@@ -1,0 +1,79 @@
+{
+    "mcpServers": {
+        "n8n-mcp": {
+            "command": "npx",
+            "args": [
+                "n8n-mcp"
+            ],
+            "env": {
+                "MCP_MODE": "stdio",
+                "LOG_LEVEL": "error",
+                "DISABLE_CONSOLE_OUTPUT": "true",
+                "N8N_API_URL": "https://neightn.functionbytes.com/",
+                "N8N_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NDM5NWJkZS1iOTNkLTQ4YjYtOWYyMC1lODQxYWE1Yjc0YWUiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY0NjMzNjgzfQ.IOTI9EGxPhyeWhphVQCPsXjo6Zh-dTTiU4krVn2YaEQ"
+            }
+        },
+        "n8n-workflows Docs": {
+            "command": "npx",
+            "args": [
+                "mcp-remote",
+                "https://gitmcp.io/Zie619/n8n-workflows"
+            ]
+        },
+        "context7": {
+            "command": "npx",
+            "args": [
+                "--y",
+                "@upstash/context7-mcp"
+            ]
+        },
+        "chrome-devtools": {
+            "command": "npx",
+            "args": [
+                "chrome-devtools-mcp@latest"
+            ]
+        },
+        "mcp-filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-filesystem"
+            ]
+        },
+        "mcp-http": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-http"
+            ]
+        },
+        "mcp-smtp": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-smtp"
+            ]
+        },
+        "mcp-mongodb": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-mongodb"
+            ]
+        },
+        "mcp-codemap": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-codemap"
+            ]
+        },
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

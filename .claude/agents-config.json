@@ -1,0 +1,90 @@
+{
+  "agents": [
+    {
+      "id": "frontend-agent",
+      "name": "Frontend Agent",
+      "type": "development",
+      "description": "Build interactive, responsive frontend components and features for Alsernet",
+      "location": "agents/frontend/",
+      "mainFile": "agents/frontend/frontend-design.md",
+      "capabilitiesFile": "agents/frontend/capabilities.md",
+      "guidesDirectory": "guides/frontend/",
+      "version": "1.0",
+      "status": "production",
+      "model": "haiku",
+      "modelType": "claude-code-guide",
+      "capabilities": 45,
+      "technologies": ["jQuery", "Bootstrap", "jQuery Validate", "DataTables", "Laravel Echo", "Vite"],
+      "guides": [
+        {"name": "jQuery Patterns", "file": "guides/frontend/jquery-patterns.md"},
+        {"name": "Component Building", "file": "guides/frontend/component-building.md"},
+        {"name": "Form Handling", "file": "guides/frontend/form-handling.md"},
+        {"name": "Real-time Integration", "file": "guides/frontend/real-time-integration.md"}
+      ]
+    },
+    {
+      "id": "backend-agent",
+      "name": "Backend Agent",
+      "type": "development",
+      "description": "Generate Laravel models, controllers, APIs, and business logic for Alsernet",
+      "location": "agents/backend/",
+      "mainFile": "agents/backend/backend-design.md",
+      "capabilitiesFile": "agents/backend/capabilities.md",
+      "guidesDirectory": "guides/backend/",
+      "version": "1.0",
+      "status": "production",
+      "model": "haiku",
+      "modelType": "claude-code-guide",
+      "capabilities": 41,
+      "technologies": ["Laravel", "PHP", "PostgreSQL", "Redis", "Laravel Sanctum", "Laravel Reverb"],
+      "guides": [
+        {"name": "Creating New Module", "file": "guides/backend/creating-new-module.md"},
+        {"name": "API Endpoint Patterns", "file": "guides/backend/api-endpoint-patterns.md"}
+      ]
+    },
+    {
+      "id": "plan-agent",
+      "name": "Plan Agent",
+      "type": "planning",
+      "description": "Plan implementation strategy, break down features, and create development roadmaps for Alsernet",
+      "location": "agents/plan/",
+      "mainFile": "agents/plan/plan-design.md",
+      "capabilitiesFile": "agents/plan/capabilities.md",
+      "guidesDirectory": "guides/plan/",
+      "version": "1.0",
+      "status": "production",
+      "model": "inherit",
+      "modelType": "plan-agent",
+      "capabilities": 35,
+      "technologies": ["Feature Analysis", "Architecture Planning", "Task Breakdown", "Risk Analysis", "Testing Strategy"],
+      "guides": [
+        {"name": "Quick Start", "file": "guides/plan/plan-agent-quick-start.md"},
+        {"name": "Feature Planning", "file": "guides/plan/feature-planning-guide.md"},
+        {"name": "Architecture Planning", "file": "guides/plan/architecture-planning-guide.md"},
+        {"name": "Task Breakdown", "file": "guides/plan/task-breakdown-guide.md"},
+        {"name": "Risk Assessment", "file": "guides/plan/risk-assessment-guide.md"}
+      ]
+    }
+  ],
+  "structure": {
+    ".claude/agents/": {
+      "plan/": ["plan-design.md", "capabilities.md"],
+      "frontend/": ["frontend-design.md", "capabilities.md"],
+      "backend/": ["backend-design.md", "capabilities.md"]
+    },
+    ".claude/guides/": {
+      "plan/": ["plan-agent-quick-start.md", "feature-planning-guide.md", "architecture-planning-guide.md", "task-breakdown-guide.md", "risk-assessment-guide.md"],
+      "frontend/": ["jquery-patterns.md", "component-building.md", "form-handling.md", "real-time-integration.md"],
+      "backend/": ["creating-new-module.md", "api-endpoint-patterns.md"]
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-11-30",
+    "description": "Alsernet Development Agents Registry",
+    "totalAgents": 3,
+    "totalCapabilities": 121,
+    "totalGuides": 6,
+    "organization": "Centralized guides directory organized by agent type + Plan Agent for pre-implementation planning"
+  }
+}

@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Models\Order;
+
+use App\Library\Traits\HasUid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+/**
+ * @property-read \App\Models\Prestashop\Cart\Cart|null $cart
+ * @property-read \App\Models\Prestashop\Customer|null $customer
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
+ * @property-read int|null $media_count
+ * @property-read \App\Models\Prestashop\Order\Order|null $order
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order ascending()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order descending()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order id($id)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order order($order)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order uid($uid)
+ * @mixin \Eloquent
+ */
+class Order extends Model  implements HasMedia
+{
+    use HasFactory ,HasUid ,  InteractsWithMedia;
+
+    protected $table = "orders";
+
+    protected $fillable = [
+        'uid',
+        'type',
+        'proccess',
+        'label',
+        'order_id',
+        'customer_id',
+        'cart_id',
+        'created_at',
+        'updated_at'
+    ];
+
+    public function scopeDescending($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    public function scopeAscending($query)
+    {
+        return $query->orderBy('created_at', 'asc');
+    }
+    public function scopeOrder($query ,$order)
+    {
+        return $query->where('order_id' ,$order)->first();
+    }
+
+    public function scopeId($query ,$id)
+    {
+        return $query->where('id' ,$id)->first();
+    }
+
+    public function scopeUid($query ,$uid)
+    {
+        return $query->where('uid', $uid)->first();
+    }
+
+    public function getAllDocumentsUrls(): array
+    {
+        return $this->getMedia('documents')->map(function ($media) {
+            return $media->getUrl();
+        })->toArray();
+    }
+    public function getDocumentUrl(): ?string
+    {
+        $media = $this->getFirstMedia('documents');
+        return $media ? $media->getUrl() : null;
+    }
+
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Prestashop\Order\Order','order_id','id_order');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Prestashop\Customer','customer_id','id_customer');
+    }
+
+    public function cart(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Prestashop\Cart\Cart','cart_id','id_cart');
+    }
+
+}

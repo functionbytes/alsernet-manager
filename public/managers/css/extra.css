@@ -1,0 +1,211 @@
+
+.select2-container--classic .select2-selection--single,
+.select2-container--default .select2-selection--single,
+.select2-container--default
+.select2-selection--single
+.select2-selection__arrow,
+.select2-container--default
+.select2-selection--single
+.select2-selection__rendered {
+    border-color: #ebf1f6;
+    color: #081a28;
+    line-height: 40px;
+}
+.select2-container--default .select2-selection--multiple {
+    border-color: #ebf1f6;
+    color: #081a28;
+    line-height: 32px;
+    height: auto;
+}
+.select2-container--classic
+.select2-selection--single
+.select2-selection__arrow,
+.select2-container--classic
+.select2-selection--single
+.select2-selection__rendered {
+    border-color: #ebf1f6;
+    color: #081a28;
+    line-height: 40px;
+}
+.select2-container--classic
+.select2-selection--multiple
+.select2-selection__choice,
+.select2-container--default
+.select2-selection--multiple
+.select2-selection__choice,
+.select2-container--default
+.select2-selection--multiple
+.select2-selection__choice__remove {
+    background-color: #081a28;
+    border-color: #081a28;
+    color: #fff;
+}
+
+
+
+.bg-light-secondary {
+    --bs-bg-opacity: 1;
+    background-color: #f5f6f8;
+    color: var(--bs-secondary-color) !important;
+}
+
+.badge {
+    --bs-badge-padding-x: 10px;
+    --bs-badge-padding-y: 5px;
+    --bs-badge-font-size: 0.875rem;
+    --bs-badge-font-weight: 400;
+    --bs-badge-color: #fff;
+    --bs-badge-border-radius: 4px;
+    display: inline-block;
+    padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+    font-size: var(--bs-badge-font-size);
+    font-weight: var(--bs-badge-font-weight);
+    line-height: 1;
+    color: var(--bs-badge-color);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: var(--bs-badge-border-radius);
+}
+
+.sidebar-nav ul .sidebar-item .sidebar-link {
+    display: flex;
+    font-size: 13px;
+    white-space: nowrap;
+    align-items: center;
+    position: relative;
+    padding: 11px 16px 11px 16px;
+    border-radius: 12px;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+
+
+
+.card-body .select2-container .select2-selection--single,
+.form-search .select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    height
+    Specifies the height of the content area, padding area or border area (depending on 'box-sizing') of certain boxes.
+
+Disponible en la mayoría de los navegadores principales (Baseline desde enero de 2018)
+Más información
+
+No mostrar: 20px;
+    height: 44px;
+}
+.card-body .select2-container,
+.form-search .select2-container {
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+    width: 100% !important;
+}
+.card-body
+.select2-container
+.select2-selection--single
+.select2-selection__rendered,
+.form-search
+.select2-container
+.select2-selection--single
+.select2-selection__rendered {
+    display: block;
+    padding-left: 2px;
+    padding-right: 20px;
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 25px;
+    max-width: max-content;
+    position: initial;
+}
+.form-search .select2-container .select2-selection--single {
+    display: inline-block;
+}
+.form-search .select2-container {
+    width: min-content !important;
+}
+
+
+
+
+.toast {
+    --bs-toast-zindex: 1090;
+    --bs-toast-padding-x: 0.75rem;
+    --bs-toast-padding-y: 0.5rem;
+    --bs-toast-spacing: 24px;
+    --bs-toast-max-width: 350px;
+    --bs-toast-font-size: 0.875rem;
+    --bs-toast-color: ;
+    --bs-toast-bg: rgba(var(--bs-body-bg-rgb), 0.85);
+    --bs-toast-border-width: 0;
+    --bs-toast-border-color: var(--bs-border-color-translucent);
+    --bs-toast-border-radius: var(--bs-border-radius);
+    --bs-toast-box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+    --bs-toast-header-color: var(--bs-secondary-color);
+    --bs-toast-header-bg: rgba(var(--bs-body-bg-rgb), 0.85);
+    --bs-toast-header-border-color: var(--bs-border-color-translucent);
+    width: var(--bs-toast-max-width);
+    max-width: 100%;
+    font-size: var(--bs-toast-font-size);
+    color: var(--bs-toast-color);
+    pointer-events: auto;
+    background-color: var(--bs-toast-bg);
+    background-clip: padding-box;
+    border: var(--bs-toast-border-width) solid var(--bs-toast-border-color);
+    box-shadow: var(--bs-toast-box-shadow);
+    border-radius: var(--bs-toast-border-radius);
+}
+
+.toast.showing {
+    opacity: 0;
+}
+
+.toast:not(.show) {
+    display: none;
+}
+
+.toast-container {
+    --bs-toast-zindex: 1090;
+    position: absolute;
+    z-index: var(--bs-toast-zindex);
+    width: max-content;
+    max-width: 100%;
+    pointer-events: none;
+}
+
+.toast-container > :not(:last-child) {
+    margin-bottom: var(--bs-toast-spacing);
+}
+
+.toast-header {
+    display: flex;
+    align-items: center;
+    padding: var(--bs-toast-padding-y) var(--bs-toast-padding-x);
+    color: var(--bs-toast-header-color);
+    background-color: var(--bs-toast-header-bg);
+    background-clip: padding-box;
+    border-bottom: var(--bs-toast-border-width) solid var(--bs-toast-header-border-color);
+    border-top-left-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+    border-top-right-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+}
+
+.toast-header .btn-close {
+    margin-right: calc(-.5 * var(--bs-toast-padding-x));
+    margin-left: var(--bs-toast-padding-x);
+}
+
+.toast-body {
+    padding: var(--bs-toast-padding-x);
+    word-wrap: break-word;
+}
+
