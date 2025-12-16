@@ -6,8 +6,21 @@
     </div>
 
     @if($document->actions && $document->actions->count() > 0)
+        @php
+            $actions = $document->actions->sortByDesc('created_at');
+            $totalActions = $actions->count();
+            $showLimit = 5;
+            $hasMore = $totalActions > $showLimit;
+        @endphp
+
+        @if($hasMore)
+            <div class="alert alert-info alert-sm mb-2" role="alert">
+                <small><i class="fas fa-info-circle me-1"></i> Mostrando las últimas {{ $showLimit }} acciones de {{ $totalActions }} totales</small>
+            </div>
+        @endif
+
         <div class="comment-widgets scrollable common-widget action-history-scroll">
-            @foreach($document->actions->sortByDesc('created_at') as $action)
+            @foreach($actions->take($showLimit) as $action)
                 <div class="comment-row border-bottom px-2 px-md-3 py-2 py-md-3 action-item">
 
 
@@ -137,20 +150,21 @@
     }
 
     .action-history-scroll::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
     }
 
     .action-history-scroll::-webkit-scrollbar-track {
-        background: #f5f5f5;
+        background: #f1f1f1;
+        border-radius: 4px;
     }
 
     .action-history-scroll::-webkit-scrollbar-thumb {
-        background: #dee2e6;
-        border-radius: 3px;
+        background: #ccc;
+        border-radius: 4px;
     }
 
     .action-history-scroll::-webkit-scrollbar-thumb:hover {
-        background: #adb5bd;
+        background: #999;
     }
 
     .action-item {
