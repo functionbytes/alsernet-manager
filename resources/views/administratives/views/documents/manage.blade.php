@@ -659,14 +659,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-success d-flex align-items-center mb-3">
+                    <div class="alert alert-success d-flex align-items-center">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
-                    </div>
-                    <div class="mb-0">
-                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
-                        <textarea class="form-control" id="approvalNotes" rows="3"
-                                  placeholder="Mensaje adicional para el cliente..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-top">
@@ -724,14 +719,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-primary d-flex align-items-center mb-3">
+                    <div class="alert alert-primary d-flex align-items-center">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email notificando que el proceso ha sido completado.</div>
-                    </div>
-                    <div class="mb-0">
-                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
-                        <textarea class="form-control" id="completionNotes" rows="3"
-                                  placeholder="Mensaje adicional para el cliente..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-top">
@@ -1696,14 +1686,13 @@
             // ===== Approval Handler =====
             $('#btnSendApproval').on('click', function() {
                 const $btn = $(this);
-                const notes = $('#approvalNotes').val();
 
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-approval', $document->uid) }}",
                     method: 'POST',
-                    data: { notes: notes },
+                    data: {},
                     success: function(response) {
                         if (response.success) {
                             toastr.success('Email de aprobación enviado a: ' + response.recipient, 'Éxito', {
@@ -1712,7 +1701,6 @@
                                 positionClass: "toast-bottom-right"
                             });
                             $('#approvalModal').modal('hide');
-                            $('#approvalNotes').val('');
                         }
                     },
                     error: function(xhr) {
@@ -1778,14 +1766,13 @@
             // ===== Completion Handler =====
             $('#btnSendCompletion').on('click', function() {
                 const $btn = $(this);
-                const notes = $('#completionNotes').val();
 
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-completion', $document->uid) }}",
                     method: 'POST',
-                    data: { notes: notes },
+                    data: {},
                     success: function(response) {
                         if (response.success) {
                             toastr.success('Email de finalización enviado a: ' + response.recipient, 'Éxito', {
@@ -1794,7 +1781,6 @@
                                 positionClass: "toast-bottom-right"
                             });
                             $('#completionModal').modal('hide');
-                            $('#completionNotes').val('');
                         }
                     },
                     error: function(xhr) {
