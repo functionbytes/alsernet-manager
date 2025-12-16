@@ -42,7 +42,10 @@ class SendTemplateEmailJob implements ShouldQueue
                     $this->emailData['missing_docs'] ?? [],
                     $this->emailData['notes'] ?? null
                 ),
-                'upload_confirmation' => DocumentEmailTemplateService::sendUploadConfirmation($this->document),
+                'upload_confirmation' => DocumentEmailTemplateService::sendUploadConfirmation($this->document, $this->emailData['notes'] ?? null),
+                'approval' => DocumentEmailTemplateService::sendApprovalEmail($this->document, $this->emailData['notes'] ?? null),
+                'rejection' => DocumentEmailTemplateService::sendRejectionEmail($this->document, $this->emailData['reason'] ?? null),
+                'completion' => DocumentEmailTemplateService::sendCompletionEmail($this->document, $this->emailData['notes'] ?? null),
                 'custom' => DocumentEmailTemplateService::sendCustomEmail(
                     $this->document,
                     $this->emailData['subject'] ?? '',
@@ -73,6 +76,9 @@ class SendTemplateEmailJob implements ShouldQueue
                 'reminder' => 'Email de recordatorio enviado',
                 'missing_documents' => 'Email de documentos faltantes enviado',
                 'upload_confirmation' => 'Email de confirmación de carga enviado',
+                'approval' => 'Email de aprobación enviado',
+                'rejection' => 'Email de rechazo enviado',
+                'completion' => 'Email de finalización enviado',
                 'custom' => 'Correo personalizado enviado',
             ];
 
@@ -113,6 +119,9 @@ class SendTemplateEmailJob implements ShouldQueue
                 'reminder' => 'Fallo al enviar email de recordatorio',
                 'missing_documents' => 'Fallo al enviar email de documentos faltantes',
                 'upload_confirmation' => 'Fallo al enviar email de confirmación',
+                'approval' => 'Fallo al enviar email de aprobación',
+                'rejection' => 'Fallo al enviar email de rechazo',
+                'completion' => 'Fallo al enviar email de finalización',
                 'custom' => 'Fallo al enviar correo personalizado',
             ];
 
