@@ -297,6 +297,7 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/preview/{uid}', [MailTemplateController::class, 'preview'])->name('manager.settings.mailers.templates.preview');
                 Route::get('/preview-ajax/{uid}', [MailTemplateController::class, 'previewAjax'])->name('manager.settings.mailers.templates.preview-ajax');
                 Route::get('/variables/{uid}', [MailTemplateController::class, 'getVariables'])->name('manager.settings.mailers.templates.variables');
+                Route::get('/variables-by-module', [MailTemplateController::class, 'variablesByModule'])->name('manager.settings.mailers.variables-by-module');
                 Route::delete('/{uid}', [MailTemplateController::class, 'destroy'])->name('manager.settings.mailers.templates.destroy');
                 Route::post('/toggle-status/{uid}', [MailTemplateController::class, 'toggleStatus'])->name('manager.settings.mailers.templates.toggle-status');
                 Route::post('/send-test/{uid}', [MailTemplateController::class, 'sendTest'])->name('manager.settings.mailers.templates.send-test');

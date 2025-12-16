@@ -400,510 +400,6 @@
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.2/lib/codemirror.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.2/theme/monokai.min.css">
-<style>
-.CodeMirror {
-    font-size: 12px;
-    line-height: 1.6;
-    height: 550px !important;
-    border: 2px solid #e5e7eb !important;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
-.CodeMirror-scroll {
-    background-color: #ffffff !important;
-}
-
-.CodeMirror-sizer {
-    background-color: #ffffff !important;
-}
-
-.CodeMirror-lines {
-    background-color: #ffffff !important;
-}
-
-.CodeMirror-gutters {
-    background-color: #f5f6f8 !important;
-    border-right: 1px solid #ddd !important;
-}
-
-.CodeMirror-linenumber {
-    color: #666 !important;
-    font-weight: 500;
-}
-
-/* Cursor with blinking animation */
-@keyframes cursorBlink {
-    0%, 49% {
-        border-left-color: #90bb13 !important;
-        box-shadow: 0 0 8px rgba(144, 187, 19, 0.6) !important;
-    }
-    50%, 100% {
-        border-left-color: transparent !important;
-        box-shadow: none !important;
-    }
-}
-
-.CodeMirror-cursor {
-    border-left: 3px solid #90bb13 !important;
-    height: 100% !important;
-    animation: cursorBlink 1s infinite !important;
-}
-
-.CodeMirror.CodeMirror-focused .CodeMirror-cursor {
-    border-left-color: #90bb13 !important;
-    animation: cursorBlink 1s infinite !important;
-}
-
-/* Syntax highlighting - Visible on white background */
-.cm-tag {
-    color: #0066cc !important;
-    font-weight: 500 !important;
-    background-color: transparent !important;
-}
-
-.cm-attribute {
-    color: #ff6600 !important;
-    font-weight: 500 !important;
-    background-color: transparent !important;
-}
-
-.cm-string {
-    color: #00aa00 !important;
-    background-color: transparent !important;
-}
-
-.cm-string-2 {
-    color: #00aa00 !important;
-    background-color: transparent !important;
-}
-
-.cm-number {
-    color: #dd1111 !important;
-    background-color: transparent !important;
-}
-
-.cm-atom {
-    color: #0066cc !important;
-    background-color: transparent !important;
-}
-
-.cm-keyword {
-    color: #0066cc !important;
-    font-weight: 500 !important;
-    background-color: transparent !important;
-}
-
-.cm-variable {
-    color: #333333 !important;
-    background-color: transparent !important;
-}
-
-.cm-variable-2 {
-    color: #333333 !important;
-    background-color: transparent !important;
-}
-
-.cm-variable-3 {
-    color: #333333 !important;
-    background-color: transparent !important;
-}
-
-.cm-property {
-    color: #333333 !important;
-    background-color: transparent !important;
-}
-
-.cm-comment {
-    color: #999999 !important;
-    font-style: italic !important;
-    background-color: transparent !important;
-}
-
-.cm-meta {
-    color: #999999 !important;
-    background-color: transparent !important;
-}
-
-.cm-qualifier {
-    color: #0066cc !important;
-    background-color: transparent !important;
-}
-
-.cm-builtin {
-    color: #0066cc !important;
-    background-color: transparent !important;
-}
-
-.cm-bracket {
-    color: #666666 !important;
-    background-color: transparent !important;
-}
-
-.cm-tag-name {
-    color: #0066cc !important;
-    background-color: transparent !important;
-    font-weight: 500 !important;
-}
-
-.cm-attribute-value {
-    color: #00aa00 !important;
-    background-color: transparent !important;
-}
-
-.cm-html-tag {
-    color: #0066cc !important;
-    background-color: transparent !important;
-}
-
-.cm-operator {
-    color: #666666 !important;
-    background-color: transparent !important;
-}
-
-.cm-error {
-    color: #dd1111 !important;
-    background-color: transparent !important;
-}
-
-.CodeMirror .cm-s-monokai.cm-s-monokai * {
-    background-color: transparent !important;
-}
-
-.CodeMirror-focused {
-    border-color: #90bb13;
-    box-shadow: 0 0 0 3px rgba(144, 187, 19, 0.1);
-}
-
-.hover-shadow-sm:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transform: translateX(2px);
-    transition: all 0.2s ease;
-}
-
-.variable-insert {
-    transition: all 0.2s ease;
-    cursor: pointer;
-    padding: 8px;
-    border-left: 3px solid transparent;
-}
-
-.variable-insert:hover {
-    background: #f6f7f9 !important;
-    padding: 8px;
-}
-
-.variable-insert code {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 13px;
-}
-
-#preview-panel {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-}
-
-#previewContainer {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-}
-
-#previewContainerTab {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* Device preview buttons styling */
-#preview-panel .btn-group .btn {
-    border-color: #d1d5db;
-    transition: all 0.2s ease;
-}
-
-#preview-panel .btn-group .btn:hover {
-    border-color: #90bb13;
-    background-color: rgba(144, 187, 19, 0.05);
-}
-
-#preview-panel .btn-group .btn.active {
-    background-color: #90bb13;
-    border-color: #90bb13;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(144, 187, 19, 0.3);
-}
-
-#preview-panel .btn-group .btn.active:hover {
-    background-color: #7a9a0f;
-    border-color: #7a9a0f;
-}
-
-/* Refresh button styling */
-#btnRefreshPreviewCreate {
-    transition: all 0.2s ease;
-}
-
-#btnRefreshPreviewCreate:hover:not(:disabled) {
-    box-shadow: 0 2px 8px rgba(19, 198, 114, 0.3);
-    transform: translateY(-1px);
-}
-
-#btnRefreshPreviewCreate:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-#previewContainer iframe {
-    transition: all 0.3s ease;
-}
-
-#previewContainerTab {
-    transition: max-width 0.3s ease;
-}
-
-.card {
-    transition: box-shadow 0.3s ease;
-}
-
-.card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Tooltip Styling - Green Theme */
-.tooltip-inner {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(144, 187, 19, 0.3);
-}
-
-.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before,
-.bs-tooltip-top .tooltip-arrow::before {
-    border-top-color: #90bb13 !important;
-}
-
-.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before,
-.bs-tooltip-end .tooltip-arrow::before {
-    border-right-color: #90bb13 !important;
-}
-
-.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before,
-.bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: #90bb13 !important;
-}
-
-.bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before,
-.bs-tooltip-start .tooltip-arrow::before {
-    border-left-color: #90bb13 !important;
-}
-
-/* Selection Color - Green (#90bb13) with white text */
-.CodeMirror-selected {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line::selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line > span::selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line > span > span::selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line::-moz-selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line > span::-moz-selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-line > span > span::-moz-selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror ::selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror ::-moz-selection {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-/* Active Line */
-.CodeMirror-activeline {
-    background-color: #ffffff !important;
-}
-
-.CodeMirror-activeline .CodeMirror-linenumber {
-    background-color: #f0f0f0 !important;
-    color: #333 !important;
-}
-
-.CodeMirror-activeline .cm-tag {
-    color: #0066cc !important;
-}
-
-.CodeMirror-activeline .cm-attribute {
-    color: #ff6600 !important;
-}
-
-.CodeMirror-activeline .cm-string {
-    color: #00aa00 !important;
-}
-
-.CodeMirror-activeline .cm-variable,
-.CodeMirror-activeline .cm-property {
-    color: #333333 !important;
-}
-
-.CodeMirror-linenumber {
-    background-color: #f5f6f8 !important;
-}
-
-.CodeMirror-line {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
-.CodeMirror {
-    caret-color: #90bb13 !important;
-}
-
-.CodeMirror span {
-    background-color: transparent !important;
-    color: #333333 !important;
-}
-
-.CodeMirror pre {
-    background-color: transparent !important;
-    color: #333333 !important;
-}
-
-.cm-tab {
-    color: #999 !important;
-}
-
-/* Matching Brackets */
-.CodeMirror-matchingbracket {
-    background-color: rgba(144, 187, 19, 0.15) !important;
-    color: #0066cc !important;
-    font-weight: bold !important;
-    border-bottom: 2px solid #90bb13 !important;
-    text-decoration: underline !important;
-    text-decoration-color: #90bb13 !important;
-    text-decoration-thickness: 2px !important;
-}
-
-.CodeMirror-nonmatchingbracket {
-    background-color: rgba(250, 137, 107, 0.15) !important;
-    color: #0066cc !important;
-    font-weight: bold !important;
-    border-bottom: 2px solid #FA896B !important;
-    text-decoration: underline !important;
-    text-decoration-color: #FA896B !important;
-    text-decoration-thickness: 2px !important;
-}
-
-/* Autocomplete Dropdown */
-.CodeMirror-hints {
-    background-color: #1e1e1e !important;
-    border: 2px solid #90bb13 !important;
-    border-radius: 6px !important;
-    box-shadow: 0 4px 16px rgba(144, 187, 19, 0.25) !important;
-    max-height: 300px !important;
-    font-family: 'Courier New', monospace !important;
-    font-size: 12px !important;
-    z-index: 9999 !important;
-}
-
-.CodeMirror-hint {
-    color: #e0e0e0 !important;
-    padding: 8px 12px !important;
-    border-bottom: 1px solid #333 !important;
-    cursor: pointer !important;
-    transition: all 0.15s ease !important;
-}
-
-.CodeMirror-hint:last-child {
-    border-bottom: none !important;
-}
-
-.CodeMirror-hint-active,
-.CodeMirror-hint:hover {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-    font-weight: 600 !important;
-    padding-left: 16px !important;
-    box-shadow: inset 0 0 0 2px rgba(144, 187, 19, 0.3) !important;
-}
-
-.CodeMirror-hint-active {
-    background-color: #90bb13 !important;
-    color: #fff !important;
-}
-
-.CodeMirror-Emmet-abbreviation {
-    color: #90bb13 !important;
-}
-
-@media (max-width: 991px) {
-    .CodeMirror {
-        height: 400px !important;
-    }
-}
-
-/* Variable Cards - Grid Layout */
-.variable-card {
-    background: white;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 50px;
-    user-select: none;
-}
-
-.variable-card:hover {
-    background-color: #f0f4f8;
-    border-color: #0d6efd;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
-}
-
-.variable-card:active {
-    transform: translateY(0);
-}
-
-.variable-code {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #0d6efd;
-    background: none;
-    padding: 0;
-    word-break: break-word;
-}
-</style>
 @endpush
 
 @push('scripts')
@@ -1220,63 +716,50 @@ $(document).ready(function() {
             '<div class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm mb-2" role="status"><span class="visually-hidden">Cargando...</span></div><p class="mb-0 small">Cargando variables...</p></div>'
         );
 
-        // Simulate loading variables (in production, this would be an AJAX call)
-        setTimeout(function() {
-            const moduleVariables = getVariablesForModule(module);
-            renderVariables(moduleVariables);
-        }, 500);
+        // Call API to load variables for the module
+        $.ajax({
+            url: '{{ route('manager.settings.mailers.variables-by-module') }}',
+            type: 'GET',
+            data: { module: module },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    renderVariables(data.variables);
+                } else {
+                    $('#variablesPanel').html(
+                        '<div class="alert alert-warning m-2"><i class="fas fa-warning me-2"></i>No hay variables disponibles</div>'
+                    );
+                }
+            },
+            error: function(error) {
+                console.error('Error loading variables:', error);
+                $('#variablesPanel').html(
+                    '<div class="alert alert-danger m-2"><i class="fas fa-exclamation-circle me-2"></i>Error al cargar variables</div>'
+                );
+            }
+        });
     }
 
-    // Get variables for a specific module
-    function getVariablesForModule(module) {
-        const commonVars = [
-            {name: 'SITE_NAME', description: 'Nombre del sitio'},
-            {name: 'SITE_URL', description: 'URL del sitio'},
-            {name: 'SITE_EMAIL', description: 'Email del sitio'},
-            {name: 'LOGO_URL', description: 'URL del logo'},
-            {name: 'CUSTOMER_NAME', description: 'Nombre del cliente'},
-            {name: 'CUSTOMER_EMAIL', description: 'Email del cliente'},
-            {name: 'CURRENT_YEAR', description: 'Año actual'},
-        ];
-
-        const moduleSpecificVars = {
-            'documents': [
-                {name: 'DOCUMENT_TYPE', description: 'Tipo de documento'},
-                {name: 'UPLOAD_LINK', description: 'Link para subir documento'},
-                {name: 'EXPIRATION_DATE', description: 'Fecha de expiración'}
-            ],
-            'orders': [
-                {name: 'ORDER_ID', description: 'ID del pedido'},
-                {name: 'ORDER_NUMBER', description: 'Número de pedido'},
-                {name: 'ORDER_TOTAL', description: 'Total del pedido'},
-                {name: 'ORDER_STATUS', description: 'Estado del pedido'},
-                {name: 'ORDER_DATE', description: 'Fecha del pedido'}
-            ],
-            'notifications': [
-                {name: 'NOTIFICATION_TYPE', description: 'Tipo de notificación'},
-                {name: 'NOTIFICATION_DATE', description: 'Fecha de la notificación'}
-            ],
-            'core': [
-                {name: 'RESET_LINK', description: 'Link para resetear contraseña'},
-                {name: 'CONFIRM_LINK', description: 'Link de confirmación'},
-                {name: 'ACTIVATION_LINK', description: 'Link de activación'}
-            ]
-        };
-
-        return [...commonVars, ...(moduleSpecificVars[module] || [])];
-    }
-
-    // Render Variables
+    // Render Variables (grouped by category)
     function renderVariables(variableGroups) {
         // Render in sidebar panel
         let html = '';
 
-        $.each(variableGroups, function(idx, variable) {
-            html += `<div class="mb-2 pb-2 border-bottom variable-insert" data-variable-name="${variable.name}">`;
-            html += `<a class="text-decoration-none d-block" onclick="return false;">`;
-            html += `<code class="d-inline-block bg-light px-2 py-1 text-primary fw-bold">{${variable.name}}</code>`;
-            html += `</a>`;
-            html += `<small class="text-muted d-block mt-1"><i class="fas fa-info-circle me-1"></i>${variable.description}</small>`;
+        $.each(variableGroups, function(groupIdx, group) {
+            html += `<div class="mb-3">`;
+            html += `<h6 class="text-muted small fw-bold px-2 mt-2 mb-2">`;
+            html += `<i class="fas fa-folder me-1"></i>${group.group}`;
+            html += `</h6>`;
+
+            $.each(group.items, function(idx, variable) {
+                html += `<div class="mb-2 pb-2 border-bottom variable-insert" data-variable-name="${variable.name}">`;
+                html += `<a class="text-decoration-none d-block" onclick="return false;">`;
+                html += `<code class="d-inline-block bg-light px-2 py-1 text-primary fw-bold">{${variable.name}}</code>`;
+                html += `</a>`;
+                html += `<small class="text-muted d-block mt-1" style="font-size: 0.80rem;">${variable.description}</small>`;
+                html += `</div>`;
+            });
+
             html += `</div>`;
         });
 
@@ -1285,8 +768,12 @@ $(document).ready(function() {
         // Render in top selector (toolbar)
         let selectorOptions = '<option value="">-- Selecciona una variable --</option>';
 
-        $.each(variableGroups, function(idx, variable) {
-            selectorOptions += `<option value="${variable.name}" data-description="${variable.description}">{${variable.name}} - ${variable.description}</option>`;
+        $.each(variableGroups, function(groupIdx, group) {
+            selectorOptions += `<optgroup label="${group.group}">`;
+            $.each(group.items, function(idx, variable) {
+                selectorOptions += `<option value="${variable.name}">{${variable.name}} - ${variable.description}</option>`;
+            });
+            selectorOptions += `</optgroup>`;
         });
 
         $('#variableSelector').html(selectorOptions);

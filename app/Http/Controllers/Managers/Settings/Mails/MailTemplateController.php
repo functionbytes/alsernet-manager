@@ -766,6 +766,75 @@ PREHEADER;
     }
 
     /**
+     * Get variables for a specific module (for create form)
+     * Used when creating a new template to load variables based on selected module
+     */
+    public function variablesByModule(Request $request)
+    {
+        try {
+            $module = $request->query('module');
+
+            if (!$module) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Module parameter is required',
+                    'variables' => [],
+                ], 400);
+            }
+
+            // Get variables from database filtered by the specified module
+            // Includes variables from the specific module + core variables
+            $dbVariables = \App\Models\Mail\MailVariable::query()
+                ->where('is_enabled', true)
+                ->where(function ($query) use ($module) {
+                    $query->where('module', $module)
+                        ->orWhere('module', 'core');
+                })
+                ->orderBy('category')
+                ->orderBy('key')
+                ->get();
+
+            // Group variables by category
+            $grouped = $dbVariables->groupBy('category');
+
+            $variables = [];
+            foreach ($grouped as $category => $items) {
+                $categoryLabel = ucfirst($category);
+                $categoryLabels = [
+                    'system' => 'Sistema',
+                    'customer' => 'Cliente',
+                    'order' => 'Pedido',
+                    'document' => 'Documento',
+                    'general' => 'General',
+                ];
+
+                $variables[] = [
+                    'group' => $categoryLabels[$category] ?? $categoryLabel,
+                    'items' => $items->map(function ($variable) {
+                        return [
+                            'name' => $variable->key,
+                            'description' => $variable->description ?? $variable->name,
+                        ];
+                    })->toArray(),
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'variables' => $variables,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error loading variables by module: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'variables' => [],
+            ], 500);
+        }
+    }
+
+    /**
      * Cambiar estado (enabled/disabled)
      */
     public function toggleStatus($uid)
