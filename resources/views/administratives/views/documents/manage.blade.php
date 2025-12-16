@@ -718,6 +718,36 @@
         </div>
     </div>
 
+    <!-- Confirm Document Configuration Modal -->
+    <div class="modal fade" id="confirmConfigurationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title">
+                        <i class="fas fa-save text-primary me-2"></i>
+                        Guardar Configuración
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info d-flex align-items-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>¿Estás seguro de que deseas guardar la configuración del documento?</div>
+                    </div>
+                    <p class="text-muted mb-0">
+                        Se actualizarán el estado, origen y tipo de carga del documento.
+                    </p>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-primary" id="confirmConfigBtn">
+                        <i class="fas fa-check me-1"></i> Guardar
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div>
 
 @endsection
@@ -1110,34 +1140,42 @@
             });
 
             // ===== Guardar Configuración (Estado y Origen) =====
+            let configFormData = null;
+            let $configSubmitBtn = null;
+
             $(document).on('submit', '#formDocumentConfig', function(e) {
                 e.preventDefault();
 
                 const $form = $(this);
-                const $submitBtn = $form.find('button[type="submit"]');
-                const proccess = $('#proccess').val();
-                const source = $('#source').val();
-                const statusId = $('#status_id').val();
-                const documentSourceId = $('#document_source_id').val();
-                const uploadType = $('#upload_type').val();
+                configFormData = {
+                    proccess: $('#proccess').val(),
+                    source: $('#source').val(),
+                    status_id: $('#status_id').val(),
+                    document_source_id: $('#document_source_id').val(),
+                    upload_type: $('#upload_type').val()
+                };
+                $configSubmitBtn = $form.find('button[type="submit"]');
 
-                if (!confirm('¿Guardar la configuración del documento?')) {
-                    return;
-                }
+                // Open confirmation modal
+                const modal = new bootstrap.Modal(document.getElementById('confirmConfigurationModal'));
+                modal.show();
+            });
 
-                $submitBtn.prop('disabled', true);
-                $submitBtn.html('<i class="ti ti-loader-2 spin"></i> Guardando...');
+            // Handle confirmation button click
+            $('#confirmConfigBtn').on('click', function() {
+                if (!configFormData || !$configSubmitBtn) return;
+
+                $configSubmitBtn.prop('disabled', true);
+                $configSubmitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
+
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmConfigurationModal'));
+                modal.hide();
 
                 $.ajax({
                     url: "{{ route('administrative.documents.update', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                     type: 'POST',
-                    data: {
-                        proccess: proccess,
-                        source: source,
-                        status_id: statusId,
-                        document_source_id: documentSourceId,
-                        upload_type: uploadType
-                    },
+                    data: configFormData,
                     success: function(response) {
                         if (response.success) {
                             toastr.success('Configuración guardada correctamente', 'Éxito', {
@@ -1166,8 +1204,8 @@
                         });
                     },
                     complete: function() {
-                        $submitBtn.prop('disabled', false);
-                        $submitBtn.html('<i class="ti ti-device-floppy"></i> Guardar configuración');
+                        $configSubmitBtn.prop('disabled', false);
+                        $configSubmitBtn.html('<i class="fas fa-save me-1"></i> Guardar configuración');
                     }
                 });
             });
