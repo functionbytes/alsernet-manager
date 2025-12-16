@@ -20,7 +20,7 @@
                 </div>
             @endif
 
-            <div class="comment-widgets scrollable common-widget action-history-scroll">
+            <div class="action-history-scroll">
                 @foreach($actions->take($showLimit) as $action)
                 <div class="comment-row border-bottom px-2 px-md-3 py-2 py-md-3 action-item">
 
