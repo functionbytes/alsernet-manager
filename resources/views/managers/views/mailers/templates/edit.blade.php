@@ -852,6 +852,9 @@ $(document).ready(function() {
         let html = '';
 
         $.each(variableGroups, function(groupIdx, group) {
+            // Skip "Cliente" category
+            if (group.group === 'Cliente') return true;
+
             html += `<div class="mb-3">`;
             html += `<h6 class="text-muted small fw-bold px-2 mt-3 mb-2">`;
             html += `<i class="fas fa-folder me-1"></i>${group.group}`;
@@ -860,9 +863,8 @@ $(document).ready(function() {
 
             $.each(group.items, function(idx, variable) {
                 html += `<div class="col-6 col-md-4">`;
-                html += `<div class="variable-card variable-insert" data-variable-name="${variable.name}" data-bs-toggle="tooltip" title="${variable.description}">`;
+                html += `<div class="variable-card variable-insert" data-variable-name="${variable.name}" data-bs-toggle="tooltip" title="${variable.name}">`;
                 html += `<code class="variable-code">{${variable.name}}</code>`;
-                html += `<small class="d-block text-muted mt-1" style="font-size: 0.70rem; line-height: 1.2;">${variable.description}</small>`;
                 html += `</div>`;
                 html += `</div>`;
             });
@@ -876,9 +878,12 @@ $(document).ready(function() {
         // Render in top selector (toolbar)
         let selectorOptions = '<option value="">-- Selecciona una variable --</option>';
         $.each(variableGroups, function(groupIdx, group) {
+            // Skip "Cliente" category
+            if (group.group === 'Cliente') return true;
+
             selectorOptions += `<optgroup label="${group.group}">`;
             $.each(group.items, function(idx, variable) {
-                selectorOptions += `<option value="${variable.name}">{${variable.name}} - ${variable.description}</option>`;
+                selectorOptions += `<option value="${variable.name}">{${variable.name}}</option>`;
             });
             selectorOptions += `</optgroup>`;
         });

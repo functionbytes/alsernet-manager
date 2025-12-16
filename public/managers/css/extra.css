@@ -726,7 +726,7 @@ kbd {
     }
 
     .variable-card {
-        min-height: 75px;
+        min-height: 100%;
         padding: 10px;
     }
 

@@ -746,6 +746,9 @@ $(document).ready(function() {
         let html = '';
 
         $.each(variableGroups, function(groupIdx, group) {
+            // Skip "Cliente" category
+            if (group.group === 'Cliente') return true;
+
             html += `<div class="mb-3">`;
             html += `<h6 class="text-muted small fw-bold px-2 mt-2 mb-2">`;
             html += `<i class="fas fa-folder me-1"></i>${group.group}`;
@@ -756,7 +759,6 @@ $(document).ready(function() {
                 html += `<a class="text-decoration-none d-block" onclick="return false;">`;
                 html += `<code class="d-inline-block bg-light px-2 py-1 text-primary fw-bold">{${variable.name}}</code>`;
                 html += `</a>`;
-                html += `<small class="text-muted d-block mt-1" style="font-size: 0.80rem;">${variable.description}</small>`;
                 html += `</div>`;
             });
 
@@ -769,9 +771,12 @@ $(document).ready(function() {
         let selectorOptions = '<option value="">-- Selecciona una variable --</option>';
 
         $.each(variableGroups, function(groupIdx, group) {
+            // Skip "Cliente" category
+            if (group.group === 'Cliente') return true;
+
             selectorOptions += `<optgroup label="${group.group}">`;
             $.each(group.items, function(idx, variable) {
-                selectorOptions += `<option value="${variable.name}">{${variable.name}} - ${variable.description}</option>`;
+                selectorOptions += `<option value="${variable.name}">{${variable.name}}</option>`;
             });
             selectorOptions += `</optgroup>`;
         });
