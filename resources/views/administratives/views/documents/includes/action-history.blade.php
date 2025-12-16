@@ -13,14 +13,15 @@
             $hasMore = $totalActions > $showLimit;
         @endphp
 
-        @if($hasMore)
-            <div class="alert alert-info alert-sm mb-2" role="alert">
-                <small><i class="fas fa-info-circle me-1"></i> Mostrando las últimas {{ $showLimit }} acciones de {{ $totalActions }} totales</small>
-            </div>
-        @endif
+        <div class="card-body p-0">
+            @if($hasMore)
+                <div class="alert alert-info alert-sm mb-2 mx-3 mt-3" role="alert">
+                    <small><i class="fas fa-info-circle me-1"></i> Mostrando las últimas {{ $showLimit }} acciones de {{ $totalActions }} totales</small>
+                </div>
+            @endif
 
-        <div class="comment-widgets scrollable common-widget action-history-scroll">
-            @foreach($actions->take($showLimit) as $action)
+            <div class="comment-widgets scrollable common-widget action-history-scroll">
+                @foreach($actions->take($showLimit) as $action)
                 <div class="comment-row border-bottom px-2 px-md-3 py-2 py-md-3 action-item">
 
 
@@ -108,9 +109,10 @@
                     </div>
                 </div>
             @endforeach
+            </div>
         </div>
     @else
-        <div class="p-4 text-center">
+        <div class="card-body p-4 text-center">
             <div class="mb-3">
                 <i class="fas fa-inbox text-muted" style="font-size: 2rem;"></i>
             </div>
