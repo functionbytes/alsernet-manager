@@ -931,23 +931,21 @@ class DocumentsController extends Controller
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
         // Get allowed status transitions from current status
-        $allowedStatuses = [];
+        $statusIds = [$document->status_id]; // Include current status
         if ($document->status_id) {
             $transitions = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $document->status_id)
                 ->active()
                 ->pluck('to_status_id')
                 ->toArray();
 
-            if (! empty($transitions)) {
-                $allowedStatuses = \App\Models\Document\DocumentStatus::whereIn('id', $transitions)
-                    ->where('is_active', true)
-                    ->orderBy('order')
-                    ->get();
-            }
+            $statusIds = array_merge($statusIds, $transitions);
         }
 
-        // Get all document statuses for dropdown (fallback if no transitions)
-        $statuses = ! empty($allowedStatuses) ? $allowedStatuses : \App\Models\Document\DocumentStatus::where('is_active', true)->orderBy('order')->get();
+        // Get statuses for dropdown (current status + allowed transitions)
+        $statuses = \App\Models\Document\DocumentStatus::whereIn('id', $statusIds)
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
 
         // Get all document sources for dropdown
         $documentSources = \App\Models\Document\DocumentSource::where('is_active', true)->orderBy('order')->get();
