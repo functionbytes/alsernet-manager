@@ -130,24 +130,24 @@
     .action-history-scroll {
         overflow-y: auto;
         border-top: 1px solid #e9ecef;
-        height: 300px;
+        height: 200px;
     }
 
     @media (min-width: 576px) {
         .action-history-scroll {
-            height: 350px;
+            height: 220px;
         }
     }
 
     @media (min-width: 768px) {
         .action-history-scroll {
-            height: 400px;
+            height: 240px;
         }
     }
 
     @media (min-width: 992px) {
         .action-history-scroll {
-            height: 450px;
+            height: 280px;
         }
     }
 

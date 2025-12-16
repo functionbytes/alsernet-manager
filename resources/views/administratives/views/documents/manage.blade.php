@@ -308,10 +308,10 @@
                                 <label class="form-label fw-semibold">Tipo de Carga</label>
                                 <select class="form-select" id="upload_type" name="upload_type">
                                     <option value="automatic" {{ $document->upload_type == 'automatic' ? 'selected' : '' }}>
-                                        🤖 Automático (Cliente/Sistema)
+                                       Automático (Cliente/Sistema)
                                     </option>
                                     <option value="manual" {{ $document->upload_type == 'manual' ? 'selected' : '' }}>
-                                        ✏️ Manual (Administrador)
+                                       Manual (Administrador)
                                     </option>
                                 </select>
                             </div>

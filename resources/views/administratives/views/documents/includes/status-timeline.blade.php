@@ -20,7 +20,7 @@
                 </div>
             @endif
 
-            <div class="status-timeline-scroll @if($hasMore) scrollable @endif" @if($hasMore) style="max-height: 450px; overflow-y: auto;" @endif>
+            <div class="status-timeline-scroll @if($hasMore) scrollable @endif" @if($hasMore) style="max-height: 280px; overflow-y: auto;" @endif>
                 <ul class="timeline-widget mb-0 position-relative">
                     @foreach($histories->take($showLimit) as $history)
                     <li class="timeline-item d-flex position-relative overflow-hidden pb-3">
