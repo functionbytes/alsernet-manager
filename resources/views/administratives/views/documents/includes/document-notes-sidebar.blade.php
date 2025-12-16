@@ -310,72 +310,69 @@
             if (data.success) {
                 // Add note to DOM without reloading
                 const notesList = document.querySelector('.notes-scroll');
-                const noteTemplate = document.createElement('div');
-                noteTemplate.className = 'note-item border-bottom px-2 px-md-0 py-2';
-                noteTemplate.setAttribute('data-note-id', data.note.id);
-
                 const userInitials = (data.note.author?.firstname || 'S').charAt(0).toUpperCase() +
                                     (data.note.author?.lastname || '').charAt(0).toUpperCase();
 
-                noteTemplate.innerHTML = `
-                    <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
-                        <div class="d-flex align-items-center gap-2 min-width-0">
-                            <div class="avatar-initials flex-shrink-0" style="background-color: #f6f7f9;">
-                                ${userInitials}
+                const noteHTML = `
+                    <div class="note-item border-bottom px-2 px-md-0 py-2" data-note-id="${data.note.id}">
+                        <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                            <div class="d-flex align-items-center gap-2 min-width-0">
+                                <div class="avatar-initials flex-shrink-0" style="background-color: #f6f7f9;">
+                                    ${userInitials}
+                                </div>
+                                <div class="min-width-0">
+                                    <small class="fw-semibold d-block text-truncate">
+                                        ${data.note.author?.firstname || 'Sistema'} ${(data.note.author?.lastname || '').charAt(0)}.
+                                    </small>
+                                    <small class="text-muted d-block" style="font-size: 0.7rem;">
+                                        ${new Date().toLocaleDateString('es-ES', {year: 'numeric', month: 'short', day: 'numeric'})}
+                                        ${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}
+                                    </small>
+                                </div>
                             </div>
-                            <div class="min-width-0">
-                                <small class="fw-semibold d-block text-truncate">
-                                    ${data.note.author?.firstname || 'Sistema'} ${(data.note.author?.lastname || '').charAt(0)}.
-                                </small>
-                                <small class="text-muted d-block" style="font-size: 0.7rem;">
-                                    ${new Date().toLocaleDateString('es-ES', {year: 'numeric', month: 'short', day: 'numeric'})}
-                                    ${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}
-                                </small>
+                            <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                <div class="note-actions-editable">
+                                    <button class="btn-note-edit" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Editar nota">
+                                        <i class="fas fa-pen-to-square text-black fs-2"></i>
+                                    </button>
+                                    <button class="btn-note-delete" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
+                                        <i class="fas fa-trash text-black fs-2"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center gap-1 flex-shrink-0">
-                            <div class="note-actions-editable">
-                                <button class="btn-note-edit" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Editar nota">
-                                    <i class="fas fa-pen-to-square text-black fs-2"></i>
+                        <div class="note-content mt-3">
+                            <p class="text-dark mb-0 small text-truncate-3" data-full-text="${data.note.content}">
+                                ${data.note.content}
+                            </p>
+                        </div>
+                        <div class="note-edit-form d-none mt-2" style="display: none;">
+                            <textarea class="form-control form-control-sm note-edit-textarea" rows="2" style="resize: none; font-size: 0.85rem;">${data.note.content}</textarea>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn-note-save btn-sm btn btn-success" data-note-id="${data.note.id}">
+                                    <i class="fas fa-check me-1"></i> Guardar
                                 </button>
-                                <button class="btn-note-delete" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
-                                    <i class="fas fa-trash text-black fs-2"></i>
+                                <button class="btn-note-cancel btn-sm btn btn-secondary">
+                                    <i class="fas fa-times me-1"></i> Cancelar
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="note-content mt-3">
-                        <p class="text-dark mb-0 small text-truncate-3" data-full-text="${data.note.content}">
-                            ${data.note.content}
-                        </p>
-                    </div>
-                    <div class="note-edit-form d-none mt-2" style="display: none;">
-                        <textarea class="form-control form-control-sm note-edit-textarea" rows="2" style="resize: none; font-size: 0.85rem;">${data.note.content}</textarea>
-                        <div class="d-flex gap-2 mt-2">
-                            <button class="btn-note-save btn-sm btn btn-success" data-note-id="${data.note.id}">
-                                <i class="fas fa-check me-1"></i> Guardar
-                            </button>
-                            <button class="btn-note-cancel btn-sm btn btn-secondary">
-                                <i class="fas fa-times me-1"></i> Cancelar
-                            </button>
                         </div>
                     </div>
                 `;
 
                 // If notes list doesn't exist, create it (first note)
                 if (!notesList) {
-                    const noNotesAlert = document.querySelector('[role="alert"]');
+                    const noNotesAlert = document.querySelector('.card-body [role="alert"]');
                     if (noNotesAlert) {
-                        noNotesAlert.parentElement.innerHTML = `
+                        noNotesAlert.replaceWith(`
                             <div class="notes-scroll scrollable mb-3">
-                                <ul class="timeline-widget mb-0 position-relative" style="list-style: none; padding-left: 0;">
-                                    ${noteTemplate.outerHTML}
-                                </ul>
+                                ${noteHTML}
                             </div>
-                        `;
+                        `);
                     }
                 } else {
-                    notesList.querySelector('ul').insertAdjacentHTML('afterbegin', noteTemplate.outerHTML);
+                    // Insert at the beginning of notes-scroll
+                    notesList.insertAdjacentHTML('afterbegin', noteHTML);
                 }
 
                 // Rebind event listeners for new note
