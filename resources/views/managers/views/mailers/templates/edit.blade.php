@@ -848,18 +848,12 @@ $(document).ready(function() {
 
     // Render Variables
     function renderVariables(variableGroups) {
-        // Render in panel below editor (grouped by category)
-        let html = '';
+        // Render in panel below editor
+        let html = '<div class="row g-1 px-2">';
 
         $.each(variableGroups, function(groupIdx, group) {
             // Skip "Cliente" category
             if (group.group === 'Cliente') return true;
-
-            html += `<div class="mb-3">`;
-            html += `<h6 class="text-muted small fw-bold px-2 mt-3 mb-2">`;
-            html += `<i class="fas fa-folder me-1"></i>${group.group}`;
-            html += `</h6>`;
-            html += `<div class="row g-1 px-2">`;
 
             $.each(group.items, function(idx, variable) {
                 html += `<div class="col-6 col-md-4">`;
@@ -868,11 +862,9 @@ $(document).ready(function() {
                 html += `</div>`;
                 html += `</div>`;
             });
-
-            html += `</div>`;
-            html += `</div>`;
         });
 
+        html += '</div>';
         $('#variablesPanel').html(html);
 
         // Render in top selector (toolbar)

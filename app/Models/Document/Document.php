@@ -20,6 +20,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string|null $source
  * @property int|null $lang_id
  * @property \Illuminate\Support\Carbon|null $confirmed_at When the document upload was confirmed
+ * @property \Illuminate\Support\Carbon|null $uploaded_confirmation_sent_at When the upload confirmation event was sent
  * @property \Illuminate\Support\Carbon|null $reminder_at
  * @property int|null $order_id
  * @property int|null $customer_id
@@ -86,11 +87,13 @@ class Document extends Model implements HasMedia
 
     protected $casts = [
         'confirmed_at' => 'datetime',
+        'uploaded_confirmation_sent_at' => 'datetime',
         'reminder_at' => 'datetime',
         'reminder_sent_at' => 'datetime',
         'order_date' => 'datetime',
         'required_documents' => 'array',
         'uploaded_documents' => 'array',
+        'upload_type' => 'string',
     ];
 
     protected $fillable = [
@@ -98,8 +101,11 @@ class Document extends Model implements HasMedia
         'type',
         'proccess',
         'source',
+        'document_source_id',
+        'upload_type',
         'lang_id',
         'confirmed_at',
+        'uploaded_confirmation_sent_at',
         'reminder_at',
         'reminder_sent_at',
         'order_id',
@@ -329,6 +335,14 @@ class Document extends Model implements HasMedia
     public function status(): BelongsTo
     {
         return $this->belongsTo(DocumentStatus::class, 'status_id');
+    }
+
+    /**
+     * Relación con la fuente/origen del documento
+     */
+    public function documentSource(): BelongsTo
+    {
+        return $this->belongsTo(DocumentSource::class, 'document_source_id');
     }
 
     /**

@@ -749,11 +749,6 @@ $(document).ready(function() {
             // Skip "Cliente" category
             if (group.group === 'Cliente') return true;
 
-            html += `<div class="mb-3">`;
-            html += `<h6 class="text-muted small fw-bold px-2 mt-2 mb-2">`;
-            html += `<i class="fas fa-folder me-1"></i>${group.group}`;
-            html += `</h6>`;
-
             $.each(group.items, function(idx, variable) {
                 html += `<div class="mb-2 pb-2 border-bottom variable-insert" data-variable-name="${variable.name}">`;
                 html += `<a class="text-decoration-none d-block" onclick="return false;">`;
@@ -761,8 +756,6 @@ $(document).ready(function() {
                 html += `</a>`;
                 html += `</div>`;
             });
-
-            html += `</div>`;
         });
 
         $('#variablesPanel').html(html);

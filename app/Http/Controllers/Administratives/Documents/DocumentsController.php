@@ -7,6 +7,7 @@ use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationContro
 use App\Jobs\Document\SendTemplateEmailJob;
 use App\Models\Document\Document;
 use App\Models\Mail\MailTemplate;
+use App\Models\Prestashop\Orders\OrderSendErp;
 use App\Services\Documents\DocumentActionService;
 use App\Services\DocumentTypeService;
 use App\Services\ErpService;
@@ -466,16 +467,77 @@ class DocumentsController extends Controller
 
     public function update(Request $request)
     {
-
         $document = Document::findByUid($request->uid);
+        $oldStatusId = $document->status_id;
         $document->proccess = $request->proccess;
 
-        // Actualizar source si se proporciona
+        // Actualizar source si se proporciona (legacy field - keep for backward compatibility)
         if ($request->has('source')) {
             $document->source = $request->source;
         }
 
+        // Actualizar document_source_id (nuevo campo principal)
+        if ($request->has('document_source_id') && ! empty($request->document_source_id)) {
+            $document->document_source_id = $request->document_source_id;
+        }
+
+        // Actualizar upload_type (manual vs automatic)
+        if ($request->has('upload_type')) {
+            $document->upload_type = $request->upload_type;
+        }
+
+        // Actualizar status si se proporciona
+        if ($request->has('status_id') && ! empty($request->status_id)) {
+            $newStatusId = $request->status_id;
+
+            // Validar transición si existe estado anterior
+            if ($oldStatusId && $oldStatusId !== $newStatusId) {
+                $transition = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $oldStatusId)
+                    ->where('to_status_id', $newStatusId)
+                    ->active()
+                    ->first();
+
+                if (! $transition) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Transición de estado no permitida',
+                    ], 400);
+                }
+
+                // Validar permisos si es necesario
+                if (! $transition->canTransition(auth()->id())) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No tienes permisos para realizar esta transición',
+                    ], 403);
+                }
+            }
+
+            $document->status_id = $newStatusId;
+        }
+
         $document->save();
+
+        // Fire DocumentStatusChanged event if status was actually changed
+        if ($oldStatusId !== $document->status_id && $document->status_id) {
+            $oldStatus = \App\Models\Document\DocumentStatus::find($oldStatusId);
+            $newStatus = \App\Models\Document\DocumentStatus::find($document->status_id);
+
+            if ($oldStatus && $newStatus) {
+                // Verify transition is valid
+                $transition = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $oldStatusId)
+                    ->where('to_status_id', $document->status_id)
+                    ->active()
+                    ->first();
+
+                event(new \App\Events\Document\DocumentStatusChanged(
+                    $document,
+                    $oldStatus,
+                    $newStatus,
+                    'Manual status change via admin panel'
+                ));
+            }
+        }
 
         if ($request->proccess == 1) {
             OrderSendErp::create([
@@ -868,6 +930,12 @@ class DocumentsController extends Controller
         $products = $document->products;
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
+        // Get all document statuses for dropdown
+        $statuses = \App\Models\Document\DocumentStatus::where('is_active', true)->orderBy('order')->get();
+
+        // Get all document sources for dropdown
+        $documentSources = \App\Models\Document\DocumentSource::where('is_active', true)->orderBy('order')->get();
+
         // Get global document configuration settings
         $configController = new DocumentConfigurationController;
         $globalSettings = $configController->getGlobalSettings();
@@ -890,13 +958,14 @@ class DocumentsController extends Controller
             'enable_custom_email' => $globalSettings['enable_custom_email'] ?? false,
             'enable_approval' => $globalSettings['enable_approval'] ?? true,
             'enable_rejection' => $globalSettings['enable_rejection'] ?? true,
-            'enable_completion' => $globalSettings['enable_completion'] ?? true,
         ];
 
         return view('administratives.views.documents.manage')->with([
             'document' => $document,
             'products' => $products,
             'sources' => $sources,
+            'statuses' => $statuses,
+            'documentSources' => $documentSources,
             'documentConfig' => $documentConfig,
             'globalSettings' => $globalSettings,
             'customEmailTemplate' => $customEmailTemplate,
@@ -1901,62 +1970,6 @@ class DocumentsController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Error sending rejection email', [
-                'uid' => $uid,
-                'error' => $e->getMessage(),
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al enviar correo: '.$e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
-     * Send completion email
-     */
-    public function sendCompletionEmail(Request $request, $uid)
-    {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            if (Setting::get('documents.enable_completion') !== 'yes') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'La notificación de finalización está deshabilitada.',
-                ], 403);
-            }
-
-            $recipient = $document->customer_email ?? $document->customer?->email;
-
-            if (! $recipient) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se pudo enviar: documento sin email de cliente',
-                ], 400);
-            }
-
-            $notes = $request->input('notes');
-
-            SendTemplateEmailJob::dispatch($document, 'completion', [
-                'notes' => $notes,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email de finalización en cola para envío',
-                'recipient' => $recipient,
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Error sending completion email', [
                 'uid' => $uid,
                 'error' => $e->getMessage(),
             ]);

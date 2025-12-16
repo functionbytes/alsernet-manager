@@ -15,6 +15,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
  * @property-read \App\Models\Prestashop\Order\Order|null $order
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order ascending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order descending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order id($id)
@@ -23,13 +24,14 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order order($order)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order uid($uid)
+ *
  * @mixin \Eloquent
  */
-class Order extends Model  implements HasMedia
+class Order extends Model implements HasMedia
 {
     use HasFactory ,HasUid ,  InteractsWithMedia;
 
-    protected $table = "orders";
+    protected $table = 'orders';
 
     protected $fillable = [
         'uid',
@@ -40,7 +42,7 @@ class Order extends Model  implements HasMedia
         'customer_id',
         'cart_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function scopeDescending($query)
@@ -52,17 +54,18 @@ class Order extends Model  implements HasMedia
     {
         return $query->orderBy('created_at', 'asc');
     }
-    public function scopeOrder($query ,$order)
+
+    public function scopeOrder($query, $order)
     {
-        return $query->where('order_id' ,$order)->first();
+        return $query->where('order_id', $order)->first();
     }
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
-        return $query->where('id' ,$id)->first();
+        return $query->where('id', $id)->first();
     }
 
-    public function scopeUid($query ,$uid)
+    public function scopeUid($query, $uid)
     {
         return $query->where('uid', $uid)->first();
     }
@@ -73,26 +76,26 @@ class Order extends Model  implements HasMedia
             return $media->getUrl();
         })->toArray();
     }
+
     public function getDocumentUrl(): ?string
     {
         $media = $this->getFirstMedia('documents');
+
         return $media ? $media->getUrl() : null;
     }
 
-
     public function order(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Order\Order','order_id','id_order');
+        return $this->belongsTo('App\Models\Prestashop\Order\Order', 'order_id', 'id_order');
     }
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Customer','customer_id','id_customer');
+        return $this->belongsTo('App\Models\Prestashop\Customer', 'customer_id', 'id_customer');
     }
 
     public function cart(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Cart\Cart','cart_id','id_cart');
+        return $this->belongsTo('App\Models\Prestashop\Cart\Cart', 'cart_id', 'id_cart');
     }
-
 }

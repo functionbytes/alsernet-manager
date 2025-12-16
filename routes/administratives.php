@@ -35,7 +35,6 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::post('/{uid}/send-upload-confirmation', [DocumentsController::class, 'sendUploadConfirmationEmail'])->name('administrative.documents.send-upload-confirmation');
         Route::post('/{uid}/send-approval', [DocumentsController::class, 'sendApprovalEmail'])->name('administrative.documents.send-approval');
         Route::post('/{uid}/send-rejection', [DocumentsController::class, 'sendRejectionEmail'])->name('administrative.documents.send-rejection');
-        Route::post('/{uid}/send-completion', [DocumentsController::class, 'sendCompletionEmail'])->name('administrative.documents.send-completion');
         Route::post('/{uid}/admin-upload', [DocumentsController::class, 'adminUploadDocument'])->name('administrative.documents.admin-upload');
         Route::post('/sync/fields', [DocumentsController::class, 'syncAllDocumentFields'])->name('administrative.documents.sync-fields');
         Route::get('/{uid}/document-state', [DocumentsController::class, 'getDocumentState'])->name('administrative.documents.state');

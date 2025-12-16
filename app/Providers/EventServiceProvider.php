@@ -11,6 +11,7 @@ use App\Events\Documents\DocumentUploaded;
 use App\Events\Subscribers\SubscriberCheckatEvent;
 use App\Listeners\Backups\BackupEventListener;
 use App\Listeners\Campaigns\GiftvoucherListener;
+use App\Listeners\Documents\LogDocumentStatusChange;
 use App\Listeners\Documents\SendDocumentUploadConfirmation;
 use App\Listeners\Documents\SendDocumentUploadNotification;
 use App\Listeners\Documents\SendDocumentUploadReminder;
@@ -62,6 +63,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         DocumentStatusChanged::class => [
+            LogDocumentStatusChange::class,
             SendApprovalEmailListener::class,
             SendRejectionEmailListener::class,
             SendCompletionEmailListener::class,
@@ -99,6 +101,9 @@ class EventServiceProvider extends ServiceProvider
 
         // Register backup event handlers to prevent notification errors
         $this->registerBackupEventHandlers();
+
+        // Note: EventServiceProvider may be booted multiple times by Laravel's container,
+        // but the PreventsDuplicateEventExecution trait in listeners prevents actual duplicate execution
     }
 
     /**
@@ -126,6 +131,6 @@ class EventServiceProvider extends ServiceProvider
 
     public function shouldDiscoverEvents(): bool
     {
-        return true;
+        return false;
     }
 }

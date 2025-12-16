@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Documents\DocumentCreated;
 use App\Events\Documents\DocumentReminderRequested;
 use App\Events\Documents\DocumentUploaded;
 use App\Models\Document\Document;
@@ -53,7 +54,6 @@ class DocumentsController extends ApiController
 
     public function process(Request $request)
     {
-
         $action = $request->input('action');
 
         $data = $request->all();
@@ -184,6 +184,9 @@ class DocumentsController extends ApiController
                 $document->save();
             }
 
+            // Disparar evento para enviar email inicial y programar recordatorio
+            event(new DocumentCreated($document));
+
             return response()->json([
                 'status' => 'success',
                 'message' => "Document request created successfully for order {$orderId}",
@@ -241,7 +244,7 @@ class DocumentsController extends ApiController
             ], 400);
         }
 
-        $document = Document::uid($uid);
+        $document = Document::uid($uid)->first();
 
         if (! $document) {
             return response()->json([
@@ -263,8 +266,8 @@ class DocumentsController extends ApiController
                 'type' => $document->type ?? 'general',
                 'label' => $document->order_reference ?? $document->order_id,
                 'can_upload' => is_null($document->confirmed_at),
-                'required_documents' => $document->getRequiredDocuments(),
-                'uploaded_documents' => $document->getUploadedDocumentTypes(),
+                'required_documents' => $document->getRequiredDocumentsWithLabels(),
+                'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
                 'missing_documents' => $document->getMissingDocuments(),
                 'is_complete' => $document->hasAllRequiredDocuments(),
             ],
@@ -283,7 +286,7 @@ class DocumentsController extends ApiController
                 ], 400);
             }
 
-            $document = Document::uid($uid);
+            $document = Document::uid($uid)->first();
 
             if (! $document) {
                 return response()->json([
@@ -319,7 +322,35 @@ class DocumentsController extends ApiController
 
             // Procesar cada archivo con su tipo
             foreach ($files as $index => $file) {
+                // Validar que el archivo es válido
+                if (! $file || ! $file->isValid()) {
+                    $errorMessage = 'Invalid file provided at index '.$index;
+
+                    // Agregar detalles del error para debugging
+                    if ($file) {
+                        $errorMessage .= ' - Error: '.$file->getError();
+                        $errorMessage .= ' - Name: '.$file->getClientOriginalName();
+                        $errorMessage .= ' - Size: '.$file->getSize();
+                    } else {
+                        $errorMessage .= ' - File is null';
+                    }
+
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => $errorMessage,
+                    ], 400);
+                }
+
                 $docType = $documentTypes[$index] ?? 'documento';
+
+                // Validar tamaño del archivo (máximo 10MB)
+                $maxSize = 10 * 1024 * 1024; // 10MB
+                if ($file->getSize() > $maxSize) {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'File "'.$file->getClientOriginalName().'" is too large. Maximum size is 10MB.',
+                    ], 400);
+                }
 
                 // Eliminar archivo previo del mismo tipo si existe
                 $existingMedia = $document->getMedia('documents')
@@ -336,6 +367,9 @@ class DocumentsController extends ApiController
                     ->toMediaCollection('documents');
             }
 
+            // Refrescar el documento para obtener los medios recién subidos
+            $document->refresh();
+
             // Actualizar JSON de documentos subidos
             $document->syncUploadedDocumentsJson();
 
@@ -347,14 +381,38 @@ class DocumentsController extends ApiController
             $document->source = $request->input('source', 'api');
             $document->save();
 
-            // Disparar evento
-            event(new DocumentUploaded($document));
+            // Refrescar nuevamente para obtener los datos actualizados
+            $document->refresh();
+
+            // Obtener documentos subidos para respuesta
+            $uploadedDocs = $document->getUploadedDocumentsWithDetails();
+
+            // Disparar evento SOLO cuando todos los documentos estén completos
+            // Usa UPDATE atómico para prevenir múltiples disparos
+            $isComplete = $document->hasAllRequiredDocuments();
+
+            if ($isComplete) {
+                // Usar UPDATE atómico para asegurar que solo se marca una vez
+                $updated = \DB::table('documents')
+                    ->where('id', $document->id)
+                    ->whereNull('uploaded_confirmation_sent_at')
+                    ->update([
+                        'uploaded_confirmation_sent_at' => Carbon::now()->setTimezone('Europe/Madrid'),
+                        'updated_at' => Carbon::now()->setTimezone('Europe/Madrid'),
+                    ]);
+
+                // Si se actualizó, disparar el evento (el listener usará PreventsDuplicateEventExecution)
+                if ($updated === 1) {
+                    $document->refresh();
+                    event(new DocumentUploaded($document));
+                }
+            }
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Documents uploaded successfully',
                 'data' => [
-                    'uploaded_documents' => $document->uploaded_documents,
+                    'uploaded_documents' => $uploadedDocs,
                     'missing_documents' => $document->getMissingDocuments(),
                     'is_complete' => $document->hasAllRequiredDocuments(),
                 ],
@@ -381,7 +439,7 @@ class DocumentsController extends ApiController
                 ], 400);
             }
 
-            $document = Document::uid($uid);
+            $document = Document::uid($uid)->first();
 
             if (! $document) {
                 return response()->json([
@@ -432,7 +490,7 @@ class DocumentsController extends ApiController
             'uid' => 'required|string',
         ]);
 
-        $document = Document::uid($request->input('uid'));
+        $document = Document::uid($request->input('uid'))->first();
 
         if (! $document) {
             return response()->json([
@@ -458,7 +516,7 @@ class DocumentsController extends ApiController
             'uid' => 'required|string',
         ]);
 
-        $document = Document::uid($request->input('uid'));
+        $document = Document::uid($request->input('uid'))->first();
 
         if (! $document) {
             return response()->json([
@@ -558,7 +616,7 @@ class DocumentsController extends ApiController
         $orderId = $request->input('order_id');
 
         // Obtener el documento
-        $document = Document::uid($uid);
+        $document = Document::uid($uid)->first();
 
         if (! $document) {
             return response()->json([

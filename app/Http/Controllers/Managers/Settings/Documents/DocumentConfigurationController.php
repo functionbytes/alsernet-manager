@@ -45,7 +45,6 @@ class DocumentConfigurationController extends Controller
             'enable_upload_confirmation' => 'boolean',
             'enable_approval' => 'boolean',
             'enable_rejection' => 'boolean',
-            'enable_completion' => 'boolean',
             'mail_template_initial_request_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_reminder_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_missing_docs_id' => 'nullable|integer|exists:mail_templates,id',
@@ -53,7 +52,6 @@ class DocumentConfigurationController extends Controller
             'mail_template_upload_confirmation_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_approval_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_rejection_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_completion_id' => 'nullable|integer|exists:mail_templates,id',
         ]);
 
         try {
@@ -65,7 +63,6 @@ class DocumentConfigurationController extends Controller
             Setting::set('documents.enable_upload_confirmation', $request->boolean('enable_upload_confirmation') ? 'yes' : 'no');
             Setting::set('documents.enable_approval', $request->boolean('enable_approval') ? 'yes' : 'no');
             Setting::set('documents.enable_rejection', $request->boolean('enable_rejection') ? 'yes' : 'no');
-            Setting::set('documents.enable_completion', $request->boolean('enable_completion') ? 'yes' : 'no');
 
             // Save template IDs
             Setting::set('documents.mail_template_initial_request_id', (string) ($validated['mail_template_initial_request_id'] ?? ''));
@@ -75,7 +72,6 @@ class DocumentConfigurationController extends Controller
             Setting::set('documents.mail_template_upload_confirmation_id', (string) ($validated['mail_template_upload_confirmation_id'] ?? ''));
             Setting::set('documents.mail_template_approval_id', (string) ($validated['mail_template_approval_id'] ?? ''));
             Setting::set('documents.mail_template_rejection_id', (string) ($validated['mail_template_rejection_id'] ?? ''));
-            Setting::set('documents.mail_template_completion_id', (string) ($validated['mail_template_completion_id'] ?? ''));
 
             return redirect()
                 ->back()
@@ -131,7 +127,6 @@ class DocumentConfigurationController extends Controller
             'enable_upload_confirmation' => Setting::get('documents.enable_upload_confirmation', 'yes') === 'yes',
             'enable_approval' => Setting::get('documents.enable_approval', 'yes') === 'yes',
             'enable_rejection' => Setting::get('documents.enable_rejection', 'yes') === 'yes',
-            'enable_completion' => Setting::get('documents.enable_completion', 'yes') === 'yes',
             'mail_template_initial_request_id' => Setting::get('documents.mail_template_initial_request_id'),
             'mail_template_reminder_id' => Setting::get('documents.mail_template_reminder_id'),
             'mail_template_missing_docs_id' => Setting::get('documents.mail_template_missing_docs_id'),
@@ -139,7 +134,6 @@ class DocumentConfigurationController extends Controller
             'mail_template_upload_confirmation_id' => Setting::get('documents.mail_template_upload_confirmation_id'),
             'mail_template_approval_id' => Setting::get('documents.mail_template_approval_id'),
             'mail_template_rejection_id' => Setting::get('documents.mail_template_rejection_id'),
-            'mail_template_completion_id' => Setting::get('documents.mail_template_completion_id'),
             'available_templates' => $availableTemplates,
         ];
     }

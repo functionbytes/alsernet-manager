@@ -43,7 +43,7 @@
 
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
-                                   Solicitud inicial de documentos
+                                   Solicitud de documentos
                                 </h6>
                                 <p class="text-muted small mb-3">
                                     Se envía cuando se detecta una orden pagada y se crea un documento que requiere ser cargado.
@@ -166,7 +166,7 @@
                             <!-- Correo Personalizado -->
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
-                                    Correo Personalizado
+                                    Correo personalizado
                                 </h6>
                                 <p class="text-muted small mb-3">
                                     Opción para enviar correos personalizados manualmente desde la gestión de documentos.
@@ -205,7 +205,7 @@
                             <!-- Configuración de Confirmación de Subida -->
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
-                                    Notificación de Confirmación de Subida
+                                    Notificación de confirmación de subida
                                 </h6>
                                 <p class="text-muted small mb-3">
                                     Se envía automáticamente cuando el cliente carga documentos en el portal.
@@ -243,7 +243,7 @@
                             <!-- Configuración de Aprobación -->
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
-                                    Notificación de Aprobación
+                                    Notificación de aprobación
                                 </h6>
                                 <p class="text-muted small mb-3">
                                     Se envía cuando los documentos son aprobados y el proceso continúa.
@@ -281,7 +281,7 @@
                             <!-- Configuración de Rechazo -->
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
-                                    Notificación de Rechazo
+                                    Notificación de rechazo
                                 </h6>
                                 <p class="text-muted small mb-3">
                                     Se envía cuando los documentos son rechazados y se requiere que se reenvíen.
@@ -310,44 +310,6 @@
                                     </select>
                                     <small class="text-muted d-block mt-2">
                                         Notifica al cliente que sus documentos fueron rechazados e indica qué debe corregir.
-                                    </small>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <!-- Configuración de Finalización -->
-                            <div class="mb-4">
-                                <h6 class="mb-1 fw-bold text-dark">
-                                    Notificación de Finalización
-                                </h6>
-                                <p class="text-muted small mb-3">
-                                    Se envía cuando el proceso de documentación está completamente finalizado.
-                                </p>
-
-                                <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="enableCompletion"
-                                           name="enable_completion" value="1"
-                                           {{ ($globalSettings['enable_completion'] ?? true) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="enableCompletion">
-                                        <strong>Habilitar</strong> notificación de finalización
-                                    </label>
-                                </div>
-
-                                <div class="mb-0">
-                                    <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_completion_id"
-                                            name="mail_template_completion_id"
-                                            data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
-                                        @foreach ($globalSettings['available_templates'] as $template)
-                                            <option value="{{ $template['id'] }}"
-                                                    @if ((string)$globalSettings['mail_template_completion_id'] === (string)$template['id']) selected @endif>
-                                                {{ $template['text'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <small class="text-muted d-block mt-2">
-                                        Notifica al cliente que todo el proceso de documentación ha sido completado.
                                     </small>
                                 </div>
                             </div>
@@ -477,8 +439,7 @@
         '#mail_template_custom_email_id',
         '#mail_template_upload_confirmation_id',
         '#mail_template_approval_id',
-        '#mail_template_rejection_id',
-        '#mail_template_completion_id'
+        '#mail_template_rejection_id'
     ];
 
     function initializeSelect2() {

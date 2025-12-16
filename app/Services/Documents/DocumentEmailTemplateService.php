@@ -380,53 +380,6 @@ class DocumentEmailTemplateService
     }
 
     /**
-     * Enviar email de finalización
-     */
-    public static function sendCompletionEmail(Document $document, ?string $notes = null): bool
-    {
-        try {
-            $template = self::resolveTemplate('documents.mail_template_completion_id', 'document_completion', ['completion_notification']);
-
-            if (! $template) {
-                return false;
-            }
-
-            $recipient = $document->customer_email ?? $document->customer?->email;
-            if (! $recipient) {
-                return false;
-            }
-
-            $variables = self::prepareDocumentVariables($document, [], $notes);
-
-            // Get lang_id from document (defaults to 1 if not set)
-            $langId = $document->lang_id ?? 1;
-
-            // Get translation for the template using document's language
-            $translation = $template->translate($langId);
-            if (! $translation || ! $translation->subject) {
-                return false;
-            }
-
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
-
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
-
-            return true;
-        } catch (\Exception $e) {
-            \Log::error('Error sending completion email', [
-                'document_uid' => $document->uid,
-                'error' => $e->getMessage(),
-            ]);
-
-            return false;
-        }
-    }
-
-    /**
      * Preparar variables para el documento
      */
     private static function prepareDocumentVariables(

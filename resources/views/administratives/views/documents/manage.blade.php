@@ -86,6 +86,52 @@
                         </div>
                     @endif
 
+
+                        @if($documentConfig['enable_upload_confirmation'] ?? true)
+                            <hr class="my-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold mb-1">
+                                    Confirmación de subida
+                                </label>
+                                <p class="text-muted small mb-2">
+                                    Confirma al cliente que sus documentos han sido recibidos.
+                                </p>
+                                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#uploadConfirmationModal">
+                                    Enviar confirmación
+                                </button>
+                            </div>
+                        @endif
+
+                        @if($documentConfig['enable_approval'] ?? true)
+                            <hr class="my-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold mb-1">
+                                    Notificación de aprobación
+                                </label>
+                                <p class="text-muted small mb-2">
+                                    Notifica al cliente que sus documentos fueron aprobados.
+                                </p>
+                                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#approvalModal">
+                                    Enviar aprobación
+                                </button>
+                            </div>
+                        @endif
+
+                        @if($documentConfig['enable_rejection'] ?? true)
+                            <hr class="my-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold mb-1">
+                                    Notificación de rechazo
+                                </label>
+                                <p class="text-muted small mb-2">
+                                    Notifica al cliente que sus documentos fueron rechazados.
+                                </p>
+                                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#rejectionModal">
+                                    Enviar rechazo
+                                </button>
+                            </div>
+                        @endif
+
                      @if($documentConfig['enable_custom_email'] ?? true)
 
                         <!-- Correo Personalizado -->
@@ -103,65 +149,6 @@
 
                         @endif
 
-                    @if($documentConfig['enable_upload_confirmation'] ?? true)
-                        <hr class="my-3">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-1">
-                                Confirmación de subida
-                            </label>
-                            <p class="text-muted small mb-2">
-                                Confirma al cliente que sus documentos han sido recibidos.
-                            </p>
-                            <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#uploadConfirmationModal">
-                                <i class="fas fa-check-circle me-1"></i> Enviar confirmación
-                            </button>
-                        </div>
-                    @endif
-
-                    @if($documentConfig['enable_approval'] ?? true)
-                        <hr class="my-3">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-1">
-                                Notificación de aprobación
-                            </label>
-                            <p class="text-muted small mb-2">
-                                Notifica al cliente que sus documentos fueron aprobados.
-                            </p>
-                            <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#approvalModal">
-                                <i class="fas fa-thumbs-up me-1"></i> Enviar aprobación
-                            </button>
-                        </div>
-                    @endif
-
-                    @if($documentConfig['enable_rejection'] ?? true)
-                        <hr class="my-3">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-1">
-                                Notificación de rechazo
-                            </label>
-                            <p class="text-muted small mb-2">
-                                Notifica al cliente que sus documentos fueron rechazados.
-                            </p>
-                            <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#rejectionModal">
-                                <i class="fas fa-times-circle me-1"></i> Enviar rechazo
-                            </button>
-                        </div>
-                    @endif
-
-                    @if($documentConfig['enable_completion'] ?? true)
-                        <hr class="my-3">
-                        <div class="mb-0">
-                            <label class="form-label fw-semibold mb-1">
-                                Notificación de finalización
-                            </label>
-                            <p class="text-muted small mb-2">
-                                Notifica al cliente que el proceso ha sido completado.
-                            </p>
-                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#completionModal">
-                                <i class="fas fa-flag-checkered me-1"></i> Enviar finalización
-                            </button>
-                        </div>
-                    @endif
                 </div>
             </div>
 
@@ -291,21 +278,41 @@
 
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Gestionado</label>
-                                <select class="form-select select2" id="proccess" name="proccess">
-                                    <option value="0" {{ $document->proccess == 0 ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $document->proccess == 1 ? 'selected' : '' }}>Sí</option>
+                                <label class="form-label fw-semibold">Estado del Documento</label>
+                                <select class="form-select select2" id="status_id" name="status_id">
+                                    <option value="">Selecciona un estado</option>
+                                    @forelse($statuses as $status)
+                                        <option value="{{ $status->id }}" {{ $document->status_id == $status->id ? 'selected' : '' }}>
+                                            {{ $status->label }}
+                                        </option>
+                                    @empty
+                                        <option disabled>No hay estados disponibles</option>
+                                    @endforelse
                                 </select>
-                                <label id="proccess-error" class="error" for="proccess" style="display: none"></label>
+                                <label id="status_id-error" class="error" for="status_id" style="display: none"></label>
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Origen</label>
-                                <select class="form-select select2" id="source" name="source">
-                                    <option value="">Sin origen</option>
-                                    <option value="manual" {{ $document->source == 'manual' ? 'selected' : '' }}>Manual</option>
-                                    <option value="email" {{ $document->source == 'email' ? 'selected' : '' }}>Email</option>
-                                    <option value="api" {{ $document->source == 'api' ? 'selected' : '' }}>API</option>
-                                    <option value="whatsapp" {{ $document->source == 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
+                                <label class="form-label fw-semibold">Origen (Canal)</label>
+                                <select class="form-select select2" id="document_source_id" name="document_source_id">
+                                    <option value="">Sin especificar</option>
+                                    @forelse($documentSources as $source)
+                                        <option value="{{ $source->id }}" {{ $document->document_source_id == $source->id ? 'selected' : '' }}>
+                                            {{ $source->label }} - {{ $source->description }}
+                                        </option>
+                                    @empty
+                                        <option disabled>No hay orígenes disponibles</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Tipo de Carga</label>
+                                <select class="form-select" id="upload_type" name="upload_type">
+                                    <option value="automatic" {{ $document->upload_type == 'automatic' ? 'selected' : '' }}>
+                                        🤖 Automático (Cliente/Sistema)
+                                    </option>
+                                    <option value="manual" {{ $document->upload_type == 'manual' ? 'selected' : '' }}>
+                                        ✏️ Manual (Administrador)
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-12">
@@ -429,7 +436,7 @@
                             </div>
                         </form>
                     @else
-                        <div class="alert alert-success mb-0" role="alert">
+                        <div class="alert alert-info  mb-0" role="alert">
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-check-circle fs-4 me-2"></i>
                                 <div>
@@ -627,7 +634,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-success d-flex align-items-center mb-3">
+                    <div class="alert alert-info  d-flex align-items-center mb-3">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email confirmando que los documentos han sido recibidos correctamente.</div>
                     </div>
@@ -652,23 +659,25 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h5 class="modal-title">
-                        <i class="fas fa-thumbs-up text-success me-2"></i>
-                        Notificación de Aprobación
-                    </h5>
+                    <div>
+                        <h5 class="modal-title">
+                            Notificación de aprobación
+                        </h5>
+                        <p class="text-muted small mb-0">Notifica al cliente que sus documentos fueron aprobados.</p>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-success d-flex align-items-center">
+                    <div class="alert alert-info  d-flex align-items-center">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
                     </div>
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-success" id="btnSendApproval">
-                        <i class="fas fa-paper-plane me-1"></i> Enviar aprobación
+                    <button type="button" class="btn btn-primary w-100" id="btnSendApproval">
+                        Enviar aprobación
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -679,14 +688,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h5 class="modal-title">
-                        <i class="fas fa-times-circle text-danger me-2"></i>
-                        Notificación de Rechazo
-                    </h5>
+                    <div>
+                        <h5 class="modal-title">
+                            Notificación de rechazo
+                        </h5>
+                        <p class="text-muted small mb-0">Notifica al cliente que sus documentos fueron rechazados.</p>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-danger d-flex align-items-center mb-3">
+                    <div class="alert alert-info  d-flex align-items-center mb-3">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
                     </div>
@@ -698,37 +709,10 @@
                     </div>
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-danger" id="btnSendRejection">
-                        <i class="fas fa-paper-plane me-1"></i> Enviar rechazo
+                    <button type="button" class="btn btn-primary w-100" id="btnSendRejection">
+                        Enviar rechazo
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Completion Modal -->
-    <div class="modal fade" id="completionModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h5 class="modal-title">
-                        <i class="fas fa-flag-checkered text-primary me-2"></i>
-                        Notificación de Finalización
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-primary d-flex align-items-center">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <div>Se enviará un email notificando que el proceso ha sido completado.</div>
-                    </div>
-                </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-primary" id="btnSendCompletion">
-                        <i class="fas fa-paper-plane me-1"></i> Enviar finalización
-                    </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -1133,6 +1117,9 @@
                 const $submitBtn = $form.find('button[type="submit"]');
                 const proccess = $('#proccess').val();
                 const source = $('#source').val();
+                const statusId = $('#status_id').val();
+                const documentSourceId = $('#document_source_id').val();
+                const uploadType = $('#upload_type').val();
 
                 if (!confirm('¿Guardar la configuración del documento?')) {
                     return;
@@ -1146,7 +1133,10 @@
                     type: 'POST',
                     data: {
                         proccess: proccess,
-                        source: source
+                        source: source,
+                        status_id: statusId,
+                        document_source_id: documentSourceId,
+                        upload_type: uploadType
                     },
                     success: function(response) {
                         if (response.success) {
@@ -1763,39 +1753,6 @@
                 });
             });
 
-            // ===== Completion Handler =====
-            $('#btnSendCompletion').on('click', function() {
-                const $btn = $(this);
-
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
-
-                $.ajax({
-                    url: "{{ route('administrative.documents.send-completion', $document->uid) }}",
-                    method: 'POST',
-                    data: {},
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success('Email de finalización enviado a: ' + response.recipient, 'Éxito', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                            $('#completionModal').modal('hide');
-                        }
-                    },
-                    error: function(xhr) {
-                        const message = xhr.responseJSON?.message || 'Error al enviar el email';
-                        toastr.error(message, 'Error', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
-                    },
-                    complete: function() {
-                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar finalización');
-                    }
-                });
-            });
         });
     </script>
 

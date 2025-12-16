@@ -644,6 +644,36 @@ No mostrar: 20px;
     color: #333333 !important;
 }
 
+/* Fondo + color del texto seleccionado dentro de CodeMirror */
+.CodeMirror-selected {
+    background: rgba(120, 170, 255, 0.35) !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+    background: rgba(120, 170, 255, 0.45) !important;
+}
+
+/* Asegura que el texto seleccionado NO cambie a blanco/transparente */
+.CodeMirror-line::selection,
+.CodeMirror-line > span::selection,
+.CodeMirror-line > span > span::selection {
+    background: rgba(120, 170, 255, 0.35) !important;
+    color: #000 !important;
+}
+
+.CodeMirror-line::-moz-selection,
+.CodeMirror-line > span::-moz-selection,
+.CodeMirror-line > span > span::-moz-selection {
+    background: rgba(120, 170, 255, 0.35) !important;
+    color: #000 !important;
+}
+
+.CodeMirror *::selection,
+.CodeMirror *::-moz-selection{
+    background: rgba(120,170,255,.35) !important;
+    color: #000 !important;
+}
+
 .cm-tab {
     color: #999 !important;
 }

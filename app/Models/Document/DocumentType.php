@@ -13,6 +13,7 @@ class DocumentType extends Model
     protected $fillable = [
         'uid',
         'slug',
+        'name',
         'icon',
         'color',
         'is_active',
