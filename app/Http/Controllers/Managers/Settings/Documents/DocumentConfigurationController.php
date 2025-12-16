@@ -42,6 +42,7 @@ class DocumentConfigurationController extends Controller
             'reminder_days' => 'required|integer|min:1|max:90',
             'enable_missing_docs' => 'boolean',
             'enable_custom_email' => 'boolean',
+            'enable_upload_confirmation' => 'boolean',
             'enable_approval' => 'boolean',
             'enable_rejection' => 'boolean',
             'enable_completion' => 'boolean',
@@ -49,6 +50,7 @@ class DocumentConfigurationController extends Controller
             'mail_template_reminder_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_missing_docs_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_custom_email_id' => 'nullable|integer|exists:mail_templates,id',
+            'mail_template_upload_confirmation_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_approval_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_rejection_id' => 'nullable|integer|exists:mail_templates,id',
             'mail_template_completion_id' => 'nullable|integer|exists:mail_templates,id',
@@ -60,6 +62,7 @@ class DocumentConfigurationController extends Controller
             Setting::set('documents.reminder_days', (string) $validated['reminder_days']);
             Setting::set('documents.enable_missing_docs', $request->boolean('enable_missing_docs') ? 'yes' : 'no');
             Setting::set('documents.enable_custom_email', $request->boolean('enable_custom_email') ? 'yes' : 'no');
+            Setting::set('documents.enable_upload_confirmation', $request->boolean('enable_upload_confirmation') ? 'yes' : 'no');
             Setting::set('documents.enable_approval', $request->boolean('enable_approval') ? 'yes' : 'no');
             Setting::set('documents.enable_rejection', $request->boolean('enable_rejection') ? 'yes' : 'no');
             Setting::set('documents.enable_completion', $request->boolean('enable_completion') ? 'yes' : 'no');
@@ -69,6 +72,7 @@ class DocumentConfigurationController extends Controller
             Setting::set('documents.mail_template_reminder_id', (string) ($validated['mail_template_reminder_id'] ?? ''));
             Setting::set('documents.mail_template_missing_docs_id', (string) ($validated['mail_template_missing_docs_id'] ?? ''));
             Setting::set('documents.mail_template_custom_email_id', (string) ($validated['mail_template_custom_email_id'] ?? ''));
+            Setting::set('documents.mail_template_upload_confirmation_id', (string) ($validated['mail_template_upload_confirmation_id'] ?? ''));
             Setting::set('documents.mail_template_approval_id', (string) ($validated['mail_template_approval_id'] ?? ''));
             Setting::set('documents.mail_template_rejection_id', (string) ($validated['mail_template_rejection_id'] ?? ''));
             Setting::set('documents.mail_template_completion_id', (string) ($validated['mail_template_completion_id'] ?? ''));
@@ -124,6 +128,7 @@ class DocumentConfigurationController extends Controller
             'reminder_days' => (int) Setting::get('documents.reminder_days', '7'),
             'enable_missing_docs' => Setting::get('documents.enable_missing_docs', 'yes') === 'yes',
             'enable_custom_email' => Setting::get('documents.enable_custom_email', 'no') === 'yes',
+            'enable_upload_confirmation' => Setting::get('documents.enable_upload_confirmation', 'yes') === 'yes',
             'enable_approval' => Setting::get('documents.enable_approval', 'yes') === 'yes',
             'enable_rejection' => Setting::get('documents.enable_rejection', 'yes') === 'yes',
             'enable_completion' => Setting::get('documents.enable_completion', 'yes') === 'yes',
@@ -131,6 +136,7 @@ class DocumentConfigurationController extends Controller
             'mail_template_reminder_id' => Setting::get('documents.mail_template_reminder_id'),
             'mail_template_missing_docs_id' => Setting::get('documents.mail_template_missing_docs_id'),
             'mail_template_custom_email_id' => Setting::get('documents.mail_template_custom_email_id'),
+            'mail_template_upload_confirmation_id' => Setting::get('documents.mail_template_upload_confirmation_id'),
             'mail_template_approval_id' => Setting::get('documents.mail_template_approval_id'),
             'mail_template_rejection_id' => Setting::get('documents.mail_template_rejection_id'),
             'mail_template_completion_id' => Setting::get('documents.mail_template_completion_id'),

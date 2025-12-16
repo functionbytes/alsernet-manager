@@ -202,6 +202,44 @@
 
                             <hr class="my-4">
 
+                            <!-- Configuración de Confirmación de Subida -->
+                            <div class="mb-4">
+                                <h6 class="mb-1 fw-bold text-dark">
+                                    Notificación de Confirmación de Subida
+                                </h6>
+                                <p class="text-muted small mb-3">
+                                    Se envía automáticamente cuando el cliente carga documentos en el portal.
+                                </p>
+
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="enableUploadConfirmation"
+                                           name="enable_upload_confirmation" value="1"
+                                           {{ ($globalSettings['enable_upload_confirmation'] ?? true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="enableUploadConfirmation">
+                                        <strong>Habilitar</strong> notificación de confirmación de subida
+                                    </label>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
+                                    <select class="form-select select2-template select2" id="mail_template_upload_confirmation_id"
+                                            name="mail_template_upload_confirmation_id"
+                                            data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
+                                        @foreach ($globalSettings['available_templates'] as $template)
+                                            <option value="{{ $template['id'] }}"
+                                                    @if ((string)$globalSettings['mail_template_upload_confirmation_id'] === (string)$template['id']) selected @endif>
+                                                {{ $template['text'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted d-block mt-2">
+                                        Notifica al cliente que sus documentos han sido recibidos correctamente.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
                             <!-- Configuración de Aprobación -->
                             <div class="mb-4">
                                 <h6 class="mb-1 fw-bold text-dark">
@@ -436,6 +474,8 @@
         '#mail_template_initial_request_id',
         '#mail_template_reminder_id',
         '#mail_template_missing_docs_id',
+        '#mail_template_custom_email_id',
+        '#mail_template_upload_confirmation_id',
         '#mail_template_approval_id',
         '#mail_template_rejection_id',
         '#mail_template_completion_id'

@@ -32,6 +32,10 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::post('/{uid}/send-reminder', [DocumentsController::class, 'sendReminderEmail'])->name('administrative.documents.send-reminder');
         Route::post('/{uid}/send-missing', [DocumentsController::class, 'sendMissingDocumentsEmail'])->name('administrative.documents.send-missing');
         Route::post('/{uid}/send-custom-email', [DocumentsController::class, 'sendCustomEmail'])->name('administrative.documents.send-custom-email');
+        Route::post('/{uid}/send-upload-confirmation', [DocumentsController::class, 'sendUploadConfirmationEmail'])->name('administrative.documents.send-upload-confirmation');
+        Route::post('/{uid}/send-approval', [DocumentsController::class, 'sendApprovalEmail'])->name('administrative.documents.send-approval');
+        Route::post('/{uid}/send-rejection', [DocumentsController::class, 'sendRejectionEmail'])->name('administrative.documents.send-rejection');
+        Route::post('/{uid}/send-completion', [DocumentsController::class, 'sendCompletionEmail'])->name('administrative.documents.send-completion');
         Route::post('/{uid}/admin-upload', [DocumentsController::class, 'adminUploadDocument'])->name('administrative.documents.admin-upload');
         Route::post('/sync/fields', [DocumentsController::class, 'syncAllDocumentFields'])->name('administrative.documents.sync-fields');
         Route::get('/{uid}/document-state', [DocumentsController::class, 'getDocumentState'])->name('administrative.documents.state');

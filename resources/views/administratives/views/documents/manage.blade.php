@@ -89,7 +89,7 @@
                      @if($documentConfig['enable_custom_email'] ?? true)
 
                         <!-- Correo Personalizado -->
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="form-label fw-semibold mb-1">
                                 Correo personalizado
                             </label>
@@ -102,6 +102,66 @@
                         </div>
 
                         @endif
+
+                    @if($documentConfig['enable_upload_confirmation'] ?? true)
+                        <hr class="my-3">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold mb-1">
+                                Confirmación de subida
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Confirma al cliente que sus documentos han sido recibidos.
+                            </p>
+                            <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#uploadConfirmationModal">
+                                <i class="fas fa-check-circle me-1"></i> Enviar confirmación
+                            </button>
+                        </div>
+                    @endif
+
+                    @if($documentConfig['enable_approval'] ?? true)
+                        <hr class="my-3">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold mb-1">
+                                Notificación de aprobación
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Notifica al cliente que sus documentos fueron aprobados.
+                            </p>
+                            <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#approvalModal">
+                                <i class="fas fa-thumbs-up me-1"></i> Enviar aprobación
+                            </button>
+                        </div>
+                    @endif
+
+                    @if($documentConfig['enable_rejection'] ?? true)
+                        <hr class="my-3">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold mb-1">
+                                Notificación de rechazo
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Notifica al cliente que sus documentos fueron rechazados.
+                            </p>
+                            <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#rejectionModal">
+                                <i class="fas fa-times-circle me-1"></i> Enviar rechazo
+                            </button>
+                        </div>
+                    @endif
+
+                    @if($documentConfig['enable_completion'] ?? true)
+                        <hr class="my-3">
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold mb-1">
+                                Notificación de finalización
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Notifica al cliente que el proceso ha sido completado.
+                            </p>
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#completionModal">
+                                <i class="fas fa-flag-checkered me-1"></i> Enviar finalización
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -550,6 +610,135 @@
                     </button>
                     <button type="button" class="btn btn-secondary w-100"  data-bs-dismiss="modal">Cancelar</button>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Confirmation Modal -->
+    <div class="modal fade" id="uploadConfirmationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Confirmación de Subida
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success d-flex align-items-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>Se enviará un email confirmando que los documentos han sido recibidos correctamente.</div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
+                        <textarea class="form-control" id="uploadConfirmationNotes" rows="3"
+                                  placeholder="Mensaje adicional para el cliente..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-success" id="btnSendUploadConfirmation">
+                        <i class="fas fa-paper-plane me-1"></i> Enviar confirmación
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Modal -->
+    <div class="modal fade" id="approvalModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title">
+                        <i class="fas fa-thumbs-up text-success me-2"></i>
+                        Notificación de Aprobación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success d-flex align-items-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
+                        <textarea class="form-control" id="approvalNotes" rows="3"
+                                  placeholder="Mensaje adicional para el cliente..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-success" id="btnSendApproval">
+                        <i class="fas fa-paper-plane me-1"></i> Enviar aprobación
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Modal -->
+    <div class="modal fade" id="rejectionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title">
+                        <i class="fas fa-times-circle text-danger me-2"></i>
+                        Notificación de Rechazo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger d-flex align-items-center mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold">Razón del rechazo <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="rejectionReason" rows="4" required
+                                  placeholder="Explica por qué los documentos fueron rechazados..."></textarea>
+                        <small class="text-muted">Este campo es obligatorio.</small>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-danger" id="btnSendRejection">
+                        <i class="fas fa-paper-plane me-1"></i> Enviar rechazo
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal fade" id="completionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title">
+                        <i class="fas fa-flag-checkered text-primary me-2"></i>
+                        Notificación de Finalización
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-primary d-flex align-items-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>Se enviará un email notificando que el proceso ha sido completado.</div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
+                        <textarea class="form-control" id="completionNotes" rows="3"
+                                  placeholder="Mensaje adicional para el cliente..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-primary" id="btnSendCompletion">
+                        <i class="fas fa-paper-plane me-1"></i> Enviar finalización
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -1466,6 +1655,160 @@
                     renderCustomEmailVariables();
                     $btn.prop('disabled', false).find('i').removeClass('fa-spin');
                 }, 300);
+            });
+
+            // ===== Upload Confirmation Handler =====
+            $('#btnSendUploadConfirmation').on('click', function() {
+                const $btn = $(this);
+                const notes = $('#uploadConfirmationNotes').val();
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.send-upload-confirmation', $document->uid) }}",
+                    method: 'POST',
+                    data: { notes: notes },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Email enviado correctamente a: ' + response.recipient, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            $('#uploadConfirmationModal').modal('hide');
+                            $('#uploadConfirmationNotes').val('');
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al enviar el email';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar confirmación');
+                    }
+                });
+            });
+
+            // ===== Approval Handler =====
+            $('#btnSendApproval').on('click', function() {
+                const $btn = $(this);
+                const notes = $('#approvalNotes').val();
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.send-approval', $document->uid) }}",
+                    method: 'POST',
+                    data: { notes: notes },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Email de aprobación enviado a: ' + response.recipient, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            $('#approvalModal').modal('hide');
+                            $('#approvalNotes').val('');
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al enviar el email';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar aprobación');
+                    }
+                });
+            });
+
+            // ===== Rejection Handler =====
+            $('#btnSendRejection').on('click', function() {
+                const $btn = $(this);
+                const reason = $('#rejectionReason').val().trim();
+
+                if (!reason) {
+                    toastr.warning('Debes especificar la razón del rechazo', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    $('#rejectionReason').focus();
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.send-rejection', $document->uid) }}",
+                    method: 'POST',
+                    data: { reason: reason },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Email de rechazo enviado a: ' + response.recipient, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            $('#rejectionModal').modal('hide');
+                            $('#rejectionReason').val('');
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al enviar el email';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar rechazo');
+                    }
+                });
+            });
+
+            // ===== Completion Handler =====
+            $('#btnSendCompletion').on('click', function() {
+                const $btn = $(this);
+                const notes = $('#completionNotes').val();
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.send-completion', $document->uid) }}",
+                    method: 'POST',
+                    data: { notes: notes },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Email de finalización enviado a: ' + response.recipient, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            $('#completionModal').modal('hide');
+                            $('#completionNotes').val('');
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al enviar el email';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar finalización');
+                    }
+                });
             });
         });
     </script>

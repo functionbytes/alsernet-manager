@@ -1740,6 +1740,234 @@ class DocumentsController extends Controller
         }
     }
 
+    /**
+     * Send upload confirmation email
+     */
+    public function sendUploadConfirmationEmail(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            if (Setting::get('documents.enable_upload_confirmation') !== 'yes') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La notificación de confirmación de subida está deshabilitada.',
+                ], 403);
+            }
+
+            $recipient = $document->customer_email ?? $document->customer?->email;
+
+            if (! $recipient) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo enviar: documento sin email de cliente',
+                ], 400);
+            }
+
+            $notes = $request->input('notes');
+
+            SendTemplateEmailJob::dispatch($document, 'upload_confirmation', [
+                'notes' => $notes,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email de confirmación en cola para envío',
+                'recipient' => $recipient,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error sending upload confirmation email', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar correo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Send approval email
+     */
+    public function sendApprovalEmail(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            if (Setting::get('documents.enable_approval') !== 'yes') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La notificación de aprobación está deshabilitada.',
+                ], 403);
+            }
+
+            $recipient = $document->customer_email ?? $document->customer?->email;
+
+            if (! $recipient) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo enviar: documento sin email de cliente',
+                ], 400);
+            }
+
+            $notes = $request->input('notes');
+
+            SendTemplateEmailJob::dispatch($document, 'approval', [
+                'notes' => $notes,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email de aprobación en cola para envío',
+                'recipient' => $recipient,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error sending approval email', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar correo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Send rejection email
+     */
+    public function sendRejectionEmail(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            if (Setting::get('documents.enable_rejection') !== 'yes') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La notificación de rechazo está deshabilitada.',
+                ], 403);
+            }
+
+            $request->validate([
+                'reason' => 'required|string|max:5000',
+            ]);
+
+            $recipient = $document->customer_email ?? $document->customer?->email;
+
+            if (! $recipient) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo enviar: documento sin email de cliente',
+                ], 400);
+            }
+
+            $reason = $request->input('reason');
+
+            SendTemplateEmailJob::dispatch($document, 'rejection', [
+                'reason' => $reason,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email de rechazo en cola para envío',
+                'recipient' => $recipient,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error sending rejection email', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar correo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Send completion email
+     */
+    public function sendCompletionEmail(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            if (Setting::get('documents.enable_completion') !== 'yes') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La notificación de finalización está deshabilitada.',
+                ], 403);
+            }
+
+            $recipient = $document->customer_email ?? $document->customer?->email;
+
+            if (! $recipient) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo enviar: documento sin email de cliente',
+                ], 400);
+            }
+
+            $notes = $request->input('notes');
+
+            SendTemplateEmailJob::dispatch($document, 'completion', [
+                'notes' => $notes,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email de finalización en cola para envío',
+                'recipient' => $recipient,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error sending completion email', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar correo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
     private function syncDocumentWithOrder(Document $document, PrestashopOrder $order): bool
     {
         $customer = $order->customer;
