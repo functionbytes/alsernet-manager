@@ -7,8 +7,22 @@
     <div class="card-body">
 
         @if($document->statusHistories && $document->statusHistories->count() > 0)
-            <ul class="timeline-widget mb-0 position-relative">
-                @foreach($document->statusHistories->sortByDesc('created_at') as $history)
+            @php
+                $histories = $document->statusHistories->sortByDesc('created_at');
+                $totalHistories = $histories->count();
+                $showLimit = 5;
+                $hasMore = $totalHistories > $showLimit;
+            @endphp
+
+            @if($hasMore)
+                <div class="alert alert-info alert-sm mb-2" role="alert">
+                    <small><i class="fas fa-info-circle me-1"></i> Mostrando los últimos {{ $showLimit }} cambios de {{ $totalHistories }} totales</small>
+                </div>
+            @endif
+
+            <div class="status-timeline-scroll @if($hasMore) scrollable @endif" @if($hasMore) style="max-height: 450px; overflow-y: auto;" @endif>
+                <ul class="timeline-widget mb-0 position-relative">
+                    @foreach($histories->take($showLimit) as $history)
                     <li class="timeline-item d-flex position-relative overflow-hidden pb-3">
                         <!-- Timeline Time -->
                         <div class="timeline-time text-muted flex-shrink-0 text-end pe-3" style="min-width: 70px; font-size: 0.8rem;">
@@ -86,8 +100,9 @@
                             @endif
                         </div>
                     </li>
-                @endforeach
-            </ul>
+                    @endforeach
+                </ul>
+            </div>
         @else
             <div class="alert bg-light-subtle py-3 px-3 mb-0" role="alert">
                 <div class="d-flex align-items-start">
@@ -150,6 +165,29 @@
     .timeline-badge-wrap {
         position: relative;
         z-index: 1;
+    }
+
+    .status-timeline-scroll {
+        border-radius: 4px;
+        padding-right: 0.5rem;
+    }
+
+    .status-timeline-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .status-timeline-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .status-timeline-scroll::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+    .status-timeline-scroll::-webkit-scrollbar-thumb:hover {
+        background: #999;
     }
 </style>
 @endpush
