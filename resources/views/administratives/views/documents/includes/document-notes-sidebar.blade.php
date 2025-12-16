@@ -307,11 +307,16 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success && data.note) {
                 // Add note to DOM without reloading
                 const notesList = document.querySelector('.notes-scroll');
-                const userInitials = (data.note.author?.firstname || 'S').charAt(0).toUpperCase() +
-                                    (data.note.author?.lastname || '').charAt(0).toUpperCase();
+
+                // Safe handling of author data
+                const author = data.note.author || {};
+                const firstname = author.firstname || 'S';
+                const lastname = author.lastname || '';
+                const userInitials = firstname.charAt(0).toUpperCase() + lastname.charAt(0).toUpperCase();
+                const authorName = author.firstname ? `${author.firstname} ${lastname.charAt(0)}.` : 'Sistema';
 
                 const noteHTML = `
                     <div class="note-item border-bottom px-2 px-md-0 py-2" data-note-id="${data.note.id}">
@@ -322,7 +327,7 @@
                                 </div>
                                 <div class="min-width-0">
                                     <small class="fw-semibold d-block text-truncate">
-                                        ${data.note.author?.firstname || 'Sistema'} ${(data.note.author?.lastname || '').charAt(0)}.
+                                        ${authorName}
                                     </small>
                                     <small class="text-muted d-block" style="font-size: 0.7rem;">
                                         ${new Date().toLocaleDateString('es-ES', {year: 'numeric', month: 'short', day: 'numeric'})}

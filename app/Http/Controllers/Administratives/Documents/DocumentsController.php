@@ -1648,16 +1648,29 @@ class DocumentsController extends Controller
             $adminId = auth()->check() ? auth()->id() : 0;
 
             // Agregar la nota usando el servicio
-            DocumentActionService::addNote(
+            $note = DocumentActionService::addNote(
                 $document,
                 $adminId,
                 $request->input('content'),
                 true // is_internal
             );
 
+            // Cargar relación de autor
+            $note->load('author');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Nota agregada correctamente',
+                'note' => [
+                    'id' => $note->id,
+                    'content' => $note->content,
+                    'created_at' => $note->created_at,
+                    'author' => $note->author ? [
+                        'firstname' => $note->author->firstname ?? '',
+                        'lastname' => $note->author->lastname ?? '',
+                        'full_name' => $note->author->full_name ?? '',
+                    ] : null,
+                ],
             ]);
 
         } catch (\Exception $e) {

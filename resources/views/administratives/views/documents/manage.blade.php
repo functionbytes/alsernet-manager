@@ -278,7 +278,7 @@
 
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Estado del Documento</label>
+                                <label class="form-label fw-semibold">Estado del documento</label>
                                 <select class="form-select select2" id="status_id" name="status_id">
                                     <option value="">Selecciona un estado</option>
                                     @forelse($statuses as $status)
@@ -725,7 +725,7 @@
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title">
                         <i class="fas fa-save text-primary me-2"></i>
-                        Guardar Configuración
+                        Guardar configuración
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -739,10 +739,10 @@
                     </p>
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-primary" id="confirmConfigBtn">
-                        <i class="fas fa-check me-1"></i> Guardar
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="confirmConfigBtn">
+                        Guardar
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
