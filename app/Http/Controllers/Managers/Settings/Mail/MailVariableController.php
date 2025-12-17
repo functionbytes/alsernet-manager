@@ -78,6 +78,7 @@ class MailVariableController extends Controller
             'translations.*.lang_id' => 'required|exists:langs,id',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
+            'translations.*.value' => 'nullable|string',
         ]);
 
         $translations = $validated['translations'];
@@ -146,6 +147,7 @@ class MailVariableController extends Controller
             'translations.*.lang_id' => 'required|exists:langs,id',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
+            'translations.*.value' => 'nullable|string',
         ]);
 
         $translations = $validated['translations'];
@@ -160,6 +162,7 @@ class MailVariableController extends Controller
                 [
                     'name' => $translation['name'],
                     'description' => $translation['description'] ?? null,
+                    'value' => $translation['value'] ?? null,
                 ]
             );
         }
@@ -240,7 +243,7 @@ class MailVariableController extends Controller
 
         $grouped = [];
         foreach ($variables as $variable) {
-            if (!isset($grouped[$variable->category])) {
+            if (! isset($grouped[$variable->category])) {
                 $grouped[$variable->category] = [];
             }
 

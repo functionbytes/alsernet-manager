@@ -323,7 +323,7 @@ class MailTemplateController extends Controller
 
         // Usar el MISMO servicio que se usa para enviar emails reales
         // Esto garantiza que el preview sea idéntico al email enviado
-        $variables = $this->getPreviewVariables($template);
+        $variables = $this->getPreviewVariables($template, $langId);
         $html = \App\Services\Email\TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
         return view('managers.views.mailers.templates.preview', [
@@ -367,7 +367,7 @@ class MailTemplateController extends Controller
 
             // Usar el MISMO servicio que se usa para enviar emails reales
             // Esto garantiza que el preview sea idéntico al email enviado
-            $variables = $this->getPreviewVariables($template);
+            $variables = $this->getPreviewVariables($template, $langId);
             $html = \App\Services\Email\TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             // Restaurar valores originales
@@ -394,16 +394,21 @@ class MailTemplateController extends Controller
     /**
      * Obtener variables de ejemplo para el preview
      */
-    private function getPreviewVariables(MailTemplate $template): array
+    private function getPreviewVariables(MailTemplate $template, ?int $langId = null): array
     {
+        $langId = $langId ?? 1;
+
+        // Obtener valores reales traducidos desde la base de datos
+        $realValues = \App\Services\Email\MailVariableValueService::getTranslatedValues($langId, $template->module);
+
         $baseVariables = [
-            // Sistema
-            'COMPANY_NAME' => config('app.name', 'Alsernet'),
-            'SITE_NAME' => config('app.name', 'Alsernet'),
-            'SITE_URL' => config('app.url', 'https://example.com'),
-            'SUPPORT_EMAIL' => config('mail.support.address', 'soporte@example.com'),
-            'SUPPORT_PHONE' => '+34 900 000 000',
-            'CONTACT_EMAIL' => config('mail.from.address', 'info@example.com'),
+            // Sistema - usar valores reales de BD, con fallback a config
+            'COMPANY_NAME' => $realValues['COMPANY_NAME'] ?? config('app.name', 'Alsernet'),
+            'SITE_NAME' => $realValues['SITE_NAME'] ?? config('app.name', 'Alsernet'),
+            'SITE_URL' => $realValues['SITE_URL'] ?? config('app.url', 'https://example.com'),
+            'SUPPORT_EMAIL' => $realValues['SUPPORT_EMAIL'] ?? config('mail.support.address', 'soporte@example.com'),
+            'SUPPORT_PHONE' => $realValues['SUPPORT_PHONE'] ?? '+34 900 000 000',
+            'CONTACT_EMAIL' => $realValues['CONTACT_EMAIL'] ?? config('mail.from.address', 'info@example.com'),
             'CURRENT_YEAR' => date('Y'),
             'CURRENT_DATE' => date('d/m/Y'),
             'CURRENT_DATETIME' => date('d/m/Y H:i'),
@@ -774,7 +779,7 @@ PREHEADER;
         try {
             $module = $request->query('module');
 
-            if (!$module) {
+            if (! $module) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Module parameter is required',

@@ -11,6 +11,14 @@
                     @csrf
                     @method('PATCH')
 
+                    <!-- Hidden fields for system variables (which are disabled in UI but still need to be submitted) -->
+                    @if($variable->is_system)
+                        <input type="hidden" name="key" value="{{ $variable->key }}">
+                        <input type="hidden" name="category" value="{{ $variable->category }}">
+                        <input type="hidden" name="module" value="{{ $variable->module }}">
+                        <input type="hidden" name="is_system" value="1">
+                    @endif
+
                     <div class="card-body">
                         <!-- Header -->
                         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -27,11 +35,6 @@
 
                         <!-- Basic Information -->
                         <div class="row mb-4">
-                            <div class="col-12">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2">
-                                    <i class="fas fa-cog me-2"></i>Información Básica
-                                </h6>
-                            </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -131,16 +134,20 @@
                             @endif
                         </div>
 
+                        <hr>
                         <!-- Translations -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2">
-                                    <i class="fas fa-language me-2"></i>Traducciones
-                                </h6>
+                                <h5 class="fw-bold ">
+                                   Traducciones
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    Actualice la información en todos los idiomas disponibles.
+                                </p>
                             </div>
 
                             <div class="col-12">
-                                <ul class="nav nav-tabs mb-3" id="languageTabs" role="tablist">
+                                <ul class="nav nav-tabs mt-3 mb-3" id="languageTabs" role="tablist">
                                     @foreach($langs as $index => $lang)
                                         <li class="nav-item" role="presentation">
                                             <button class="nav-link {{ $index === 0 ? 'active' : '' }}"
@@ -153,7 +160,7 @@
                                                     $translation = $variable->translate($lang->id);
                                                 @endphp
                                                 @if($translation && $translation->name)
-                                                    <i class="fas fa-check-circle text-success ms-1"></i>
+
                                                 @else
                                                     <i class="fas fa-exclamation-circle text-warning ms-1"></i>
                                                 @endif
@@ -205,6 +212,26 @@
                                                         @enderror
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <label for="translations_{{ $lang->id }}_value" class="form-label">
+                                                            Valor visual en correo
+                                                            <small class="text-muted">(Este es el valor que se usará en los emails)</small>
+                                                        </label>
+                                                        <textarea class="form-control @error("translations.{$index}.value") is-invalid @enderror"
+                                                                  id="translations_{{ $lang->id }}_value"
+                                                                  name="translations[{{ $index }}][value]"
+                                                                  rows="2"
+                                                                  placeholder="Ingresa el valor traducido para esta variable">{{ old("translations.{$index}.value", $translation?->value) }}</textarea>
+                                                        @error("translations.{$index}.value")
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <small class="form-text text-muted">
+                                                            <i class="fas fa-info-circle me-1"></i>Dejar vacío para usar el valor por defecto del sistema
+                                                        </small>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -215,14 +242,12 @@
                     </div>
 
                     <div class="card-footer border-top">
-                        <div class="d-flex gap-2 justify-content-end">
-                            <a href="{{ route('manager.settings.mailers.variables.index') }}" class="btn btn-light">
-                                <i class="fas fa-times me-1"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Guardar Cambios
+                            <button type="submit" class="btn btn-primary mb-1 w-100">
+                               Guardar
                             </button>
-                        </div>
+                            <a href="{{ route('manager.settings.mailers.variables.index') }}" class="btn btn-light w-100">
+                                Cancelar
+                            </a>
                     </div>
                 </form>
             </div>

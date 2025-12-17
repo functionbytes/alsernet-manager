@@ -16,6 +16,7 @@ class MailVariableLang extends Model
         'lang_id',
         'name',
         'description',
+        'value',
     ];
 
     /**

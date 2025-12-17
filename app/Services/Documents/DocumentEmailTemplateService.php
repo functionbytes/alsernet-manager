@@ -417,8 +417,11 @@ class DocumentEmailTemplateService
         $documentTypeLabel = self::translateDocumentType($documentType, $locale);
         $documentInstructions = __("documents.types.{$documentType}.instructions", [], $locale);
 
+        // Obtener lang_id del documento (defaults to 1 if not set)
+        $langId = $document->lang_id ?? 1;
+
         // Variables base del sistema (siempre disponibles)
-        $variables = self::getSystemVariables($locale);
+        $variables = self::getSystemVariables($locale, $langId);
 
         // Variables específicas del documento
         $variables = array_merge($variables, [
@@ -474,18 +477,21 @@ class DocumentEmailTemplateService
     /**
      * Obtener variables del sistema (siempre disponibles)
      */
-    private static function getSystemVariables(string $locale = 'es'): array
+    private static function getSystemVariables(string $locale = 'es', int $langId = 1): array
     {
+        // Obtener los valores reales desde la base de datos
+        $realValues = \App\Services\Email\MailVariableValueService::getTranslatedValues($langId);
+
         return [
-            // Información de la empresa
-            'COMPANY_NAME' => config('app.name', 'Alsernet'),
-            'SITE_NAME' => config('app.name', 'Alsernet'),
-            'SITE_URL' => config('app.url', 'https://example.com'),
+            // Información de la empresa - usar valores reales de BD con fallback a config
+            'COMPANY_NAME' => $realValues['COMPANY_NAME'] ?? config('app.name', 'Alsernet'),
+            'SITE_NAME' => $realValues['SITE_NAME'] ?? config('app.name', 'Alsernet'),
+            'SITE_URL' => $realValues['SITE_URL'] ?? config('app.url', 'https://example.com'),
 
             // Contacto y soporte
-            'SUPPORT_EMAIL' => config('mail.support.address', 'soporte@example.com'),
-            'SUPPORT_PHONE' => config('app.support_phone', '+34 900 000 000'),
-            'CONTACT_EMAIL' => config('mail.from.address', 'info@example.com'),
+            'SUPPORT_EMAIL' => $realValues['SUPPORT_EMAIL'] ?? config('mail.support.address', 'soporte@example.com'),
+            'SUPPORT_PHONE' => $realValues['SUPPORT_PHONE'] ?? config('app.support_phone', '+34 900 000 000'),
+            'CONTACT_EMAIL' => $realValues['CONTACT_EMAIL'] ?? config('mail.from.address', 'info@example.com'),
 
             // Fechas del sistema
             'CURRENT_YEAR' => date('Y'),

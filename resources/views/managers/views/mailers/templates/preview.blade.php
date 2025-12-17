@@ -359,6 +359,19 @@
                 flex-shrink: 0;
             }
 
+            /* Desktop View - Full width */
+            .preview-email-container.preview-desktop-view {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            /* Mobile View - 375px width */
+            .preview-email-container.preview-mobile-view {
+                max-width: 375px !important;
+                width: 375px !important;
+                margin: 0 auto;
+            }
+
             /* Card Headers with Color */
             .card-header.bg-primary-subtle {
                 background-color: rgba(13, 110, 253, 0.1) !important;
@@ -503,6 +516,14 @@
             } catch (error) {
                 console.warn('Preview initialization warning:', error);
             }
+
+            // Initialize preview container with desktop view class
+            document.addEventListener('DOMContentLoaded', function() {
+                const container = document.getElementById('previewContainer');
+                if (container && !container.classList.contains('preview-desktop-view') && !container.classList.contains('preview-mobile-view')) {
+                    container.classList.add('preview-desktop-view');
+                }
+            });
         </script>
         <script src="{{ url('managers/js/forms/template-preview.js') }}"></script>
     @endpush

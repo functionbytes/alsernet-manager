@@ -153,7 +153,26 @@
       "Bash(php artisan migrate:latest:*)",
       "Bash(xargs basename:*)",
       "Bash(php artisan migrate:refresh:*)",
-      "Bash(php artisan db:seed:*)"
+      "Bash(php artisan db:seed:*)",
+      "mcp__dev-chrome__open",
+      "mcp__dev-chrome__close",
+      "mcp__dev-chrome__goto",
+      "mcp__dev-chrome__take_screenshot",
+      "mcp__dev-chrome__take_screenshot_v2",
+      "mcp__dev-chrome__click",
+      "mcp__dev-chrome__type",
+      "mcp__dev-chrome__press_key",
+      "mcp__dev-chrome__evaluate",
+      "mcp__dev-chrome__get_content",
+      "mcp__dev-chrome__set_content",
+      "mcp__dev-chrome__scroll",
+      "mcp__dev-chrome__hover",
+      "mcp__dev-chrome__wait_for_selector",
+      "mcp__dev-chrome__wait_for_navigation",
+      "mcp__dev-chrome__wait_for_function",
+      "mcp__dev-chrome__select",
+      "mcp__dev-chrome__get_resource",
+      "mcp__dev-chrome__list_pages"
     ],
     "deny": [],
     "ask": []
@@ -168,7 +187,8 @@
     "mcp-smtp",
     "mcp-mongodb",
     "mcp-codemap",
-    "laravel-boost"
+    "laravel-boost",
+    "dev-chrome"
   ],
   "disabledMcpjsonServers": [
     "n8n-mcp",

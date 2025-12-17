@@ -74,6 +74,13 @@
                 "artisan",
                 "boost:mcp"
             ]
+        },
+        "dev-chrome": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@anthropic-ai/dev-chrome"
+            ]
         }
     }
 }
