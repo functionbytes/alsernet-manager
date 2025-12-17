@@ -707,6 +707,11 @@ class Document extends Model implements HasMedia
         parent::boot();
 
         static::creating(function (Document $document) {
+            // Generate UID if not already set (must happen before save)
+            if (is_null($document->uid)) {
+                $document->generateUid();
+            }
+
             // If no type is set, default to 'general'
             if (! $document->type) {
                 $document->type = 'general';

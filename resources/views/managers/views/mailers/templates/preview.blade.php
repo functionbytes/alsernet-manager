@@ -307,7 +307,7 @@
         </div>
     </div>
 
-    @push('head')
+    @push('css')
         <style>
             /* Variable Badges */
             .variable-badge {
