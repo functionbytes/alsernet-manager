@@ -26,16 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove previous view classes
             container.classList.remove('preview-desktop-view', 'preview-mobile-view');
 
-            // Apply appropriate view class and set width
+            // Apply appropriate view class
             if (width === '375px') {
                 container.classList.add('preview-mobile-view');
             } else {
                 container.classList.add('preview-desktop-view');
             }
-
-            // Animate container width with !important to override base styles
-            container.style.setProperty('max-width', width, 'important');
-            container.style.setProperty('width', width, 'important');
 
             // Visual feedback
             if (typeof toastr !== 'undefined') {

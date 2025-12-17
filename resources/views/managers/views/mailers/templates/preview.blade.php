@@ -353,9 +353,9 @@
 
             /* Preview Container Transitions */
             .preview-email-container {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                max-width: 100% !important;
-                width: 100% !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                max-width: 100%;
+                width: 100%;
                 flex-shrink: 0;
             }
 
@@ -369,7 +369,7 @@
             .preview-email-container.preview-mobile-view {
                 max-width: 375px !important;
                 width: 375px !important;
-                margin: 0 auto;
+                margin: 0 auto !important;
             }
 
             /* Card Headers with Color */

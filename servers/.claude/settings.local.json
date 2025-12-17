@@ -4,7 +4,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(vendor/bin/pint:*)",
-      "mcp__chrome-devtools__new_page"
+      "mcp__chrome-devtools__new_page",
+      "Bash(curl -s -I https://manager.test/manager/settings/mailers/templates/preview/f8105481-1d00-33da-b217-6bf6d0bc4147)"
     ]
   }
 }
