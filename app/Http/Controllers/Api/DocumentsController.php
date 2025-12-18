@@ -131,9 +131,15 @@ class DocumentsController extends ApiController
             $document = new Document;
             $document->order_id = $orderId;
             $document->type = $data['type'] ?? 'general';
+
             // Set source_id to 'api' source from document_sources table
             $apiSource = DocumentSource::where('key', 'api')->first();
             $document->source_id = $apiSource?->id;
+
+            // Set upload_id to 'automatic' upload type
+            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $automaticUpload?->id;
+
             $document->proccess = 0;    // Estado inicial: pendiente
             $document->lang_id = $langId;  // Assign language
 
