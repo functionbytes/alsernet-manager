@@ -934,12 +934,21 @@
                 const filesBeingUploaded = [];
 
                 $('.document-file-input').each(function() {
-                    const docType = $(this).data('doc-type');
-                    if (this.files && this.files.length > 0) {
+                    const $input = $(this);
+                    const docType = $input.data('doc-type');
+
+                    if ($input[0].files && $input[0].files.length > 0) {
                         hasFiles = true;
                         uploadedByType[docType] = true;
-                        const $item = $(this).closest('.document-upload-item');
-                        const docLabel = $item.find('.form-label').text().trim();
+
+                        const $item = $input.closest('.document-upload-item');
+                        let docLabel = $item.find('.form-label').text().trim();
+
+                        // Validar que se encontró el label
+                        if (!docLabel) {
+                            docLabel = `Documento (${docType})`;
+                        }
+
                         filesBeingUploaded.push({
                             type: docType,
                             label: docLabel
@@ -979,7 +988,13 @@
                 $('.document-upload-item').each(function() {
                     const docType = $(this).data('doc-type');
                     const isAlreadyUploaded = $(this).find('.uploaded-doc-info').length > 0;
-                    const isBeingUploaded = uploadedByType[docType];
+
+                    // Verificar si hay archivo seleccionado en el input
+                    const $fileInput = $(this).find('input[type="file"][data-doc-type="' + docType + '"]');
+                    const hasFileSelected = $fileInput.length > 0 && $fileInput[0].files && $fileInput[0].files.length > 0;
+
+                    // También verificar en uploadedByType por compatibilidad
+                    const isBeingUploaded = uploadedByType[docType] || hasFileSelected;
 
                     if (!isAlreadyUploaded && !isBeingUploaded) {
                         const docLabel = $(this).find('.form-label').text().trim();
