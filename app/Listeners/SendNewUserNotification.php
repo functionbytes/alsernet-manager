@@ -2,18 +2,21 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Traits\PreventsDuplicateEventExecution;
 
-use App\Models\User;
 class SendNewUserNotification
 {
-    public function __construct()
-    {
-    }
+    use PreventsDuplicateEventExecution;
+
+    public function __construct() {}
 
     public function handle($event)
     {
-    }
+        // Prevent duplicate execution within the same request
+        if ($this->preventDuplicateExecution($event)) {
+            return;
+        }
 
+        // TODO: Implement SendNewUserNotification logic
+    }
 }

@@ -4,11 +4,14 @@ namespace App\Listeners\Documents;
 
 use App\Events\Document\DocumentStatusChanged;
 use App\Models\Document\DocumentStatusHistory;
+use App\Traits\PreventsDuplicateEventExecution;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class LogDocumentStatusChange
 {
+    use PreventsDuplicateEventExecution;
+
     /**
      * Handle the event.
      *
@@ -18,6 +21,11 @@ class LogDocumentStatusChange
      */
     public function handle(DocumentStatusChanged $event): void
     {
+        // Prevent duplicate execution within the same request
+        if ($this->preventDuplicateExecution($event)) {
+            return;
+        }
+
         try {
             // Log to document_status_histories (main history)
             $statusHistory = DocumentStatusHistory::create([
