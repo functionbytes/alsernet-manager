@@ -479,19 +479,14 @@ class DocumentsController extends Controller
         $oldStatusId = $document->status_id;
         $document->proccess = $request->proccess;
 
-        // Actualizar source si se proporciona (legacy field - keep for backward compatibility)
-        if ($request->has('source')) {
-            $document->source = $request->source;
+        // Actualizar source_id si se proporciona
+        if ($request->has('source_id') && ! empty($request->source_id)) {
+            $document->source_id = $request->source_id;
         }
 
-        // Actualizar document_source_id (nuevo campo principal)
-        if ($request->has('document_source_id') && ! empty($request->document_source_id)) {
-            $document->document_source_id = $request->document_source_id;
-        }
-
-        // Actualizar upload_type (manual vs automatic)
-        if ($request->has('upload_type')) {
-            $document->upload_type = $request->upload_type;
+        // Actualizar upload_id si se proporciona
+        if ($request->has('upload_id') && ! empty($request->upload_id)) {
+            $document->upload_id = $request->upload_id;
         }
 
         // Actualizar status si se proporciona
@@ -941,8 +936,8 @@ class DocumentsController extends Controller
         $products = $document->products;
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
-        // Get all statuses except 'pending'
-        $statuses = DocumentStatus::where('key', '!=', 'pending')
+        // Get all active statuses except 'pending'
+        $statuses = DocumentStatus::where('is_active', true)
             ->orderBy('order')
             ->get();
 
