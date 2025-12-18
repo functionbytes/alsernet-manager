@@ -5,7 +5,29 @@
       "Bash(git commit:*)",
       "Bash(vendor/bin/pint:*)",
       "mcp__chrome-devtools__new_page",
-      "Bash(curl -s -I https://manager.test/manager/settings/mailers/templates/preview/f8105481-1d00-33da-b217-6bf6d0bc4147)"
+      "Bash(curl -s -I https://manager.test/manager/settings/mailers/templates/preview/f8105481-1d00-33da-b217-6bf6d0bc4147)",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__select_page",
+      "mcp__chrome-devtools__navigate_page",
+      "Bash(find:*)",
+      "Bash(php artisan:*)",
+      "Bash(curl:*)"
     ]
-  }
+  },
+  "disabledMcpjsonServers": [
+    "n8n-mcp",
+    "n8n-workflows Docs",
+    "context7",
+    "chrome-devtools",
+    "mcp-filesystem",
+    "mcp-http",
+    "mcp-smtp",
+    "mcp-mongodb",
+    "mcp-codemap",
+    "laravel-boost",
+    "dev-chrome"
+  ]
 }

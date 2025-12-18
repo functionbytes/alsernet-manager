@@ -701,17 +701,13 @@ class Document extends Model implements HasMedia
     /**
      * Boot method to initialize required_documents when creating a document
      * Uses getRequiredDocuments() to fetch keys based on document type
+     * Laravel automatically calls bootHasUid() from the trait
      */
     protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function (Document $document) {
-            // Generate UID if not already set (must happen before save)
-            if (is_null($document->uid)) {
-                $document->generateUid();
-            }
-
             // If no type is set, default to 'general'
             if (! $document->type) {
                 $document->type = 'general';

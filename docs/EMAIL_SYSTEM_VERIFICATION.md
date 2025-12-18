@@ -59,7 +59,7 @@ Todos los 5 métodos de email en `DocumentsController` verificados:
 - **Validaciones:** Email cliente requerido
 - **Respuesta:** `{ success: true, message: "Email de recordatorio en cola para envío" }`
 
-**Cambios realizados:** Se refactorizó `resendReminderEmail()` para usar `SendTemplateEmailJob::dispatch()` directamente en lugar de disparar un evento que llamaba al servicio de forma síncrona.
+**Cambios realizados:** Se refactorizó `resendReminderEmail()` para usar `SendMailTemplateJob::dispatch()` directamente en lugar de disparar un evento que llamaba al servicio de forma síncrona.
 
 ---
 
@@ -142,7 +142,7 @@ Se verifica que las variables se preparan correctamente:
 
 ### 5. Job Processing
 
-**Clase:** `App\Jobs\Document\SendTemplateEmailJob`
+**Clase:** `App\Jobs\Document\SendMailTemplateJob`
 
 **Características:**
 - ✓ Implementa `ShouldQueue`
@@ -344,7 +344,7 @@ public function resendReminderEmail($uid) {
 ```php
 public function resendReminderEmail($uid) {
     // Ahora despacha job igual que otros métodos
-    SendTemplateEmailJob::dispatch($document, 'reminder');
+    SendMailTemplateJob::dispatch($document, 'reminder');
 }
 ```
 

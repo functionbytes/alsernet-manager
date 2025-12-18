@@ -129,7 +129,7 @@ $setting->save();
 
 ### Archivos Modificados/Creados
 
-#### 1. **app/Jobs/Document/SendTemplateEmailJob.php**
+#### 1. **app/Jobs/Document/SendMailTemplateJob.php**
 - ✓ Job central para todos los tipos de email
 - ✓ Soporta: initial_request, reminder, missing_documents, upload_confirmation, custom
 - ✓ Auditoria automática en DocumentAction
@@ -208,7 +208,7 @@ created_at: 2025-12-15 14:51:49
    ↓
 2. Controller valida documento + email
    ↓
-3. Controller despacha SendTemplateEmailJob
+3. Controller despacha SendMailTemplateJob
    - Captura admin ID en constructor
    - Encola en 'emails' queue
    ↓
@@ -248,7 +248,7 @@ php artisan queue:work --queue=emails
 # Terminal 2: Despachar email
 php artisan tinker
 > $doc = \App\Models\Document\Document::first();
-> \App\Jobs\Document\SendTemplateEmailJob::dispatch($doc, 'reminder');
+> \App\Jobs\Document\SendMailTemplateJob::dispatch($doc, 'reminder');
 
 # Ver en Mailpit
 # http://localhost:8025/
@@ -337,6 +337,6 @@ php artisan tinker
 **🟢 STATUS: LISTO PARA USAR**
 
 Para cualquier pregunta, revisar los comentarios en:
-- `app/Jobs/Document/SendTemplateEmailJob.php`
+- `app/Jobs/Document/SendMailTemplateJob.php`
 - `app/Providers/BootMailConfigurationProvider.php`
 - `app/Services/Documents/DocumentEmailTemplateService.php`

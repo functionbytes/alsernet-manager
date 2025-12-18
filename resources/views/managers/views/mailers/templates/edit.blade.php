@@ -102,6 +102,32 @@
                     {{-- Template Info --}}
                     <div class="card-body border-bottom">
                         <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="name" class="form-label fw-semibold">
+                                    Nombre de la plantilla
+                                </label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                       id="name" name="name" value="{{ old('name', $template->name ?? '') }}"
+                                       placeholder="Ej: Confirmación de Pedido" readonly>
+                                <small class="text-muted">Nombre general de la plantilla (no se puede cambiar aquí)</small>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-semibold">
+                                    Descripción <span class="text-muted small">(Opcional)</span>
+                                </label>
+                                <textarea class="form-control @error('description') is-invalid @enderror"
+                                          id="description" name="description" rows="2"
+                                          placeholder="Descripción breve de para qué se usa esta plantilla">{{ old('description', $template->description ?? '') }}</textarea>
+                                <small class="text-muted">Descripción general y propósito de la plantilla</small>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-12 col-md-12">
                                 <label for="subject" class="form-label fw-semibold">
                                     Asunto del email

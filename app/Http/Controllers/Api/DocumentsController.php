@@ -6,6 +6,7 @@ use App\Events\Documents\DocumentCreated;
 use App\Events\Documents\DocumentReminderRequested;
 use App\Events\Documents\DocumentUploaded;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentStatus;
 use App\Models\Prestashop\Order\Order as PrestashopOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -150,6 +151,9 @@ class DocumentsController extends ApiController
             $document->order_reference = $data['reference'] ?? null;
             $document->order_date = $data['date_add'] ?? null;
 
+            // Set initial status to "pending"
+            $document->status_id = DocumentStatus::where('key', 'pending')->first()?->id;
+
             // Guardar documento
             $document->save();
 
@@ -185,7 +189,7 @@ class DocumentsController extends ApiController
             }
 
             // Disparar evento para enviar email inicial y programar recordatorio
-            event(new DocumentCreated($document));
+            DocumentCreated::dispatch($document);
 
             return response()->json([
                 'status' => 'success',
@@ -373,9 +377,16 @@ class DocumentsController extends ApiController
             // Actualizar JSON de documentos subidos
             $document->syncUploadedDocumentsJson();
 
-            // Marcar como confirmado solo si todos los docs están completos
-            if ($document->hasAllRequiredDocuments() && ! $document->confirmed_at) {
-                $document->confirmed_at = Carbon::now()->setTimezone('Europe/Madrid');
+            // Update status based on document completion
+            if ($document->hasAllRequiredDocuments()) {
+                // All documents uploaded - set to "incomplete" status
+                $document->status_id = DocumentStatus::where('key', 'incomplete')->first()?->id;
+                if (! $document->confirmed_at) {
+                    $document->confirmed_at = Carbon::now()->setTimezone('Europe/Madrid');
+                }
+            } else {
+                // Partial upload - set to "received" status
+                $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
             }
 
             $document->source = $request->input('source', 'api');
@@ -404,7 +415,7 @@ class DocumentsController extends ApiController
                 // Si se actualizó, disparar el evento (el listener usará PreventsDuplicateEventExecution)
                 if ($updated === 1) {
                     $document->refresh();
-                    event(new DocumentUploaded($document));
+                    DocumentUploaded::dispatch($document);
                 }
             }
 
@@ -499,7 +510,7 @@ class DocumentsController extends ApiController
             ], 404);
         }
 
-        event(new DocumentReminderRequested($document));
+        DocumentReminderRequested::dispatch($document);
 
         $document->reminder_at = now();
         $document->save();
@@ -998,7 +1009,7 @@ class DocumentsController extends ApiController
             ], 200);
         }
 
-        event(new DocumentReminderRequested($document));
+        DocumentReminderRequested::dispatch($document);
 
         $document->reminder_at = now();
         $document->save();

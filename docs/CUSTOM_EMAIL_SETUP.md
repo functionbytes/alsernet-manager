@@ -53,7 +53,7 @@ Cuando envías un correo personalizado:
 
 1. **Se despacha un job:**
    ```php
-   SendTemplateEmailJob::dispatch($document, 'custom', [
+   SendMailTemplateJob::dispatch($document, 'custom', [
        'subject' => 'Mi asunto',
        'content' => 'Mi contenido',
        'template_id' => 23,  // ← La plantilla seleccionada
@@ -109,7 +109,7 @@ if ($templateId) {
 }
 
 // 4. ¿Hay jobs pendientes?
-$pendingJobs = \App\Jobs\Document\SendTemplateEmailJob::count();
+$pendingJobs = \App\Jobs\Document\SendMailTemplateJob::count();
 echo "\n3. Jobs de email pendientes: {$pendingJobs}\n";
 
 // 5. Plantillas disponibles
@@ -187,7 +187,7 @@ sudo supervisorctl status laravel-worker
 3. Controller obtiene el template ID del setting
    ✓ documents.mail_template_custom_email_id = 23
    ↓
-4. Se despacha SendTemplateEmailJob con:
+4. Se despacha SendMailTemplateJob con:
    - document
    - email_type: 'custom'
    - emailData: { subject, content, template_id: 23 }

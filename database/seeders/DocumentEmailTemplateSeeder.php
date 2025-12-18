@@ -32,42 +32,42 @@ class DocumentEmailTemplateSeeder extends Seeder
             [
                 'key' => 'document_initial_request',
                 'name' => 'Solicitud de Documentación',
-                'subject' => 'Solicitud de Documentación - Orden {ORDER_REFERENCE}',
+                'subject' => 'Solicitud de Documentación - pedido {ORDER_REFERENCE}',
                 'content' => $this->getInitialRequestContent(),
                 'description' => 'Email enviado cuando se solicita documentación al cliente',
             ],
             [
                 'key' => 'document_missing_documents',
                 'name' => 'Documentación Faltante',
-                'subject' => 'Documentación Faltante - Orden {ORDER_REFERENCE}',
+                'subject' => 'Documentación Faltante - pedido {ORDER_REFERENCE}',
                 'content' => $this->getMissingDocumentsContent(),
                 'description' => 'Email enviado cuando se solicitan documentos específicos faltantes',
             ],
             [
                 'key' => 'document_reminder',
-                'name' => 'Recordatorio de Documentación',
-                'subject' => 'Recordatorio: Documentación Pendiente - Orden {ORDER_REFERENCE}',
+                'name' => 'Recordatorio de documentación',
+                'subject' => 'Recordatorio: documentación pendiente - pedido {ORDER_REFERENCE}',
                 'content' => $this->getReminderContent(),
                 'description' => 'Email de recordatorio enviado después de X días sin documentos',
             ],
             [
                 'key' => 'document_approved',
                 'name' => 'Documentos Aprobados',
-                'subject' => 'Documentos Aprobados - Orden {ORDER_REFERENCE}',
+                'subject' => 'Documentos Aprobados - pedido {ORDER_REFERENCE}',
                 'content' => $this->getApprovedContent(),
                 'description' => 'Email enviado cuando los documentos son aprobados',
             ],
             [
                 'key' => 'document_rejected',
                 'name' => 'Documentos Rechazados',
-                'subject' => 'Documentos Rechazados - Acción Requerida - Orden {ORDER_REFERENCE}',
+                'subject' => 'Documentos Rechazados - Acción Requerida - pedido {ORDER_REFERENCE}',
                 'content' => $this->getRejectedContent(),
                 'description' => 'Email enviado cuando los documentos son rechazados',
             ],
             [
                 'key' => 'document_completed',
                 'name' => 'Documentación Completa',
-                'subject' => 'Documentación Completa - Orden {ORDER_REFERENCE}',
+                'subject' => 'Documentación Completa - pedido {ORDER_REFERENCE}',
                 'content' => $this->getCompletedContent(),
                 'description' => 'Email enviado cuando la documentación está completa',
             ],
@@ -121,7 +121,7 @@ class DocumentEmailTemplateSeeder extends Seeder
 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
     <p>Estimado/a <strong>{CUSTOMER_NAME}</strong>,</p>
 
-    <p>Gracias por realizar su compra en nuestro sitio. Para poder procesar su pedido <strong>(Orden {ORDER_REFERENCE})</strong>, necesitamos que cargue los siguientes documentos:</p>
+    <p>Gracias por realizar su compra en nuestro sitio. Para poder procesar su pedido <strong>(pedido {ORDER_REFERENCE})</strong>, necesitamos que cargue los siguientes documentos:</p>
 
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h4 style="margin-top: 0; color: #2c3e50;">Documentos Requeridos para {DOCUMENT_TYPE_LABEL}</h4>
@@ -147,7 +147,7 @@ HTML;
 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
     <p>Estimado/a <strong>{CUSTOMER_NAME}</strong>,</p>
 
-    <p>Hemos revisado su solicitud de documentos para la orden <strong>{ORDER_REFERENCE}</strong> y detectamos que aún faltan los siguientes documentos:</p>
+    <p>Hemos revisado su solicitud de documentos para la pedido <strong>{ORDER_REFERENCE}</strong> y detectamos que aún faltan los siguientes documentos:</p>
 
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h4 style="margin-top: 0; color: #dc3545;">Documentos Faltantes</h4>
@@ -174,7 +174,7 @@ HTML;
 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
     <p>Estimado/a <strong>{CUSTOMER_NAME}</strong>,</p>
 
-    <p>Le recordamos que aún no ha cargado los documentos requeridos para su orden <strong>{ORDER_REFERENCE}</strong>.</p>
+    <p>Le recordamos que aún no ha cargado los documentos requeridos para su pedido <strong>{ORDER_REFERENCE}</strong>.</p>
 
     <p style="color: #e74c3c; font-weight: bold;">Hace {DAYS_SINCE_REQUEST} días que se le solicitó la documentación.</p>
 
@@ -202,17 +202,17 @@ HTML;
     <p>Estimado/a <strong>{CUSTOMER_NAME}</strong>,</p>
 
     <p style="background-color: #d4edda; padding: 12px; border-radius: 5px; border-left: 4px solid #28a745;">
-        <strong>✓ ¡Excelente!</strong> Sus documentos han sido revisados y <strong>aprobados</strong>.
+        <strong>¡Excelente!</strong> Sus documentos han sido revisados y <strong>aprobados</strong>.
     </p>
 
-    <p>Su orden <strong>{ORDER_REFERENCE}</strong> está siendo procesada y será completada en breve.</p>
+    <p>Su pedido <strong>{ORDER_REFERENCE}</strong> está siendo procesada y será completada en breve.</p>
 
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h4 style="margin-top: 0;">Próximos Pasos</h4>
         <ul>
             <li>Su pedido está en proceso de cumplimiento</li>
             <li>Recibirá un email de confirmación cuando esté listo para entrega</li>
-            <li>Puede rastrear su orden en cualquier momento desde su cuenta</li>
+            <li>Puede rastrear su pedido en cualquier momento desde su cuenta</li>
         </ul>
     </div>
 
@@ -228,7 +228,7 @@ HTML;
     <p>Estimado/a <strong>{CUSTOMER_NAME}</strong>,</p>
 
     <p style="background-color: #f8d7da; padding: 12px; border-radius: 5px; border-left: 4px solid #dc3545;">
-        <strong>⚠ Acción Requerida:</strong> Hemos revisado los documentos enviados para su orden <strong>{ORDER_REFERENCE}</strong> y necesitamos que realice algunas correcciones.
+        <strong>⚠ Acción Requerida:</strong> Hemos revisado los documentos enviados para su pedido <strong>{ORDER_REFERENCE}</strong> y necesitamos que realice algunas correcciones.
     </p>
 
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -262,7 +262,7 @@ HTML;
         <strong>✓ ¡Felicidades!</strong> Su solicitud de documentación ha sido completada exitosamente.
     </p>
 
-    <p>Nos complace informarle que su orden <strong>{ORDER_REFERENCE}</strong> está lista para ser procesada.</p>
+    <p>Nos complace informarle que su pedido <strong>{ORDER_REFERENCE}</strong> está lista para ser procesada.</p>
 
     <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h4 style="margin-top: 0;">Estado Actual</h4>

@@ -39,6 +39,7 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::post('/sync/fields', [DocumentsController::class, 'syncAllDocumentFields'])->name('administrative.documents.sync-fields');
         Route::get('/{uid}/document-state', [DocumentsController::class, 'getDocumentState'])->name('administrative.documents.state');
         Route::get('/{uid}/refresh-section', [DocumentsController::class, 'refreshDocumentsSection'])->name('administrative.documents.refresh-section');
+        Route::get('/{uid}/refresh-action-history', [DocumentsController::class, 'refreshActionHistory'])->name('administrative.documents.refresh-action-history');
         Route::get('/{uid}/missing-documents', [DocumentsController::class, 'getMissingDocuments'])->name('administrative.documents.missing-documents');
         Route::post('/{uid}/delete-single', [DocumentsController::class, 'deleteSingleDocument'])->name('administrative.documents.delete-single');
         Route::post('/manage/{uid}/add-note', [DocumentsController::class, 'addNote'])->name('administrative.documents.add-note');

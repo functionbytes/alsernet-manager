@@ -4,10 +4,12 @@ namespace App\Library\Traits;
 
 trait HasUid
 {
-    public static function boot()
+    /**
+     * Register the UID generation listener
+     * Call this from the model's boot method
+     */
+    protected static function bootHasUid(): void
     {
-        parent::boot();
-
         static::creating(function ($item) {
             if (is_null($item->uid)) {
                 $item->generateUid();
@@ -20,7 +22,7 @@ trait HasUid
         return self::where('uid', '=', $uid)->first();
     }
 
-    public function generateUid()
+    public function generateUid(): void
     {
         $this->uid = uniqid();
     }

@@ -97,7 +97,7 @@
                                     Confirma al cliente que sus documentos han sido recibidos.
                                 </p>
                                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#uploadConfirmationModal">
-                                    Enviar confirmación
+                                    Enviar
                                 </button>
                             </div>
                         @endif
@@ -112,7 +112,7 @@
                                     Notifica al cliente que sus documentos fueron aprobados.
                                 </p>
                                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#approvalModal">
-                                    Enviar aprobación
+                                    Enviar
                                 </button>
                             </div>
                         @endif
@@ -153,7 +153,9 @@
             </div>
 
             <!-- Action History -->
-            @include('administratives.views.documents.includes.action-history')
+            <div id="actionHistoryContainer">
+                @include('administratives.views.documents.includes.action-history')
+            </div>
 
             <!-- Document Notes -->
             @include('administratives.views.documents.includes.document-notes-sidebar')
@@ -436,7 +438,7 @@
                             </div>
                         </form>
                     @else
-                        <div class="alert alert-info  mb-0" role="alert">
+                        <div class="alert alert-info" role="alert">
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-check-circle fs-4 me-2"></i>
                                 <div>
@@ -476,7 +478,7 @@
                 <div class="modal-body">
                     @if($customEmailTemplate)
                         <!-- Información de la plantilla configurada -->
-                        <div class="alert alert-info mb-3" role="alert">
+                        <div class="alert alert-info" role="alert">
                             <div class="d-flex align-items-start">
                                 <i class="fas fa-info-circle me-2 mt-1"></i>
                                 <div>
@@ -566,7 +568,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info mb-3" role="alert">
+                    <div class="alert alert-info" role="alert">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-circle-info me-2"></i>
                             <div>
@@ -601,7 +603,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert bg-light mb-3" role="alert">
+                    <div class="alert bg-light" role="alert">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <div>
@@ -629,26 +631,21 @@
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title">
                         <i class="fas fa-check-circle text-success me-2"></i>
-                        Confirmación de Subida
+                        Confirmación de subida
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info  d-flex align-items-center mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email confirmando que los documentos han sido recibidos correctamente.</div>
                     </div>
-                    <div class="mb-0">
-                        <label class="form-label fw-bold">Notas adicionales (Opcional)</label>
-                        <textarea class="form-control" id="uploadConfirmationNotes" rows="3"
-                                  placeholder="Mensaje adicional para el cliente..."></textarea>
-                    </div>
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-success" id="btnSendUploadConfirmation">
-                        <i class="fas fa-paper-plane me-1"></i> Enviar confirmación
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="btnSendUploadConfirmation">
+                        Enviar
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -668,14 +665,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info  d-flex align-items-center">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
                     </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-primary w-100" id="btnSendApproval">
-                        Enviar aprobación
+                        Enviar
                     </button>
                     <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
@@ -697,10 +694,26 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info  d-flex align-items-center mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Documentos rechazados</label>
+                        <p class="text-muted small mb-2">Selecciona los documentos que necesitan ser reenviados:</p>
+                        <div class="border rounded p-3 bg-light-secondary">
+                            @foreach($requiredDocuments as $docKey => $docLabel)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="rejected_docs[]" value="{{ $docKey }}" id="rejected_{{ $docKey }}" checked>
+                                    <label class="form-check-label fw-semibold" for="rejected_{{ $docKey }}">
+                                        {{ $docLabel }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
                     <div class="mb-0">
                         <label class="form-label fw-bold">Razón del rechazo <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="rejectionReason" rows="4" required
@@ -730,7 +743,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info d-flex align-items-center mb-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
                         <div>¿Estás seguro de que deseas guardar la configuración del documento?</div>
                     </div>
@@ -751,6 +764,48 @@
     </div>
 
 @endsection
+
+@push('styles')
+<style>
+    /* Variable Cards Styling */
+    .variable-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        margin-bottom: 8px;
+    }
+
+    .variable-card:hover {
+        background: linear-gradient(135deg, #90bb13 0%, #7a9f10 100%);
+        border-color: #90bb13;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(144, 187, 19, 0.15);
+    }
+
+    .variable-card:hover .variable-code {
+        color: #ffffff;
+    }
+
+    .variable-code {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #495057;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        word-break: break-word;
+        transition: color 0.2s ease;
+    }
+</style>
+@endpush
 
 @push('scripts')
     <script>
@@ -797,11 +852,21 @@
                     success: function(response) {
                         if (response.success) {
                             $('#missingDocsModal').modal('hide');
+
+                            // Limpiar checkboxes
+                            $form.find('input[name="missing_docs[]"]:checked').prop('checked', false);
+
+                            // Limpiar textarea de notas
+                            $('#additional_notes').val('');
+
                             toastr.success('Email enviado correctamente', 'Éxito', {
                                 closeButton: true,
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
+
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {
                                 closeButton: true,
@@ -847,10 +912,8 @@
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
-                            // Recargar historial si existe
-                            if (typeof reloadDocumentsSection === 'function') {
-                                reloadDocumentsSection();
-                            }
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {
                                 closeButton: true,
@@ -896,6 +959,8 @@
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {
                                 closeButton: true,
@@ -1277,6 +1342,8 @@
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {
                                 closeButton: true,
@@ -1321,10 +1388,18 @@
                         if (response.success && response.html) {
                             console.log('[reloadDocumentsSection] Reemplazando HTML en #uploadSectionContainer');
 
-                            // Reemplazar completamente el contenedor con el nuevo HTML
-                            $('#uploadSectionContainer').html(response.html);
+                            const $container = $('#uploadSectionContainer');
+                            console.log('[DEBUG] Contenedor encontrado:', $container.length > 0);
+                            console.log('[DEBUG] Contenedor display:', $container.css('display'));
+                            console.log('[DEBUG] Contenedor visibility:', $container.css('visibility'));
+                            console.log('[DEBUG] Contenedor html antes:', $container.html().substring(0, 50) + '...');
 
-                            console.log('[reloadDocumentsSection] HTML reemplazado, estado actual:', $('#uploadSectionContainer').html().substring(0, 100));
+                            // Reemplazar completamente el contenedor con el nuevo HTML
+                            $container.html(response.html);
+
+                            console.log('[DEBUG] Contenedor html después:', $container.html().substring(0, 50) + '...');
+                            console.log('[DEBUG] Nueva altura del contenedor:', $container.height());
+                            console.log('[reloadDocumentsSection] HTML reemplazado, estado actual:', $container.html().substring(0, 100));
 
                             // Asegurar que los event handlers estén activados (usan event delegation, así que no es necesario)
                             console.log('[reloadDocumentsSection] Recarga completada');
@@ -1361,6 +1436,43 @@
              */
             function updateDocumentState(uid = documentUid) {
                 reloadDocumentsSection(uid);
+            }
+
+            /**
+             * Recarga el historial de acciones
+             */
+            function reloadActionHistory(uid = documentUid) {
+                console.log('[reloadActionHistory] Iniciando recarga para uid:', uid);
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.refresh-action-history', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('[reloadActionHistory] Response:', response);
+
+                        if (response.success && response.html) {
+                            console.log('[reloadActionHistory] Reemplazando HTML en #actionHistoryContainer');
+
+                            const $container = $('#actionHistoryContainer');
+                            $container.html(response.html);
+
+                            console.log('[reloadActionHistory] Recarga completada');
+                        } else {
+                            console.error('[reloadActionHistory] Respuesta sin success o html:', response);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('[reloadActionHistory] Error AJAX:', xhr);
+                        let errorMsg = 'Error al refrescar el historial de acciones';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        console.error(errorMsg);
+                    }
+                });
             }
 
             /**
@@ -1641,14 +1753,15 @@
                     { name: 'SUPPORT_PHONE', desc: 'Teléfono de soporte' }
                 ];
 
-                let html = '';
+                let html = '<div class="row g-1 px-2">';
                 $.each(variables, function(idx, variable) {
-                    html += '<div class="col-6 col-md-4 col-lg-3">';
+                    html += '<div class="col-6 col-md-4">';
                     html += '<div class="variable-card variable-insert" data-variable-name="' + variable.name + '" data-bs-toggle="tooltip" title="' + variable.desc + '">';
                     html += '<code class="variable-code">{' + variable.name + '}</code>';
                     html += '</div>';
                     html += '</div>';
                 });
+                html += '</div>';
 
                 $('#customEmailVariablesPanel').html(html);
 
@@ -1657,39 +1770,60 @@
                     new bootstrap.Tooltip(this);
                 });
 
+                // Track last cursor position for custom email fields
+                let lastFocusedField = null;
+                let lastCursorPosition = 0;
+
+                $('#email_content, #email_subject').on('focus click keyup', function() {
+                    lastFocusedField = this;
+                    lastCursorPosition = this.selectionStart;
+                });
+
                 // Add click handlers
                 $(document).off('click', '.variable-insert').on('click', '.variable-insert', function(e) {
                     e.preventDefault();
                     const variableName = $(this).data('variable-name');
                     const variable = '{' + variableName + '}';
 
-                    // Try to insert in focused field
-                    const $textarea = $('#email_content');
-                    const $input = $('#email_subject');
+                    // Determine which field to insert into
+                    let $targetField = null;
 
-                    if ($textarea.is(':focus')) {
-                        const curPos = $textarea[0].selectionStart;
-                        const textBefore = $textarea.val().substring(0, curPos);
-                        const textAfter = $textarea.val().substring(curPos);
-                        $textarea.val(textBefore + variable + textAfter);
-                        $textarea[0].selectionStart = $textarea[0].selectionEnd = curPos + variable.length;
-                        $textarea.focus();
-                    } else if ($input.is(':focus')) {
-                        const curPos = $input[0].selectionStart;
-                        const textBefore = $input.val().substring(0, curPos);
-                        const textAfter = $input.val().substring(curPos);
-                        $input.val(textBefore + variable + textAfter);
-                        $input[0].selectionStart = $input[0].selectionEnd = curPos + variable.length;
-                        $input.focus();
-                    } else {
-                        // Copy to clipboard if no field is focused
-                        navigator.clipboard.writeText(variable).then(() => {
-                            toastr.success('Variable copiada: ' + variable, 'Éxito', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-top-right",
-                                timeOut: 2000
-                            });
+                    // First check if a field is currently focused
+                    if ($('#email_content').is(':focus')) {
+                        $targetField = $('#email_content');
+                    } else if ($('#email_subject').is(':focus')) {
+                        $targetField = $('#email_subject');
+                    }
+                    // Then check the last focused field
+                    else if (lastFocusedField) {
+                        $targetField = $(lastFocusedField);
+                    }
+                    // Default to email_content
+                    else {
+                        $targetField = $('#email_content');
+                    }
+
+                    if ($targetField && $targetField.length > 0) {
+                        const field = $targetField[0];
+                        const curPos = field.selectionStart || lastCursorPosition || field.value.length;
+                        const textBefore = $targetField.val().substring(0, curPos);
+                        const textAfter = $targetField.val().substring(curPos);
+
+                        $targetField.val(textBefore + variable + textAfter);
+
+                        // Set cursor position after the inserted variable
+                        const newPos = curPos + variable.length;
+                        field.selectionStart = field.selectionEnd = newPos;
+                        lastCursorPosition = newPos;
+
+                        // Focus the field
+                        $targetField.focus();
+
+                        toastr.success('Variable insertada: ' + variable, 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-top-right",
+                            timeOut: 1500
                         });
                     }
                 });
@@ -1717,7 +1851,7 @@
                 const $btn = $(this);
                 const notes = $('#uploadConfirmationNotes').val();
 
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-upload-confirmation', $document->uid) }}",
@@ -1732,6 +1866,8 @@
                             });
                             $('#uploadConfirmationModal').modal('hide');
                             $('#uploadConfirmationNotes').val('');
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         }
                     },
                     error: function(xhr) {
@@ -1743,7 +1879,7 @@
                         });
                     },
                     complete: function() {
-                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar confirmación');
+                        $btn.prop('disabled', false).html('Enviar');
                     }
                 });
             });
@@ -1752,7 +1888,7 @@
             $('#btnSendApproval').on('click', function() {
                 const $btn = $(this);
 
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-approval', $document->uid) }}",
@@ -1766,6 +1902,8 @@
                                 positionClass: "toast-bottom-right"
                             });
                             $('#approvalModal').modal('hide');
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         }
                     },
                     error: function(xhr) {
@@ -1777,7 +1915,7 @@
                         });
                     },
                     complete: function() {
-                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar aprobación');
+                        $btn.prop('disabled', false).html('Enviar');
                     }
                 });
             });
@@ -1797,12 +1935,21 @@
                     return;
                 }
 
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+                // Recoger documentos rechazados seleccionados
+                const rejectedDocs = [];
+                $('input[name="rejected_docs[]"]:checked').each(function() {
+                    rejectedDocs.push($(this).val());
+                });
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-rejection', $document->uid) }}",
                     method: 'POST',
-                    data: { reason: reason },
+                    data: {
+                        reason: reason,
+                        rejected_docs: rejectedDocs
+                    },
                     success: function(response) {
                         if (response.success) {
                             toastr.success('Email de rechazo enviado a: ' + response.recipient, 'Éxito', {
@@ -1811,7 +1958,15 @@
                                 positionClass: "toast-bottom-right"
                             });
                             $('#rejectionModal').modal('hide');
+
+                            // Limpiar textarea de razón
                             $('#rejectionReason').val('');
+
+                            // Limpiar checkboxes (desmarcar todos)
+                            $('input[name="rejected_docs[]"]').prop('checked', false);
+
+                            // Recargar historial de acciones
+                            reloadActionHistory();
                         }
                     },
                     error: function(xhr) {
@@ -1823,7 +1978,7 @@
                         });
                     },
                     complete: function() {
-                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar rechazo');
+                        $btn.prop('disabled', false).html('Enviar');
                     }
                 });
             });
@@ -1857,40 +2012,5 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Variables Panel Styles */
-        .variable-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 50px;
-            user-select: none;
-        }
-
-        .variable-card:hover {
-            background-color: #f0f4f8;
-            border-color: #0d6efd;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
-        }
-
-        .variable-card:active {
-            transform: translateY(0);
-        }
-
-        .variable-code {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #0d6efd;
-            background: none;
-            padding: 0;
-            word-break: break-word;
-        }
     </style>
 @endpush

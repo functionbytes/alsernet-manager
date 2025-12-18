@@ -3,7 +3,7 @@
 namespace App\Listeners\Documents;
 
 use App\Events\Documents\DocumentCreated;
-use App\Jobs\Document\SendDocumentReminderJob;
+use App\Jobs\Document\EmailTemplateJob;
 use App\Models\Document\DocumentStatus;
 use App\Services\Documents\DocumentMailService;
 use Illuminate\Support\Facades\Log;
@@ -53,7 +53,7 @@ class SendDocumentUploadNotification
 
             // Programar recordatorio con delay según reminder_days (asíncrono en la cola)
             $reminderDays = (int) setting('documents.reminder_days', 7);
-            dispatch(new SendDocumentReminderJob($document))
+            EmailTemplateJob::dispatch($document, 'reminder')
                 ->delay(now()->addDays($reminderDays))
                 ->onQueue('emails');
 

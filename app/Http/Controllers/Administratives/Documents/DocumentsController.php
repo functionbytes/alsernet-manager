@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers\Administratives\Documents;
 
+use App\Events\Document\DocumentStatusChanged;
+use App\Events\Documents\DocumentCreated;
+use App\Events\Documents\DocumentUploaded;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
-use App\Jobs\Document\SendTemplateEmailJob;
+use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentSource;
+use App\Models\Document\DocumentStatus;
+use App\Models\Document\DocumentStatusTransition;
 use App\Models\Mail\MailTemplate;
+use App\Models\Prestashop\Orders\Order as PrestashopOrder;
 use App\Models\Prestashop\Orders\OrderSendErp;
+use App\Models\Setting;
 use App\Services\Documents\DocumentActionService;
 use App\Services\DocumentTypeService;
 use App\Services\ErpService;
@@ -108,7 +116,7 @@ class DocumentsController extends Controller
     public function syncFromErp(Request $request)
     {
         // Check if ERP integration is enabled
-        if (\App\Models\Setting::get('erp_integration_enabled') !== 'yes') {
+        if (Setting::get('erp_integration_enabled') !== 'yes') {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'ERP integration service is not enabled. Please contact your administrator.',
@@ -116,7 +124,7 @@ class DocumentsController extends Controller
         }
 
         // Check if document import is enabled
-        if (\App\Models\Setting::get('erp_import_documents') !== 'yes') {
+        if (Setting::get('erp_import_documents') !== 'yes') {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Document import from ERP is disabled. Please contact your administrator.',
@@ -235,7 +243,7 @@ class DocumentsController extends Controller
             $document->save();
 
             // Fire event
-            event(new \App\Events\Documents\DocumentCreated($document));
+            DocumentCreated::dispatch($document);
 
             return $document;
         } catch (\Exception $e) {
@@ -492,7 +500,7 @@ class DocumentsController extends Controller
 
             // Validar transición si existe estado anterior
             if ($oldStatusId && $oldStatusId !== $newStatusId) {
-                $transition = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $oldStatusId)
+                $transition = DocumentStatusTransition::where('from_status_id', $oldStatusId)
                     ->where('to_status_id', $newStatusId)
                     ->active()
                     ->first();
@@ -520,17 +528,17 @@ class DocumentsController extends Controller
 
         // Fire DocumentStatusChanged event if status was actually changed
         if ($oldStatusId !== $document->status_id && $document->status_id) {
-            $oldStatus = \App\Models\Document\DocumentStatus::find($oldStatusId);
-            $newStatus = \App\Models\Document\DocumentStatus::find($document->status_id);
+            $oldStatus = DocumentStatus::find($oldStatusId);
+            $newStatus = DocumentStatus::find($document->status_id);
 
             if ($oldStatus && $newStatus) {
                 // Verify transition is valid
-                $transition = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $oldStatusId)
+                $transition = DocumentStatusTransition::where('from_status_id', $oldStatusId)
                     ->where('to_status_id', $document->status_id)
                     ->active()
                     ->first();
 
-                event(new \App\Events\Document\DocumentStatusChanged(
+                event(new DocumentStatusChanged(
                     $document,
                     $oldStatus,
                     $newStatus,
@@ -582,7 +590,7 @@ class DocumentsController extends Controller
             }
 
             // Despachar job para enviar email en background
-            SendTemplateEmailJob::dispatch($document, 'reminder');
+            MailTemplateJob::dispatch($document, 'reminder');
 
             $document->reminder_at = now();
             $document->save();
@@ -652,7 +660,7 @@ class DocumentsController extends Controller
         }
 
         // Disparar evento para enviar confirmación de carga
-        event(new \App\Events\Documents\DocumentUploaded($document));
+        event(new DocumentUploaded($document));
 
         return response()->json([
             'status' => 'success',
@@ -852,7 +860,7 @@ class DocumentsController extends Controller
                     }
 
                     // AHORA disparar evento después de que el documento esté sincronizado
-                    event(new \App\Events\Documents\DocumentCreated($document));
+                    DocumentCreated::dispatch($document);
 
                     $documents = collect([$document]);
                 } catch (\Exception $e) {
@@ -933,7 +941,7 @@ class DocumentsController extends Controller
         // Get allowed status transitions from current status
         $statusIds = [$document->status_id]; // Include current status
         if ($document->status_id) {
-            $transitions = \App\Models\Document\DocumentStatusTransition::where('from_status_id', $document->status_id)
+            $transitions = DocumentStatusTransition::where('from_status_id', $document->status_id)
                 ->active()
                 ->pluck('to_status_id')
                 ->toArray();
@@ -942,13 +950,13 @@ class DocumentsController extends Controller
         }
 
         // Get statuses for dropdown (current status + allowed transitions)
-        $statuses = \App\Models\Document\DocumentStatus::whereIn('id', $statusIds)
+        $statuses = DocumentStatus::whereIn('id', $statusIds)
             ->where('is_active', true)
             ->orderBy('order')
             ->get();
 
         // Get all document sources for dropdown
-        $documentSources = \App\Models\Document\DocumentSource::where('is_active', true)->orderBy('order')->get();
+        $documentSources = DocumentSource::where('is_active', true)->orderBy('order')->get();
 
         // Get global document configuration settings
         $configController = new DocumentConfigurationController;
@@ -956,7 +964,7 @@ class DocumentsController extends Controller
 
         // Get the custom email template if configured
         $customEmailTemplate = null;
-        $customEmailTemplateId = \App\Models\Setting::get('documents.mail_template_custom_email_id');
+        $customEmailTemplateId = Setting::get('documents.mail_template_custom_email_id');
         if ($customEmailTemplateId) {
             $customEmailTemplate = MailTemplate::find($customEmailTemplateId);
         }
@@ -1004,7 +1012,7 @@ class DocumentsController extends Controller
             }
 
             // Verificar si está habilitado en configuración global
-            if (\App\Models\Setting::get('documents.enable_initial_request', 'yes') !== 'yes') {
+            if (Setting::get('documents.enable_initial_request', 'yes') !== 'yes') {
                 return response()->json([
                     'success' => false,
                     'message' => 'La solicitud inicial de documentos está deshabilitada en la configuración.',
@@ -1022,7 +1030,7 @@ class DocumentsController extends Controller
             }
 
             // Despachar job para enviar email en background
-            SendTemplateEmailJob::dispatch($document, 'initial_request');
+            MailTemplateJob::dispatch($document, 'request');
 
             return response()->json([
                 'success' => true,
@@ -1054,7 +1062,7 @@ class DocumentsController extends Controller
             }
 
             // Verificar si está habilitado en configuración global
-            if (\App\Models\Setting::get('documents.enable_reminder', 'yes') !== 'yes') {
+            if (Setting::get('documents.enable_reminder', 'yes') !== 'yes') {
                 return response()->json([
                     'success' => false,
                     'message' => 'Los recordatorios automáticos están deshabilitados en la configuración.',
@@ -1071,7 +1079,7 @@ class DocumentsController extends Controller
             }
 
             // Despachar job para enviar email en background
-            SendTemplateEmailJob::dispatch($document, 'reminder');
+            MailTemplateJob::dispatch($document, 'reminder');
 
             return response()->json([
                 'success' => true,
@@ -1222,7 +1230,7 @@ class DocumentsController extends Controller
             ]);
 
             // Dispara evento para enviar confirmación al cliente
-            event(new \App\Events\Documents\DocumentUploaded($document));
+            event(new DocumentUploaded($document));
 
             return response()->json([
                 'success' => true,
@@ -1514,6 +1522,47 @@ class DocumentsController extends Controller
     }
 
     /**
+     * Refresca la sección del historial de acciones
+     */
+    public function refreshActionHistory($uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Cargar las relaciones necesarias
+            $document->load('actions.performer');
+
+            // Renderizar el componente de historial de acciones
+            $html = view('administratives.views.documents.includes.action-history', [
+                'document' => $document,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error al refrescar historial de acciones', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al refrescar el historial: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Elimina un documento individual por su media_id
      */
     public function deleteSingleDocument(Request $request, $uid)
@@ -1582,7 +1631,7 @@ class DocumentsController extends Controller
             }
 
             // Verificar si está habilitado en configuración global
-            if (\App\Models\Setting::get('documents.enable_missing_docs', 'yes') !== 'yes') {
+            if (Setting::get('documents.enable_missing_docs', 'yes') !== 'yes') {
                 return response()->json([
                     'success' => false,
                     'message' => 'La solicitud de documentos específicos está deshabilitada en la configuración.',
@@ -1607,7 +1656,7 @@ class DocumentsController extends Controller
             }
 
             // Despachar job para enviar email en background
-            SendTemplateEmailJob::dispatch($document, 'missing_documents', [
+            MailTemplateJob::dispatch($document, 'missing', [
                 'missing_docs' => $missingDocs,
                 'notes' => $notes,
             ]);
@@ -1817,7 +1866,7 @@ class DocumentsController extends Controller
 
             // Despachar job para enviar email en background
             // La plantilla se obtiene automáticamente desde settings en DocumentEmailTemplateService
-            SendTemplateEmailJob::dispatch($document, 'custom', [
+            MailTemplateJob::dispatch($document, 'custom', [
                 'subject' => $subject,
                 'content' => $content,
             ]);
@@ -1869,7 +1918,7 @@ class DocumentsController extends Controller
 
             $notes = $request->input('notes');
 
-            SendTemplateEmailJob::dispatch($document, 'upload_confirmation', [
+            MailTemplateJob::dispatch($document, 'upload', [
                 'notes' => $notes,
             ]);
 
@@ -1925,9 +1974,7 @@ class DocumentsController extends Controller
 
             $notes = $request->input('notes');
 
-            SendTemplateEmailJob::dispatch($document, 'approval', [
-                'notes' => $notes,
-            ]);
+            MailTemplateJob::dispatch($document, 'approval');
 
             return response()->json([
                 'success' => true,
@@ -1972,6 +2019,8 @@ class DocumentsController extends Controller
 
             $request->validate([
                 'reason' => 'required|string|max:5000',
+                'rejected_docs' => 'nullable|array',
+                'rejected_docs.*' => 'string',
             ]);
 
             $recipient = $document->customer_email ?? $document->customer?->email;
@@ -1984,9 +2033,11 @@ class DocumentsController extends Controller
             }
 
             $reason = $request->input('reason');
+            $rejectedDocs = $request->input('rejected_docs', []);
 
-            SendTemplateEmailJob::dispatch($document, 'rejection', [
+            MailTemplateJob::dispatch($document, 'rejection', [
                 'reason' => $reason,
+                'rejected_docs' => $rejectedDocs,
             ]);
 
             return response()->json([

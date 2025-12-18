@@ -446,8 +446,8 @@ class MailTemplateController extends Controller
             $baseVariables['DOCUMENT_INSTRUCTIONS'] = 'Por favor, cargue los documentos solicitados en formato PDF o imagen.';
 
             // Variable NOTES_SECTION con ejemplo de nota del administrador
-            $baseVariables['NOTES_SECTION'] = '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff9800;">
-                <p style="margin: 0; font-weight: bold; color: #374151;">Nota adicional del administrador:</p>
+            $baseVariables['NOTES_SECTION'] = '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff0049;">
+                <p style="margin: 0; font-weight: bold; color: #374151;">Nota adicional:</p>
                 <p style="margin-top: 10px; font-style: italic; color: #555;">"La foto del DNI está borrosa. Por favor, asegúrese de que todos los datos sean legibles. También necesitamos que el comprobante de domicilio no tenga más de 3 meses de antigüedad."</p>
             </div>';
             $baseVariables['NOTES'] = 'La foto del DNI está borrosa. Por favor, asegúrese de que todos los datos sean legibles.';

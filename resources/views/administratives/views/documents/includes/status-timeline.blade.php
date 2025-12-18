@@ -1,10 +1,10 @@
 <!-- Document Status Timeline -->
 <div class="card mb-3">
     <div class="card-header p-3 bg-white border-bottom">
-        <h5 class="mb-1 fw-bold">Historial de cambios de estado</h5>
-        <p class="small mb-0 text-muted">Auditoría completa de transiciones de estado en el documento</p>
+        <h5 class="mb-1 fw-bold" style="font-size: 1rem;">Historial de estado</h5>
+        <p class="small mb-0 text-muted" style="font-size: 0.75rem;">Transiciones del documento</p>
     </div>
-    <div class="card-body">
+    <div class="card-body p-2">
 
         @if($document->statusHistories && $document->statusHistories->count() > 0)
             @php
@@ -15,20 +15,20 @@
             @endphp
 
             @if($hasMore)
-                <div class="alert alert-info alert-sm mb-2" role="alert">
-                    <small><i class="fas fa-info-circle me-1"></i> Mostrando los últimos {{ $showLimit }} cambios de {{ $totalHistories }} totales</small>
+                <div class="alert alert-info py-1 px-2 mb-2" role="alert" style="font-size: 0.7rem;">
+                    <i class="fas fa-info-circle me-1"></i> Últimos {{ $showLimit }}/{{ $totalHistories }}
                 </div>
             @endif
 
-            <div class="status-timeline-scroll @if($hasMore) scrollable @endif" @if($hasMore) style="max-height: 280px; overflow-y: auto;" @endif>
+            <div class="status-timeline-scroll @if($hasMore) scrollable @endif" @if($hasMore) style="max-height: 350px; overflow-y: auto;" @endif>
                 <ul class="timeline-widget mb-0 position-relative">
                     @foreach($histories->take($showLimit) as $history)
-                    <li class="timeline-item d-flex position-relative overflow-hidden pb-3">
+                    <li class="timeline-item d-flex position-relative overflow-hidden pb-2">
                         <!-- Timeline Time -->
-                        <div class="timeline-time text-muted flex-shrink-0 text-end pe-3" style="min-width: 70px; font-size: 0.8rem;">
+                        <div class="timeline-time text-muted flex-shrink-0 text-end pe-2" style="min-width: 50px; font-size: 0.65rem; line-height: 1.2;">
                             {{ $history->created_at->format('H:i') }}
                             <br>
-                            <small>{{ $history->created_at->format('d/m/Y') }}</small>
+                            <span style="font-size: 0.6rem;">{{ $history->created_at->format('d/m') }}</span>
                         </div>
 
                         <!-- Timeline Badge -->
@@ -48,52 +48,49 @@
                         </div>
 
                         <!-- Timeline Description -->
-                        <div class="timeline-desc ps-3 flex-grow-1">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <div>
-                                    <span class="fw-semibold text-dark">
-                                        {{ $history->fromStatus->name ?? 'N/A' }}
-                                        <i class="fas fa-arrow-right text-muted mx-2" style="font-size: 0.8rem;"></i>
-                                        <span class="badge
-                                            @if($history->toStatus->slug === 'pendiente') bg-secondary-subtle text-secondary
-                                            @elseif($history->toStatus->slug === 'en-revision') bg-warning-subtle text-warning
-                                            @elseif($history->toStatus->slug === 'aprobado') bg-success-subtle text-success
-                                            @elseif($history->toStatus->slug === 'rechazado') bg-danger-subtle text-danger
-                                            @else bg-info-subtle text-info
-                                            @endif
-                                        ">
-                                            {{ $history->toStatus->name }}
-                                        </span>
+                        <div class="timeline-desc ps-2 flex-grow-1">
+                            <div class="mb-1">
+                                <div class="d-flex align-items-center gap-1 flex-wrap" style="font-size: 0.7rem;">
+                                    <span class="text-muted text-truncate" style="max-width: 60px;">{{ Str::limit($history->fromStatus->name ?? 'N/A', 10) }}</span>
+                                    <i class="fas fa-arrow-right text-muted" style="font-size: 0.6rem;"></i>
+                                    <span class="badge
+                                        @if($history->toStatus->slug === 'pendiente') bg-secondary-subtle text-secondary
+                                        @elseif($history->toStatus->slug === 'en-revision') bg-warning-subtle text-warning
+                                        @elseif($history->toStatus->slug === 'aprobado') bg-success-subtle text-success
+                                        @elseif($history->toStatus->slug === 'rechazado') bg-danger-subtle text-danger
+                                        @else bg-info-subtle text-info
+                                        @endif
+                                        py-0 px-1" style="font-size: 0.65rem;">
+                                        {{ Str::limit($history->toStatus->name, 15) }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- User Info -->
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($history->changedBy->name ?? 'Sistema') }}&background=0d6efd&color=fff&size=32"
-                                     alt="user" width="32" class="rounded-circle flex-shrink-0" style="font-size: 0.75rem;">
-                                <div>
-                                    <small class="fw-semibold d-block">{{ $history->changedBy->name ?? 'Sistema' }}</small>
-                                    <small class="text-muted">{{ $history->changedBy->roles?->first()?->name ?? 'Usuario' }}</small>
+                            <div class="d-flex align-items-center gap-1 mb-1">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($history->changedBy->name ?? 'Sistema') }}&background=0d6efd&color=fff&size=20"
+                                     alt="user" width="20" height="20" class="rounded-circle flex-shrink-0">
+                                <div class="overflow-hidden">
+                                    <div class="fw-semibold text-truncate" style="font-size: 0.65rem; line-height: 1.2;">{{ $history->changedBy->name ?? 'Sistema' }}</div>
+                                    <div class="text-muted text-truncate" style="font-size: 0.6rem; line-height: 1.1;">{{ $history->changedBy->roles?->first()?->name ?? 'Usuario' }}</div>
                                 </div>
                             </div>
 
                             <!-- Reason -->
                             @if($history->reason)
-                                <div class="alert alert-light border-start border-4 border-primary py-2 px-3 mb-2">
-                                    <small class="text-dark" style="line-height: 1.5;">
-                                        <strong>Razón:</strong> {{ $history->reason }}
-                                    </small>
+                                <div class="alert alert-light border-start border-2 border-primary py-1 px-2 mb-1" style="font-size: 0.65rem; line-height: 1.3;">
+                                    <strong class="d-block mb-1">Razón:</strong>
+                                    <span class="text-dark">{{ Str::limit($history->reason, 100) }}</span>
                                 </div>
                             @endif
 
                             <!-- Metadata -->
                             @if($history->metadata && count($history->metadata) > 0)
-                                <div class="small text-muted">
+                                <div class="text-muted" style="font-size: 0.6rem;">
                                     <i class="fas fa-circle-info me-1"></i>
                                     @foreach($history->metadata as $key => $value)
-                                        <span class="badge bg-light text-dark me-1" style="font-size: 0.7rem;">
-                                            {{ ucfirst(str_replace('_', ' ', $key)) }}: {{ is_array($value) ? implode(', ', $value) : $value }}
+                                        <span class="badge bg-light text-dark py-0 px-1 me-1" style="font-size: 0.6rem;">
+                                            {{ Str::limit(ucfirst(str_replace('_', ' ', $key)), 10) }}: {{ Str::limit(is_array($value) ? implode(', ', $value) : $value, 10) }}
                                         </span>
                                     @endforeach
                                 </div>
@@ -104,12 +101,12 @@
                 </ul>
             </div>
         @else
-            <div class="alert bg-light-subtle py-3 px-3 mb-0" role="alert">
+            <div class="alert bg-light-subtle py-2 px-2 mb-0" role="alert">
                 <div class="d-flex align-items-start">
-                    <i class="fas fa-circle-info text-black me-2 mt-1" style="font-size: 0.9rem;"></i>
+                    <i class="fas fa-circle-info text-black me-1 mt-1" style="font-size: 0.7rem;"></i>
                     <div>
-                        <small class="fw-semibold d-block">Sin cambios de estado</small>
-                        <small class="text-muted">Este documento aún no ha tenido cambios de estado registrados.</small>
+                        <div class="fw-semibold" style="font-size: 0.7rem;">Sin cambios</div>
+                        <div class="text-muted" style="font-size: 0.65rem; line-height: 1.2;">No hay historial registrado</div>
                     </div>
                 </div>
             </div>
@@ -130,8 +127,8 @@
     }
 
     .timeline-badge {
-        width: 14px;
-        height: 14px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         display: inline-block;
         position: relative;
@@ -139,27 +136,27 @@
     }
 
     .timeline-badge-border {
-        width: 2px;
-        height: 40px;
+        width: 1.5px;
+        height: 30px;
         background: #e9ecef;
         position: relative;
-        margin-top: -5px;
-        margin-bottom: -5px;
+        margin-top: -3px;
+        margin-bottom: -3px;
     }
 
     .timeline-time {
-        line-height: 1.3;
+        line-height: 1.2;
     }
 
     .timeline-desc {
-        transition: all 0.2s ease;
+        transition: all 0.15s ease;
     }
 
     .timeline-item:hover .timeline-desc {
         background-color: #f8f9fa;
-        border-radius: 4px;
-        padding: 0.5rem;
-        margin-left: -0.5rem;
+        border-radius: 3px;
+        padding: 0.25rem;
+        margin-left: -0.25rem;
     }
 
     .timeline-badge-wrap {
@@ -168,26 +165,26 @@
     }
 
     .status-timeline-scroll {
-        border-radius: 4px;
-        padding-right: 0.5rem;
+        border-radius: 3px;
+        padding-right: 0.25rem;
     }
 
     .status-timeline-scroll::-webkit-scrollbar {
-        width: 6px;
+        width: 4px;
     }
 
     .status-timeline-scroll::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
+        background: #f8f9fa;
+        border-radius: 3px;
     }
 
     .status-timeline-scroll::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
+        background: #dee2e6;
+        border-radius: 3px;
     }
 
     .status-timeline-scroll::-webkit-scrollbar-thumb:hover {
-        background: #999;
+        background: #adb5bd;
     }
 </style>
 @endpush

@@ -28,7 +28,10 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $variables = self::prepareDocumentVariables($document);
+            // Obtener los documentos requeridos para este tipo de documento
+            $requiredDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+
+            $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
             // Get lang_id from document (defaults to 1 if not set)
             $langId = $document->lang_id ?? 1;
@@ -76,7 +79,10 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $variables = self::prepareDocumentVariables($document);
+            // Obtener los documentos requeridos para este tipo de documento
+            $requiredDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+
+            $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
             // Calcular días desde la solicitud inicial
             $daysSinceRequest = $document->created_at
@@ -286,7 +292,7 @@ class DocumentEmailTemplateService
     /**
      * Enviar email de aprobación
      */
-    public static function sendApprovalEmail(Document $document, ?string $notes = null): bool
+    public static function sendApprovalEmail(Document $document): bool
     {
         try {
             $template = self::resolveTemplate('documents.mail_template_approval_id', 'document_approval', ['approval_notification']);
@@ -300,7 +306,7 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $variables = self::prepareDocumentVariables($document, [], $notes);
+            $variables = self::prepareDocumentVariables($document);
 
             // Get lang_id from document (defaults to 1 if not set)
             $langId = $document->lang_id ?? 1;
@@ -333,7 +339,7 @@ class DocumentEmailTemplateService
     /**
      * Enviar email de rechazo con razón personalizada
      */
-    public static function sendRejectionEmail(Document $document, ?string $reason = null): bool
+    public static function sendRejectionEmail(Document $document, ?string $reason = null, array $rejectedDocs = []): bool
     {
         try {
             $template = self::resolveTemplate('documents.mail_template_rejection_id', 'document_rejection', ['rejection_notification']);
@@ -347,7 +353,14 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $variables = self::prepareDocumentVariables($document, [], $reason);
+            // Si se proporcionaron documentos rechazados específicos, usarlos
+            // Si no, usar todos los documentos requeridos
+            if (empty($rejectedDocs)) {
+                $rejectedDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+            }
+
+            $variables = self::prepareDocumentVariables($document, $rejectedDocs, $reason);
+
             // Agregar variable específica para rechazo
             $variables['REJECTION_REASON'] = $reason ?? '';
 
@@ -460,7 +473,7 @@ class DocumentEmailTemplateService
             // Crear sección de notas HTML solo si existen notas
             if (! empty($notes)) {
                 $variables['NOTES_SECTION'] = sprintf(
-                    '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff9800;">
+                    '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff0049;">
                         <p style="margin: 0; font-weight: bold; color: #374151;">Nota adicional:</p>
                         <p style="margin-top: 10px; font-style: italic; color: #555;">"%s"</p>
                     </div>',

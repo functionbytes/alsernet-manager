@@ -8,7 +8,7 @@ use App\Services\Documents\DocumentEmailTemplateService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class SendTemplateEmailJob implements ShouldQueue
+class MailTemplateJob implements ShouldQueue
 {
     use Queueable;
 
@@ -35,16 +35,20 @@ class SendTemplateEmailJob implements ShouldQueue
     {
         try {
             $result = match ($this->emailType) {
-                'initial_request' => DocumentEmailTemplateService::sendInitialRequest($this->document),
+                'request' => DocumentEmailTemplateService::sendInitialRequest($this->document),
                 'reminder' => DocumentEmailTemplateService::sendReminder($this->document),
-                'missing_documents' => DocumentEmailTemplateService::sendMissingDocuments(
+                'upload' => DocumentEmailTemplateService::sendUploadConfirmation($this->document),
+                'approval' => DocumentEmailTemplateService::sendApprovalEmail($this->document),
+                'rejection' => DocumentEmailTemplateService::sendRejectionEmail(
+                    $this->document,
+                    $this->emailData['reason'] ?? null,
+                    $this->emailData['rejected_docs'] ?? []
+                ),
+                'missing' => DocumentEmailTemplateService::sendMissingDocuments(
                     $this->document,
                     $this->emailData['missing_docs'] ?? [],
                     $this->emailData['notes'] ?? null
                 ),
-                'upload_confirmation' => DocumentEmailTemplateService::sendUploadConfirmation($this->document, $this->emailData['notes'] ?? null),
-                'approval' => DocumentEmailTemplateService::sendApprovalEmail($this->document, $this->emailData['notes'] ?? null),
-                'rejection' => DocumentEmailTemplateService::sendRejectionEmail($this->document, $this->emailData['reason'] ?? null),
                 'custom' => DocumentEmailTemplateService::sendCustomEmail(
                     $this->document,
                     $this->emailData['subject'] ?? '',
