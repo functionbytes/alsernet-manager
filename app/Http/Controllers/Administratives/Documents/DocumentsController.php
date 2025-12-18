@@ -12,6 +12,7 @@ use App\Models\Document\DocumentNote;
 use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;
 use App\Models\Document\DocumentStatusTransition;
+use App\Models\Document\DocumentUploadType;
 use App\Models\Mail\MailTemplate;
 use App\Models\Prestashop\Orders\Order as PrestashopOrder;
 use App\Models\Prestashop\Orders\OrderSendErp;
@@ -816,9 +817,17 @@ class DocumentsController extends Controller
                     $document->order_id = $orderId;
                     $document->type = 'order';
 
-                    // Set source_id to 'api' source from document_sources table
-                    $apiSource = DocumentSource::where('key', 'api')->first();
-                    $document->source_id = $apiSource?->id;
+                    // Set source_id to 'manual' (administrative import)
+                    $manualSource = DocumentSource::where('key', 'manual')->first();
+                    $document->source_id = $manualSource?->id;
+
+                    // Set upload_id to 'manual'
+                    $manualUpload = DocumentUploadType::where('key', 'manual')->first();
+                    $document->upload_id = $manualUpload?->id;
+
+                    // Set initial status to 'pending'
+                    $pendingStatus = DocumentStatus::where('key', 'pending')->first();
+                    $document->status_id = $pendingStatus?->id;
 
                     $document->proccess = 0;
                     $document->save();
