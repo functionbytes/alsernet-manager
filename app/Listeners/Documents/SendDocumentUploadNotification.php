@@ -4,10 +4,13 @@ namespace App\Listeners\Documents;
 
 use App\Events\Document\DocumentCreated;
 use App\Jobs\Document\MailTemplateJob;
+use App\Traits\PreventsDuplicateEventExecution;
 use Illuminate\Support\Facades\Log;
 
 class SendDocumentUploadNotification
 {
+    use PreventsDuplicateEventExecution;
+
     /**
      * Maneja el evento DocumentCreated
      * 1. Set status to "Pending" (Solicitado)
@@ -16,14 +19,24 @@ class SendDocumentUploadNotification
      */
     public function handle(DocumentCreated $event): void
     {
+        // Prevent duplicate execution within the same request
+        if ($this->preventDuplicateExecution($event)) {
+            Log::info('SendDocumentUploadNotification listener skipped (duplicate detected)', [
+                'document_id' => $event->document->id ?? null,
+                'order_id' => $event->document->order_id ?? null,
+            ]);
+
+            return;
+        }
+
         $document = $event->document->fresh();
 
         if (! $document) {
             return;
         }
 
-        // Log entry to track how many times listener is triggered
-        Log::info('SendDocumentUploadNotification listener triggered', [
+        // Log entry to track when listener actually executes
+        Log::info('SendDocumentUploadNotification listener executing', [
             'document_uid' => $document->uid,
             'document_id' => $document->id,
             'order_id' => $document->order_id,
