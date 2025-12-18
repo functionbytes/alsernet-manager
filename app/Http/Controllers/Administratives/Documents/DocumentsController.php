@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
 use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentNote;
 use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;
 use App\Models\Document\DocumentStatusTransition;
