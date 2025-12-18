@@ -996,8 +996,6 @@
                     // También verificar en uploadedByType por compatibilidad
                     const isBeingUploaded = uploadedByType[docType] || hasFileSelected;
 
-                    console.log(`[Doc Validation] ${docType}: already=${isAlreadyUploaded}, being=${isBeingUploaded}, hasFileSelected=${hasFileSelected}, uploadedByType=${uploadedByType[docType]}`);
-
                     if (!isAlreadyUploaded && !isBeingUploaded) {
                         const docLabel = $(this).find('.form-label').text().trim();
                         missingAfterUpload.push({
