@@ -100,9 +100,8 @@ class Document extends Model implements HasMedia
         'uid',
         'type',
         'proccess',
-        'source',
-        'document_source_id',
-        'upload_type',
+        'source_id',
+        'upload_id',
         'lang_id',
         'confirmed_at',
         'uploaded_confirmation_sent_at',
@@ -340,9 +339,17 @@ class Document extends Model implements HasMedia
     /**
      * Relación con la fuente/origen del documento
      */
-    public function documentSource(): BelongsTo
+    public function source(): BelongsTo
     {
-        return $this->belongsTo(DocumentSource::class, 'document_source_id');
+        return $this->belongsTo(DocumentSource::class, 'source_id');
+    }
+
+    /**
+     * Relación con el tipo de carga (automatic, manual)
+     */
+    public function uploadType(): BelongsTo
+    {
+        return $this->belongsTo(DocumentUploadType::class, 'upload_id');
     }
 
     /**

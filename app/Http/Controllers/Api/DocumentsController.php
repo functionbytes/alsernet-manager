@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Events\Document\DocumentCreated;
 use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;
+use App\Models\Document\DocumentUploadType;
 use App\Models\Prestashop\Order\Order as PrestashopOrder;
 use App\Services\Documents\DocumentEmailService;
 use Carbon\Carbon;
@@ -129,7 +131,9 @@ class DocumentsController extends ApiController
             $document = new Document;
             $document->order_id = $orderId;
             $document->type = $data['type'] ?? 'general';
-            $document->source = 'api';  // Origen: API Prestashop
+            // Set source_id to 'api' source from document_sources table
+            $apiSource = DocumentSource::where('key', 'api')->first();
+            $document->source_id = $apiSource?->id;
             $document->proccess = 0;    // Estado inicial: pendiente
             $document->lang_id = $langId;  // Assign language
 
@@ -422,7 +426,13 @@ class DocumentsController extends ApiController
                 $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
             }
 
-            $document->source = $request->input('source', 'api');
+            // Set upload type (default to 'manual' for API uploads)
+            $uploadTypeKey = $request->input('upload_type', 'manual');
+            $uploadType = DocumentUploadType::where('key', $uploadTypeKey)->first();
+            if ($uploadType) {
+                $document->upload_id = $uploadType->id;
+            }
+
             $document->save();
 
             // Refrescar nuevamente para obtener los datos actualizados

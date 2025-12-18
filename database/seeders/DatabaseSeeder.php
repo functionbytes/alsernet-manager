@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             WarehouseSeedersV2::class,
             Coruna1LocationsSeeder::class,
             DocumentConfigurationSeeder::class,
+            DocumentUploadTypeSeeder::class,
         ]);
     }
 }
