@@ -12,6 +12,7 @@ use App\Models\Prestashop\Order\Order as PrestashopOrder;
 use App\Services\Documents\DocumentEmailService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DocumentsController extends ApiController
 {
