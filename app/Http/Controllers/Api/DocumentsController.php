@@ -277,6 +277,19 @@ class DocumentsController extends ApiController
             ], 409);
         }
 
+        // Ensure default values for source_id and upload_id if not set
+        if (! $document->source_id) {
+            $apiSource = DocumentSource::where('key', 'api')->first();
+            $document->source_id = $apiSource?->id;
+        }
+
+        if (! $document->upload_id) {
+            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $automaticUpload?->id;
+        }
+
+        $document->save();
+
         // Actualizar JSON de documentos requeridos si no existe
         if (empty($document->required_documents)) {
             $document->updateRequiredDocumentsJson();
@@ -426,12 +439,12 @@ class DocumentsController extends ApiController
                 $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
             }
 
-            // Set upload type (default to 'manual' for API uploads)
-            $uploadTypeKey = $request->input('upload_type', 'manual');
-            $uploadType = DocumentUploadType::where('key', $uploadTypeKey)->first();
-            if ($uploadType) {
-                $document->upload_id = $uploadType->id;
-            }
+            // Set source_id to 'api' and upload_id to 'automatic'
+            $apiSource = DocumentSource::where('key', 'api')->first();
+            $document->source_id = $apiSource?->id;
+
+            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $automaticUpload?->id;
 
             $document->save();
 
