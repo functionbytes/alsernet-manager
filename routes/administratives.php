@@ -11,12 +11,11 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
 
         Route::get('/', [DocumentsController::class, 'index'])->name('administrative.documents');
         Route::get('/pending', [DocumentsController::class, 'pending'])->name('administrative.documents.pending');
-        Route::get('/history', [DocumentsController::class, 'history'])->name('administrative.documents.history');
         Route::get('/create', [DocumentsController::class, 'create'])->name('administrative.documents.create');
         Route::post('/store', [DocumentsController::class, 'store'])->name('administrative.documents.store');
         Route::post('/update', [DocumentsController::class, 'update'])->name('administrative.documents.update');
         Route::get('/edit/{slack}', [DocumentsController::class, 'edit'])->name('administrative.documents.edit');
-        Route::get('/view/{slack}', [DocumentsController::class, 'view'])->name('administrative.documents.view');
+        Route::get('/show/{slack}', [DocumentsController::class, 'show'])->name('administrative.documents.show');
         Route::get('/destroy/{slack}', [DocumentsController::class, 'destroy'])->name('administrative.documents.destroy');
 
         Route::post('/files', [DocumentsController::class, 'storeFiles'])->name('administrative.documents.files');

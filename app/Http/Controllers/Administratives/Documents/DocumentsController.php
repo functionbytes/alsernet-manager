@@ -69,34 +69,6 @@ class DocumentsController extends Controller
         ]);
     }
 
-    /**
-     * Mostrar documentos históricos (completados, rechazados, cancelados)
-     */
-    public function history(Request $request)
-    {
-        $search = trim(strtolower($request->get('search')));
-        $status = $request->get('status');
-        $dateFrom = $request->get('date_from');
-        $dateTo = $request->get('date_to');
-        $perPage = paginationNumber();
-
-        // Filtrar solo documentos históricos (status: completed, rejected, cancelled)
-        $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
-            ->whereIn('proccess', ['completed', 'approved', 'rejected', 'cancelled'])
-            ->when($status, function ($query) use ($status) {
-                $query->where('proccess', $status);
-            })
-            ->paginate($perPage);
-
-        return view('administratives.views.documents.history')->with([
-            'documents' => $documents,
-            'searchKey' => $search,
-            'status' => $status,
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
-        ]);
-    }
-
     public function import()
     {
         return view('administratives.views.documents.import');
@@ -337,7 +309,7 @@ class DocumentsController extends Controller
         }
     }
 
-    public function edit($uid)
+    public function show($uid)
     {
 
         $document = Document::findByUid($uid);
@@ -900,13 +872,16 @@ class DocumentsController extends Controller
                 'status' => 'success',
                 'message' => "Successfully synced {$synced} document(s) for order {$orderId}.",
                 'data' => [
+                    'uid' => $documents->first()?->uid,
                     'order_id' => $orderId,
+                    'type' => $documents->first()?->type,
+                    'lang_id' => $documents->first()?->lang_id,
                     'synced' => $synced,
+                    'products_count' => $productsCount,
+                    'customer_name' => $order->customer ? "{$order->customer->firstname} {$order->customer->lastname}" : null,
+                    'order_reference' => $order->reference,
                     'failed' => $failed,
                     'total' => $documents->count(),
-                    'products_count' => $productsCount,
-                    'order_reference' => $order->reference,
-                    'customer_name' => $order->customer ? "{$order->customer->firstname} {$order->customer->lastname}" : null,
                     'errors' => $failed > 0 ? $errors : [],
                 ],
             ], 200);

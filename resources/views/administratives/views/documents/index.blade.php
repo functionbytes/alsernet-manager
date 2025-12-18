@@ -107,11 +107,11 @@
                             <td class="text-left">
                                 <div class="dropdown dropstart">
                                     <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ti ti-dots fs-5"></i>
+                                        <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.edit', $document->uid) }}">Editar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.show', $document->uid) }}">Ver</a>
                                         </li>
                                         <li class="{{ $document->media->count()>0 ? '' : 'd-none'}}">
                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.summary', $document->uid) }}">Documentos</a>

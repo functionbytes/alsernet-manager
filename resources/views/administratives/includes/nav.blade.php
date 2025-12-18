@@ -60,11 +60,6 @@
                                 <span class="hide-menu">Documentos pendientes</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('administrative.documents.history') }}" class="sidebar-link">
-                                <span class="hide-menu">Histórico</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
 
