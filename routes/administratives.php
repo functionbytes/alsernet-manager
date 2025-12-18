@@ -42,9 +42,12 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::get('/{uid}/refresh-action-history', [DocumentsController::class, 'refreshActionHistory'])->name('administrative.documents.refresh-action-history');
         Route::get('/{uid}/missing-documents', [DocumentsController::class, 'getMissingDocuments'])->name('administrative.documents.missing-documents');
         Route::post('/{uid}/delete-single', [DocumentsController::class, 'deleteSingleDocument'])->name('administrative.documents.delete-single');
+
+        // Nested routes - must come BEFORE generic /manage/{uid} route
         Route::post('/manage/{uid}/add-note', [DocumentsController::class, 'addNote'])->name('administrative.documents.add-note');
         Route::put('/manage/{uid}/update-note/{noteId}', [DocumentsController::class, 'updateNote'])->name('administrative.documents.update-note');
         Route::delete('/manage/{uid}/delete-note/{noteId}', [DocumentsController::class, 'deleteNote'])->name('administrative.documents.delete-note');
+        Route::get('/manage/{uid}', [DocumentsController::class, 'manage'])->name('administrative.documents.manage');
 
         Route::get('/sync/all', [DocumentsController::class, 'syncAllDocuments'])->name('administrative.documents.sync.all');
         Route::post('/sync/by-order', [DocumentsController::class, 'syncByOrderId'])->name('administrative.documents.sync.by-order');
