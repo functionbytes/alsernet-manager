@@ -1018,7 +1018,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h6 class="text-danger mb-2">Aún faltarán después de esta carga:</h6>
+                            <h6 class="text-success mb-2">Aún faltarán después de esta carga:</h6>
                             <ul class="list-unstyled ms-3">
                                 ${missingHtml}
                             </ul>
@@ -1309,23 +1309,45 @@
              * Reemplaza todo el HTML de la sección para evitar errores de sincronización
              */
             function reloadDocumentsSection(uid = documentUid) {
+                console.log('[reloadDocumentsSection] Iniciando recarga para uid:', uid);
+
                 $.ajax({
                     url: "{{ route('administrative.documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        if (response.success) {
+                        console.log('[reloadDocumentsSection] Response:', response);
+
+                        if (response.success && response.html) {
+                            console.log('[reloadDocumentsSection] Reemplazando HTML en #uploadSectionContainer');
+
                             // Reemplazar completamente el contenedor con el nuevo HTML
                             $('#uploadSectionContainer').html(response.html);
 
-                            // Re-inicializar event handlers para los nuevos elementos
-                            initializeUploadHandlers();
-                            initializeDeleteHandlers();
+                            console.log('[reloadDocumentsSection] HTML reemplazado, estado actual:', $('#uploadSectionContainer').html().substring(0, 100));
+
+                            // Asegurar que los event handlers estén activados (usan event delegation, así que no es necesario)
+                            console.log('[reloadDocumentsSection] Recarga completada');
+                        } else {
+                            console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
+                            toastr.error('No se pudo actualizar la sección', 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
                         }
                     },
                     error: function(xhr) {
-                        console.error('Error al refrescar la sección de documentos', xhr);
-                        toastr.error('Error al refrescar la sección de documentos', 'Error', {
+                        console.error('[reloadDocumentsSection] Error AJAX:', xhr);
+                        let errorMsg = 'Error al refrescar la sección de documentos';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        } else if (xhr.status === 404) {
+                            errorMsg = 'La ruta de actualización no existe (404)';
+                        }
+
+                        toastr.error(errorMsg, 'Error', {
                             closeButton: true,
                             progressBar: true,
                             positionClass: "toast-bottom-right"
