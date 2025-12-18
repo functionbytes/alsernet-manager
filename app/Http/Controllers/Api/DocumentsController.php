@@ -204,6 +204,12 @@ class DocumentsController extends ApiController
             $document->refresh();
 
             // Disparar evento SOLO UNA VEZ al final después de toda la configuración
+            Log::info('Dispatching DocumentCreated event', [
+                'document_uid' => $document->uid,
+                'document_id' => $document->id,
+                'order_id' => $document->order_id,
+                'method' => 'documentRequests',
+            ]);
             DocumentCreated::dispatch($document);
 
             return response()->json([

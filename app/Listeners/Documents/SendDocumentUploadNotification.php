@@ -4,7 +4,6 @@ namespace App\Listeners\Documents;
 
 use App\Events\Document\DocumentCreated;
 use App\Jobs\Document\MailTemplateJob;
-use App\Models\Document\DocumentStatus;
 use Illuminate\Support\Facades\Log;
 
 class SendDocumentUploadNotification
@@ -28,19 +27,8 @@ class SendDocumentUploadNotification
             'document_uid' => $document->uid,
             'document_id' => $document->id,
             'order_id' => $document->order_id,
+            'status_id' => $document->status_id,
         ]);
-
-        // Set status to "pending" (Solicitado) - Initial Request email sent
-        if (! $document->status_id) {
-            $pendingStatus = DocumentStatus::where('key', 'pending')->first();
-            if ($pendingStatus) {
-                $document->update(['status_id' => $pendingStatus->id]);
-                Log::info('Document status set to Pending', [
-                    'document_uid' => $document->uid,
-                    'status_id' => $pendingStatus->id,
-                ]);
-            }
-        }
 
         $recipient = $document->customer_email ?? $document->customer?->email;
 
