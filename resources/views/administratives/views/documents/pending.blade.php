@@ -146,68 +146,90 @@
 
 @section('scripts')
     <script>
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-
-        // ===== Reenviar correo (existente) =====
-        document.querySelectorAll('.resend-reminder-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const uid = this.getAttribute('data-uid');
+        $(document).ready(function() {
+            // ===== Reenviar correo =====
+            $(document).on('click', '.resend-reminder-btn', function(e) {
+                e.preventDefault();
+                const uid = $(this).data('uid');
 
                 if (!confirm('¿Estás seguro de que deseas reenviar el correo de recordatorio?')) {
                     return;
                 }
 
-                fetch(`/administratives/documents/${uid}/resend-reminder`, {
+                $.ajax({
+                    url: `/administratives/documents/${uid}/resend-reminder`,
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                })
-                    .then(response => response.json())
-                    .then(data => {
+                    dataType: 'json',
+                    success: function(data) {
                         if (data.success) {
-                            alert('✅ Correo de recordatorio reenviado correctamente');
+                            toastr.success('Correo de recordatorio reenviado correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
                         } else {
-                            alert('❌ Error: ' + (data.message || 'No se pudo reenviar el correo'));
+                            toastr.error('Error: ' + (data.message || 'No se pudo reenviar el correo'), 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('❌ Error al procesar la solicitud');
-                    });
+                    },
+                    error: function() {
+                        console.error('Error en la solicitud AJAX');
+                        toastr.error('Error al procesar la solicitud', 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                });
             });
-        });
 
-        // ===== Confirmar carga de documento (existente) =====
-        document.querySelectorAll('.confirm-upload-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const uid = this.getAttribute('data-uid');
+            // ===== Confirmar carga de documento =====
+            $(document).on('click', '.confirm-upload-btn', function(e) {
+                e.preventDefault();
+                const uid = $(this).data('uid');
 
                 if (!confirm('¿Estás seguro de que deseas confirmar la carga del documento?')) {
                     return;
                 }
 
-                fetch(`/administratives/documents/${uid}/confirm-upload`, {
+                $.ajax({
+                    url: `/administratives/documents/${uid}/confirm-upload`,
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                })
-                    .then(response => response.json())
-                    .then(data => {
+                    dataType: 'json',
+                    success: function(data) {
                         if (data.success) {
-                            alert('✅ Carga de documento confirmada correctamente');
-                            location.reload();
+                            toastr.success('Carga de documento confirmada correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            setTimeout(() => location.reload(), 1500);
                         } else {
-                            alert('❌ Error: ' + (data.message || 'No se pudo confirmar la carga'));
+                            toastr.error('Error: ' + (data.message || 'No se pudo confirmar la carga'), 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('❌ Error al procesar la solicitud');
-                    });
+                    },
+                    error: function() {
+                        console.error('Error en la solicitud AJAX');
+                        toastr.error('Error al procesar la solicitud', 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                });
             });
         });
     </script>

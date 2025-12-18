@@ -82,265 +82,239 @@
 
 @push('scripts')
     <script>
-        console.log('Script de import.blade.php cargado');
+        $(document).ready(function() {
+            const $orderIdsInput = $('#order_ids_input');
+            const $addOrderBtn = $('#add-order-btn');
+            const $ordersListContainer = $('#orders_list_container');
+            const $ordersList = $('#orders_list');
+            const $importBtn = $('#import-btn');
+            const $resultsContainer = $('#results-container');
+            const $resultsContent = $('#results-content');
+            let selectedOrderIds = [];
 
-        (function() {
-            console.log('IIFE ejecutándose');
+            // Validar que los elementos existan
+            if ($orderIdsInput.length === 0 || $addOrderBtn.length === 0 || $importBtn.length === 0) {
+                console.error('No se encontraron los elementos del formulario de importación');
+                return;
+            }
 
-            // Función para inicializar cuando el DOM esté listo
-            function initializeImportForm() {
-                console.log('initializeImportForm llamada');
-                const orderIdsInput = document.getElementById('order_ids_input');
-                const addOrderBtn = document.getElementById('add-order-btn');
-                const ordersListContainer = document.getElementById('orders_list_container');
-                const ordersList = document.getElementById('orders_list');
-                const importBtn = document.getElementById('import-btn');
-                const resultsContainer = document.getElementById('results-container');
-                const resultsContent = document.getElementById('results-content');
-                let selectedOrderIds = [];
+            // Manejar clic en botón Agregar
+            $addOrderBtn.on('click', function() {
+                addOrderIds();
+            });
 
-                // Validar que los elementos existan
-                if (!orderIdsInput || !addOrderBtn || !importBtn) {
-                    console.error('No se encontraron los elementos del formulario de importación');
-                    console.log('orderIdsInput:', orderIdsInput);
-                    console.log('addOrderBtn:', addOrderBtn);
-                    console.log('importBtn:', importBtn);
-                    console.log('Todos los elementos encontrados:');
-                    console.log('- order_ids_input:', document.getElementById('order_ids_input'));
-                    console.log('- add-order-btn:', document.getElementById('add-order-btn'));
-                    console.log('- import-btn:', document.getElementById('import-btn'));
+            // Manejar entrada de IDs con Enter
+            $orderIdsInput.on('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addOrderIds();
+                }
+            });
+
+            function addOrderIds() {
+                const inputValue = $orderIdsInput.val().trim();
+
+                if (!inputValue) {
                     return;
                 }
-                console.log('Script de importación inicializado correctamente');
-                console.log('addOrderBtn encontrado:', addOrderBtn);
 
-                // Manejar clic en botón Agregar
-                addOrderBtn.addEventListener('click', function() {
-                    addOrderIds();
-                });
+                // Dividir por comas y procesar cada ID
+                const ids = inputValue.split(',').map(id => id.trim()).filter(id => id && /^\d+$/.test(id));
 
-                // Manejar entrada de IDs con Enter
-                orderIdsInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addOrderIds();
-                    }
-                });
-
-                function addOrderIds() {
-                    console.log('addOrderIds ejecutada');
-                    const inputValue = orderIdsInput.value.trim();
-                    console.log('inputValue:', inputValue);
-
-                    if (!inputValue) {
-                        console.log('Input vacío');
-                        return;
-                    }
-
-                    // Dividir por comas y procesar cada ID
-                    const ids = inputValue.split(',').map(id => {
-                        return id.trim();
-                    }).filter(id => id && /^\d+$/.test(id)); // Solo números
-
-                    console.log('IDs procesados:', ids);
-
-                    if (ids.length === 0) {
-                        alert('Por favor ingresa IDs válidos separados por comas (solo números)');
-                        return;
-                    }
-
-                    // Agregar IDs que no estén duplicados
-                    ids.forEach(id => {
-                        if (!selectedOrderIds.includes(id)) {
-                            selectedOrderIds.push(id);
-                        }
+                if (ids.length === 0) {
+                    toastr.warning('Por favor ingresa IDs válidos separados por comas (solo números)', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
                     });
-
-                    console.log('selectedOrderIds actualizado:', selectedOrderIds);
-                    orderIdsInput.value = ''; // Limpiar input
-                    updateOrdersList();
+                    return;
                 }
 
-                function updateOrdersList() {
-                    if (selectedOrderIds.length === 0) {
-                        ordersListContainer.style.display = 'none';
-                        importBtn.disabled = true;
-                        return;
+                // Agregar IDs que no estén duplicados
+                ids.forEach(id => {
+                    if (!selectedOrderIds.includes(id)) {
+                        selectedOrderIds.push(id);
                     }
+                });
 
-                    ordersListContainer.style.display = 'block';
-                    ordersList.innerHTML = selectedOrderIds.map(id => `
-                        <div class="badge bg-primary me-2 " >
-                           ${id}
-                            <button type="button" class="btn-close btn-close-white ms-2" style="font-size: 0.7rem;" onclick="removeOrderId('${id}')"></button>
+                $orderIdsInput.val(''); // Limpiar input
+                updateOrdersList();
+            }
+
+            function updateOrdersList() {
+                if (selectedOrderIds.length === 0) {
+                    $ordersListContainer.hide();
+                    $importBtn.prop('disabled', true);
+                    return;
+                }
+
+                let html = '';
+                selectedOrderIds.forEach(id => {
+                    html += `
+                        <div class="badge bg-primary me-2">
+                            ${id}
+                            <button type="button" class="btn-close btn-close-white ms-2 remove-order-btn" data-order-id="${id}" style="font-size: 0.7rem;"></button>
                         </div>
-                    `).join('');
+                    `;
+                });
 
-                    importBtn.disabled = false;
+                $ordersList.html(html);
+                $ordersListContainer.show();
+                $importBtn.prop('disabled', false);
+            }
+
+            // Manejar eliminar orden (delegado)
+            $(document).on('click', '.remove-order-btn', function() {
+                const orderId = $(this).data('order-id');
+                selectedOrderIds = selectedOrderIds.filter(oid => oid !== orderId);
+                updateOrdersList();
+            });
+
+            // Importar órdenes
+            $importBtn.on('click', function() {
+                if (selectedOrderIds.length === 0) {
+                    toastr.warning('Por favor ingresa al menos una orden para importar', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    return;
                 }
 
-                window.removeOrderId = function(id) {
-                    selectedOrderIds = selectedOrderIds.filter(oid => oid !== id);
-                    updateOrdersList();
-                };
+                // Mostrar modal de confirmación
+                $('#import-count-text').text(`Se importarán ${selectedOrderIds.length} orden(es)`);
+                const modal = new bootstrap.Modal(document.getElementById('import-confirm-modal'));
+                modal.show();
+            });
 
-                // Importar órdenes
-                importBtn.addEventListener('click', function() {
-                    if (selectedOrderIds.length === 0) {
-                        alert('Por favor ingresa al menos una orden para importar');
+            // Confirmar importación desde el modal
+            $(document).on('click', '#confirm-import-btn', function() {
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('import-confirm-modal'));
+                modal.hide();
+
+                $importBtn.prop('disabled', true).html('<i class="fa-duotone fa-spinner fa-spin"></i> Importando...');
+                importOrders(selectedOrderIds);
+            });
+
+            function importOrders(orderIds) {
+                const totalOrders = orderIds.length;
+                let importedCount = 0;
+                let resultsHtml = `
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Orden</th>
+                                    <th>Detalles</th>
+                                    <th class="text-end">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                const importNext = (index) => {
+                    if (index >= orderIds.length) {
+                        // Mostrar resultados
+                        resultsHtml += '</tbody></table></div>';
+                        showResults(resultsHtml, importedCount, totalOrders);
+                        $importBtn.prop('disabled', false).html('Importar');
                         return;
                     }
 
-                    // Mostrar modal de confirmación
-                    const importCountText = document.getElementById('import-count-text');
-                    importCountText.textContent = `Se importarán ${selectedOrderIds.length} orden(es)`;
-                    
-                    const modal = new bootstrap.Modal(document.getElementById('import-confirm-modal'));
-                    modal.show();
-                });
+                    const orderId = orderIds[index];
 
-                // Confirmar importación desde el modal
-                document.getElementById('confirm-import-btn').addEventListener('click', function() {
-                    // Cerrar modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('import-confirm-modal'));
-                    modal.hide();
-
-                    importBtn.disabled = true;
-                    importBtn.innerHTML = '<i class="fa-duotone fa-spinner fa-spin"></i> Importando...';
-
-                    importOrders(selectedOrderIds);
-                });
-
-                function importOrders(orderIds) {
-                    const totalOrders = orderIds.length;
-                    let importedCount = 0;
-                    let resultsHtml = `
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Orden</th>
-                                        <th>Detalles</th>
-                                        <th class="text-end">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-
-                    const importNext = (index) => {
-                        if (index >= orderIds.length) {
-                            // Mostrar resultados
-                            resultsHtml += '</tbody></table></div>';
-                            showResults(resultsHtml, importedCount, totalOrders);
-                            importBtn.disabled = false;
-                            importBtn.innerHTML = 'Importar';
-                            return;
-                        }
-
-                        const orderId = orderIds[index];
-
-                        fetch(`/administrative/documents/sync/by-order?order_id=${orderId}`, {
-                            method: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    importedCount++;
-                                    const productsCount = data.data.products_count || 0;
-
-                                    resultsHtml += `
-                                        <tr>
-                                            <td><strong>${orderId}</strong></td>
-                                            <td>${data.data.synced} sincronizados • ${productsCount} productos • ${data.data.customer_name || 'N/A'}</td>
-                                            <td class="text-end"><span class="badge bg-success">Importada</span></td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    const errorMessage = data.message || 'Error desconocido';
-                                    const additionalInfo = data.data && data.data.existing_documents
-                                        ? ` • ${data.data.existing_documents} documentos existentes`
-                                        : '';
-
-                                    resultsHtml += `
-                                        <tr>
-                                            <td><strong>${orderId}</strong></td>
-                                            <td class="text-muted">${errorMessage}${additionalInfo}</td>
-                                            <td class="text-end"><span class="badge bg-danger">Error</span></td>
-                                        </tr>
-                                    `;
-                                }
-
-                                importNext(index + 1);
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
+                    $.ajax({
+                        url: `/administrative/documents/sync/by-order?order_id=${orderId}`,
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.status === 'success') {
+                                importedCount++;
+                                const productsCount = data.data.products_count || 0;
 
                                 resultsHtml += `
                                     <tr>
                                         <td><strong>${orderId}</strong></td>
-                                        <td class="text-muted">No se pudo procesar la solicitud</td>
+                                        <td>${data.data.synced} sincronizados • ${productsCount} productos • ${data.data.customer_name || 'N/A'}</td>
+                                        <td class="text-end"><span class="badge bg-success">Importada</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                const errorMessage = data.message || 'Error desconocido';
+                                const additionalInfo = data.data && data.data.existing_documents
+                                    ? ` • ${data.data.existing_documents} documentos existentes`
+                                    : '';
+
+                                resultsHtml += `
+                                    <tr>
+                                        <td><strong>${orderId}</strong></td>
+                                        <td class="text-muted">${errorMessage}${additionalInfo}</td>
                                         <td class="text-end"><span class="badge bg-danger">Error</span></td>
                                     </tr>
                                 `;
+                            }
 
-                                importNext(index + 1);
-                            });
-                    };
+                            importNext(index + 1);
+                        },
+                        error: function() {
+                            console.error('Error en la importación de orden:', orderId);
 
-                    importNext(0);
-                }
+                            resultsHtml += `
+                                <tr>
+                                    <td><strong>${orderId}</strong></td>
+                                    <td class="text-muted">No se pudo procesar la solicitud</td>
+                                    <td class="text-end"><span class="badge bg-danger">Error</span></td>
+                                </tr>
+                            `;
 
-                function showResults(html, imported, total) {
-                    const failed = total - imported;
-                    resultsContent.innerHTML = `
-                <div class="card mb-4 border-0 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="mb-4">Resumen de Importación</h5>
-                        <div class="row text-center g-3">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3">
-                                    <h2 class="mb-1 text-dark fw-bold">${total}</h2>
-                                    <p class="mb-0 text-muted small">Total</p>
+                            importNext(index + 1);
+                        }
+                    });
+                };
+
+                importNext(0);
+            }
+
+            function showResults(html, imported, total) {
+                const failed = total - imported;
+                const resultsHtml = `
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="mb-4">Resumen de Importación</h5>
+                            <div class="row text-center g-3">
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h2 class="mb-1 text-dark fw-bold">${total}</h2>
+                                        <p class="mb-0 text-muted small">Total</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="border border-success rounded p-3">
-                                    <h2 class="mb-1 text-success fw-bold">${imported}</h2>
-                                    <p class="mb-0 text-muted small">Importadas</p>
+                                <div class="col-md-4">
+                                    <div class="border border-success rounded p-3">
+                                        <h2 class="mb-1 text-success fw-bold">${imported}</h2>
+                                        <p class="mb-0 text-muted small">Importadas</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="border border-danger rounded p-3">
-                                    <h2 class="mb-1 text-danger fw-bold">${failed}</h2>
-                                    <p class="mb-0 text-muted small">Fallidas</p>
+                                <div class="col-md-4">
+                                    <div class="border border-danger rounded p-3">
+                                        <h2 class="mb-1 text-danger fw-bold">${failed}</h2>
+                                        <p class="mb-0 text-muted small">Fallidas</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <h5 class="mb-3">Detalle de Importación</h5>
-                ${html}
-            `;
-                    resultsContainer.style.display = 'block';
-                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
+                    <h5 class="mb-3">Detalle de Importación</h5>
+                    ${html}
+                `;
 
-            // Ejecutar cuando el DOM esté listo (múltiples estrategias de compatibilidad)
-            console.log('Verificando readyState:', document.readyState);
-            if (document.readyState === 'loading') {
-                console.log('Esperando DOMContentLoaded');
-                document.addEventListener('DOMContentLoaded', initializeImportForm);
-            } else {
-                console.log('DOM ya está listo, ejecutando inmediatamente');
-                initializeImportForm();
+                $resultsContent.html(resultsHtml);
+                $resultsContainer.show();
+                $resultsContainer[0].scrollIntoView({ behavior: 'smooth' });
             }
-        })();
-
-        console.log('Script finalizado');
+        });
     </script>
 @endpush
