@@ -941,9 +941,8 @@ class DocumentsController extends Controller
         $products = $document->products;
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
-        // Get all active statuses except 'pending'
-        $statuses = DocumentStatus::where('is_active', true)
-            ->where('key', '!=', 'pending')
+        // Get all statuses except 'pending'
+        $statuses = DocumentStatus::where('key', '!=', 'pending')
             ->orderBy('order')
             ->get();
 
