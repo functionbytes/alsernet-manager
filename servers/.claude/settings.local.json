@@ -16,7 +16,11 @@
       "Bash(php artisan:*)",
       "Bash(curl:*)",
       "Bash(done)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(for event in \"Auth/Password/ForgotPasswordCreated\" \"Auth/Password/ResetPasswordCreated\" \"Auth/UserLoggedOut\" \"CampaignMaillistSubscription\" \"CampaignMaillistUnsubscription\")",
+      "Bash(do if [ ! -f \"app/Events/$event.php\" ])",
+      "Bash(then echo \"❌ FALTA: app/Events/$event.php\")",
+      "Bash(fi)"
     ]
   },
   "disabledMcpjsonServers": [

@@ -63,12 +63,12 @@
                         <!-- Edit Form (Hidden by default) -->
                         <div class="note-edit-form d-none mt-2" style="display: none;">
                             <textarea class="form-control form-control-sm note-edit-textarea" rows="2" style="resize: none; font-size: 0.85rem;">{{ $note->content }}</textarea>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn-note-save btn-sm btn btn-success" data-note-id="{{ $note->id }}">
-                                    <i class="fas fa-check me-1"></i> Guardar
+                            <div class="gap-2 mt-2">
+                                <button class="btn-note-save btn-sm btn btn-primary w-100 mb-1" data-note-id="{{ $note->id }}">
+                                    Guardar
                                 </button>
-                                <button class="btn-note-cancel btn-sm btn btn-secondary">
-                                    <i class="fas fa-times me-1"></i> Cancelar
+                                <button class="btn-note-cancel btn-sm btn btn-secondary  w-100">
+                                    Cancelar
                                 </button>
                             </div>
                         </div>
@@ -97,319 +97,298 @@
 
 @push('scripts')
 <script>
-    const documentUid = '{{ $document->uid }}';
+    $(document).ready(function() {
+        const documentUid = '{{ $document->uid }}';
 
-    // Function to rebind event listeners after adding new notes
-    function rebindNoteEventListeners() {
-        // Edit Note
-        document.querySelectorAll('.btn-note-edit').forEach(btn => {
-            btn.removeEventListener('click', editNoteHandler);
-            btn.addEventListener('click', editNoteHandler);
-        });
+        // Function to rebind event listeners after adding new notes
+        function rebindNoteEventListeners() {
+            // Edit Note
+            $(document).off('click', '.btn-note-edit').on('click', '.btn-note-edit', editNoteHandler);
 
-        // Delete Note
-        document.querySelectorAll('.btn-note-delete').forEach(btn => {
-            btn.removeEventListener('click', deleteNoteHandler);
-            btn.addEventListener('click', deleteNoteHandler);
-        });
+            // Delete Note
+            $(document).off('click', '.btn-note-delete').on('click', '.btn-note-delete', deleteNoteHandler);
 
-        // Save Note
-        document.querySelectorAll('.btn-note-save').forEach(btn => {
-            btn.removeEventListener('click', saveNoteHandler);
-            btn.addEventListener('click', saveNoteHandler);
-        });
+            // Save Note
+            $(document).off('click', '.btn-note-save').on('click', '.btn-note-save', saveNoteHandler);
 
-        // Cancel Note Edit
-        document.querySelectorAll('.btn-note-cancel').forEach(btn => {
-            btn.removeEventListener('click', cancelNoteHandler);
-            btn.addEventListener('click', cancelNoteHandler);
-        });
-    }
-
-    // Edit Note Handler
-    function editNoteHandler(e) {
-        const noteId = this.dataset.noteId;
-        const noteItem = document.querySelector(`[data-note-id="${noteId}"]`);
-        const noteContent = noteItem.querySelector('.note-content');
-        const editForm = noteItem.querySelector('.note-edit-form');
-
-        noteContent.style.display = 'none';
-        editForm.classList.remove('d-none');
-        editForm.style.display = 'block';
-        editForm.querySelector('.note-edit-textarea').focus();
-    }
-
-    // Cancel Edit Handler
-    function cancelNoteHandler(e) {
-        e.preventDefault();
-        const noteItem = this.closest('.note-item');
-        const noteContent = noteItem.querySelector('.note-content');
-        const editForm = noteItem.querySelector('.note-edit-form');
-
-        editForm.classList.add('d-none');
-        editForm.style.display = 'none';
-        noteContent.style.display = 'block';
-    }
-
-    // Save Note Handler
-    function saveNoteHandler(e) {
-        e.preventDefault();
-        const noteId = this.dataset.noteId;
-        const noteItem = document.querySelector(`[data-note-id="${noteId}"]`);
-        const editForm = noteItem.querySelector('.note-edit-form');
-        const textarea = editForm.querySelector('.note-edit-textarea');
-        const content = textarea.value;
-
-        if (!content.trim()) {
-            toastr.warning('La nota no puede estar vacía', 'Atención', {
-                closeButton: true,
-                progressBar: true,
-                positionClass: "toast-bottom-right"
-            });
-            return;
+            // Cancel Note Edit
+            $(document).off('click', '.btn-note-cancel').on('click', '.btn-note-cancel', cancelNoteHandler);
         }
 
-        const $btn = this;
-        $btn.disabled = true;
-        $btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>';
+        // Edit Note Handler
+        function editNoteHandler(e) {
+            e.preventDefault();
+            const noteId = $(this).data('note-id');
+            const $noteItem = $(`[data-note-id="${noteId}"]`);
+            const $noteContent = $noteItem.find('.note-content');
+            const $editForm = $noteItem.find('.note-edit-form');
 
-        fetch(`/administrative/documents/manage/${documentUid}/update-note/${noteId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-            },
-            body: JSON.stringify({ content: content })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const noteContent = noteItem.querySelector('.note-content');
-                noteContent.querySelector('p').textContent = content;
-                editForm.classList.add('d-none');
-                editForm.style.display = 'none';
-                noteContent.style.display = 'block';
+            $noteContent.hide();
+            $editForm.removeClass('d-none').show();
+            $editForm.find('.note-edit-textarea').focus();
+        }
 
-                toastr.success('Nota actualizada correctamente', 'Éxito', {
+        // Cancel Edit Handler
+        function cancelNoteHandler(e) {
+            e.preventDefault();
+            const $noteItem = $(this).closest('.note-item');
+            const $noteContent = $noteItem.find('.note-content');
+            const $editForm = $noteItem.find('.note-edit-form');
+
+            $editForm.addClass('d-none').hide();
+            $noteContent.show();
+        }
+
+        // Save Note Handler
+        function saveNoteHandler(e) {
+            e.preventDefault();
+            const noteId = $(this).data('note-id');
+            const $noteItem = $(`[data-note-id="${noteId}"]`);
+            const $editForm = $noteItem.find('.note-edit-form');
+            const content = $editForm.find('.note-edit-textarea').val();
+            const $btn = $(this);
+
+            if (!content.trim()) {
+                toastr.warning('La nota no puede estar vacía', 'Atención', {
                     closeButton: true,
                     progressBar: true,
                     positionClass: "toast-bottom-right"
                 });
-            } else {
-                toastr.error('Error: ' + (data.message || 'No se pudo actualizar la nota'), 'Error', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
-                });
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            toastr.error('Error al actualizar la nota', 'Error', {
-                closeButton: true,
-                progressBar: true,
-                positionClass: "toast-bottom-right"
-            });
-        })
-        .finally(() => {
-            $btn.disabled = false;
-            $btn.innerHTML = '<i class="fas fa-check me-1"></i> Guardar';
-        });
-    }
 
-    // Delete Note Handler
-    function deleteNoteHandler(e) {
-        e.preventDefault();
-        const noteId = this.dataset.noteId;
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
-        if (confirm('¿Estás seguro de que deseas eliminar esta nota?')) {
-            const $btn = this;
-            $btn.disabled = true;
-            $btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-            fetch(`/administrative/documents/manage/${documentUid}/delete-note/${noteId}`, {
-                method: 'DELETE',
+            $.ajax({
+                url: `/administrative/documents/manage/${documentUid}/update-note/${noteId}`,
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const noteItem = document.querySelector(`[data-note-id="${noteId}"]`);
-                    noteItem.remove();
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
+                },
+                dataType: 'json',
+                data: JSON.stringify({ content: content }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if (data.success) {
+                        const $noteContent = $noteItem.find('.note-content');
+                        $noteContent.find('p').text(content);
+                        $editForm.addClass('d-none').hide();
+                        $noteContent.show();
 
-                    toastr.success('Nota eliminada correctamente', 'Éxito', {
+                        toastr.success('Nota actualizada correctamente', 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    } else {
+                        toastr.error('Error: ' + (data.message || 'No se pudo actualizar la nota'), 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    toastr.error('Error al actualizar la nota', 'Error', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
                     });
-
-                    // Reload if no notes left
-                    if (document.querySelectorAll('.note-item').length === 0) {
-                        setTimeout(() => location.reload(), 500);
-                    }
-                } else {
-                    toastr.error('Error: ' + (data.message || 'No se pudo eliminar la nota'), 'Error', {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-bottom-right"
-                    });
-                    $btn.disabled = false;
-                    $btn.innerHTML = '<i class="fas fa-trash-alt text-danger"></i>';
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).html('<i class="fas fa-check me-1"></i> Guardar');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('Error al eliminar la nota', 'Error', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
-                });
-                $btn.disabled = false;
-                $btn.innerHTML = '<i class="fas fa-trash-alt text-danger"></i>';
             });
         }
-    }
 
-    // Initial binding on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        rebindNoteEventListeners();
-    });
+        // Delete Note Handler
+        function deleteNoteHandler(e) {
+            e.preventDefault();
+            const noteId = $(this).data('note-id');
+            const $btn = $(this);
 
-    // Add New Note
-    document.getElementById('addNoteForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+            if (confirm('¿Estás seguro de que deseas eliminar esta nota?')) {
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
-        const content = document.getElementById('noteContent').value;
+                $.ajax({
+                    url: `/administrative/documents/manage/${documentUid}/delete-note/${noteId}`,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('[name="_token"]').val()
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.success) {
+                            $(`[data-note-id="${noteId}"]`).remove();
 
-        if (!content.trim()) {
-            toastr.warning('La nota no puede estar vacía', 'Atención', {
-                closeButton: true,
-                progressBar: true,
-                positionClass: "toast-bottom-right"
-            });
-            return;
-        }
+                            toastr.success('Nota eliminada correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
 
-        const $btn = this.querySelector('button[type="submit"]');
-        $btn.disabled = true;
-        $btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Guardando...';
-
-        fetch(`/administrative/documents/manage/${documentUid}/add-note`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-            },
-            body: JSON.stringify({ content: content })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.note) {
-                // Add note to DOM without reloading
-                const notesList = document.querySelector('.notes-scroll');
-
-                // Safe handling of author data
-                const author = data.note.author || {};
-                const firstname = author.firstname || 'S';
-                const lastname = author.lastname || '';
-                const userInitials = firstname.charAt(0).toUpperCase() + lastname.charAt(0).toUpperCase();
-                const authorName = author.firstname ? `${author.firstname} ${lastname.charAt(0)}.` : 'Sistema';
-
-                const noteHTML = `
-                    <div class="note-item border-bottom px-2 px-md-0 py-2" data-note-id="${data.note.id}">
-                        <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
-                            <div class="d-flex align-items-center gap-2 min-width-0">
-                                <div class="avatar-initials flex-shrink-0" style="background-color: #f6f7f9;">
-                                    ${userInitials}
-                                </div>
-                                <div class="min-width-0">
-                                    <small class="fw-semibold d-block text-truncate">
-                                        ${authorName}
-                                    </small>
-                                    <small class="text-muted d-block" style="font-size: 0.7rem;">
-                                        ${new Date().toLocaleDateString('es-ES', {year: 'numeric', month: 'short', day: 'numeric'})}
-                                        ${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-1 flex-shrink-0">
-                                <div class="note-actions-editable">
-                                    <button class="btn-note-edit" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Editar nota">
-                                        <i class="fas fa-pen-to-square text-black fs-2"></i>
-                                    </button>
-                                    <button class="btn-note-delete" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
-                                        <i class="fas fa-trash text-black fs-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="note-content mt-3">
-                            <p class="text-dark mb-0 small text-truncate-3" data-full-text="${data.note.content}">
-                                ${data.note.content}
-                            </p>
-                        </div>
-                        <div class="note-edit-form d-none mt-2" style="display: none;">
-                            <textarea class="form-control form-control-sm note-edit-textarea" rows="2" style="resize: none; font-size: 0.85rem;">${data.note.content}</textarea>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn-note-save btn-sm btn btn-success" data-note-id="${data.note.id}">
-                                    <i class="fas fa-check me-1"></i> Guardar
-                                </button>
-                                <button class="btn-note-cancel btn-sm btn btn-secondary">
-                                    <i class="fas fa-times me-1"></i> Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // If notes list doesn't exist, create it (first note)
-                if (!notesList) {
-                    const noNotesAlert = document.querySelector('.card-body [role="alert"]');
-                    if (noNotesAlert) {
-                        noNotesAlert.replaceWith(`
-                            <div class="notes-scroll scrollable mb-3">
-                                ${noteHTML}
-                            </div>
-                        `);
+                            // Reload if no notes left
+                            if ($('.note-item').length === 0) {
+                                setTimeout(() => location.reload(), 500);
+                            }
+                        } else {
+                            toastr.error('Error: ' + (data.message || 'No se pudo eliminar la nota'), 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            $btn.prop('disabled', false).html('<i class="fas fa-trash text-danger"></i>');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        toastr.error('Error al eliminar la nota', 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                        $btn.prop('disabled', false).html('<i class="fas fa-trash text-danger"></i>');
                     }
-                } else {
-                    // Insert at the beginning of notes-scroll
-                    notesList.insertAdjacentHTML('afterbegin', noteHTML);
-                }
-
-                // Rebind event listeners for new note
-                rebindNoteEventListeners();
-
-                // Clear form
-                document.getElementById('noteContent').value = '';
-
-                toastr.success('Nota guardada correctamente', 'Éxito', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
-                });
-            } else {
-                toastr.error('Error: ' + (data.message || 'No se pudo guardar la nota'), 'Error', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
                 });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            toastr.error('Error al agregar la nota', 'Error', {
-                closeButton: true,
-                progressBar: true,
-                positionClass: "toast-bottom-right"
+        }
+
+        // Initial binding on page load
+        rebindNoteEventListeners();
+
+        // Add New Note
+        $('#addNoteForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const content = $('#noteContent').val();
+
+            if (!content.trim()) {
+                toastr.warning('La nota no puede estar vacía', 'Atención', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-bottom-right"
+                });
+                return;
+            }
+
+            const $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
+
+            $.ajax({
+                url: `/administrative/documents/manage/${documentUid}/add-note`,
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
+                },
+                dataType: 'json',
+                data: JSON.stringify({ content: content }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if (data.success && data.note) {
+                        // Add note to DOM without reloading
+                        const $notesList = $('.notes-scroll');
+
+                        // Safe handling of author data
+                        const author = data.note.author || {};
+                        const firstname = author.firstname || 'S';
+                        const lastname = author.lastname || '';
+                        const userInitials = firstname.charAt(0).toUpperCase() + lastname.charAt(0).toUpperCase();
+                        const authorName = author.firstname ? `${author.firstname} ${lastname.charAt(0)}.` : 'Sistema';
+
+                        const noteHTML = `
+                            <div class="note-item border-bottom px-2 px-md-0 py-2" data-note-id="${data.note.id}">
+                                <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                                    <div class="d-flex align-items-center gap-2 min-width-0">
+                                        <div class="avatar-initials flex-shrink-0" style="background-color: #f6f7f9;">
+                                            ${userInitials}
+                                        </div>
+                                        <div class="min-width-0">
+                                            <small class="fw-semibold d-block text-truncate">
+                                                ${authorName}
+                                            </small>
+                                            <small class="text-muted d-block" style="font-size: 0.7rem;">
+                                                ${new Date().toLocaleDateString('es-ES', {year: 'numeric', month: 'short', day: 'numeric'})}
+                                                ${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                        <div class="note-actions-editable">
+                                            <button class="btn-note-edit" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Editar nota">
+                                                <i class="fas fa-pen-to-square text-black fs-2"></i>
+                                            </button>
+                                            <button class="btn-note-delete" data-note-id="${data.note.id}" data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
+                                                <i class="fas fa-trash text-black fs-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="note-content mt-3">
+                                    <p class="text-dark mb-0 small text-truncate-3" data-full-text="${data.note.content}">
+                                        ${data.note.content}
+                                    </p>
+                                </div>
+                                <div class="note-edit-form d-none mt-2" style="display: none;">
+                                    <textarea class="form-control form-control-sm note-edit-textarea" rows="2" style="resize: none; font-size: 0.85rem;">${data.note.content}</textarea>
+                                    <div class="gap-2 mt-2">
+                                        <button class="btn-note-save btn-sm btn btn-success w-100" data-note-id="${data.note.id}">
+                                            Guardar
+                                        </button>
+                                        <button class="btn-note-cancel btn-sm btn btn-secondary  w-100">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        // If notes list doesn't exist, create it (first note)
+                        if ($notesList.length === 0) {
+                            const $noNotesAlert = $('.card-body [role="alert"]');
+                            if ($noNotesAlert.length) {
+                                $noNotesAlert.replaceWith(`
+                                    <div class="notes-scroll scrollable mb-3">
+                                        ${noteHTML}
+                                    </div>
+                                `);
+                            }
+                        } else {
+                            // Insert at the beginning of notes-scroll
+                            $notesList.prepend(noteHTML);
+                        }
+
+                        // Rebind event listeners for new note
+                        rebindNoteEventListeners();
+
+                        // Clear form
+                        $('#noteContent').val('');
+
+                        toastr.success('Nota guardada correctamente', 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    } else {
+                        toastr.error('Error: ' + (data.message || 'No se pudo guardar la nota'), 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    toastr.error('Error al agregar la nota', 'Error', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).html('<i class="fas fa-plus me-1"></i> Agregar');
+                }
             });
-        })
-        .finally(() => {
-            $btn.disabled = false;
-            $btn.innerHTML = '<i class="fas fa-plus me-1"></i> Agregar';
         });
     });
 </script>
@@ -505,9 +484,7 @@
     }
 
     .btn-note-edit,
-    .btn-note-delete,
-    .btn-note-save,
-    .btn-note-cancel {
+    .btn-note-delete {
         background: none;
         border: none;
         padding: 0.25rem 0.35rem;

@@ -65,32 +65,43 @@
 
 @push('scripts')
 <script>
-    document.getElementById('addNoteForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $('#addNoteForm').on('submit', function(e) {
+            e.preventDefault();
 
-        const content = document.getElementById('noteContent').value;
-        const documentUid = '{{ $document->uid }}';
+            const content = $('#noteContent').val();
+            const documentUid = '{{ $document->uid }}';
 
-        fetch(`/administrative/orders/manage/${documentUid}/add-note`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-            },
-            body: JSON.stringify({ content: content })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Recargar la página o actualizar dinámicamente
-                location.reload();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al agregar la nota');
+            $.ajax({
+                url: `/administrative/orders/manage/${documentUid}/add-note`,
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
+                },
+                dataType: 'json',
+                data: JSON.stringify({ content: content }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if (data.success) {
+                        // Recargar la página o actualizar dinámicamente
+                        location.reload();
+                    } else {
+                        toastr.error('Error: ' + data.message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    toastr.error('Error al agregar la nota', 'Error', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                }
+            });
         });
     });
 </script>
