@@ -411,7 +411,7 @@ public function boot()
 {
     if (app()->isLocal()) {
         // Sync routes on every boot in development
-        $this->app->make(\App\Services\RouteSyncService::class)->syncAllRoutes();
+        $this->app->make(\App\Services\Systems\RouteSyncService::class)->syncAllRoutes();
     }
 }
 ```

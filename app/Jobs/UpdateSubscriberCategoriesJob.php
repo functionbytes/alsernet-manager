@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

@@ -4,7 +4,7 @@ namespace App\Mail\Documents;
 
 use App\Models\Document\Document;
 use App\Models\Mail\MailTemplate;
-use App\Services\Email\TemplateRendererService;
+use App\Services\Mails\MailTemplateRendererService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -96,13 +96,13 @@ class DocumentCustomMail extends Mailable
     private function buildFromTemplate(): self
     {
         // Renderizar template con variables
-        $htmlContent = TemplateRendererService::renderEmailTemplate(
+        $htmlContent = MailTemplateRendererService::renderEmailTemplate(
             $this->emailTemplate,
             $this->templateVariables
         );
 
         // Obtener asunto (puede tener variables también)
-        $subject = TemplateRendererService::replaceVariables(
+        $subject = MailTemplateRendererService::replaceVariables(
             $this->emailTemplate->subject,
             $this->templateVariables
         );
@@ -122,7 +122,7 @@ class DocumentCustomMail extends Mailable
         $content = $this->emailContent;
 
         if ($content) {
-            $content = TemplateRendererService::replaceVariables(
+            $content = MailTemplateRendererService::replaceVariables(
                 $content,
                 $this->templateVariables
             );

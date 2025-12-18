@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Return\ComponentService;
+use App\Services\Returns\ComponentService;
 use App\Models\ProductComponent;
 use Illuminate\Console\Command;
 

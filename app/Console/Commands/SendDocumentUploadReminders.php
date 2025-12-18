@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\Document\MailTemplateJob;
+use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;

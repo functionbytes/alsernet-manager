@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\Document\DocumentCreated;
-use App\Jobs\Document\MailTemplateJob;
+use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
 use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;

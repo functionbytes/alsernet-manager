@@ -1031,7 +1031,7 @@ Create `app/Services/Documents/DocumentEmailService.php`:
 
 namespace App\Services\Documents;
 
-use App\Factories\DocumentEmailFactory;use App\Jobs\Document\SendDocumentEmailJob;use App\Models\Document\Document;use App\Models\Document\DocumentConfiguration;use Illuminate\Support\Facades\Setting;
+use App\Factories\DocumentEmailFactory;use App\Jobs\Documents\SendDocumentEmailJob;use App\Models\Document\Document;use App\Models\Document\DocumentConfiguration;use Illuminate\Support\Facades\Setting;
 
 class DocumentEmailService
 {
@@ -1211,7 +1211,7 @@ Create `app/Jobs/Document/SendDocumentEmailJob.php`:
 
 namespace App\Jobs\Document;
 
-use App\Models\Document\Document;use App\Services\Email\TemplateRendererService;use Illuminate\Bus\Queueable;use Illuminate\Contracts\Queue\ShouldQueue;use Illuminate\Foundation\Bus\Dispatchable;use Illuminate\Queue\InteractsWithQueue;use Illuminate\Queue\SerializesModels;use Illuminate\Support\Facades\Mail;
+use App\Models\Document\Document;use App\Services\Mails\MailTemplateRendererService;use Illuminate\Bus\Queueable;use Illuminate\Contracts\Queue\ShouldQueue;use Illuminate\Foundation\Bus\Dispatchable;use Illuminate\Queue\InteractsWithQueue;use Illuminate\Queue\SerializesModels;use Illuminate\Support\Facades\Mail;
 
 class SendDocumentEmailJob implements ShouldQueue
 {
@@ -1225,7 +1225,7 @@ class SendDocumentEmailJob implements ShouldQueue
         $this->onQueue('emails');
     }
 
-    public function handle(TemplateRendererService $renderer): void
+    public function handle(MailTemplateRendererService $renderer): void
     {
         // Get template with language support
         $template = $this->getTemplate();

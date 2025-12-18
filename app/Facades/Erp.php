@@ -2,8 +2,8 @@
 
 namespace App\Facades;
 
+use App\Services\Integrations\ErpService;
 use Illuminate\Support\Facades\Facade;
-use App\Services\ErpService;
 
 class Erp extends Facade
 {

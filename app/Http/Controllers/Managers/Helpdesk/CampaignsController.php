@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers\Helpdesk;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCampaignRequest;
-use App\Http\Requests\UpdateCampaignRequest;
+use App\Http\Requests\Campaigns\StoreCampaignRequest;
+use App\Http\Requests\Campaigns\UpdateCampaignRequest;
 use App\Models\Helpdesk\Campaign;
 use App\Models\Helpdesk\CampaignTemplate;
 use Illuminate\Http\Request;

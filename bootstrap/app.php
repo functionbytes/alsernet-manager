@@ -16,10 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('tickets:sla-warnings')->everyFifteenMinutes();
 
         // Document reminders - run daily at 09:00
-        $schedule->job(\App\Jobs\Document\SendDocumentReminderJob::class)->daily()->at('09:00');
+        $schedule->job(\App\Jobs\Documents\SendDocumentReminderJob::class)->daily()->at('09:00');
 
         // Check SLA breaches for documents - run every hour
-        $schedule->job(\App\Jobs\Document\CheckSlaBreachesJob::class)->hourly();
+        $schedule->job(\App\Jobs\Documents\CheckSlaBreachesJob::class)->hourly();
 
         // Cleanup commands
         $schedule->command('notifications:clean')->daily();

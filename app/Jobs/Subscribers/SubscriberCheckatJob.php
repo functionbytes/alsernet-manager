@@ -3,8 +3,8 @@
 namespace App\Jobs\Subscribers;
 
 use App\Mail\Subscribers\SubscriberCheckMail;
-use App\Models\Mail/MailLayout.php
-use App\Subscriber\Subscriber;
+use App\Models\Mail;
+use App\Models\Subscriber\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,6 +12,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+
+/MailLayout.php
 
 class SubscriberCheckatJob implements ShouldQueue
 {

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\RouteSyncService;
+use App\Services\Systems\RouteSyncService;
 use Illuminate\Console\Command;
 
 class SyncRoutesCommand extends Command

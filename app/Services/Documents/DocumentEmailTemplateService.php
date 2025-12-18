@@ -5,7 +5,7 @@ namespace App\Services\Documents;
 use App\Models\Document\Document;
 use App\Models\Mail\MailTemplate;
 use App\Models\Setting;
-use App\Services\Email\TemplateRendererService;
+use App\Services\Mails\MailTemplateRendererService;
 use Illuminate\Support\Facades\Mail;
 
 class DocumentEmailTemplateService
@@ -29,7 +29,7 @@ class DocumentEmailTemplateService
             }
 
             // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+            $requiredDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -42,8 +42,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -80,7 +80,7 @@ class DocumentEmailTemplateService
             }
 
             // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+            $requiredDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -109,8 +109,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -157,8 +157,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -192,14 +192,14 @@ class DocumentEmailTemplateService
             $langId = $document->lang_id ?? 1;
 
             // Procesar contenido del usuario (reemplazar variables que el usuario haya puesto)
-            $userContent = TemplateRendererService::replaceVariables($content, $variables);
+            $userContent = MailTemplateRendererService::replaceVariables($content, $variables);
 
             // Agregar el contenido del usuario como variable especial
             $variables['custom_content'] = $userContent;
             $variables['CUSTOM_CONTENT'] = $userContent;
 
             // Procesar asunto (reemplazar variables del usuario)
-            $processedSubject = TemplateRendererService::replaceVariables($subject, $variables);
+            $processedSubject = MailTemplateRendererService::replaceVariables($subject, $variables);
 
             // Obtener plantilla configurada para correo personalizado
             $template = self::resolveTemplate('documents.mail_template_custom_email_id', 'document_custom_email');
@@ -221,7 +221,7 @@ class DocumentEmailTemplateService
 
                 // Usar renderEmailTemplate para aplicar layouts y reemplazar todas las variables
                 // Esto es igual que los demás métodos (sendInitialRequest, sendReminder, etc.)
-                $finalContent = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+                $finalContent = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
             }
 
             Mail::html($finalContent, function ($message) use ($processedSubject, $recipient) {
@@ -270,8 +270,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -317,8 +317,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -356,7 +356,7 @@ class DocumentEmailTemplateService
             // Si se proporcionaron documentos rechazados específicos, usarlos
             // Si no, usar todos los documentos requeridos
             if (empty($rejectedDocs)) {
-                $rejectedDocs = \App\Services\DocumentTypeService::getRequiredDocuments($document->type);
+                $rejectedDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
             }
 
             $variables = self::prepareDocumentVariables($document, $rejectedDocs, $reason);
@@ -373,8 +373,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = TemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -493,7 +493,7 @@ class DocumentEmailTemplateService
     private static function getSystemVariables(string $locale = 'es', int $langId = 1): array
     {
         // Obtener los valores reales desde la base de datos
-        $realValues = \App\Services\Email\MailVariableValueService::getTranslatedValues($langId);
+        $realValues = \App\Services\Mails\MailVariableValueService::getTranslatedValues($langId);
 
         return [
             // Información de la empresa - usar valores reales de BD con fallback a config

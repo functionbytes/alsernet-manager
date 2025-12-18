@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Helpdesk;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\Helpdesk\ProcessIncomingEmailWebhookJob;
+use App\Jobs\Helpdesks\ProcessIncomingEmailWebhookJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

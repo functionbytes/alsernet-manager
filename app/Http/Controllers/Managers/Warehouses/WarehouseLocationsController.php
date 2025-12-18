@@ -8,7 +8,7 @@ use App\Models\Warehouse\WarehouseFloor;
 use App\Models\Warehouse\WarehouseInventorySlot;
 use App\Models\Warehouse\WarehouseLocation;
 use App\Models\Warehouse\WarehouseLocationStyle;
-use App\Services\BarcodeService;
+use App\Services\Warehouses\BarcodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

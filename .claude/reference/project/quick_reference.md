@@ -41,28 +41,28 @@ DocumentEmailFactory::sendByTemplate($document, $template, [
 ### TemplateRendererService
 
 ```php
-use App\Services\Email\TemplateRendererService;
+use App\Services\Mails\MailTemplateRendererService;
 
 // Render template
-$html = TemplateRendererService::renderEmailTemplate($template, [
+$html = MailTemplateRendererService::renderEmailTemplate($template, [
     'CUSTOMER_NAME' => 'Juan',
     'ORDER_ID' => '12345'
 ]);
 
 // Replace variables
-$text = TemplateRendererService::replaceVariables(
+$text = MailTemplateRendererService::replaceVariables(
     'Hola {CUSTOMER_NAME}',
     ['CUSTOMER_NAME' => 'Juan']
 );
 
 // Get preview
-$html = TemplateRendererService::getPreviewHtml($template);
+$html = MailTemplateRendererService::getPreviewHtml($template);
 
 // Validate
-$validation = TemplateRendererService::validateTemplate($template);
+$validation = MailTemplateRendererService::validateTemplate($template);
 
 // Get stats
-$stats = TemplateRendererService::getStats($template);
+$stats = MailTemplateRendererService::getStats($template);
 ```
 
 ### DocumentEmailFactory
@@ -361,8 +361,9 @@ if (!$template) {
 ```
 
 ### Check if rendering works
+
 ```php
-$html = \App\Services\Email\TemplateRendererService::renderEmailTemplate(
+$html = \App\Services\Mails\MailTemplateRendererService::renderEmailTemplate(
     $template,
     ['CUSTOMER_NAME' => 'Test']
 );

@@ -35,7 +35,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendInitialRequest($document);
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_send_initial_request_when_disabled(): void
@@ -52,7 +52,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendInitialRequest($document);
 
         // Assert: No job was dispatched
-        Queue::assertNotPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertNotPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_send_reminder_email(): void
@@ -69,7 +69,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendReminder($document);
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_reminder_email_replaces_days_since_request_variable(): void
@@ -124,7 +124,7 @@ class DocumentEmailServiceTest extends TestCase
         );
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_send_approval_email(): void
@@ -141,7 +141,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendApprovalEmail($document);
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_send_rejection_email(): void
@@ -161,7 +161,7 @@ class DocumentEmailServiceTest extends TestCase
         );
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_send_completion_email(): void
@@ -178,7 +178,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendCompletionEmail($document);
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_email_includes_customer_name(): void
@@ -196,7 +196,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendInitialRequest($document);
 
         // Assert: Queue has job with document containing customer data
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class, function ($job) use ($document) {
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class, function ($job) use ($document) {
             return $job->document->id === $document->id;
         });
     }
@@ -214,7 +214,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendInitialRequest($document);
 
         // Assert: Job was dispatched
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class);
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class);
     }
 
     public function test_email_includes_required_documents_list(): void
@@ -236,7 +236,7 @@ class DocumentEmailServiceTest extends TestCase
         $this->emailService->sendInitialRequest($document);
 
         // Assert: Job contains document with required documents
-        Queue::assertPushed(\App\Jobs\Document\SendDocumentEmailJob::class, function ($job) {
+        Queue::assertPushed(\App\Jobs\Documents\SendDocumentEmailJob::class, function ($job) {
             return ! empty($job->document->required_documents);
         });
     }

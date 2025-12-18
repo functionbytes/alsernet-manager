@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SupervisorService;
+use App\Services\Systems\SupervisorService;
 use Illuminate\Console\Command;
 
 class SupervisorBackupCommand extends Command

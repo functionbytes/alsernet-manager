@@ -1,308 +1,436 @@
-# Email Variables Management System - Implementation Summary
+# Document Upload System - Complete Implementation Summary
 
-## 📋 Project Overview
+## Overview
 
-A complete **centralized email variables management system** has been implemented, allowing administrators to manage all email template variables directly from the database without code changes.
+Complete document upload system implemented for PrestaShop with exact Laravel admin panel design. System handles multiple file uploads, validation, storage, and email notifications.
 
-## ✅ Completed Components
-
-### 1. Database Layer
-- **mail_variables** table: Stores variable definitions
-  - `key` - Variable identifier (e.g., CUSTOMER_NAME)
-  - `name` - Display name
-  - `description` - Variable purpose
-  - `example_value` - Example for testing/preview
-  - `category` - Variable category (system, customer, order, document, general)
-  - `module` - Module (core, documents, orders)
-  - `is_system` - System flag (protected variables)
-  - `is_enabled` - Active status
-
-- **mail_variable_translations** table: Multi-language support
-  - Stores translated names and descriptions
-  - One translation per variable per language
-  - Full referential integrity
-
-### 2. Models
-- **MailVariable** (`app/Models/Mail/MailVariable.php`)
-  - Relationships to translations
-  - Auto-UUID generation
-  - `translate($langId)` method
-
-- **MailVariableLang** (`app/Models/Mail/MailVariableLang.php`)
-  - Translation model with foreign keys
-  - Language relationship
-
-### 3. Services
-- **MailVariableService** (`app/Services/Email/MailVariableService.php`)
-  - `getVariablesByModule(string)` - Get module variables
-  - `getAllVariables()` - Get all available variables
-  - `getVariablesByCategory(module, category)` - Filter by category
-  - `getVariable(key)` - Get single variable
-  - `getTranslatedVariable(key, langId)` - Get translation
-  - `variableExists(key)` - Check existence
-  - `getAllVariableKeys()` - Validation helper
-  - `getVariablesGroupedByCategory(module)` - Grouped fetch
-
-### 4. Controller
-- **MailVariableController** (`app/Http/Controllers/Managers/Settings/Mail/MailVariableController.php`)
-
-  **CRUD Operations:**
-  - `index()` - List all variables with filters (module, category, search)
-  - `create()` - Show creation form
-  - `store()` - Save new variable with translations
-  - `edit()` - Show edit form
-  - `update()` - Update variable and translations
-  - `destroy()` - Delete custom variables
-  - `toggleStatus()` - Enable/disable via AJAX
-  - `getByModule()` - API endpoint for variable filtering
-  - `getGroupedByCategory()` - API endpoint for grouped variables
-  - `getAvailableKeys()` - API endpoint for validation
-
-### 5. User Interface
-Three Blade views for complete management:
-
-**Index View** (`resources/views/.../variables/index.blade.php`)
-- Responsive data table
-- Filters: module, category, search
-- Toggle status switches
-- Pagination
-- CRUD action dropdown
-- System variable protection indicator
-
-**Create View** (`resources/views/.../variables/create.blade.php`)
-- Multi-language form tabs
-- Input validation
-- Example value field
-- Category & module selection
-- Translation support for all languages
-
-**Edit View** (`resources/views/.../variables/edit.blade.php`)
-- Pre-filled with existing data
-- System variable field protection
-- Language-specific translations
-- Full edit capabilities
-
-### 6. Routes
-```php
-GET    /settings/mailers/variables/                    → index
-GET    /settings/mailers/variables/create              → create
-POST   /settings/mailers/variables/                    → store
-GET    /settings/mailers/variables/edit/{variable}     → edit
-PATCH  /settings/mailers/variables/{variable}          → update
-DELETE /settings/mailers/variables/{variable}          → destroy
-POST   /settings/mailers/variables/toggle-status/{var} → toggleStatus
-GET    /settings/mailers/variables/by-module           → getByModule
-GET    /settings/mailers/variables/grouped-by-category → getGroupedByCategory
-GET    /settings/mailers/variables/available-keys      → getAvailableKeys
-```
-
-### 7. Navigation
-Added menu item to Settings → Mailers → **Variables de correo**
-
-### 8. Database Seeding
-**MailVariableSeeder** (`database/seeders/MailVariableSeeder.php`)
-- Seeds 30 default variables
-- Includes example values for all variables
-- Creates translations for all languages
-- Organized by category:
-  - **System**: Company, Site, Support info
-  - **Customer**: Name, Email
-  - **Order**: ID, Reference
-  - **Document**: Type, Upload link, Dates, Lists
-
-## 🔄 Integration Points
-
-### With Email Services
-Services now have access to variables via:
-```php
-use App\Services\Email\MailVariableService;
-
-// Get all variables for a module
-$variables = MailVariableService::getVariablesByModule('documents');
-
-// Get grouped by category
-$grouped = MailVariableService::getVariablesGroupedByCategory('documents');
-
-// Get with translations
-$translated = MailVariableService::getTranslatedVariable('CUSTOMER_NAME', $langId);
-```
-
-### With Mail Templates
-MailTemplate model updated:
-```php
-// Now reads from database instead of hardcoded
-public static function defaultVariables($module = 'core'): array
-```
-
-### API Endpoints
-Frontend can fetch variables:
-```javascript
-// Get variables by module
-GET /settings/mailers/variables/by-module?module=documents&category=customer
-
-// Get grouped by category
-GET /settings/mailers/variables/grouped-by-category?module=documents
-
-// Get available keys for validation
-GET /settings/mailers/variables/available-keys?module=documents
-```
-
-## 📊 Default Variables
-
-### System Variables (Core Module)
-- COMPANY_NAME → "Alsernet S.L."
-- SITE_NAME → "Mi Tienda Online"
-- SITE_URL → "https://www.mitienraonline.com"
-- SUPPORT_EMAIL → "soporte@mitienraonline.com"
-- SUPPORT_PHONE → "+34 900 123 456"
-- CURRENT_YEAR → "2025"
-- CURRENT_DATE → "15/12/2025"
-- CURRENT_DATETIME → "15/12/2025 14:30"
-- LANG_CODE → "es"
-
-### Customer Variables
-- CUSTOMER_NAME → "Juan García López"
-- CUSTOMER_FIRSTNAME → "Juan"
-- CUSTOMER_LASTNAME → "García López"
-- CUSTOMER_EMAIL → "juan.garcia@example.com"
-
-### Order Variables
-- ORDER_ID → "12345"
-- ORDER_REFERENCE → "PED-2025-001234"
-
-### Document Variables (20 variables)
-- DOCUMENT_TYPE → "identity_document"
-- DOCUMENT_TYPE_LABEL → "Documento de Identidad"
-- DOCUMENT_INSTRUCTIONS → "Instrucciones..."
-- UPLOAD_LINK → "https://www.mitienraonline.com/upload/68eaa99c"
-- EXPIRATION_DATE → "18/12/2025"
-- MISSING_DOCUMENTS → HTML list
-- REQUIRED_DOCUMENTS_LIST → HTML list
-- And more...
-
-## 🎯 Key Features
-
-✅ **Centralized Management**: All variables in database
-✅ **Multi-Language Support**: Translations per language
-✅ **Example Values**: For testing and preview
-✅ **Categories**: Organized by type
-✅ **Module-Based**: Variables per module
-✅ **Protection**: System variables can't be deleted
-✅ **Easy Admin Interface**: No code changes needed
-✅ **API Endpoints**: Programmatic access
-✅ **Validation Ready**: Helper methods for template validation
-✅ **Search & Filter**: Find variables quickly
-
-## 📝 Admin Usage
-
-### Add New Variable
-1. Settings → Mailers → Variables de correo
-2. Click "Crear Variable"
-3. Fill in:
-   - Clave: MY_VAR_NAME
-   - Nombre: My Variable Name
-   - Ejemplo: Example value
-   - Categoría: Select type
-   - Módulo: Select module
-4. Add translations for each language
-5. Save
-
-### Edit Variable
-1. Click pencil icon on variable row
-2. Update fields
-3. Save changes
-
-### Enable/Disable Variable
-1. Toggle switch on variable row
-2. Changes apply immediately
-
-### Delete Variable
-1. Click dropdown menu
-2. Click Delete (only for custom variables)
-3. Confirm deletion
-
-## 🔐 Security
-
-- System variables are protected (can't modify key/category)
-- Variables are HTML-escaped in admin UI
-- Database validation on all inputs
-- CSRF protection on all forms
-- Authorization checks in controller
-
-## 📚 Documentation
-
-Complete integration guide created at:
-`docs/EMAIL_VARIABLES_INTEGRATION.md`
-
-Contains:
-- Component overview
-- Integration examples
-- API usage
-- Best practices
-- Database schema
-
-## 🚀 Performance
-
-- Database indexed on: module, category, is_enabled, key
-- Eager loading of translations
-- Caching-ready architecture
-- No N+1 query problems
-- Pagination on admin list
-
-## 🔄 Migration Path
-
-To migrate from hardcoded variables:
-
-1. Variables already seeded with defaults
-2. Services can immediately use MailVariableService
-3. Old hardcoded arrays will be replaced gradually
-4. No breaking changes to existing functionality
-
-## 📦 Files Created/Modified
-
-### Created Files (15)
-- MailVariable model
-- MailVariableLang model
-- MailVariableController
-- MailVariableService
-- 3 Blade views
-- 3 migrations
-- Seeder
-- Integration documentation
-
-### Modified Files (5)
-- routes/managers.php (added routes)
-- nav.blade.php (added menu item)
-- MailTemplate.php (updated defaultVariables)
-- bootstrap/providers.php
-- config/mail.php
-
-### Total Changes
-- 46 files changed
-- 16,155 insertions
-- 475 deletions
-
-## ✨ Next Steps
-
-1. **Template Integration**: Update template editor to use new variables dynamically
-2. **Preview System**: Use example values to show template previews
-3. **Validation**: Add template validation using getAllVariableKeys()
-4. **Caching**: Implement Redis caching for variable lists
-5. **Audit**: Log variable additions/modifications
-6. **Import/Export**: Bulk variable import from CSV
-
-## 🎓 Best Practices
-
-1. Always use MailVariableService for variable access
-2. Include example values for testing
-3. Use descriptive names and categories
-4. Provide translations for all languages
-5. Mark system variables appropriately
-6. Enable/disable instead of deleting
-7. Validate template variables before saving
+**Status**: ✅ **READY FOR PRODUCTION DEPLOYMENT**
 
 ---
 
-**Implementation Date**: December 15, 2025
-**Status**: ✅ Complete and Tested
-**Code Committed**: `014002f44`
+## Architecture Overview
+
+```
+PrestaShop Frontend (documents.js)
+    ↓
+Client-side Validation (format, size, MIME type)
+    ↓
+Sequential Upload (one file at a time)
+    ↓
+Laravel API (/api/documents)
+    ↓
+DocumentsController (validate/upload/delete)
+    ↓
+Document Model (Eloquent + MediaLibrary)
+    ↓
+Database + Storage (files + metadata)
+    ↓
+Queue Jobs (async email notification)
+```
+
+---
+
+## File Changes Summary
+
+### 1. Backend API Controller
+**File**: `app/Http/Controllers/Api/DocumentsController.php`
+
+**Changes Made**:
+- ✅ Fixed validate endpoint to return object with labels instead of array
+- ✅ Enhanced upload endpoint with:
+  - Detailed file validation (size, format, MIME type)
+  - Model refresh after media operations
+  - Error details (filename, size, error code)
+- ✅ Wrapped email event in `hasAllRequiredDocuments()` check
+- ✅ Removed debug `dd()` statements
+- ✅ Returns `getUploadedDocumentsWithDetails()` with full file info
+
+**Key Methods Modified**:
+- `documentValidates()` (line 265)
+- `documentUpload()` (lines 320-395)
+- Email event dispatch conditional (lines 373-377)
+
+### 2. Document Model
+**File**: `app/Models/Document/Document.php`
+
+**Methods Verified** ✅:
+- `getRequiredDocumentsWithLabels()` - Returns object with labels
+- `getUploadedDocumentsWithDetails()` - Returns array with file info
+- `hasAllRequiredDocuments()` - Checks if all documents uploaded
+
+**Returns**:
+```php
+[
+    'file_name' => 'dni_frontal_68db039b13f4e.pdf',
+    'url' => 'https://storage.example.com/...',
+    'created_at' => '2025-12-16 15:30:00',
+    'size' => 245632
+]
+```
+
+### 3. PrestaShop Order Override
+**File**: `integrations/prestashop/content/override/classes/order/Order.php`
+
+**Fixed**:
+- ✅ `validateDniDocuments()` method corrected
+- ✅ API response parsing: `$response['response']` (was: `$response['response']['response']`)
+- ✅ Proper response structure handling
+
+### 4. PrestaShop Template
+**File**: `integrations/prestashop/content/modules/alsernetforms/views/templates/hook/forms/documents/gun.tpl`
+
+**Updated**:
+- ✅ Exact replica of Laravel admin panel HTML structure
+- ✅ Document counter: "X/Y cargados"
+- ✅ Pending documents show "Pendiente" badge
+- ✅ Uploaded documents show info box with download/delete buttons
+- ✅ Progress bar during upload
+- ✅ Success/completion message
+
+### 5. PrestaShop CSS
+**File**: `integrations/prestashop/content/modules/alsernetforms/views/css/front/form.css`
+
+**Features**:
+- ✅ Modernize Bootstrap colors:
+  - Primary: #5d87ff
+  - Danger: #fa896b
+  - Success: #13deb9
+- ✅ 400+ lines of comprehensive styling
+- ✅ Progress bar animation
+- ✅ Responsive design (mobile, tablet, desktop)
+- ✅ Hover effects and transitions
+- ✅ Font Awesome 6 icon support
+
+### 6. PrestaShop JavaScript
+**File**: `integrations/prestashop/content/modules/alsernetforms/views/js/front/documents.js`
+
+**Features Implemented**:
+- ✅ Sequential file upload (one-by-one via recursion)
+- ✅ Client-side validation:
+  - File existence check
+  - Size validation (max 10MB)
+  - Format validation (PDF, JPG, PNG, DOC, DOCX)
+  - MIME type validation
+  - Empty file check
+- ✅ Progress bar with percentage updates
+- ✅ Error handling with specific messages
+- ✅ UI refresh after each upload
+- ✅ Document counter updates
+- ✅ Success message on completion
+
+**Key Functions**:
+- `uploadFilesSequentially()` - Recursive upload handler
+- `loadDocumentStatus()` - Fetch current status from API
+- `updateDocumentUI()` - Update DOM with response data
+- `updateDocumentCounter()` - Update "X/Y cargados" counter
+- `showError()` - Display error messages with toastr
+
+### 7. Configuration Files (NEW)
+**Files Created**:
+- ✅ `.htaccess` - Apache PHP configuration (35 lines)
+- ✅ `.user.ini` - PHP-FPM configuration (5 lines)
+
+**Settings Applied**:
+```
+upload_max_filesize = 50M   (was: 2M)
+post_max_size = 50M          (was: 8M)
+memory_limit = 256M          (was: default)
+max_execution_time = 300s    (was: default)
+```
+
+---
+
+## Fixed Issues
+
+| Issue | Root Cause | Solution | Status |
+|-------|-----------|----------|--------|
+| PostTooLargeException | PHP limits too low | Deploy .htaccess/.user.ini | ✅ Ready |
+| Empty uploaded_documents | Files not saving | Increase limits + model refresh | ✅ Fixed |
+| Email on each upload | Event triggered every time | Conditional `hasAllRequiredDocuments()` | ✅ Fixed |
+| Multiple email jobs | No completion check | Only dispatch when complete | ✅ Fixed |
+| Response structure mismatch | Array vs object | Changed to `getUploadedDocumentsWithDetails()` | ✅ Fixed |
+| UI not updating | No refresh call | Added `loadDocumentStatus()` in JS | ✅ Fixed |
+| 500 errors on validate | Debug `dd()` statements | Removed all debug code | ✅ Fixed |
+| Missing file details | Only returning keys | Added size, url, created_at | ✅ Fixed |
+
+---
+
+## Validation Rules
+
+### Client-Side (JavaScript)
+
+| Rule | Max Value | Error Message |
+|------|-----------|---------------|
+| File size | 10 MB | "File is too large ({size}MB). Maximum size is 10MB." |
+| File format | PDF,JPG,PNG,DOC,DOCX | "File has invalid format. Allowed: PDF, JPG, PNG, DOC, DOCX." |
+| MIME type | 6 types | "File has invalid type ({mime}). Allowed: PDF, JPG, PNG, DOC, DOCX." |
+| Empty file | 0 bytes | "File is empty. Please select a valid file." |
+
+### Server-Side (Laravel)
+
+- File validation: `$file->isValid()`
+- Size check: `file.size > 10485760` (10MB)
+- Format validation via extension
+- MIME type validation
+
+---
+
+## API Response Structure
+
+### Validate Endpoint Response
+
+```json
+{
+  "status": "success",
+  "data": {
+    "required_documents": {
+      "dni_frontal": "DNI Frontal",
+      "dni_trasera": "DNI Trasera"
+    },
+    "uploaded_documents": {
+      "dni_frontal": {
+        "file_name": "dni_frontal_68db039b13f4e.pdf",
+        "url": "https://storage.example.com/...",
+        "created_at": "2025-12-16 15:30:00",
+        "size": 245632
+      }
+    },
+    "missing_documents": {
+      "dni_trasera": "DNI Trasera"
+    },
+    "is_complete": false
+  },
+  "message": "Document validation successful"
+}
+```
+
+### Upload Endpoint Response
+
+Same structure as validate endpoint, reflecting updated state.
+
+---
+
+## Email Notification System
+
+**Trigger**: Only when ALL required documents uploaded
+
+**Condition**:
+```php
+if ($document->hasAllRequiredDocuments() && !$document->confirmed_at) {
+    event(new DocumentUploaded($document));
+}
+```
+
+**Job Queued**: `SendDocumentUploadedConfirmationJob`
+
+**Email Content**:
+- Document type notification
+- File count confirmation
+- User action required (none if complete)
+
+---
+
+## Database Operations
+
+### MediaLibrary Integration
+
+Files stored via Spatie MediaLibrary:
+```
+Storage Path: storage/app/public/documents/
+Database Table: media
+Custom Properties: ['document_type' => 'dni_frontal']
+```
+
+### Model Refresh
+
+After media operations, model is refreshed to fetch latest data:
+```php
+$document->refresh();  // Reloads media relationship
+```
+
+---
+
+## Testing Workflow
+
+### Local Testing (Before Deployment)
+
+1. **Validate endpoint**: `POST /api/documents` with action=validate
+2. **Upload small file**: < 1MB PDF
+3. **Verify response structure**: Check all fields present
+4. **Check database**: `tinker` verify media count > 0
+5. **Test UI update**: Verify counter and file display
+
+### Production Testing (After Deployment)
+
+1. **Deploy configuration files** to production
+2. **Verify PHP limits**: `php -i | grep upload_max_filesize`
+3. **Upload test files**: Small, medium, large
+4. **Verify persistence**: Check MediaLibrary storage
+5. **Test email**: Complete workflow should queue one job
+6. **Check error logs**: No exceptions or warnings
+
+---
+
+## Deployment Instructions
+
+### Step 1: Deploy Code Changes
+
+```bash
+# Commit and push all changes
+git add .
+git commit -m "feat: Complete document upload system with MediaLibrary integration"
+git push origin main
+```
+
+**Files to Commit**:
+- ✅ `app/Http/Controllers/Api/DocumentsController.php`
+- ✅ `app/Models/Order/Order.php`
+- ✅ `integrations/prestashop/content/override/classes/order/Order.php`
+- ✅ `integrations/prestashop/content/modules/alsernetforms/views/templates/hook/forms/documents/gun.tpl`
+- ✅ `integrations/prestashop/content/modules/alsernetforms/views/css/front/form.css`
+- ✅ `integrations/prestashop/content/modules/alsernetforms/views/js/front/documents.js`
+- ✅ `.htaccess` (NEW)
+- ✅ `.user.ini` (NEW)
+
+### Step 2: Deploy Configuration Files
+
+```bash
+# Deploy PHP configuration to production server
+scp .htaccess .user.ini webadminpruebas@webadminpruebas.a-alvarez.com:/home2/webadminpruebas/web/
+
+# SSH into production and verify
+ssh webadminpruebas@webadminpruebas.a-alvarez.com
+php -i | grep -E "upload_max_filesize|post_max_size"
+# Should show: 50M for both
+
+# Restart PHP-FPM if needed
+sudo systemctl restart php-fpm
+```
+
+### Step 3: Run Database Migrations (if any)
+
+```bash
+# Already applied - no new migrations needed
+# MediaLibrary tables already exist
+```
+
+### Step 4: Verify Production Deployment
+
+```bash
+# Test endpoint
+curl -X POST https://webadminpruebas.a-alvarez.com/api/documents \
+  -H "Content-Type: application/json" \
+  -d '{"action":"validate","uid":"68db039b13f4e"}'
+
+# Should return proper response structure with file details
+```
+
+---
+
+## Performance Considerations
+
+- **Sequential Upload**: Prevents POST size errors, increases UX feedback
+- **Model Refresh**: Ensures fresh MediaLibrary data after saves
+- **Conditional Email**: Only queues job when complete (no unnecessary jobs)
+- **Async Processing**: Email sent via queue, doesn't block upload response
+
+---
+
+## Security Features
+
+✅ **File Validation**:
+- Extension whitelist: PDF, JPG, PNG, DOC, DOCX
+- MIME type validation against 6 allowed types
+- Size limit: 10MB per file
+- Empty file detection
+
+✅ **Database Security**:
+- Eloquent ORM (SQL injection prevention)
+- Proper error handling (no sensitive info leaked)
+
+✅ **Storage Security**:
+- Files stored outside web root (via MediaLibrary)
+- Download via authenticated endpoint
+- Delete requires proper authorization
+
+---
+
+## Known Limitations & Future Improvements
+
+**Current Limitations**:
+- Files stored on local filesystem (not S3/cloud)
+- Single upload per document type (not multiple versions)
+- No antivirus scanning
+
+**Future Improvements**:
+- Cloud storage support (S3, Azure Blob)
+- Document versioning
+- Antivirus integration
+- Batch upload for multiple document types
+- Document OCR/verification
+
+---
+
+## Rollback Plan
+
+If critical issues occur:
+
+1. **Revert code changes**: `git revert <commit-hash>`
+2. **Remove config files**: `rm .htaccess .user.ini` from production
+3. **Clear queue**: `php artisan queue:flush`
+4. **Check logs**: Review Laravel error logs for details
+
+---
+
+## Support & Debugging
+
+### Check Current Status
+
+```bash
+# Validate endpoint working
+curl -X POST https://webadminpruebas.a-alvarez.com/api/documents \
+  -H "Content-Type: application/json" \
+  -d '{"action":"validate","uid":"68db039b13f4e"}'
+
+# Check uploaded files in database
+php artisan tinker
+>>> $doc = Document::uid('68db039b13f4e')->first();
+>>> $doc->media->count();
+>>> $doc->getUploadedDocumentsWithDetails();
+
+# Check email queue
+php artisan queue:work
+php artisan queue:failed
+
+# View recent logs
+tail -100 storage/logs/laravel.log
+```
+
+### Common Issues & Solutions
+
+| Problem | Solution |
+|---------|----------|
+| "PostTooLargeException" | Deploy .htaccess/.user.ini, restart PHP-FPM |
+| "uploaded_documents empty" | Check MediaLibrary migration, verify storage path |
+| "Multiple email jobs queued" | Verify `hasAllRequiredDocuments()` conditional works |
+| "Files not downloading" | Check storage path permissions, verify URL generation |
+| "UI not updating" | Check browser console for JS errors, verify API response |
+
+---
+
+## Summary
+
+**Status**: ✅ PRODUCTION READY
+
+**Deployment Checklist**:
+- [x] Backend API implemented with validation
+- [x] Frontend UI matches Laravel design
+- [x] File validation (client + server)
+- [x] Sequential upload implemented
+- [x] Email notification conditional logic fixed
+- [x] Configuration files created (PHP limits)
+- [x] Documentation complete
+- [ ] Deploy to production (NEXT STEP)
+
+**Next Action**: Deploy `.htaccess` and `.user.ini` to production server at `/home2/webadminpruebas/web/`
+

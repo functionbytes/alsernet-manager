@@ -8,9 +8,9 @@ use App\Models\Return\Order\ReturnOrder;
 use App\Models\Return\Order\ReturnOrderProduct;
 use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnRequestProduct;
-use App\Services\ErpService;
-use App\Services\Return\BarcodeService;
-use App\Services\Return\DocumentService;
+use App\Services\Integrations\ErpService;
+use App\Services\Returns\BarcodeService;
+use App\Services\Returns\DocumentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

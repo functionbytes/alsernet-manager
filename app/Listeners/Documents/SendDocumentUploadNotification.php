@@ -3,7 +3,7 @@
 namespace App\Listeners\Documents;
 
 use App\Events\Document\DocumentCreated;
-use App\Jobs\Document\MailTemplateJob;
+use App\Jobs\Documents\MailTemplateJob;
 use App\Traits\PreventsDuplicateEventExecution;
 use Illuminate\Support\Facades\Log;
 

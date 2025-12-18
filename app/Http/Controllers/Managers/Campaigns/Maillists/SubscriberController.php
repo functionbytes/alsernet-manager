@@ -10,11 +10,10 @@ use App\Models\EmailVerificationServer;
 use App\Models\Jobs\JobMonitor;
 use App\Models\Segment;
 use App\Models\Setting;
-use App\Subscriber\Subscriber;
-use App\Subscriber\SubscriberList;
+use App\Models\Subscriber\Subscriber;
+use App\Models\Subscriber\SubscriberList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use function App\Http\Controllers\Managers\Maillists\dispatch_now;
 
 class SubscriberController extends Controller

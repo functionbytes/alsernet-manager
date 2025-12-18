@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Managers\Subscribers;
 
 use App\Exports\Managers\Newsletters\NewsletterListExport;
 use App\Http\Controllers\Controller;
-use App\Subscriber\SubscriberList;
+use App\Models\Subscriber\SubscriberList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;

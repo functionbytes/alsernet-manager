@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
-use App\Services\ErpService;
+use App\Services\Integrations\ErpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;

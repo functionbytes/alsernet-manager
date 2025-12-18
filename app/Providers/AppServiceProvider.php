@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Library\Facades\Hook;
 use App\Models\Return\ReturnRequest;
 use App\Models\Setting\Setting;
-use App\Observers\Return\ReturnObserver;
+use App\Observers\Returns\ReturnObserver;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;

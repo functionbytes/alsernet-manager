@@ -4,7 +4,7 @@ namespace App\Imports;
 
 use App\Exports\Suscribers\SubscribersFailedExport;
 use App\Models\Customer;
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;

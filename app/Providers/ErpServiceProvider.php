@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Integrations\ErpService;
 use Illuminate\Support\ServiceProvider;
-use App\Services\ErpService;
 
 class ErpServiceProvider extends ServiceProvider
 {

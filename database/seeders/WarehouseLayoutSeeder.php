@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseFloor;
 use App\Models\Warehouse\WarehouseLocation;
 use App\Models\Warehouse\WarehouseLocationSection;
 use App\Models\Warehouse\WarehouseLocationStyle;
-use App\Services\WarehouseLayoutParser;
-use Illuminate\Support\Str;
+use App\Services\Warehouses\WarehouseLayoutParser;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class WarehouseLayoutSeeder extends Seeder
 {

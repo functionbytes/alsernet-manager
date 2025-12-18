@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Managers\Settings\Roles;
 
 use App\Http\Controllers\Managers\BaseManagerController;
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\Systems\RoleRequest;
 use App\Models\Role\Role;
 use App\Models\User;
 use Illuminate\Http\Request;

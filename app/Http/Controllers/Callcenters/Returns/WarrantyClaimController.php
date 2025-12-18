@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Callcenters\Returns;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\WarrantyClaim;
-use App\Services\Return\WarrantyService;
+use App\Services\Returns\WarrantyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

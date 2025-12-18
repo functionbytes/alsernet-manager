@@ -2,7 +2,7 @@
 
 namespace App\Services\Documents;
 
-use App\Jobs\Document\MailTemplateJob;
+use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
 
 class DocumentEmailService

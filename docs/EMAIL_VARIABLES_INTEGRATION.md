@@ -46,7 +46,7 @@ Stores translations for variables:
 ### Using MailVariableService in Email Services
 
 ```php
-use App\Services\Email\MailVariableService;
+use App\Services\Mails\MailVariableService;
 use App\Models\Document\Document;
 
 class DocumentEmailTemplateService

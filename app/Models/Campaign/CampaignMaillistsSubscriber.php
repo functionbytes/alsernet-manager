@@ -50,7 +50,7 @@ use Illuminate\Support\Facades\DB;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Campaign\CampaignMaillist|null $CampaignMaillist
- * @property-read \App\Subscriber\Subscriber|null $subscriber
+ * @property-read \App\Models\Subscriber\Subscriber|null $subscriber
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignMaillistsSubscriber byEmail($email)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignMaillistsSubscriber deliverable()
@@ -132,7 +132,7 @@ class CampaignMaillistsSubscriber extends Model
 
     public function subscriber()
     {
-        return $this->belongsTo('App\Subscriber\Subscriber');
+        return $this->belongsTo('App\Models\Subscriber\Subscriber');
     }
 
     public function CampaignMaillist()

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Callcenters\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notification\NotificationSetting;
 use App\Models\Notification\PushNotificationToken;
-use App\Services\NotificationService;
+use App\Services\Systems\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

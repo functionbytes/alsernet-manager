@@ -324,7 +324,7 @@ class MailTemplateController extends Controller
         // Usar el MISMO servicio que se usa para enviar emails reales
         // Esto garantiza que el preview sea idéntico al email enviado
         $variables = $this->getPreviewVariables($template, $langId);
-        $html = \App\Services\Email\TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+        $html = \App\Services\Mails\MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
         return view('managers.views.mailers.templates.preview', [
             'template' => $template,
@@ -368,7 +368,7 @@ class MailTemplateController extends Controller
             // Usar el MISMO servicio que se usa para enviar emails reales
             // Esto garantiza que el preview sea idéntico al email enviado
             $variables = $this->getPreviewVariables($template, $langId);
-            $html = \App\Services\Email\TemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $html = \App\Services\Mails\MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             // Restaurar valores originales
             $template->layout_id = $originalLayoutId;
@@ -399,7 +399,7 @@ class MailTemplateController extends Controller
         $langId = $langId ?? 1;
 
         // Obtener valores reales traducidos desde la base de datos
-        $realValues = \App\Services\Email\MailVariableValueService::getTranslatedValues($langId, $template->module);
+        $realValues = \App\Services\Mails\MailVariableValueService::getTranslatedValues($langId, $template->module);
 
         $baseVariables = [
             // Sistema - usar valores reales de BD, con fallback a config

@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Erp;
 
-use App\Services\ErpService;
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
+use App\Services\Integrations\ErpService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

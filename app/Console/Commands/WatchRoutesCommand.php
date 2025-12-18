@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\RouteFileWatcherService;
+use App\Services\Systems\RouteFileWatcherService;
 use Illuminate\Console\Command;
 
 class WatchRoutesCommand extends Command

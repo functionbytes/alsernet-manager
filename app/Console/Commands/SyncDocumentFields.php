@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Document\Document;
-use App\Services\DocumentTypeService;
+use App\Services\Documents\DocumentTypeService;
 use Illuminate\Console\Command;
 
 class SyncDocumentFields extends Command

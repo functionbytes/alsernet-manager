@@ -9,7 +9,7 @@ use App\Http\Controllers\Managers\Maillists\Customer;
 use App\Models\Campaign\CampaignMaillist;
 use App\Models\EmailVerificationServer;
 use App\Models\Setting;
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
 use Exception;
 use Illuminate\Http\Request;
 

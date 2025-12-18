@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Return\Warranty;
 use App\Models\Return\WarrantyClaim;
 use App\Models\Return\WarrantyType;
-use App\Services\Return\WarrantyService;
+use App\Services\Returns\WarrantyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

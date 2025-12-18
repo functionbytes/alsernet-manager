@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Services\ErpService;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\Integrations\ErpService;
+use Illuminate\Http\Request;
 
 class ErpController extends Controller
 {

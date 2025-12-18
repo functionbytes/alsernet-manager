@@ -6,7 +6,7 @@ namespace App\Console\Commands;
 use App\Models\Return\ReturnRequest;
 use Illuminate\Console\Command;
 use App\Models\Return;
-use App\Services\Return\ReturnNotificationService;
+use App\Services\Returns\ReturnNotificationService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

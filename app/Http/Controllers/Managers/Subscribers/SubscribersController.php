@@ -9,8 +9,8 @@ use App\Models\Categorie;
 use App\Models\Jobs\JobMonitor;
 use App\Models\Lang;
 use App\Models\Product\Product;
-use App\Subscriber\Subscriber;
-use App\Subscriber\SubscriberImport;
+use App\Models\Subscriber\Subscriber;
+use App\Models\Subscriber\SubscriberImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

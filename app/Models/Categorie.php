@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Subscriber\SubscriberList> $lists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Subscriber\SubscriberList> $lists
  * @property-read int|null $lists_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Subscriber\SubscriberList> $subscriberlists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Subscriber\SubscriberList> $subscriberlists
  * @property-read int|null $subscriberlists_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Categorie ascending()
@@ -66,7 +66,7 @@ class Categorie extends Model
     public function lists(): BelongsToMany
     {
         return $this->belongsToMany(
-            'App\Subscriber\SubscriberList',
+            'App\Models\Subscriber\SubscriberList',
             'subscriber_list_categories',
             'categorie_id',
             'list_id'
@@ -76,7 +76,7 @@ class Categorie extends Model
     public function subscriberlists(): BelongsToMany
     {
         return $this->belongsToMany(
-            'App\Subscriber\SubscriberList',
+            'App\Models\Subscriber\SubscriberList',
             'categorie_subscriber_list',  // Pivot table name
             'categorie_id',  // Foreign key on the pivot table for this model
             'subscriber_list_id' // Foreign key on the pivot table for the related model

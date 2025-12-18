@@ -103,8 +103,9 @@ Every variable has an example value for testing:
 ## 🔗 Using Variables in Code
 
 ### Get Variables by Module
+
 ```php
-use App\Services\Email\MailVariableService;
+use App\Services\Mails\MailVariableService;
 
 $variables = MailVariableService::getVariablesByModule('documents');
 $grouped = MailVariableService::getVariablesGroupedByCategory('documents');

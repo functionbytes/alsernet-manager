@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use App\Models\Lang;
 use App\Models\Product\Product;
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

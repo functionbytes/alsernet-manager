@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Managers\Subscribers;
 
 use App\Http\Controllers\Controller;
-use App\Subscriber\SubscriberCondition;
+use App\Models\Subscriber\SubscriberCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

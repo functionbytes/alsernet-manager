@@ -2,7 +2,7 @@
 
 namespace App\Events\Subscribers;
 
-use App\Subscriber\Subscriber;
+use App\Models\Subscriber\Subscriber;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
