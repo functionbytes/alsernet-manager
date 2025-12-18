@@ -5,7 +5,6 @@ namespace App\Listeners\Documents;
 use App\Events\Document\DocumentCreated;
 use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\DocumentStatus;
-use App\Services\Documents\DocumentMailService;
 use Illuminate\Support\Facades\Log;
 
 class SendDocumentUploadNotification
@@ -48,8 +47,10 @@ class SendDocumentUploadNotification
         }
 
         try {
-            // Enviar notificación inicial de forma SÍNCRONA (directa, sin cola)
-            DocumentMailService::sendUploadNotification($document);
+            // Despachar correo inicial de solicitud de documentación (request)
+            // No enviar síncrono para evitar duplicados
+            MailTemplateJob::dispatch($document, 'request')
+                ->onQueue('emails');
 
             // Programar recordatorio con delay según reminder_days (asíncrono en la cola)
             $reminderDays = (int) setting('documents.reminder_days', 7);
@@ -57,15 +58,15 @@ class SendDocumentUploadNotification
                 ->delay(now()->addDays($reminderDays))
                 ->onQueue('emails');
 
-            Log::info('Document notification sent and reminder scheduled', [
+            Log::info('Document notification and reminder scheduled', [
                 'document_uid' => $document->uid,
                 'order_id' => $document->order_id,
                 'recipient' => $recipient,
-                'notification_sent' => 'sync',
+                'notification_scheduled' => 'request_email',
                 'reminder_scheduled' => "async_+{$reminderDays}days",
             ]);
         } catch (\Throwable $exception) {
-            Log::error('Unable to send document notifications', [
+            Log::error('Unable to schedule document notifications', [
                 'document_uid' => $document->uid ?? null,
                 'order_id' => $document->order_id,
                 'recipient' => $recipient,
