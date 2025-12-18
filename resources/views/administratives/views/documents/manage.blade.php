@@ -989,12 +989,14 @@
                     const docType = $(this).data('doc-type');
                     const isAlreadyUploaded = $(this).find('.uploaded-doc-info').length > 0;
 
-                    // Verificar si hay archivo seleccionado en el input
-                    const $fileInput = $(this).find('input[type="file"][data-doc-type="' + docType + '"]');
+                    // Verificar si hay archivo seleccionado en el input (búsqueda más directa)
+                    const $fileInput = $(this).find('input.document-file-input');
                     const hasFileSelected = $fileInput.length > 0 && $fileInput[0].files && $fileInput[0].files.length > 0;
 
                     // También verificar en uploadedByType por compatibilidad
                     const isBeingUploaded = uploadedByType[docType] || hasFileSelected;
+
+                    console.log(`[Doc Validation] ${docType}: already=${isAlreadyUploaded}, being=${isBeingUploaded}, hasFileSelected=${hasFileSelected}, uploadedByType=${uploadedByType[docType]}`);
 
                     if (!isAlreadyUploaded && !isBeingUploaded) {
                         const docLabel = $(this).find('.form-label').text().trim();
