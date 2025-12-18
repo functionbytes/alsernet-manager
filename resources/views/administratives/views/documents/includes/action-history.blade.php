@@ -9,7 +9,7 @@
         @php
             $actions = $document->actions->sortByDesc('created_at');
             $totalActions = $actions->count();
-            $showLimit = 5;
+            $showLimit = 3;
             $hasMore = $totalActions > $showLimit;
         @endphp
 
@@ -22,93 +22,76 @@
 
             <div class="action-history-scroll">
                 @foreach($actions->take($showLimit) as $action)
-                <div class="comment-row border-bottom px-2 px-md-3 py-2 py-md-3 action-item">
+                    <div class="comment-row border-bottom p-4 action-item">
+                        <div class="comment-text w-100 small">
 
+                            {{-- Fecha --}}
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Fecha</span>
+                                <span class="fw-semibold text-end">
+                                    {{ $action->created_at->format('d/m/Y H:i') }}
+                                </span>
+                            </div>
 
-                    <!-- Action Content -->
-                    <div class="comment-text w-100">
-                        <!-- Header: Name and Action Type -->
-                        <div class="d-flex align-items-flex-start justify-content-between gap-2 mb-2">
-                            <div class="flex-grow-1 min-width-0">
-                                <h6 class="fw-semibold mb-1 text-truncate small">
+                            {{-- Acción --}}
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Acción</span>
+                                <span class="fw-semibold text-end">
+                                    {{ $action->action_name }}
+                                </span>
+                            </div>
+
+                            {{-- Tipo de acción (badge a la derecha) --}}
+                            <div class="d-flex justify-content-between mb-1 align-items-center">
+                                <span class="text-muted">Tipo</span>
+                                <span class="fw-semibold text-end">
+                                   {{ ucfirst(str_replace('_', ' ', $action->action_type)) }}
+                                </span>
+                            </div>
+
+                            {{-- Realizado por --}}
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Actualizado por</span>
+                                <span class="fw-semibold text-end">
                                     @if($action->performed_by && $action->performer)
-                                        {{ $action->performer->name }}
+                                        @php
+                                            $firstname = ucfirst(strtolower($action->performer->firstname));
+                                            $lastnameInitial = $action->performer->lastname ? strtoupper(substr($action->performer->lastname, 0, 1)) : '';
+                                            $displayName = trim($firstname . ' ' . $lastnameInitial);
+                                        @endphp
+                                        {{ $displayName ?: 'Usuario' }}
                                     @else
                                         Sistema
                                     @endif
-                                </h6>
-                                <small class="text-muted d-block text-truncate">{{ $action->action_name }}</small>
+                                </span>
                             </div>
-                            <span class="badge flex-shrink-0
-                                @if($action->action_type === 'upload') bg-primary-subtle text-primary
-                                @elseif($action->action_type === 'status_change') bg-warning-subtle text-warning
-                                @elseif($action->action_type === 'email_sent') bg-info-subtle text-info
-                                @elseif($action->action_type === 'approval') bg-success-subtle text-success
-                                @elseif($action->action_type === 'rejection') bg-danger-subtle text-danger
-                                @elseif($action->action_type === 'note') bg-secondary-subtle text-secondary
-                                @else bg-light text-dark
-                                @endif
-                            " style="font-size: 0.7rem; white-space: nowrap;">
-                                @if($action->action_type === 'upload')
-                                    <i class="fas fa-upload me-1"></i><span class="d-none d-sm-inline">Carga</span>
-                                @elseif($action->action_type === 'status_change')
-                                    <i class="fas fa-exchange-alt me-1"></i><span class="d-none d-sm-inline">Estado</span>
-                                @elseif($action->action_type === 'email_sent')
-                                    <i class="fas fa-envelope me-1"></i><span class="d-none d-sm-inline">Email</span>
-                                @elseif($action->action_type === 'approval')
-                                    <i class="fas fa-check-circle me-1"></i><span class="d-none d-sm-inline">Aprobado</span>
-                                @elseif($action->action_type === 'rejection')
-                                    <i class="fas fa-times-circle me-1"></i><span class="d-none d-sm-inline">Rechazado</span>
-                                @elseif($action->action_type === 'note')
-                                    <i class="fas fa-sticky-note me-1"></i><span class="d-none d-sm-inline">Nota</span>
-                                @else
-                                    <i class="fas fa-circle me-1"></i><span class="d-none d-sm-inline">{{ ucfirst(str_replace('_', ' ', $action->action_type)) }}</span>
-                                @endif
-                            </span>
-                        </div>
-
-                        <!-- Description -->
-                        @if($action->description)
-                            <p class="mb-2 small text-dark text-truncate-2" style="line-height: 1.4;">
-                                {{ $action->description }}
-                            </p>
-                        @endif
-
-                        <!-- Action Footer -->
-                        <div class="comment-footer mt-1">
-                            <div class="d-flex flex-column flex-sm-row align-items-flex-start justify-content-between gap-1 gap-sm-2">
-                                <div class="d-flex align-items-center gap-1 min-width-0 small">
-                                    @if($action->performed_by && $action->performer)
-                                        <i class="fas fa-user-circle text-muted flex-shrink-0"></i>
-                                        <span class="text-muted text-truncate" style="font-size: 0.75rem;">
-                                            {{ $action->performer->roles?->first()?->name ?? 'Usuario' }}
-                                        </span>
-                                    @else
-                                        <i class="fas fa-cog text-muted flex-shrink-0"></i>
-                                        <span class="text-muted" style="font-size: 0.75rem;">Sistema</span>
-                                    @endif
+                            {{-- Descripción --}}
+                            @if($action->description)
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Descripción</span>
+                                    <span class="fw-semibold text-end" style="max-width: 60%; word-break: break-word;">
+                                        {{ Str::limit($action->description, 160) }}
+                                    </span>
                                 </div>
+                            @endif
 
-                                <!-- Metadata Badges -->
-                                @if($action->metadata && count($action->metadata) > 0)
-                                    <div class="d-flex gap-1 flex-wrap justify-content-sm-end">
-                                        @foreach($action->metadata as $key => $value)
-                                            <span class="badge bg-light text-dark" style="font-size: 0.6rem; white-space: nowrap;">
-                                                {{ ucfirst(str_replace('_', ' ', $key)) }}
-                                            </span>
-                                        @endforeach
+                            {{-- Metadata (clave izquierda / valor derecha) --}}
+                            @if($action->metadata && count($action->metadata) > 0)
+                                @foreach($action->metadata as $key => $value)
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="text-muted">
+                                            {{ ucfirst(str_replace('_', ' ', $key)) }}
+                                        </span>
+                                        <span class="fw-semibold text-end" style="max-width: 60%; word-break: break-word;">
+                                            {{ Str::limit(is_array($value) ? implode(', ', $value) : $value, 160) }}
+                                        </span>
                                     </div>
-                                @endif
-                            </div>
+                                @endforeach
+                            @endif
 
-                            <!-- Date -->
-                            <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
-                                {{ $action->created_at->format('d M Y H:i') }}
-                            </small>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
             </div>
         </div>
     @else
@@ -126,116 +109,53 @@
 </div>
 
 @push('styles')
-<style>
-    .action-history-scroll {
-        overflow-y: auto;
-        border-top: 1px solid #e9ecef;
-        height: 200px;
-    }
-
-    @media (min-width: 576px) {
+    <style>
         .action-history-scroll {
-            height: 220px;
+            overflow-y: auto;
+            border-top: 1px solid #e9ecef;
+            height: 200px;
         }
-    }
 
-    @media (min-width: 768px) {
-        .action-history-scroll {
-            height: 240px;
+        @media (min-width: 576px) { .action-history-scroll { height: 220px; } }
+        @media (min-width: 768px) { .action-history-scroll { height: 240px; } }
+        @media (min-width: 992px) { .action-history-scroll { height: 280px; } }
+
+        .action-history-scroll::-webkit-scrollbar {
+            width: 6px;
         }
-    }
-
-    @media (min-width: 992px) {
-        .action-history-scroll {
-            height: 280px;
+        .action-history-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
         }
-    }
+        .action-history-scroll::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        .action-history-scroll::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
 
-    .action-history-scroll::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .action-history-scroll::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .action-history-scroll::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
-    }
-
-    .action-history-scroll::-webkit-scrollbar-thumb:hover {
-        background: #999;
-    }
-
-    .action-item {
-        display: flex;
-        flex-direction: row;
-        gap: 0.75rem;
-        transition: all 0.2s ease;
-        border-color: #e9ecef !important;
-    }
-
-    .action-item:hover {
-        background-color: #f8f9fa;
-        border-color: #dee2e6 !important;
-    }
-
-    .action-avatar {
-        min-width: 40px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .action-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .comment-text {
-        overflow: hidden;
-    }
-
-    .text-truncate-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .min-width-0 {
-        min-width: 0;
-    }
-
-    /* Responsive Typography */
-    @media (max-width: 575px) {
         .action-item {
-            gap: 0.5rem;
-        }
-
-        .action-item h6 {
-            font-size: 0.875rem;
-            margin-bottom: 0.25rem !important;
-        }
-
-        .action-item .small {
-            font-size: 0.75rem !important;
-        }
-
-        .comment-footer {
-            font-size: 0.7rem;
-        }
-    }
-
-    @media (min-width: 576px) {
-        .action-item {
+            display: flex;
+            flex-direction: row;
             gap: 0.75rem;
+            transition: all 0.2s ease;
+            border-color: #e9ecef !important;
         }
-    }
-</style>
+
+        .action-item:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6 !important;
+        }
+
+        .comment-text {
+            overflow: hidden;
+        }
+
+        @media (max-width: 575px) {
+            .action-item .small {
+                font-size: 0.75rem !important;
+            }
+        }
+    </style>
 @endpush

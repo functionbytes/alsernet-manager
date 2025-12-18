@@ -55,10 +55,7 @@ public function handle($event): void
 
 namespace App\Listeners\Documents;
 
-use App\Events\Documents\DocumentUploaded;
-use App\Jobs\Documents\SendDocumentUploadedConfirmationJob;
-use App\Traits\PreventsDuplicateEventExecution;
-use Illuminate\Support\Facades\Log;
+use App\Events\Document\DocumentUploaded;use App\Jobs\Document\SendDocumentUploadedConfirmationJob;use App\Traits\PreventsDuplicateEventExecution;
 
 class SendDocumentUploadConfirmation
 {

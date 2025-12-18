@@ -22,20 +22,20 @@
 
 namespace App\Models\Campaign;
 
-use App\Models\Campaign\CampaignTrackingLog;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Campaign\CampaignOpenLog;
-use Illuminate\Database\Eloquent\Model;
 use App\Events\CampaignUpdated;
 use App\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @property-read CampaignTrackingLog|null $trackingLog
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignClickLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignClickLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignClickLog query()
+ *
  * @mixin \Eloquent
  */
 class CampaignClickLog extends Model
@@ -60,11 +60,11 @@ class CampaignClickLog extends Model
             return [$url, null];
         }
 
-        if (!CampaignTrackingLog::where('message_id', $messageId)->exists()) {
+        if (! CampaignTrackingLog::where('message_id', $messageId)->exists()) {
             return [$url, null];
         }
 
-        $log = new self();
+        $log = new self;
         $log->message_id = $messageId;
         $log->url = $url;
         $log->user_agent = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null;
@@ -85,9 +85,9 @@ class CampaignClickLog extends Model
         $openLog = $log->createRelatedOpenLogIfNotExist();
 
         // Do not trigger cache update if campaign is running
-        if ($log->trackingLog && !is_null($log->trackingLog->campaign)) {
-            if (!$log->trackingLog->campaign->isSending()) {
-                event(new CampaignUpdated($log->trackingLog->campaign));
+        if ($log->trackingLog && ! is_null($log->trackingLog->campaign)) {
+            if (! $log->trackingLog->campaign->isSending()) {
+                CampaignUpdated::dispatch($log->trackingLog->campaign);
             }
         }
 
@@ -105,8 +105,8 @@ class CampaignClickLog extends Model
 
     private static function validateUrl($url)
     {
-        $value = [ 'url' => $url ];
-        $rules = [ 'url' => 'required|url' ];
+        $value = ['url' => $url];
+        $rules = ['url' => 'required|url'];
         $validator = Validator::make($value, $rules);
 
         if ($validator->fails()) {
@@ -134,7 +134,7 @@ class CampaignClickLog extends Model
         $query = $query->leftJoin('customers', 'customers.id', '=', 'tracking_logs.customer_id');
 
         // Keyword
-        if (!empty(trim($request->keyword))) {
+        if (! empty(trim($request->keyword))) {
             foreach (explode(' ', trim($request->keyword)) as $keyword) {
                 $query = $query->where(function ($q) use ($keyword) {
                     $q->orwhere('campaigns.name', 'like', '%'.$keyword.'%')
@@ -148,8 +148,8 @@ class CampaignClickLog extends Model
 
         // filters
         $filters = $request->all();
-        if (!empty($filters)) {
-            if (!empty($filters['campaign_uid'])) {
+        if (! empty($filters)) {
+            if (! empty($filters['campaign_uid'])) {
                 $query = $query->where('campaigns.uid', '=', $filters['campaign_uid']);
             }
         }
@@ -171,5 +171,4 @@ class CampaignClickLog extends Model
     }
 
     public static $itemsPerPage = 25;
-
 }

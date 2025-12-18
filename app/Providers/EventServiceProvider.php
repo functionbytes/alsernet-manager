@@ -5,22 +5,13 @@ namespace App\Providers;
 use App\Events\Campaigns\GiftvoucherCreated;
 use App\Events\Document\DocumentCreated;
 use App\Events\Document\DocumentStatusChanged;
-use App\Events\Documents\DocumentCreated as DocumentsDocumentCreated;
-use App\Events\Documents\DocumentReminderRequested;
-use App\Events\Documents\DocumentUploaded;
 use App\Events\Subscribers\SubscriberCheckatEvent;
 use App\Listeners\Backups\BackupEventListener;
 use App\Listeners\Campaigns\GiftvoucherListener;
 use App\Listeners\Documents\LogDocumentStatusChange;
-use App\Listeners\Documents\SendDocumentUploadConfirmation;
 use App\Listeners\Documents\SendDocumentUploadNotification;
-use App\Listeners\Documents\SendDocumentUploadReminder;
 use App\Listeners\LogToDatabase;
-use App\Listeners\SendApprovalEmailListener;
-use App\Listeners\SendCompletionEmailListener;
-use App\Listeners\SendInitialRequestEmailListener;
 use App\Listeners\SendNewUserNotification;
-use App\Listeners\SendRejectionEmailListener;
 use App\Listeners\Subscribers\SubscriberCheckatListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -44,29 +35,13 @@ class EventServiceProvider extends ServiceProvider
             GiftvoucherListener::class,
         ],
 
-        // Eventos de Documentos (antiguos)
-        DocumentsDocumentCreated::class => [
-            SendDocumentUploadNotification::class,
-        ],
-
-        DocumentUploaded::class => [
-            SendDocumentUploadConfirmation::class,
-        ],
-
-        DocumentReminderRequested::class => [
-            SendDocumentUploadReminder::class,
-        ],
-
-        // Eventos de Documentos (nuevos - con emails integrados)
+        // Eventos de Documentos
         DocumentCreated::class => [
-            SendInitialRequestEmailListener::class,
+            SendDocumentUploadNotification::class,
         ],
 
         DocumentStatusChanged::class => [
             LogDocumentStatusChange::class,
-            SendApprovalEmailListener::class,
-            SendRejectionEmailListener::class,
-            SendCompletionEmailListener::class,
         ],
 
         // Eventos de Backup

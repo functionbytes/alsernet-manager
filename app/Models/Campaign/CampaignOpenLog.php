@@ -2,12 +2,11 @@
 
 namespace App\Models\Campaign;
 
-use App\Models\IpLocation;
-use App\Models\Campaign\CampaignTrackingLog;
-use Illuminate\Database\Eloquent\Model;
 use App\Events\CampaignUpdated;
 use App\Library\StringHelper;
+use App\Models\IpLocation;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
@@ -18,6 +17,7 @@ use Exception;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read IpLocation|null $ipLocation
  * @property-read CampaignTrackingLog $trackingLog
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog query()
@@ -27,6 +27,7 @@ use Exception;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog whereMessageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignOpenLog whereUserAgent($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignOpenLog extends Model
@@ -37,6 +38,7 @@ class CampaignOpenLog extends Model
     {
         return $this->belongsTo('App\Models\Campaign\CampaignTrackingLog', 'message_id', 'message_id');
     }
+
     public function ipLocation()
     {
         return $this->belongsTo('App\Models\IpLocation', 'ip_address', 'ip_address');
@@ -57,7 +59,7 @@ class CampaignOpenLog extends Model
         $query = $query->leftJoin('customers', 'customers.id', '=', 'tracking_logs.customer_id');
 
         // Keyword
-        if (!empty(trim($request->keyword))) {
+        if (! empty(trim($request->keyword))) {
             foreach (explode(' ', trim($request->keyword)) as $keyword) {
                 $query = $query->where(function ($q) use ($keyword) {
                     $q->orwhere('campaigns.name', 'like', '%'.$keyword.'%')
@@ -70,8 +72,8 @@ class CampaignOpenLog extends Model
 
         // filters
         $filters = $request->all();
-        if (!empty($filters)) {
-            if (!empty($filters['campaign_uid'])) {
+        if (! empty($filters)) {
+            if (! empty($filters['campaign_uid'])) {
                 $query = $query->where('campaigns.uid', '=', $filters['campaign_uid']);
             }
         }
@@ -98,11 +100,11 @@ class CampaignOpenLog extends Model
 
         $messageId = StringHelper::base64UrlDecode($request->message_id);
 
-        if (!TrackingLog::where('message_id', $messageId)->exists()) {
+        if (! TrackingLog::where('message_id', $messageId)->exists()) {
             throw new Exception(sprintf('Message ID %s not found', $messageId));
         }
 
-        $log = new self();
+        $log = new self;
         $log->message_id = $messageId;
         $log->user_agent = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null;
 
@@ -117,9 +119,9 @@ class CampaignOpenLog extends Model
         $log->save();
 
         // Do not trigger cache update if campaign is running
-        if ($log->trackingLog && !is_null($log->trackingLog->campaign)) {
-            if (!$log->trackingLog->campaign->isSending()) {
-                event(new CampaignUpdated($log->trackingLog->campaign));
+        if ($log->trackingLog && ! is_null($log->trackingLog->campaign)) {
+            if (! $log->trackingLog->campaign->isSending()) {
+                CampaignUpdated::dispatch($log->trackingLog->campaign);
             }
         }
 
@@ -127,6 +129,4 @@ class CampaignOpenLog extends Model
     }
 
     public static $itemsPerPage = 25;
-
-
 }

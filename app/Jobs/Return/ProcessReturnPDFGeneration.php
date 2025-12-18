@@ -16,8 +16,11 @@ class ProcessReturnPDFGeneration implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $returnRequest;
+
     public $tries = 3;
+
     public $timeout = 120;
+
     public $backoff = [10, 30, 60]; // Reintentos con delay progresivo
 
     public function __construct(ReturnRequest $returnRequest)
@@ -30,7 +33,7 @@ class ProcessReturnPDFGeneration implements ShouldQueue
     {
         Log::info('Iniciando generación de PDF', [
             'return_id' => $this->returnRequest->id_return_request,
-            'customer_email' => $this->returnRequest->email
+            'customer_email' => $this->returnRequest->email,
         ]);
 
         try {
@@ -42,28 +45,28 @@ class ProcessReturnPDFGeneration implements ShouldQueue
 
             Log::info('PDF generado exitosamente', [
                 'return_id' => $this->returnRequest->id_return_request,
-                'pdf_path' => $pdfPath
+                'pdf_path' => $pdfPath,
             ]);
 
             // Opcional: Disparar evento de PDF completado
-            event(new \App\Events\ReturnPDFGenerated($this->returnRequest, $pdfPath));
+            \App\Events\ReturnPDFGenerated::dispatch($this->returnRequest, $pdfPath);
 
         } catch (\Exception $e) {
             Log::error('Error generando PDF', [
                 'return_id' => $this->returnRequest->id_return_request,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             // Si es el último intento, marcar como fallido
             if ($this->attempts() >= $this->tries) {
                 Log::critical('PDF generation failed after all retries', [
                     'return_id' => $this->returnRequest->id_return_request,
-                    'attempts' => $this->attempts()
+                    'attempts' => $this->attempts(),
                 ]);
 
                 // Opcional: Notificar a administradores
-                event(new \App\Events\ReturnPDFGenerationFailed($this->returnRequest, $e));
+                \App\Events\ReturnPDFGenerationFailed::dispatch($this->returnRequest, $e);
             }
 
             throw $e; // Re-lanzar para que Laravel maneje el reintento
@@ -75,13 +78,13 @@ class ProcessReturnPDFGeneration implements ShouldQueue
         Log::error('Job de generación PDF falló definitivamente', [
             'return_id' => $this->returnRequest->id_return_request,
             'error' => $exception->getMessage(),
-            'attempts' => $this->attempts()
+            'attempts' => $this->attempts(),
         ]);
 
         // Marcar en la base de datos que la generación falló
         $this->returnRequest->update([
             'pdf_generation_failed' => true,
-            'pdf_generation_error' => $exception->getMessage()
+            'pdf_generation_error' => $exception->getMessage(),
         ]);
     }
 

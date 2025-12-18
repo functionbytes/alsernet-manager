@@ -21,30 +21,39 @@ use Throwable;
  * @property-read \App\Models\User|null $customer
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign byStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign scheduled()
+ *
  * @mixin \Eloquent
  */
 class BaseCampaign extends Model
 {
-    use TrackJobs;
-    use HasUid;
     use HasCache;
     use HasFactory;
+    use HasUid;
+    use TrackJobs;
 
     protected $logger;
 
     // Campaign status
     public const STATUS_NEW = 'new';
+
     public const STATUS_QUEUING = 'queuing'; // equiv. to 'queue'
+
     public const STATUS_QUEUED = 'queued'; // equiv. to 'queue'
+
     public const STATUS_SENDING = 'sending';
+
     public const STATUS_ERROR = 'error';
+
     public const STATUS_DONE = 'done';
+
     public const STATUS_PAUSED = 'paused';
+
     public const STATUS_SCHEDULED = 'scheduled';
 
     /**
@@ -99,6 +108,7 @@ class BaseCampaign extends Model
     {
         $this->status = self::STATUS_QUEUED;
         $this->save();
+
         return $this;
     }
 
@@ -106,6 +116,7 @@ class BaseCampaign extends Model
     {
         $this->status = self::STATUS_QUEUING;
         $this->save();
+
         return $this;
     }
 
@@ -114,6 +125,7 @@ class BaseCampaign extends Model
         $this->status = self::STATUS_ERROR;
         $this->last_error = $error;
         $this->save();
+
         return $this;
     }
 
@@ -125,7 +137,7 @@ class BaseCampaign extends Model
         $timeoutCallback = function () {
             // pass this to the getExclusiveLock method
             // to have it silently quit, without throwing an exception
-            return;
+
         };
 
         $lock->getExclusiveLock(function ($f) {
@@ -157,9 +169,10 @@ class BaseCampaign extends Model
     {
         $now = Carbon::now();
 
-        if (!is_null($this->run_at) && $this->run_at->gte($now)) {
+        if (! is_null($this->run_at) && $this->run_at->gte($now)) {
             $scheduledAt = $this->run_at->timezone($this->customer->timezone);
             $this->logger()->warning(sprintf('Campaign is scheduled at %s (%s)', $scheduledAt->format('Y-m-d H:m'), $scheduledAt->diffForHumans()));
+
             return;
         }
 
@@ -184,6 +197,7 @@ class BaseCampaign extends Model
     {
         $this->status = self::STATUS_SCHEDULED;
         $this->save();
+
         return $this;
     }
 
@@ -217,7 +231,7 @@ class BaseCampaign extends Model
                 // @Update: the above statement is longer true! Cancelling a batch DOES NOT trigger "THEN" callback
                 //
                 // IMPORTANT: refresh() is required!
-                if (!$this->refresh()->isPaused()) {
+                if (! $this->refresh()->isPaused()) {
                     $count = $this->subscribersToSend()->count();
                     if ($count > 0) {
                         // Run over and over again until there is no subscribers left to send
@@ -236,7 +250,7 @@ class BaseCampaign extends Model
             },
             function (Batch $batch, Throwable $e) {
                 // CATCH callback
-                $errorMsg = "Campaign stopped. ".$e->getMessage()."\n".$e->getTraceAsString();
+                $errorMsg = 'Campaign stopped. '.$e->getMessage()."\n".$e->getTraceAsString();
                 $this->logger()->info($errorMsg);
                 $this->setError($errorMsg);
             },
@@ -282,7 +296,7 @@ class BaseCampaign extends Model
 
     public function logger()
     {
-        if (!is_null($this->logger)) {
+        if (! is_null($this->logger)) {
             return $this->logger;
         }
 
@@ -303,6 +317,7 @@ class BaseCampaign extends Model
     public function getLogFile()
     {
         $path = storage_path(join_paths('logs', php_sapi_name(), '/campaign-'.$this->uid.'.log'));
+
         return $path;
     }
 
@@ -326,7 +341,7 @@ class BaseCampaign extends Model
         $this->setPaused();
 
         // Update status
-        event(new CampaignUpdated($this));
+        CampaignUpdated::dispatch($this);
     }
 
     public function setPaused()
@@ -334,6 +349,7 @@ class BaseCampaign extends Model
         // set campaign status
         $this->status = self::STATUS_PAUSED;
         $this->save();
+
         return $this;
     }
 
@@ -350,14 +366,14 @@ class BaseCampaign extends Model
     public static function statusSelectOptions()
     {
         return [
-            ['text' => trans('messages.campaign_status_' . self::STATUS_NEW), 'value' => self::STATUS_NEW],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_QUEUING), 'value' => self::STATUS_QUEUING],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_QUEUED), 'value' => self::STATUS_QUEUED],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_SENDING), 'value' => self::STATUS_SENDING],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_ERROR), 'value' => self::STATUS_ERROR],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_DONE), 'value' => self::STATUS_DONE],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_PAUSED), 'value' => self::STATUS_PAUSED],
-            ['text' => trans('messages.campaign_status_' . self::STATUS_SCHEDULED), 'value' => self::STATUS_SCHEDULED],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_NEW), 'value' => self::STATUS_NEW],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_QUEUING), 'value' => self::STATUS_QUEUING],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_QUEUED), 'value' => self::STATUS_QUEUED],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_SENDING), 'value' => self::STATUS_SENDING],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_ERROR), 'value' => self::STATUS_ERROR],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_DONE), 'value' => self::STATUS_DONE],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_PAUSED), 'value' => self::STATUS_PAUSED],
+            ['text' => trans('messages.campaign_status_'.self::STATUS_SCHEDULED), 'value' => self::STATUS_SCHEDULED],
         ];
     }
 }

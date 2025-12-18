@@ -292,7 +292,7 @@ class SegmentController extends Controller
             $segment->log('updated', $request->user()->customer);
 
             // update cached information
-            event(new \Acelle\Events\MailListUpdated($segment->mailList));
+            \Acelle\Events\MailListUpdated::dispatch($segment->mailList);
 
             // Redirect to my lists page
             $request->session()->flash('alert-success', trans('messages.segment.updated'));

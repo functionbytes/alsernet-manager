@@ -1,23 +1,23 @@
 <?php
 
-
 namespace App\Http\Controllers\Callcenters\Users;
 
 use App\Events\Auth\Password\ForgotPasswordCreated;
 use App\Events\Auth\Password\ResetPasswordCreated;
-use App\Models\Enterprise\EnterpriseUser;
-use App\Models\Enterprise\Enterprise;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\Enterprise\Enterprise;
+use App\Models\Enterprise\EnterpriseUser;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $role = null ?? $request->role;
@@ -25,11 +25,11 @@ class UsersController extends Controller
         $users = User::descending();
 
         if ($searchKey) {
-            $users = $users->where(function($query) use ($searchKey) {
-                $query->where('users.firstname', 'like', '%' . $searchKey . '%')
-                    ->orWhere('users.lastname', 'like', '%' . $searchKey . '%')
-                    ->orWhere(DB::raw("CONCAT(users.firstname, ' ', users.lastname)"), 'like', '%' . $searchKey . '%')
-                    ->orWhere('users.email', 'like', '%' . $searchKey . '%')->orWhere('users.identification', 'like', '%' . $searchKey . '%');
+            $users = $users->where(function ($query) use ($searchKey) {
+                $query->where('users.firstname', 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.lastname', 'like', '%'.$searchKey.'%')
+                    ->orWhere(DB::raw("CONCAT(users.firstname, ' ', users.lastname)"), 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.email', 'like', '%'.$searchKey.'%')->orWhere('users.identification', 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -45,7 +45,9 @@ class UsersController extends Controller
             'searchKey' => $searchKey,
         ]);
     }
-    public function create(){
+
+    public function create()
+    {
 
         $roles = collect([
             ['id' => 'admin', 'title' => 'Administrador'],
@@ -64,7 +66,7 @@ class UsersController extends Controller
             ['id' => '0', 'label' => 'Inactivo'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         return view('callcenters.views.users.users.create')->with([
             'roles' => $roles,
@@ -73,16 +75,17 @@ class UsersController extends Controller
         ]);
 
     }
+
     public function store(Request $request)
     {
 
         $validates = User::where('email', $request->email)->orWhere('identification', $request->identification)->get();
 
-        if($validates!=null){
+        if ($validates != null) {
 
-            $email =  User::where('email', $request->email)->get();
+            $email = User::where('email', $request->email)->get();
 
-            if($email!=null){
+            if ($email != null) {
 
                 return response()->json([
                     'success' => false,
@@ -91,9 +94,9 @@ class UsersController extends Controller
 
             }
 
-            $identification =  User::where('identification', $request->identification)->get();
+            $identification = User::where('identification', $request->identification)->get();
 
-            if($identification!=null){
+            if ($identification != null) {
 
                 return response()->json(['success' => false,
                     'message' => 'El nit ya estan regitrada en nuestro sistema',
@@ -101,12 +104,12 @@ class UsersController extends Controller
 
             }
 
-        }else{
+        } else {
 
             $user = new User;
             $user->uid = $this->generate_uid('users');
             $user->firstname = Str::upper($request->firstname);
-            $user->lastname  = Str::upper($request->lastname);
+            $user->lastname = Str::upper($request->lastname);
             $user->cellphone = $request->cellphone;
             $user->identification = $request->identification;
             $user->email = $request->email;
@@ -125,13 +128,15 @@ class UsersController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Se ha actualizado correctamente.'
+                'message' => 'Se ha actualizado correctamente.',
             ]);
 
         }
 
     }
-    public function view($uid){
+
+    public function view($uid)
+    {
 
         $user = User::uid($uid);
 
@@ -148,7 +153,7 @@ class UsersController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         return view('callcenters.views.users.users.view')->with([
             'user' => $user,
@@ -157,7 +162,9 @@ class UsersController extends Controller
         ]);
 
     }
-    public function navegation($uid){
+
+    public function navegation($uid)
+    {
         $user = User::uid($uid);
 
         return view('callcenters.views.users.users.navegation')->with([
@@ -165,6 +172,7 @@ class UsersController extends Controller
         ]);
 
     }
+
     public function edit($uid)
     {
         $user = User::uid($uid);
@@ -182,13 +190,14 @@ class UsersController extends Controller
             ['id' => '0', 'label' => 'Inactivo'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $enterprises = Enterprise::get();
         $enterprises->prepend('', '');
         $enterprises = $enterprises->pluck('title', 'id');
 
         $enterprise = $user->relations?->id;
+
         return view('callcenters.views.users.users.edit')->with([
             'user' => $user,
             'enterprises' => $enterprises,
@@ -198,23 +207,23 @@ class UsersController extends Controller
         ]);
 
     }
+
     public function update(Request $request)
     {
 
-
         $user = User::uid($request->uid);
 
-        if($user->email != $request->email || $user->identification != $request->identification){
+        if ($user->email != $request->email || $user->identification != $request->identification) {
 
             $validates = User::where('email', $request->email)->orWhere('identification', $request->identification)->get();
 
-            if (count($validates)>0) {
+            if (count($validates) > 0) {
 
-                $email =  User::where('email', $request->email)->get();
+                $email = User::where('email', $request->email)->get();
 
-                if(count($email)>0){
+                if (count($email) > 0) {
 
-                    if($user->email != $request->email){
+                    if ($user->email != $request->email) {
 
                         return response()->json([
                             'success' => false,
@@ -225,10 +234,10 @@ class UsersController extends Controller
 
                 }
 
-                $identification =  User::where('identification', $request->identification)->get();
+                $identification = User::where('identification', $request->identification)->get();
 
-                if(count($identification)>0){
-                    if($user->identification != $request->identification){
+                if (count($identification) > 0) {
+                    if ($user->identification != $request->identification) {
 
                         return response()->json([
                             'success' => false,
@@ -249,11 +258,11 @@ class UsersController extends Controller
                 $user->available = $request->available;
                 $request->password != null ? $user->password = $request->password : null;
 
-                if ($request->role == "enterprises") {
+                if ($request->role == 'enterprises') {
 
                     $user->enterprise_id = $request->enterprise;
 
-                } elseif ($user->role == "customers") {
+                } elseif ($user->role == 'customers') {
 
                     $enterprise = $user->relation;
 
@@ -285,12 +294,12 @@ class UsersController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Se ha actualizado correctamente.'
+                    'message' => 'Se ha actualizado correctamente.',
                 ]);
 
             }
 
-        }else {
+        } else {
 
             $user = User::uid($request->uid);
             $user->firstname = Str::upper($request->firstname);
@@ -303,11 +312,11 @@ class UsersController extends Controller
             $user->available = $request->available;
             $request->password != null ? $user->password = $request->password : null;
 
-            if ($request->role == "enterprises") {
+            if ($request->role == 'enterprises') {
 
                 $user->enterprise_id = $request->enterprise;
 
-            } elseif ($user->role == "customers") {
+            } elseif ($user->role == 'customers') {
 
                 $enterprise = $user->relation;
 
@@ -339,55 +348,56 @@ class UsersController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Se ha actualizado correctamente.'
+                'message' => 'Se ha actualizado correctamente.',
             ]);
 
         }
 
-
     }
-    public function destroy($uid){
+
+    public function destroy($uid)
+    {
         $user = User::uid($uid);
         $user->delete();
+
         return redirect()->back();
     }
+
     public function information(Request $request)
     {
 
         $user = User::uid($request->uid);
 
-        if($user->email != $request->email || $user->identification != $request->identification){
+        if ($user->email != $request->email || $user->identification != $request->identification) {
 
             $validates = User::where('email', $request->email)->orWhere('identification', $request->identification)->get();
 
-            if (count($validates)>0) {
+            if (count($validates) > 0) {
 
-                $email =  User::where('email', $request->email)->get();
+                $email = User::where('email', $request->email)->get();
 
-                if(count($email)>0){
+                if (count($email) > 0) {
 
-                    if($user->email != $request->email){
+                    if ($user->email != $request->email) {
 
                         return response()->json([
                             'success' => false,
                             'message' => 'El correo electronico ya estan regitrada en nuestro sistema',
                         ]);
 
-
                     }
 
                 }
 
-                $identification =  User::where('identification', $request->identification)->get();
+                $identification = User::where('identification', $request->identification)->get();
 
-                if(count($identification)>0){
-                    if($user->identification != $request->identification){
+                if (count($identification) > 0) {
+                    if ($user->identification != $request->identification) {
 
                         return response()->json([
                             'success' => false,
                             'message' => 'El nit ya estan regitrada en nuestro sistema',
                         ]);
-
 
                     }
                 }
@@ -401,7 +411,6 @@ class UsersController extends Controller
                 $user->role = $request->role;
                 $user->available = $request->available;
 
-
                 if ($user->isDirty()) {
 
                     $user->update();
@@ -412,15 +421,13 @@ class UsersController extends Controller
                         ->log('updated');
                 }
 
-
                 return response()->json([
                     'success' => true,
                     'message' => 'El nit ya estan regitrada en nuestro sistema',
                 ]);
 
-
             }
-        }else {
+        } else {
 
             $user = User::uid($request->uid);
             $user->firstname = Str::upper($request->firstname);
@@ -441,18 +448,15 @@ class UsersController extends Controller
                     ->log('updated');
             }
 
-
-
             return response()->json([
                 'success' => true,
                 'message' => 'El nit ya estan regitrada en nuestro sistema',
             ]);
 
-
         }
 
-
     }
+
     public function resetpassword(Request $request)
     {
 
@@ -469,7 +473,7 @@ class UsersController extends Controller
             $user->password_reset_last_tried_on = null;
             $user->sessions()->delete();
 
-            event(new ResetPasswordCreated($user));
+            ResetPasswordCreated::dispatch($user);
 
             if ($user->isDirty()) {
 
@@ -489,6 +493,7 @@ class UsersController extends Controller
         }
 
     }
+
     public function forgotpassword(Request $request)
     {
 
@@ -496,10 +501,10 @@ class UsersController extends Controller
 
         $reset_tries = 0;
 
-        if ($user->password_reset_last_tried_on != "") {
+        if ($user->password_reset_last_tried_on != '') {
 
-            $current_date = date("Y-m-d");
-            $last_tried_date = date("Y-m-d", strtotime($user->password_reset_last_tried_on));
+            $current_date = date('Y-m-d');
+            $last_tried_date = date('Y-m-d', strtotime($user->password_reset_last_tried_on));
 
             if ($last_tried_date == $current_date && $user->password_reset_max_tries >= 3) {
 
@@ -512,7 +517,7 @@ class UsersController extends Controller
 
             if ($last_tried_date == $current_date && $user->password_reset_max_tries < 3) {
                 $reset_tries = $user->password_reset_max_tries + 1;
-            } else if ($last_tried_date != $current_date) {
+            } elseif ($last_tried_date != $current_date) {
                 $reset_tries = $reset_tries + 1;
             }
         } else {
@@ -525,7 +530,7 @@ class UsersController extends Controller
         $user->password_reset_max_tries = $reset_tries;
         $user->password_reset_last_tried_on = now();
 
-        event(new ForgotPasswordCreated($user));
+        ForgotPasswordCreated::dispatch($user);
 
         if ($user->isDirty()) {
 
@@ -539,36 +544,36 @@ class UsersController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Se ha actualizado correctamente.'
+            'message' => 'Se ha actualizado correctamente.',
         ]);
 
     }
-    public function notification(Request $request){
+
+    public function notification(Request $request)
+    {
 
         $user = User::uid($request->uid);
 
-            $user->subscribers_notification = $request->subscribers_notification == 'true' ? 1 : 0;
-            $user->order_notification = $request->order_notification == 'true' ? 1 : 0;
-            $user->status_notification = $request->status_notification  == 'true' ? 1 : 0;
-            $user->email_notification = $request->email_notification  == 'true' ? 1 : 0;
-            $user->cookies_notification = $request->cookies_notification == 'true' ? 1 : 0;
+        $user->subscribers_notification = $request->subscribers_notification == 'true' ? 1 : 0;
+        $user->order_notification = $request->order_notification == 'true' ? 1 : 0;
+        $user->status_notification = $request->status_notification == 'true' ? 1 : 0;
+        $user->email_notification = $request->email_notification == 'true' ? 1 : 0;
+        $user->cookies_notification = $request->cookies_notification == 'true' ? 1 : 0;
 
+        if ($user->isDirty()) {
 
-            if ($user->isDirty()) {
+            $user->update();
 
-                $user->update();
+            activity()
+                ->performedOn($user)
+                ->withProperties($user->getChanges())
+                ->log('updated');
+        }
 
-                activity()
-                    ->performedOn($user)
-                    ->withProperties($user->getChanges())
-                    ->log('updated');
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Se ha actualizado correctamente.'
-            ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Se ha actualizado correctamente.',
+        ]);
 
     }
-
 }

@@ -152,13 +152,13 @@
                 </div>
             </div>
 
+            <!-- Document Notes -->
+            @include('administratives.views.documents.includes.document-notes-sidebar')
+
             <!-- Action History -->
             <div id="actionHistoryContainer">
                 @include('administratives.views.documents.includes.action-history')
             </div>
-
-            <!-- Document Notes -->
-            @include('administratives.views.documents.includes.document-notes-sidebar')
 
             <!-- Status Timeline -->
             @include('administratives.views.documents.includes.status-timeline')
@@ -294,7 +294,7 @@
                                 <label id="status_id-error" class="error" for="status_id" style="display: none"></label>
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Origen (Canal)</label>
+                                <label class="form-label fw-semibold">Origen (canal)</label>
                                 <select class="form-select select2" id="document_source_id" name="document_source_id">
                                     <option value="">Sin especificar</option>
                                     @forelse($documentSources as $source)
@@ -306,8 +306,9 @@
                                     @endforelse
                                 </select>
                             </div>
+
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Tipo de Carga</label>
+                                <label class="form-label fw-semibold">Tipo de carga</label>
                                 <select class="form-select" id="upload_type" name="upload_type">
                                     <option value="automatic" {{ $document->upload_type == 'automatic' ? 'selected' : '' }}>
                                        Automático (Cliente/Sistema)

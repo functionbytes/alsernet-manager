@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Documents\DocumentCreated;
+use App\Events\Document\DocumentCreated;
 use App\Models\Document\Document;
 use App\Services\Documents\DocumentEmailService;
 use Illuminate\Console\Command;
@@ -166,7 +166,7 @@ class CreateSampleDocumentsFromPrestashop extends Command
         }
 
         // Disparar evento de creación
-        event(new DocumentCreated($document));
+        DocumentCreated::dispatch($document);
 
         return $document;
     }

@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\MailHelper;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Events\Auth\UserLoggedOut;
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Events\Auth\UserLoggedOut;
-use App\Events\Auth\UserLoggedIn;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
 
 class LoginController extends Controller
 {
@@ -23,11 +19,12 @@ class LoginController extends Controller
 
     protected $redirectTo = '/login';
 
-    public function showLoginForm(){
+    public function showLoginForm()
+    {
 
-        if($this->guard()->check()){
+        if ($this->guard()->check()) {
             return redirect()->route($this->guard()->user()->redirectRouteName());
-        }else{
+        } else {
             return view('auth.login');
         }
     }
@@ -39,9 +36,10 @@ class LoginController extends Controller
 
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Demasiados intentos de inicio de sesión. Inténtelo de nuevo más tarde.'
+                'message' => 'Demasiados intentos de inicio de sesión. Inténtelo de nuevo más tarde.',
             ], 429);
         }
 
@@ -69,7 +67,7 @@ class LoginController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso.',
-                'redirect' => route($this->guard()->user()->redirectRouteName())
+                'redirect' => route($this->guard()->user()->redirectRouteName()),
             ]);
 
         } else {
@@ -79,29 +77,30 @@ class LoginController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Tu cuenta está deshabilitada. Contacta al administrador.'
+                'message' => 'Tu cuenta está deshabilitada. Contacta al administrador.',
             ]);
         }
     }
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        if (!User::where('email', $request->email)->first()) {
+        if (! User::where('email', $request->email)->first()) {
             return response()->json([
                 'success' => false,
-                'message' => "El correo o cédula no coincide con nuestros registros."
+                'message' => 'El correo o cédula no coincide con nuestros registros.',
             ]);
         }
 
-        if (!Hash::check($request->password, User::where('email', $request->email)->first()->password)) {
+        if (! Hash::check($request->password, User::where('email', $request->email)->first()->password)) {
             return response()->json([
                 'success' => false,
-                'message' => "La contraseña ingresada no es válida."
+                'message' => 'La contraseña ingresada no es válida.',
             ]);
         }
     }
 
-    protected function validateLogin(Request $request){
+    protected function validateLogin(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             $this->username() => 'required|string',
@@ -119,32 +118,32 @@ class LoginController extends Controller
     {
         $login = $request->input($this->username());
         $field = 'email';
+
         return [
             $field => $login,
             'password' => $request->input('password'),
         ];
     }
 
-
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $this->guard()->logout();
         $user = $request->user();
-        //event(new UserLoggedOut($user));
+        // UserLoggedOut::dispatch($user);
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
 
     }
 
-    public function username(){
+    public function username()
+    {
         return 'email';
     }
 
-    protected function guard(){
+    protected function guard()
+    {
         return Auth::guard();
     }
-
 }
-
-
-

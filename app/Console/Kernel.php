@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
         }
 
         $schedule->call(function () {
-            event(new CronJobExecuted);
+            CronJobExecuted::dispatch();
         })->name('cronjob_event:log')->everyMinute();
 
         // Automation2

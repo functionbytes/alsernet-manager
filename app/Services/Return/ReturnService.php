@@ -79,7 +79,7 @@ class ReturnService
             $return->load(['status.state', 'returnType', 'returnReason']);
 
             // *** DISPARAR EVENTO: Devolución Creada ***
-            event(new ReturnCreated(
+            ReturnCreated::dispatch(
                 $return,
                 $data['created_by'] ?? 'web',
                 request()->ip(),
@@ -119,7 +119,7 @@ class ReturnService
             $return->load(['status.state', 'returnType', 'returnReason']);
 
             // *** DISPARAR EVENTO: Estado Cambiado ***
-            event(new ReturnStatusChanged(
+            ReturnStatusChanged::dispatch(
                 $return,
                 $previousStatus,
                 $newStatus,
@@ -162,7 +162,7 @@ class ReturnService
             ]);
 
             // *** DISPARAR EVENTO: Pago Procesado ***
-            event(new ReturnPaymentProcessed(
+            ReturnPaymentProcessed::dispatch(
                 $return,
                 $payment,
                 $paymentData['employee_id'] ?? 1,
@@ -198,7 +198,7 @@ class ReturnService
         }
 
         // *** DISPARAR EVENTO: Devolución Completada ***
-        event(new ReturnCompleted(
+        ReturnCompleted::dispatch(
             $return,
             $completionType,
             $employeeId,

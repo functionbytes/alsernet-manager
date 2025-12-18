@@ -17,7 +17,6 @@ use App\Models\Template;
 use App\Models\TemplateCategory;
 use App\Models\TrackingLog;
 use Carbon\Carbon;
-use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log as LaravelLog;
@@ -25,7 +24,6 @@ use Validator;
 
 class CampaignsController extends Controller
 {
-
     public function index(Request $request)
     {
         $campaigns = Campaign::all();
@@ -70,7 +68,7 @@ class CampaignsController extends Controller
     {
         $campaign = Campaign::findByUid($id);
 
-        event(new \App\Events\CampaignUpdated($campaign));
+        \App\Events\CampaignUpdated::dispatch($campaign);
 
         if ($campaign->status == 'new') {
             return redirect()->route('CampaignController@edit', ['uid' => $campaign->uid]);
@@ -108,7 +106,7 @@ class CampaignsController extends Controller
         $rules = $campaign->recipientsRules($request->all());
         $campaign->fillRecipients($request->all());
 
-        if (!empty($request->old())) {
+        if (! empty($request->old())) {
             $rules = $campaign->recipientsRules($request->old());
             $campaign->fillRecipients($request->old());
         }
@@ -117,7 +115,7 @@ class CampaignsController extends Controller
 
             $this->validate($request, $rules);
             $campaign->saveRecipients($request->all());
-            event(new CampaignUpdated($campaign));
+            CampaignUpdated::dispatch($campaign);
 
             return redirect()->route('CampaignController@setup', ['uid' => $campaign->uid]);
         }
@@ -134,8 +132,8 @@ class CampaignsController extends Controller
         $customer = $request->user()->customer;
         $campaign = Campaign::findByUid($request->uid);
 
-        $campaign->from_name = !empty($campaign->from_name) ? $campaign->from_name : $campaign->defaultMailList->from_name;
-        $campaign->from_email = !empty($campaign->from_email) ? $campaign->from_email : $campaign->defaultMailList->from_email;
+        $campaign->from_name = ! empty($campaign->from_name) ? $campaign->from_name : $campaign->defaultMailList->from_name;
+        $campaign->from_email = ! empty($campaign->from_email) ? $campaign->from_email : $campaign->defaultMailList->from_email;
 
         // Get old post values
         if ($request->old()) {
@@ -175,7 +173,7 @@ class CampaignsController extends Controller
         }
 
         // check if campagin does not have template
-        if (!$campaign->template) {
+        if (! $campaign->template) {
             return redirect()->route('CampaignController@templateCreate', ['uid' => $campaign->uid]);
         }
 
@@ -211,12 +209,12 @@ class CampaignsController extends Controller
         }
 
         // default tab
-        if ($request->from != 'mine' && !$request->category_uid) {
+        if ($request->from != 'mine' && ! $request->category_uid) {
             $request->category_uid = TemplateCategory::first()->uid;
         }
 
         return view('managers.views.campaigns.campaigns.template.layout', [
-            'campaign' => $campaign
+            'campaign' => $campaign,
         ]);
     }
 
@@ -265,9 +263,9 @@ class CampaignsController extends Controller
 
         // save campaign html
         if ($request->isMethod('post')) {
-            $rules = array(
+            $rules = [
                 'content' => 'required',
-            );
+            ];
 
             $this->validate($request, $rules);
 
@@ -353,7 +351,6 @@ class CampaignsController extends Controller
         $user = $request->user();
         $campaign = Campaign::findByUid($request->uid);
 
-
         return view('managers.views.campaigns.campaigns.preview', [
             'campaign' => $campaign,
         ]);
@@ -391,13 +388,13 @@ class CampaignsController extends Controller
         $delivery_date = $runAt->format('Y-m-d');
         $delivery_time = $runAt->format('H:i');
 
-        $rules = array(
+        $rules = [
             'delivery_date' => 'required',
             'delivery_time' => 'required',
-        );
+        ];
 
         // Get old post values
-        if (null !== $request->old()) {
+        if ($request->old() !== null) {
             $campaign->fill($request->old());
         }
 
@@ -419,7 +416,6 @@ class CampaignsController extends Controller
             return redirect()->route('CampaignController@schedule', ['uid' => $campaign->uid]);
         }
 
-
         try {
             $score = $campaign->score();
         } catch (\Exception $e) {
@@ -429,7 +425,7 @@ class CampaignsController extends Controller
         // validate and save posted data
         if ($request->isMethod('post') && $campaign->step() >= 5) {
             // Japan + not license
-            if(config('custom.japan') && !\App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),
@@ -440,6 +436,7 @@ class CampaignsController extends Controller
             if (get_tmp_quota($customer, 'unsubscribe_url_required') == 'yes' && Setting::isYes('campaign.enforce_unsubscribe_url_check')) {
                 if (strpos($campaign->getTemplateContent(), '{UNSUBSCRIBE_URL}') === false) {
                     $request->session()->flash('alert-error', trans('messages.template.validation.unsubscribe_url_required'));
+
                     return view('managers.views.campaigns.campaigns.confirm', [
                         'campaign' => $campaign,
                         'score' => $score,
@@ -463,11 +460,10 @@ class CampaignsController extends Controller
         ]);
     }
 
-
     public function delete(Request $request)
     {
         if (isSiteDemo()) {
-            return response()->json(["message" => trans('messages.operation_not_allowed_in_demo')], 404);
+            return response()->json(['message' => trans('messages.operation_not_allowed_in_demo')], 404);
         }
 
         $customer = $request->user()->customer;
@@ -478,7 +474,7 @@ class CampaignsController extends Controller
             return;
         }
 
-        if (!is_array($request->uids)) {
+        if (! is_array($request->uids)) {
             $request->uids = explode(',', $request->uids);
         }
 
@@ -486,7 +482,7 @@ class CampaignsController extends Controller
 
         foreach ($campaigns->get() as $campaign) {
 
-                $campaign->deleteAndCleanup();
+            $campaign->deleteAndCleanup();
         }
 
         // Redirect to my lists page
@@ -496,7 +492,6 @@ class CampaignsController extends Controller
     /**
      * Campaign overview.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -506,8 +501,7 @@ class CampaignsController extends Controller
 
         // Trigger the CampaignUpdate event to update the campaign cache information
         // The second parameter of the constructor function is false, meanining immediate update
-        event(new \App\Events\CampaignUpdated($campaign));
-
+        \App\Events\CampaignUpdated::dispatch($campaign);
 
         return view('managers.views.campaigns.campaigns.overview', [
             'campaign' => $campaign,
@@ -523,7 +517,6 @@ class CampaignsController extends Controller
                 DB::raw('count(*) AS clickCount'),
                 DB::raw(sprintf('max(%s) AS lastClick', table('click_logs.created_at')))
             )->groupBy('click_logs.url')->get();
-
 
         return view('managers.views.campaigns.campaigns.links', [
             'campaign' => $campaign,
@@ -548,9 +541,9 @@ class CampaignsController extends Controller
             $hours = [];
 
             // columns
-            for ($i = 23; $i >= 0; --$i) {
+            for ($i = 23; $i >= 0; $i--) {
                 $time = $nowInUserTimezone->copy()->subHours($i);
-                $result['columns'][] = $time->format('h') . ':00 ' . $time->format('A');
+                $result['columns'][] = $time->format('h').':00 '.$time->format('A');
                 $hours[] = $time->format('H');
             }
 
@@ -569,7 +562,7 @@ class CampaignsController extends Controller
             $days = [];
 
             // columns
-            for ($i = 2; $i >= 0; --$i) {
+            for ($i = 2; $i >= 0; $i--) {
                 $time = $nowInUserTimezone->copy()->subDays($i);
                 $result['columns'][] = $time->format('m-d');
                 $days[] = $time->format('Y-m-d');
@@ -590,7 +583,7 @@ class CampaignsController extends Controller
             $days = [];
 
             // columns
-            for ($i = 6; $i >= 0; --$i) {
+            for ($i = 6; $i >= 0; $i--) {
                 $time = $nowInUserTimezone->copy()->subDays($i);
                 $result['columns'][] = $time->format('m-d');
                 $days[] = $time->format('Y-m-d');
@@ -611,7 +604,7 @@ class CampaignsController extends Controller
             $days = [];
 
             // columns
-            for ($i = $nowInUserTimezone->copy()->subMonths(1)->diff(Carbon::now())->days - 1; $i >= 0; --$i) {
+            for ($i = $nowInUserTimezone->copy()->subMonths(1)->diff(Carbon::now())->days - 1; $i >= 0; $i--) {
                 $time = $nowInUserTimezone->copy()->subDays($i);
                 $result['columns'][] = $time->format('m-d');
                 $days[] = $time->format('Y-m-d');
@@ -632,7 +625,6 @@ class CampaignsController extends Controller
 
         return response()->json($result);
     }
-
 
     public function chart(Request $request)
     {
@@ -688,7 +680,7 @@ class CampaignsController extends Controller
         $total = $campaign->uniqueOpenCount();
         $count = 0;
         foreach ($campaign->topOpenCountries()->get() as $location) {
-            $country_name = (!empty($location->country_name) ? $location->country_name : trans('messages.unknown'));
+            $country_name = (! empty($location->country_name) ? $location->country_name : trans('messages.unknown'));
             $result['data'][] = ['value' => $location->aggregate, 'name' => $country_name];
             $count += $location->aggregate;
         }
@@ -775,7 +767,7 @@ class CampaignsController extends Controller
 
     public function click(Request $request)
     {
-        list($url, $log) = ClickLog::createFromRequest($request);
+        [$url, $log] = ClickLog::createFromRequest($request);
 
         if ($log && $log->trackingLog && $log->trackingLog->campaign) {
             $log->trackingLog->campaign->queueClickCallbacks($log);
@@ -791,6 +783,7 @@ class CampaignsController extends Controller
 
         if (is_null($subscriber)) {
             LaravelLog::error('Subscriber does not exist');
+
             return view('somethingWentWrong', ['message' => trans('subscriber.invalid')]);
         }
 
@@ -806,7 +799,7 @@ class CampaignsController extends Controller
 
         // GeoIP information
         $location = IpLocation::add($request->ip());
-        if (!is_null($location)) {
+        if (! is_null($location)) {
             $trackingInfo['ip_address'] = $location->ip_address;
         }
 
@@ -882,6 +875,7 @@ class CampaignsController extends Controller
     {
         $job = JobMonitor::findByUid($request->uid);
         $path = $job->getJsonData()['path'];
+
         return response()->download($path)->deleteFileAfterSend(true);
     }
 
@@ -961,7 +955,6 @@ class CampaignsController extends Controller
     {
         $campaign = Campaign::findByUid($request->uid);
 
-
         $items = \App\Models\OpenLog::search($request, $campaign)->paginate($request->per_page);
 
         return view('managers.views.campaigns.campaigns.open_log_list', [
@@ -976,7 +969,6 @@ class CampaignsController extends Controller
     public function clickLog(Request $request)
     {
         $campaign = Campaign::findByUid($request->uid);
-
 
         $items = $campaign->clickLogs();
 
@@ -1064,8 +1056,8 @@ class CampaignsController extends Controller
         );
 
         foreach ($campaigns->get() as $campaign) {
-                $campaign->pause();
-                $campaign->log('paused', $customer);
+            $campaign->pause();
+            $campaign->log('paused', $customer);
         }
 
         //
@@ -1078,14 +1070,14 @@ class CampaignsController extends Controller
     public function restart(Request $request)
     {
         $customer = $request->user()->customer;
-        if (!is_array($request->uids)) {
+        if (! is_array($request->uids)) {
             $request->uids = explode(',', $request->uids);
         }
 
         $items = Campaign::whereIn('uid', $request->uids);
 
         // Japan + not license
-        if(config('custom.japan') && !\App\Models\Setting::get('license')) {
+        if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
             return response()->json([
                 'status' => 'error',
                 'message' => trans('messages.license.required'),
@@ -1093,8 +1085,8 @@ class CampaignsController extends Controller
         }
 
         foreach ($items->get() as $item) {
-                $item->resume();
-                $item->log('restarted', $customer);
+            $item->resume();
+            $item->log('restarted', $customer);
         }
 
         // Redirect to my lists page
@@ -1180,7 +1172,6 @@ class CampaignsController extends Controller
     /**
      * Buiding email template.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -1229,6 +1220,7 @@ class CampaignsController extends Controller
             }
 
             $campaign->copy($request->name);
+
             return trans('messages.campaign.copied');
         }
 
@@ -1243,7 +1235,7 @@ class CampaignsController extends Controller
 
         if ($request->isMethod('post')) {
             // Japan + not license
-            if(config('custom.japan') && !\App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),
@@ -1286,10 +1278,8 @@ class CampaignsController extends Controller
         $campaign = Campaign::findByUid($request->uid);
         $subscriber = Subscriber::findByUid($request->subscriber_uid);
 
-
         echo $campaign->getHtmlContent($subscriber);
     }
-
 
     public function listSegmentForm(Request $request)
     {
@@ -1311,7 +1301,6 @@ class CampaignsController extends Controller
         $campaign = Campaign::findByUid($uid);
         $changeTemplate = Template::findByUid($template_uid);
 
-
         $campaign->changeTemplate($changeTemplate);
     }
 
@@ -1324,14 +1313,14 @@ class CampaignsController extends Controller
         $tracking_log = TrackingLog::where('message_id', '=', $message_id)->first();
 
         try {
-            if (!$tracking_log) {
+            if (! $tracking_log) {
                 throw new \Exception(trans('messages.web_view_can_not_find_tracking_log_with_message_id'));
             }
 
             $subscriber = $tracking_log->subscriber;
             $campaign = $tracking_log->campaign;
 
-            if (!$campaign || !$subscriber) {
+            if (! $campaign || ! $subscriber) {
                 throw new \Exception(trans('messages.web_view_can_not_find_campaign_or_subscriber'));
             }
 
@@ -1397,19 +1386,20 @@ class CampaignsController extends Controller
         // do resend with option: $request->option : not_receive|not_open|not_click
         if ($request->isMethod('post')) {
             // Japan + not license
-            if(config('custom.japan') && !\App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),
                 ], 400);
             }
 
-                $campaign->resend($request->option);
-                // Redirect to my lists page
-                return response()->json([
-                    'status' => 'success',
-                    'message' => trans('messages.campaign.resent'),
-                ]);
+            $campaign->resend($request->option);
+
+            // Redirect to my lists page
+            return response()->json([
+                'status' => 'success',
+                'message' => trans('messages.campaign.resent'),
+            ]);
 
         }
 
@@ -1436,7 +1426,6 @@ class CampaignsController extends Controller
 
     /**
      * Edit email content.
-     *
      */
     public function builderClassic(Request $request, $uid)
     {
@@ -1445,9 +1434,9 @@ class CampaignsController extends Controller
 
         // validate and save posted data
         if ($request->isMethod('post')) {
-            $rules = array(
+            $rules = [
                 'html' => 'required',
-            );
+            ];
 
             // make validator
             $validator = \Validator::make($request->all(), $rules);
@@ -1486,7 +1475,6 @@ class CampaignsController extends Controller
 
     /**
      * Edit plain text.
-     *
      */
     public function builderPlainEdit(Request $request, $uid)
     {
@@ -1495,9 +1483,9 @@ class CampaignsController extends Controller
 
         // validate and save posted data
         if ($request->isMethod('post')) {
-            $rules = array(
+            $rules = [
                 'plain' => 'required',
-            );
+            ];
 
             // make validator
             $validator = \Validator::make($request->all(), $rules);
@@ -1526,7 +1514,6 @@ class CampaignsController extends Controller
 
     /**
      * Upload attachment.
-     *
      */
     public function uploadAttachment(Request $request, $uid)
     {
@@ -1540,7 +1527,6 @@ class CampaignsController extends Controller
 
     /**
      * Download attachment.
-     *
      */
     public function downloadAttachment(Request $request, $uid)
     {
@@ -1552,7 +1538,6 @@ class CampaignsController extends Controller
 
     /**
      * Remove attachment.
-     *
      */
     public function removeAttachment(Request $request, $uid)
     {
@@ -1573,6 +1558,7 @@ class CampaignsController extends Controller
     public function notification(Request $request)
     {
         $message = StringHelper::base64UrlDecode($request->message);
+
         return response($message, 200)->header('Content-Type', 'text/plain');
     }
 
@@ -1648,7 +1634,7 @@ class CampaignsController extends Controller
         $webhook = $campaign->newWebhook();
 
         if ($request->isMethod('post')) {
-            list($webhook, $validator) = $webhook->createFromArray($request->all());
+            [$webhook, $validator] = $webhook->createFromArray($request->all());
 
             // redirect if fails
             if ($validator->fails()) {
@@ -1684,7 +1670,7 @@ class CampaignsController extends Controller
         $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
 
         if ($request->isMethod('post')) {
-            list($webhook, $validator) = $webhook->updateFromArray($request->all());
+            [$webhook, $validator] = $webhook->updateFromArray($request->all());
 
             // redirect if fails
             if ($validator->fails()) {
@@ -1729,14 +1715,13 @@ class CampaignsController extends Controller
         $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
-
         if ($request->isMethod('post')) {
-            $client = new \GuzzleHttp\Client();
+            $client = new \GuzzleHttp\Client;
 
             try {
                 $response = $client->request('GET', $webhook->endpoint, [
                     'headers' => [
-                        "content-type" => "application/json"
+                        'content-type' => 'application/json',
                     ],
                     'body' => '{hello: "world"}',
                     'http_errors' => false,
@@ -1766,13 +1751,12 @@ class CampaignsController extends Controller
         $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
-
-        $client = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client;
 
         try {
             $response = $client->request('GET', $webhook->endpoint, [
                 'headers' => [
-                    "content-type" => "application/json"
+                    'content-type' => 'application/json',
                 ],
                 'body' => '{hello: "world"}',
                 'http_errors' => false,
@@ -1838,7 +1822,6 @@ class CampaignsController extends Controller
     public function preheaderAdd(Request $request)
     {
         $campaign = Campaign::findByUid($request->uid);
-
 
         // Save posted data
         if ($request->isMethod('post')) {

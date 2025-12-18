@@ -14,7 +14,9 @@
       "mcp__chrome-devtools__navigate_page",
       "Bash(find:*)",
       "Bash(php artisan:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(done)",
+      "Bash(ls:*)"
     ]
   },
   "disabledMcpjsonServers": [

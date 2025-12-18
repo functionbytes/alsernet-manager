@@ -1079,7 +1079,7 @@ class DocumentStatusChanged {
 
 namespace App\Listeners\Documents;
 
-use App\Events\Documents\DocumentStatusChanged;
+use App\Events\Document\DocumentStatusChanged;
 use App\Services\Documents\DocumentMailService;
 
 class SendApprovalEmail {

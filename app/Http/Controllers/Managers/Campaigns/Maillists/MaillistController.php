@@ -93,7 +93,7 @@ class MaillistController extends Controller
             // }
 
             // Trigger updating related campaigns cache
-            event(new MailListUpdated($list));
+            MailListUpdated::dispatch($list);
 
             return response()->json([
                 'success' => true,
@@ -193,7 +193,7 @@ class MaillistController extends Controller
 
         foreach ($lists->get() as $item) {
             $item->delete();
-            event(new MailListUpdated($item));
+            MailListUpdated::dispatch($item);
         }
 
         echo trans('messages.lists.deleted');
@@ -202,7 +202,7 @@ class MaillistController extends Controller
     public function overview(Request $request)
     {
         $list = CampaignMaillist::findByUid($request->uid);
-        event(new MailListUpdated($list));
+        MailListUpdated::dispatch($list);
 
         return view('managers.views.maillists.maillists.overview', [
             'list' => $list,

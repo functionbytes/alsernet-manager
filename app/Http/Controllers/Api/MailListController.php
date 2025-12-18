@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * /api/v1/lists - API controller for managing lists.
@@ -34,8 +34,7 @@ class MailListController extends Controller
      *
      * GET /api/v1/lists/{id}
      *
-     * @param int $id List's id
-     *
+     * @param  int  $id  List's id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -46,13 +45,13 @@ class MailListController extends Controller
             ->first();
 
         // check if item exists
-        if (!$item) {
-            return \Response::json(array('message' => 'Mail list not found'), 404);
+        if (! $item) {
+            return \Response::json(['message' => 'Mail list not found'], 404);
         }
 
         // authorize
-        if (!$user->can('read', $item)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('read', $item)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         // list info
@@ -118,18 +117,17 @@ class MailListController extends Controller
      *
      * POST /api/v1/lists/store
      *
-     * @param \Illuminate\Http\Request $request All list information.
-     *
+     * @param  \Illuminate\Http\Request  $request  All list information.
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $user = \Auth::guard('api')->user();
-        $list = new \Acelle\Model\MailList();
+        $list = new \Acelle\Model\MailList;
 
         // authorize
-        if (!$user->can('create', $list)) {
-            return \Response::json(array('status' => 0, 'message' => trans('no_more_item')), 403);
+        if (! $user->can('create', $list)) {
+            return \Response::json(['status' => 0, 'message' => trans('no_more_item')], 403);
         }
 
         // validate and save posted data
@@ -152,11 +150,11 @@ class MailListController extends Controller
             // Trigger updating related campaigns cache
             $list->updateCachedInfo();
 
-            return \Response::json(array(
+            return \Response::json([
                 'status' => 1,
                 'message' => trans('messages.list.created'),
-                'list_uid' => $list->uid
-            ), 200);
+                'list_uid' => $list->uid,
+            ], 200);
         }
     }
 
@@ -165,8 +163,7 @@ class MailListController extends Controller
      *
      * POST /api/v1/lists/store
      *
-     * @param \Illuminate\Http\Request $request All list information.
-     *
+     * @param  \Illuminate\Http\Request  $request  All list information.
      * @return \Illuminate\Http\Response
      */
     public function addField(Request $request, $uid)
@@ -174,13 +171,13 @@ class MailListController extends Controller
         $user = \Auth::guard('api')->user();
         $list = \Acelle\Model\MailList::findByUid($uid);
 
-        if (!$list) {
-            return \Response::json(array('status' => 0, 'message' => 'Can not find list with uid=' . $uid), 404);
+        if (! $list) {
+            return \Response::json(['status' => 0, 'message' => 'Can not find list with uid='.$uid], 404);
         }
 
         // authorize
-        if (!$user->can('update', $list)) {
-            return \Response::json(array('status' => 0, 'message' => trans('no_more_item')), 403);
+        if (! $user->can('update', $list)) {
+            return \Response::json(['status' => 0, 'message' => trans('no_more_item')], 403);
         }
 
         // validate and save posted data
@@ -201,22 +198,22 @@ class MailListController extends Controller
                 ->count();
 
             if ($exist) {
-                return \Response::json(array('status' => 0, 'message' => 'Field tag exists'), 403);
+                return \Response::json(['status' => 0, 'message' => 'Field tag exists'], 403);
             }
 
             // Save field
-            $field = new \Acelle\Model\Field();
+            $field = new \Acelle\Model\Field;
             $field->mail_list_id = $list->id;
             $field->visible = true;
             $field->required = false;
             $field->fill($request->all());
             $field->save();
 
-            return \Response::json(array(
+            return \Response::json([
                 'status' => 1,
                 'message' => trans('messages.field.created'),
-                'field' => $field->toArray()
-            ), 200);
+                'field' => $field->toArray(),
+            ], 200);
         }
     }
 
@@ -226,13 +223,13 @@ class MailListController extends Controller
         $list = \Acelle\Model\MailList::findByUid($uid);
 
         // check if item exists
-        if (!$list) {
-            return \Response::json(array('status' => 0, 'message' => 'Mail list not found'), 404);
+        if (! $list) {
+            return \Response::json(['status' => 0, 'message' => 'Mail list not found'], 404);
         }
 
         // authorize
-        if (!$user->can('delete', $list)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('delete', $list)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $list->delete();
@@ -244,8 +241,8 @@ class MailListController extends Controller
         $list->log('deleted', $user->customer);
 
         // update MailList cache
-        event(new \Acelle\Events\MailListUpdated($list));
+        \Acelle\Events\MailListUpdated::dispatch($list);
 
-        return \Response::json(array('status' => 1, 'message' => 'Deleted'), 200);
+        return \Response::json(['status' => 1, 'message' => 'Deleted'], 200);
     }
 }

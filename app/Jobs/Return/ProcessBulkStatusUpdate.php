@@ -2,27 +2,31 @@
 
 namespace App\Jobs\Return;
 
-use App\Models\Return\ReturnRequest;
 use App\Services\Return\ReturnService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProcessBulkStatusUpdate implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $returnIds;
+
     protected $newStatusId;
+
     protected $description;
+
     protected $employeeId;
+
     protected $batchId;
 
     public $tries = 3;
+
     public $timeout = 300; // 5 minutos para operaciones masivas
 
     public function __construct(array $returnIds, int $newStatusId, string $description, int $employeeId)
@@ -41,7 +45,7 @@ class ProcessBulkStatusUpdate implements ShouldQueue
             'batch_id' => $this->batchId,
             'return_count' => count($this->returnIds),
             'new_status_id' => $this->newStatusId,
-            'employee_id' => $this->employeeId
+            'employee_id' => $this->employeeId,
         ]);
 
         $successCount = 0;
@@ -64,20 +68,20 @@ class ProcessBulkStatusUpdate implements ShouldQueue
 
                     Log::debug('Estado actualizado', [
                         'batch_id' => $this->batchId,
-                        'return_id' => $returnId
+                        'return_id' => $returnId,
                     ]);
 
                 } catch (\Exception $e) {
                     $errorCount++;
                     $errors[] = [
                         'return_id' => $returnId,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ];
 
                     Log::warning('Error actualizando estado individual', [
                         'batch_id' => $this->batchId,
                         'return_id' => $returnId,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
                 }
             }
@@ -88,17 +92,17 @@ class ProcessBulkStatusUpdate implements ShouldQueue
                 'batch_id' => $this->batchId,
                 'success_count' => $successCount,
                 'error_count' => $errorCount,
-                'total_processed' => count($this->returnIds)
+                'total_processed' => count($this->returnIds),
             ]);
 
             // Disparar evento de finalización
-            event(new \App\Events\BulkStatusUpdateCompleted(
+            \App\Events\BulkStatusUpdateCompleted::dispatch(
                 $this->batchId,
                 $successCount,
                 $errorCount,
                 $errors,
                 $this->employeeId
-            ));
+            );
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -106,7 +110,7 @@ class ProcessBulkStatusUpdate implements ShouldQueue
             Log::error('Error crítico en actualización masiva', [
                 'batch_id' => $this->batchId,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             throw $e;
@@ -118,16 +122,16 @@ class ProcessBulkStatusUpdate implements ShouldQueue
         Log::error('Job de actualización masiva falló', [
             'batch_id' => $this->batchId,
             'return_count' => count($this->returnIds),
-            'error' => $exception->getMessage()
+            'error' => $exception->getMessage(),
         ]);
 
         // Notificar al admin que inició la operación
-        event(new \App\Events\BulkStatusUpdateFailed(
+        \App\Events\BulkStatusUpdateFailed::dispatch(
             $this->batchId,
             $this->returnIds,
             $exception,
             $this->employeeId
-        ));
+        );
     }
 
     public function uniqueId()

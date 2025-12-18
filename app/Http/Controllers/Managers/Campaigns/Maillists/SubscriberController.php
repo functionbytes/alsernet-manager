@@ -206,7 +206,7 @@ class SubscriberController extends Controller
             // Update field
             $subscriber->updateFields($request->all());
 
-            event(new \Acelle\Events\MailListUpdated($subscriber->mailList));
+            \Acelle\Events\MailListUpdated::dispatch($subscriber->mailList);
 
             // Log
             $subscriber->log('updated', $customer);
@@ -257,7 +257,7 @@ class SubscriberController extends Controller
         }
 
         foreach ($lists as $list) {
-            event(new \Acelle\Events\MailListUpdated($list));
+            \Acelle\Events\MailListUpdated::dispatch($list);
         }
 
         // Redirect to my lists page
@@ -296,7 +296,7 @@ class SubscriberController extends Controller
                 ]);
 
                 // update MailList cache
-                event(new \Acelle\Events\MailListUpdated($subscriber->mailList));
+                \Acelle\Events\MailListUpdated::dispatch($subscriber->mailList);
 
                 // Log
                 $subscriber->log('subscribed', $customer);
@@ -339,7 +339,7 @@ class SubscriberController extends Controller
                 $subscriber->log('unsubscribed', $customer);
 
                 // update MailList cache
-                event(new \Acelle\Events\MailListUpdated($subscriber->mailList));
+                \Acelle\Events\MailListUpdated::dispatch($subscriber->mailList);
             }
         }
 
@@ -646,7 +646,7 @@ class SubscriberController extends Controller
         }
 
         // Trigger updating related campaigns cache
-        event(new \Acelle\Events\MailListUpdated($to_list));
+        \Acelle\Events\MailListUpdated::dispatch($to_list);
 
         // Log
         $to_list->log('copied', $request->user()->customer, [
@@ -689,8 +689,8 @@ class SubscriberController extends Controller
         }
 
         // Trigger updating related campaigns cache
-        event(new \Acelle\Events\MailListUpdated($from_list));
-        event(new \Acelle\Events\MailListUpdated($to_list));
+        \Acelle\Events\MailListUpdated::dispatch($from_list);
+        \Acelle\Events\MailListUpdated::dispatch($to_list);
 
         // Log
         $to_list->log('moved', $request->user()->customer, [
@@ -744,7 +744,7 @@ class SubscriberController extends Controller
             $request->session()->flash('alert-success', trans('messages.verification.finish'));
 
             // update MailList cache
-            event(new \Acelle\Events\MailListUpdated($subscriber->mailList));
+            \Acelle\Events\MailListUpdated::dispatch($subscriber->mailList);
 
             return redirect()->route('SubscriberController@edit', ['list_uid' => $request->list_uid, 'uid' => $subscriber->uid]);
         } catch (\Exception $e) {

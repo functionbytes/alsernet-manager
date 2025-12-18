@@ -333,10 +333,11 @@ MAIL_FROM_NAME=...
 **Línea:** 502
 
 **Antes:**
+
 ```php
 public function resendReminderEmail($uid) {
     // Usaba evento y listener que llamaba al servicio sincronamente
-    event(new \App\Events\Documents\DocumentReminderRequested($document));
+    event(new \App\Events\Document\DocumentReminderRequested($document));
 }
 ```
 

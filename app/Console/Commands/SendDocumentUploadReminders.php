@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Documents\DocumentReminderRequested;
+use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\Document;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +23,7 @@ class SendDocumentUploadReminders extends Command
 
         if ($paidStatuses->isEmpty()) {
             $this->warn('No hay estados pagados configurados (DOCUMENTS_PRESTASHOP_PAID_STATUS_IDS).');
+
             return Command::SUCCESS;
         }
 
@@ -34,7 +35,7 @@ class SendDocumentUploadReminders extends Command
                 $builder->whereIn('current_state', $paidStatuses);
             });
 
-        if (!$this->option('force')) {
+        if (! $this->option('force')) {
             $query->whereNull('reminder_sent_at');
         }
 
@@ -43,7 +44,7 @@ class SendDocumentUploadReminders extends Command
         $query->chunkById(100, function ($documents) use (&$processed) {
             /** @var Document $document */
             foreach ($documents as $document) {
-                event(new DocumentReminderRequested($document));
+                MailTemplateJob::dispatch($document, 'reminder');
 
                 $document->forceFill([
                     'reminder_sent_at' => now(),

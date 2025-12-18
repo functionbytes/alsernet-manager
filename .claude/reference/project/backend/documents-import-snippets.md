@@ -29,7 +29,7 @@ $document->save();
 $this->syncDocumentWithOrder($document, $order);
 
 // Fire event
-event(new \App\Events\Documents\DocumentCreated($document));
+event(new \App\Events\Document\DocumentCreated($document));
 ```
 
 ### Get Import Status
@@ -150,7 +150,7 @@ foreach ($files as $docType => $file) {
 }
 
 // Fire upload event
-event(new \App\Events\Documents\DocumentUploaded($document));
+event(new \App\Events\Document\DocumentUploaded($document));
 ```
 
 ### Get Uploaded Files

@@ -83,7 +83,7 @@ public function syncByOrderId(Request $request)
     $this->syncDocumentWithOrder($document, $order);
     
     // Fires event for email notifications
-    event(new \App\Events\Documents\DocumentCreated($document));
+    event(new \App\Events\Document\DocumentCreated($document));
 }
 ```
 
