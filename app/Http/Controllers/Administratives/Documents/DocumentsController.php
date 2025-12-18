@@ -815,7 +815,11 @@ class DocumentsController extends Controller
                     $document = new Document;
                     $document->order_id = $orderId;
                     $document->type = 'order';
-                    $document->source = 'api';
+
+                    // Set source_id to 'api' source from document_sources table
+                    $apiSource = DocumentSource::where('key', 'api')->first();
+                    $document->source_id = $apiSource?->id;
+
                     $document->proccess = 0;
                     $document->save();
 

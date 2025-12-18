@@ -172,7 +172,8 @@
       "mcp__dev-chrome__wait_for_function",
       "mcp__dev-chrome__select",
       "mcp__dev-chrome__get_resource",
-      "mcp__dev-chrome__list_pages"
+      "mcp__dev-chrome__list_pages",
+      "WebFetch(domain:manager.test)"
     ],
     "deny": [],
     "ask": []
