@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Administratives\Documents;
 
+use App\Events\Document\DocumentCreated;
 use App\Events\Document\DocumentStatusChanged;
-use App\Events\Documents\DocumentCreated;
-use App\Events\Documents\DocumentUploaded;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
 use App\Jobs\Document\MailTemplateJob;
@@ -17,6 +16,7 @@ use App\Models\Prestashop\Orders\Order as PrestashopOrder;
 use App\Models\Prestashop\Orders\OrderSendErp;
 use App\Models\Setting;
 use App\Services\Documents\DocumentActionService;
+use App\Services\Documents\DocumentEmailService;
 use App\Services\DocumentTypeService;
 use App\Services\ErpService;
 use Illuminate\Http\Request;
@@ -538,12 +538,12 @@ class DocumentsController extends Controller
                     ->active()
                     ->first();
 
-                event(new DocumentStatusChanged(
+                DocumentStatusChanged::dispatch(
                     $document,
                     $oldStatus,
                     $newStatus,
                     'Manual status change via admin panel'
-                ));
+                );
             }
         }
 
@@ -659,8 +659,8 @@ class DocumentsController extends Controller
             @chmod($mediaDir, 0755);
         }
 
-        // Disparar evento para enviar confirmación de carga
-        event(new DocumentUploaded($document));
+        // Procesar upload: cambiar status a "received" y enviar confirmación
+        app(DocumentEmailService::class)->processDocumentUpload($document);
 
         return response()->json([
             'status' => 'success',
@@ -935,23 +935,15 @@ class DocumentsController extends Controller
             abort(404, 'Documento no encontrado');
         }
 
+        // Cargar relaciones necesarias para la vista
+        $document->load('actions.performer');
+
         $products = $document->products;
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
-        // Get allowed status transitions from current status
-        $statusIds = [$document->status_id]; // Include current status
-        if ($document->status_id) {
-            $transitions = DocumentStatusTransition::where('from_status_id', $document->status_id)
-                ->active()
-                ->pluck('to_status_id')
-                ->toArray();
-
-            $statusIds = array_merge($statusIds, $transitions);
-        }
-
-        // Get statuses for dropdown (current status + allowed transitions)
-        $statuses = DocumentStatus::whereIn('id', $statusIds)
-            ->where('is_active', true)
+        // Get all active statuses except 'pending'
+        $statuses = DocumentStatus::where('is_active', true)
+            ->where('key', '!=', 'pending')
             ->orderBy('order')
             ->get();
 
@@ -1229,8 +1221,8 @@ class DocumentsController extends Controller
                 'confirmed_at' => now(), // El admin confirma implícitamente
             ]);
 
-            // Dispara evento para enviar confirmación al cliente
-            event(new DocumentUploaded($document));
+            // Procesar upload: cambiar status a "received" y enviar confirmación al cliente
+            app(DocumentEmailService::class)->processDocumentUpload($document);
 
             return response()->json([
                 'success' => true,
