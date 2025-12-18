@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Documents;
 
-use App\Events\Documents\DocumentCreated;
+use App\Events\Document\DocumentCreated;
 use App\Jobs\Document\EmailTemplateJob;
 use App\Models\Document\DocumentStatus;
 use App\Services\Documents\DocumentMailService;

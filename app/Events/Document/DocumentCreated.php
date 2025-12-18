@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Events\Document;
+namespace App\Events\Documents;
 
 use App\Models\Document\Document;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class DocumentCreated
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(
-        public Document $document,
-    ) {
-        //
+    public function __construct(public Document $document)
+    {
     }
 }

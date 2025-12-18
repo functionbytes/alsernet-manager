@@ -3,8 +3,8 @@
 namespace App\Listeners\Documents;
 
 use App\Events\Document\DocumentStatusChanged;
-use App\Events\Documents\DocumentUploaded;
-use App\Jobs\Documents\SendDocumentUploadedConfirmationJob;
+use App\Events\Document\DocumentUploaded;
+use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\DocumentStatus;
 use App\Traits\PreventsDuplicateEventExecution;
 use Illuminate\Support\Facades\Log;
@@ -49,12 +49,12 @@ class SendDocumentUploadConfirmation
                     ]);
 
                     // Fire DocumentStatusChanged event
-                    event(new \App\Events\Document\DocumentStatusChanged(
+                    \App\Events\Document\DocumentStatusChanged::dispatch(
                         $document,
                         $currentStatus,
                         $receivedStatus,
                         'Automatic status change: documents uploaded'
-                    ));
+                    );
                 }
             }
         }
@@ -71,8 +71,8 @@ class SendDocumentUploadConfirmation
         }
 
         try {
-            // Despachar job en la cola para envío asíncrono (NO bloquea la respuesta)
-            SendDocumentUploadedConfirmationJob::dispatch($document);
+            // Despachar MailTemplateJob directamente para envío asíncrono (NO bloquea la respuesta)
+            MailTemplateJob::dispatch($document, 'upload');
 
             Log::info('Document upload confirmation job queued', [
                 'document_uid' => $document->uid,

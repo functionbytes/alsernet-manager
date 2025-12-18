@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\Documents\DocumentCreated;
-use App\Events\Documents\DocumentReminderRequested;
-use App\Events\Documents\DocumentUploaded;
+use App\Events\Document\DocumentCreated;
+use App\Jobs\Document\MailTemplateJob;
 use App\Models\Document\Document;
 use App\Models\Document\DocumentStatus;
 use App\Models\Prestashop\Order\Order as PrestashopOrder;
+use App\Services\Documents\DocumentEmailService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -257,6 +257,22 @@ class DocumentsController extends ApiController
             ], 404);
         }
 
+        // Validar que el documento está en un estado que permite carga de archivos
+        $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+        $currentStatusKey = $document->status?->key;
+
+        if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
+                'data' => [
+                    'uid' => $document->uid,
+                    'current_status' => $currentStatusKey,
+                    'allowed_statuses' => $allowedStatusKeys,
+                ],
+            ], 409);
+        }
+
         // Actualizar JSON de documentos requeridos si no existe
         if (empty($document->required_documents)) {
             $document->updateRequiredDocumentsJson();
@@ -269,7 +285,8 @@ class DocumentsController extends ApiController
                 'uid' => $document->uid,
                 'type' => $document->type ?? 'general',
                 'label' => $document->order_reference ?? $document->order_id,
-                'can_upload' => is_null($document->confirmed_at),
+                'current_status' => $currentStatusKey,
+                'can_upload' => is_null($document->confirmed_at) && in_array($currentStatusKey, $allowedStatusKeys),
                 'required_documents' => $document->getRequiredDocumentsWithLabels(),
                 'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
                 'missing_documents' => $document->getMissingDocuments(),
@@ -297,6 +314,22 @@ class DocumentsController extends ApiController
                     'status' => 'failed',
                     'message' => 'Document not found',
                 ], 404);
+            }
+
+            // Validar que el documento está en un estado que permite carga de archivos
+            $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+            $currentStatusKey = $document->status?->key;
+
+            if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
+                    'data' => [
+                        'uid' => $document->uid,
+                        'current_status' => $currentStatusKey,
+                        'allowed_statuses' => $allowedStatusKeys,
+                    ],
+                ], 409);
             }
 
             // Obtener archivos y tipos de documento
@@ -412,10 +445,10 @@ class DocumentsController extends ApiController
                         'updated_at' => Carbon::now()->setTimezone('Europe/Madrid'),
                     ]);
 
-                // Si se actualizó, disparar el evento (el listener usará PreventsDuplicateEventExecution)
+                // Si se actualizó, procesar upload: cambiar status a "received" y enviar confirmación
                 if ($updated === 1) {
                     $document->refresh();
-                    DocumentUploaded::dispatch($document);
+                    app(DocumentEmailService::class)->processDocumentUpload($document);
                 }
             }
 
@@ -510,7 +543,7 @@ class DocumentsController extends ApiController
             ], 404);
         }
 
-        DocumentReminderRequested::dispatch($document);
+        MailTemplateJob::dispatch($document, 'reminder');
 
         $document->reminder_at = now();
         $document->save();
@@ -1009,7 +1042,7 @@ class DocumentsController extends ApiController
             ], 200);
         }
 
-        DocumentReminderRequested::dispatch($document);
+        MailTemplateJob::dispatch($document, 'reminder');
 
         $document->reminder_at = now();
         $document->save();

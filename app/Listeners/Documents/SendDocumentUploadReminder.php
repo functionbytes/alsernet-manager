@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Documents;
 
-use App\Events\Documents\DocumentReminderRequested;
+use App\Events\Document\DocumentReminderRequested;
 use App\Services\Documents\DocumentMailService;
 use Illuminate\Support\Facades\Log;
 
