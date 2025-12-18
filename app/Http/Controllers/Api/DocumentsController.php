@@ -164,10 +164,10 @@ class DocumentsController extends ApiController
             // Set initial status to "pending"
             $document->status_id = DocumentStatus::where('key', 'pending')->first()?->id;
 
-            // Guardar documento
+            // Save document FIRST (required for relationships)
             $document->save();
 
-            // Guardar productos si vienen en el payload
+            // Process and create products AFTER document is saved
             $productsCount = 0;
             if (isset($data['products']) && is_array($data['products'])) {
                 foreach ($data['products'] as $product) {
@@ -191,14 +191,19 @@ class DocumentsController extends ApiController
                 }
             }
 
-            // Detectar tipo de documento basado en los productos guardados
+            // Detectar tipo de documento basado en los productos
             if ($productsCount > 0) {
                 $detectedType = $document->detectDocumentType();
-                $document->type = $detectedType;
-                $document->save();
+                if ($detectedType && $detectedType !== $document->type) {
+                    $document->type = $detectedType;
+                    $document->save();
+                }
             }
 
-            // Disparar evento para enviar email inicial y programar recordatorio
+            // Refresh para obtener los datos más recientes
+            $document->refresh();
+
+            // Disparar evento SOLO UNA VEZ al final después de toda la configuración
             DocumentCreated::dispatch($document);
 
             return response()->json([

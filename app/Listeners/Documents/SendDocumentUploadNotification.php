@@ -23,6 +23,13 @@ class SendDocumentUploadNotification
             return;
         }
 
+        // Log entry to track how many times listener is triggered
+        Log::info('SendDocumentUploadNotification listener triggered', [
+            'document_uid' => $document->uid,
+            'document_id' => $document->id,
+            'order_id' => $document->order_id,
+        ]);
+
         // Set status to "pending" (Solicitado) - Initial Request email sent
         if (! $document->status_id) {
             $pendingStatus = DocumentStatus::where('key', 'pending')->first();
