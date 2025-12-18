@@ -54,7 +54,7 @@
                         </div>
 
                         <!-- Note Content -->
-                        <div class="note-content mt-3">
+                        <div class="note-content mt-3 p-2">
                             <p class="text-dark mb-0 small text-truncate-3"  data-full-text="{{ $note->content }}">
                                 {{ $note->content }}
                             </p>
@@ -197,7 +197,7 @@
                     });
                 },
                 complete: function() {
-                    $btn.prop('disabled', false).html('<i class="fas fa-check me-1"></i> Guardar');
+                    $btn.prop('disabled', false).html('Guardar');
                 }
             });
         }
