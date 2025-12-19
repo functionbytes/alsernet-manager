@@ -2,36 +2,53 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Documentos pendientes'])
+    @include('managers.includes.card', ['title' => 'Documentos'])
 
     <div class="widget-content searchable-container list">
         <div class="card card-body">
             <div class="row">
                 <div class="col-md-12 col-xl-12">
-                    <form class="position-relative form-search" action="{{ request()->fullUrl() }}" method="GET">
+                    <form class="form-search" action="{{ route('administrative.documents') }}" method="GET">
                         <div class="row justify-content-between g-2 ">
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
                                     <div class="input-group">
                                         <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i data-feather="search"></i></span>
-                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar" @isset($searchKey) value="{{ $searchKey }}" @endisset>
+                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar por ID, referencia, nombre, apellido o DNI..." @isset($searchKey) value="{{ $searchKey }}" @endisset>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="proccess" data-minimum-results-for-search="Infinity">
-                                        <option value="">Seleccionar estado</option>
-                                        <option value="1" @isset($proccess) @if ($proccess==1) selected @endif @endisset>  Cargados</option>
-                                        <option value="0" @isset($proccess) @if ($proccess==0) selected  @endif @endisset>  Pendiente</option>
+                                    <select class="form-select select2" name="status_id">
+                                        <option value="">Todos los estados</option>
+                                        @foreach($statuses as $status)
+                                            <option value="{{ $status->id }}" {{ ($statusId ?? '') == $status->id ? 'selected' : '' }}>
+                                                {{ $status->label }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <input type="text" class="form-control daterange" id="daterange" placeholder="Seleccionar rango de fechas">
-                                    <input type="hidden" id="date_from" name="date_from" @isset($dateFrom) value="{{ $dateFrom }}" @endisset>
-                                    <input type="hidden" id="date_to" name="date_to" @isset($dateTo) value="{{ $dateTo }}" @endisset>
+                                    <select class="form-select select2" name="load_id">
+                                        <option value="">Todos los orígenes</option>
+                                        @foreach($loads as $load)
+                                            <option value="{{ $load->id }}" {{ ($loadId ?? '') == $load->id ? 'selected' : '' }}>
+                                                {{ $load->label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group">
+                                    <input type="text" class="form-control daterange" id="daterange" placeholder="Rango de fechas"
+                                           value="{{ ($dateFrom && $dateTo) ? $dateFrom . ' - ' . $dateTo : '' }}"
+                                           autocomplete="off">
+                                    <input type="hidden" id="date_from" name="date_from" value="{{ $dateFrom ?? '' }}">
+                                    <input type="hidden" id="date_to" name="date_to" value="{{ $dateTo ?? '' }}">
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -45,7 +62,7 @@
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('administrative.documents.import') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
+                                <a href="{{ route('administrative.documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
                                     <i class="fa-duotone fa-file-import"></i>
                                 </a>
                             </div>
@@ -59,10 +76,10 @@
                 <table class="table search-table align-middle text-nowrap">
                     <thead class="header-item">
                     <tr>
-                        <th>Orden</th>
+                        <th>Orden ID</th>
+                        <th>Referencia</th>
                         <th>Cliente</th>
                         <th>Origen</th>
-                        <th>Documentos</th>
                         <th>Estado</th>
                         <th>Fecha</th>
                         <th>Acciones</th>
@@ -72,32 +89,30 @@
                     @foreach ($documents as $key => $document)
                         <tr class="search-items">
                             <td>
-                                {{ $document->order_id }}
+                                <strong>{{ $document->order_id }}</strong>
                             </td>
                             <td>
-                                {{ strtoupper($document->customer_firstname) }}  {{ strtoupper($document->customer_lastname) }}
+                                {{ $document->order_reference ?? '-' }}
                             </td>
                             <td>
-                                @if($document->source)
-
-                                    {{ ucfirst($document->source) }}
+                                {{ $document->customer_firstname }} {{ $document->customer_lastname }}
+                            </td>
+                            <td>
+                                @if($document->documentLoad)
+                                    <span class="badge bg-light-info text-info">{{ $document->documentLoad->label }}</span>
                                 @else
-                                    Sin origen
+                                    <span class="text-muted">-</span>
                                 @endif
                             </td>
                             <td>
-                      <span class="badge {{ $document->confirmed_at!=null && $document->media->count()>0 == 1 ? 'bg-light-secondary  text-primary' : 'bg-light-secondary  text-primary' }}  rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1">
-                           {{ $document->confirmed_at!=null && $document->media->count()>0 ? 'Cargados' : 'Pendiente' }}
-                      </span>
-                            </td>
-
-                            <td>
-                      <span class="badge {{ $document->proccess == 1 ? 'bg-light-secondary  text-primary' : 'bg-light-secondary  text-primary' }}  rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1">
-                           {{ $document->proccess == 1 ? 'Gestionado' : 'Pendiente' }}
-                      </span>
+                                @if($document->status)
+                                    <span class="badge bg-light-primary text-primary">{{ $document->status->label }}</span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td>
-                                <span class="usr-ph-no">{{ date('Y-m-d', strtotime($document->created_at)) }}</span>
+                                <span class="usr-ph-no">{{ $document->created_at->format('Y-m-d H:i') }}</span>
                             </td>
                             <td class="text-left">
                                 <div class="dropdown dropstart">
@@ -106,25 +121,24 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.edit', $document->uid) }}">Editar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.show', $document->uid) }}">
+                                                Ver
+                                            </a>
                                         </li>
-                                        <li class="{{ $document->media->count()>0 ? '' : 'd-none'}}">
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.summary', $document->uid) }}">Documentos</a>
-                                        </li>
-
-                                        <li class="{{ $document->confirmed_at!=null && $document->media->count()>0 && !$document->confirmed_at ? '' : 'd-none'}}">
-                                            <button class="dropdown-item d-flex align-items-center gap-3 confirm-upload-btn" data-uid="{{ $document->uid }}" type="button">
-                                                Confirmar carga
-                                            </button>
-                                        </li>
-
-                                        <li class="border-top my-2"></li>
-
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.manage', $document->uid) }}">
                                                 Gestionar
                                             </a>
                                         </li>
+                                        @if($document->mails()->count() > 0)
+                                            <li class="border-top my-2"></li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.emails', $document->uid) }}">
+                                                    Ver emails
+                                                </a>
+                                            </li>
+                                        @endif
+
                                     </ul>
                                 </div>
                             </td>
@@ -144,95 +158,44 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
+    <script src="{{ url('managers/libs/daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ url('managers/libs/daterangepicker/daterangepicker.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // ===== Reenviar correo =====
-            $(document).on('click', '.resend-reminder-btn', function(e) {
-                e.preventDefault();
-                const uid = $(this).data('uid');
-
-                if (!confirm('¿Estás seguro de que deseas reenviar el correo de recordatorio?')) {
-                    return;
-                }
-
-                $.ajax({
-                    url: `/administratives/documents/${uid}/resend-reminder`,
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.success) {
-                            toastr.success('Correo de recordatorio reenviado correctamente', 'Éxito', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                        } else {
-                            toastr.error('Error: ' + (data.message || 'No se pudo reenviar el correo'), 'Error', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                        }
-                    },
-                    error: function() {
-                        console.error('Error en la solicitud AJAX');
-                        toastr.error('Error al procesar la solicitud', 'Error', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
+            // ===== Daterange Picker =====
+            if ($('#daterange').length && typeof $.fn.daterangepicker !== 'undefined') {
+                $('#daterange').daterangepicker({
+                    autoUpdateInput: false,
+                    locale: {
+                        format: 'YYYY-MM-DD',
+                        separator: ' - ',
+                        applyLabel: 'Aplicar',
+                        cancelLabel: 'Limpiar',
+                        fromLabel: 'Desde',
+                        toLabel: 'Hasta',
+                        customRangeLabel: 'Personalizado',
+                        weekLabel: 'S',
+                        daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                        firstDay: 1
                     }
                 });
-            });
 
-            // ===== Confirmar carga de documento =====
-            $(document).on('click', '.confirm-upload-btn', function(e) {
-                e.preventDefault();
-                const uid = $(this).data('uid');
-
-                if (!confirm('¿Estás seguro de que deseas confirmar la carga del documento?')) {
-                    return;
-                }
-
-                $.ajax({
-                    url: `/administratives/documents/${uid}/confirm-upload`,
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.success) {
-                            toastr.success('Carga de documento confirmada correctamente', 'Éxito', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                            setTimeout(() => location.reload(), 1500);
-                        } else {
-                            toastr.error('Error: ' + (data.message || 'No se pudo confirmar la carga'), 'Error', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                        }
-                    },
-                    error: function() {
-                        console.error('Error en la solicitud AJAX');
-                        toastr.error('Error al procesar la solicitud', 'Error', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
-                    }
+                $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                    $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+                    $('#date_from').val(picker.startDate.format('YYYY-MM-DD'));
+                    $('#date_to').val(picker.endDate.format('YYYY-MM-DD'));
                 });
-            });
+
+                $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+                    $(this).val('');
+                    $('#date_from').val('');
+                    $('#date_to').val('');
+                });
+            }
         });
     </script>
-@endsection
+@endpush
 
 

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Events\Document\DocumentCreated;
 use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentLoad;
 use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;
+use App\Models\Document\DocumentSync;
 use App\Models\Document\DocumentUploadType;
 use App\Models\Prestashop\Order\Order as PrestashopOrder;
 use App\Services\Documents\DocumentEmailService;
@@ -128,23 +130,25 @@ class DocumentsController extends ApiController
                 }
             }
 
-            // Crear nuevo documento
             $document = new Document;
             $document->order_id = $orderId;
             $document->type = $data['type'] ?? 'general';
 
-            // Set source_id to 'api' source from document_sources table
             $apiSource = DocumentSource::where('key', 'api')->first();
             $document->source_id = $apiSource?->id;
 
-            // Set upload_id to 'automatic' upload type
+            $apiLoad = DocumentLoad::where('key', 'api')->first();
+            $document->load_id = $apiLoad?->id;
+
+            $automaticSync = DocumentSync::where('key', 'automatic')->first();
+            $document->sync_id = $automaticSync?->id;
+
             $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
             $document->upload_id = $automaticUpload?->id;
 
             $document->proccess = 0;    // Estado inicial: pendiente
             $document->lang_id = $langId;  // Assign language
 
-            // Obtener datos del cliente si vienen en el payload
             if (isset($data['customer']) && is_array($data['customer'])) {
                 $document->customer_id = $data['customer']['id_customer'] ?? $data['customer']['id'] ?? null;
                 $document->customer_firstname = $data['customer']['firstname'] ?? null;
@@ -295,18 +299,27 @@ class DocumentsController extends ApiController
             ], 409);
         }
 
-        // Ensure default values for source_id and upload_id if not set
-        if (! $document->source_id) {
-            $apiSource = DocumentSource::where('key', 'api')->first();
-            $document->source_id = $apiSource?->id;
-        }
-
-        if (! $document->upload_id) {
-            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
-            $document->upload_id = $automaticUpload?->id;
-        }
-
-        $document->save();
+        //        if (! $document->source_id) {
+        //            $apiSource = DocumentSource::where('key', 'api')->first();
+        //            $document->source_id = $apiSource?->id;
+        //        }
+        //
+        //        if (! $document->load_id) {
+        //            $apiLoad = DocumentLoad::where('key', 'api')->first();
+        //            $document->load_id = $apiLoad?->id;
+        //        }
+        //
+        //        if (! $document->sync_id) {
+        //            $automaticSync = DocumentSync::where('key', 'automatic')->first();
+        //            $document->sync_id = $automaticSync?->id;
+        //        }
+        //
+        //        if (! $document->upload_id) {
+        //            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+        //            $document->upload_id = $automaticUpload?->id;
+        //        }
+        //
+        //        $document->save();
 
         // Actualizar JSON de documentos requeridos si no existe
         if (empty($document->required_documents)) {
@@ -457,9 +470,15 @@ class DocumentsController extends ApiController
                 $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
             }
 
-            // Set source_id to 'api' and upload_id to 'automatic'
-            $apiSource = DocumentSource::where('key', 'api')->first();
-            $document->source_id = $apiSource?->id;
+            // Set source_id to 'api', load_id to 'api', sync_id to 'automatic' and upload_id to 'automatic'
+            // $apiSource = DocumentSource::where('key', 'api')->first();
+            // $document->source_id = $apiSource?->id;
+
+            // $apiLoad = DocumentLoad::where('key', 'api')->first();
+            // $document->load_id = $apiLoad?->id;
+
+            // $automaticSync = DocumentSync::where('key', 'automatic')->first();
+            // $document->sync_id = $automaticSync?->id;
 
             $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
             $document->upload_id = $automaticUpload?->id;

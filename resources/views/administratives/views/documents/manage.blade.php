@@ -160,6 +160,9 @@
                 @include('administratives.views.documents.includes.action-history')
             </div>
 
+            <!-- Email History -->
+            @include('administratives.views.documents.includes.email-history')
+
             <!-- Status Timeline -->
             @include('administratives.views.documents.includes.status-timeline')
 
@@ -295,27 +298,54 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-semibold">Origen (canal)</label>
-                                <select class="form-select select2" id="document_source_id" name="document_source_id">
+                                <select class="form-select select2" id="source_id" name="source_id">
                                     <option value="">Sin especificar</option>
                                     @forelse($documentSources as $source)
-                                        <option value="{{ $source->id }}" {{ $document->document_source_id == $source->id ? 'selected' : '' }}>
-                                            {{ $source->label }} - {{ $source->description }}
+                                        <option value="{{ $source->id }}" {{ $document->source_id == $source->id ? 'selected' : '' }}>
+                                            {{ $source->label }}
                                         </option>
                                     @empty
                                         <option disabled>No hay orígenes disponibles</option>
                                     @endforelse
                                 </select>
                             </div>
-
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Tipo de carga</label>
-                                <select class="form-select" id="upload_type" name="upload_type">
-                                    <option value="automatic" {{ $document->upload_type == 'automatic' ? 'selected' : '' }}>
-                                       Automático (Cliente/Sistema)
-                                    </option>
-                                    <option value="manual" {{ $document->upload_type == 'manual' ? 'selected' : '' }}>
-                                       Manual (Administrador)
-                                    </option>
+                                <label class="form-label fw-semibold">Método de carga</label>
+                                <select class="form-select select2" id="load_id" name="load_id">
+                                    <option value="">Sin especificar</option>
+                                    @forelse($documentLoads as $load)
+                                        <option value="{{ $load->id }}" {{ $document->load_id == $load->id ? 'selected' : '' }}>
+                                            {{ $load->label }}
+                                        </option>
+                                    @empty
+                                        <option disabled>No hay métodos disponibles</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Tipo de sincronización</label>
+                                <select class="form-select select2" id="sync_id" name="sync_id">
+                                    <option value="">Sin especificar</option>
+                                    @forelse($documentSyncs as $sync)
+                                        <option value="{{ $sync->id }}" {{ $document->sync_id == $sync->id ? 'selected' : '' }}>
+                                            {{ $sync->label }}
+                                        </option>
+                                    @empty
+                                        <option disabled>No hay tipos disponibles</option>
+                                    @endforelse
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Tipo de subida</label>
+                                <select class="form-select select2" id="upload_id" name="upload_id">
+                                    <option value="">Sin especificar</option>
+                                    @forelse($uploadTypes as $uploadType)
+                                        <option value="{{ $uploadType->id }}" {{ $document->upload_id == $uploadType->id ? 'selected' : '' }}>
+                                            {{ $uploadType->label }}
+                                        </option>
+                                    @empty
+                                        <option disabled>No hay tipos disponibles</option>
+                                    @endforelse
                                 </select>
                             </div>
                             <div class="col-12">
@@ -441,7 +471,6 @@
                     @else
                         <div class="alert alert-info" role="alert">
                             <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle fs-4 me-2"></i>
                                 <div>
                                     <h6 class="mb-1 fw-bold">Todos los documentos están cargados</h6>
                                     <p class="mb-0 small">No hay documentos faltantes para este tipo de solicitud.</p>
@@ -481,7 +510,7 @@
                         <!-- Información de la plantilla configurada -->
                         <div class="alert alert-info" role="alert">
                             <div class="d-flex align-items-start">
-                                <i class="fas fa-info-circle me-2 mt-1"></i>
+
                                 <div>
                                     <h6 class="mb-1 fw-semibold">Plantilla configurada</h6>
                                     <p class="mb-0 small">
@@ -497,7 +526,6 @@
                         <!-- Sin plantilla configurada -->
                         <div class="alert alert-warning mb-3" role="alert">
                             <div class="d-flex align-items-start">
-                                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
                                 <div>
                                     <h6 class="mb-1 fw-semibold">Sin plantilla configurada</h6>
                                     <p class="mb-0 small">
@@ -540,7 +568,7 @@
                             <label for="email_content" class="form-label fw-semibold">Contenido del correo</label>
                             <textarea class="form-control" id="email_content" name="content" rows="6" placeholder="Escribe el contenido personalizado&#10;Ej: Hola {CUSTOMER_NAME}, queremos informarte que tu orden {ORDER_ID} ha sido procesada..." required></textarea>
                             <small class="text-muted d-block mt-1">
-                                <i class="fas fa-info-circle"></i> Las variables entre llaves se reemplazarán con los datos reales del cliente
+                                Las variables entre llaves se reemplazarán con los datos reales del cliente
                             </small>
                         </div>
                     </form>
@@ -571,7 +599,7 @@
                 <div class="modal-body">
                     <div class="alert alert-info" role="alert">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-circle-info me-2"></i>
+
                             <div>
                                 <p class="mb-0 small">Se enviará un email solicitando que se carguen todos los documentos requeridos.</p>
                             </div>
@@ -606,7 +634,6 @@
                 <div class="modal-body">
                     <div class="alert bg-light" role="alert">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
                             <div>
                                 <p class="mb-0 small">Se enviará un email de recordatorio al cliente para que complete la carga de documentos.</p>
                             </div>
@@ -631,14 +658,12 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title">
-                        <i class="fas fa-check-circle text-success me-2"></i>
                         Confirmación de subida
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email confirmando que los documentos han sido recibidos correctamente.</div>
                     </div>
                 </div>
@@ -667,7 +692,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
                     </div>
                 </div>
@@ -696,7 +720,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
                         <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
                     </div>
 
@@ -738,14 +761,12 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title">
-                        <i class="fas fa-save text-primary me-2"></i>
                         Guardar configuración
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
                         <div>¿Estás seguro de que deseas guardar la configuración del documento?</div>
                     </div>
                     <p class="text-muted mb-0">
@@ -840,7 +861,7 @@
 
                 // Deshabilitar botón y mostrar estado de carga
                 $btn.prop('disabled', true);
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Enviando...');
+                $btn.html('Enviando...');
 
                 // Enviar directamente
                 $.ajax({
@@ -885,7 +906,7 @@
                     },
                     complete: function() {
                         $btn.prop('disabled', false);
-                        $btn.html('<i class="fas fa-send"></i> Documentos faltantes');
+                        $btn.html('Documentos faltantes');
                     }
                 });
             });
@@ -947,7 +968,7 @@
             $(document).on('click', '#btnSendReminder', function() {
                 const $btn = $(this);
                 $btn.prop('disabled', true);
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Enviando...');
+                $btn.html('Enviando...');
 
                 $.ajax({
                     url: "{{ route('administrative.documents.send-reminder', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
@@ -979,7 +1000,7 @@
                     },
                     complete: function() {
                         $btn.prop('disabled', false);
-                        $btn.html('<i class="fas fa-bell"></i> Enviar Recordatorio');
+                        $btn.html('Enviar Recordatorio');
                     }
                 });
             });
@@ -1229,11 +1250,11 @@
 
                 const $form = $(this);
                 configFormData = {
-                    proccess: $('#proccess').val(),
-                    source: $('#source').val(),
                     status_id: $('#status_id').val(),
-                    document_source_id: $('#document_source_id').val(),
-                    upload_type: $('#upload_type').val()
+                    source_id: $('#source_id').val(),
+                    load_id: $('#load_id').val(),
+                    sync_id: $('#sync_id').val(),
+                    upload_id: $('#upload_id').val()
                 };
                 $configSubmitBtn = $form.find('button[type="submit"]');
 
@@ -1247,7 +1268,7 @@
                 if (!configFormData || !$configSubmitBtn) return;
 
                 $configSubmitBtn.prop('disabled', true);
-                $configSubmitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
+                $configSubmitBtn.html('Guardando...');
 
                 // Close modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('confirmConfigurationModal'));
@@ -1286,7 +1307,7 @@
                     },
                     complete: function() {
                         $configSubmitBtn.prop('disabled', false);
-                        $configSubmitBtn.html('<i class="fas fa-save me-1"></i> Guardar configuración');
+                        $configSubmitBtn.html('Guardar configuración');
                     }
                 });
             });
@@ -1320,7 +1341,7 @@
 
                 // Deshabilitar botón y mostrar estado de carga
                 $btn.prop('disabled', true);
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Enviando...');
+                $btn.html('Enviando...');
 
                 // Enviar directamente
                 console.log('Enviando correo personalizado:', { subject, content });
@@ -1667,7 +1688,7 @@
              */
             function performUpload($submitBtn, formData, $progressBar, $uploadStatus) {
                 $submitBtn.prop('disabled', true);
-                $submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Cargando...');
+                $submitBtn.html('Cargando...');
                 $progressBar.show();
                 $uploadStatus.text('Cargando documentos...');
 

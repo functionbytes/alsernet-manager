@@ -5,7 +5,11 @@ use App\Http\Controllers\Administratives\Documents\DocumentsController;
 
 Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function () {
 
-    Route::get('/', [DashboardController::class, 'dashboard'])->name('administrative.dashboard');
+    Route::get('/dashboard/v4', [DashboardController::class, 'dashboard'])->name('administrative.dashboard.v4');
+    Route::get('/dashboard/v1', [DashboardController::class, 'dashboardV1'])->name('administrative.dashboard.v1');
+    Route::get('/dashboard/v2', [DashboardController::class, 'dashboardV2'])->name('administrative.dashboard.v2');
+    Route::get('/dashboard/v3', [DashboardController::class, 'dashboardV3'])->name('administrative.dashboard.v3');
+    Route::get('/', [DashboardController::class, 'dashboardV4'])->name('administrative.dashboard');
 
     Route::group(['prefix' => 'documents'], function () {
 
@@ -51,10 +55,17 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::get('/sync/all', [DocumentsController::class, 'syncAllDocuments'])->name('administrative.documents.sync.all');
         Route::post('/sync/by-order', [DocumentsController::class, 'syncByOrderId'])->name('administrative.documents.sync.by-order');
         Route::get('/sync/by-order', [DocumentsController::class, 'syncByOrderId'])->name('administrative.documents.sync.by-order.query');
-        Route::get('/sync/from-erp', [DocumentsController::class, 'syncFromErp'])->name('administrative.documents.sync.from-erp');
+        Route::get('/sync/from-erp', [DocumentsController::class, 'syncFromErp'])->name('administrative.documents.sync.from-erp.query');
+        Route::post('/sync/from-erp', [DocumentsController::class, 'syncFromErp'])->name('administrative.documents.sync.from-erp');
 
-        Route::get('/import', [DocumentsController::class, 'import'])->name('administrative.documents.import');
-        Route::get('/import-erp', [DocumentsController::class, 'importFromERP'])->name('administrative.documents.import-erp');
+        // Import routes
+        Route::get('/import', [DocumentsController::class, 'importIndex'])->name('administrative.documents.import');
+        Route::get('/import/api', [DocumentsController::class, 'importApi'])->name('administrative.documents.import.api');
+        Route::get('/import/erp', [DocumentsController::class, 'importErp'])->name('administrative.documents.import.erp');
+
+        // Email history routes
+        Route::get('/{uid}/emails', [DocumentsController::class, 'emailHistory'])->name('administrative.documents.emails');
+        Route::get('/emails/preview/{mailUid}', [DocumentsController::class, 'emailPreview'])->name('administrative.documents.emails.preview');
 
     });
 

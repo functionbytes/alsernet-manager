@@ -3,240 +3,277 @@
 @section('content')
 <div class="container-fluid">
 
-    {{-- Breadcrumb Card --}}
-    <div class="card position-relative overflow-hidden">
-        <div class="card-body px-4 py-3">
-            <div class="row align-items-center">
-                <div class="col-12 col-md-9">
-                    <h6 class="fw-semibold mb-1 text-uppercase">Panel de Control</h6>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted text-decoration-none" href="{{ url('/home') }}">Dashboard</a></li>
-                        </ol>
-                    </nav>
+    @include('managers.includes.card', ['title' => 'Dashboard'])
+
+    <div class="widget-content searchable-container list">
+
+        {{-- Stats Cards Row --}}
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-lg bg-primary-subtle rounded">
+                                    <i class="fas fa-file-alt text-primary fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h3 class="mb-0 fw-bold">{{ number_format($totalAll) }}</h3>
+                                <p class="text-muted mb-0 small">Total documentos</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="text-center mb-n5">
-                        <img src="./images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-lg bg-warning-subtle rounded">
+                                    <i class="fas fa-clock text-warning fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h3 class="mb-0 fw-bold">{{ number_format($totalPending) }}</h3>
+                                <p class="text-muted mb-0 small">Pendientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-lg bg-info-subtle rounded">
+                                    <i class="fas fa-inbox text-info fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h3 class="mb-0 fw-bold">{{ number_format($totalReceived) }}</h3>
+                                <p class="text-muted mb-0 small">Recibidos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-lg bg-success-subtle rounded">
+                                    <i class="fas fa-check-circle text-success fs-4"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h3 class="mb-0 fw-bold">{{ number_format($totalApproved) }}</h3>
+                                <p class="text-muted mb-0 small">Aprobados</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="widget-content searchable-container list">
-
-        {{-- Main Dashboard Card --}}
-        <div class="card">
-            {{-- Header Section --}}
-            <div class="card-header p-4 border-bottom border-light">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-1 fw-bold">Resumen General</h5>
-                        <p class="small mb-0 text-muted">Vista general del estado de documentos y actividad reciente</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Main Stats Cards --}}
-            <div class="card-body border-bottom">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-primary mb-2">
-                                            Hoy
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold">{{ $totalToday }}</h4>
-                                        <small class="text-muted">Documentos creados</small>
-                                    </div>
-                                </div>
+        {{-- Secondary Stats --}}
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 bg-primary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-white-50 small">Hoy</p>
+                                <h4 class="mb-0 fw-bold">{{ $totalToday }}</h4>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-success mb-2">
-                                            Esta Semana
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold">{{ $totalWeek }}</h4>
-                                        <small class="text-muted">Documentos creados</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-info mb-2">
-                                            Este Mes
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold">{{ $totalMonth }}</h4>
-                                        <small class="text-muted">Documentos creados</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-warning mb-2">
-                                            Pendientes
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold">{{ $totalPending }}</h4>
-                                        <small class="text-muted">Por procesar</small>
-                                    </div>
-                                </div>
-                            </div>
+                            <i class="fas fa-calendar-day fs-3 text-white-50"></i>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Chart & Recent Documents Section --}}
-            <div class="card-body border-bottom">
-                <div class="row g-3">
-                    {{-- Document Trends Chart --}}
-                    <div class="col-lg-8">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h6 class="mb-1 fw-bold">Tendencia de Documentos</h6>
-                                    <p class="text-muted small mb-0">Estadísticas mensuales del año actual</p>
-                                </div>
-                                <select class="form-select" style="width: auto;">
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                </select>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 bg-success text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-white-50 small">Esta semana</p>
+                                <h4 class="mb-0 fw-bold">{{ $totalWeek }}</h4>
                             </div>
-                            <div id="chart"></div>
-                        </div>
-                    </div>
-
-                    {{-- Recent Documents --}}
-                    <div class="col-lg-4">
-                        <div class="mb-3">
-                            <h6 class="mb-3 fw-bold">Documentos Recientes</h6>
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Cliente</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($recentDocuments as $doc)
-                                            <tr>
-                                                <td>
-                                                    <div>
-                                                        <strong class="d-block">{{ $doc->customer_firstname }} {{ $doc->customer_lastname }}</strong>
-                                                        <small class="text-muted d-block">{{ $doc->type }}</small>
-                                                        <small class="text-muted">{{ $doc->created_at ? $doc->created_at->format('d/m/Y') : '-' }}</small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    @if($doc->proccess == 'pending')
-                                                        <span class="badge bg-warning-subtle text-warning">Pendiente</span>
-                                                    @elseif($doc->proccess == 'completed' || $doc->proccess == 'approved')
-                                                        <span class="badge bg-success-subtle text-success">Completado</span>
-                                                    @elseif($doc->proccess == 'rejected')
-                                                        <span class="badge bg-danger-subtle text-danger">Rechazado</span>
-                                                    @else
-                                                        <span class="badge bg-secondary-subtle text-secondary">{{ ucfirst($doc->proccess) }}</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="2" class="text-center text-muted py-4">
-                                                    <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
-                                                    No hay documentos recientes
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
+                            <i class="fas fa-calendar-week fs-3 text-white-50"></i>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Status Statistics Table --}}
-            <div class="card-body">
-                <div class="mb-3">
-                    <h6 class="mb-1 fw-bold">Estadísticas por Estado</h6>
-                    <p class="text-muted small mb-0">Distribución de documentos según su estado de procesamiento</p>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 bg-info text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-white-50 small">Este mes</p>
+                                <h4 class="mb-0 fw-bold">{{ $totalMonth }}</h4>
+                            </div>
+                            <i class="fas fa-calendar-alt fs-3 text-white-50"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th width="30%">Estado</th>
-                                <th width="15%">Total</th>
-                                <th width="55%">Porcentaje</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $totalDocs = $statistics->sum('total');
-                            @endphp
-                            @forelse($statistics as $stat)
-                                <tr>
-                                    <td>
-                                        @if($stat->proccess == 'pending')
-                                            <span class="badge bg-warning-subtle text-warning">Pendiente</span>
-                                        @elseif($stat->proccess == 'completed' || $stat->proccess == 'approved')
-                                            <span class="badge bg-success-subtle text-success">Completado</span>
-                                        @elseif($stat->proccess == 'rejected')
-                                            <span class="badge bg-danger-subtle text-danger">Rechazado</span>
-                                        @elseif($stat->proccess == 'incomplete')
-                                            <span class="badge bg-warning-subtle text-warning">Incompleto</span>
-                                        @else
-                                            <span class="badge bg-secondary-subtle text-secondary">{{ ucfirst($stat->proccess ?: 'Sin estado') }}</span>
-                                        @endif
-                                    </td>
-                                    <td><strong>{{ $stat->total }}</strong></td>
-                                    <td>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card border-0 bg-danger text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-white-50 small">Rechazados</p>
+                                <h4 class="mb-0 fw-bold">{{ $totalRejected }}</h4>
+                            </div>
+                            <i class="fas fa-times-circle fs-3 text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            {{-- Chart Section --}}
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Tendencia de Documentos</h6>
+                                <small class="text-muted">Documentos creados por mes</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Status Distribution --}}
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h6 class="mb-0 fw-bold">Distribución por Estado</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            @php $totalDocs = $statuses->sum('documents_count'); @endphp
+                            @forelse($statuses as $status)
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge me-2" style="background-color: {{ $status->color ?? '#6c757d' }}; width: 10px; height: 10px; padding: 0;"></span>
+                                        <span>{{ $status->label }}</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="fw-bold">{{ $status->documents_count }}</span>
                                         @if($totalDocs > 0)
-                                            <div class="d-flex align-items-center gap-3">
-                                                <span style="min-width: 45px; font-weight: 500;">
-                                                    {{ round(($stat->total / $totalDocs) * 100, 1) }}%
-                                                </span>
-                                                <div class="progress flex-grow-1" style="height: 8px;">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ ($stat->total / $totalDocs) * 100 }}%" aria-valuenow="{{ ($stat->total / $totalDocs) * 100 }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <span class="text-muted">0%</span>
+                                            <small class="text-muted ms-1">({{ round(($status->documents_count / $totalDocs) * 100, 1) }}%)</small>
                                         @endif
-                                    </td>
-                                </tr>
+                                    </div>
+                                </div>
                             @empty
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted py-5">
-                                        <i class="fas fa-chart-bar fa-2x mb-2 d-block"></i>
-                                        No hay datos disponibles
-                                    </td>
-                                </tr>
+                                <div class="list-group-item text-center text-muted py-4">
+                                    No hay estados configurados
+                                </div>
                             @endforelse
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
+        {{-- Recent Documents --}}
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Documentos Recientes</h6>
+                                <small class="text-muted">Últimos 10 documentos registrados</small>
+                            </div>
+                            <a href="{{ route('administrative.documents') }}" class="btn btn-sm btn-primary">
+                                Ver todos
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Orden ID</th>
+                                        <th>Referencia</th>
+                                        <th>Cliente</th>
+                                        <th>Origen</th>
+                                        <th>Estado</th>
+                                        <th>Fecha</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($recentDocuments as $document)
+                                        <tr>
+                                            <td>
+                                                <strong>{{ $document->order_id }}</strong>
+                                            </td>
+                                            <td>
+                                                {{ $document->order_reference ?? '-' }}
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <span class="fw-medium">{{ $document->customer_firstname }} {{ $document->customer_lastname }}</span>
+                                                    @if($document->customer_email)
+                                                        <br><small class="text-muted">{{ $document->customer_email }}</small>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if($document->documentLoad)
+                                                    <span class="badge bg-light-info text-info">{{ $document->documentLoad->label }}</span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($document->status)
+                                                    <span class="badge" style="background-color: {{ $document->status->color ?? '#6c757d' }}">
+                                                        {{ $document->status->label }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span>{{ $document->created_at->format('d/m/Y H:i') }}</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{{ route('administrative.documents.show', $document->uid) }}" class="btn btn-sm btn-outline-secondary" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('administrative.documents.manage', $document->uid) }}" class="btn btn-sm btn-outline-primary" title="Gestionar">
+                                                    <i class="fas fa-cog"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-5">
+                                                <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                                                No hay documentos recientes
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -253,7 +290,7 @@
             ],
             chart: {
                 type: "bar",
-                height: 320,
+                height: 350,
                 toolbar: { show: true },
                 fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
             },

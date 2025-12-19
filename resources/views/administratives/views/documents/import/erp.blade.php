@@ -2,36 +2,54 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Importar ordenes'])
+    @include('managers.includes.card', ['title' => 'Importar desde gestión'])
 
     <div class="widget-content">
         <div class="card card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="mb-4">Selecciona las órdenes que deseas importar</h5>
+                    <h5 class="mb-3">Importar pedido desde gestión</h5>
+                    <p class="text-muted mb-4">
+                        Ingresa la serie (año) y el número de pedido del cliente en Gestión. Se sincronizarán automáticamente
+                        los datos del cliente (nombre, email, teléfono, DNI/CIF) y las líneas del pedido con artículos y precios.
+                        El pedido se identificará con la referencia Serie/Número.
+                    </p>
 
-                    <div class="form-group mb-3">
-                        <label for="order_ids_input" class="form-label">IDs de órdenes a Importar</label>
-                        <div class="input-group">
-                            <input type="text" id="order_ids_input" class="form-control" placeholder="Ingresa los IDs separados por comas. Ej: 123,456,789">
-                            <button type="button" class="btn btn-primary" id="add-order-btn"><i class="fa-duotone fa-plus"></i></button>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="serie_input" class="form-label">Serie <span class="text-danger">*</span></label>
+                                <input type="text" id="serie_input" class="form-control" placeholder="Ej: 2025" value="{{ date('Y') }}">
+                                <small class="text-muted">Año/Serie del pedido</small>
+                            </div>
                         </div>
-                        <small class="text-muted">Escribe los IDs de las órdenes que deseas importar (separados por comas) y haz clic en "Agregar" o presiona Enter</small>
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label for="npedidocli_input" class="form-label">Número de Pedido <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" id="npedidocli_input" class="form-control" placeholder="Ej: 61550">
+                                    <button type="button" class="btn btn-primary" id="add-order-btn">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">Número de pedido del cliente en Gestión</small>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group mb-3" id="orders_list_container" style="display: none;">
-                        <label class="form-label">Órdenes agregadas</label>
+                        <label class="form-label">Pedidos a importar</label>
                         <div id="orders_list" class="border rounded p-3" style="min-height: 60px; background-color: #f8f9fa;">
                         </div>
                     </div>
 
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-primary  mb-2 w-100" id="import-btn" disabled>
+                            <button type="button" class="btn btn-primary mb-2 w-100" id="import-btn" disabled>
                                 Importar
                             </button>
-                            <a href="{{ route('administrative.documents') }}" class="btn btn-secondary  w-100">
-                                Volver
+                            <a href="{{ route('administrative.documents.import') }}" class="btn btn-secondary w-100">
+                               Volver
                             </a>
                         </div>
                     </div>
@@ -47,7 +65,7 @@
             <div id="results-content"></div>
             <div class="mt-4">
                 <a href="{{ route('administrative.documents') }}" class="btn btn-primary w-100">
-                    Volver
+                    Ver documentos
                 </a>
             </div>
         </div>
@@ -58,12 +76,12 @@
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Importación</h5>
+                    <h5 class="modal-title">Confirmar importación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <div class="display-4 text-primary"><i data-feather="download-cloud"></i></div>
-                    <h4 class="my-3">¿Deseas importar estas órdenes?</h4>
+                    <div class="display-4 text-primary"></div>
+                    <h4 class="my-3">¿Deseas importar estos pedidos del ERP?</h4>
                     <p id="import-count-text" class="text-muted"></p>
                     <div class="row justify-content-center mt-4">
                         <div class="col-sm-12 col-md-5">
@@ -83,46 +101,65 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const $orderIdsInput = $('#order_ids_input');
+            const $serieInput = $('#serie_input');
+            const $npedidocliInput = $('#npedidocli_input');
             const $addOrderBtn = $('#add-order-btn');
             const $ordersListContainer = $('#orders_list_container');
             const $ordersList = $('#orders_list');
             const $importBtn = $('#import-btn');
             const $resultsContainer = $('#results-container');
             const $resultsContent = $('#results-content');
-            let selectedOrderIds = [];
+
+            // Array de objetos {serie, npedidocli}
+            let selectedOrders = [];
 
             // Validar que los elementos existan
-            if ($orderIdsInput.length === 0 || $addOrderBtn.length === 0 || $importBtn.length === 0) {
-                console.error('No se encontraron los elementos del formulario de importación');
+            if ($serieInput.length === 0 || $npedidocliInput.length === 0 || $addOrderBtn.length === 0 || $importBtn.length === 0) {
+                console.error('No se encontraron los elementos del formulario de importación del ERP');
                 return;
             }
 
             // Manejar clic en botón Agregar
             $addOrderBtn.on('click', function() {
-                addOrderIds();
+                addOrder();
             });
 
-            // Manejar entrada de IDs con Enter
-            $orderIdsInput.on('keypress', function(e) {
+            // Manejar entrada con Enter en número de pedido
+            $npedidocliInput.on('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    addOrderIds();
+                    addOrder();
                 }
             });
 
-            function addOrderIds() {
-                const inputValue = $orderIdsInput.val().trim();
+            function addOrder() {
+                const serie = $serieInput.val().trim();
+                const npedidocli = $npedidocliInput.val().trim();
 
-                if (!inputValue) {
+                if (!serie) {
+                    toastr.warning('Por favor ingresa la serie del pedido', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    $serieInput.focus();
                     return;
                 }
 
-                // Dividir por comas y procesar cada ID
-                const ids = inputValue.split(',').map(id => id.trim()).filter(id => id && /^\d+$/.test(id));
+                if (!npedidocli) {
+                    toastr.warning('Por favor ingresa el número de pedido', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    $npedidocliInput.focus();
+                    return;
+                }
 
-                if (ids.length === 0) {
-                    toastr.warning('Por favor ingresa IDs válidos separados por comas (solo números)', 'Atención', {
+                // Verificar si ya existe
+                const exists = selectedOrders.some(o => o.serie === serie && o.npedidocli === npedidocli);
+                if (exists) {
+                    toastr.warning('Este pedido ya está en la lista', 'Atención', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
@@ -130,30 +167,27 @@
                     return;
                 }
 
-                // Agregar IDs que no estén duplicados
-                ids.forEach(id => {
-                    if (!selectedOrderIds.includes(id)) {
-                        selectedOrderIds.push(id);
-                    }
-                });
+                // Agregar a la lista
+                selectedOrders.push({ serie, npedidocli });
 
-                $orderIdsInput.val(''); // Limpiar input
+                $npedidocliInput.val(''); // Limpiar solo número de pedido
+                $npedidocliInput.focus();
                 updateOrdersList();
             }
 
             function updateOrdersList() {
-                if (selectedOrderIds.length === 0) {
+                if (selectedOrders.length === 0) {
                     $ordersListContainer.hide();
                     $importBtn.prop('disabled', true);
                     return;
                 }
 
                 let html = '';
-                selectedOrderIds.forEach(id => {
+                selectedOrders.forEach((order, index) => {
                     html += `
-                        <div class="badge bg-primary me-2">
-                            ${id}
-                            <button type="button" class="btn-close btn-close-white ms-2 remove-order-btn" data-order-id="${id}" style="font-size: 0.7rem;"></button>
+                        <div class="badge bg-primary me-2 mb-2" style="font-size: 0.9rem;">
+                            ${order.serie}/${order.npedidocli}
+                            <button type="button" class="btn-close btn-close-white ms-2 remove-order-btn" data-index="${index}" style="font-size: 0.6rem;"></button>
                         </div>
                     `;
                 });
@@ -165,15 +199,15 @@
 
             // Manejar eliminar orden (delegado)
             $(document).on('click', '.remove-order-btn', function() {
-                const orderId = $(this).data('order-id');
-                selectedOrderIds = selectedOrderIds.filter(oid => oid !== orderId);
+                const index = $(this).data('index');
+                selectedOrders.splice(index, 1);
                 updateOrdersList();
             });
 
             // Importar órdenes
             $importBtn.on('click', function() {
-                if (selectedOrderIds.length === 0) {
-                    toastr.warning('Por favor ingresa al menos una orden para importar', 'Atención', {
+                if (selectedOrders.length === 0) {
+                    toastr.warning('Por favor agrega al menos un pedido para importar', 'Atención', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
@@ -182,7 +216,7 @@
                 }
 
                 // Mostrar modal de confirmación
-                $('#import-count-text').text(`Se importarán ${selectedOrderIds.length} orden(es)`);
+                $('#import-count-text').text(`Se importarán ${selectedOrders.length} pedido(s) del ERP`);
                 const modal = new bootstrap.Modal(document.getElementById('import-confirm-modal'));
                 modal.show();
             });
@@ -193,19 +227,19 @@
                 const modal = bootstrap.Modal.getInstance(document.getElementById('import-confirm-modal'));
                 modal.hide();
 
-                $importBtn.prop('disabled', true).html('<i class="fa-duotone fa-spinner fa-spin"></i> Importando...');
-                importOrders(selectedOrderIds);
+                $importBtn.prop('disabled', true).html('Importando...');
+                importOrders(selectedOrders);
             });
 
-            function importOrders(orderIds) {
-                const totalOrders = orderIds.length;
+            function importOrders(orders) {
+                const totalOrders = orders.length;
                 let importedCount = 0;
                 let resultsHtml = `
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Orden</th>
+                                    <th>Pedido</th>
                                     <th>Detalles</th>
                                     <th class="text-end">Estado</th>
                                 </tr>
@@ -214,7 +248,7 @@
                 `;
 
                 const importNext = (index) => {
-                    if (index >= orderIds.length) {
+                    if (index >= orders.length) {
                         // Mostrar resultados
                         resultsHtml += '</tbody></table></div>';
                         showResults(resultsHtml, importedCount, totalOrders);
@@ -222,37 +256,47 @@
                         return;
                     }
 
-                    const orderId = orderIds[index];
+                    const order = orders[index];
+                    const orderLabel = `${order.serie}/${order.npedidocli}`;
 
                     $.ajax({
-                        url: `/administrative/documents/sync/by-order?order_id=${orderId}`,
-                        method: 'GET',
+                        url: '{{ route("administrative.documents.sync.from-erp") }}',
+                        method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            serie: order.serie,
+                            npedidocli: order.npedidocli
                         },
                         dataType: 'json',
                         success: function(data) {
                             if (data.status === 'success') {
                                 importedCount++;
                                 const productsCount = data.data.products_count || 0;
+                                const customerName = data.data.customer_name || 'N/A';
+                                const total = data.data.total || '0.00';
 
                                 resultsHtml += `
                                     <tr>
-                                        <td><strong>${orderId}</strong></td>
-                                        <td>${data.data.synced} sincronizados • ${productsCount} productos • ${data.data.customer_name || 'N/A'}</td>
-                                        <td class="text-end"><span class="badge bg-success">Importada</span></td>
+                                        <td>
+                                            <strong>${orderLabel}</strong>
+                                            <br><small class="text-muted">ID: ${data.data.erp_order_id || '-'}</small>
+                                        </td>
+                                        <td>
+                                            <div>${customerName}</div>
+                                            <small class="text-muted">${productsCount} productos • €${total}</small>
+                                        </td>
+                                        <td class="text-end"><span class="badge bg-success">Importado</span></td>
                                     </tr>
                                 `;
                             } else {
                                 const errorMessage = data.message || 'Error desconocido';
-                                const additionalInfo = data.data && data.data.existing_documents
-                                    ? ` • ${data.data.existing_documents} documentos existentes`
-                                    : '';
 
                                 resultsHtml += `
                                     <tr>
-                                        <td><strong>${orderId}</strong></td>
-                                        <td class="text-muted">${errorMessage}${additionalInfo}</td>
+                                        <td><strong>${orderLabel}</strong></td>
+                                        <td class="text-muted">${errorMessage}</td>
                                         <td class="text-end"><span class="badge bg-danger">Error</span></td>
                                     </tr>
                                 `;
@@ -260,13 +304,19 @@
 
                             importNext(index + 1);
                         },
-                        error: function() {
-                            console.error('Error en la importación de orden:', orderId);
+                        error: function(xhr) {
+                            let errorMessage = 'No se pudo procesar la solicitud';
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                errorMessage = response.message || errorMessage;
+                            } catch (e) {}
+
+                            console.error('Error en la importación de pedido del ERP:', orderLabel);
 
                             resultsHtml += `
                                 <tr>
-                                    <td><strong>${orderId}</strong></td>
-                                    <td class="text-muted">No se pudo procesar la solicitud</td>
+                                    <td><strong>${orderLabel}</strong></td>
+                                    <td class="text-muted">${errorMessage}</td>
                                     <td class="text-end"><span class="badge bg-danger">Error</span></td>
                                 </tr>
                             `;
@@ -284,24 +334,23 @@
                 const resultsHtml = `
                     <div class="card mb-4 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="mb-4">Resumen de Importación</h5>
                             <div class="row text-center g-3">
                                 <div class="col-md-4">
-                                    <div class="border rounded p-3">
+                                    < <div class="border rounded bg-light p-3">
                                         <h2 class="mb-1 text-dark fw-bold">${total}</h2>
                                         <p class="mb-0 text-muted small">Total</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="border border-success rounded p-3">
+                                    <div class="border rounded bg-light p-3">
                                         <h2 class="mb-1 text-success fw-bold">${imported}</h2>
-                                        <p class="mb-0 text-muted small">Importadas</p>
+                                        <p class="mb-0 text-muted small">Importados</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="border border-danger rounded p-3">
-                                        <h2 class="mb-1 text-danger fw-bold">${failed}</h2>
-                                        <p class="mb-0 text-muted small">Fallidas</p>
+                                    <div class="border rounded bg-light p-3">
+                                        <h2 class="mb-1 text-success fw-bold">${failed}</h2>
+                                        <p class="mb-0 text-muted small">Fallidos</p>
                                     </div>
                                 </div>
                             </div>

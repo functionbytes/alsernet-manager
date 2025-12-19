@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ $uploadedDocs[$docKey]->getUrl() }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                        <a href="{{ parse_url($uploadedDocs[$docKey]->getUrl(), PHP_URL_PATH) }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
                                             <i class="fa fa-download"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-media-id="{{ $uploadedDocs[$docKey]->id }}" data-doc-type="{{ $docKey }}" title="Eliminar">
@@ -132,7 +132,7 @@
                                 </div>
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="{{ $media->getUrl() }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                <a href="{{ parse_url($media->getUrl(), PHP_URL_PATH) }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
                                     <i class="fa fa-download"></i>
                                 </a>
                                 <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-media-id="{{ $media->id }}" data-doc-type="{{ $docType }}" title="Eliminar">

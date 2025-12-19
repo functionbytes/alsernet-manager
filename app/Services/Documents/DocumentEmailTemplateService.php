@@ -3,6 +3,7 @@
 namespace App\Services\Documents;
 
 use App\Models\Document\Document;
+use App\Models\Document\DocumentMail;
 use App\Models\Mail\MailTemplate;
 use App\Models\Setting;
 use App\Services\Mails\MailTemplateRendererService;
@@ -49,6 +50,9 @@ class DocumentEmailTemplateService
                 $message->to($recipient)
                     ->subject($subject);
             });
+
+            // Log the email
+            self::logEmail($document, 'request', $subject, $content, $template);
 
             return true;
         } catch (\Exception $e) {
@@ -117,6 +121,11 @@ class DocumentEmailTemplateService
                     ->subject($subject);
             });
 
+            // Log the email
+            self::logEmail($document, 'reminder', $subject, $content, $template, [
+                'days_since_request' => $daysSinceRequest,
+            ]);
+
             return true;
         } catch (\Exception $e) {
             \Log::error('Error sending reminder email', [
@@ -164,6 +173,12 @@ class DocumentEmailTemplateService
                 $message->to($recipient)
                     ->subject($subject);
             });
+
+            // Log the email
+            self::logEmail($document, 'missing', $subject, $content, $template, [
+                'missing_docs' => $missingDocs,
+                'notes' => $notes,
+            ]);
 
             return true;
         } catch (\Exception $e) {
@@ -229,6 +244,12 @@ class DocumentEmailTemplateService
                     ->subject($processedSubject);
             });
 
+            // Log the email
+            self::logEmail($document, 'custom', $processedSubject, $finalContent, $template ?? null, [
+                'original_subject' => $subject,
+                'original_content' => $content,
+            ]);
+
             return true;
         } catch (\Exception $e) {
             \Log::error('Error sending custom email', [
@@ -278,6 +299,9 @@ class DocumentEmailTemplateService
                     ->subject($subject);
             });
 
+            // Log the email
+            self::logEmail($document, 'upload', $subject, $content, $template);
+
             return true;
         } catch (\Exception $e) {
             \Log::error('Error sending upload confirmation email', [
@@ -324,6 +348,9 @@ class DocumentEmailTemplateService
                 $message->to($recipient)
                     ->subject($subject);
             });
+
+            // Log the email
+            self::logEmail($document, 'approval', $subject, $content, $template);
 
             return true;
         } catch (\Exception $e) {
@@ -380,6 +407,12 @@ class DocumentEmailTemplateService
                 $message->to($recipient)
                     ->subject($subject);
             });
+
+            // Log the email
+            self::logEmail($document, 'rejection', $subject, $content, $template, [
+                'reason' => $reason,
+                'rejected_docs' => $rejectedDocs,
+            ]);
 
             return true;
         } catch (\Exception $e) {
@@ -607,5 +640,48 @@ class DocumentEmailTemplateService
         }
 
         return null;
+    }
+
+    /**
+     * Log email to document_mails table
+     */
+    private static function logEmail(
+        Document $document,
+        string $emailType,
+        string $subject,
+        string $content,
+        ?MailTemplate $template = null,
+        array $metadata = [],
+        bool $success = true,
+        ?string $errorMessage = null
+    ): ?DocumentMail {
+        try {
+            $mail = DocumentMail::logEmail(
+                $document,
+                $emailType,
+                $subject,
+                $content,
+                null,
+                $template?->id,
+                auth()->id(),
+                $metadata
+            );
+
+            if ($success) {
+                $mail->markAsSent();
+            } else {
+                $mail->markAsFailed($errorMessage ?? 'Unknown error');
+            }
+
+            return $mail;
+        } catch (\Exception $e) {
+            \Log::error('Failed to log document email', [
+                'document_uid' => $document->uid,
+                'email_type' => $emailType,
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 }

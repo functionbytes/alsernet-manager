@@ -101,6 +101,8 @@ class Document extends Model implements HasMedia
         'type',
         'proccess',
         'source_id',
+        'load_id',
+        'sync_id',
         'upload_id',
         'lang_id',
         'confirmed_at',
@@ -353,6 +355,22 @@ class Document extends Model implements HasMedia
     }
 
     /**
+     * Relación con el origen de carga (manual, email, api, erp)
+     */
+    public function documentLoad(): BelongsTo
+    {
+        return $this->belongsTo(DocumentLoad::class, 'load_id');
+    }
+
+    /**
+     * Relación con el tipo de sincronización (manual, automatic)
+     */
+    public function sync(): BelongsTo
+    {
+        return $this->belongsTo(DocumentSync::class, 'sync_id');
+    }
+
+    /**
      * Relación con el historial de cambios de estado
      */
     public function statusHistories()
@@ -374,6 +392,14 @@ class Document extends Model implements HasMedia
     public function slaBreaches()
     {
         return $this->hasMany(DocumentSlaBreach::class, 'document_id');
+    }
+
+    /**
+     * Relación con los emails enviados para este documento
+     */
+    public function mails()
+    {
+        return $this->hasMany(DocumentMail::class, 'document_id');
     }
 
     /**

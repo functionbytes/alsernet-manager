@@ -8,10 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
 use App\Jobs\Documents\MailTemplateJob;
 use App\Models\Document\Document;
+use App\Models\Document\DocumentLoad;
 use App\Models\Document\DocumentNote;
 use App\Models\Document\DocumentSource;
 use App\Models\Document\DocumentStatus;
 use App\Models\Document\DocumentStatusTransition;
+use App\Models\Document\DocumentSync;
+use App\Models\Document\DocumentType;
 use App\Models\Document\DocumentUploadType;
 use App\Models\Mail\MailTemplate;
 use App\Models\Prestashop\Orders\Order as PrestashopOrder;
@@ -31,19 +34,30 @@ class DocumentsController extends Controller
     public function index(Request $request)
     {
         $search = trim(strtolower($request->get('search')));
-        $proccess = $request->get('proccess');
+        $statusId = $request->get('status_id');
+        $loadId = $request->get('load_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
         $perPage = paginationNumber();
 
-        $documents = Document::filterListing($search, $proccess, $dateFrom, $dateTo)->paginate($perPage);
+        $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
+            ->when($statusId, fn ($q) => $q->where('status_id', $statusId))
+            ->when($loadId, fn ($q) => $q->where('load_id', $loadId))
+            ->paginate($perPage);
+
+        // Get statuses and loads for filters
+        $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();
+        $loads = DocumentLoad::where('is_active', true)->orderBy('order')->get();
 
         return view('administratives.views.documents.index')->with([
             'documents' => $documents,
             'searchKey' => $search,
-            'proccess' => $proccess,
+            'statusId' => $statusId,
+            'loadId' => $loadId,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
+            'statuses' => $statuses,
+            'loads' => $loads,
         ]);
     }
 
@@ -53,39 +67,62 @@ class DocumentsController extends Controller
     public function pending(Request $request)
     {
         $search = trim(strtolower($request->get('search')));
+        $loadId = $request->get('load_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
         $perPage = paginationNumber();
 
-        // Filtrar solo documentos pendientes (status: pending, incomplete)
+        // Get pending status ID
+        $pendingStatus = DocumentStatus::where('key', 'pending')->first();
+
+        // Filter only documents with pending status
         $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
-            ->whereIn('proccess', ['pending', 'incomplete', 'awaiting_documents'])
+            ->where('status_id', $pendingStatus?->id)
+            ->when($loadId, fn ($q) => $q->where('load_id', $loadId))
             ->paginate($perPage);
+
+        // Get statuses and loads for filters
+        $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();
+        $loads = DocumentLoad::where('is_active', true)->orderBy('order')->get();
 
         return view('administratives.views.documents.pending')->with([
             'documents' => $documents,
             'searchKey' => $search,
+            'loadId' => $loadId,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
+            'statuses' => $statuses,
+            'loads' => $loads,
         ]);
     }
 
-    public function import()
+    /**
+     * Show import options index page
+     */
+    public function importIndex()
     {
-        return view('administratives.views.documents.import');
+        return view('administratives.views.documents.import.index');
+    }
+
+    /**
+     * Show form to import orders from PrestaShop API
+     */
+    public function importApi()
+    {
+        return view('administratives.views.documents.import.api');
     }
 
     /**
      * Show form to import orders from ERP
      */
-    public function importFromERP()
+    public function importErp()
     {
-        return view('administratives.views.documents.import-erp');
+        return view('administratives.views.documents.import.erp');
     }
 
     /**
      * Import orders from ERP and create documents
-     * Consumes ERP API directly
+     * Consumes ERP API directly using serie + npedidocli
      */
     public function syncFromErp(Request $request)
     {
@@ -105,70 +142,100 @@ class DocumentsController extends Controller
             ], 403);
         }
 
-        $orderId = $request->input('order_id') ?? $request->query('order_id');
+        // Get serie and npedidocli from request
+        $serie = $request->input('serie') ?? $request->query('serie');
+        $npedidocli = $request->input('npedidocli') ?? $request->query('npedidocli');
 
-        if (! $orderId) {
+        if (! $serie || ! $npedidocli) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Missing order_id parameter',
+                'message' => 'Missing serie or npedidocli parameter',
             ], 400);
         }
 
+        // Create unique order identifier
+        $orderIdentifier = "{$serie}/{$npedidocli}";
+
         try {
-            // Check if document already exists
-            $existingDoc = Document::where('order_id', $orderId)->first();
+            // Get ERP source, load, and sync IDs
+            $erpSource = DocumentSource::where('key', 'erp')->first();
+            $erpSourceId = $erpSource?->id;
+
+            $erpLoad = DocumentLoad::where('key', 'erp')->first();
+            $erpLoadId = $erpLoad?->id;
+
+            // Manual sync (imported from admin panel)
+            $manualSync = DocumentSync::where('key', 'manual')->first();
+            $manualSyncId = $manualSync?->id;
+
+            // Check if document already exists by order_reference or order_id + source_id
+            $existingDoc = Document::where('order_reference', $orderIdentifier)
+                ->orWhere(function ($query) use ($npedidocli, $erpSourceId) {
+                    $query->where('order_id', $npedidocli)
+                        ->where('source_id', $erpSourceId);
+                })
+                ->first();
+
             if ($existingDoc) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => "Orden {$orderId} ya existe como documento.",
+                    'message' => "Pedido {$orderIdentifier} ya existe como documento.",
                     'data' => [
-                        'order_id' => $orderId,
+                        'order_id' => $orderIdentifier,
                         'document_uid' => $existingDoc->uid,
                     ],
                 ], 400);
             }
 
-            // Get ERP service to fetch order data
+            // Get ERP service to fetch order data using serie + npedidocli
             $erpService = app(ErpService::class);
-            $orderData = $erpService->retrieveOrderById($orderId);
+            $orderData = $erpService->recuperarPedido($npedidocli, $serie);
 
             if (! $orderData) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => "Order {$orderId} not found in ERP.",
+                    'message' => "Pedido {$orderIdentifier} no encontrado en el ERP.",
                 ], 404);
             }
 
             // Create new document from ERP data
-            $document = $this->createDocumentFromErpData($orderId, $orderData);
+            $document = $this->createDocumentFromErpData($orderIdentifier, $orderData, $erpSourceId, $erpLoadId, $manualSyncId);
 
             if (! $document) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Failed to create document from ERP data',
+                    'message' => 'Error al crear documento desde datos del ERP',
                 ], 500);
             }
 
             // Load products
             $productsCount = $document->products()->count();
 
+            // Get total from order data
+            $resource = $orderData['resource'] ?? $orderData;
+            $total = $resource['total_con_impuestos'] ?? '0.00';
+
             return response()->json([
                 'status' => 'success',
-                'message' => "Successfully imported order {$orderId} from ERP.",
+                'message' => "Pedido {$orderIdentifier} importado correctamente del ERP.",
                 'data' => [
-                    'order_id' => $orderId,
+                    'order_id' => $document->order_id,
                     'document_uid' => $document->uid,
                     'synced' => 1,
                     'failed' => 0,
-                    'total' => 1,
                     'products_count' => $productsCount,
-                    'customer_name' => $document->customer_firstname.' '.$document->customer_lastname,
+                    'customer_name' => trim($document->customer_firstname.' '.$document->customer_lastname),
                     'order_reference' => $document->order_reference,
+                    'total' => $total,
                 ],
             ], 200);
 
         } catch (\Exception $e) {
-            \Log::error('Error importing from ERP: '.$e->getMessage());
+            \Log::error('Error importing from ERP: '.$e->getMessage(), [
+                'serie' => $serie,
+                'npedidocli' => $npedidocli,
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             return response()->json([
                 'status' => 'failed',
@@ -179,38 +246,91 @@ class DocumentsController extends Controller
 
     /**
      * Create a Document from ERP order data
+     * Maps the XML structure from Gestión ERP API
+     *
+     * Expected structure:
+     * - resource.cliente.nombre, resource.cliente.apellidos
+     * - resource.cliente.email, resource.cliente.cif
+     * - resource.envio.telefono, resource.envio.calle, etc.
+     * - resource.fpedido, resource.idpedidocli, resource.npedidocli
+     * - resource.lineas_pedido_cliente.resource[].articulo
      */
-    private function createDocumentFromErpData(string $orderId, array $orderData): ?Document
+    private function createDocumentFromErpData(string $orderIdentifier, array $orderData, ?int $sourceId = null, ?int $loadId = null, ?int $syncId = null): ?Document
     {
         try {
-            // Extract customer info from ERP data
-            $customerName = $orderData['cliente_nombre'] ?? $orderData['customer_name'] ?? 'Unknown';
-            $customerEmail = $orderData['cliente_email'] ?? $orderData['customer_email'] ?? null;
-            $customerPhone = $orderData['cliente_telefono'] ?? $orderData['customer_phone'] ?? null;
-            $customerDocument = $orderData['cliente_documento'] ?? $orderData['customer_document'] ?? null;
+            // The API returns data wrapped in 'resource' key
+            $resource = $orderData['resource'] ?? $orderData;
 
-            // Parse customer name into first and last name
-            $nameParts = explode(' ', $customerName, 2);
-            $firstName = $nameParts[0] ?? 'Unknown';
-            $lastName = $nameParts[1] ?? '';
+            // Extract customer info from ERP structure
+            $cliente = $resource['cliente'] ?? [];
+            $envio = $resource['envio'] ?? [];
 
-            // Create document
+            $firstName = $cliente['nombre'] ?? 'Unknown';
+            $lastName = $cliente['apellidos'] ?? '';
+            $customerEmail = $cliente['email'] ?? null;
+            $customerDni = $cliente['cif'] ?? null;
+            $customerPhone = $envio['telefono'] ?? null;
+
+            // Extract order info
+            $idPedidoCli = $resource['idpedidocli'] ?? null;
+            $npedidocli = $resource['npedidocli'] ?? null;
+            $fpedido = $resource['fpedido'] ?? now()->format('Y-m-d');
+            $total = $resource['total_con_impuestos'] ?? 0;
+            $serie = $resource['serie']['descripcorta'] ?? date('Y');
+
+            // Extract shipping address
+            $shippingAddress = trim(implode(', ', array_filter([
+                $envio['calle'] ?? '',
+                $envio['num'] ?? '',
+                $envio['cp'] ?? '',
+                $envio['localidad'] ?? '',
+                $envio['provincia'] ?? '',
+                $envio['pais'] ?? '',
+            ])));
+
+            // Create document using existing fields
+            // source_id differentiates ERP from PrestaShop orders
+            // load_id indicates the loading method (erp import)
+            // sync_id indicates manual sync (from admin panel)
             $document = new Document;
-            $document->order_id = $orderId;
+            $document->order_id = $idPedidoCli;
+            $document->customer_id = $cliente['idcliente'] ?? null;
             $document->type = 'order';
-            $document->source = 'erp';
+            $document->source_id = $sourceId; // ERP source ID
+
+            // Set source_id to 'api' (data from PrestaShop API)
+            $apiSource = DocumentSource::where('key', 'api')->first();
+            $document->source_id = $apiSource?->id;
+
+            // Set load_id to 'api' (loaded from PrestaShop)
+            $apiLoad = DocumentLoad::where('key', 'erp')->first();
+            $document->load_id = $apiLoad?->id;
+
+            // Set sync_id to 'automatic'
+            $automaticSync = DocumentSync::where('key', 'automatic')->first();
+            $document->sync_id = $automaticSync?->id;
+
+            // Set upload_id to 'manual' (admin uploads files)
+            $manualUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $manualUpload?->id;
+
+            // Set initial status to 'pending'
+            $pendingStatus = DocumentStatus::where('key', 'pending')->first();
+            $document->status_id = $pendingStatus?->id;
+
+            $document->lang_id = 1; // español
             $document->proccess = 0;
             $document->customer_firstname = $firstName;
             $document->customer_lastname = $lastName;
             $document->customer_email = $customerEmail;
             $document->customer_cellphone = $customerPhone;
-            $document->customer_dni = $customerDocument;
-            $document->order_reference = $orderData['referencia_orden'] ?? $orderData['reference'] ?? $orderId;
-            $document->order_date = $orderData['fecha_pedido'] ?? $orderData['order_date'] ?? now();
+            $document->customer_dni = $customerDni;
+            $document->order_reference = $orderIdentifier;
+            $document->order_date = $fpedido;
             $document->save();
 
             // Create products from ERP data
-            $this->createDocumentProductsFromErpData($document, $orderData);
+            $this->createDocumentProductsFromErpData($document, $resource);
 
             // Detect document type based on products
             $document->type = $document->detectDocumentType();
@@ -219,9 +339,19 @@ class DocumentsController extends Controller
             // Fire event
             DocumentCreated::dispatch($document);
 
+            \Log::info('Document created from ERP', [
+                'document_uid' => $document->uid,
+                'order_identifier' => $orderIdentifier,
+                'erp_order_id' => $idPedidoCli,
+                'customer' => $firstName.' '.$lastName,
+            ]);
+
             return $document;
         } catch (\Exception $e) {
-            \Log::error('Error creating document from ERP: '.$e->getMessage());
+            \Log::error('Error creating document from ERP: '.$e->getMessage(), [
+                'order_identifier' => $orderIdentifier,
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             return null;
         }
@@ -229,46 +359,85 @@ class DocumentsController extends Controller
 
     /**
      * Create document products from ERP data
+     * Maps the lineas_pedido_cliente structure from Gestión ERP API
+     *
+     * Expected structure:
+     * lineas_pedido_cliente.resource[].articulo.codigo
+     * lineas_pedido_cliente.resource[].articulo.descripcion
+     * lineas_pedido_cliente.resource[].unidades
+     * lineas_pedido_cliente.resource[].total_con_impuestos
      */
     private function createDocumentProductsFromErpData(Document $document, array $orderData): void
     {
         try {
-            // Handle both array and single product formats
-            $products = $orderData['productos'] ?? $orderData['lineas'] ?? $orderData['items'] ?? [];
+            // Get lineas_pedido_cliente from ERP structure
+            $lineas = $orderData['lineas_pedido_cliente'] ?? [];
 
-            // Ensure products is an array
-            if (! is_array($products)) {
-                $products = [$products];
+            // Handle empty or missing lines
+            if (empty($lineas)) {
+                \Log::warning('No product lines found in ERP order', [
+                    'document_uid' => $document->uid,
+                ]);
+
+                return;
             }
 
-            // Handle single product (convert to array)
-            if (isset($products['codigo'])) {
-                $products = [$products];
+            // Get the resource array (could be single item or array)
+            $resources = $lineas['resource'] ?? $lineas;
+
+            // Ensure it's an array of products
+            if (! is_array($resources)) {
+                return;
             }
 
-            foreach ($products as $product) {
-                if (! is_array($product)) {
+            // If single product (has 'articulo' key directly), wrap in array
+            if (isset($resources['articulo'])) {
+                $resources = [$resources];
+            }
+
+            $productCount = 0;
+            foreach ($resources as $linea) {
+                if (! is_array($linea)) {
                     continue;
                 }
 
-                $code = $product['codigo'] ?? $product['product_code'] ?? '';
-                $name = $product['nombre'] ?? $product['product_name'] ?? '';
-                $price = (float) ($product['precio'] ?? $product['product_price'] ?? 0);
-                $quantity = (int) ($product['cantidad'] ?? $product['quantity'] ?? 1);
+                // Extract articulo data
+                $articulo = $linea['articulo'] ?? [];
 
+                $code = $articulo['codigo'] ?? '';
+                $name = $articulo['descripcion'] ?? '';
+                $quantity = (float) ($linea['unidades'] ?? 1);
+                $totalPrice = (float) ($linea['total_con_impuestos'] ?? 0);
+
+                // Calculate unit price from total
+                $unitPrice = $quantity > 0 ? $totalPrice / $quantity : $totalPrice;
+
+                // Skip empty products or promotional items with 0 price (optional)
                 if (! $code || ! $name) {
                     continue;
                 }
 
                 $document->products()->create([
-                    'product_code' => $code,
+                    'product_id' => $articulo['idarticulo'] ?? null,
+                    'product_reference' => $code,
                     'product_name' => $name,
-                    'product_price' => $price,
-                    'quantity' => $quantity,
+                    'price' => round($unitPrice, 2),
+                    'quantity' => (int) $quantity,
                 ]);
+
+                $productCount++;
             }
+
+            \Log::info('Products created from ERP order', [
+                'document_uid' => $document->uid,
+                'products_count' => $productCount,
+            ]);
+
         } catch (\Exception $e) {
-            \Log::error('Error creating products from ERP: '.$e->getMessage());
+            \Log::error('Error creating products from ERP: '.$e->getMessage(), [
+                'document_uid' => $document->uid ?? 'unknown',
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
@@ -312,15 +481,14 @@ class DocumentsController extends Controller
 
     public function show($uid)
     {
-
-        $document = Document::findByUid($uid);
+        $document = Document::with(['notes.author', 'status', 'source', 'documentLoad', 'sync', 'uploadType'])
+            ->whereUid($uid)
+            ->firstOrFail();
         $products = $document->products;
-        $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
 
-        return view('administratives.views.documents.edit')->with([
+        return view('administratives.views.documents.show')->with([
             'document' => $document,
             'products' => $products,
-            'sources' => $sources,
         ]);
     }
 
@@ -454,43 +622,29 @@ class DocumentsController extends Controller
         $document->proccess = $request->proccess;
 
         // Actualizar source_id si se proporciona
-        if ($request->has('source_id') && ! empty($request->source_id)) {
-            $document->source_id = $request->source_id;
+        if ($request->has('source_id')) {
+            $document->source_id = $request->source_id ?: null;
+        }
+
+        // Actualizar load_id si se proporciona
+        if ($request->has('load_id')) {
+            $document->load_id = $request->load_id ?: null;
+        }
+
+        // Actualizar sync_id si se proporciona
+        if ($request->has('sync_id')) {
+            $document->sync_id = $request->sync_id ?: null;
         }
 
         // Actualizar upload_id si se proporciona
-        if ($request->has('upload_id') && ! empty($request->upload_id)) {
-            $document->upload_id = $request->upload_id;
+        if ($request->has('upload_id')) {
+            $document->upload_id = $request->upload_id ?: null;
         }
 
         // Actualizar status si se proporciona
+        // Los administradores pueden cambiar el estado directamente sin validación de transiciones
         if ($request->has('status_id') && ! empty($request->status_id)) {
-            $newStatusId = $request->status_id;
-
-            // Validar transición si existe estado anterior
-            if ($oldStatusId && $oldStatusId !== $newStatusId) {
-                $transition = DocumentStatusTransition::where('from_status_id', $oldStatusId)
-                    ->where('to_status_id', $newStatusId)
-                    ->active()
-                    ->first();
-
-                if (! $transition) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Transición de estado no permitida',
-                    ], 400);
-                }
-
-                // Validar permisos si es necesario
-                if (! $transition->canTransition(auth()->id())) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'No tienes permisos para realizar esta transición',
-                    ], 403);
-                }
-            }
-
-            $document->status_id = $newStatusId;
+            $document->status_id = $request->status_id;
         }
 
         $document->save();
@@ -817,12 +971,20 @@ class DocumentsController extends Controller
                     $document->order_id = $orderId;
                     $document->type = 'order';
 
-                    // Set source_id to 'manual' (administrative import)
-                    $manualSource = DocumentSource::where('key', 'manual')->first();
-                    $document->source_id = $manualSource?->id;
+                    // Set source_id to 'api' (data from PrestaShop API)
+                    $apiSource = DocumentSource::where('key', 'api')->first();
+                    $document->source_id = $apiSource?->id;
 
-                    // Set upload_id to 'manual'
-                    $manualUpload = DocumentUploadType::where('key', 'manual')->first();
+                    // Set load_id to 'api' (loaded from PrestaShop)
+                    $apiLoad = DocumentLoad::where('key', 'api')->first();
+                    $document->load_id = $apiLoad?->id;
+
+                    // Set sync_id to 'automatic'
+                    $automaticSync = DocumentSync::where('key', 'manual')->first();
+                    $document->sync_id = $automaticSync?->id;
+
+                    // Set upload_id to 'manual' (admin uploads files)
+                    $manualUpload = DocumentUploadType::where('key', 'automatic')->first();
                     $document->upload_id = $manualUpload?->id;
 
                     // Set initial status to 'pending'
@@ -933,6 +1095,15 @@ class DocumentsController extends Controller
         // Get all document sources for dropdown
         $documentSources = DocumentSource::where('is_active', true)->orderBy('order')->get();
 
+        // Get all document loads for dropdown
+        $documentLoads = DocumentLoad::where('is_active', true)->orderBy('order')->get();
+
+        // Get all document syncs for dropdown
+        $documentSyncs = DocumentSync::where('is_active', true)->orderBy('order')->get();
+
+        // Get all upload types for dropdown
+        $uploadTypes = DocumentUploadType::where('is_active', true)->orderBy('order')->get();
+
         // Get global document configuration settings
         $configController = new DocumentConfigurationController;
         $globalSettings = $configController->getGlobalSettings();
@@ -963,6 +1134,9 @@ class DocumentsController extends Controller
             'sources' => $sources,
             'statuses' => $statuses,
             'documentSources' => $documentSources,
+            'documentLoads' => $documentLoads,
+            'documentSyncs' => $documentSyncs,
+            'uploadTypes' => $uploadTypes,
             'documentConfig' => $documentConfig,
             'globalSettings' => $globalSettings,
             'customEmailTemplate' => $customEmailTemplate,
@@ -1204,8 +1378,8 @@ class DocumentsController extends Controller
                 'confirmed_at' => now(), // El admin confirma implícitamente
             ]);
 
-            // Procesar upload: cambiar status a "received" y enviar confirmación al cliente
-            app(DocumentEmailService::class)->processDocumentUpload($document);
+            // NO enviar correo automático cuando el admin sube documentos
+            // app(DocumentEmailService::class)->processDocumentUpload($document);
 
             return response()->json([
                 'success' => true,
@@ -1423,51 +1597,22 @@ class DocumentsController extends Controller
                 ], 404);
             }
 
-            // Obtener documentos requeridos según el tipo
-            $requiredDocuments = DocumentTypeService::getRequiredDocuments($document->type);
-
-            \Log::info('refreshDocumentsSection START', [
-                'uid' => $uid,
-                'document_id' => $document->id,
-                'document_type' => $document->type,
-                'required_documents' => array_keys($requiredDocuments),
-            ]);
+            // Obtener tipo de documento desde la base de datos (mismo método que manage.blade.php)
+            $documentType = DocumentType::where('slug', $document->type)->with('requirements')->first();
+            $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
 
             // Obtener documentos ya cargados organizados por tipo (recargando relación media)
             $document->load('media');
-
-            \Log::info('Media loaded', [
-                'totalMedia' => $document->media->count(),
-                'mediaIds' => $document->media->pluck('id')->toArray(),
-            ]);
 
             $uploadedDocs = [];
             foreach ($document->media as $media) {
                 $docType = $media->getCustomProperty('document_type', 'documento');
                 $uploadedDocs[$docType] = $media;
-
-                \Log::info('Processing media in refresh', [
-                    'mediaId' => $media->id,
-                    'fileName' => $media->file_name,
-                    'docType' => $docType,
-                    'customProperty' => $media->getCustomProperty('document_type'),
-                    'allProperties' => $media->custom_properties ?? [],
-                ]);
             }
 
-            \Log::info('Uploaded docs collected', [
-                'count' => count($uploadedDocs),
-                'keys' => array_keys($uploadedDocs),
-            ]);
-
             // Calcular documentos faltantes
-            $missingDocs = DocumentTypeService::getMissingDocuments($document->type, $uploadedDocs);
-            $allUploaded = DocumentTypeService::allDocumentsUploaded($document->type, $uploadedDocs);
-
-            \Log::info('refreshDocumentsSection END', [
-                'missingCount' => count($missingDocs),
-                'allUploaded' => $allUploaded,
-            ]);
+            $missingDocs = array_diff_key($requiredDocuments, $uploadedDocs);
+            $allUploaded = empty($missingDocs);
 
             // Renderizar solo la sección de carga de documentos
             $html = view('administratives.views.documents.partials.upload-section', [
@@ -2042,6 +2187,27 @@ class DocumentsController extends Controller
             return false;
         }
 
+        $langId = null;
+
+        // If iso_code is provided, map to Laravel lang_id
+        if (isset($order->lang?->iso_code) && ! empty($order->lang?->iso_code)) {
+            $isoCode = strtolower(trim($order->lang?->iso_code));
+
+            // Find Laravel language by iso_code
+            $laravelLang = \App\Models\Lang::iso($isoCode);
+
+            if ($laravelLang) {
+                $langId = $laravelLang->id;
+                \Log::info("Language mapped: PrestaShop iso_code '{$isoCode}' → Laravel lang_id {$langId}");
+            } else {
+                // Log warning and fallback to default
+                \Log::warning("Language mapping failed: iso_code '{$isoCode}' not found in Laravel langs table");
+                $defaultLang = \App\Models\Lang::iso('es');
+                $langId = $defaultLang ? $defaultLang->id : null;
+            }
+        }
+
+        $document->lang_id = $langId;  // Assign language
         $document->order_reference = $order->reference ?? $document->order_reference;
         $document->order_date = $order->date_add ?? $document->order_date;
 
@@ -2050,18 +2216,17 @@ class DocumentsController extends Controller
 
         // Obtener dirección de envío
         $deliveryAddress = $order->deliveryAddress;
-
         $document->customer_id = $customer->id_customer;
         // Nombre y apellido vienen de la dirección de envío
-        $document->customer_firstname = $deliveryAddress?->firstname ?? $customer->firstname;
-        $document->customer_lastname = $deliveryAddress?->lastname ?? $customer->lastname;
+        $document->customer_firstname = $customer->firstname;
+        $document->customer_lastname = $customer->lastname;
         $document->customer_email = $customer->email;
         // DNI/SIRET vienen de la dirección de envío
         $document->customer_dni = $deliveryAddress?->dni ?? $deliveryAddress?->vat_number ?? null;
         // Empresa viene de la dirección de envío
         $document->customer_company = $deliveryAddress?->company ?? null;
         // Teléfono celular viene de la dirección de envío
-        $document->customer_cellphone = $deliveryAddress?->phone_mobile ?? null;
+        $document->customer_cellphone = $deliveryAddress?->phone ?? null;
 
         // Guardar primero el documento
         $document->save();
@@ -2074,5 +2239,37 @@ class DocumentsController extends Controller
         $document->save();
 
         return true;
+    }
+
+    /**
+     * Show email history for a document
+     */
+    public function emailHistory($uid)
+    {
+        $document = Document::findByUid($uid);
+
+        if (! $document) {
+            return redirect()
+                ->route('administrative.documents')
+                ->with('error', 'Documento no encontrado');
+        }
+
+        $mails = $document->mails()
+            ->with('sender')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('administratives.views.documents.emails.index', compact('document', 'mails'));
+    }
+
+    /**
+     * Preview a specific email
+     */
+    public function emailPreview($mailUid)
+    {
+        $mail = \App\Models\Document\DocumentMail::where('uid', $mailUid)->firstOrFail();
+        $document = $mail->document;
+
+        return view('administratives.views.documents.emails.preview', compact('mail', 'document'));
     }
 }

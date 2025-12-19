@@ -2,35 +2,40 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Importar órdenes del ERP'])
+    @include('managers.includes.card', ['title' => 'Importar desde PrestaShop'])
 
     <div class="widget-content">
         <div class="card card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="mb-4">Selecciona las órdenes del ERP que deseas importar</h5>
+                    <h5 class="mb-3">Selecciona las órdenes que deseas importar</h5>
+                    <p class="text-muted mb-4">
+                        Ingresa los IDs de las órdenes de PrestaShop que deseas importar. Se sincronizarán automáticamente
+                        los datos del cliente (nombre, email, teléfono, DNI) y los productos del carrito.
+                        El sistema detectará el tipo de documento según los productos de la orden.
+                    </p>
 
                     <div class="form-group mb-3">
-                        <label for="order_ids_input" class="form-label">IDs de órdenes del ERP</label>
+                        <label for="order_ids_input" class="form-label">IDs de órdenes a Importar</label>
                         <div class="input-group">
-                            <input type="text" id="order_ids_input" class="form-control" placeholder="Ingresa los IDs separados por comas. Ej: ORD001,ORD002,ORD003">
+                            <input type="text" id="order_ids_input" class="form-control" placeholder="Ingresa los IDs separados por comas. Ej: 123,456,789">
                             <button type="button" class="btn btn-primary" id="add-order-btn"><i class="fa-duotone fa-plus"></i></button>
                         </div>
-                        <small class="text-muted">Escribe los IDs de las órdenes del ERP que deseas importar (separados por comas) y haz clic en "Agregar" o presiona Enter</small>
+                        <small class="text-muted">Escribe los IDs de las órdenes que deseas importar (separados por comas) y haz clic en "Agregar" o presiona Enter</small>
                     </div>
 
                     <div class="form-group mb-3" id="orders_list_container" style="display: none;">
-                        <label class="form-label">Órdenes a importar</label>
-                        <div id="orders_list" class="card p-3" style="min-height: 60px; background-color: #f8f9fa;">
+                        <label class="form-label">Órdenes agregadas</label>
+                        <div id="orders_list" class="border rounded p-3" style="min-height: 60px; background-color: #f8f9fa;">
                         </div>
                     </div>
 
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <button type="button" class="btn btn-primary  mb-2 w-100" id="import-btn" disabled>
-                                Importar del ERP
+                                Importar
                             </button>
-                            <a href="{{ route('administrative.documents') }}" class="btn btn-secondary  w-100">
+                            <a href="{{ route('administrative.documents.import') }}" class="btn btn-secondary  w-100">
                                 Volver
                             </a>
                         </div>
@@ -47,7 +52,7 @@
             <div id="results-content"></div>
             <div class="mt-4">
                 <a href="{{ route('administrative.documents') }}" class="btn btn-primary w-100">
-                    Ver documentos
+                    Volver
                 </a>
             </div>
         </div>
@@ -63,7 +68,7 @@
                 </div>
                 <div class="modal-body text-center">
                     <div class="display-4 text-primary"><i data-feather="download-cloud"></i></div>
-                    <h4 class="my-3">¿Deseas importar estas órdenes del ERP?</h4>
+                    <h4 class="my-3">¿Deseas importar estas órdenes?</h4>
                     <p id="import-count-text" class="text-muted"></p>
                     <div class="row justify-content-center mt-4">
                         <div class="col-sm-12 col-md-5">
@@ -94,7 +99,7 @@
 
             // Validar que los elementos existan
             if ($orderIdsInput.length === 0 || $addOrderBtn.length === 0 || $importBtn.length === 0) {
-                console.error('No se encontraron los elementos del formulario de importación del ERP');
+                console.error('No se encontraron los elementos del formulario de importación');
                 return;
             }
 
@@ -119,10 +124,10 @@
                 }
 
                 // Dividir por comas y procesar cada ID
-                const ids = inputValue.split(',').map(id => id.trim()).filter(id => id);
+                const ids = inputValue.split(',').map(id => id.trim()).filter(id => id && /^\d+$/.test(id));
 
                 if (ids.length === 0) {
-                    toastr.warning('Por favor ingresa IDs válidos separados por comas', 'Atención', {
+                    toastr.warning('Por favor ingresa IDs válidos separados por comas (solo números)', 'Atención', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
@@ -182,7 +187,7 @@
                 }
 
                 // Mostrar modal de confirmación
-                $('#import-count-text').text(`Se importarán ${selectedOrderIds.length} orden(es) del ERP`);
+                $('#import-count-text').text(`Se importarán ${selectedOrderIds.length} orden(es)`);
                 const modal = new bootstrap.Modal(document.getElementById('import-confirm-modal'));
                 modal.show();
             });
@@ -218,14 +223,14 @@
                         // Mostrar resultados
                         resultsHtml += '</tbody></table></div>';
                         showResults(resultsHtml, importedCount, totalOrders);
-                        $importBtn.prop('disabled', false).html('Importar del ERP');
+                        $importBtn.prop('disabled', false).html('Importar');
                         return;
                     }
 
                     const orderId = orderIds[index];
 
                     $.ajax({
-                        url: `/administrative/documents/sync/from-erp?order_id=${orderId}`,
+                        url: `/administrative/documents/sync/by-order?order_id=${orderId}`,
                         method: 'GET',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -239,17 +244,20 @@
                                 resultsHtml += `
                                     <tr>
                                         <td><strong>${orderId}</strong></td>
-                                        <td>${productsCount} productos • ${data.data.customer_name || 'N/A'}</td>
+                                        <td>${data.data.synced} sincronizados • ${productsCount} productos • ${data.data.customer_name || 'N/A'}</td>
                                         <td class="text-end"><span class="badge bg-success">Importada</span></td>
                                     </tr>
                                 `;
                             } else {
                                 const errorMessage = data.message || 'Error desconocido';
+                                const additionalInfo = data.data && data.data.existing_documents
+                                    ? ` • ${data.data.existing_documents} documentos existentes`
+                                    : '';
 
                                 resultsHtml += `
                                     <tr>
                                         <td><strong>${orderId}</strong></td>
-                                        <td class="text-muted">${errorMessage}</td>
+                                        <td class="text-muted">${errorMessage}${additionalInfo}</td>
                                         <td class="text-end"><span class="badge bg-danger">Error</span></td>
                                     </tr>
                                 `;
@@ -258,7 +266,7 @@
                             importNext(index + 1);
                         },
                         error: function() {
-                            console.error('Error en la importación de orden del ERP:', orderId);
+                            console.error('Error en la importación de orden:', orderId);
 
                             resultsHtml += `
                                 <tr>
@@ -283,20 +291,20 @@
                         <div class="card-body">
                             <div class="row text-center g-3">
                                 <div class="col-md-4">
-                                    <div class="card p-3">
+                                    <div class="border rounded bg-light p-3">
                                         <h2 class="mb-1 text-dark fw-bold">${total}</h2>
                                         <p class="mb-0 text-muted small">Total</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="border rounded p-3">
+                                    <div class="border rounded bg-light p-3">
                                         <h2 class="mb-1 text-success fw-bold">${imported}</h2>
                                         <p class="mb-0 text-muted small">Importadas</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="border rounded p-3">
-                                        <h2 class="mb-1 text-danger fw-bold">${failed}</h2>
+                                    <div class="border rounded bg-light p-3">
+                                        <h2 class="mb-1 text-success fw-bold">${failed}</h2>
                                         <p class="mb-0 text-muted small">Fallidas</p>
                                     </div>
                                 </div>

@@ -37,9 +37,14 @@
             <div class="sidebarmenu">
                 <!-- Dashboard Section -->
                 <nav class="sidebar-nav" id="menu-right-mini-1" data-simplebar="init">
-                    <ul class="sidebar-menu" href="{{ route('home') }}">
+                    <ul class="sidebar-menu">
                         <li class="nav-small-cap">
                             <span class="hide-menu">Inicio</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('administrative.dashboard') }}" class="sidebar-link">
+                                <span class="hide-menu">Dashboard</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -58,6 +63,11 @@
                         <li class="sidebar-item">
                             <a href="{{ route('administrative.documents.pending') }}" class="sidebar-link">
                                 <span class="hide-menu">Documentos pendientes</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('administrative.documents.import') }}" class="sidebar-link">
+                                <span class="hide-menu">Importar documentos</span>
                             </a>
                         </li>
                     </ul>

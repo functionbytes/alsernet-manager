@@ -778,3 +778,22 @@ kbd {
     display: inline-block;
     line-height: 1;
 }
+
+
+.result-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+.result-body span {
+    flex-shrink: 0;
+}
+.result-body nav {
+     display: flex;
+     align-items: center; /* ← centra su contenido */
+ }
+
+.result-body nav ul{
+    margin-bottom: 0;
+}
