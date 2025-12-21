@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property-read User|null $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationSetting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationSetting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NotificationSetting query()
+ *
  * @mixin \Eloquent
  */
 class NotificationSetting extends Model

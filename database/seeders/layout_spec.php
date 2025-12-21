@@ -31,38 +31,38 @@ return [
                 'right' => [
                     ['code' => '0-13-1-1-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-1-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-13-1-1-1', 'color' => 'shelf--azul']
+                    ['code' => '0-13-1-1-1', 'color' => 'shelf--azul'],
                 ],
             ],
             2 => [
                 'right' => [
                     ['code' => '0-13-1-2-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-2-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-13-1-2-1', 'color' => 'shelf--azul']
+                    ['code' => '0-13-1-2-1', 'color' => 'shelf--azul'],
                 ],
             ],
             3 => [
                 'right' => [
                     ['code' => '0-13-1-3-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-3-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-13-1-3-1', 'color' => 'shelf--azul']
+                    ['code' => '0-13-1-3-1', 'color' => 'shelf--azul'],
                 ],
             ],
             4 => [
                 'right' => [
                     ['code' => '0-13-1-4-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-4-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-13-1-4-1', 'color' => 'shelf--azul']
+                    ['code' => '0-13-1-4-1', 'color' => 'shelf--azul'],
                 ],
             ],
             5 => [
                 'right' => [
                     ['code' => '0-13-1-5-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-5-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-13-1-5-1', 'color' => 'shelf--azul']
+                    ['code' => '0-13-1-5-1', 'color' => 'shelf--azul'],
                 ],
             ],
-        ]
+        ],
     ],
 
     [
@@ -94,8 +94,8 @@ return [
                     ['code' => '0-13-1-7-2', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-7-1', 'color' => 'shelf--azul'],
                 ],
-            ]
-        ]
+            ],
+        ],
     ],
 
     [
@@ -127,8 +127,8 @@ return [
                     ['code' => '0-13-1-9-2', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-9-1', 'color' => 'shelf--azul'],
                 ],
-            ]
-        ]
+            ],
+        ],
     ],
 
     [
@@ -150,9 +150,9 @@ return [
                     ['code' => '0-13-1-10-3', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-10-2', 'color' => 'shelf--azul'],
                     ['code' => '0-13-1-10-1', 'color' => 'shelf--azul'],
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ],
 
     // COLUMNAS VERTICALES PS0 - PASILLO 1
@@ -173,59 +173,59 @@ return [
                 'right' => [
                     ['code' => '0-01-1-8-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-8-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-8-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-8-3', 'color' => 'shelf--azul'],
+                ],
             ],
             2 => [
                 'right' => [
                     ['code' => '0-01-1-7-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-7-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-7-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-7-3', 'color' => 'shelf--azul'],
+                ],
             ],
             3 => [
                 'right' => [
                     ['code' => '0-01-1-6-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-6-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-6-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-6-3', 'color' => 'shelf--azul'],
+                ],
             ],
             4 => [
                 'right' => [
                     ['code' => '0-01-1-5-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-5-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-5-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-5-3', 'color' => 'shelf--azul'],
+                ],
             ],
             5 => [
                 'right' => [
                     ['code' => '0-01-1-4-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-4-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-4-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-4-3', 'color' => 'shelf--azul'],
+                ],
             ],
             6 => [
                 'right' => [
                     ['code' => '0-01-1-3-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-3-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-3-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-3-3', 'color' => 'shelf--azul'],
+                ],
             ],
             7 => [
                 'right' => [
                     ['code' => '0-01-1-2-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-2-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-2-3', 'color' => 'shelf--azul']
-                ]
+                    ['code' => '0-01-1-2-3', 'color' => 'shelf--azul'],
+                ],
             ],
             8 => [
                 'right' => [
                     ['code' => '0-01-1-1-1', 'color' => 'shelf--azul'],
                     ['code' => '0-01-1-1-2', 'color' => 'shelf--azul'],
-                    ['code' => '0-01-1-1-3', 'color' => 'shelf--azul']
-                ]
-            ]
-        ]
+                    ['code' => '0-01-1-1-3', 'color' => 'shelf--azul'],
+                ],
+            ],
+        ],
     ],
 
     // PASILLO 2
@@ -248,8 +248,8 @@ return [
             5 => ['left' => [['code' => '0-01-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-01-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-01-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-02-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-02-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-02-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-01-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-01-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-01-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-02-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-02-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-02-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-01-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-01-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-01-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-02-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-02-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-02-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-01-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-01-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-01-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-02-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-02-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-02-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-01-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-01-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-01-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-02-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-02-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-02-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 3
@@ -272,8 +272,8 @@ return [
             5 => ['left' => [['code' => '0-02-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-02-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-02-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-03-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-03-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-03-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-02-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-02-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-02-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-03-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-03-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-03-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-02-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-02-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-02-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-03-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-03-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-03-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-02-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-02-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-02-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-03-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-03-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-03-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-02-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-02-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-02-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-03-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-03-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-03-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 4
@@ -296,8 +296,8 @@ return [
             5 => ['left' => [['code' => '0-03-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-03-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-03-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-04-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-04-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-04-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-03-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-03-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-03-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-04-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-04-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-04-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-03-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-03-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-03-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-04-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-04-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-04-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-03-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-03-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-03-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-04-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-04-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-04-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-03-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-03-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-03-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-04-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-04-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-04-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 5
@@ -320,8 +320,8 @@ return [
             5 => ['left' => [['code' => '0-04-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-04-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-04-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-05-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-05-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-05-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-04-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-04-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-04-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-05-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-05-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-05-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-04-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-04-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-04-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-05-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-05-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-05-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-04-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-04-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-04-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-05-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-05-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-05-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-04-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-04-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-04-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-05-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-05-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-05-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 6
@@ -344,8 +344,8 @@ return [
             5 => ['left' => [['code' => '0-05-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-05-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-05-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-06-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-06-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-06-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-05-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-05-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-05-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-06-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-06-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-06-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-05-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-05-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-05-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-06-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-06-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-06-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-05-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-05-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-05-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-06-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-06-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-06-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-05-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-05-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-05-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-06-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-06-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-06-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 7
@@ -368,8 +368,8 @@ return [
             5 => ['left' => [['code' => '0-06-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-06-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-06-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-07-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-07-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-07-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-06-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-06-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-06-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-07-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-07-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-07-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-06-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-06-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-06-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-07-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-07-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-07-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-06-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-06-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-06-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-07-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-07-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-07-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-06-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-06-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-06-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-07-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-07-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-07-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 8
@@ -392,8 +392,8 @@ return [
             5 => ['left' => [['code' => '0-07-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-07-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-07-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-08-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-08-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-08-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-07-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-07-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-07-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-08-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-08-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-08-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-07-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-07-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-07-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-08-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-08-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-08-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-07-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-07-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-07-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-08-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-08-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-08-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-07-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-07-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-07-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-08-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-08-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-08-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 9
@@ -416,8 +416,8 @@ return [
             5 => ['left' => [['code' => '0-08-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-08-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-08-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-09-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-09-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-09-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-08-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-08-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-08-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-09-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-09-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-09-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-08-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-08-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-08-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-09-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-09-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-09-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-08-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-08-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-08-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-09-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-09-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-09-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-08-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-08-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-08-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-09-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-09-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-09-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 10
@@ -440,8 +440,8 @@ return [
             5 => ['left' => [['code' => '0-09-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-09-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-09-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-10-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-10-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-10-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-09-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-09-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-09-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-10-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-10-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-10-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-09-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-09-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-09-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-10-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-10-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-10-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-09-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-09-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-09-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-10-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-10-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-10-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-09-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-09-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-09-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-10-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-10-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-10-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 11
@@ -464,8 +464,8 @@ return [
             5 => ['left' => [['code' => '0-10-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-10-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-10-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-11-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-11-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-11-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-10-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-10-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-10-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-11-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-11-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-11-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-10-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-10-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-10-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-11-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-11-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-11-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-10-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-10-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-10-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-11-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-11-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-11-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-10-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-10-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-10-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-11-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-11-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-11-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PASILLO 12
@@ -488,8 +488,8 @@ return [
             5 => ['left' => [['code' => '0-11-2-4-1', 'color' => 'shelf--azul'], ['code' => '0-11-2-4-2', 'color' => 'shelf--azul'], ['code' => '0-11-2-4-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-12-1-4-1', 'color' => 'shelf--azul'], ['code' => '0-12-1-4-2', 'color' => 'shelf--azul'], ['code' => '0-12-1-4-3', 'color' => 'shelf--azul']]],
             6 => ['left' => [['code' => '0-11-2-3-1', 'color' => 'shelf--azul'], ['code' => '0-11-2-3-2', 'color' => 'shelf--azul'], ['code' => '0-11-2-3-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-12-1-3-1', 'color' => 'shelf--azul'], ['code' => '0-12-1-3-2', 'color' => 'shelf--azul'], ['code' => '0-12-1-3-3', 'color' => 'shelf--azul']]],
             7 => ['left' => [['code' => '0-11-2-2-1', 'color' => 'shelf--azul'], ['code' => '0-11-2-2-2', 'color' => 'shelf--azul'], ['code' => '0-11-2-2-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-12-1-2-1', 'color' => 'shelf--azul'], ['code' => '0-12-1-2-2', 'color' => 'shelf--azul'], ['code' => '0-12-1-2-3', 'color' => 'shelf--azul']]],
-            8 => ['left' => [['code' => '0-11-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-11-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-11-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-12-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-12-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-12-1-1-3', 'color' => 'shelf--azul']]]
-        ]
+            8 => ['left' => [['code' => '0-11-2-1-1', 'color' => 'shelf--azul'], ['code' => '0-11-2-1-2', 'color' => 'shelf--azul'], ['code' => '0-11-2-1-3', 'color' => 'shelf--azul']], 'right' => [['code' => '0-12-1-1-1', 'color' => 'shelf--azul'], ['code' => '0-12-1-1-2', 'color' => 'shelf--azul'], ['code' => '0-12-1-1-3', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // BUNKER
@@ -505,8 +505,8 @@ return [
         'direction' => 'left',
         'gaps' => ['betweenColumns_m' => 1.0, 'betweenRows_m' => 0],
         'locationsByRow' => [
-            1 => ['right' => [['code' => 'BUNKER', 'color' => 'shelf--azul']]]
-        ]
+            1 => ['right' => [['code' => 'BUNKER', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PB1
@@ -524,8 +524,8 @@ return [
         'gaps' => ['betweenColumns_m' => 1.0, 'betweenRows_m' => 0],
         'locationsByRow' => [
             1 => ['right' => [['code' => 'PB-1-3-4', 'color' => 'shelf--azul'], ['code' => 'PB-1-3-3', 'color' => 'shelf--azul'], ['code' => 'PB-1-3-2', 'color' => 'shelf--azul'], ['code' => 'PB-1-3-1', 'color' => 'shelf--azul']]],
-            2 => ['right' => [['code' => 'PB-1-2-4', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-3', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-2', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-1', 'color' => 'shelf--azul']]]
-        ]
+            2 => ['right' => [['code' => 'PB-1-2-4', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-3', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-2', 'color' => 'shelf--azul'], ['code' => 'PB-1-2-1', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // PB2
@@ -542,8 +542,8 @@ return [
         'direction' => 'left',
         'gaps' => ['betweenColumns_m' => 1.0, 'betweenRows_m' => 0],
         'locationsByRow' => [
-            1 => ['right' => [['code' => 'PB-1-1-4', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-3', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-2', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-1', 'color' => 'shelf--azul']]]
-        ]
+            1 => ['right' => [['code' => 'PB-1-1-4', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-3', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-2', 'color' => 'shelf--azul'], ['code' => 'PB-1-1-1', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // ES
@@ -566,7 +566,7 @@ return [
             6 => ['right' => [['code' => 'ES-1-6-2', 'color' => 'shelf--azul'], ['code' => 'ES-1-6-1', 'color' => 'shelf--azul']]],
             7 => ['right' => [['code' => 'ES-1-7-2', 'color' => 'shelf--azul'], ['code' => 'ES-1-7-1', 'color' => 'shelf--azul']]],
             8 => ['right' => [['code' => 'ES-1-8-2', 'color' => 'shelf--azul'], ['code' => 'ES-1-8-1', 'color' => 'shelf--azul']]],
-        ]
+        ],
     ],
 
     // CB
@@ -582,8 +582,8 @@ return [
         'gaps' => ['between_m' => 0],
         'itemLocationsByIndex' => [
             1 => ['right' => [['code' => 'CB-1-1-4', 'color' => 'shelf--azul'], ['code' => 'CB-1-1-3', 'color' => 'shelf--azul'], ['code' => 'CB-1-1-2', 'color' => 'shelf--azul'], ['code' => 'CB-1-1-1', 'color' => 'shelf--azul']]],
-            2 => ['right' => [['code' => 'CB-1-2-4', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-3', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-2', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-1', 'color' => 'shelf--azul']]]
-        ]
+            2 => ['right' => [['code' => 'CB-1-2-4', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-3', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-2', 'color' => 'shelf--azul'], ['code' => 'CB-1-2-1', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // ==================== PLANTA 1 (floors: [2] → PS1) ====================
@@ -605,7 +605,7 @@ return [
             3 => ['right' => [['code' => '1-05-2-3-3', 'color' => 'shelf--azul'], ['code' => '1-05-2-3-2', 'color' => 'shelf--azul'], ['code' => '1-05-2-3-1', 'color' => 'shelf--azul']]],
             4 => ['right' => [['code' => '1-05-2-4-3', 'color' => 'shelf--azul'], ['code' => '1-05-2-4-2', 'color' => 'shelf--azul'], ['code' => '1-05-2-4-1', 'color' => 'shelf--azul']]],
             5 => ['right' => [['code' => '1-05-2-5-3', 'color' => 'shelf--azul'], ['code' => '1-05-2-5-2', 'color' => 'shelf--azul'], ['code' => '1-05-2-5-1', 'color' => 'shelf--azul']]],
-        ]
+        ],
     ],
 
     // Continue with remaining P1 sections - note I'm including just a sample for message length
@@ -630,8 +630,8 @@ return [
             2 => ['right' => [['code' => '2-01-1-4-3', 'color' => 'shelf--azul'], ['code' => '2-01-1-4-2', 'color' => 'shelf--azul'], ['code' => '2-01-1-4-1', 'color' => 'shelf--azul']]],
             3 => ['right' => [['code' => '2-01-1-3-3', 'color' => 'shelf--azul'], ['code' => '2-01-1-3-2', 'color' => 'shelf--azul'], ['code' => '2-01-1-3-1', 'color' => 'shelf--azul']]],
             4 => ['right' => [['code' => '2-01-1-2-3', 'color' => 'shelf--azul'], ['code' => '2-01-1-2-2', 'color' => 'shelf--azul'], ['code' => '2-01-1-2-1', 'color' => 'shelf--azul']]],
-            5 => ['right' => [['code' => '2-01-1-1-3', 'color' => 'shelf--azul'], ['code' => '2-01-1-1-2', 'color' => 'shelf--azul'], ['code' => '2-01-1-1-1', 'color' => 'shelf--azul']]]
-        ]
+            5 => ['right' => [['code' => '2-01-1-1-3', 'color' => 'shelf--azul'], ['code' => '2-01-1-1-2', 'color' => 'shelf--azul'], ['code' => '2-01-1-1-1', 'color' => 'shelf--azul']]],
+        ],
     ],
 
     // Continue with remaining P2 sections...

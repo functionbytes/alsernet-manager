@@ -5,6 +5,7 @@ namespace App\Jobs;
 class SendConfirmationEmailJob extends Base
 {
     protected $subscribers;
+
     protected $mailList;
 
     /**

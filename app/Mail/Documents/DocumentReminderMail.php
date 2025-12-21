@@ -12,9 +12,7 @@ class DocumentReminderMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(protected Document $document)
-    {
-    }
+    public function __construct(protected Document $document) {}
 
     public function build(): self
     {
@@ -24,7 +22,7 @@ class DocumentReminderMail extends Mailable
             $this->document->customer_lastname ?? ''
         ));
 
-        $orderReference = $this->document->order_reference ;
+        $orderReference = $this->document->order_reference;
 
         $uploadDeadline = $this->document->created_at
             ? Carbon::parse($this->document->created_at)->addDays(3)->format('d/m/Y')
@@ -35,7 +33,7 @@ class DocumentReminderMail extends Mailable
             ? str_replace('{uid}', $this->document->uid, rtrim($uploadPortalTemplate))
             : null;
 
-        return $this->subject('Recordatorio: sube la documentación para tu pedido ' . ($orderReference ? '#'.$orderReference : ''))
+        return $this->subject('Recordatorio: sube la documentación para tu pedido '.($orderReference ? '#'.$orderReference : ''))
             ->view('mailers.documents.reminder')
             ->with([
                 'document' => $this->document,

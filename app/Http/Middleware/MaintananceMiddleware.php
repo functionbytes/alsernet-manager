@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MaintananceMiddleware
 {
@@ -33,15 +33,16 @@ class MaintananceMiddleware
 
         try {
             DB::connection()->getPdo();
-            if(!DB::getSchemaBuilder()->hasTable('settings')){
+            if (! DB::getSchemaBuilder()->hasTable('settings')) {
 
                 return $next($request);
-            }else{
+            } else {
 
-                if ( setting('MAINTENANCE_MODE') == 'on' && !$this->isExcludedRoute($request, $excludedRoutes) ){
+                if (setting('MAINTENANCE_MODE') == 'on' && ! $this->isExcludedRoute($request, $excludedRoutes)) {
 
                     return response()->view('errors.503', [], 503);
                 }
+
                 return $next($request);
             }
         } catch (\Exception $e) {
@@ -60,5 +61,4 @@ class MaintananceMiddleware
 
         return false;
     }
-
 }

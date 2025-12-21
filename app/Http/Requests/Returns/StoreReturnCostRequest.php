@@ -18,25 +18,25 @@ class StoreReturnCostRequest extends FormRequest
             'cost_type' => [
                 'required',
                 'string',
-                'in:' . implode(',', [
+                'in:'.implode(',', [
                     ReturnCost::TYPE_SHIPPING,
                     ReturnCost::TYPE_RESTOCKING,
                     ReturnCost::TYPE_INSPECTION,
                     ReturnCost::TYPE_DAMAGE,
-                    ReturnCost::TYPE_OTHER
-                ])
+                    ReturnCost::TYPE_OTHER,
+                ]),
             ],
             'amount' => [
                 'required',
                 'numeric',
                 'min:0.01',
-                'max:9999.99'
+                'max:9999.99',
             ],
             'description' => [
                 'nullable',
                 'string',
-                'max:255'
-            ]
+                'max:255',
+            ],
         ];
     }
 
@@ -49,7 +49,7 @@ class StoreReturnCostRequest extends FormRequest
             'amount.numeric' => 'El monto debe ser un número',
             'amount.min' => 'El monto mínimo es 0.01€',
             'amount.max' => 'El monto máximo es 9,999.99€',
-            'description.max' => 'La descripción no puede exceder 255 caracteres'
+            'description.max' => 'La descripción no puede exceder 255 caracteres',
         ];
     }
 
@@ -58,8 +58,7 @@ class StoreReturnCostRequest extends FormRequest
         return [
             'cost_type' => 'tipo de costo',
             'amount' => 'monto',
-            'description' => 'descripción'
+            'description' => 'descripción',
         ];
     }
 }
-

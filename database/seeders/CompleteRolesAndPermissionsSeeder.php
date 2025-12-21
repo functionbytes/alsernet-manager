@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class CompleteRolesAndPermissionsSeeder extends Seeder
 {
@@ -457,5 +455,4 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'returns.attachment.upload',
         ]);
     }
-
 }

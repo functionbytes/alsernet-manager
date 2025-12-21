@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Models\Return\Return as ReturnModel;
+use Closure;
 
 class CheckReturnStatus
 {
@@ -16,7 +16,7 @@ class CheckReturnStatus
             if (in_array($return->status, ['completed', 'cancelled'])) {
                 if ($request->wantsJson()) {
                     return response()->json([
-                        'error' => 'No se pueden modificar costos en una devolución cerrada'
+                        'error' => 'No se pueden modificar costos en una devolución cerrada',
                     ], 403);
                 }
 

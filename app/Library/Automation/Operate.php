@@ -8,7 +8,9 @@ use Exception;
 class Operate extends Action
 {
     public const OPERATION_TAG = 'tag';
+
     public const OPERATION_COPY = 'copy';
+
     public const OPERATION_MOVE = 'move';
 
     /*****
@@ -40,7 +42,7 @@ class Operate extends Action
             $toListUid = $this->getOption('target_list_uid');
 
             if (is_null($toListUid)) {
-                throw new Exception("Cannot copy/move contact, target list not set");
+                throw new Exception('Cannot copy/move contact, target list not set');
             }
 
             $toList = CampaignMaillist::findByUid($toListUid);
@@ -86,7 +88,7 @@ class Operate extends Action
             $toListUid = $this->getOption('target_list_uid');
 
             if (is_null($toListUid)) {
-                throw new Exception("Cannot get trigger info contact, target list not set");
+                throw new Exception('Cannot get trigger info contact, target list not set');
             }
 
             $toList = CampaignMaillist::findByUid($toListUid);

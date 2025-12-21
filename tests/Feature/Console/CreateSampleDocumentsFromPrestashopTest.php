@@ -4,12 +4,12 @@ namespace Tests\Feature\Console;
 
 use App\Models\Document\Document;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class CreateSampleDocumentsFromPrestashopTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_command_creates_sample_documents(): void
     {
         // Arrange: Clean up any existing test documents

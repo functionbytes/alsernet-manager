@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Http;
 /**
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Return\Warranty> $warranties
  * @property-read int|null $warranties_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Manufacturer active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Manufacturer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Manufacturer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Manufacturer query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Manufacturer withApi()
+ *
  * @mixin \Eloquent
  */
 class Manufacturer extends Model
@@ -90,7 +92,7 @@ class Manufacturer extends Model
      */
     public function registerWarranty(Warranty $warranty): array
     {
-        if (!$this->has_api_integration || !$this->api_endpoint) {
+        if (! $this->has_api_integration || ! $this->api_endpoint) {
             return [
                 'success' => false,
                 'message' => 'Fabricante no tiene integración API configurada',
@@ -99,9 +101,9 @@ class Manufacturer extends Model
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->api_key,
+                'Authorization' => 'Bearer '.$this->api_key,
                 'Content-Type' => 'application/json',
-            ])->post($this->api_endpoint . '/warranties/register', [
+            ])->post($this->api_endpoint.'/warranties/register', [
                 'product_serial' => $warranty->product_serial_number,
                 'product_model' => $warranty->product_model,
                 'purchase_date' => $warranty->purchase_date->format('Y-m-d'),
@@ -123,6 +125,7 @@ class Manufacturer extends Model
 
             if ($response->successful()) {
                 $data = $response->json();
+
                 return [
                     'success' => true,
                     'manufacturer_warranty_id' => $data['warranty_id'] ?? null,
@@ -132,7 +135,7 @@ class Manufacturer extends Model
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Error al registrar con fabricante: ' . $response->body(),
+                    'message' => 'Error al registrar con fabricante: '.$response->body(),
                     'http_code' => $response->status(),
                 ];
             }
@@ -140,7 +143,7 @@ class Manufacturer extends Model
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error de conexión con fabricante: ' . $e->getMessage(),
+                'message' => 'Error de conexión con fabricante: '.$e->getMessage(),
             ];
         }
     }
@@ -150,7 +153,7 @@ class Manufacturer extends Model
      */
     public function lookupWarranty(string $serialNumber): array
     {
-        if (!$this->has_api_integration || !$this->api_endpoint) {
+        if (! $this->has_api_integration || ! $this->api_endpoint) {
             return [
                 'success' => false,
                 'message' => 'Fabricante no tiene integración API configurada',
@@ -159,8 +162,8 @@ class Manufacturer extends Model
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->api_key,
-            ])->get($this->api_endpoint . '/warranties/lookup', [
+                'Authorization' => 'Bearer '.$this->api_key,
+            ])->get($this->api_endpoint.'/warranties/lookup', [
                 'serial_number' => $serialNumber,
             ]);
 
@@ -179,7 +182,7 @@ class Manufacturer extends Model
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error consultando fabricante: ' . $e->getMessage(),
+                'message' => 'Error consultando fabricante: '.$e->getMessage(),
             ];
         }
     }
@@ -189,7 +192,7 @@ class Manufacturer extends Model
      */
     public function createWarrantyClaim(WarrantyClaim $claim): array
     {
-        if (!$this->has_api_integration || !$this->api_endpoint) {
+        if (! $this->has_api_integration || ! $this->api_endpoint) {
             return [
                 'success' => false,
                 'message' => 'Fabricante no tiene integración API configurada',
@@ -200,9 +203,9 @@ class Manufacturer extends Model
             $warranty = $claim->warranty;
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->api_key,
+                'Authorization' => 'Bearer '.$this->api_key,
                 'Content-Type' => 'application/json',
-            ])->post($this->api_endpoint . '/warranties/claims', [
+            ])->post($this->api_endpoint.'/warranties/claims', [
                 'warranty_id' => $warranty->manufacturer_warranty_id,
                 'claim_details' => [
                     'issue_category' => $claim->issue_category,
@@ -220,6 +223,7 @@ class Manufacturer extends Model
 
             if ($response->successful()) {
                 $data = $response->json();
+
                 return [
                     'success' => true,
                     'manufacturer_claim_id' => $data['claim_id'] ?? null,
@@ -230,14 +234,14 @@ class Manufacturer extends Model
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Error enviando reclamo al fabricante: ' . $response->body(),
+                    'message' => 'Error enviando reclamo al fabricante: '.$response->body(),
                 ];
             }
 
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error de conexión con fabricante: ' . $e->getMessage(),
+                'message' => 'Error de conexión con fabricante: '.$e->getMessage(),
             ];
         }
     }
@@ -247,7 +251,7 @@ class Manufacturer extends Model
      */
     public function getClaimStatus(string $manufacturerClaimId): array
     {
-        if (!$this->has_api_integration || !$this->api_endpoint) {
+        if (! $this->has_api_integration || ! $this->api_endpoint) {
             return [
                 'success' => false,
                 'message' => 'Fabricante no tiene integración API configurada',
@@ -256,8 +260,8 @@ class Manufacturer extends Model
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->api_key,
-            ])->get($this->api_endpoint . '/warranties/claims/' . $manufacturerClaimId);
+                'Authorization' => 'Bearer '.$this->api_key,
+            ])->get($this->api_endpoint.'/warranties/claims/'.$manufacturerClaimId);
 
             if ($response->successful()) {
                 return [
@@ -274,7 +278,7 @@ class Manufacturer extends Model
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error consultando estado del reclamo: ' . $e->getMessage(),
+                'message' => 'Error consultando estado del reclamo: '.$e->getMessage(),
             ];
         }
     }
@@ -296,11 +300,12 @@ class Manufacturer extends Model
      */
     public function canHandleIssue(string $issueType): bool
     {
-        if (!$this->warranty_policies) {
+        if (! $this->warranty_policies) {
             return true; // Por defecto maneja todos
         }
 
         $handledIssues = $this->warranty_policies['handled_issues'] ?? [];
+
         return empty($handledIssues) || in_array($issueType, $handledIssues);
     }
 }

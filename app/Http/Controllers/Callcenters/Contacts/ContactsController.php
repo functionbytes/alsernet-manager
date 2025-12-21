@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Callcenters\Contacts;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Contact;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ContactsController extends Controller
@@ -17,10 +17,10 @@ class ContactsController extends Controller
         $contacts = Contact::orderBy('created_at', 'desc');
 
         if ($searchKey != null) {
-            $contacts = $contacts->where(function($query) use ($searchKey) {
-                $query->where('firstname', 'like', '%' . $searchKey . '%')
-                    ->orWhere('lastname', 'like', '%' . $searchKey . '%')
-                    ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', '%' . $searchKey . '%');
+            $contacts = $contacts->where(function ($query) use ($searchKey) {
+                $query->where('firstname', 'like', '%'.$searchKey.'%')
+                    ->orWhere('lastname', 'like', '%'.$searchKey.'%')
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -36,17 +36,18 @@ class ContactsController extends Controller
             'searchKey' => $searchKey,
         ]);
     }
+
     public function edit($uid)
     {
 
-        $contact = Contact::uid($uid);;
+        $contact = Contact::uid($uid);
 
         $revieweds = collect([
             ['id' => '1', 'label' => 'Gestionado'],
             ['id' => '0', 'label' => 'Pendiente'],
         ]);
 
-        $revieweds = $revieweds->pluck('label','id');
+        $revieweds = $revieweds->pluck('label', 'id');
 
         return view('callcenters.views.contacts.edit')->with([
             'contact' => $contact,
@@ -54,11 +55,12 @@ class ContactsController extends Controller
         ]);
 
     }
+
     public function update(Request $request)
     {
 
         $contact = Contact::uid($request->uid);
-        $contact->reviewed =  $request->reviewed;
+        $contact->reviewed = $request->reviewed;
         $contact->update();
 
         return response()->json([
@@ -67,6 +69,7 @@ class ContactsController extends Controller
         ]);
 
     }
+
     public function destroy($uid)
     {
         $contact = Contact::uid($uid);
@@ -74,5 +77,4 @@ class ContactsController extends Controller
 
         return redirect()->route('support.contacts');
     }
-
 }

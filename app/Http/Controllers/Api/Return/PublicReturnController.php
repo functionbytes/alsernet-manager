@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\Return;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\ReturnRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 
 class PublicReturnController extends Controller
 {
@@ -17,7 +17,7 @@ class PublicReturnController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'order_id' => 'required|string',
-            'email' => 'required|email'
+            'email' => 'required|email',
         ]);
 
         if ($validator->fails()) {
@@ -29,7 +29,7 @@ class PublicReturnController extends Controller
             ->with(['status.state', 'returnType', 'returnReason'])
             ->first();
 
-        if (!$return) {
+        if (! $return) {
             return response()->json(['message' => 'No se encontró solicitud de devolución'], 404);
         }
 
@@ -48,7 +48,7 @@ class PublicReturnController extends Controller
             'created_at' => $return->created_at,
             'received_date' => $return->received_date,
             'pickup_date' => $return->pickup_date,
-            'can_be_modified' => $return->canBeModified()
+            'can_be_modified' => $return->canBeModified(),
         ]);
     }
 
@@ -68,7 +68,7 @@ class PublicReturnController extends Controller
             'description' => 'required|string|min:10',
             'product_quantity' => 'required|integer|min:1',
             'return_address' => 'nullable|string',
-            'iban' => 'nullable|string|max:34'
+            'iban' => 'nullable|string|max:34',
         ]);
 
         if ($validator->fails()) {
@@ -83,7 +83,7 @@ class PublicReturnController extends Controller
 
         if ($existingReturn) {
             return response()->json([
-                'error' => 'Ya existe una solicitud de devolución activa para este pedido'
+                'error' => 'Ya existe una solicitud de devolución activa para este pedido',
             ], 409);
         }
 
@@ -101,12 +101,12 @@ class PublicReturnController extends Controller
                 'tracking_info' => [
                     'order_id' => $return->id_order,
                     'email' => $return->email,
-                    'return_id' => $return->id_return_request
-                ]
+                    'return_id' => $return->id_return_request,
+                ],
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Error al crear la solicitud: ' . $e->getMessage()
+                'error' => 'Error al crear la solicitud: '.$e->getMessage(),
             ], 500);
         }
     }

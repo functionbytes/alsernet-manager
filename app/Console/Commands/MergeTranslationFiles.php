@@ -8,9 +8,7 @@ use function Acelle\Helpers\updateTranslationFile;
 
 class MergeTranslationFiles extends Command
 {
-
     protected $signature = 'translation:merge {current} {update}';
-
 
     protected $description = 'Merge translation phrases from $new to $current (overwrite). The utility is helpful when we have a new translation file and want to apply it to a current file in the repos.
         IMPORTANT: do not merge any files under lang/en/ folder (which is considered the main language) or it may add redundant keys to the main file which will in turn propogate to the other files of other languages';
@@ -33,5 +31,4 @@ class MergeTranslationFiles extends Command
 
         updateTranslationFile($current, $update, $overwrite = true, $deleteTargetKeys = false, $sort = true);
     }
-
 }

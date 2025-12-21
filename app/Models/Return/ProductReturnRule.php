@@ -3,9 +3,9 @@
 namespace App\Models\Return;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 class ProductReturnRule extends Model
 {
@@ -129,6 +129,7 @@ class ProductReturnRule extends Model
     public static function isProductReturnable(Product $product): bool
     {
         $rule = static::getApplicableRule($product);
+
         return $rule ? $rule->is_returnable : true; // Por defecto retornable
     }
 
@@ -139,7 +140,7 @@ class ProductReturnRule extends Model
     {
         $rule = static::getApplicableRule($product);
 
-        if (!$rule) {
+        if (! $rule) {
             return $product->category?->default_return_days ?? 30;
         }
 
@@ -158,9 +159,10 @@ class ProductReturnRule extends Model
         ];
 
         // Verificar si el producto es retornable
-        if (!$this->is_returnable) {
+        if (! $this->is_returnable) {
             $results['valid'] = false;
             $results['errors'][] = 'Este producto no es retornable';
+
             return $results;
         }
 
@@ -176,13 +178,13 @@ class ProductReturnRule extends Model
         }
 
         // Verificar empaque original si es requerido
-        if ($this->requires_original_packaging && !($returnData['has_original_packaging'] ?? false)) {
+        if ($this->requires_original_packaging && ! ($returnData['has_original_packaging'] ?? false)) {
             $results['valid'] = false;
             $results['errors'][] = 'Se requiere el empaque original para esta devolución';
         }
 
         // Verificar recibo si es requerido
-        if ($this->requires_receipt && !($returnData['has_receipt'] ?? false)) {
+        if ($this->requires_receipt && ! ($returnData['has_receipt'] ?? false)) {
             $results['valid'] = false;
             $results['errors'][] = 'Se requiere el recibo de compra para esta devolución';
         }
@@ -260,14 +262,14 @@ class ProductReturnRule extends Model
     {
         $description = [];
 
-        if (!$this->is_returnable) {
+        if (! $this->is_returnable) {
             return 'Producto no retornable';
         }
 
         if ($this->return_period_days) {
             $description[] = "Período de devolución: {$this->return_period_days} días";
         } else {
-            $description[] = "Sin límite de tiempo para devolución";
+            $description[] = 'Sin límite de tiempo para devolución';
         }
 
         if ($this->max_return_percentage < 100) {
@@ -275,11 +277,11 @@ class ProductReturnRule extends Model
         }
 
         if ($this->requires_original_packaging) {
-            $description[] = "Requiere empaque original";
+            $description[] = 'Requiere empaque original';
         }
 
         if ($this->requires_receipt) {
-            $description[] = "Requiere recibo";
+            $description[] = 'Requiere recibo';
         }
 
         return implode(' • ', $description);

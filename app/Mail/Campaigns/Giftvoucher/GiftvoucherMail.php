@@ -4,22 +4,28 @@ namespace App\Mail\Campaigns\Giftvoucher;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\SerializesModels;
 
 class GiftvoucherMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $newsletter;
+
     public $firstname;
+
     public $lastname;
+
     public $email;
+
     public $uid;
+
     public $subject;
+
     public $template;
+
     public $iso;
 
     public function __construct($newsletter)
@@ -63,7 +69,7 @@ class GiftvoucherMail extends Mailable
             with: [
                 'firstname' => $this->firstname,
                 'lastname' => $this->lastname,
-                'names' => ucwords($this->firstname) . " " . ucwords($this->lastname),
+                'names' => ucwords($this->firstname).' '.ucwords($this->lastname),
             ],
         );
     }
@@ -72,5 +78,4 @@ class GiftvoucherMail extends Mailable
     {
         return [];
     }
-
 }

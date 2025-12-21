@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class StockMvt extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_mvt';
+
     protected $primaryKey = 'id_stock_mvt';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +30,7 @@ class StockMvt extends Model
         'quantity',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_employee' => 'integer',

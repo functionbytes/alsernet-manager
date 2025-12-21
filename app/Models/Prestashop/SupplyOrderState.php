@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\SupplyOrderState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\SupplyOrderState;
 
 class SupplyOrderState extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_state';
+
     protected $primaryKey = 'id_supply_order_state';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +27,7 @@ class SupplyOrderState extends Model
         'color',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_supply_order_state' => 'integer',
     ];
 

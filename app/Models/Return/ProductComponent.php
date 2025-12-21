@@ -65,17 +65,24 @@ class ProductComponent extends Model
      * Tipos de componentes
      */
     const TYPE_ESSENTIAL = 'essential';
+
     const TYPE_OPTIONAL = 'optional';
+
     const TYPE_ACCESSORY = 'accessory';
+
     const TYPE_CONSUMABLE = 'consumable';
 
     /**
      * Categorías de componentes
      */
     const CATEGORY_ELECTRONICS = 'electronics';
+
     const CATEGORY_MECHANICAL = 'mechanical';
+
     const CATEGORY_ACCESSORY = 'accessory';
+
     const CATEGORY_SOFTWARE = 'software';
+
     const CATEGORY_PACKAGING = 'packaging';
 
     /**
@@ -185,9 +192,9 @@ class ProductComponent extends Model
     /**
      * Reservar stock
      */
-    public function reserveStock(int $quantity, string $reference = null): bool
+    public function reserveStock(int $quantity, ?string $reference = null): bool
     {
-        if (!$this->hasStock($quantity)) {
+        if (! $this->hasStock($quantity)) {
             return false;
         }
 
@@ -209,7 +216,7 @@ class ProductComponent extends Model
     /**
      * Liberar stock reservado
      */
-    public function releaseStock(int $quantity, string $reference = null): bool
+    public function releaseStock(int $quantity, ?string $reference = null): bool
     {
         if ($this->reserved_stock < $quantity) {
             return false;
@@ -233,7 +240,7 @@ class ProductComponent extends Model
     /**
      * Actualizar stock físico
      */
-    public function updateStock(int $quantity, string $movementType, string $reference = null, string $reason = null): void
+    public function updateStock(int $quantity, string $movementType, ?string $reference = null, ?string $reason = null): void
     {
         $stockBefore = $this->current_stock;
         $stockAfter = $stockBefore + $quantity;
@@ -258,8 +265,8 @@ class ProductComponent extends Model
         int $stockBefore,
         int $stockAfter,
         int $quantity,
-        string $reference = null,
-        string $reason = null
+        ?string $reference = null,
+        ?string $reason = null
     ): void {
         ComponentStockMovement::create([
             'component_id' => $this->id,

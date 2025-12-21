@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Managers\Settings;
 
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\Controller;
 use App\Models\Setting\Setting;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MetaSettingsController extends Controller
 {
-
-   public function index(){
+    public function index()
+    {
 
         $meta = Setting::key('meta_image')->getMedia('meta')->count() > 0 ? true : false;
 
@@ -18,13 +18,14 @@ class MetaSettingsController extends Controller
             'metadata' => $meta,
         ]);
 
-   }
+    }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
-        $data['meta_title']  =  $request->meta_title;
-        $data['meta_description']  =  $request->meta_description;
-        $data['meta_keywords']  =  $request->meta_keywords;
+        $data['meta_title'] = $request->meta_title;
+        $data['meta_description'] = $request->meta_description;
+        $data['meta_keywords'] = $request->meta_keywords;
         updateSettings($data);
 
         $response = [
@@ -36,27 +37,31 @@ class MetaSettingsController extends Controller
 
     }
 
-    public function storeMetas(Request $request){
+    public function storeMetas(Request $request)
+    {
 
-        if($request->hasFile('file') && $request->file('file')->isValid()){
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
             $setting = Setting::key($request->setting);
             $setting->addMediaFromRequest('file')->toMediaCollection('meta');
-            return response()->json(['status' => "success", 'setting' => $setting->uid]);
+
+            return response()->json(['status' => 'success', 'setting' => $setting->uid]);
         }
 
     }
 
-    public function deleteMetas($id){
+    public function deleteMetas($id)
+    {
 
         Media::find($id)->delete();
-        return response()->json(['status' => "success"]);
+
+        return response()->json(['status' => 'success']);
 
     }
 
-    public function getMetas($uid){
+    public function getMetas($uid)
+    {
 
         $setting = Setting::key($uid);
-
 
         $images = $setting->getMedia('meta')->map(function ($thumbnail) {
             return [
@@ -72,6 +77,4 @@ class MetaSettingsController extends Controller
         return response()->json($images);
 
     }
-
-
 }

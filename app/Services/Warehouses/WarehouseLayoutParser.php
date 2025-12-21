@@ -11,17 +11,20 @@ namespace App\Services\Warehouses;
 class WarehouseLayoutParser
 {
     private const WAREHOUSE_WIDTH_M = 42.23;
+
     private const WAREHOUSE_HEIGHT_M = 30.26;
 
     private array $processedSections = [];
+
     private array $sectionPositions = [];
+
     private array $errors = [];
+
     private array $warnings = [];
 
     /**
      * Parse complete LAYOUT_SPEC array
      *
-     * @param array $layoutSpec
      * @return array ['floors', 'locations', 'sections', 'summary', 'errors', 'warnings']
      */
     public function parse(array $layoutSpec): array
@@ -34,8 +37,9 @@ class WarehouseLayoutParser
         foreach ($layoutSpec as $section) {
             $sectionId = $section['id'] ?? null;
 
-            if (!$sectionId) {
-                $this->errors[] = "Section without ID found";
+            if (! $sectionId) {
+                $this->errors[] = 'Section without ID found';
+
                 continue;
             }
 
@@ -127,6 +131,7 @@ class WarehouseLayoutParser
 
         // Default position (top-left)
         $this->warnings[] = "Section {$sectionId} has no position data, using default (0, 0)";
+
         return ['x' => 0, 'y' => 0, 'anchor' => $anchor];
     }
 
@@ -173,15 +178,16 @@ class WarehouseLayoutParser
         $mode = $fromPrev['mode'] ?? null;
         $gap_m = $fromPrev['gap_m'] ?? 0;
 
-        if (!$refSectionId || !isset($this->sectionPositions[$refSectionId])) {
+        if (! $refSectionId || ! isset($this->sectionPositions[$refSectionId])) {
             $this->errors[] = "Section {$section['id']} references non-existent section {$refSectionId}";
+
             return ['x' => 0, 'y' => 0, 'anchor' => $section['anchor'] ?? 'top-right'];
         }
 
         $refPos = $this->sectionPositions[$refSectionId];
         $refSection = $this->findSectionById($refSectionId, $layoutSpec);
 
-        if (!$refSection) {
+        if (! $refSection) {
             return ['x' => 0, 'y' => 0, 'anchor' => $section['anchor'] ?? 'top-right'];
         }
 
@@ -223,6 +229,7 @@ class WarehouseLayoutParser
                 return $section;
             }
         }
+
         return null;
     }
 
@@ -317,7 +324,9 @@ class WarehouseLayoutParser
 
                 foreach ($sectionList as $sectionData) {
                     $code = $sectionData['code'] ?? null;
-                    if (!$code) continue;
+                    if (! $code) {
+                        continue;
+                    }
 
                     $level = $this->extractLevelFromCode($code);
                     $maxLevel = max($maxLevel, $level);
@@ -413,7 +422,8 @@ class WarehouseLayoutParser
     private function extractLevelFromCode(string $code): int
     {
         $parts = explode('-', $code);
-        return (int)end($parts);
+
+        return (int) end($parts);
     }
 
     /**

@@ -3,37 +3,36 @@
 namespace App\Models\Prestashop\Event;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EventBannersBackup extends Model
 {
-
-   // use HasFactory;
+    // use HasFactory;
 
     protected $connection = 'prestashop';
 
-    protected $table = "aalv_Alsernet_event_banners";
+    protected $table = 'aalv_Alsernet_event_banners';
 
     protected $fillable = [
         'id',
         'banner_id',
         'event_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
     public function scopeUid($query, $uid)
-{
+    {
         return $query->where('uid', $uid)->first();
-}
+    }
 
-    public function scopeSlug($query ,$slug)
+    public function scopeSlug($query, $slug)
     {
         return $query->where('slug', $slug)->first();
     }
@@ -47,5 +46,4 @@ class EventBannersBackup extends Model
     {
         return $this->hasMany('App\Models\Inventarie\InventarieLocationItems');
     }
-
 }

@@ -14,7 +14,7 @@ return [
         'address' => env('COMPANY_ADDRESS', 'Dirección de la empresa'),
         'phone' => env('COMPANY_PHONE', 'Teléfono'),
         'email' => env('COMPANY_EMAIL', 'info@empresa.com'),
-        'website' => env('COMPANY_WEBSITE', 'www.empresa.com')
+        'website' => env('COMPANY_WEBSITE', 'www.empresa.com'),
     ],
     'notifications' => [
         'enabled' => true,
@@ -24,7 +24,7 @@ return [
         'support_phone' => '900 123 456',
         'from' => [
             'address' => env('RETURNS_FROM_ADDRESS', 'noreply@example.com'),
-            'name' => env('RETURNS_FROM_NAME', 'Devoluciones')
+            'name' => env('RETURNS_FROM_NAME', 'Devoluciones'),
         ],
         'expiration_days' => 30,
         'admin_email' => env('RETURNS_ADMIN_EMAIL', 'admin@example.com'),
@@ -36,7 +36,7 @@ return [
         'customer_transport' => 'Agencia de transporte (cuenta del cliente)',
         'home_pickup' => 'Recogida a domicilio',
         'store_delivery' => 'Entrega en tienda',
-        'inpost' => 'InPost'
+        'inpost' => 'InPost',
     ],
 
     'return_order_statuses' => env('RETURN_ORDER_STATUS', '5,4'), // Estados de pedido que permiten devolución
@@ -63,5 +63,5 @@ return [
         'admin_email' => env('RETURN_ADMIN_EMAIL'),
         'notify_admin_on_new_return' => env('RETURN_NOTIFY_ADMIN', true),
         'notify_customer_on_status_change' => env('RETURN_NOTIFY_CUSTOMER', true),
-    ]
+    ],
 ];

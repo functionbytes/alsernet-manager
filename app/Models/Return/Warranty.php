@@ -5,9 +5,9 @@ namespace App\Models\Return;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Warranty extends Model
 {
@@ -76,9 +76,13 @@ class Warranty extends Model
      * Estados disponibles
      */
     const STATUS_ACTIVE = 'active';
+
     const STATUS_EXPIRED = 'expired';
+
     const STATUS_CLAIMED = 'claimed';
+
     const STATUS_CANCELLED = 'cancelled';
+
     const STATUS_TRANSFERRED = 'transferred';
 
     /**
@@ -185,6 +189,7 @@ class Warranty extends Model
     public function scopeExpiringSoon($query, $days = 30)
     {
         $futureDate = now()->addDays($days)->toDateString();
+
         return $query->where('status', self::STATUS_ACTIVE)
             ->whereBetween('warranty_end_date', [now()->toDateString(), $futureDate]);
     }
@@ -237,7 +242,7 @@ class Warranty extends Model
     /**
      * Activar garantía
      */
-    public function activate(User $user = null, array $details = []): bool
+    public function activate(?User $user = null, array $details = []): bool
     {
         if ($this->activation_date) {
             return false; // Ya está activada
@@ -263,7 +268,7 @@ class Warranty extends Model
      */
     public function registerWithManufacturer(): array
     {
-        if (!$this->manufacturer) {
+        if (! $this->manufacturer) {
             return [
                 'success' => false,
                 'message' => 'No hay fabricante asociado',
@@ -295,7 +300,7 @@ class Warranty extends Model
      */
     public function transferTo(User $newOwner, array $transferDetails = []): bool
     {
-        if (!$this->warrantyType->transferable) {
+        if (! $this->warrantyType->transferable) {
             return false;
         }
 
@@ -331,7 +336,7 @@ class Warranty extends Model
             'original_warranty_id' => $this->id,
             'user_id' => $this->user_id,
             'warranty_type_id' => $extensionType->id,
-            'extension_number' => 'EXT-' . strtoupper(uniqid()),
+            'extension_number' => 'EXT-'.strtoupper(uniqid()),
             'additional_months' => $additionalMonths,
             'extension_start_date' => $this->warranty_end_date,
             'extension_end_date' => $this->warranty_end_date->copy()->addMonths($additionalMonths),
@@ -361,7 +366,7 @@ class Warranty extends Model
 
         $this->update([
             'status' => self::STATUS_CANCELLED,
-            'notes' => ($this->notes ? $this->notes . "\n" : '') . "Cancelada: {$reason}",
+            'notes' => ($this->notes ? $this->notes."\n" : '')."Cancelada: {$reason}",
         ]);
 
         return true;
@@ -373,7 +378,7 @@ class Warranty extends Model
     public static function generateWarrantyNumber(): string
     {
         do {
-            $number = 'WAR-' . now()->format('Y') . '-' . strtoupper(uniqid());
+            $number = 'WAR-'.now()->format('Y').'-'.strtoupper(uniqid());
         } while (self::where('warranty_number', $number)->exists());
 
         return $number;

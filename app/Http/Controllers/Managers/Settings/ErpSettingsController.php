@@ -31,7 +31,7 @@ class ErpSettingsController extends Controller
         // Verificar última conexión
         $lastCheck = $settings['last_connection_check'] ?? null;
         $lastCheckDate = $lastCheck ? \Carbon\Carbon::parse($lastCheck) : null;
-        $needsCheck = !$lastCheckDate || $lastCheckDate->diffInMinutes(now()) > 5;
+        $needsCheck = ! $lastCheckDate || $lastCheckDate->diffInMinutes(now()) > 5;
 
         return view('managers.views.settings.erp.index', compact('settings', 'stats', 'needsCheck'));
     }
@@ -82,12 +82,12 @@ class ErpSettingsController extends Controller
             return response()->json($result);
 
         } catch (\Exception $e) {
-            Log::error('Error verificando conexión ERP: ' . $e->getMessage());
+            Log::error('Error verificando conexión ERP: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al verificar conexión: ' . $e->getMessage(),
-                'status' => 'error'
+                'message' => 'Error al verificar conexión: '.$e->getMessage(),
+                'status' => 'error',
             ], 500);
         }
     }
@@ -111,7 +111,7 @@ class ErpSettingsController extends Controller
         return response()->json([
             'success' => true,
             'is_active' => $isActive === 'yes',
-            'message' => $isActive === 'yes' ? 'Servicio ERP activado' : 'Servicio ERP desactivado'
+            'message' => $isActive === 'yes' ? 'Servicio ERP activado' : 'Servicio ERP desactivado',
         ]);
     }
 
@@ -125,13 +125,13 @@ class ErpSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Cache del ERP limpiado correctamente'
+                'message' => 'Cache del ERP limpiado correctamente',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al limpiar cache: ' . $e->getMessage()
+                'message' => 'Error al limpiar cache: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -145,7 +145,7 @@ class ErpSettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Estadísticas reseteadas correctamente'
+            'message' => 'Estadísticas reseteadas correctamente',
         ]);
     }
 
@@ -156,10 +156,10 @@ class ErpSettingsController extends Controller
     {
         $stats = Setting::getErpStats();
 
-        if (!$stats) {
+        if (! $stats) {
             return response()->json([
                 'success' => false,
-                'message' => 'Configuración no encontrada'
+                'message' => 'Configuración no encontrada',
             ], 404);
         }
 
@@ -175,7 +175,7 @@ class ErpSettingsController extends Controller
                 'last_check' => $lastCheckDate?->diffForHumans() ?? null,
                 'last_status' => $stats['last_connection_status'] ?? null,
                 'is_active' => $stats['is_active'] ?? false,
-            ]
+            ],
         ]);
     }
 
@@ -191,19 +191,19 @@ class ErpSettingsController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Sincronización funcionando correctamente',
-                    'pending_changes' => $result['count'] ?? 0
+                    'pending_changes' => $result['count'] ?? 0,
                 ]);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => 'No se pudo conectar al servicio de sincronización'
+                'message' => 'No se pudo conectar al servicio de sincronización',
             ], 500);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error en sincronización: ' . $e->getMessage()
+                'message' => 'Error en sincronización: '.$e->getMessage(),
             ], 500);
         }
     }

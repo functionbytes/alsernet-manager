@@ -4,10 +4,10 @@ namespace App\Models\Return;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Storage;
 
 class ReturnBarcode extends Model
 {
@@ -25,7 +25,7 @@ class ReturnBarcode extends Model
         'printed_at',
         'scanned_at',
         'scanned_by',
-        'validation_notes'
+        'validation_notes',
     ];
 
     protected $casts = [
@@ -36,14 +36,20 @@ class ReturnBarcode extends Model
 
     // Constantes de estado
     const STATUS_GENERATED = 'generated';
+
     const STATUS_PRINTED = 'printed';
+
     const STATUS_SCANNED = 'scanned';
+
     const STATUS_VALIDATED = 'validated';
+
     const STATUS_REJECTED = 'rejected';
 
     // Tipos de código de barras
     const TYPE_CODE128 = 'CODE128';
+
     const TYPE_QR = 'QR';
+
     const TYPE_EAN13 = 'EAN13';
 
     // Relaciones
@@ -104,6 +110,7 @@ class ReturnBarcode extends Model
         for ($i = 0; $i < strlen($code); $i++) {
             $sum += ord($code[$i]) * ($i + 1);
         }
+
         return strtoupper(dechex($sum % 256));
     }
 
@@ -120,7 +127,7 @@ class ReturnBarcode extends Model
             'barcode_number' => $barcodeNumber,
             'barcode_type' => $type,
             'status' => self::STATUS_GENERATED,
-            'generated_at' => now()
+            'generated_at' => now(),
         ]);
 
         // Generar imagen del código
@@ -149,7 +156,7 @@ class ReturnBarcode extends Model
                 Storage::put("{$path}/{$filename}", $qrCode);
             } else {
                 // Generar código de barras tradicional
-                $generator = new BarcodeGeneratorPNG();
+                $generator = new BarcodeGeneratorPNG;
                 $barcodeImage = $generator->getBarcode(
                     $this->barcode_number,
                     $generator::TYPE_CODE_128,
@@ -162,13 +169,15 @@ class ReturnBarcode extends Model
             }
 
             $this->update(['barcode_image_path' => "{$path}/{$filename}"]);
+
             return true;
 
         } catch (\Exception $e) {
             \Log::error('Error generating barcode image', [
                 'barcode_id' => $this->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -178,7 +187,7 @@ class ReturnBarcode extends Model
      */
     public function getImageUrl(): ?string
     {
-        if (!$this->barcode_image_path) {
+        if (! $this->barcode_image_path) {
             return null;
         }
 
@@ -192,7 +201,7 @@ class ReturnBarcode extends Model
     {
         return $this->update([
             'status' => self::STATUS_PRINTED,
-            'printed_at' => now()
+            'printed_at' => now(),
         ]);
     }
 
@@ -205,7 +214,7 @@ class ReturnBarcode extends Model
             'status' => self::STATUS_SCANNED,
             'scanned_at' => now(),
             'scanned_by' => $userId,
-            'validation_notes' => $notes
+            'validation_notes' => $notes,
         ]);
     }
 
@@ -215,11 +224,12 @@ class ReturnBarcode extends Model
     public function validate($notes = null): bool
     {
         // Verificar que el producto corresponde
-        if (!$this->returnProduct || !$this->returnRequest) {
+        if (! $this->returnProduct || ! $this->returnRequest) {
             $this->update([
                 'status' => self::STATUS_REJECTED,
-                'validation_notes' => 'Producto o solicitud no encontrada'
+                'validation_notes' => 'Producto o solicitud no encontrada',
             ]);
+
             return false;
         }
 
@@ -230,21 +240,22 @@ class ReturnBarcode extends Model
         if (self::calculateChecksum($baseCode) !== $checksum) {
             $this->update([
                 'status' => self::STATUS_REJECTED,
-                'validation_notes' => 'Checksum inválido'
+                'validation_notes' => 'Checksum inválido',
             ]);
+
             return false;
         }
 
         // Marcar como validado
         $this->update([
             'status' => self::STATUS_VALIDATED,
-            'validation_notes' => $notes ?? 'Validación exitosa'
+            'validation_notes' => $notes ?? 'Validación exitosa',
         ]);
 
         // Actualizar el producto como recibido
         $this->returnProduct->update([
             'is_received' => true,
-            'received_at' => now()
+            'received_at' => now(),
         ]);
 
         return true;
@@ -271,7 +282,7 @@ class ReturnBarcode extends Model
             'quantity' => $this->returnProduct->quantity,
             'customer_name' => $this->returnRequest->customer_name,
             'order_number' => $this->returnRequest->order->order_number,
-            'generated_date' => $this->generated_at->format('d/m/Y H:i')
+            'generated_date' => $this->generated_at->format('d/m/Y H:i'),
         ];
     }
 }

@@ -2,18 +2,21 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Customer extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_customer';
+
     protected $primaryKey = 'id_customer';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -51,7 +54,7 @@ class Customer extends Model
         'reset_password_validity',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'newsletter_date_add' => 'datetime',
         'last_passwd_gen' => 'datetime',
         'date_add' => 'datetime',
@@ -89,10 +92,8 @@ class Customer extends Model
         return $this->hasOne('App\Models\Prestashop\Guest', 'id_customer', 'id_customer');
     }
 
-
     public function carts(): HasMany
     {
         return $this->hasMany('App\Models\Prestashop\Cart\Cart', 'id_customer', 'id_customer');
     }
-
 }

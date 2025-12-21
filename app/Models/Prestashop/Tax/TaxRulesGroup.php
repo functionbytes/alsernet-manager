@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class TaxRulesGroup extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tax_rules_group';
+
     protected $primaryKey = 'id_tax_rules_group';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -18,7 +21,7 @@ class TaxRulesGroup extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'active' => 'boolean',

@@ -28,15 +28,16 @@ class SupervisorBackupCommand extends Command
     {
         $name = $this->argument('name');
 
-        if (!$name) {
-            $name = 'Backup ' . now()->format('Y-m-d H:i:s');
+        if (! $name) {
+            $name = 'Backup '.now()->format('Y-m-d H:i:s');
         }
 
         $environment = $this->option('environment');
         $description = $this->option('description');
 
-        if (!in_array($environment, ['dev', 'prod', 'staging'])) {
+        if (! in_array($environment, ['dev', 'prod', 'staging'])) {
             $this->error('Ambiente inválido. Usar: dev, prod o staging');
+
             return 1;
         }
 
@@ -48,13 +49,16 @@ class SupervisorBackupCommand extends Command
 
             if ($result['success']) {
                 $this->info("✅ Backup creado exitosamente (ID: {$result['backup_id']})");
+
                 return 0;
             } else {
                 $this->error("❌ Error al crear backup: {$result['error']}");
+
                 return 1;
             }
         } catch (\Exception $e) {
             $this->error("❌ Excepción: {$e->getMessage()}");
+
             return 1;
         }
     }

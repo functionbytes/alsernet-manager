@@ -2,16 +2,18 @@
 
 namespace App\Models\Prestashop\Shop;
 
+use App\Models\Prestashop\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\ShopGroup;
-use App\Models\Prestashop\Category;
 
 class Shop extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_shop';
+
     protected $primaryKey = 'id_shop';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +30,7 @@ class Shop extends Model
         'theme',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'deleted' => 'boolean',
         'id_shop_group' => 'integer',
         'id_category' => 'integer',

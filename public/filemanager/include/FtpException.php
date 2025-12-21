@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the `nicolab/php-ftp-client` package.
  *
@@ -9,14 +10,14 @@
  *
  * @copyright Nicolas Tallefourtane http://nicolab.net
  */
+
 namespace FtpClient;
 
 /**
  * The FtpException class.
  * Exception thrown if an error on runtime of the FTP client occurs.
- * @inheritDoc
+ * {@inheritDoc}
+ *
  * @author Nicolas Tallefourtane <dev@nicolab.net>
  */
-class FtpException extends \Exception
-{
-}
+class FtpException extends \Exception {}

@@ -2,17 +2,20 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\Order;
+use App\Models\Prestashop\Stock\StockMvtReason;
+use App\Models\Prestashop\Stock\SupplyOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\StockMvtReason;
-use App\Models\Prestashop\Orders\Order;
-use App\Models\Prestashop\Stock\SupplyOrder;
 
 class StockMvt extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_mvt';
+
     protected $primaryKey = 'id_stock_mvt';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -35,7 +38,7 @@ class StockMvt extends Model
         'quantity',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_stock_mvt' => 'integer',
@@ -47,7 +50,6 @@ class StockMvt extends Model
         'quantity' => 'integer',
         'price_te' => 'float',
     ];
-
 
     public function employee(): BelongsTo
     {

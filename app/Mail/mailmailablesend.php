@@ -2,18 +2,18 @@
 
 namespace App\Mail;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\SerializesModels;
+use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-
-use App\Models\EmailTemplate;
+use Illuminate\Queue\SerializesModels;
 
 class mailmailablesend extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $template, $data;
+    public $template;
+
+    public $data;
 
     public function __construct($template, $data)
     {
@@ -29,17 +29,17 @@ class mailmailablesend extends Mailable
 
         $body = $template->body;
         $subject = $template->subject;
-        foreach($this->data as $key => $value){
-            $subject = str_replace('{{'.$key.'}}' , $this->data[$key] , $subject);
-            $subject = str_replace('{{ '.$key.' }}' , $this->data[$key] , $subject);
+        foreach ($this->data as $key => $value) {
+            $subject = str_replace('{{'.$key.'}}', $this->data[$key], $subject);
+            $subject = str_replace('{{ '.$key.' }}', $this->data[$key], $subject);
 
-            $body = str_replace('{{'.$key.'}}' , $this->data[$key] , $body);
-            $body = str_replace('{{ '.$key.' }}' , $this->data[$key] , $body);
+            $body = str_replace('{{'.$key.'}}', $this->data[$key], $body);
+            $body = str_replace('{{ '.$key.' }}', $this->data[$key], $body);
         }
 
-        $data['emailBody']  =   $body;
-        $this->subject( $subject );
+        $data['emailBody'] = $body;
+        $this->subject($subject);
+
         return $this->view('admin.email.template', $data);
     }
-
 }

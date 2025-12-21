@@ -3,42 +3,39 @@
 namespace App\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use App\Models\Ticket\TicketComment;
-use App\Models\Ticket\Ticket;
-use App\Models\Ticket\Category;
-use App\Models\User;
-use App\Models\Customer;
-use Auth;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Hash;
-use App\Notifications\TicketCreateNotifications;
 use App\Mail\mailmailablesend;
-use Mail;
-use App\Models\Ratingtoken;
 use App\Models\CCMAILS;
+use App\Models\Customer;
+use App\Models\Ratingtoken;
+use App\Models\Ticket\Category;
+use App\Models\Ticket\Ticket;
+use App\Models\Ticket\TicketComment;
 use App\Models\tickethistory;
+use App\Models\User;
+use App\Notifications\TicketCreateNotifications;
+use Auth;
+use Illuminate\Http\Request;
+use Mail;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class CommentsController extends Controller
 {
-    public function postComment(Request $request,  $ticket_id)
+    public function postComment(Request $request, $ticket_id)
     {
 
-        if($request->status == 'Solved')
-        {
+        if ($request->status == 'Solved') {
 
             $this->validate($request, [
-                'comment' => 'required'
+                'comment' => 'required',
             ]);
             $comment = TicketComment::create([
                 'ticket_id' => $request->input('ticket_id'),
                 'user_id' => Auth::user()->id,
                 'cust_id' => null,
-                'comment' => $request->input('comment')
+                'comment' => $request->input('comment'),
             ]);
             foreach ($request->input('comments', []) as $file) {
-                $comment->addMedia(public_path('uploads/comment/' . $file))->toMediaCollection('comments');
+                $comment->addMedia(public_path('uploads/comment/'.$file))->toMediaCollection('comments');
             }
             $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
             $ticket->status = 'Closed';
@@ -55,37 +52,36 @@ class CommentsController extends Controller
             $ticket->lastreply_mail = Auth::id();
             $ticket->update();
 
-
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
+            if ($ticket->ticketnote->isEmpty()) {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-success font-weight-semibold mx-1">'.$ticket->replystatus.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-success font-weight-semibold mx-1">'.$ticket->replystatus.'</span>
                     ';
                 }
 
-            }else{
-                if($ticket->overduestatus != null){
+            } else {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-success font-weight-semibold mx-1">'.$ticket->replystatus.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-success font-weight-semibold mx-1">'.$ticket->replystatus.'</span>
@@ -112,59 +108,55 @@ class CommentsController extends Controller
             $cust->notify(new TicketCreateNotifications($ticket));
 
             // create ticket notification
-            if($ticket->category)
-            {
+            if ($ticket->category) {
                 $notificationcat = $ticket->category->groupscategoryc()->get();
-                $icc = array();
-                if($notificationcat->isNotEmpty()){
+                $icc = [];
+                if ($notificationcat->isNotEmpty()) {
 
-                    foreach($notificationcat as $igc){
+                    foreach ($notificationcat as $igc) {
 
-                        foreach($igc->groupsc->groupsuser()->get() as $user){
+                        foreach ($igc->groupsc->groupsuser()->get() as $user) {
                             $icc[] .= $user->users_id;
                         }
                     }
 
-                    if(!$icc){
-                        $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                        foreach($admins as $admin){
+                    if (! $icc) {
+                        $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                        foreach ($admins as $admin) {
                             $admin->notify(new TicketCreateNotifications($ticket));
                         }
 
-                    }else{
+                    } else {
 
                         $user = User::whereIn('id', $icc)->get();
-                        foreach($user as $users){
+                        foreach ($user as $users) {
                             $users->notify(new TicketCreateNotifications($ticket));
                         }
-                        $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                        foreach($admins as $admin){
-                            if($admin->getRoleNames()[0] == 'superadmin'){
+                        $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                        foreach ($admins as $admin) {
+                            if ($admin->getRoleNames()[0] == 'superadmin') {
                                 $admin->notify(new TicketCreateNotifications($ticket));
                             }
                         }
 
-
                     }
-                }else{
-                    $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                    foreach($admins as $admin){
+                } else {
+                    $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                    foreach ($admins as $admin) {
                         $admin->notify(new TicketCreateNotifications($ticket));
                     }
                 }
             }
             // Notification category Empty
-            if(!$ticket->category)
-            {
+            if (! $ticket->category) {
                 $admins = User::get();
-                foreach($admins as $admin){
+                foreach ($admins as $admin) {
                     $admin->notify(new TicketCreateNotifications($ticket));
                 }
 
             }
 
-
-            $ratingtoken =  Ratingtoken::create([
+            $ratingtoken = Ratingtoken::create([
 
                 'token' => str_random(64),
                 'ticket_id' => $ticket->id,
@@ -173,9 +165,8 @@ class CommentsController extends Controller
             $closed_agent = User::findOrFail(Auth::id());
             $ccemailsend = CCMAILS::where('ticket_id', $ticket->id)->first();
 
-            if(setting('ticketrating') == 'on')
-            {
-                if($ticket->cust->userType == 'Guest'){
+            if (setting('ticketrating') == 'on') {
+                if ($ticket->cust->userType == 'Guest') {
                     $ticketData = [
                         'closed_agent_name' => $closed_agent->name,
                         'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -189,7 +180,7 @@ class CommentsController extends Controller
                         'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                     ];
                 }
-                if($ticket->cust->userType == 'Customer'){
+                if ($ticket->cust->userType == 'Customer') {
                     $ticketData = [
                         'closed_agent_name' => $closed_agent->name,
                         'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -203,9 +194,9 @@ class CommentsController extends Controller
                         'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                     ];
                 }
-            }else{
-                if($request->rating_on_off){
-                    if($ticket->cust->userType == 'Guest'){
+            } else {
+                if ($request->rating_on_off) {
+                    if ($ticket->cust->userType == 'Guest') {
                         $ticketData = [
                             'closed_agent_name' => $closed_agent->name,
                             'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -218,7 +209,7 @@ class CommentsController extends Controller
                             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                         ];
                     }
-                    if($ticket->cust->userType == 'Customer'){
+                    if ($ticket->cust->userType == 'Customer') {
                         $ticketData = [
                             'closed_agent_name' => $closed_agent->name,
                             'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -231,8 +222,8 @@ class CommentsController extends Controller
                             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                         ];
                     }
-                }else{
-                    if($ticket->cust->userType == 'Guest'){
+                } else {
+                    if ($ticket->cust->userType == 'Guest') {
                         $ticketData = [
                             'closed_agent_name' => $closed_agent->name,
                             'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -246,7 +237,7 @@ class CommentsController extends Controller
                             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                         ];
                     }
-                    if($ticket->cust->userType == 'Customer'){
+                    if ($ticket->cust->userType == 'Customer') {
                         $ticketData = [
                             'closed_agent_name' => $closed_agent->name,
                             'closed_agent_role' => $closed_agent->getRoleNames()[0],
@@ -263,168 +254,163 @@ class CommentsController extends Controller
                 }
             }
 
-            try{
+            try {
 
-                if($ticket->category)
-                {
+                if ($ticket->category) {
                     $notificationcatss = $ticket->category->groupscategoryc()->get();
-                    $icc = array();
-                    if($notificationcatss->isNotEmpty()){
+                    $icc = [];
+                    if ($notificationcatss->isNotEmpty()) {
 
-                        foreach($notificationcatss as $igc){
+                        foreach ($notificationcatss as $igc) {
 
-                            foreach($igc->groupsc->groupsuser()->get() as $user){
+                            foreach ($igc->groupsc->groupsuser()->get() as $user) {
                                 $icc[] .= $user->users_id;
                             }
                         }
 
-                        if(!$icc){
-                            $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                            foreach($admins as $admin){
-                                if($admin->getRoleNames()[0] != 'superadmin' && $admin->usetting->emailnotifyon == 1){
+                        if (! $icc) {
+                            $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                            foreach ($admins as $admin) {
+                                if ($admin->getRoleNames()[0] != 'superadmin' && $admin->usetting->emailnotifyon == 1) {
                                     Mail::to($admin->email)
-                                    ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                        ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                                 }
                             }
 
-                        }else{
+                        } else {
 
-                            if($ticket->myassignuser){
+                            if ($ticket->myassignuser) {
                                 $assignee = $ticket->ticketassignmutliples;
-                                foreach($assignee as $assignees){
-                                    $user = User::where('id',$assignees->toassignuser_id)->get();
-                                    foreach($user as $users){
-                                        if($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1){
+                                foreach ($assignee as $assignees) {
+                                    $user = User::where('id', $assignees->toassignuser_id)->get();
+                                    foreach ($user as $users) {
+                                        if ($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1) {
                                             Mail::to($users->email)
-                                            ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                                ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                                         }
                                     }
                                 }
-                            }
-                            else if ($ticket->selfassignuser_id) {
+                            } elseif ($ticket->selfassignuser_id) {
                                 $self = User::findOrFail($ticket->selfassignuser_id);
-                                if($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1){
+                                if ($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1) {
                                     Mail::to($self->email)
-                                    ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                        ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                                 }
-                            }
-                            else if($icc ){
+                            } elseif ($icc) {
                                 $user = User::whereIn('id', $icc)->get();
-                                foreach($user as $users){
-                                    if($users->usetting->emailnotifyon == 1){
+                                foreach ($user as $users) {
+                                    if ($users->usetting->emailnotifyon == 1) {
                                         Mail::to($users->email)
-                                        ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                            ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                                     }
                                 }
-                            }
-                            else {
-                                $users = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                                foreach($users as $user){
-                                    if($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1){
+                            } else {
+                                $users = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                                foreach ($users as $user) {
+                                    if ($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1) {
                                         Mail::to($user->email)
-                                        ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                            ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                                     }
                                 }
                             }
 
-                        }
-                    }else{
-
-                        if($ticket->myassignuser){
-                            $assignee = $ticket->ticketassignmutliples;
-                            foreach($assignee as $assignees){
-                                $user = User::where('id',$assignees->toassignuser_id)->get();
-                                foreach($user as $users){
-                                    if($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1){
-                                        Mail::to($users->email)
-                                        ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
-                                    }
-                                }
-                            }
-                        } else if ($ticket->selfassignuser_id) {
-                            $self = User::findOrFail($ticket->selfassignuser_id);
-                            if($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1){
-                                Mail::to($self->email)
-                                ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
-                            }
-                        } else {
-
-                            $users = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                            foreach($users as $user){
-                                if($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1){
-                                    Mail::to($user->email)
-                                    ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
-                                }
-                            }
-                        }
-                    }
-                }
-                if(!$ticket->category)
-                {
-
-                    if($ticket->myassignuser){
-                        $assignee = $ticket->ticketassignmutliples;
-                        foreach($assignee as $assignees){
-                            $user = User::where('id',$assignees->toassignuser_id)->get();
-                            foreach($user as $users){
-                                if($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1){
-                                    Mail::to($users->email)
-                                    ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
-                                }
-                            }
-                        }
-                    } else if ($ticket->selfassignuser_id) {
-                        $self = User::findOrFail($ticket->selfassignuser_id);
-                        if($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1){
-                            Mail::to($self->email)
-                            ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
                         }
                     } else {
 
-                        $users = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                        foreach($users as $user){
-                            if($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1){
+                        if ($ticket->myassignuser) {
+                            $assignee = $ticket->ticketassignmutliples;
+                            foreach ($assignee as $assignees) {
+                                $user = User::where('id', $assignees->toassignuser_id)->get();
+                                foreach ($user as $users) {
+                                    if ($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1) {
+                                        Mail::to($users->email)
+                                            ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
+                                    }
+                                }
+                            }
+                        } elseif ($ticket->selfassignuser_id) {
+                            $self = User::findOrFail($ticket->selfassignuser_id);
+                            if ($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1) {
+                                Mail::to($self->email)
+                                    ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
+                            }
+                        } else {
+
+                            $users = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                            foreach ($users as $user) {
+                                if ($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1) {
+                                    Mail::to($user->email)
+                                        ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (! $ticket->category) {
+
+                    if ($ticket->myassignuser) {
+                        $assignee = $ticket->ticketassignmutliples;
+                        foreach ($assignee as $assignees) {
+                            $user = User::where('id', $assignees->toassignuser_id)->get();
+                            foreach ($user as $users) {
+                                if ($users->id == $assignees->toassignuser_id && $users->getRoleNames()[0] != 'superadmin' && $users->usetting->emailnotifyon == 1) {
+                                    Mail::to($users->email)
+                                        ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
+                                }
+                            }
+                        }
+                    } elseif ($ticket->selfassignuser_id) {
+                        $self = User::findOrFail($ticket->selfassignuser_id);
+                        if ($self->getRoleNames()[0] != 'superadmin' && $self->usetting->emailnotifyon == 1) {
+                            Mail::to($self->email)
+                                ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
+                        }
+                    } else {
+
+                        $users = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                        foreach ($users as $user) {
+                            if ($user->getRoleNames()[0] != 'superadmin' && $user->usetting->emailnotifyon == 1) {
                                 Mail::to($user->email)
-                                ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                                    ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                             }
                         }
                     }
 
                 }
 
-                $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                foreach($admins as $admin){
-                    if($admin->getRoleNames()[0] == 'superadmin' && $admin->usetting->emailnotifyon == 1){
+                $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                foreach ($admins as $admin) {
+                    if ($admin->getRoleNames()[0] == 'superadmin' && $admin->usetting->emailnotifyon == 1) {
                         Mail::to($admin->email)
-                        ->send( new mailmailablesend( 'send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData ) );
+                            ->send(new mailmailablesend('send_mail_to_agent_when_ticket_closed_by_admin_or_agent', $ticketData));
                     }
                 }
 
-                if($request->rating_on_off){
+                if ($request->rating_on_off) {
                     Mail::to($ticket->cust->email)
-                    ->send( new mailmailablesend( 'send_mail_to_customer_when_ticket_closed_by_admin', $ticketData) );
-                }else{
+                        ->send(new mailmailablesend('send_mail_to_customer_when_ticket_closed_by_admin', $ticketData));
+                } else {
                     Mail::to($ticket->cust->email)
-                    ->send( new mailmailablesend( 'customer_rating', $ticketData) );
+                        ->send(new mailmailablesend('customer_rating', $ticketData));
                 }
 
-                 Mail::to($ccemailsend->ccemails)
-                ->send( new mailmailablesend( 'CCmail_sendemail_whenticketclosed', $ticketData) );
+                Mail::to($ccemailsend->ccemails)
+                    ->send(new mailmailablesend('CCmail_sendemail_whenticketclosed', $ticketData));
 
-            }catch(\Exception $e){
-                return redirect()->back()->with("success", lang('The response to the ticket was successful.', 'alerts'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('success', lang('The response to the ticket was successful.', 'alerts'));
             }
 
-            return redirect()->back()->with("success", lang('The response to the ticket was successful.', 'alerts'));
+            return redirect()->back()->with('success', lang('The response to the ticket was successful.', 'alerts'));
 
-        }else{
+        } else {
             $this->validate($request, [
-                'comment' => 'required'
+                'comment' => 'required',
             ]);
             $tic = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
-            if($tic->comments()->get() != null){
+            if ($tic->comments()->get() != null) {
                 $comm = $tic->comments()->update([
-                    'display' => null
+                    'display' => null,
                 ]);
             }
 
@@ -436,34 +422,32 @@ class CommentsController extends Controller
                 'display' => 1,
             ]);
             foreach ($request->input('comments', []) as $file) {
-                $comment->addMedia(public_path('uploads/comment/' . $file))->toMediaCollection('comments');
+                $comment->addMedia(public_path('uploads/comment/'.$file))->toMediaCollection('comments');
             }
             $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
             $ticket->status = $request->input('status');
             $ticket->replystatus = 'Waiting';
-            if($request->status == 'On-Hold'){
+            if ($request->status == 'On-Hold') {
                 $ticket->note = $request->input('note');
                 // Auto Close Ticket
                 $ticket->auto_close_ticket = null;
                 // Auto Response Ticket
                 $ticket->auto_replystatus = null;
-                //Auto Overdue Ticket
+                // Auto Overdue Ticket
                 $ticket->auto_overdue_ticket = null;
                 $ticket->overduestatus = null;
-            }
-            else{
+            } else {
                 // Auto Closing Ticket
-                if(setting('AUTO_CLOSE_TICKET') == 'no'){
+                if (setting('AUTO_CLOSE_TICKET') == 'no') {
                     $ticket->auto_close_ticket = null;
-                }else{
-                    if(setting('AUTO_CLOSE_TICKET_TIME') == '0'){
+                } else {
+                    if (setting('AUTO_CLOSE_TICKET_TIME') == '0') {
                         $ticket->auto_close_ticket = null;
-                    }else{
-                        if(Auth::check() && Auth::user()){
-                            if($ticket->status == 'Closed'){
+                    } else {
+                        if (Auth::check() && Auth::user()) {
+                            if ($ticket->status == 'Closed') {
                                 $ticket->auto_close_ticket = null;
-                            }
-                            else{
+                            } else {
                                 $ticket->auto_close_ticket = now()->addHours(setting('AUTO_RESPONSETIME_TICKET_TIME'))->addDays(setting('AUTO_CLOSE_TICKET_TIME'));
                             }
                         }
@@ -473,34 +457,33 @@ class CommentsController extends Controller
 
                 // Auto Response Ticket
 
-                if(setting('AUTO_RESPONSETIME_TICKET') == 'no'){
+                if (setting('AUTO_RESPONSETIME_TICKET') == 'no') {
                     $ticket->auto_replystatus = null;
-                }else{
-                    if(setting('AUTO_RESPONSETIME_TICKET_TIME') == '0'){
+                } else {
+                    if (setting('AUTO_RESPONSETIME_TICKET_TIME') == '0') {
                         $ticket->auto_replystatus = null;
-                    }else{
-                        if(Auth::check() && Auth::user()){
+                    } else {
+                        if (Auth::check() && Auth::user()) {
                             $ticket->auto_replystatus = now()->addHours(setting('AUTO_RESPONSETIME_TICKET_TIME'));
                         }
                     }
                 }
                 // End Auto Response Ticket
 
-                 // Auto Overdue Ticket
-                 if(setting('AUTO_OVERDUE_TICKET') == 'no'){
+                // Auto Overdue Ticket
+                if (setting('AUTO_OVERDUE_TICKET') == 'no') {
                     $ticket->auto_overdue_ticket = null;
                     $ticket->overduestatus = null;
-                }else{
-                    if(setting('AUTO_OVERDUE_TICKET_TIME') == '0'){
+                } else {
+                    if (setting('AUTO_OVERDUE_TICKET_TIME') == '0') {
                         $ticket->auto_overdue_ticket = null;
                         $ticket->overduestatus = null;
-                    }else{
-                        if(Auth::check() && Auth::user()){
-                            if($ticket->status == 'Closed'){
+                    } else {
+                        if (Auth::check() && Auth::user()) {
+                            if ($ticket->status == 'Closed') {
                                 $ticket->auto_overdue_ticket = null;
                                 $ticket->overduestatus = null;
-                            }
-                            else{
+                            } else {
                                 $ticket->auto_overdue_ticket = null;
                                 $ticket->overduestatus = null;
                             }
@@ -513,37 +496,35 @@ class CommentsController extends Controller
             $ticket->lastreply_mail = Auth::id();
             $ticket->update();
 
-
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
+            if ($ticket->ticketnote->isEmpty()) {
+                if ($ticket->overduestatus != null) {
 
-                    if($ticket->status == 'On-Hold'){
+                    if ($ticket->status == 'On-Hold') {
                         $output .= '
                         <span class="text-warning font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         ';
-                    }else{
+                    } else {
                         $output .= '
                         <span class="text-info font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         ';
                     }
 
+                } else {
 
-                }else{
-
-                    if($ticket->status == 'On-Hold'){
+                    if ($ticket->status == 'On-Hold') {
                         $output .= '
                         <span class="text-warning font-weight-semibold mx-1">'.$ticket->status.'</span>
                         ';
-                    }else{
+                    } else {
                         $output .= '
                         <span class="text-info font-weight-semibold mx-1">'.$ticket->status.'</span>
                         ';
@@ -551,15 +532,15 @@ class CommentsController extends Controller
 
                 }
 
-            }else{
-                if($ticket->overduestatus != null){
-                    if($ticket->status == 'On-Hold'){
+            } else {
+                if ($ticket->overduestatus != null) {
+                    if ($ticket->status == 'On-Hold') {
                         $output .= '
                         <span class="text-warning font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
-                    }else{
+                    } else {
                         $output .= '
                         <span class="text-info font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
@@ -567,14 +548,14 @@ class CommentsController extends Controller
                         ';
                     }
 
-                }else{
+                } else {
 
-                    if($ticket->status == 'On-Hold'){
+                    if ($ticket->status == 'On-Hold') {
                         $output .= '
                         <span class="text-warning font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
-                    }else{
+                    } else {
                         $output .= '
                         <span class="text-info font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -603,7 +584,7 @@ class CommentsController extends Controller
 
             $ccemailsend = CCMAILS::where('ticket_id', $ticket->id)->first();
 
-            if($ticket->cust->userType == 'Guest'){
+            if ($ticket->cust->userType == 'Guest') {
                 $ticketData = [
                     'ticket_username' => $ticket->cust->username,
                     'ticket_title' => $ticket->subject,
@@ -615,7 +596,7 @@ class CommentsController extends Controller
                     'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
                 ];
             }
-            if($ticket->cust->userType == 'Customer'){
+            if ($ticket->cust->userType == 'Customer') {
                 $ticketData = [
                     'ticket_username' => $ticket->cust->username,
                     'ticket_title' => $ticket->subject,
@@ -628,19 +609,19 @@ class CommentsController extends Controller
                 ];
             }
 
-            try{
+            try {
 
                 Mail::to($ticket->cust->email)
-                ->send( new mailmailablesend( 'customer_send_ticket_reply', $ticketData) );
+                    ->send(new mailmailablesend('customer_send_ticket_reply', $ticketData));
 
                 Mail::to($ccemailsend->ccemails)
-                ->send( new mailmailablesend( 'customer_send_ticket_reply', $ticketData) );
+                    ->send(new mailmailablesend('customer_send_ticket_reply', $ticketData));
 
-            }catch(\Exception $e){
-                return redirect()->back()->with("success", lang('The response to the ticket was successful.', 'alerts'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('success', lang('The response to the ticket was successful.', 'alerts'));
             }
 
-            return redirect()->back()->with("success", lang('The response to the ticket was successful.', 'alerts'));
+            return redirect()->back()->with('success', lang('The response to the ticket was successful.', 'alerts'));
         }
 
     }
@@ -649,7 +630,7 @@ class CommentsController extends Controller
     {
         $path = public_path('uploads/comment');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             mkdir($path, 0777, true);
         }
 
@@ -660,61 +641,61 @@ class CommentsController extends Controller
         $file->move($path, $name);
 
         return response()->json([
-            'name'          => $name,
+            'name' => $name,
             'original_name' => $file->getClientOriginalName(),
         ]);
     }
 
-
-    public function updateedit(Request $request, $id){
+    public function updateedit(Request $request, $id)
+    {
         if ($request->has('message')) {
 
             $this->validate($request, [
-                'message' => 'required'
+                'message' => 'required',
             ]);
             $ticket = Ticket::findOrFail($id);
             $ticket->message = $request->input('message');
 
             $ticket->update();
+
             return redirect()->back();
 
-        }else{
+        } else {
             $this->validate($request, [
-                'editcomment' => 'required'
+                'editcomment' => 'required',
             ]);
             $comment = TicketComment::findOrFail($id);
             $comment->comment = $request->input('editcomment');
 
             $comment->update();
 
-
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $comment->ticket->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($comment->ticket->ticketnote->isEmpty()){
-                if($comment->ticket->overduestatus != null){
+            if ($comment->ticket->ticketnote->isEmpty()) {
+                if ($comment->ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$comment->ticket->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                     ';
                 }
 
-            }else{
-                if($comment->ticket->overduestatus != null){
+            } else {
+                if ($comment->ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$comment->ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-info font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -739,7 +720,6 @@ class CommentsController extends Controller
             return redirect()->back();
         }
 
-
     }
 
     public function deletecomment(Request $request, $id)
@@ -747,33 +727,33 @@ class CommentsController extends Controller
         $comment = TicketComment::findOrFail($id);
         $comment->delete();
 
-        $tickethistory = new tickethistory();
+        $tickethistory = new tickethistory;
         $tickethistory->ticket_id = $comment->ticket->id;
 
         $output = '<div class="d-flex align-items-center">
             <div class="mt-0">
                 <p class="mb-0 fs-12 mb-1">Status
             ';
-        if($comment->ticket->ticketnote->isEmpty()){
-            if($comment->ticket->overduestatus != null){
+        if ($comment->ticket->ticketnote->isEmpty()) {
+            if ($comment->ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$comment->ticket->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                 ';
             }
 
-        }else{
-            if($comment->ticket->overduestatus != null){
+        } else {
+            if ($comment->ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-primary font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$comment->ticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-info font-weight-semibold mx-1">'.$comment->ticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -795,30 +775,29 @@ class CommentsController extends Controller
         $tickethistory->ticketactions = $output;
         $tickethistory->save();
 
-        return response()->json(['success' => lang('The ticket comment has been deleted successfully.', 'alerts'),]);
+        return response()->json(['success' => lang('The ticket comment has been deleted successfully.', 'alerts')]);
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($ticket_id)
-    {
-
-    }
+    public function destroy($ticket_id) {}
 
     public function imagedestroy($id)
-    {   //For Deleting Users
+    {   // For Deleting Users
         $commentss = Media::findOrFail($id);
         $commentss->delete();
+
         return response()->json([
-            'success' => lang('Deleted Successfully', 'alerts')
+            'success' => lang('Deleted Successfully', 'alerts'),
         ]);
     }
 
-    public function reopenticket(Request $req){
+    public function reopenticket(Request $req)
+    {
 
         $reopenticket = Ticket::find($req->reopenid);
         $reopenticket->status = 'Re-Open';
@@ -827,34 +806,33 @@ class CommentsController extends Controller
         $reopenticket->lastreply_mail = Auth::id();
         $reopenticket->update();
 
-
-        $tickethistory = new tickethistory();
+        $tickethistory = new tickethistory;
         $tickethistory->ticket_id = $reopenticket->id;
 
         $output = '<div class="d-flex align-items-center">
             <div class="mt-0">
                 <p class="mb-0 fs-12 mb-1">Status
             ';
-        if($reopenticket->ticketnote->isEmpty()){
-            if($reopenticket->overduestatus != null){
+        if ($reopenticket->ticketnote->isEmpty()) {
+            if ($reopenticket->overduestatus != null) {
                 $output .= '
                 <span class="text-teal font-weight-semibold mx-1">'.$reopenticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$reopenticket->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-teal font-weight-semibold mx-1">'.$reopenticket->status.'</span>
                 ';
             }
 
-        }else{
-            if($reopenticket->overduestatus != null){
+        } else {
+            if ($reopenticket->overduestatus != null) {
                 $output .= '
                 <span class="text-teal font-weight-semibold mx-1">'.$reopenticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$reopenticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-teal font-weight-semibold mx-1">'.$reopenticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -876,14 +854,10 @@ class CommentsController extends Controller
         $tickethistory->ticketactions = $output;
         $tickethistory->save();
 
-
-
-
-
         $cust = Customer::with('custsetting')->find($reopenticket->cust_id);
         $cust->notify(new TicketCreateNotifications($reopenticket));
 
-        if($reopenticket->cust->userType == 'Guest'){
+        if ($reopenticket->cust->userType == 'Guest') {
             $ticketData = [
                 'ticket_username' => $reopenticket->cust->username,
                 'ticket_title' => $reopenticket->subject,
@@ -895,7 +869,7 @@ class CommentsController extends Controller
                 'ticket_admin_url' => url('/admin/ticket-view/'.$reopenticket->ticket_id),
             ];
         }
-        if($reopenticket->cust->userType == 'Customer'){
+        if ($reopenticket->cust->userType == 'Customer') {
             $ticketData = [
                 'ticket_username' => $reopenticket->cust->username,
                 'ticket_title' => $reopenticket->subject,
@@ -908,25 +882,23 @@ class CommentsController extends Controller
             ];
         }
 
-        try{
+        try {
 
             Mail::to($ccemailsend->ccemails)
-            ->send( new mailmailablesend( 'customer_send_ticket_reopen', $ticketData) );
+                ->send(new mailmailablesend('customer_send_ticket_reopen', $ticketData));
 
             Mail::to($reopenticket->cust->email)
-            ->send(new mailmailablesend('customer_send_ticket_reopen', $ticketData ) );
+                ->send(new mailmailablesend('customer_send_ticket_reopen', $ticketData));
 
-
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => lang('The ticket has been successfully reopened.', 'alerts'),
             ]);
         }
+
         return response()->json([
             'success' => lang('The ticket has been successfully reopened.', 'alerts'),
         ]);
 
     }
-
 }

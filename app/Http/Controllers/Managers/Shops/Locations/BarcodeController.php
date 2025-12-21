@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Managers\Shops\Locations;
-
 
 use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
@@ -11,7 +9,8 @@ use Illuminate\Support\Str;
 
 class BarcodeController extends Controller
 {
-    public function all(Request $request){
+    public function all(Request $request)
+    {
 
         $products = Product::all();
 
@@ -22,27 +21,29 @@ class BarcodeController extends Controller
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
 
         $availables = collect([
             ['id' => '1', 'label' => 'Publico'],
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $categories = FaqCategorie::latest()->available()->get();
-        $categories->prepend('' , '');
-        $categories = $categories->pluck('title','id');
+        $categories->prepend('', '');
+        $categories = $categories->pluck('title', 'id');
 
         return view('managers.views.settings.faqs.faqs.create')->with([
             'availables' => $availables,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $faq = Faq::uid($uid);
 
@@ -51,10 +52,10 @@ class BarcodeController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $categories = FaqCategorie::latest()->available()->get();
-        $categories = $categories->pluck('title','id');
+        $categories = $categories->pluck('title', 'id');
 
         return view('managers.views.settings.faqs.faqs.edit')->with([
             'availables' => $availables,
@@ -63,7 +64,8 @@ class BarcodeController extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $faq = new Faq;
         $faq->uid = $this->generate_uid('faqs');
@@ -84,7 +86,8 @@ class BarcodeController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $faq = Faq::uid($request->uid);
         $faq->title = $request->title;
@@ -104,12 +107,12 @@ class BarcodeController extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
-       $faq = Faq::uid($uid);
-       $faq->delete();
+        $faq = Faq::uid($uid);
+        $faq->delete();
 
-       return redirect()->route('manager.faqs');
+        return redirect()->route('manager.faqs');
     }
-
 }

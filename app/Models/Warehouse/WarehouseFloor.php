@@ -7,16 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Warehouse\WarehouseInventorySlot;
-
 
 class WarehouseFloor extends Model
 {
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_floors';
+
     protected $primaryKey = 'id';
+
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     /**
@@ -120,7 +121,6 @@ class WarehouseFloor extends Model
         })->count();
     }
 
-
     public function getOccupiedSlotsCount(): int
     {
         return WarehouseInventorySlot::whereHas('location', function ($query) {
@@ -136,6 +136,7 @@ class WarehouseFloor extends Model
         }
 
         $occupied = $this->getOccupiedSlotsCount();
+
         return ($occupied / $total) * 100;
     }
 

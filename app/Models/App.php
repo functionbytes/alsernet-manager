@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,14 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App slug($slug)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App uid($uid)
+ *
  * @mixin \Eloquent
  */
 class App extends Model
 {
-
     use HasFactory;
 
-    protected $table = "apps";
+    protected $table = 'apps';
 
     protected $fillable = [
         'uid',
@@ -32,20 +31,20 @@ class App extends Model
         'stock',
         'available',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
     public function scopeUid($query, $uid)
-{
+    {
         return $query->where('uid', $uid)->first();
-}
+    }
 
-    public function scopeSlug($query ,$slug)
+    public function scopeSlug($query, $slug)
     {
         return $query->where('slug', $slug)->first();
     }
@@ -59,5 +58,4 @@ class App extends Model
     {
         return $this->hasMany('App\Models\Location');
     }
-
 }

@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrestaShopLogger extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_log';
+
     protected $primaryKey = 'id_log';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,7 +33,7 @@ class PrestaShopLogger extends Model
         'in_all_shops',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_log' => 'integer',

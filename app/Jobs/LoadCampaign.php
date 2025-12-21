@@ -2,29 +2,30 @@
 
 namespace App\Jobs;
 
+use App\Library\Contracts\CampaignInterface;
+use App\Library\Traits\Trackable;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Library\Contracts\CampaignInterface;
-use App\Library\Traits\Trackable;
-use Closure;
 
 class LoadCampaign implements ShouldQueue
 {
-    use Trackable;
     use Batchable;
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use Trackable;
 
     public $timeout = 7200;
+
     public $failOnTimeout = true;
+
     public $tries = 1;
+
     public $maxExceptions = 1;
 
     protected CampaignInterface $campaign;

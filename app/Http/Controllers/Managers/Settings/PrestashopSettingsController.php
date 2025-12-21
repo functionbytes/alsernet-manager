@@ -65,7 +65,7 @@ class PrestashopSettingsController extends Controller
                 $settings['prestashop_db_username'],
                 $settings['prestashop_db_password'],
                 $settings['prestashop_db_database'],
-                (int)$settings['prestashop_db_port']
+                (int) $settings['prestashop_db_port']
             );
 
             if ($conn) {
@@ -75,7 +75,7 @@ class PrestashopSettingsController extends Controller
                 return response()->json([
                     'success' => true,
                     'status' => 'online',
-                    'message' => 'Conexión a PrestaShop establecida correctamente'
+                    'message' => 'Conexión a PrestaShop establecida correctamente',
                 ]);
             } else {
                 Setting::updatePrestashopSyncStatus('offline');
@@ -83,17 +83,17 @@ class PrestashopSettingsController extends Controller
                 return response()->json([
                     'success' => false,
                     'status' => 'offline',
-                    'message' => 'No se pudo conectar a la base de datos de PrestaShop: ' . mysqli_connect_error()
+                    'message' => 'No se pudo conectar a la base de datos de PrestaShop: '.mysqli_connect_error(),
                 ], 500);
             }
 
         } catch (\Exception $e) {
-            Log::error('Error verificando conexión PrestaShop: ' . $e->getMessage());
+            Log::error('Error verificando conexión PrestaShop: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al verificar conexión: ' . $e->getMessage(),
-                'status' => 'error'
+                'message' => 'Error al verificar conexión: '.$e->getMessage(),
+                'status' => 'error',
             ], 500);
         }
     }
@@ -117,7 +117,7 @@ class PrestashopSettingsController extends Controller
         return response()->json([
             'success' => true,
             'enabled' => $isEnabled === 'yes',
-            'message' => $isEnabled === 'yes' ? 'PrestaShop habilitado' : 'PrestaShop deshabilitado'
+            'message' => $isEnabled === 'yes' ? 'PrestaShop habilitado' : 'PrestaShop deshabilitado',
         ]);
     }
 
@@ -130,7 +130,7 @@ class PrestashopSettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Estadísticas reseteadas correctamente'
+            'message' => 'Estadísticas reseteadas correctamente',
         ]);
     }
 
@@ -141,10 +141,10 @@ class PrestashopSettingsController extends Controller
     {
         $stats = Setting::getPrestashopStats();
 
-        if (!$stats) {
+        if (! $stats) {
             return response()->json([
                 'success' => false,
-                'message' => 'Configuración no encontrada'
+                'message' => 'Configuración no encontrada',
             ], 404);
         }
 
@@ -160,7 +160,7 @@ class PrestashopSettingsController extends Controller
                 'last_check' => $lastCheckDate?->diffForHumans() ?? null,
                 'last_status' => $stats['last_sync_status'] ?? null,
                 'enabled' => $stats['enabled'] ?? false,
-            ]
+            ],
         ]);
     }
 
@@ -178,18 +178,18 @@ class PrestashopSettingsController extends Controller
                 $settings['prestashop_db_username'],
                 $settings['prestashop_db_password'],
                 $settings['prestashop_db_database'],
-                (int)$settings['prestashop_db_port']
+                (int) $settings['prestashop_db_port']
             );
 
-            if (!$conn) {
+            if (! $conn) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se pudo conectar a la base de datos de PrestaShop'
+                    'message' => 'No se pudo conectar a la base de datos de PrestaShop',
                 ], 500);
             }
 
             // Contar órdenes pendientes (ejemplo)
-            $result = mysqli_query($conn, "SELECT COUNT(*) as total FROM ps_orders WHERE valid = 1");
+            $result = mysqli_query($conn, 'SELECT COUNT(*) as total FROM ps_orders WHERE valid = 1');
             $row = mysqli_fetch_assoc($result);
             $pendingOrders = $row['total'] ?? 0;
 
@@ -198,13 +198,197 @@ class PrestashopSettingsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Sincronización funcionando correctamente',
-                'pending_orders' => $pendingOrders
+                'pending_orders' => $pendingOrders,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error en sincronización: ' . $e->getMessage()
+                'message' => 'Error en sincronización: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sync product blockades from external MySQL database
+     */
+    public function syncProductBlockades(Request $request)
+    {
+        try {
+            $fresh = $request->input('fresh', false);
+
+            // Execute artisan command
+            $exitCode = \Artisan::call('migrate:product-blockades', [
+                '--fresh' => $fresh,
+            ]);
+
+            $output = \Artisan::output();
+
+            // Save last sync info
+            Setting::set('product_blockades_last_sync', now());
+            Setting::set('product_blockades_sync_count', (int) Setting::get('product_blockades_sync_count', 0) + 1);
+
+            return response()->json([
+                'success' => $exitCode === 0,
+                'message' => $exitCode === 0
+                    ? 'Sincronización de bloqueos completada exitosamente'
+                    : 'Sincronización completada con errores',
+                'output' => $output,
+                'last_sync' => now()->format('Y-m-d H:i:s'),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error syncing product blockades: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al sincronizar bloqueos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get product blockades sync status
+     */
+    public function getBlockadesSyncStatus()
+    {
+        $lastSync = Setting::get('product_blockades_last_sync');
+        $syncCount = Setting::get('product_blockades_sync_count', 0);
+        $totalBlockades = \App\Models\Document\DocumentProductBlockade::count();
+
+        return response()->json([
+            'success' => true,
+            'last_sync' => $lastSync ? \Carbon\Carbon::parse($lastSync)->diffForHumans() : 'Nunca',
+            'sync_count' => (int) $syncCount,
+            'total_blockades' => $totalBlockades,
+        ]);
+    }
+
+    /**
+     * Create a new product blockade manually
+     */
+    public function createBlockade(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'source_id' => 'required|integer',
+            'product_id' => 'nullable|integer|required_without:product_attribute_id',
+            'product_attribute_id' => 'nullable|integer|required_without:product_id',
+            'blockade_type' => 'required|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Datos inválidos',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            // Check if already exists
+            $exists = \App\Models\Document\DocumentProductBlockade::hasBlockade(
+                $request->product_id,
+                $request->product_attribute_id,
+                $request->blockade_type
+            );
+
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Este bloqueo ya existe para este producto',
+                ], 409);
+            }
+
+            $blockade = \App\Models\Document\DocumentProductBlockade::create([
+                'source_id' => $request->source_id,
+                'product_id' => $request->product_id,
+                'product_attribute_id' => $request->product_attribute_id,
+                'blockade_type' => $request->blockade_type,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bloqueo creado exitosamente',
+                'blockade' => $blockade,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating product blockade: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el bloqueo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Save product blockade labels configuration
+     */
+    public function saveBlockadeLabels(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'labels' => 'required|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Etiquetas inválidas',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            Setting::set('product_blockade_labels', $request->labels);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Etiquetas guardadas exitosamente',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error saving blockade labels: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar las etiquetas: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a product blockade
+     */
+    public function deleteBlockade(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'id' => 'required|integer|exists:document_product_blockades,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID inválido',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $blockade = \App\Models\Document\DocumentProductBlockade::find($request->id);
+            $blockade->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bloqueo eliminado exitosamente',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting product blockade: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el bloqueo: '.$e->getMessage(),
             ], 500);
         }
     }

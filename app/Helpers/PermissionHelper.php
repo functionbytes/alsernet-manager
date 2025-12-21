@@ -11,11 +11,12 @@ class PermissionHelper
      */
     public static function hasAnyRole($roles)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
         $roles = is_array($roles) ? $roles : explode('|', $roles);
+
         return Auth::user()->hasAnyRole($roles);
     }
 
@@ -24,11 +25,12 @@ class PermissionHelper
      */
     public static function hasAllRoles($roles)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
         $roles = is_array($roles) ? $roles : explode('|', $roles);
+
         return Auth::user()->hasAllRoles($roles);
     }
 
@@ -37,11 +39,12 @@ class PermissionHelper
      */
     public static function hasAnyPermission($permissions)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
         $permissions = is_array($permissions) ? $permissions : explode('|', $permissions);
+
         return Auth::user()->hasAnyPermission($permissions);
     }
 
@@ -50,7 +53,7 @@ class PermissionHelper
      */
     public static function can($permission)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -62,7 +65,7 @@ class PermissionHelper
      */
     public static function canAccessModule($module)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -75,7 +78,7 @@ class PermissionHelper
             'returns' => ['super-admin', 'admin', 'manager', 'administrative', 'customer'],
         ];
 
-        if (!isset($modulePermissions[$module])) {
+        if (! isset($modulePermissions[$module])) {
             return false;
         }
 
@@ -87,7 +90,7 @@ class PermissionHelper
      */
     public static function getDefaultModule()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return null;
         }
 
@@ -121,7 +124,7 @@ class PermissionHelper
      */
     public static function canManageReturn($return, $action = 'view')
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 

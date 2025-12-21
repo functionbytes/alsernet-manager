@@ -145,7 +145,7 @@ class SettingsController extends Controller
 
         // Convert null values to false for checkboxes
         foreach ($validated as $key => $value) {
-            if (is_null($value) && strpos($key, '_') !== false && !in_array($key, ['customer_ticketid', 'employee_protect_name'])) {
+            if (is_null($value) && strpos($key, '_') !== false && ! in_array($key, ['customer_ticketid', 'employee_protect_name'])) {
                 $validated[$key] = false;
             }
         }
@@ -154,7 +154,7 @@ class SettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Configuración de tickets actualizada correctamente'
+            'message' => 'Configuración de tickets actualizada correctamente',
         ]);
     }
 

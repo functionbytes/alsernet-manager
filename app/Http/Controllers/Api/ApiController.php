@@ -12,10 +12,11 @@ class ApiController extends Controller
 
     protected $policyClass;
 
-    public function include(string $relationship) : bool {
+    public function include(string $relationship): bool
+    {
         $param = request()->get('include');
 
-        if (!isset($param)) {
+        if (! isset($param)) {
             return false;
         }
 
@@ -24,9 +25,11 @@ class ApiController extends Controller
         return in_array(strtolower($relationship), $includeValues);
     }
 
-    public function isAble($ability, $targetModel) {
+    public function isAble($ability, $targetModel)
+    {
         try {
             $this->authorize($ability, [$targetModel, $this->policyClass]);
+
             return true;
         } catch (AuthorizationException $ex) {
             return false;

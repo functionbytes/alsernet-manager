@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RangePrice extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_range_price';
+
     protected $primaryKey = 'id_range_price';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,7 +22,7 @@ class RangePrice extends Model
         'delimiter2',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_range_price' => 'integer',
         'id_carrier' => 'integer',
     ];

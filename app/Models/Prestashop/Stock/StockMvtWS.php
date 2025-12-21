@@ -2,20 +2,21 @@
 
 namespace App\Models\Prestashop\Stock;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\StockMvtReason;
-use App\Models\Prestashop\Stock\Warehouse;
-use App\Models\Prestashop\Employee;
-use App\Models\Prestashop\Product;
 use App\Models\Prestashop\Combination;
 use App\Models\Prestashop\Currency;
+use App\Models\Prestashop\Employee;
+use App\Models\Prestashop\Product;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockMvtWS extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_mvt';
+
     protected $primaryKey = 'id_stock_mvt';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -41,7 +42,7 @@ class StockMvtWS extends Model
         'reference',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_employee' => 'integer',
         'id_stock' => 'integer',

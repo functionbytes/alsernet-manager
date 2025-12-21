@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
@@ -22,8 +21,8 @@ class SendingServerController extends Controller
         $user = \Auth::guard('api')->user();
 
         // authorize
-        if (!$user->admin->can('readAll', new \Acelle\Model\SendingServer())) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->admin->can('readAll', new \Acelle\Model\SendingServer)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         $servers = \Acelle\Model\SendingServer::active()

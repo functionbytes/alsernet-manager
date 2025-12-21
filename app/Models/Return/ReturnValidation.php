@@ -33,8 +33,11 @@ class ReturnValidation extends Model
      * Estados de validación disponibles
      */
     const STATUS_PENDING = 'pending';
+
     const STATUS_PASSED = 'passed';
+
     const STATUS_FAILED = 'failed';
+
     const STATUS_MANUAL_REVIEW = 'manual_review';
 
     /**

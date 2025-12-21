@@ -24,7 +24,7 @@ trait HasUid
 
     public function generateUid(): void
     {
-        $this->uid = uniqid();
+        $this->uid = \Illuminate\Support\Str::ulid()->toBase32();
     }
 
     public function getUid(): ?string

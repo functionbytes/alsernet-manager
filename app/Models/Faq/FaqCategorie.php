@@ -3,8 +3,8 @@
 namespace App\Models\Faq;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie ascending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie available()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie descending()
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FaqCategorie whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class FaqCategorie extends Model
@@ -44,29 +46,30 @@ class FaqCategorie extends Model
         'slug',
         'available',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function scopeDescending($query)
-{
-    return $query->orderBy('created_at', 'desc');
-}
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
 
-public function scopeAscending($query)
-{
-    return $query->orderBy('created_at', 'asc');
-}
-    public function scopeId($query ,$id)
+    public function scopeAscending($query)
+    {
+        return $query->orderBy('created_at', 'asc');
+    }
+
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
-    public function scopeSlug($query ,$slug)
+    public function scopeSlug($query, $slug)
     {
         return $query->where('slug', $slug)->first();
     }
 
-    public function scopeUid($query ,$uid)
+    public function scopeUid($query, $uid)
     {
         return $query->where('uid', $uid)->first();
     }
@@ -78,7 +81,6 @@ public function scopeAscending($query)
 
     public function faqs(): HasMany
     {
-        return $this->hasMany('App\Models\Faq\Instruction','categorie_id');
+        return $this->hasMany('App\Models\Faq\Instruction', 'categorie_id');
     }
-
 }

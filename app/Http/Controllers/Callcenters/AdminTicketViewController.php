@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Apptitle;
-use App\Models\Footertext;
-use App\Models\Seosetting;
-use App\Models\Pages;
-use App\Models\Ticket\Ticket;
-use App\Models\Ticket\TicketComment;
-use App\Models\Ticket\Category;
-use App\Models\Groupsusers;
-use Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\tickethistory;
 use App\Models\Customer;
+use App\Models\Footertext;
+use App\Models\Pages;
+use App\Models\Seosetting;
+use App\Models\Ticket\Ticket;
+use App\Models\tickethistory;
+use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminTicketViewController extends Controller
 {
@@ -43,11 +39,10 @@ class AdminTicketViewController extends Controller
         $custsimillarticket = Ticket::where('cust_id', $cust_id)->latest('updated_at')->get();
         $data['custsimillarticket'] = $custsimillarticket;
 
-
         $active = Ticket::where('cust_id', $cust_id)->whereIn('status', ['New', 'Re-Open', 'Inprogress'])->get();
-       $data['active'] = $active;
+        $data['active'] = $active;
 
-       $closed = Ticket::where('cust_id', $cust_id)->where('status', 'Closed')->get();
+        $closed = Ticket::where('cust_id', $cust_id)->where('status', 'Closed')->get();
         $data['closed'] = $closed;
 
         $onhold = Ticket::where('cust_id', $cust_id)->where('status', 'On-Hold')->get();
@@ -70,13 +65,12 @@ class AdminTicketViewController extends Controller
         $post = Pages::all();
         $data['page'] = $post;
 
-        $selfassignedtickets = Ticket::where('selfassignuser_id', auth()->id())->where('status', '!=' ,'Closed')->where('status', '!=' ,'Suspend')->latest('updated_at')->get();
+        $selfassignedtickets = Ticket::where('selfassignuser_id', auth()->id())->where('status', '!=', 'Closed')->where('status', '!=', 'Suspend')->latest('updated_at')->get();
         $data['selfassignedtickets'] = $selfassignedtickets;
 
         // ticket note
         $ticketnote = DB::table('ticketnotes')->pluck('ticketnotes.ticket_id')->toArray();
         $data['ticketnote'] = $ticketnote;
-
 
         $selfassignedticketsnew = Ticket::where('selfassignuser_id', auth()->id())->where('status', 'New')->count();
         $data['selfassignedticketsnew'] = $selfassignedticketsnew;
@@ -148,33 +142,33 @@ class AdminTicketViewController extends Controller
 
             $commenttrashedrestore->each->restore();
 
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $tickettrashedrestore->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($tickettrashedrestore->ticketnote->isEmpty()){
-                if($tickettrashedrestore->overduestatus != null){
+            if ($tickettrashedrestore->ticketnote->isEmpty()) {
+                if ($tickettrashedrestore->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     ';
                 }
 
-            }else{
-                if($tickettrashedrestore->overduestatus != null){
+            } else {
+                if ($tickettrashedrestore->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -196,50 +190,44 @@ class AdminTicketViewController extends Controller
             $tickethistory->ticketactions = $output;
             $tickethistory->save();
 
-
-
-
-
-            foreach($tickettrashedrestore->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-            {
+            foreach ($tickettrashedrestore->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                 $deletetickethistory->restore();
             }
 
-
-            $tickettrashedrestore->restore();
-            return response()->json(['success'=>lang('The ticket was successfully restore.', 'alerts')]);
-        }else{
-
-
             $tickettrashedrestore->restore();
 
-            $tickethistory = new tickethistory();
+            return response()->json(['success' => lang('The ticket was successfully restore.', 'alerts')]);
+        } else {
+
+            $tickettrashedrestore->restore();
+
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $tickettrashedrestore->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($tickettrashedrestore->ticketnote->isEmpty()){
-                if($tickettrashedrestore->overduestatus != null){
+            if ($tickettrashedrestore->ticketnote->isEmpty()) {
+                if ($tickettrashedrestore->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     ';
                 }
 
-            }else{
-                if($tickettrashedrestore->overduestatus != null){
+            } else {
+                if ($tickettrashedrestore->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$tickettrashedrestore->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -261,16 +249,11 @@ class AdminTicketViewController extends Controller
             $tickethistory->ticketactions = $output;
             $tickethistory->save();
 
-
-
-
-
-            foreach($tickettrashedrestore->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-            {
+            foreach ($tickettrashedrestore->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                 $deletetickethistory->restore();
             }
 
-            return response()->json(['success'=> lang('The ticket was successfully restore.', 'alerts')]);
+            return response()->json(['success' => lang('The ticket was successfully restore.', 'alerts')]);
 
         }
     }
@@ -280,19 +263,18 @@ class AdminTicketViewController extends Controller
         $tickettrasheddelete = Ticket::onlyTrashed()->findOrFail($id);
         $commenttrasheddelete = $tickettrasheddelete->comments()->onlyTrashed()->get();
 
-
         if (count($commenttrasheddelete) > 0) {
             $media = $tickettrasheddelete->getMedia('ticket');
 
             foreach ($media as $medias) {
 
-                    $medias->forceDelete();
+                $medias->forceDelete();
 
             }
             $medias = $tickettrasheddelete->comments()->onlyTrashed()->get();
 
             foreach ($medias as $mediass) {
-                foreach($mediass->getMedia('comments') as $mediasss){
+                foreach ($mediass->getMedia('comments') as $mediasss) {
 
                     $mediasss->forceDelete();
                 }
@@ -300,33 +282,31 @@ class AdminTicketViewController extends Controller
             }
             $commenttrasheddelete->each->forceDelete();
 
-            foreach($tickettrasheddelete->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-            {
+            foreach ($tickettrasheddelete->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                 $deletetickethistory->forceDelete();
             }
             $tickettrasheddelete->forceDelete();
-            return response()->json(['success'=>lang('The ticket was successfully deleted.', 'alerts')]);
-        }else{
+
+            return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
+        } else {
 
             $media = $tickettrasheddelete->getMedia('ticket');
 
             foreach ($media as $medias) {
 
-                    $medias->forceDelete();
+                $medias->forceDelete();
 
             }
 
-            foreach($tickettrasheddelete->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-            {
+            foreach ($tickettrasheddelete->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                 $deletetickethistory->forceDelete();
             }
             $tickettrasheddelete->forceDelete();
 
-            return response()->json(['success'=> lang('The ticket was successfully deleted.', 'alerts')]);
+            return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
 
         }
     }
-
 
     public function tickettrashedview($id)
     {
@@ -348,7 +328,6 @@ class AdminTicketViewController extends Controller
         return view('admin.assignedtickets.trashedticketview')->with($data);
     }
 
-
     public function alltrashedticketrestore(Request $request)
     {
 
@@ -356,15 +335,16 @@ class AdminTicketViewController extends Controller
 
         $sendmails = Ticket::onlyTrashed()->whereIn('id', $id_array)->get();
 
-        foreach($sendmails as $tickettrashedrestoreall){
+        foreach ($sendmails as $tickettrashedrestoreall) {
             $commenttrashedrestorealls = $tickettrashedrestoreall->comments()->onlyTrashed()->get();
-            foreach($commenttrashedrestorealls as $commenttrashedrestoreall){
-                    $commenttrashedrestoreall->restore();
+            foreach ($commenttrashedrestorealls as $commenttrashedrestoreall) {
+                $commenttrashedrestoreall->restore();
             }
             $tickettrashedrestoreall->restore();
 
         }
-        return response()->json(['success'=> lang('The ticket was successfully restore.', 'alerts')]);
+
+        return response()->json(['success' => lang('The ticket was successfully restore.', 'alerts')]);
 
     }
 
@@ -374,22 +354,21 @@ class AdminTicketViewController extends Controller
 
         $sendmails = Ticket::onlyTrashed()->whereIn('id', $id_array)->get();
 
-        foreach($sendmails as $tickettrasheddeleteeall){
+        foreach ($sendmails as $tickettrasheddeleteeall) {
 
             $commenttrasheddeleteall = $tickettrasheddeleteeall->comments()->onlyTrashed()->get();
-
 
             if (count($commenttrasheddeleteall) > 0) {
                 $media = $tickettrasheddeleteeall->getMedia('ticket');
 
                 foreach ($media as $medias) {
 
-                        $medias->forceDelete();
+                    $medias->forceDelete();
 
                 }
 
                 foreach ($commenttrasheddeleteall as $mediass) {
-                    foreach($mediass->getMedia('comments') as $mediasss){
+                    foreach ($mediass->getMedia('comments') as $mediasss) {
 
                         $mediasss->forceDelete();
                     }
@@ -397,15 +376,14 @@ class AdminTicketViewController extends Controller
                     $mediass->forceDelete();
                 }
 
-                foreach($tickettrasheddeleteeall->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-                {
+                foreach ($tickettrasheddeleteeall->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                     $deletetickethistory->forceDelete();
                 }
 
-
                 $sendmails->each->forceDelete();
-                return response()->json(['success'=>lang('The ticket was successfully deleted.', 'alerts')]);
-            }else{
+
+                return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
+            } else {
 
                 $media = $tickettrasheddeleteeall->getMedia('ticket');
 
@@ -415,57 +393,54 @@ class AdminTicketViewController extends Controller
 
                 }
 
-                foreach($tickettrasheddeleteeall->ticket_history()->onlyTrashed()->get() as $deletetickethistory)
-                {
+                foreach ($tickettrasheddeleteeall->ticket_history()->onlyTrashed()->get() as $deletetickethistory) {
                     $deletetickethistory->forceDelete();
                 }
 
-
                 $sendmails->each->forceDelete();
 
-                return response()->json(['success'=> lang('The ticket was successfully deleted.', 'alerts')]);
+                return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
 
             }
 
         }
     }
 
-
     public function suspend(Request $request)
     {
-        if($request->unsuspend == 'Inprogress'){
+        if ($request->unsuspend == 'Inprogress') {
             $ticketsuspend = Ticket::find($request->ticket_id);
             $ticketsuspend->status = 'Inprogress';
             $ticketsuspend->lastreply_mail = Auth::id();
             $ticketsuspend->update();
 
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticketsuspend->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticketsuspend->ticketnote->isEmpty()){
-                if($ticketsuspend->overduestatus != null){
+            if ($ticketsuspend->ticketnote->isEmpty()) {
+                if ($ticketsuspend->overduestatus != null) {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticketsuspend->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     ';
                 }
 
-            }else{
-                if($ticketsuspend->overduestatus != null){
+            } else {
+                if ($ticketsuspend->overduestatus != null) {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticketsuspend->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -487,43 +462,39 @@ class AdminTicketViewController extends Controller
             $tickethistory->ticketactions = $output;
             $tickethistory->save();
 
-
-
-        }
-        else{
+        } else {
             $ticketsuspend = Ticket::find($request->ticket_id);
             $ticketsuspend->status = 'Suspend';
             $ticketsuspend->lastreply_mail = Auth::id();
             $ticketsuspend->update();
 
-
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticketsuspend->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticketsuspend->ticketnote->isEmpty()){
-                if($ticketsuspend->overduestatus != null){
+            if ($ticketsuspend->ticketnote->isEmpty()) {
+                if ($ticketsuspend->overduestatus != null) {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticketsuspend->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     ';
                 }
 
-            }else{
-                if($ticketsuspend->overduestatus != null){
+            } else {
+                if ($ticketsuspend->overduestatus != null) {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticketsuspend->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticketsuspend->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -545,13 +516,10 @@ class AdminTicketViewController extends Controller
             $tickethistory->ticketactions = $output;
             $tickethistory->save();
 
-
         }
-
 
         return response()->json(['success' => lang('Update Successfully')]);
     }
-
 
     public function mysuspendtickets()
     {
@@ -647,9 +615,9 @@ class AdminTicketViewController extends Controller
         $post = Pages::all();
         $data['page'] = $post;
 
-        $allactiveassignedtickets = Ticket::whereIn('status', ['Re-Open','Inprogress','On-Hold'])->leftjoin('ticketassignchildren', 'ticketassignchildren.ticket_id', 'tickets.id')->where(function($r){
+        $allactiveassignedtickets = Ticket::whereIn('status', ['Re-Open', 'Inprogress', 'On-Hold'])->leftjoin('ticketassignchildren', 'ticketassignchildren.ticket_id', 'tickets.id')->where(function ($r) {
             $r->whereNotNull('toassignuser_id')
-            ->orWhereNotNull('selfassignuser_id');
+                ->orWhereNotNull('selfassignuser_id');
         })->get();
         $data['allactiveassignedtickets'] = $allactiveassignedtickets;
 
@@ -670,10 +638,9 @@ class AdminTicketViewController extends Controller
         $post = Pages::all();
         $data['page'] = $post;
 
-
         $ticket = Ticket::where('ticket_id', $id)->firstOrFail();
         $data['ticket'] = $ticket;
+
         return view('admin.tickethistory.index')->with($data);
     }
-
 }

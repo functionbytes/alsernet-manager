@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
+use App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log as LaravelLog;
-use App\Library\Notification\BackendError;
-use App\Models\Notification;
-use App;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpLocation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpLocation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpLocation query()
+ *
  * @mixin \Eloquent
  */
 class IpLocation extends Model
 {
-
     protected $fillable = [
         'country_code', 'country_name', 'region_code',
         'region_name', 'city', 'zipcode',
@@ -25,7 +23,7 @@ class IpLocation extends Model
 
     public static function add($ip)
     {
-        //SELECT * FROM `ip2location_db11` WHERE INET_ATON('116.109.245.204') <= ip_to LIMIT 1
+        // SELECT * FROM `ip2location_db11` WHERE INET_ATON('116.109.245.204') <= ip_to LIMIT 1
         $location = self::firstOrNew(['ip_address' => $ip]);
         $geoip = App::make('Acelle\Library\Contracts\GeoIpInterface');
 
@@ -65,13 +63,13 @@ class IpLocation extends Model
     public function name()
     {
         $str = [];
-        if (!empty($this->city)) {
+        if (! empty($this->city)) {
             $str[] = $this->city;
         }
-        if (!empty($this->region_name)) {
+        if (! empty($this->region_name)) {
             $str[] = $this->region_name;
         }
-        if (!empty($this->country_name)) {
+        if (! empty($this->country_name)) {
             $str[] = $this->country_name;
         }
         $name = implode(', ', $str);
@@ -81,10 +79,10 @@ class IpLocation extends Model
 
     public function getFlagPath()
     {
-        $path = "/images/flags/" . $this->country_code . ".png";
+        $path = '/images/flags/'.$this->country_code.'.png';
 
-        if (!file_exists(public_path($path))) {
-            $path = "/images/flags/unknown.png";
+        if (! file_exists(public_path($path))) {
+            $path = '/images/flags/unknown.png';
         }
 
         return $path;
@@ -92,6 +90,6 @@ class IpLocation extends Model
 
     public function getCountryName()
     {
-        return (empty($this->country_name) ? trans("messages.unknown") : $this->country_name);
+        return empty($this->country_name) ? trans('messages.unknown') : $this->country_name;
     }
 }

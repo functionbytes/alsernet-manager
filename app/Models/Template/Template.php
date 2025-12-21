@@ -2,7 +2,6 @@
 
 namespace App\Models\Template;
 
-use App\Models\Template\TemplateCategory;
 use App\Library\HtmlHandler\AddDoctype;
 use App\Library\HtmlHandler\DecodeHtmlSpecialChars;
 use App\Library\HtmlHandler\GenerateSpintax;
@@ -16,15 +15,10 @@ use App\Models\Product;
 use App\Models\TrackingDomain;
 use App\Models\User;
 use DOMDocument;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Validation\ValidationException;
 use KubAT\PhpSimple\HtmlDomParser;
 use League\Pipeline\PipelineBuilder;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-
 
 use function App\Helpers\is_non_web_link;
 use function App\Helpers\url_get_contents_ssl_safe;
@@ -34,9 +28,11 @@ class Template extends Model
     use HasUid;
 
     public const BUILDER_ENABLED = true;
+
     public const BUILDER_DISABLED = false;
 
     public const TYPE_EMAIL = 'email';
+
     public const TYPE_POPUP = 'popup';
 
     public const IS_PRIVATE = true;
@@ -47,7 +43,7 @@ class Template extends Model
      * @var array
      */
     protected $fillable = [
-        'uid', 'title', 'content', 'builder', 'is_default', 'theme', 'type'
+        'uid', 'title', 'content', 'builder', 'is_default', 'theme', 'type',
     ];
 
     /**
@@ -56,7 +52,6 @@ class Template extends Model
      * @var array
      */
     public static $itemsPerPage = 25;
-
 
     public function admin()
     {
@@ -94,7 +89,7 @@ class Template extends Model
      */
     public function scopeNotPrivate($query)
     {
-        return $query->where('is_private', !self::IS_PRIVATE);
+        return $query->where('is_private', ! self::IS_PRIVATE);
     }
 
     // Templates that are not associated to any email or campaign
@@ -128,7 +123,7 @@ class Template extends Model
     public function scopeSearch($query, $keyword)
     {
         // Keyword
-        if (!empty($keyword)) {
+        if (! empty($keyword)) {
             $query = $query->where('name', 'like', '%'.trim($keyword).'%');
         }
     }
@@ -187,7 +182,7 @@ class Template extends Model
      */
     public function displayCreatorName()
     {
-        return $this->admin ? $this->admin->displayName() :  '' ;
+        return $this->admin ? $this->admin->displayName() : '';
     }
 
     /**
@@ -207,7 +202,7 @@ class Template extends Model
      */
     public function addCategory($category)
     {
-        if (!$this->hasCategory($category)) {
+        if (! $this->hasCategory($category)) {
             $this->categories()->attach($category->id);
         }
     }
@@ -229,7 +224,7 @@ class Template extends Model
      */
     public function copy($attributes = [])
     {
-        $copy = new self();
+        $copy = new self;
 
         $copy->generateUid();
 
@@ -271,14 +266,14 @@ class Template extends Model
     public function loadContent($directory)
     {
         if (is_null($this->uid)) {
-            throw new Exception("Cannot locate the storage directory, template does not have a UID");
+            throw new Exception('Cannot locate the storage directory, template does not have a UID');
         }
 
         // try to find the main file, index.html | index.html | file_name.html | ...
         $indexFile = null;
 
         // find index
-        $possible_indexFile_names = array('index.html', 'index.htm');
+        $possible_indexFile_names = ['index.html', 'index.htm'];
         foreach ($possible_indexFile_names as $name) {
             if (is_file($file = join_paths($directory, $name))) {
                 $indexFile = $file;
@@ -290,7 +285,7 @@ class Template extends Model
             $objects = scandir($directory);
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
-                    if (!is_dir(join_paths($directory, $object))) {
+                    if (! is_dir(join_paths($directory, $object))) {
                         if (preg_match('/\.html?$/i', $object)) {
                             $indexFile = $directory.'/'.$object;
                             break;
@@ -335,10 +330,10 @@ class Template extends Model
     {
         $user = $request->user();
 
-        $rules = array(
+        $rules = [
             'file' => 'required|mimetypes:application/zip,application/octet-stream,application/x-zip-compressed,multipart/x-zip',
             'name' => 'required',
-        );
+        ];
 
         $validator = Validator::make($request->all(), $rules, [
             'file.mimetypes' => trans('messages.template.validation.mimetypes'),
@@ -356,7 +351,7 @@ class Template extends Model
         $tmpZip = join_paths($tmpPath, $tmpName);
 
         // read zip file check if zip archive invalid
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
             // @todo hack
             // $validator = Validator::make([], []); // Empty data and rules fields
@@ -373,7 +368,6 @@ class Template extends Model
         $attributes = $request->all();
         $attributes['builder'] = self::BUILDER_DISABLED;
 
-
         // Save new template
         $template = self::createFromDirectory($attributes, $tmpPath);
         Tool::xdelete($tmpPath);
@@ -388,7 +382,7 @@ class Template extends Model
         $outputPath = join_paths('/tmp/', $this->uid.'.zip');
 
         // Initialize archive object
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         $zip->open($outputPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         // Create recursive directory iterator
@@ -400,7 +394,7 @@ class Template extends Model
 
         foreach ($files as $name => $file) {
             // Skip directories (they would be added automatically)
-            if (!$file->isDir()) {
+            if (! $file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
                 $relativePath = substr($filePath, strlen($rootPath) + 1);
@@ -424,7 +418,7 @@ class Template extends Model
 
         $base = $this->getSystemStoragePath($this->uid);
 
-        if (!\Illuminate\Support\Facades\File::exists($base)) {
+        if (! \Illuminate\Support\Facades\File::exists($base)) {
             \Illuminate\Support\Facades\File::makeDirectory($base, 0777, true, true);
         }
 
@@ -435,7 +429,7 @@ class Template extends Model
     {
         $base = storage_path('app/templates/');
 
-        if (!\Illuminate\Support\Facades\File::exists($base)) {
+        if (! \Illuminate\Support\Facades\File::exists($base)) {
             \Illuminate\Support\Facades\File::makeDirectory($base, 0777, true, true);
         }
 
@@ -448,7 +442,7 @@ class Template extends Model
     public function getThumbName()
     {
         // find index
-        $names = array('thumbnail.svg', 'thumbnail.png', 'thumbnail.jpg', 'thumb.svg', 'thumb.png', 'thumb.jpg');
+        $names = ['thumbnail.svg', 'thumbnail.png', 'thumbnail.jpg', 'thumb.svg', 'thumb.png', 'thumb.jpg'];
         foreach ($names as $name) {
             $path = $this->getStoragePath($name);
             if (file_exists($path)) {
@@ -456,7 +450,6 @@ class Template extends Model
             }
         }
 
-        return;
     }
 
     /**
@@ -469,7 +462,7 @@ class Template extends Model
         }
 
         if ($this->getThumbName()) {
-            return \App\Helpers\generatePublicPath($this->getStoragePath($this->getThumbName())) . '?v=' . filemtime($this->getStoragePath($this->getThumbName()));
+            return \App\Helpers\generatePublicPath($this->getStoragePath($this->getThumbName())).'?v='.filemtime($this->getStoragePath($this->getThumbName()));
         } else {
             return url('images/placeholder.jpg');
         }
@@ -482,18 +475,19 @@ class Template extends Model
         // + Only CSS in the template folder is considered
         $files = [];
 
-        $document = new DOMDocument();
+        $document = new DOMDocument;
         $document->loadHTML($this->content, LIBXML_NOWARNING | LIBXML_NOERROR);
         $links = $document->getElementsByTagName('link');
         foreach ($links as $link) {
             $href = $link->getAttribute('href');
-            if (!empty($href)) {
+            if (! empty($href)) {
                 $path = $this->getAssetFileFromUrl($href);
                 if ($path) {
                     $files[] = $path;
                 }
             }
         }
+
         return $files;
     }
 
@@ -520,12 +514,12 @@ class Template extends Model
         if (preg_match('/\/assets\/(?<dirname>[^\/]+)\/(?<basename>[^\/]+)/', $url, $match)) {
             $dirname = StringHelper::base64UrlDecode($match['dirname']);
             $absPath = storage_path(join_paths($dirname, $match['basename']));
+
             return $absPath;
         } else {
             return null;
         }
     }
-
 
     public function extractAssetRelativePath($absPath)
     {
@@ -535,6 +529,7 @@ class Template extends Model
         }
 
         $relativePath = trim(str_replace($myPath, '', $absPath), '/');
+
         return empty($relativePath) ? null : $relativePath;
     }
 
@@ -555,7 +550,7 @@ class Template extends Model
                 return $url;
             }
 
-            if (!is_null(parse_url($url, PHP_URL_HOST))) {
+            if (! is_null(parse_url($url, PHP_URL_HOST))) {
                 // url is with a host like "http://" or "//"
                 return $url;
             }
@@ -590,7 +585,7 @@ class Template extends Model
                 }
             } elseif (strpos($url, '/files/') === 0 && $untransformUserAssets) {
                 // Okie, now process /files/uid/name.jpg pattern
-                list($prefix, $userUid, $basename) = array_values(array_filter(explode('/', $url)));
+                [$prefix, $userUid, $basename] = array_values(array_filter(explode('/', $url)));
 
                 $user = User::findByUid($userUid);
                 if (is_null($user)) {
@@ -600,12 +595,12 @@ class Template extends Model
                 $assetPath = $user->getAssetsPath($basename);
 
                 // If file no longer exists
-                if (!file_exists($assetPath)) {
+                if (! file_exists($assetPath)) {
                     return $url;
                 }
 
                 // Callback and return
-                if (!is_null($processUserAssetCallback)) {
+                if (! is_null($processUserAssetCallback)) {
                     $processUserAssetCallback($assetPath, $basename); // Important: basename may be changed
                 }
 
@@ -626,13 +621,13 @@ class Template extends Model
      * Transform template's relative URLs to application's absolute URL, without hostname.
      * Execute this every time the template is SAVED
      */
-    public function getContentWithTransformedAssetsUrls($html, $withHost = false, Closure $urlTransform = null, TrackingDomain $domain = null)
+    public function getContentWithTransformedAssetsUrls($html, $withHost = false, ?Closure $urlTransform = null, ?TrackingDomain $domain = null)
     {
-        if (!is_null($domain) && $withHost == false) {
+        if (! is_null($domain) && $withHost == false) {
             throw new Exception('Passing $domain parameter while the $withHost parameter is false');
         }
 
-        if (!is_null($urlTransform) && $withHost == false) {
+        if (! is_null($urlTransform) && $withHost == false) {
             throw new Exception('Passing $urlTransform parameter while the $withHost parameter is false');
         }
 
@@ -661,9 +656,9 @@ class Template extends Model
                 return $url;
             }
 
-            if (!is_null(parse_url($url, PHP_URL_HOST))) {
+            if (! is_null(parse_url($url, PHP_URL_HOST))) {
                 // url is with a host like "http://" or "//"
-                if (!is_null($urlTransform)) {
+                if (! is_null($urlTransform)) {
                     // Make trackable links like. For example:
                     // StringHelper::makeTrackableLink('http://google.com', 'MSGID')
                     // ==> https://localhost/p/aHR0cDovL2dvb2dsZS5jb20/click/TVNHSUQ
@@ -686,7 +681,7 @@ class Template extends Model
                 // absolute url with leading slash (/) like "/hello/world"
 
                 $urlWithHost = join_url(getAppHost(), $url);
-                if (!is_null($urlTransform)) {
+                if (! is_null($urlTransform)) {
                     $urlWithHost = $urlTransform($urlWithHost, $element);
                 }
 
@@ -708,7 +703,7 @@ class Template extends Model
                     $absolute = ($withHost) ? true : false
                 );
 
-                if (!is_null($urlTransform)) {
+                if (! is_null($urlTransform)) {
                     $url = $urlTransform($url, $element);
                 }
 
@@ -757,22 +752,22 @@ class Template extends Model
             foreach ($items as $item) {
                 // $element->find('.woo-items')[0]->innertext = 'dddddd';
                 $itemsHtml[] = '
-                    <div class="woo-col-item mb-4 mt-4 col-md-' . (12 / $display) . '">
+                    <div class="woo-col-item mb-4 mt-4 col-md-'.(12 / $display).'">
                         <div class="">
                             <div class="img-col mb-3">
                                 <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <a style="width:100%" href="'.$item["link"].'" class="mr-4"><img width="100%" src="'.($item["image"] ? $item["image"] : url('images/cart_item.svg')).'" style="max-height:200px;max-width:100%;" /></a>
+                                    <a style="width:100%" href="'.$item['link'].'" class="mr-4"><img width="100%" src="'.($item['image'] ? $item['image'] : url('images/cart_item.svg')).'" style="max-height:200px;max-width:100%;" /></a>
                                 </div>
                             </div>
                             <div class="">
                                 <p class="font-weight-normal product-name mb-1">
-                                    <a style="color: #333;" href="'.$item["link"].'" class="mr-4">'.$item["name"].'</a>
+                                    <a style="color: #333;" href="'.$item['link'].'" class="mr-4">'.$item['name'].'</a>
                                 </p>
-                                <p class=" product-description">'.$item["description"].'</p>
-                                <p><strong>'.$item["price"].'</strong></p>
-                                <a href="'.$item["link"].'" style="background-color: #9b5c8f;
+                                <p class=" product-description">'.$item['description'].'</p>
+                                <p><strong>'.$item['price'].'</strong></p>
+                                <a href="'.$item['link'].'" style="background-color: #9b5c8f;
     border-color: #9b5c8f;" class="btn btn-primary text-white">
-                                    ' . trans('messages.automation.view_more') . '
+                                    '.trans('messages.automation.view_more').'
                                 </a>
                             </div>
                         </div>
@@ -802,12 +797,12 @@ class Template extends Model
                 // $element->find('.product-description', 0)->innertext = $item["description"];
                 // $element->find('.product-link', 0)->href = $item["link"];
                 // $element->find('.product-price', 0)->innertext = $item["price"];
-                $element->find('.product-link img', 0)->src = $item["image"];
+                $element->find('.product-link img', 0)->src = $item['image'];
                 $html = $element->innertext;
-                $html = str_replace('*|PRODUCT_NAME|*', $item["name"], $html);
-                $html = str_replace('*|PRODUCT_DESCRIPTION|*', $item["description"], $html);
-                $html = str_replace('*|PRODUCT_URL|*', $item["link"], $html);
-                $html = str_replace('*|PRODUCT_PRICE|*', $item["price"], $html);
+                $html = str_replace('*|PRODUCT_NAME|*', $item['name'], $html);
+                $html = str_replace('*|PRODUCT_DESCRIPTION|*', $item['description'], $html);
+                $html = str_replace('*|PRODUCT_URL|*', $item['link'], $html);
+                $html = str_replace('*|PRODUCT_PRICE|*', $item['price'], $html);
                 // $html = str_replace('*|PRODUCT_QUANTITY|*', $item["quantity"], $html);
                 $element->innertext = $html;
             }
@@ -872,7 +867,7 @@ class Template extends Model
             // Unsubscribe link
             $result[] = [
                 'type' => 'label',
-                'text' => '<a href="{UNSUBSCRIBE_URL}">' . trans('messages.editor.unsubscribe_text') . '</a>',
+                'text' => '<a href="{UNSUBSCRIBE_URL}">'.trans('messages.editor.unsubscribe_text').'</a>',
                 'tag' => '{UNSUBSCRIBE_LINK}',
                 'required' => true,
             ];
@@ -880,7 +875,7 @@ class Template extends Model
             // web view link
             $result[] = [
                 'type' => 'label',
-                'text' => '<a href="{WEB_VIEW_URL}">' . trans('messages.editor.click_view_web_version') . '</a>',
+                'text' => '<a href="{WEB_VIEW_URL}">'.trans('messages.editor.click_view_web_version').'</a>',
                 'tag' => '{WEB_VIEW_LINK}',
                 'required' => true,
             ];
@@ -938,7 +933,7 @@ class Template extends Model
 
         // Copy uploaded folder
         if (file_exists($this->getStoragePath())) {
-            if (!file_exists($this->getStoragePath())) {
+            if (! file_exists($this->getStoragePath())) {
                 mkdir($this->getStoragePath(), 0777, true);
             }
 
@@ -978,9 +973,8 @@ class Template extends Model
      */
     public static function createFromDirectory($attributes, $directory)
     {
-        $template = new self();
+        $template = new self;
         $template->fill($attributes); // Including 'uid', 'name', 'content', 'builder'
-
 
         // UID is needed for loading the conent
         if (is_null($template->uid)) {
@@ -988,6 +982,7 @@ class Template extends Model
         }
 
         $template->loadContent($directory); // already saved!
+
         return $template;
     }
 
@@ -1149,7 +1144,7 @@ class Template extends Model
 
         // Delete existing template and create again with new updates
         foreach ($templates as $meta) {
-            if (!\Illuminate\Support\Facades\File::exists($meta['dir'])) {
+            if (! \Illuminate\Support\Facades\File::exists($meta['dir'])) {
                 // Some featured templates shall be dropped in official releases
                 // So, instead of throwing an error:
                 //
@@ -1179,7 +1174,7 @@ class Template extends Model
 
     public function createTmpZip()
     {
-        $tmpDir = storage_path("tmp/template-" . $this->uid);
+        $tmpDir = storage_path('tmp/template-'.$this->uid);
         $tmpZipFile = "{$tmpDir}.zip";
         $indexFile = join_paths($tmpDir, 'index.html');
 
@@ -1314,13 +1309,13 @@ class Template extends Model
     public function getPreviewContent()
     {
         // Bind subscriber/message/server information to email content
-        $pipeline = new PipelineBuilder();
-        $pipeline->add(new AddDoctype());
-        $pipeline->add(new ParseRss());
+        $pipeline = new PipelineBuilder;
+        $pipeline->add(new AddDoctype);
+        $pipeline->add(new ParseRss);
         $pipeline->add(new MakeInlineCss($this->findCssFiles()));
-        $pipeline->add(new TransformWidgets());
-        $pipeline->add(new DecodeHtmlSpecialChars());
-        $pipeline->add(new GenerateSpintax());
+        $pipeline->add(new TransformWidgets);
+        $pipeline->add(new DecodeHtmlSpecialChars);
+        $pipeline->add(new GenerateSpintax);
 
         // Actually push HTML to pipeline for processing
         $html = $pipeline->build()->process($this->content);

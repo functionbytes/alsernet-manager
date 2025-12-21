@@ -7,7 +7,9 @@ use App\Models\Jobs\JobMonitor;
 trait Trackable
 {
     public $monitor;
+
     public $eventAfterDispatched;
+
     public $eventAfterFinished;
 
     public function setMonitor(JobMonitor $monitor)

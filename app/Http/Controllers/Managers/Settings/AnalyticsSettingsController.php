@@ -7,19 +7,17 @@ use Illuminate\Http\Request;
 
 class AnalyticsSettingsController extends Controller
 {
-
-   public function index()
-      {
+    public function index()
+    {
         return view('managers.views.settings.analytics.index')->with([
         ]);
 
-      }
-
+    }
 
     public function update(Request $request)
     {
 
-        $data['google_analytics_enable']  =  $request->google_analytics_enable;
+        $data['google_analytics_enable'] = $request->google_analytics_enable;
         $data['google_analytics'] = $request->google_analytics;
 
         updateSettings($data);
@@ -32,5 +30,4 @@ class AnalyticsSettingsController extends Controller
         return response()->json($response);
 
     }
-
 }

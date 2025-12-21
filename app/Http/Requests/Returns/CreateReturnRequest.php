@@ -24,7 +24,7 @@ class CreateReturnRequest extends FormRequest
                     // Verificar que no exista una devolución activa para este pedido
                     $existingReturn = ReturnRequest::where('id_order', $value)
                         ->where('email', $this->email)
-                        ->whereHas('status', function($q) {
+                        ->whereHas('status', function ($q) {
                             $q->where('active', true)
                                 ->whereNotIn('id_return_state', [5]); // No cerradas
                         })
@@ -33,7 +33,7 @@ class CreateReturnRequest extends FormRequest
                     if ($existingReturn) {
                         $fail('Ya existe una solicitud de devolución activa para este pedido.');
                     }
-                }
+                },
             ],
             'id_order_detail' => 'required|integer|min:1',
             'customer_name' => [
@@ -41,23 +41,23 @@ class CreateReturnRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:255',
-                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'
+                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/',
             ],
             'email' => [
                 'required',
                 'email:rfc,dns',
-                'max:255'
+                'max:255',
             ],
             'phone' => [
                 'nullable',
                 'string',
                 'max:20',
-                'regex:/^[\+]?[0-9\s\-\(\)]+$/'
+                'regex:/^[\+]?[0-9\s\-\(\)]+$/',
             ],
             'id_return_type' => [
                 'required',
                 'integer',
-                'exists:return_types,id_return_type'
+                'exists:return_types,id_return_type',
             ],
             'id_return_reason' => [
                 'required',
@@ -73,46 +73,46 @@ class CreateReturnRequest extends FormRequest
                             $typeMapping = [
                                 1 => 'refund',    // Reembolso
                                 2 => 'replacement', // Reemplazo
-                                3 => 'repair'     // Reparación
+                                3 => 'repair',     // Reparación
                             ];
 
                             $expectedType = $typeMapping[$this->id_return_type] ?? 'all';
 
-                            if (!$reason->isValidForReturnType($expectedType)) {
+                            if (! $reason->isValidForReturnType($expectedType)) {
                                 $fail('El motivo seleccionado no es válido para este tipo de devolución.');
                             }
                         }
                     }
-                }
+                },
             ],
             'logistics_mode' => [
                 'required',
-                Rule::in(['customer_transport', 'home_pickup', 'store_delivery', 'inpost'])
+                Rule::in(['customer_transport', 'home_pickup', 'store_delivery', 'inpost']),
             ],
             'description' => [
                 'required',
                 'string',
-                'min:' . config('returns.validation.min_description_length', 10),
-                'max:' . config('returns.validation.max_description_length', 1000)
+                'min:'.config('returns.validation.min_description_length', 10),
+                'max:'.config('returns.validation.max_description_length', 1000),
             ],
             'product_quantity' => [
                 'required',
                 'integer',
                 'min:1',
-                'max:100'
+                'max:100',
             ],
             'return_address' => [
                 'nullable',
                 'string',
                 'max:500',
-                'required_if:logistics_mode,home_pickup'
+                'required_if:logistics_mode,home_pickup',
             ],
             'iban' => [
                 'nullable',
                 'string',
                 'size:24',
                 'regex:/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$/',
-                'required_if:id_return_type,1' // Requerido para reembolsos
+                'required_if:id_return_type,1', // Requerido para reembolsos
             ],
             'id_customer' => 'nullable|integer|min:0',
             'id_address' => 'nullable|integer|min:0',
@@ -120,13 +120,13 @@ class CreateReturnRequest extends FormRequest
                 'nullable',
                 'date',
                 'after:today',
-                'before:' . now()->addDays(30)->format('Y-m-d'),
-                'required_if:logistics_mode,home_pickup'
+                'before:'.now()->addDays(30)->format('Y-m-d'),
+                'required_if:logistics_mode,home_pickup',
             ],
             'terms_accepted' => [
                 'required',
-                'accepted'
-            ]
+                'accepted',
+            ],
         ];
     }
 
@@ -160,7 +160,7 @@ class CreateReturnRequest extends FormRequest
             'pickup_date.after' => 'La fecha de recogida debe ser posterior a hoy.',
             'pickup_date.before' => 'La fecha de recogida no puede ser más de 30 días en el futuro.',
             'terms_accepted.required' => 'Debe aceptar los términos y condiciones.',
-            'terms_accepted.accepted' => 'Debe aceptar los términos y condiciones.'
+            'terms_accepted.accepted' => 'Debe aceptar los términos y condiciones.',
         ];
     }
 
@@ -169,31 +169,31 @@ class CreateReturnRequest extends FormRequest
         // Limpiar y normalizar datos
         if ($this->has('customer_name')) {
             $this->merge([
-                'customer_name' => trim($this->customer_name)
+                'customer_name' => trim($this->customer_name),
             ]);
         }
 
         if ($this->has('email')) {
             $this->merge([
-                'email' => strtolower(trim($this->email))
+                'email' => strtolower(trim($this->email)),
             ]);
         }
 
         if ($this->has('phone')) {
             $this->merge([
-                'phone' => preg_replace('/[^\+0-9]/', '', $this->phone)
+                'phone' => preg_replace('/[^\+0-9]/', '', $this->phone),
             ]);
         }
 
         if ($this->has('iban')) {
             $this->merge([
-                'iban' => strtoupper(preg_replace('/\s+/', '', $this->iban))
+                'iban' => strtoupper(preg_replace('/\s+/', '', $this->iban)),
             ]);
         }
 
         if ($this->has('description')) {
             $this->merge([
-                'description' => trim($this->description)
+                'description' => trim($this->description),
             ]);
         }
     }

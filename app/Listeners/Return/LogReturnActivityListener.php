@@ -2,12 +2,12 @@
 
 namespace App\Listeners\Return;
 
-use App\Events\Return\ReturnCreated;
-use App\Events\Return\ReturnStatusChanged;
 use App\Events\Return\ReturnCompleted;
+use App\Events\Return\ReturnCreated;
 use App\Events\Return\ReturnPaymentProcessed;
-use Illuminate\Support\Facades\Log;
+use App\Events\Return\ReturnStatusChanged;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LogReturnActivityListener
 {
@@ -24,8 +24,8 @@ class LogReturnActivityListener
                 'user_id' => auth()->id(),
                 'session_id' => session()->getId(),
                 'ip_address' => $event->ipAddress,
-                'user_agent' => $event->userAgent
-            ]
+                'user_agent' => $event->userAgent,
+            ],
         ]);
 
         // Registrar en tabla de auditoría si es necesario
@@ -45,29 +45,29 @@ class LogReturnActivityListener
                 'user_id' => auth()->id(),
                 'employee_id' => $event->changedBy,
                 'session_id' => session()->getId(),
-                'transition_type' => $event->getTransitionType()
-            ]
+                'transition_type' => $event->getTransitionType(),
+            ],
         ]);
 
         // Log especial para transiciones importantes
         if ($event->isCompleted()) {
             $this->logActivity('return_completed_success', array_merge($event->getEventData(), [
                 'processing_time_days' => $event->return->created_at->diffInDays(now()),
-                'final_status' => $event->newStatus->getTranslation()->name ?? 'Desconocido'
+                'final_status' => $event->newStatus->getTranslation()->name ?? 'Desconocido',
             ]), [
                 'level' => 'notice',
                 'channel' => 'returns',
-                'tags' => ['return', 'completed', 'success']
+                'tags' => ['return', 'completed', 'success'],
             ]);
         }
 
         if ($event->isRejected()) {
             $this->logActivity('return_rejected', array_merge($event->getEventData(), [
-                'rejection_reason' => $event->description
+                'rejection_reason' => $event->description,
             ]), [
                 'level' => 'warning',
                 'channel' => 'returns',
-                'tags' => ['return', 'rejected']
+                'tags' => ['return', 'rejected'],
             ]);
         }
 
@@ -80,7 +80,7 @@ class LogReturnActivityListener
     public function handleReturnCompleted(ReturnCompleted $event): void
     {
         $eventData = array_merge($event->getEventData(), [
-            'satisfaction_metrics' => $event->getSatisfactionMetrics()
+            'satisfaction_metrics' => $event->getSatisfactionMetrics(),
         ]);
 
         $this->logActivity('return_completed', $eventData, [
@@ -91,8 +91,8 @@ class LogReturnActivityListener
                 'completion_type' => $event->completionType,
                 'total_amount' => $event->totalAmount,
                 'processing_time' => $event->getProcessingTimeDays(),
-                'completed_by' => $event->completedBy
-            ]
+                'completed_by' => $event->completedBy,
+            ],
         ]);
 
         // Métricas de negocio
@@ -100,7 +100,7 @@ class LogReturnActivityListener
             'completion_type' => $event->completionType,
             'processing_days' => $event->getProcessingTimeDays(),
             'amount' => $event->totalAmount,
-            'within_sla' => $event->getSatisfactionMetrics()['is_within_sla']
+            'within_sla' => $event->getSatisfactionMetrics()['is_within_sla'],
         ]);
 
         $this->recordAuditEntry('return_completed', $event->return->id_return_request, $eventData);
@@ -122,18 +122,18 @@ class LogReturnActivityListener
                 'payment_method' => $event->payment->payment_method,
                 'amount' => $event->payment->amount,
                 'transaction_id' => $event->payment->transaction_id,
-                'processed_by' => $event->processedBy
-            ]
+                'processed_by' => $event->processedBy,
+            ],
         ]);
 
         // Log especial para fallos de pago
         if ($event->isFailed()) {
             $this->logActivity('return_payment_failed', array_merge($event->getEventData(), [
-                'failure_context' => 'Payment processing failed for return'
+                'failure_context' => 'Payment processing failed for return',
             ]), [
                 'level' => 'error',
                 'channel' => 'payments',
-                'tags' => ['return', 'payment', 'failed']
+                'tags' => ['return', 'payment', 'failed'],
             ]);
         }
 
@@ -156,7 +156,7 @@ class LogReturnActivityListener
             'tags' => $tags,
             'context' => $context,
             'environment' => app()->environment(),
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
 
         Log::channel($channel)->{$level}("Return Activity: {$activity}", $logData);
@@ -172,7 +172,7 @@ class LogReturnActivityListener
             'data' => $data,
             'timestamp' => now()->toISOString(),
             'date' => now()->format('Y-m-d'),
-            'hour' => now()->format('H')
+            'hour' => now()->format('H'),
         ];
 
         Log::channel('metrics')->info("Business Metric: {$metric}", $metricsData);
@@ -192,14 +192,14 @@ class LogReturnActivityListener
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
         } catch (\Exception $e) {
             // No fallar si no se puede guardar en auditoría
             Log::warning('Failed to record audit entry', [
                 'return_id' => $returnId,
                 'action' => $action,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }

@@ -47,8 +47,9 @@ class ErpCheckCommand extends Command
         // Get settings
         $settings = Setting::getErpSettings();
 
-        if (!$settings) {
+        if (! $settings) {
             $this->error('❌ No ERP settings found. Please configure the ERP first.');
+
             return self::FAILURE;
         }
 
@@ -65,7 +66,7 @@ class ErpCheckCommand extends Command
                 ['XML-RPC URL', $settings['erp_xmlrpc_url']],
                 ['SMS URL', $settings['erp_sms_url']],
                 ['Status', $settings['erp_is_active'] === 'yes' ? '✅ Active' : '❌ Inactive'],
-                ['Timeout', $settings['erp_timeout'] . 's'],
+                ['Timeout', $settings['erp_timeout'].'s'],
                 ['Retry Attempts', $settings['erp_retry_attempts']],
             ]
         );
@@ -128,9 +129,9 @@ class ErpCheckCommand extends Command
         $this->table(
             ['Metric', 'Value'],
             [
-                ['Total Requests', number_format((int)$settings['erp_total_requests'])],
-                ['Failed Requests', number_format((int)$settings['erp_failed_requests'])],
-                ['Success Rate', number_format((float)$settings['erp_success_rate'] ?? 100.0, 2) . '%'],
+                ['Total Requests', number_format((int) $settings['erp_total_requests'])],
+                ['Failed Requests', number_format((int) $settings['erp_failed_requests'])],
+                ['Success Rate', number_format((float) $settings['erp_success_rate'] ?? 100.0, 2).'%'],
                 ['Last Check', $settings['erp_last_connection_check'] ? \Carbon\Carbon::parse($settings['erp_last_connection_check'])->diffForHumans() : 'Never'],
                 ['Last Status', ucfirst($settings['erp_last_connection_status'] ?? 'unknown')],
             ]

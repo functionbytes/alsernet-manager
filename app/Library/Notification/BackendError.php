@@ -33,6 +33,7 @@ use App\Models\Notification;
  * @property string|null $read_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError query()
@@ -44,6 +45,7 @@ use App\Models\Notification;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError whereReadAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BackendError whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class BackendError extends Notification

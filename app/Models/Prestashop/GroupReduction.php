@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class GroupReduction extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_group_reduction';
+
     protected $primaryKey = 'id_group_reduction';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -18,7 +21,7 @@ class GroupReduction extends Model
         'reduction',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_group' => 'integer',
         'id_category' => 'integer',
         'reduction' => 'float',

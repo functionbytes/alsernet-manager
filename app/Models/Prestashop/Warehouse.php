@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\Warehouse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\Warehouse;
 
 class Warehouse extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_warehouse';
+
     protected $primaryKey = 'id_warehouse';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +27,7 @@ class Warehouse extends Model
         'management_type',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'deleted' => 'boolean',
         'id_warehouse' => 'integer',
         'id_address' => 'integer',

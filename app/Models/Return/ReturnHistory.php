@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnHistory extends Model
 {
     protected $table = 'return_history';
+
     protected $primaryKey = 'id_return_history';
 
     protected $fillable = [
         'id_return_request', 'id_return_status', 'description', 'id_employee',
-        'set_pickup', 'is_refunded', 'shown_to_customer'
+        'set_pickup', 'is_refunded', 'shown_to_customer',
     ];
 
     protected $casts = [

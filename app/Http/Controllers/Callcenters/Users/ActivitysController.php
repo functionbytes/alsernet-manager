@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Callcenters\Users;
 
-use Spatie\Activitylog\Models\Activity;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
 
 class ActivitysController extends Controller
 {
-    public function index(Request $request,$uid){
+    public function index(Request $request, $uid)
+    {
 
         $modelSearch = null ?? $request->model;
         $propertySearch = null ?? $request->property;
@@ -27,19 +28,18 @@ class ActivitysController extends Controller
         ];
 
         $activitiesFilter = $query->orderBy('created_at', 'desc')->get()
-            ->groupBy(function($activity) {
+            ->groupBy(function ($activity) {
                 return class_basename($activity->subject_type);
-        });
+            });
 
         $activities = $query->orderBy('created_at', 'desc')->get();
 
-
         if ($propertySearch) {
-            $query->where('properties->' . $propertySearch, '!=', null);
+            $query->where('properties->'.$propertySearch, '!=', null);
         }
 
         if ($modelSearch) {
-            $model = 'App\\Models\\' . $modelSearch;
+            $model = 'App\\Models\\'.$modelSearch;
         }
 
         $counts = [];
@@ -47,7 +47,6 @@ class ActivitysController extends Controller
         foreach ($models as $key => $friendlyName) {
             $counts[$key] = $activities->has($key) ? $activities[$key]->count() : 0;
         }
-
 
         return view('callcenters.views.users.activitys.index')->with([
             'user' => $user,
@@ -58,9 +57,8 @@ class ActivitysController extends Controller
         ]);
 
     }
-    public function lists($uid){
-    }
-    public function detail($uid){
-    }
 
+    public function lists($uid) {}
+
+    public function detail($uid) {}
 }

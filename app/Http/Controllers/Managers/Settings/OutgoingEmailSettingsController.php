@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Managers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OutgoingEmailSettingsController extends Controller
 {
@@ -49,7 +49,7 @@ class OutgoingEmailSettingsController extends Controller
                 ->with('success', 'Configuración de correo saliente actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
+                ->with('error', 'Error al actualizar la configuración: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -89,7 +89,7 @@ class OutgoingEmailSettingsController extends Controller
                         'host' => $host,
                         'port' => $port,
                         'encryption' => $settings['mail_encryption'] ?? 'none',
-                    ]
+                    ],
                 ]);
             }
 
@@ -103,7 +103,7 @@ class OutgoingEmailSettingsController extends Controller
             return response()->json([
                 'success' => false,
                 'status' => 'disconnected',
-                'message' => "No se pudo conectar al servidor SMTP: {$errstr} (Código: {$errno})"
+                'message' => "No se pudo conectar al servidor SMTP: {$errstr} (Código: {$errno})",
             ], 400);
         } catch (\Exception $e) {
             Log::error('SMTP connection test exception', [
@@ -114,7 +114,7 @@ class OutgoingEmailSettingsController extends Controller
             return response()->json([
                 'success' => false,
                 'status' => 'error',
-                'message' => 'Error en la conexión: ' . $e->getMessage()
+                'message' => 'Error en la conexión: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -126,7 +126,7 @@ class OutgoingEmailSettingsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'test_email' => 'required|email'
+                'test_email' => 'required|email',
             ]);
 
             $settings = Setting::getEmailSettings();
@@ -165,7 +165,7 @@ class OutgoingEmailSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Correo de prueba enviado exitosamente a ' . $validated['test_email']
+                'message' => 'Correo de prueba enviado exitosamente a '.$validated['test_email'],
             ]);
         } catch (\Swift_TransportException $e) {
             Log::error('SMTP Transport error when sending test email', [
@@ -175,7 +175,7 @@ class OutgoingEmailSettingsController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error de transporte SMTP: ' . $e->getMessage()
+                'message' => 'Error de transporte SMTP: '.$e->getMessage(),
             ], 500);
         } catch (\Exception $e) {
             Log::error('Error sending test email', [
@@ -185,7 +185,7 @@ class OutgoingEmailSettingsController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al enviar correo: ' . $e->getMessage()
+                'message' => 'Error al enviar correo: '.$e->getMessage(),
             ], 500);
         }
     }

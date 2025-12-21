@@ -14,9 +14,11 @@ class ImportSubscribers2 extends Base
 {
     use Batchable;
     use Trackable;
+
     public $timeout = 7200;
 
     protected $list;
+
     protected $file;
 
     public function __construct($list, $file)
@@ -47,7 +49,7 @@ class ImportSubscribers2 extends Base
     public function handle()
     {
         $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
-        $logfile = $this->file.".log";
+        $logfile = $this->file.'.log';
         $stream = new StreamHandler($logfile, Logger::DEBUG);
         $stream->setFormatter($formatter);
 

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Attachment extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_attachment';
+
     protected $primaryKey = 'id_attachment';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class Attachment extends Model
         'position',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'position' => 'integer',
     ];
 }

@@ -14,6 +14,7 @@ class ReturnRequest extends Model
     use HasUid;
 
     protected $table = 'return_requests';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -42,7 +43,7 @@ class ReturnRequest extends Model
         'total_amount',
         'approved_amount',
         'refunded_amount',
-        'request_at'
+        'request_at',
     ];
 
     protected $with = ['status', 'returnType', 'returnReason'];
@@ -62,20 +63,19 @@ class ReturnRequest extends Model
         return $this->hasMany(ReturnCommunication::class);
     }
 
-// Agregar este observer o usar eventos
+    // Agregar este observer o usar eventos
     protected static function booted()
     {
         static::updated(function ($return) {
             if ($return->isDirty('status')) {
                 // Disparar notificación cuando cambia el estado
-                //app(ReturnNotificationService::class)->notifyStatusChange(
-               //     $return,
+                // app(ReturnNotificationService::class)->notifyStatusChange(
+                //     $return,
                 //    $return->getOriginal('status')
-                //);
+                // );
             }
         });
     }
-
 
     // Relaciones actualizadas
     public function order(): BelongsTo
@@ -102,7 +102,6 @@ class ReturnRequest extends Model
     {
         return $this->belongsTo('App\Models\User', 'created_by');
     }
-
 
     public function returnType(): BelongsTo
     {
@@ -162,21 +161,21 @@ class ReturnRequest extends Model
 
     public function scopePending($query)
     {
-        return $query->whereHas('status.state', function($q) {
+        return $query->whereHas('status.state', function ($q) {
             $q->where('name', 'New');
         });
     }
 
     public function scopeCompleted($query)
     {
-        return $query->whereHas('status.state', function($q) {
+        return $query->whereHas('status.state', function ($q) {
             $q->where('name', 'Close');
         });
     }
 
     public function scopeApproved($query)
     {
-        return $query->whereHas('status.state', function($q) {
+        return $query->whereHas('status.state', function ($q) {
             $q->where('name', 'Verification');
         });
     }
@@ -200,18 +199,21 @@ class ReturnRequest extends Model
     public function getStatusName($langId = 1, $shopId = 1)
     {
         $translation = $this->status->getTranslation($langId, $shopId);
+
         return $translation ? $translation->name : $this->status->state->name;
     }
 
     public function getReturnTypeName($langId = 1, $shopId = 1)
     {
         $translation = $this->returnType->getTranslation($langId, $shopId);
+
         return $translation ? $translation->name : 'Desconocido';
     }
 
     public function getReturnReasonName($langId = 1, $shopId = 1)
     {
         $translation = $this->returnReason->getTranslation($langId, $shopId);
+
         return $translation ? $translation->name : 'Desconocido';
     }
 
@@ -233,10 +235,9 @@ class ReturnRequest extends Model
             'returnReason.translations',
             'payments',
             'attachments',
-            'history'
+            'history',
         ]);
     }
-
 
     public function getLogisticsModeLabel()
     {
@@ -244,8 +245,9 @@ class ReturnRequest extends Model
             'customer_transport' => 'Agencia de transporte (cuenta del cliente)',
             'home_pickup' => 'Recogida a domicilio',
             'store_delivery' => 'Entrega en tienda',
-            'inpost' => 'InPost'
+            'inpost' => 'InPost',
         ];
+
         return $modes[$this->logistics_mode] ?? 'No especificado';
     }
 
@@ -269,7 +271,7 @@ class ReturnRequest extends Model
     {
         $this->update([
             'total_amount' => $this->products()->sum('total_price'),
-            'approved_amount' => $this->products()->sum('refund_amount')
+            'approved_amount' => $this->products()->sum('refund_amount'),
         ]);
     }
 
@@ -301,7 +303,7 @@ class ReturnRequest extends Model
         $lastNumber = self::max('number') ?? 0;
         $nextNumber = $lastNumber + 1;
 
-        $reference = config('returns.return_reference', 'DEV') . '-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        $reference = config('returns.return_reference', 'DEV').'-'.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
 
         $defaultData = [
             'order_id' => $order->id,
@@ -314,7 +316,7 @@ class ReturnRequest extends Model
             'shop_id' => config('shop.id', 1),
             'logistics_mode' => 'store_delivery',
             'created_by' => auth()->id() ?? 'system',
-            'received_date' => now()
+            'received_date' => now(),
         ];
 
         $data = array_merge($defaultData, $additionalData);
@@ -343,17 +345,17 @@ class ReturnRequest extends Model
             'logistics_mode' => $this->getLogisticsModeLabel(),
             'description' => $this->description,
             'total_products' => $this->getTotalProductsQuantity(),
-            'total_amount' => number_format($this->total_amount ?? 0, 2) . ' €',
-            'approved_amount' => number_format($this->approved_amount ?? 0, 2) . ' €',
-            'refunded_amount' => number_format($this->refunded_amount ?? 0, 2) . ' €',
+            'total_amount' => number_format($this->total_amount ?? 0, 2).' €',
+            'approved_amount' => number_format($this->approved_amount ?? 0, 2).' €',
+            'refunded_amount' => number_format($this->refunded_amount ?? 0, 2).' €',
             'is_refunded' => $this->is_refunded,
             'created_at' => $this->created_at,
             'can_be_modified' => $this->canBeModified(),
             'has_approved_products' => $this->hasApprovedProducts(),
             'has_rejected_products' => $this->hasRejectedProducts(),
-            'products' => $this->products->map(function($product) {
+            'products' => $this->products->map(function ($product) {
                 return $product->getDisplayInfo();
-            })
+            }),
         ];
     }
 
@@ -366,14 +368,15 @@ class ReturnRequest extends Model
         $warnings = [];
 
         // 1. Verificar que existe la orden
-        if (!$this->order) {
+        if (! $this->order) {
             $errors[] = 'La orden no existe en el sistema';
+
             return ['errors' => $errors, 'warnings' => $warnings]; // No continuar si no hay orden
         }
 
         // 2. Verificar estado de la orden ERP
         $allowedStatuses = explode(',', config('returns.allowed_erp_statuses', '4,5,6'));
-        if (!in_array($this->order->erp_status_id, $allowedStatuses)) {
+        if (! in_array($this->order->erp_status_id, $allowedStatuses)) {
             $errors[] = "La orden está en estado '{$this->order->erp_status_description}' que no permite devoluciones";
         }
 
@@ -384,7 +387,7 @@ class ReturnRequest extends Model
         if ($daysSinceOrder > $returnDaysLimit) {
             $errors[] = "El período de devolución de {$returnDaysLimit} días ha expirado (pedido de hace {$daysSinceOrder} días)";
         } elseif ($daysSinceOrder > ($returnDaysLimit - 7)) {
-            $warnings[] = "El período de devolución expira pronto (quedan " . ($returnDaysLimit - $daysSinceOrder) . " días)";
+            $warnings[] = 'El período de devolución expira pronto (quedan '.($returnDaysLimit - $daysSinceOrder).' días)';
         }
 
         // 4. Verificar devoluciones activas existentes
@@ -396,10 +399,9 @@ class ReturnRequest extends Model
             })
             ->get();
 
-
         if ($activeReturns->count() > 0) {
-            $returnNumbers = $activeReturns->pluck('id')->map(function($id) {
-                return 'DEV-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+            $returnNumbers = $activeReturns->pluck('id')->map(function ($id) {
+                return 'DEV-'.str_pad($id, 6, '0', STR_PAD_LEFT);
             })->implode(', ');
 
             $errors[] = "Ya existen devoluciones activas para esta orden: {$returnNumbers}";
@@ -412,7 +414,7 @@ class ReturnRequest extends Model
             $errors[] = 'Esta orden no tiene productos elegibles para devolución';
         } else {
             // Verificar productos con cantidades disponibles
-            $availableProducts = $returnableProducts->filter(function($product) {
+            $availableProducts = $returnableProducts->filter(function ($product) {
                 return $product->available_for_return > 0;
             });
 
@@ -427,7 +429,7 @@ class ReturnRequest extends Model
         // 6. Verificar monto mínimo para devolución
         $minReturnAmount = config('returns.min_return_amount', 0);
         if ($minReturnAmount > 0 && $this->order->total_amount < $minReturnAmount) {
-            $errors[] = "El monto de la orden (" . number_format($this->order->total_amount, 2) . "€) es menor al mínimo requerido para devoluciones (" . number_format($minReturnAmount, 2) . "€)";
+            $errors[] = 'El monto de la orden ('.number_format($this->order->total_amount, 2).'€) es menor al mínimo requerido para devoluciones ('.number_format($minReturnAmount, 2).'€)';
         }
 
         // 7. Verificar información del cliente
@@ -452,7 +454,7 @@ class ReturnRequest extends Model
 
         // 10. Verificar productos de catálogos específicos
         $restrictedCatalogs = config('returns.restricted_catalogs', []);
-        if (!empty($restrictedCatalogs)) {
+        if (! empty($restrictedCatalogs)) {
             $restrictedProducts = $this->order->products()
                 ->whereIn('catalog_id', $restrictedCatalogs)
                 ->count();
@@ -483,8 +485,8 @@ class ReturnRequest extends Model
                 'returnable_products' => $returnableProducts->count(),
                 'available_products' => $availableProducts->count() ?? 0,
                 'customer_name' => $this->order->customer_name,
-                'status' => $this->order->erp_status_description
-            ]
+                'status' => $this->order->erp_status_description,
+            ],
         ];
     }
 
@@ -495,14 +497,15 @@ class ReturnRequest extends Model
         $canProceed = true;
 
         // Validar que la orden exista
-        if (!$this->order) {
+        if (! $this->order) {
             $errors[] = 'La orden no existe';
             $canProceed = false;
+
             return compact('canProceed', 'errors', 'warnings');
         }
 
         // Validar estado de la orden
-        if (!in_array($this->order->status, ['delivered', 'completed'])) {
+        if (! in_array($this->order->status, ['delivered', 'completed'])) {
             $errors[] = 'La orden debe estar entregada o completada para poder devolverla';
             $canProceed = false;
         }
@@ -536,6 +539,7 @@ class ReturnRequest extends Model
         });
 
         $this->update(['total_amount' => $total]);
+
         return $total;
     }
 
@@ -549,8 +553,9 @@ class ReturnRequest extends Model
                 ->where('product_id', $item->product_id)
                 ->first();
 
-            if (!$orderProduct) {
+            if (! $orderProduct) {
                 $errors[] = "El producto {$item->product->name} no pertenece a esta orden";
+
                 continue;
             }
 
@@ -583,20 +588,23 @@ class ReturnRequest extends Model
         foreach ($selectedProducts as $index => $productData) {
             $orderProduct = OrderProduct::find($productData['order_product_id']);
 
-            if (!$orderProduct) {
+            if (! $orderProduct) {
                 $errors[] = "Producto #{$index}: No existe en el sistema";
+
                 continue;
             }
 
             // Verificar que pertenece a esta orden
             if ($orderProduct->order_id !== $this->order_id) {
                 $errors[] = "Producto '{$orderProduct->product_name}': No pertenece a esta orden";
+
                 continue;
             }
 
             // Verificar que es retornable
-            if (!$orderProduct->is_returnable) {
+            if (! $orderProduct->is_returnable) {
                 $errors[] = "Producto '{$orderProduct->product_name}': No es elegible para devolución";
+
                 continue;
             }
 
@@ -611,23 +619,23 @@ class ReturnRequest extends Model
             }
 
             // Verificar período de devolución específico del producto
-            if (!$orderProduct->isWithinReturnPeriod()) {
+            if (! $orderProduct->isWithinReturnPeriod()) {
                 $deadline = $orderProduct->getReturnDeadline();
                 $errors[] = "Producto '{$orderProduct->product_name}': Período de devolución expirado (límite: {$deadline->format('d/m/Y')})";
             }
 
             // Validar motivo de devolución
-            if (!empty($productData['return_reason_id'])) {
+            if (! empty($productData['return_reason_id'])) {
                 $reason = \App\Models\Return\ReturnReason::find($productData['return_reason_id']);
-                if (!$reason || !$reason->active) {
+                if (! $reason || ! $reason->active) {
                     $errors[] = "Producto '{$orderProduct->product_name}': Motivo de devolución no válido";
-                } elseif (!$reason->isValidForReturnType($this->getReturnTypeForReason())) {
+                } elseif (! $reason->isValidForReturnType($this->getReturnTypeForReason())) {
                     $warnings[] = "Producto '{$orderProduct->product_name}': El motivo seleccionado no es típico para este tipo de devolución";
                 }
             }
 
             // Validar condición del producto
-            if (!empty($productData['condition']) && !in_array($productData['condition'], ['new', 'good', 'fair', 'poor', 'damaged'])) {
+            if (! empty($productData['condition']) && ! in_array($productData['condition'], ['new', 'good', 'fair', 'poor', 'damaged'])) {
                 $errors[] = "Producto '{$orderProduct->product_name}': Condición del producto no válida";
             }
 
@@ -640,7 +648,7 @@ class ReturnRequest extends Model
         return [
             'errors' => $errors,
             'warnings' => $warnings,
-            'can_proceed' => empty($errors)
+            'can_proceed' => empty($errors),
         ];
     }
 
@@ -649,14 +657,14 @@ class ReturnRequest extends Model
      */
     private function getReturnTypeForReason(): string
     {
-        if (!$this->type_id) {
+        if (! $this->type_id) {
             return 'all';
         }
 
         $typeMapping = [
             1 => 'refund',
             2 => 'replacement',
-            3 => 'repair'
+            3 => 'repair',
         ];
 
         return $typeMapping[$this->type_id] ?? 'all';
@@ -667,15 +675,23 @@ class ReturnRequest extends Model
      */
     public function quickValidation(): bool
     {
-        if (!$this->order) return false;
+        if (! $this->order) {
+            return false;
+        }
 
         $allowedStatuses = explode(',', config('returns.allowed_erp_statuses', '4,5,6'));
-        if (!in_array($this->order->erp_status_id, $allowedStatuses)) return false;
+        if (! in_array($this->order->erp_status_id, $allowedStatuses)) {
+            return false;
+        }
 
         $returnDaysLimit = config('returns.return_days_limit', 30);
-        if ($this->order->order_date->diffInDays(now()) > $returnDaysLimit) return false;
+        if ($this->order->order_date->diffInDays(now()) > $returnDaysLimit) {
+            return false;
+        }
 
-        if ($this->order->hasActiveReturns()) return false;
+        if ($this->order->hasActiveReturns()) {
+            return false;
+        }
 
         return true;
     }
@@ -685,7 +701,7 @@ class ReturnRequest extends Model
      */
     public function getAvailableProducts()
     {
-        if (!$this->order) {
+        if (! $this->order) {
             return collect();
         }
 
@@ -721,7 +737,7 @@ class ReturnRequest extends Model
             'rejected_count' => $products->where('is_approved', false)->count(),
             'pending_count' => $products->whereNull('is_approved')->count(),
             'refunded_amount' => $this->refunded_amount ?? 0,
-            'pending_refund' => max(0, ($products->where('is_approved', true)->sum('refund_amount')) - ($this->refunded_amount ?? 0))
+            'pending_refund' => max(0, ($products->where('is_approved', true)->sum('refund_amount')) - ($this->refunded_amount ?? 0)),
         ];
     }
 
@@ -751,8 +767,9 @@ class ReturnRequest extends Model
         } catch (\Exception $e) {
             Log::error('Error approving all products', [
                 'return_id' => $this->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -760,7 +777,7 @@ class ReturnRequest extends Model
     /**
      * Procesar rechazo masivo de productos
      */
-    public function rejectAllProducts(string $reason = null): bool
+    public function rejectAllProducts(?string $reason = null): bool
     {
         try {
             DB::transaction(function () use ($reason) {
@@ -775,8 +792,9 @@ class ReturnRequest extends Model
         } catch (\Exception $e) {
             Log::error('Error rejecting all products', [
                 'return_id' => $this->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -786,17 +804,17 @@ class ReturnRequest extends Model
      */
     public function getNextSuggestedStatus(): ?int
     {
-        if (!$this->areAllProductsProcessed()) {
+        if (! $this->areAllProductsProcessed()) {
             return null; // No sugerir cambio hasta que todos estén procesados
         }
 
         $hasApproved = $this->hasApprovedProducts();
         $hasRejected = $this->hasRejectedProducts();
 
-        if ($hasApproved && !$hasRejected) {
+        if ($hasApproved && ! $hasRejected) {
             // Todos aprobados → Verificación/Aprobado
             return config('returns.approved_status_id', 2);
-        } elseif (!$hasApproved && $hasRejected) {
+        } elseif (! $hasApproved && $hasRejected) {
             // Todos rechazados → Rechazado
             return 6; // ID del estado rechazado
         } elseif ($hasApproved && $hasRejected) {
@@ -812,7 +830,7 @@ class ReturnRequest extends Model
      */
     public function getReturnNumber(): string
     {
-        return 'DEV-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        return 'DEV-'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -841,7 +859,7 @@ class ReturnRequest extends Model
             'days' => $created->diffInDays($now),
             'hours' => $created->diffInHours($now),
             'human' => $created->diffForHumans(),
-            'is_overdue' => $created->diffInDays($now) > config('returns.sla_days', 7)
+            'is_overdue' => $created->diffInDays($now) > config('returns.sla_days', 7),
         ];
     }
 
@@ -850,9 +868,9 @@ class ReturnRequest extends Model
      */
     public function scopeRequiresAttention($query)
     {
-        return $query->where(function($q) {
+        return $query->where(function ($q) {
             $q->where('created_at', '<', now()->subDays(config('returns.sla_days', 7)))
-                ->orWhereHas('products', function($pq) {
+                ->orWhereHas('products', function ($pq) {
                     $pq->whereNull('is_approved');
                 });
         });
@@ -864,6 +882,7 @@ class ReturnRequest extends Model
     public function scopeHighValue($query, $threshold = null)
     {
         $threshold = $threshold ?? config('returns.high_value_threshold', 1000);
+
         return $query->where('total_amount', '>', $threshold);
     }
 
@@ -883,10 +902,9 @@ class ReturnRequest extends Model
             'is_high_value' => ($this->total_amount ?? 0) > config('returns.high_value_threshold', 1000),
             'completion_percentage' => $this->products->count() > 0 ?
                 (($this->products->whereNotNull('is_approved')->count() / $this->products->count()) * 100) : 0,
-            'next_suggested_status' => $this->getNextSuggestedStatus()
+            'next_suggested_status' => $this->getNextSuggestedStatus(),
         ];
     }
-
 
     public static function getTotalReturnedQuantity($orderId, $productId)
     {
@@ -900,7 +918,7 @@ class ReturnRequest extends Model
             ->sum('rrp.quantity');
     }
 
-// PROBLEMA 2: getReturnableByOrder() usa consulta SQL cruda incorrecta
+    // PROBLEMA 2: getReturnableByOrder() usa consulta SQL cruda incorrecta
     public static function getReturnableByOrder(int $orderId): Collection
     {
         return self::where('order_id', $orderId)
@@ -916,5 +934,4 @@ class ReturnRequest extends Model
         )')
             ->get();
     }
-
 }

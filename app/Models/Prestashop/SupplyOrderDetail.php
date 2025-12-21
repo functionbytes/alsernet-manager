@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\SupplyOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\SupplyOrder;
 
 class SupplyOrderDetail extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_detail';
+
     protected $primaryKey = 'id_supply_order_detail';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -41,7 +44,7 @@ class SupplyOrderDetail extends Model
         'price_with_order_discount_te',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_supply_order_detail' => 'integer',
         'id_supply_order' => 'integer',
         'id_product' => 'integer',

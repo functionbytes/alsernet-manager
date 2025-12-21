@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Tag extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tag';
+
     protected $primaryKey = 'id_tag';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +20,7 @@ class Tag extends Model
         'name',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_lang' => 'integer',
     ];
 

@@ -7,10 +7,7 @@ use App\Jobs\UpdateMailListJob;
 
 class MailListUpdatedListener
 {
-
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(MailListUpdated $event)
     {

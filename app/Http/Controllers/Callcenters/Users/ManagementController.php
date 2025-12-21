@@ -20,8 +20,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
 {
-
-    public function index(Request $request, $uid){
+    public function index(Request $request, $uid)
+    {
 
         $inscription = Inscription::uid($uid);
         $course = $inscription->course;
@@ -32,9 +32,8 @@ class ManagementController extends Controller
         ]);
     }
 
-
-
-    public function progressView($uid){
+    public function progressView($uid)
+    {
 
         $inscription = Inscription::uid($uid);
         $progress = $inscription->progress;
@@ -52,30 +51,33 @@ class ManagementController extends Controller
 
     }
 
-    public function progressRestoreSingle($uid){
+    public function progressRestoreSingle($uid)
+    {
         $inscription = null;
         $progress = CourseProgress::id($uid);
         $inscription = $progress->inscription;
         $progress->delete();
+
         return redirect()->route('support.enterprises.users.managements.progress.view', $inscription->uid);
     }
 
-    public function progressRestore($uid){
+    public function progressRestore($uid)
+    {
         $inscription = Inscription::uid($uid);
         $inscription->progress()->delete(); // Elimina todos los registros relacionados
+
         return redirect()->route('support.enterprises.users.managements.progress.view', $inscription->uid);
     }
 
-
-
-    public function reassign($uid){
+    public function reassign($uid)
+    {
 
         $user = User::uid($uid);
         $enterprise = $user->getEnterprise();
 
         $distributor = app('distributor');
         $enterprises = $distributor->enterprises;
-        $enterprises->prepend('' , '');
+        $enterprises->prepend('', '');
         $enterprises = $enterprises->pluck('title', 'uid');
 
         $enterprises = $enterprises->forget($enterprise->uid);
@@ -88,15 +90,16 @@ class ManagementController extends Controller
 
     }
 
-    public function reassignUser(Request $request) {
+    public function reassignUser(Request $request)
+    {
 
         $user = User::uid($request->uid);
         $newEnterprise = Enterprise::uid($request->enterprise);
 
-        if (!$user || !$newEnterprise) {
+        if (! $user || ! $newEnterprise) {
             return response()->json([
-            'success' => false,
-            'message' => 'Usuario o empresa no encontrados.']);
+                'success' => false,
+                'message' => 'Usuario o empresa no encontrados.']);
         }
 
         $enterpriseUser = EnterpriseUser::where('user_id', $user->id)->first();
@@ -109,18 +112,19 @@ class ManagementController extends Controller
             return response()->json([
                 'success' => true,
                 'enterprise' => $newEnterprise->uid,
-                'message' => 'Usuario reasignado a la nueva empresa correctamente.'
+                'message' => 'Usuario reasignado a la nueva empresa correctamente.',
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'No se encontró la relación del usuario con la empresa.'
+            'message' => 'No se encontró la relación del usuario con la empresa.',
         ]);
 
     }
 
-    public function dashboard($uid){
+    public function dashboard($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
 
@@ -130,7 +134,8 @@ class ManagementController extends Controller
 
     }
 
-    public function create($uid){
+    public function create($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
 
@@ -147,17 +152,20 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function view($uid){
+    public function view($uid)
+    {
 
         $user = User::uid($uid);
         $enterprise = $user->relations;
+
         return view('callcenters.views.enterprises.users.users.view')->with([
             'user' => $user,
             'enterprise' => $enterprise,
         ]);
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $user = User::uid($uid);
         $enterprise = $user->relations;
@@ -177,7 +185,8 @@ class ManagementController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $user = User::uid($request->uid);
 
@@ -187,7 +196,7 @@ class ManagementController extends Controller
 
             if (count($validates) > 0) {
 
-                $email =  User::where('email', $request->email)->get();
+                $email = User::where('email', $request->email)->get();
 
                 if (count($email) > 0) {
 
@@ -201,7 +210,7 @@ class ManagementController extends Controller
                     }
                 }
 
-                $identification =  User::where('identification', $request->identification)->get();
+                $identification = User::where('identification', $request->identification)->get();
 
                 if (count($identification) > 0) {
                     if ($user->identification != $request->identification) {
@@ -253,7 +262,8 @@ class ManagementController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $enterprise = Enterprise::uid($request->enterprise);
 
@@ -261,7 +271,7 @@ class ManagementController extends Controller
 
         if (count($validates) > 0) {
 
-            $email =  User::where('email', $request->email)->get();
+            $email = User::where('email', $request->email)->get();
 
             if (count($email) > 0) {
 
@@ -272,7 +282,7 @@ class ManagementController extends Controller
 
             }
 
-            $identification =  User::where('identification', $request->identification)->get();
+            $identification = User::where('identification', $request->identification)->get();
 
             if (count($identification) > 0) {
 
@@ -284,11 +294,10 @@ class ManagementController extends Controller
             }
         } else {
 
-
             $user = new User;
             $user->uid = $this->generate_uid('users');
             $user->firstname = Str::upper($request->firstname);
-            $user->lastname =  Str::upper($request->lastname);
+            $user->lastname = Str::upper($request->lastname);
             $user->cellphone = $request->cellphone;
             $user->identification = $request->identification;
             $user->email = $request->email;
@@ -320,7 +329,8 @@ class ManagementController extends Controller
 
     }
 
-    public function users($uid){
+    public function users($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
         $users = $enterprise->users;
@@ -331,7 +341,8 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function courses($uid){
+    public function courses($uid)
+    {
 
         $user = User::uid($uid);
         $inscriptions = $user->inscriptions()->with('course');
@@ -343,7 +354,8 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function report($uid){
+    public function report($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
 
@@ -361,7 +373,8 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function income($uid){
+    public function income($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
 
@@ -374,7 +387,8 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function import($uid){
+    public function import($uid)
+    {
 
         $enterprise = Enterprise::uid($uid);
 
@@ -383,7 +397,8 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function importation(Request $request){
+    public function importation(Request $request)
+    {
 
         $enterprise = Enterprise::uid($request->enterprise);
 
@@ -394,7 +409,8 @@ class ManagementController extends Controller
             } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
                 $failures = $e->failures();
-                //dd($failures);
+
+                // dd($failures);
                 return view('callcenters.views.enterprises.users.users.response')->with([
                     'error_message' => $e->getMessage(),
                     'failures' => $failures,
@@ -406,23 +422,25 @@ class ManagementController extends Controller
         return redirect()->route('support.supports.users', $enterprise->uid);
     }
 
-    public function generate(Request $request){
+    public function generate(Request $request)
+    {
 
         $modalitie = $request->modalitie;
         $enterprise = $request->enterprise;
 
-        return Excel::download(new UsersExport($enterprise, $modalitie), 'REPORTE USUARIOS ' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new UsersExport($enterprise, $modalitie), 'REPORTE USUARIOS '.date('Y-m-d').'.xlsx');
     }
 
-    public function incoming(Request $request){
+    public function incoming(Request $request)
+    {
 
         $course = $request->course;
         $enterprise = $request->enterprise;
-        $date = explode(" - ", $request->range);
+        $date = explode(' - ', $request->range);
         $start = Carbon::parse($date[0])->startOfDay();
         $end = Carbon::parse($date[1])->endOfDay();
 
-        return Excel::download(new IncomesExport($enterprise, $course, $start, $end), 'REPORTE USUARIOS ' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new IncomesExport($enterprise, $course, $start, $end), 'REPORTE USUARIOS '.date('Y-m-d').'.xlsx');
     }
 
     public function check(Request $request)
@@ -444,41 +462,38 @@ class ManagementController extends Controller
 
                         return response()->json([
                             'success' => true,
-                            'message' => 'Este usuario ya está registrado y asignado a la empresa: ' . $enterprise->title,
+                            'message' => 'Este usuario ya está registrado y asignado a la empresa: '.$enterprise->title,
                             'enterprise' => $enterprise->title,
                             'distributor' => $distributor->title,
-                            'url' => route('distributor.supports.users', ['uid' => $enterprise->uid])
+                            'url' => route('distributor.supports.users', ['uid' => $enterprise->uid]),
                         ]);
-
 
                     } else {
 
                         return response()->json([
                             'success' => true,
-                            'message' => 'Este usuario ya está registrado en la empresa: ' . $enterprise->title . ', pero no está asignado a ningún distribuidor.',
+                            'message' => 'Este usuario ya está registrado en la empresa: '.$enterprise->title.', pero no está asignado a ningún distribuidor.',
                             'enterprise' => $enterprise->title,
-                            'distributor' => null
+                            'distributor' => null,
                         ]);
 
                     }
                 }
             } else {
 
-                return response()->json([ 'success' => true,
+                return response()->json(['success' => true,
                     'message' => 'Este usuario ya está registrado pero no está asignado a ninguna empresa.',
-                    'enterprise' => null
+                    'enterprise' => null,
                 ]);
             }
         } else {
 
             return response()->json([
                 'success' => false,
-                'message' => 'Este usuario no está registrado.'
+                'message' => 'Este usuario no está registrado.',
             ]);
 
         }
 
     }
-
-
 }

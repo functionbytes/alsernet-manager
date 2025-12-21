@@ -7,7 +7,6 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-
     protected $levels = [
         //
     ];

@@ -26,10 +26,10 @@ class Identity extends Base
 
     public function validate($data)
     {
-        $requiredKeys = [ 'Name', 'VerificationStatus' ];
+        $requiredKeys = ['Name', 'VerificationStatus'];
 
         foreach ($requiredKeys as $key) {
-            if (!array_key_exists($key, $data)) {
+            if (! array_key_exists($key, $data)) {
                 throw new Exception(sprintf('Invalid JSON structure: key "%s" missing', $key));
             }
 

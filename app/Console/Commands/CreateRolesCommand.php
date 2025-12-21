@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class CreateRolesCommand extends Command
 {
@@ -86,7 +85,7 @@ class CreateRolesCommand extends Command
                 );
 
                 // Update if exists but missing data
-                if (!$role->wasRecentlyCreated && (!$role->label || !$role->description)) {
+                if (! $role->wasRecentlyCreated && (! $role->label || ! $role->description)) {
                     $role->update([
                         'label' => $roleData['label'] ?? $role->label,
                         'description' => $roleData['description'] ?? $role->description,
@@ -109,10 +108,10 @@ class CreateRolesCommand extends Command
 
         $this->newLine();
         $this->info('📊 Summary:');
-        $this->line("  ✓ Created: " . count($createdRoles) . " new role(s)");
-        $this->line("  ℹ Already existed: " . count($existingRoles) . " role(s)");
-        $this->line("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        $this->line("  Total roles: " . (count($createdRoles) + count($existingRoles)));
+        $this->line('  ✓ Created: '.count($createdRoles).' new role(s)');
+        $this->line('  ℹ Already existed: '.count($existingRoles).' role(s)');
+        $this->line('  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->line('  Total roles: '.(count($createdRoles) + count($existingRoles)));
 
         $this->newLine();
         $this->info('✅ Role creation completed!');

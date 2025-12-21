@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\Order;
+use App\Models\Prestashop\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Orders\Order;
 
 class CustomerThread extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_customer_thread';
+
     protected $primaryKey = 'id_customer_thread';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,7 +32,7 @@ class CustomerThread extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_shop' => 'integer',

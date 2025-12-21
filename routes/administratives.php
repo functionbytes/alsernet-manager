@@ -46,6 +46,15 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::get('/{uid}/missing-documents', [DocumentsController::class, 'getMissingDocuments'])->name('administrative.documents.missing-documents');
         Route::post('/{uid}/delete-single', [DocumentsController::class, 'deleteSingleDocument'])->name('administrative.documents.delete-single');
 
+        // Additional attachments routes
+        Route::post('/{uid}/upload-attachment', [DocumentsController::class, 'uploadAdditionalAttachment'])->name('administrative.documents.upload-attachment');
+        Route::get('/{uid}/attachments', [DocumentsController::class, 'getAdditionalAttachments'])->name('administrative.documents.attachments');
+        Route::post('/{uid}/delete-attachment', [DocumentsController::class, 'deleteAdditionalAttachment'])->name('administrative.documents.delete-attachment');
+
+        // Multi-stage workflow validation routes
+        Route::post('/{uid}/approve-stage', [DocumentsController::class, 'approveStage'])->name('administrative.documents.approve-stage');
+        Route::post('/{uid}/reject-stage', [DocumentsController::class, 'rejectStage'])->name('administrative.documents.reject-stage');
+
         // Nested routes - must come BEFORE generic /manage/{uid} route
         Route::post('/manage/{uid}/add-note', [DocumentsController::class, 'addNote'])->name('administrative.documents.add-note');
         Route::put('/manage/{uid}/update-note/{noteId}', [DocumentsController::class, 'updateNote'])->name('administrative.documents.update-note');

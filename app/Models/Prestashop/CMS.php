@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CMS extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_cms';
+
     protected $primaryKey = 'id_cms';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class CMS extends Model
         'active',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'id_cms_category' => 'integer',
         'position' => 'integer',

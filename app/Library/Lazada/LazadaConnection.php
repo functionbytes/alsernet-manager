@@ -2,28 +2,28 @@
 
 namespace App\Library\Lazada;
 
-use App\Http\Controllers\Controller;
 use App\Library\Lazada\Lazop\LazopClient;
 use App\Library\Lazada\Lazop\LazopRequest;
-use App\Library\Lazada\Lazop\UrlConstants;
-use App\Library\Lazada\Lazop\LazopLogger;
-use App\Library\Lazada\Lazop\Constants;
 
-if (!defined("LAZOP_SDK_WORK_DIR")) {
-    define("LAZOP_SDK_WORK_DIR", dirname(__FILE__));
+if (! defined('LAZOP_SDK_WORK_DIR')) {
+    define('LAZOP_SDK_WORK_DIR', dirname(__FILE__));
 }
 
-if (!defined("LAZOP_AUTOLOADER_PATH")) {
-    define("LAZOP_AUTOLOADER_PATH", dirname(__FILE__));
+if (! defined('LAZOP_AUTOLOADER_PATH')) {
+    define('LAZOP_AUTOLOADER_PATH', dirname(__FILE__));
 }
 
 class LazadaConnection
 {
     public $appKey;
+
     public $appSecret;
+
     public $service;
+
     public $data;
-    public $endpoint = "https://api.lazada.vn/rest";
+
+    public $endpoint = 'https://api.lazada.vn/rest';
 
     public function __construct($appKey = false, $appSecret = false, $data = [])
     {
@@ -43,12 +43,12 @@ class LazadaConnection
 
     public function getConnectLink()
     {
-        return "https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri=" . action('SourceController@connect') . "&client_id=" . $this->appKey;
+        return 'https://auth.lazada.com/oauth/authorize?response_type=code&force_auth=true&redirect_uri='.action('SourceController@connect').'&client_id='.$this->appKey;
     }
 
     public function getAccessToken($code)
     {
-        $this->service = new LazopClient("https://auth.lazada.com/rest", $this->appKey, $this->appSecret);
+        $this->service = new LazopClient('https://auth.lazada.com/rest', $this->appKey, $this->appSecret);
 
         $re = new LazopRequest('/auth/token/create');
         $re->addApiParam('code', $code);
@@ -61,7 +61,7 @@ class LazadaConnection
 
     public function refreshToken()
     {
-        $this->service = new LazopClient("https://auth.lazada.com/rest", $this->appKey, $this->appSecret);
+        $this->service = new LazopClient('https://auth.lazada.com/rest', $this->appKey, $this->appSecret);
 
         $re = new LazopRequest('/auth/token/refresh');
         $re->addApiParam('refresh_token', $this->data['refresh_token']);
@@ -73,7 +73,7 @@ class LazadaConnection
 
     public function makeRequest($url, $params, $method = 'GET')
     {
-        $this->service = new LazopClient("https://api.lazada.vn/rest", $this->appKey, $this->appSecret);
+        $this->service = new LazopClient('https://api.lazada.vn/rest', $this->appKey, $this->appSecret);
 
         $request = new LazopRequest($url, $method);
 

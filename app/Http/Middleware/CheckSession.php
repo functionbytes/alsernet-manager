@@ -2,18 +2,18 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
 use Closure;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class CheckSession
 {
     public function handle($request, Closure $next)
     {
 
-        if(!Auth::check() && Auth::user()->available == 1){
+        if (! Auth::check() && Auth::user()->available == 1) {
             return redirect()->route('auth.login');
-        }else{
+        } else {
 
             $previousSession = Auth::User()->session;
 
@@ -28,6 +28,4 @@ class CheckSession
         }
 
     }
-
-
 }

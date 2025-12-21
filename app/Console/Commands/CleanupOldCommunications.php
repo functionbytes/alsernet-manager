@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\ReturnCommunication;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class CleanupOldCommunications extends Command
 {
@@ -29,6 +28,7 @@ class CleanupOldCommunications extends Command
 
         if ($count === 0) {
             $this->info('✅ No hay comunicaciones antiguas para limpiar.');
+
             return Command::SUCCESS;
         }
 
@@ -48,5 +48,3 @@ class CleanupOldCommunications extends Command
         return Command::SUCCESS;
     }
 }
-
-

@@ -22,6 +22,7 @@ class CreatePermissionsCommand extends Command
 
         if ($routes->isEmpty()) {
             $this->warn('⚠️  No routes found. Run: php artisan routes:sync');
+
             return 1;
         }
 
@@ -51,10 +52,10 @@ class CreatePermissionsCommand extends Command
 
         $this->newLine();
         $this->info('📊 Summary:');
-        $this->line("  ✓ Created: " . count($createdPermissions) . " new permission(s)");
-        $this->line("  ℹ Already existed: " . count($existingPermissions) . " permission(s)");
-        $this->line("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        $this->line("  Total permissions: " . (count($createdPermissions) + count($existingPermissions)));
+        $this->line('  ✓ Created: '.count($createdPermissions).' new permission(s)');
+        $this->line('  ℹ Already existed: '.count($existingPermissions).' permission(s)');
+        $this->line('  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->line('  Total permissions: '.(count($createdPermissions) + count($existingPermissions)));
 
         // Optionally assign permissions to roles
         if ($this->option('assign')) {
@@ -98,8 +99,9 @@ class CreatePermissionsCommand extends Command
         foreach ($roleProfileMapping as $roleName => $profiles) {
             $role = Role::where('name', $roleName)->first();
 
-            if (!$role) {
+            if (! $role) {
                 $this->line("  ⚠️  Role '{$roleName}' not found. Create roles first: php artisan roles:create");
+
                 continue;
             }
 
@@ -115,6 +117,7 @@ class CreatePermissionsCommand extends Command
 
             if (empty($permissions)) {
                 $this->line("  ℹ  Role '{$roleName}' has no routes to assign");
+
                 continue;
             }
 

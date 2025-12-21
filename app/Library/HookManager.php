@@ -7,6 +7,7 @@ use Exception;
 class HookManager
 {
     protected $hooks;
+
     protected $plugins;
 
     public function __construct()
@@ -37,7 +38,7 @@ class HookManager
     public function execute($name, $params = [])
     {
         $results = [];
-        if (!$this->isEmpty($name)) {
+        if (! $this->isEmpty($name)) {
             foreach ($this->hooks[$name] as $callback) {
                 $results[] = call_user_func_array($callback, $params);
             }
@@ -55,6 +56,7 @@ class HookManager
 
         $closures = $this->hooks[$name];
         $lastClosure = end($closures);
+
         return call_user_func_array($lastClosure, $params);
     }
 

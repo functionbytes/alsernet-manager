@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Automation2;
 use App\Jobs\RunAutomation;
+use App\Models\Automation2;
 
 /**
  * /api/v1/campaigns - API controller for managing campaigns.

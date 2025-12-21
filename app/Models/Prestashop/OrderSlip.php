@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\Order;
 
 class OrderSlip extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_slip';
+
     protected $primaryKey = 'id_order_slip';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -31,7 +34,7 @@ class OrderSlip extends Model
         'order_slip_type',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_order_slip' => 'integer',

@@ -1,4 +1,4 @@
-@extends('layouts.administratives')
+ @extends('layouts.administratives')
 
 @section('title', 'Gestionar Documento')
 
@@ -152,6 +152,9 @@
                 </div>
             </div>
 
+            <!-- Workflow Multi-Etapa -->
+            @include('administratives.views.documents.includes.validation-workflow-sidebar')
+
             <!-- Document Notes -->
             @include('administratives.views.documents.includes.document-notes-sidebar')
 
@@ -287,7 +290,9 @@
                                 <select class="form-select select2" id="status_id" name="status_id">
                                     <option value="">Selecciona un estado</option>
                                     @forelse($statuses as $status)
-                                        <option value="{{ $status->id }}" {{ $document->status_id == $status->id ? 'selected' : '' }}>
+                                        <option value="{{ $status->id }}"
+                                                data-key="{{ $status->key }}"
+                                                {{ $document->status_id == $status->id ? 'selected' : '' }}>
                                             {{ $status->label }}
                                         </option>
                                     @empty
@@ -349,6 +354,23 @@
                                 </select>
                             </div>
                             <div class="col-12">
+                                <div class="border rounded p-3 bg-light">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="requires_financing" name="requires_financing" value="1"
+                                               {{ $document->requires_financing ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-semibold" for="requires_financing">
+                                            <i class="fas fa-money-check-alt me-1 text-success"></i>
+                                            Requiere financiación
+                                        </label>
+                                    </div>
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Si está marcado, el documento pasará por validación de contabilidad.
+                                        Esto define el número de etapas del workflow de validación.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-primary w-100">
                                     Guardar configuración
                                 </button>
@@ -369,6 +391,8 @@
                 ])
             </div>
 
+            <!-- Additional Attachments Section -->
+            @include('administratives.views.documents.includes.additional-attachments')
 
         </div>
 
@@ -755,27 +779,194 @@
         </div>
     </div>
 
+    <!-- Approve Stage Modal -->
+    <div class="modal fade" id="approveStageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-1">
+                            Aprobar etapa actual
+                        </h5>
+                        <p class="text-muted small mb-0">Confirma la aprobación para avanzar en el flujo</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Current Stage Info --}}
+                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded mb-3">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle" style="width: 48px; height: 48px;">
+                            <i class="fas fa-layer-group text-primary fs-5"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-semibold">Etapa {{ $document->current_stage }} de {{ $document->total_stages }}</p>
+                            <small class="text-muted">Grupo: {{ ucfirst($document->current_validator_group ?? 'Sin asignar') }}</small>
+                        </div>
+                    </div>
+
+                    @if($document->current_stage < $document->total_stages)
+                        @php
+                            $nextStage = $document->current_stage + 1;
+                            $stages = $document->getValidationWorkflowStages();
+                            $nextGroup = $stages[$nextStage - 1] ?? null;
+                            $nextGroupModel = $nextGroup ? \App\Models\Validation\ValidatorGroup::findByKey($nextGroup) : null;
+                            $nextGroupUsers = $nextGroupModel ? $nextGroupModel->users : collect();
+                        @endphp
+
+                        {{-- Next Stage Preview --}}
+                        <div class="alert bg-primary-subtle border-0 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-arrow-right text-primary me-2 mt-1"></i>
+                                <div>
+                                    <small class="fw-semibold d-block text-primary">Siguiente etapa</small>
+                                    <small class="text-dark">{{ ucfirst($nextGroup) }} - Se notificará al grupo o usuario asignado</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if($nextGroupUsers->isNotEmpty())
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">
+                                Asignar a usuario específico
+                            </label>
+                            <select class="form-select form-select-sm" id="assignToUser">
+                                <option value="">Todo el grupo ({{ $nextGroupUsers->count() }} usuarios)</option>
+                                @foreach($nextGroupUsers as $user)
+                                    <option value="{{ $user->id }}">
+                                        {{ $user->full_name }}
+                                        @if($user->pivot->priority === 'primary') (Primario) @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>Opcional: asigna a una persona o deja que todo el grupo lo vea
+                            </small>
+                        </div>
+                        @endif
+                    @else
+                        {{-- Final Stage --}}
+                        <div class="alert bg-primary-subtle border-0 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-check-double text-primary me-2 mt-1"></i>
+                                <div>
+                                    <small class="fw-semibold d-block text-primary">Última etapa</small>
+                                    <small class="text-dark">El documento será marcado como completamente aprobado</small>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="mb-0">
+                        <label class="form-label fw-semibold small">Comentarios <span class="text-muted fw-normal">(opcional)</span></label>
+                        <textarea class="form-control form-control-sm" id="approveStageComments" rows="3"
+                                  placeholder="Agregar comentarios sobre la aprobación..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="btnConfirmApproveStage">
+                        Aprobar
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Stage Modal -->
+    <div class="modal fade" id="rejectStageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-1">
+                            Rechazar documento
+                        </h5>
+                        <p class="text-muted small mb-0">El documento será marcado como rechazado</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Current Stage Info --}}
+                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded mb-3">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle" style="width: 48px; height: 48px;">
+                            <i class="fas fa-times text-primary fs-5"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-semibold">Etapa {{ $document->current_stage }} de {{ $document->total_stages }}</p>
+                            <small class="text-muted">El flujo de validación se detendrá</small>
+                        </div>
+                    </div>
+
+                    {{-- Internal Note Warning --}}
+                    <div class="alert bg-primary-subtle border-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-lock text-primary me-2 mt-1"></i>
+                            <div>
+                                <small class="fw-semibold d-block text-primary">Nota interna</small>
+                                <small class="text-dark">Esta información NO será enviada al cliente</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label fw-semibold small">
+                            Motivo del rechazo <span class="text-primary">*</span>
+                        </label>
+                        <textarea class="form-control form-control-sm" id="rejectStageReason" rows="4" required
+                                  placeholder="Describe el motivo del rechazo (solo visible para el equipo interno)..."></textarea>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>Mínimo 10 caracteres - Solo visible para el equipo interno
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="btnConfirmRejectStage">
+                        Rechazar
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Confirm Document Configuration Modal -->
     <div class="modal fade" id="confirmConfigurationModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title">
-                        Guardar configuración
+                        <i class="fas fa-save me-2 text-primary"></i>Guardar configuración
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info">
-                        <div>¿Estás seguro de que deseas guardar la configuración del documento?</div>
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>¿Deseas guardar la configuración del documento?</strong>
                     </div>
-                    <p class="text-muted mb-0">
+
+                    <p class="text-muted mb-3">
                         Se actualizarán el estado, origen y tipo de carga del documento.
                     </p>
+
+                    <!-- Email notification option -->
+                    <div class="border rounded p-3 bg-light" id="emailNotificationSection" style="display: none;">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="sendEmailOnStatusChange" checked>
+                            <label class="form-check-label fw-semibold" for="sendEmailOnStatusChange">
+                                <i class="fas fa-envelope me-1"></i>Enviar email automático al cliente
+                            </label>
+                        </div>
+                        <div class="ps-4">
+                            <small class="text-muted" id="emailTypeDescription">
+                                <!-- Se llenará dinámicamente según el estado seleccionado -->
+                            </small>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-primary w-100 mb-1" id="confirmConfigBtn">
-                        Guardar
+                        <i class="fas fa-check me-2"></i>Guardar
                     </button>
                     <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
@@ -1244,19 +1435,86 @@
             // ===== Guardar Configuración (Estado y Origen) =====
             let configFormData = null;
             let $configSubmitBtn = null;
+            let previousStatusId = $('#status_id').val();
+
+            // Mapeo de estados a descripciones de email (según nombres reales del sistema)
+            const statusEmailMap = {
+                'pending': {
+                    show: true,
+                    label: 'Solicitud inicial',
+                    description: 'Se enviará un email de "Solicitud inicial" solicitando al cliente que cargue los documentos requeridos.'
+                },
+                'awaiting_documents': {
+                    show: true,
+                    label: 'Recordatorio',
+                    description: 'Se enviará un email de "Recordatorio" solicitando los documentos pendientes.'
+                },
+                'received': {
+                    show: true,
+                    label: 'Confirmación de subida',
+                    description: 'Se enviará un email de "Confirmación de subida" confirmando que los documentos han sido recibidos y están en revisión.'
+                },
+                'incomplete': {
+                    show: true,
+                    label: 'Documentos específicos',
+                    description: 'Se enviará un email de "Documentos específicos" indicando los documentos que faltan y deben ser enviados.'
+                },
+                'approved': {
+                    show: true,
+                    label: 'Notificación de aprobación',
+                    description: 'Se enviará un email de "Notificación de aprobación" confirmando que los documentos han sido aprobados.'
+                },
+                'rejected': {
+                    show: true,
+                    label: 'Notificación de rechazo',
+                    description: 'Se enviará un email de "Notificación de rechazo" indicando que los documentos han sido rechazados y deben ser reenviados.'
+                },
+                'cancelled': {
+                    show: false
+                }
+            };
+
+            // Detectar cambio de estado
+            $('#status_id').on('change', function() {
+                const newStatusId = $(this).val();
+                const statusChanged = newStatusId !== previousStatusId;
+
+                if (statusChanged) {
+                    previousStatusId = newStatusId;
+                }
+            });
 
             $(document).on('submit', '#formDocumentConfig', function(e) {
                 e.preventDefault();
 
                 const $form = $(this);
+                const selectedStatusId = $('#status_id').val();
+                const selectedStatusKey = $('#status_id option:selected').data('key') || '';
+
                 configFormData = {
-                    status_id: $('#status_id').val(),
+                    status_id: selectedStatusId,
                     source_id: $('#source_id').val(),
                     load_id: $('#load_id').val(),
                     sync_id: $('#sync_id').val(),
                     upload_id: $('#upload_id').val()
                 };
                 $configSubmitBtn = $form.find('button[type="submit"]');
+
+                // Verificar si el estado cambió y si debe mostrar opción de email
+                const statusChanged = selectedStatusId && (selectedStatusId !== previousStatusId);
+                const emailConfig = statusEmailMap[selectedStatusKey];
+
+                if (statusChanged && emailConfig && emailConfig.show) {
+                    // Mostrar sección de email
+                    $('#emailNotificationSection').show();
+                    $('#emailTypeDescription').html(
+                        `<i class="fas fa-info-circle me-1"></i><strong>${emailConfig.label}:</strong> ${emailConfig.description}`
+                    );
+                    $('#sendEmailOnStatusChange').prop('checked', true);
+                } else {
+                    // Ocultar sección de email
+                    $('#emailNotificationSection').hide();
+                }
 
                 // Open confirmation modal
                 const modal = new bootstrap.Modal(document.getElementById('confirmConfigurationModal'));
@@ -1270,6 +1528,14 @@
                 $configSubmitBtn.prop('disabled', true);
                 $configSubmitBtn.html('Guardando...');
 
+                // Agregar parámetro de email si está visible y checkeado
+                const $emailSection = $('#emailNotificationSection');
+                const $emailCheckbox = $('#sendEmailOnStatusChange');
+
+                if ($emailSection.is(':visible') && $emailCheckbox.is(':checked')) {
+                    configFormData.send_email = true;
+                }
+
                 // Close modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('confirmConfigurationModal'));
                 modal.hide();
@@ -1280,12 +1546,22 @@
                     data: configFormData,
                     success: function(response) {
                         if (response.success) {
-                            toastr.success('Configuración guardada correctamente', 'Éxito', {
+                            let successMsg = 'Configuración guardada correctamente';
+
+                            // Si se envió un email, mostrar información adicional
+                            if (response.email_sent) {
+                                successMsg += `<br><small><i class="fas fa-envelope me-1"></i>Email enviado: ${response.email_sent.label} a ${response.email_sent.recipient}</small>`;
+                            }
+
+                            toastr.success(successMsg, 'Éxito', {
                                 closeButton: true,
                                 progressBar: true,
-                                positionClass: "toast-bottom-right"
+                                positionClass: "toast-bottom-right",
+                                timeOut: 3000,
+                                enableHtml: true
                             });
-                            setTimeout(() => location.reload(), 1500);
+
+                            setTimeout(() => location.reload(), 2000);
                         } else {
                             toastr.error(response.message || 'No se pudo guardar', 'Error', {
                                 closeButton: true,
@@ -2003,6 +2279,126 @@
                         $btn.prop('disabled', false).html('Enviar');
                     }
                 });
+            });
+
+            // =========================================
+            // MULTI-STAGE WORKFLOW: APPROVE & REJECT
+            // =========================================
+
+            // Handler para aprobar etapa actual
+            $('#btnConfirmApproveStage').on('click', function() {
+                const $btn = $(this);
+                const comments = $('#approveStageComments').val();
+                const assignedUserId = $('#assignToUser').val();
+
+                // Deshabilitar botón y mostrar loading
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Aprobando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.approve-stage', $document->uid) }}",
+                    method: 'POST',
+                    data: {
+                        comments: comments,
+                        assigned_user_id: assignedUserId || null,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+
+                            // Cerrar modal y recargar página después de 1.5s
+                            $('#approveStageModal').modal('hide');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al aprobar la etapa';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+
+                        // Restaurar botón
+                        $btn.prop('disabled', false).html('<i class="fas fa-check-circle me-2"></i>Aprobar y Continuar');
+                    }
+                });
+            });
+
+            // Handler para rechazar documento
+            $('#btnConfirmRejectStage').on('click', function() {
+                const $btn = $(this);
+                const reason = $('#rejectStageReason').val();
+
+                // Validar que hay una razón
+                if (!reason || reason.trim().length < 10) {
+                    toastr.warning('Debes proporcionar una razón de al menos 10 caracteres', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    return;
+                }
+
+                // Deshabilitar botón y mostrar loading
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Rechazando...');
+
+                $.ajax({
+                    url: "{{ route('administrative.documents.reject-stage', $document->uid) }}",
+                    method: 'POST',
+                    data: {
+                        reason: reason,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message, 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+
+                            // Cerrar modal y recargar página después de 1.5s
+                            $('#rejectStageModal').modal('hide');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al rechazar el documento';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+
+                        // Restaurar botón
+                        $btn.prop('disabled', false).html('<i class="fas fa-times-circle me-2"></i>Rechazar Documento');
+                    }
+                });
+            });
+
+            // Limpiar modales al cerrar
+            $('#approveStageModal').on('hidden.bs.modal', function() {
+                $('#approveStageComments').val('');
+                $('#assignToUser').val('');
+                $('#btnConfirmApproveStage')
+                    .prop('disabled', false)
+                    .html('<i class="fas fa-check-circle me-2"></i>Aprobar y Continuar');
+            });
+
+            $('#rejectStageModal').on('hidden.bs.modal', function() {
+                $('#rejectStageReason').val('');
+                $('#btnConfirmRejectStage')
+                    .prop('disabled', false)
+                    .html('<i class="fas fa-times-circle me-2"></i>Rechazar Documento');
             });
 
         });

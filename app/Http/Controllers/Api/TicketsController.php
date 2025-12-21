@@ -16,14 +16,12 @@ use App\Models\User;
 use App\Notifications\TicketCreateNotifications;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
 use function App\Http\Controllers\Api\V1\lang;
 use function App\Http\Controllers\Api\V1\usersdata;
 
 class TicketsController extends ApiController
 {
-
-
-
     public function store(Request $request)
     {
         // Validar los datos básicos
@@ -32,7 +30,6 @@ class TicketsController extends ApiController
             'category' => 'required|exists:categories,id',
             'message' => 'required|no_script_tags',
         ]);
-
 
         $details = $request->except([
             'subject', 'category', 'message',
@@ -48,7 +45,7 @@ class TicketsController extends ApiController
             'details' => $details,
         ]);
 
-        $ticket->ticket_id = setting('CUSTOMER_TICKETID') . '-' . $ticket->id;
+        $ticket->ticket_id = setting('CUSTOMER_TICKETID').'-'.$ticket->id;
         $ticket->save();
 
         if (setting('AUTO_OVERDUE_TICKET') == 'no') {
@@ -74,18 +71,15 @@ class TicketsController extends ApiController
         }
         $ticket->update();
 
-
-
         // Procesar cualquier lógica adicional específica, como notificaciones o adjuntos
         $this->processCustomFields($ticket, $request);
 
-        $ccmails = new TicketMail();
+        $ccmails = new TicketMail;
         $ccmails->ticket_id = $ticket->id;
         $ccmails->ccemails = $request->ccmail;
         $ccmails->save();
 
-
-        $tickethistory = new TicketHistory();
+        $tickethistory = new TicketHistory;
         $tickethistory->ticket_id = $ticket->id;
         $tickethistory->ticketnote = $ticket->ticketnote->isNotEmpty();
         $tickethistory->overduestatus = $ticket->overduestatus;
@@ -95,10 +89,10 @@ class TicketsController extends ApiController
         $tickethistory->type = $ticket->cust->userType;
         $tickethistory->save();
 
-        //foreach ($request->input('ticket', []) as $file) {
-         //   $provider =  storage()->provider;
-         //   $provider::mediaupload($ticket, 'uploads/ticket/' . $file, 'ticket');
-        //}
+        // foreach ($request->input('ticket', []) as $file) {
+        //   $provider =  storage()->provider;
+        //   $provider::mediaupload($ticket, 'uploads/ticket/' . $file, 'ticket');
+        // }
 
         $request->session()->put('customerticket', Auth::guard('customer')->id());
         $ccemailsend = CCMAILS::where('ticket_id', $ticket->id)->first();
@@ -110,12 +104,12 @@ class TicketsController extends ApiController
             'ticket_description' => $ticket->message,
             'ticket_status' => $ticket->status,
             'ticket_customer_url' => route('loadmore.load_data', encrypt($ticket->ticket_id)),
-            'ticket_admin_url' => url('/admin/ticket-view/' . encrypt($ticket->ticket_id)),
+            'ticket_admin_url' => url('/admin/ticket-view/'.encrypt($ticket->ticket_id)),
         ];
 
         try {
 
-            if($ticket->cust->phonesmsenable == 1 && $ticket->cust->phoneVerified == 1 && setting('twilioenable') == 'on'){
+            if ($ticket->cust->phonesmsenable == 1 && $ticket->cust->phoneVerified == 1 && setting('twilioenable') == 'on') {
                 dispatch((new SendSMS($ticket->cust->phone, 'created_ticket', $ticketData)));
             }
 
@@ -124,16 +118,15 @@ class TicketsController extends ApiController
 
             if ($holidays->isNotEmpty() && setting('24hoursbusinessswitch') != 'on') {
                 dispatch((new MailSend($ticket->cust->email, 'customer_send_ticket_created_that_holiday_or_announcement', $ticketData)));
-                if($ccemailsend->ccemails != null){
+                if ($ccemailsend->ccemails != null) {
                     dispatch((new MailSend($ccemailsend->ccemails, 'customer_send_ticket_created_that_holiday_or_announcement', $ticketData)));
                 }
             } else {
                 dispatch((new MailSend($ticket->cust->email, 'customer_send_ticket_created', $ticketData)));
-                if($ccemailsend->ccemails != null){
+                if ($ccemailsend->ccemails != null) {
                     dispatch((new MailSend($ccemailsend->ccemails, 'customer_send_ticket_created', $ticketData)));
                 }
             }
-
 
             $notificationcat = $ticket->category->groupscategoryc()->get();
             $groupIds = $notificationcat->pluck('group_id')->toArray();
@@ -145,7 +138,7 @@ class TicketsController extends ApiController
                 }
             }
 
-            $icc = array();
+            $icc = [];
 
             if ($groupstatus) {
 
@@ -164,7 +157,7 @@ class TicketsController extends ApiController
                     }
                 }
 
-                if (!$icc) {
+                if (! $icc) {
                     $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->where('users.status', 1)->get();
                     foreach ($admins as $admin) {
                         $admin->notify(new TicketCreateNotifications($ticket));
@@ -201,51 +194,47 @@ class TicketsController extends ApiController
 
             return response()->json([
                 'status' => true,
-                'message' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id,
-                'ticket' => $ticket->id
+                'message' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id,
+                'ticket' => $ticket->id,
             ], 200);
         }
 
         return response()->json([
             'status' => true,
-            'message' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id,
-            'ticket' => $ticket->id
+            'message' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id,
+            'ticket' => $ticket->id,
         ], 200);
 
     }
-
 
     private function processCustomFields(Ticket $ticket, $request)
     {
         $customFields = TicketField::where('status', 1)->whereIn('displaytypes', ['both', 'createticket'])->get();
 
         foreach ($customFields as $customfield) {
-            $ticketcustomfield = new TicketCustomField();
+            $ticketcustomfield = new TicketCustomField;
             $ticketcustomfield->ticket_id = $ticket->id;
             $ticketcustomfield->fieldnames = $customfield->fieldnames;
             $ticketcustomfield->fieldtypes = $customfield->fieldtypes;
             $ticketcustomfield->fieldoptions = $customfield->fieldoptions;
             if ($customfield->fieldtypes == 'checkbox') {
-                if ($request->input('custom_' . $customfield->id) != null) {
+                if ($request->input('custom_'.$customfield->id) != null) {
 
-                    $string = implode(',', $request->input('custom_' . $customfield->id));
+                    $string = implode(',', $request->input('custom_'.$customfield->id));
                     $ticketcustomfield->values = $string;
                 }
             }
             if ($customfield->fieldtypes != 'checkbox') {
                 if ($customfield->fieldprivacy == '1') {
                     $ticketcustomfield->privacymode = $customfield->fieldprivacy;
-                    $ticketcustomfield->values = encrypt($request->input('custom_' . $customfield->id));
+                    $ticketcustomfield->values = encrypt($request->input('custom_'.$customfield->id));
                 } else {
 
-                    $ticketcustomfield->values = $request->input('custom_' . $customfield->id);
+                    $ticketcustomfield->values = $request->input('custom_'.$customfield->id);
                 }
             }
             $ticketcustomfield->save();
         }
 
-
     }
-
-
 }

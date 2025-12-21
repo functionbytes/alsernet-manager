@@ -7,10 +7,8 @@ use App\Jobs\CreateBackupJob;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Artisan;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SplFileInfo;
 
 class BackupController extends Controller
 {
@@ -96,7 +94,7 @@ class BackupController extends Controller
                     $dbConnections[$defaultConnection] = [
                         'driver' => $defaultConnection,
                         'host' => $dbSettings['db_host'] ?? 'localhost',
-                        'port' => (int)($dbSettings['db_port'] ?? 3306),
+                        'port' => (int) ($dbSettings['db_port'] ?? 3306),
                         'database' => $dbSettings['db_database'],
                         'username' => $dbSettings['db_username'],
                         'password' => $dbSettings['db_password'],
@@ -119,7 +117,7 @@ class BackupController extends Controller
             CreateBackupJob::dispatch($backupTypes, $backupConfig, $dbSettings);
 
             // Format types for display
-            $displayTypes = array_map(function($type) {
+            $displayTypes = array_map(function ($type) {
                 $labels = [
                     'app_code' => 'Código',
                     'config' => 'Configuración',
@@ -127,18 +125,19 @@ class BackupController extends Controller
                     'resources' => 'Recursos',
                     'migrations' => 'Migraciones',
                     'storage' => 'Almacenamiento',
-                    'database' => 'Base de Datos'
+                    'database' => 'Base de Datos',
                 ];
+
                 return $labels[$type] ?? $type;
             }, $backupTypes);
 
             return redirect()->route('manager.settings.backups.index')
-                ->with('success', 'Backup en progreso... Se está creando el backup incluyendo: ' . implode(', ', $displayTypes) . '. Esto puede tardar varios minutos.');
+                ->with('success', 'Backup en progreso... Se está creando el backup incluyendo: '.implode(', ', $displayTypes).'. Esto puede tardar varios minutos.');
         } catch (\Throwable $e) {
-            \Log::error('Backup creation failed: ' . $e->getMessage());
+            \Log::error('Backup creation failed: '.$e->getMessage());
 
             return redirect()->back()
-                ->with('error', 'Error al crear el backup: ' . $e->getMessage());
+                ->with('error', 'Error al crear el backup: '.$e->getMessage());
         }
     }
 
@@ -150,8 +149,8 @@ class BackupController extends Controller
         try {
             // Try multiple possible backup locations
             $possiblePaths = [
-                'backups/' . $filename,
-                config('app.name') . '/' . $filename,
+                'backups/'.$filename,
+                config('app.name').'/'.$filename,
             ];
 
             $backupPath = null;
@@ -162,7 +161,7 @@ class BackupController extends Controller
                 }
             }
 
-            if (!$backupPath) {
+            if (! $backupPath) {
                 return redirect()->route('manager.settings.backups.index')
                     ->with('error', 'El archivo de backup no existe');
             }
@@ -170,7 +169,7 @@ class BackupController extends Controller
             return Storage::disk('local')->download($backupPath, $filename);
         } catch (\Exception $e) {
             return redirect()->route('manager.settings.backups.index')
-                ->with('error', 'Error al descargar el backup: ' . $e->getMessage());
+                ->with('error', 'Error al descargar el backup: '.$e->getMessage());
         }
     }
 
@@ -187,8 +186,8 @@ class BackupController extends Controller
 
             // Try multiple possible backup locations
             $possiblePaths = [
-                'backups/' . $filename,
-                config('app.name') . '/' . $filename,
+                'backups/'.$filename,
+                config('app.name').'/'.$filename,
             ];
 
             $backupPath = null;
@@ -199,13 +198,14 @@ class BackupController extends Controller
                 }
             }
 
-            if (!$backupPath) {
+            if (! $backupPath) {
                 if ($isJsonRequest) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'El archivo de backup no existe'
+                        'message' => 'El archivo de backup no existe',
                     ], 404);
                 }
+
                 return redirect()->route('manager.settings.backups.index')
                     ->with('error', 'El archivo de backup no existe');
             }
@@ -215,7 +215,7 @@ class BackupController extends Controller
             if ($isJsonRequest) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Backup eliminado exitosamente'
+                    'message' => 'Backup eliminado exitosamente',
                 ]);
             }
 
@@ -229,11 +229,12 @@ class BackupController extends Controller
             if ($isJsonRequest) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al eliminar el backup: ' . $e->getMessage()
+                    'message' => 'Error al eliminar el backup: '.$e->getMessage(),
                 ], 500);
             }
+
             return redirect()->route('manager.settings.backups.index')
-                ->with('error', 'Error al eliminar el backup: ' . $e->getMessage());
+                ->with('error', 'Error al eliminar el backup: '.$e->getMessage());
         }
     }
 
@@ -247,11 +248,11 @@ class BackupController extends Controller
         // Try multiple possible backup locations
         $possiblePaths = [
             storage_path('app/backups'),
-            storage_path('app/' . config('app.name')),
+            storage_path('app/'.config('app.name')),
         ];
 
         foreach ($possiblePaths as $backupPath) {
-            if (!is_dir($backupPath)) {
+            if (! is_dir($backupPath)) {
                 continue;
             }
 
@@ -293,7 +294,7 @@ class BackupController extends Controller
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 
     /**
@@ -309,7 +310,7 @@ class BackupController extends Controller
                 'success' => true,
                 'count' => count($backups),
                 'total_size' => $this->formatBytes($totalSize),
-                'latest' => !empty($backups) ? [
+                'latest' => ! empty($backups) ? [
                     'name' => $backups[0]['name'],
                     'date' => $backups[0]['date'],
                     'size' => $backups[0]['size'],

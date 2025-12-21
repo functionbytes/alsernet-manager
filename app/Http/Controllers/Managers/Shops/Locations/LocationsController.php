@@ -11,7 +11,8 @@ use Illuminate\Support\Str;
 
 class LocationsController extends Controller
 {
-    public function index(Request $request,$uid){
+    public function index(Request $request, $uid)
+    {
 
         $shop = Shop::uid($uid);
         $searchKey = null ?? $request->search;
@@ -20,7 +21,7 @@ class LocationsController extends Controller
         $locations = $shop->locations()->orderBy('id', 'desc');
 
         if ($searchKey != null) {
-            $locations = $locations->where('title', 'like', '%' . $searchKey . '%');
+            $locations = $locations->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($available != null) {
@@ -37,8 +38,9 @@ class LocationsController extends Controller
         ]);
 
     }
-    public function create($uid,$lang = 'es'){
 
+    public function create($uid, $lang = 'es')
+    {
 
         $shop = Shop::uid($uid);
 
@@ -47,8 +49,8 @@ class LocationsController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables->prepend('' , '');
-        $availables = $availables->pluck('label','id');
+        $availables->prepend('', '');
+        $availables = $availables->pluck('label', 'id');
 
         $shops = Shop::available()->get();
         $shops->prepend('', '');
@@ -62,7 +64,8 @@ class LocationsController extends Controller
 
     }
 
-    public function exists($uid){
+    public function exists($uid)
+    {
 
         $shop = Shop::uid($uid);
 
@@ -72,12 +75,13 @@ class LocationsController extends Controller
 
     }
 
-    public function checkLocationExists(Request $request){
+    public function checkLocationExists(Request $request)
+    {
 
-        $shop  = Shop::uid($request->shop);
-        $locationValidate = Location::validateExits($request->location,$shop->id);
+        $shop = Shop::uid($request->shop);
+        $locationValidate = Location::validateExits($request->location, $shop->id);
 
-        if (!$locationValidate) {
+        if (! $locationValidate) {
 
             $location = new Location;
             $location->uid = $this->generate_uid('locations');
@@ -95,7 +99,7 @@ class LocationsController extends Controller
                 'message' => 'Se actualizo la clase correctamente',
             ]);
 
-        }else{
+        } else {
 
             return response()->json([
                 'success' => false,
@@ -105,8 +109,8 @@ class LocationsController extends Controller
 
     }
 
-
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $location = Location::uid($uid);
 
@@ -115,7 +119,7 @@ class LocationsController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $shops = Shop::available()->get();
         $shops->prepend('', '');
@@ -130,8 +134,8 @@ class LocationsController extends Controller
 
     }
 
-
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $location = Location::uid($request->uid);
         $location->title = Str::upper($request->title);
@@ -149,7 +153,8 @@ class LocationsController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $location = new Location;
         $location->uid = $this->generate_uid('locations');
@@ -167,16 +172,20 @@ class LocationsController extends Controller
         ]);
 
     }
-    public function destroy($uid){
+
+    public function destroy($uid)
+    {
 
         $shop = null;
         $location = Location::uid($uid);
         $shop = $location->shop;
         $location->delete();
-        return redirect()->route('manager.shops.locations',$shop->uid);
+
+        return redirect()->route('manager.shops.locations', $shop->uid);
     }
 
-    public function history(Request $request,$uid){
+    public function history(Request $request, $uid)
+    {
 
         $searchKey = null ?? $request->search;
         $location = Location::uid($uid);
@@ -184,14 +193,13 @@ class LocationsController extends Controller
 
         $items = $inventarielocation->items();
 
-
         if ($searchKey) {
-            $items->when(!strpos($searchKey, '-'), function ($query) use ($searchKey) {
-                $query->where('products.reference', 'like', '%' . $searchKey . '%')
-                    ->orWhere('products.barcode', 'like', '%' . $searchKey . '%')
-                    ->orWhere('products.title', 'like', '%' . $searchKey . '%')
+            $items->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
+                $query->where('products.reference', 'like', '%'.$searchKey.'%')
+                    ->orWhere('products.barcode', 'like', '%'.$searchKey.'%')
+                    ->orWhere('products.title', 'like', '%'.$searchKey.'%')
                     ->orWhereHas('location', function ($q) use ($searchKey) {
-                        $q->where('locations.title', 'like', '%' . $searchKey . '%');
+                        $q->where('locations.title', 'like', '%'.$searchKey.'%');
                     });
             });
         }
@@ -204,6 +212,4 @@ class LocationsController extends Controller
         ]);
 
     }
-
 }
-

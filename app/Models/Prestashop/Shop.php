@@ -2,20 +2,20 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Shop\ShopGroup;
-use Illuminate\Database\Eloquent\Relations\{
-    BelongsTo,
-    HasMany
-};
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_shop';
+
     protected $primaryKey = 'id_shop';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -34,7 +34,7 @@ class Shop extends Model
         'theme',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'deleted' => 'boolean',
         'id_shop' => 'integer',
@@ -43,7 +43,7 @@ class Shop extends Model
     ];
 
     // BelongsTo Relationships
-    public function shopGroup() : BelongsTo
+    public function shopGroup(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\ShopGroup',
@@ -52,7 +52,7 @@ class Shop extends Model
         );
     }
 
-    public function category() : BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Category',
@@ -62,7 +62,7 @@ class Shop extends Model
     }
 
     // HasMany Relationships
-    public function customers() : HasMany
+    public function customers(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\Customer',
@@ -71,7 +71,7 @@ class Shop extends Model
         );
     }
 
-    public function orders() : HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\Order',
@@ -80,7 +80,7 @@ class Shop extends Model
         );
     }
 
-    public function carts() : HasMany
+    public function carts(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\Cart',
@@ -89,7 +89,7 @@ class Shop extends Model
         );
     }
 
-    public function products() : HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\Product',
@@ -98,7 +98,7 @@ class Shop extends Model
         );
     }
 
-    public function categories() : HasMany
+    public function categories(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\Category',
@@ -121,6 +121,4 @@ class Shop extends Model
     {
         return $this->hasMany('App\Models\Prestashop\Carrier', 'id_shop', 'id_shop');
     }
-
-
 }

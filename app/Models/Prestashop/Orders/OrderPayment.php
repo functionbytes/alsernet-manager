@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop\Orders;
 
+use App\Models\Prestashop\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Currency;
 
 class OrderPayment extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_payment';
+
     protected $primaryKey = 'id_order_payment';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +30,7 @@ class OrderPayment extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_currency' => 'integer',
         'conversion_rate' => 'float',

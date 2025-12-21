@@ -64,27 +64,52 @@
         {"name": "Task Breakdown", "file": "guides/plan/task-breakdown-guide.md"},
         {"name": "Risk Assessment", "file": "guides/plan/risk-assessment-guide.md"}
       ]
+    },
+    {
+      "id": "docs-agent",
+      "name": "Documentation Agent",
+      "type": "documentation",
+      "description": "Generate and maintain technical documentation, API docs, READMEs, and code comments for Alsernet",
+      "location": "agents/docs/",
+      "mainFile": "agents/docs/docs-design.md",
+      "capabilitiesFile": "agents/docs/capabilities.md",
+      "guidesDirectory": "guides/docs/",
+      "version": "1.0",
+      "status": "production",
+      "model": "haiku",
+      "modelType": "claude-code-guide",
+      "capabilities": 28,
+      "technologies": ["Markdown", "PHPDoc", "JSDoc", "OpenAPI/Swagger", "Mermaid Diagrams", "Context7"],
+      "guides": [
+        {"name": "Quick Start", "file": "guides/docs/docs-agent-quick-start.md"},
+        {"name": "API Documentation", "file": "guides/docs/api-documentation-guide.md"},
+        {"name": "Code Comments", "file": "guides/docs/code-comments-guide.md"},
+        {"name": "Architecture Docs", "file": "guides/docs/architecture-docs-guide.md"}
+      ]
     }
   ],
   "structure": {
     ".claude/agents/": {
       "plan/": ["plan-design.md", "capabilities.md"],
       "frontend/": ["frontend-design.md", "capabilities.md"],
-      "backend/": ["backend-design.md", "capabilities.md"]
+      "backend/": ["backend-design.md", "capabilities.md"],
+      "docs/": ["docs-design.md", "capabilities.md"]
     },
     ".claude/guides/": {
       "plan/": ["plan-agent-quick-start.md", "feature-planning-guide.md", "architecture-planning-guide.md", "task-breakdown-guide.md", "risk-assessment-guide.md"],
       "frontend/": ["jquery-patterns.md", "component-building.md", "form-handling.md", "real-time-integration.md"],
-      "backend/": ["creating-new-module.md", "api-endpoint-patterns.md"]
+      "backend/": ["creating-new-module.md", "api-endpoint-patterns.md"],
+      "docs/": ["docs-agent-quick-start.md", "api-documentation-guide.md", "code-comments-guide.md", "architecture-docs-guide.md"]
     }
   },
   "metadata": {
-    "version": "1.0",
+    "version": "1.1",
     "created": "2025-11-30",
+    "updated": "2025-12-20",
     "description": "Alsernet Development Agents Registry",
-    "totalAgents": 3,
-    "totalCapabilities": 121,
-    "totalGuides": 6,
-    "organization": "Centralized guides directory organized by agent type + Plan Agent for pre-implementation planning"
+    "totalAgents": 4,
+    "totalCapabilities": 149,
+    "totalGuides": 10,
+    "organization": "Centralized guides directory organized by agent type + Plan Agent for pre-implementation planning + Docs Agent for documentation"
   }
 }

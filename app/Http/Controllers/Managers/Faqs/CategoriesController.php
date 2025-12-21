@@ -9,58 +9,61 @@ use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
+    public function index(Request $request)
+    {
 
-    public function index(Request $request){
+        $searchKey = null ?? $request->search;
+        $available = null ?? $request->available;
 
-            $searchKey = null ?? $request->search;
-            $available = null ?? $request->available;
+        $categories = FaqCategorie::descending();
 
-            $categories = FaqCategorie::descending();
+        if ($searchKey) {
+            $categories = $categories->where('title', 'like', '%'.$searchKey.'%');
+        }
 
-            if ($searchKey) {
-                $categories = $categories->where('title', 'like', '%' . $searchKey . '%');
-            }
+        if ($request->available != null) {
+            $categories = $categories->where('available', $available);
+        }
 
-            if ($request->available != null) {
-                $categories = $categories->where('available', $available);
-            }
+        $categories = $categories->paginate(paginationNumber());
 
-            $categories = $categories->paginate(paginationNumber());
-
-            return view('managers.views.settings.faqs.categories.index')->with([
-                'categories' => $categories,
-                'available' => $available,
-                'searchKey' => $searchKey,
-            ]);
+        return view('managers.views.settings.faqs.categories.index')->with([
+            'categories' => $categories,
+            'available' => $available,
+            'searchKey' => $searchKey,
+        ]);
 
     }
 
-    public function create(){
+    public function create()
+    {
 
         $availables = collect([
             ['id' => '1', 'label' => 'Publico'],
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         return view('managers.views.settings.faqs.categories.create')->with([
-            'availables' => $availables
+            'availables' => $availables,
         ]);
 
     }
 
-    public function view($uid){
+    public function view($uid)
+    {
 
         $categorie = FaqCategorie::uid($uid);
 
         return view('managers.views.settings.faqs.categories.view')->with([
-            'categorie' => $categorie
+            'categorie' => $categorie,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $categorie = FaqCategorie::uid($uid);
 
@@ -69,21 +72,22 @@ class CategoriesController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         return view('managers.views.settings.faqs.categories.edit')->with([
             'categorie' => $categorie,
-            'availables' => $availables
+            'availables' => $availables,
         ]);
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $categorie = new FaqCategorie;
         $categorie->uid = $this->generate_uid('faq_categories');
         $categorie->title = $request->title;
-        $categorie->slug  = Str::slug($request->title, '-');
+        $categorie->slug = Str::slug($request->title, '-');
         $categorie->available = $request->available;
         $categorie->save();
 
@@ -94,11 +98,12 @@ class CategoriesController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $categorie = FaqCategorie::uid($request->uid);
         $categorie->title = $request->title;
-        $categorie->slug  = Str::slug($request->title, '-');
+        $categorie->slug = Str::slug($request->title, '-');
         $categorie->available = $request->available;
         $categorie->update();
 
@@ -109,7 +114,8 @@ class CategoriesController extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
         $categorie = FaqCategorie::uid($uid);
         $categorie->delete();
@@ -117,5 +123,4 @@ class CategoriesController extends Controller
         return redirect()->back();
 
     }
-
 }

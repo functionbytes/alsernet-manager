@@ -20,7 +20,7 @@ class ReturnConfirmationMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Confirmación de Solicitud de Devolución #' . $this->return->id_return_request)
+        return $this->subject('Confirmación de Solicitud de Devolución #'.$this->return->id_return_request)
             ->view('emails.return-confirmation')
             ->with([
                 'return' => $this->return,
@@ -30,7 +30,7 @@ class ReturnConfirmationMail extends Mailable
                 'status' => $this->return->getStatusName(),
                 'return_type' => $this->return->getReturnTypeName(),
                 'logistics_mode' => $this->return->getLogisticsModeLabel(),
-                'company_info' => config('returns.company_info')
+                'company_info' => config('returns.company_info'),
             ]);
     }
 }

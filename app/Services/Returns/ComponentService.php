@@ -7,7 +7,6 @@ use App\Models\OrderComponent;
 use App\Models\ProductComponent;
 use App\Models\Return\ComponentShipment;
 use App\Models\Return\ComponentShipmentItem;
-use App\Models\Return\ComponentSubstitution;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -111,7 +110,7 @@ class ComponentService
      */
     protected function tryAutoSubstitution(OrderComponent $orderComponent): bool
     {
-        if (!$orderComponent->can_substitute) {
+        if (! $orderComponent->can_substitute) {
             return false;
         }
 
@@ -133,6 +132,7 @@ class ComponentService
                         'substitute_component' => $substitute->code,
                         'quantity' => $quantityToSubstitute,
                     ]);
+
                     return true;
                 }
             }
@@ -290,7 +290,7 @@ class ComponentService
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error creando envío parcial: ' . $e->getMessage(),
+                'message' => 'Error creando envío parcial: '.$e->getMessage(),
             ];
         }
     }
@@ -305,7 +305,7 @@ class ComponentService
         // Estrategia 1: Buscar sustitutos
         if ($orderComponent->can_substitute) {
             $alternatives = $orderComponent->findAlternatives();
-            if (!empty($alternatives)) {
+            if (! empty($alternatives)) {
                 $strategies[] = [
                     'type' => 'substitution',
                     'description' => 'Usar componente sustituto',
@@ -333,12 +333,12 @@ class ComponentService
                 'description' => 'Enviar sin el componente con deducción',
                 'deduction_amount' => $deduction,
                 'affects_functionality' => $orderComponent->component->affects_functionality,
-                'recommended' => !$orderComponent->is_essential,
+                'recommended' => ! $orderComponent->is_essential,
             ];
         }
 
         // Estrategia 4: Cancelar item (solo para componentes no esenciales)
-        if (!$orderComponent->is_essential) {
+        if (! $orderComponent->is_essential) {
             $strategies[] = [
                 'type' => 'cancel_item',
                 'description' => 'Cancelar el item del pedido',
@@ -457,7 +457,7 @@ class ComponentService
 
             // Agrupar por categoría
             $category = $component->category ?: 'uncategorized';
-            if (!isset($report['components_by_category'][$category])) {
+            if (! isset($report['components_by_category'][$category])) {
                 $report['components_by_category'][$category] = [
                     'count' => 0,
                     'total_value' => 0,
@@ -562,11 +562,12 @@ class ComponentService
                     ->orWhere('sku', $stockData['component_code'])
                     ->first();
 
-                if (!$component) {
+                if (! $component) {
                     $results['errors'][] = [
                         'code' => $stockData['component_code'],
                         'error' => 'Componente no encontrado',
                     ];
+
                     continue;
                 }
 
@@ -598,7 +599,7 @@ class ComponentService
 
         } catch (\Exception $e) {
             DB::rollback();
-            $results['errors'][] = ['error' => 'Error general: ' . $e->getMessage()];
+            $results['errors'][] = ['error' => 'Error general: '.$e->getMessage()];
         }
 
         return $results;

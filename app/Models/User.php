@@ -29,7 +29,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasCache, HasFactory , HasRoles , HasUid , LogsActivity ,Notifiable , TrackJobs;
+    use HasApiTokens, HasCache, HasFactory , HasRoles , HasUid , LogsActivity , TrackJobs;
+    use Notifiable {
+        routeNotificationFor as protected routeNotificationForNotifiable;
+    }
 
     protected $table = 'users';
 
@@ -2125,35 +2128,112 @@ class User extends Authenticatable
     }
 
     /**
-     * Configuraciones de notificaciones
+     * Preferencias de notificaciones del usuario
      */
-    public function notificationSettings()
+    public function notificationPreferences(): HasMany
     {
-        return $this->hasMany(NotificationSetting::class);
+        return $this->hasMany(\App\Models\Notifications\NotificationPreference::class);
     }
 
     /**
-     * Tokens de notificaciones push
+     * Tokens de push notifications del usuario
      */
-    public function pushTokens()
+    public function pushTokens(): HasMany
     {
-        return $this->hasMany(PushNotificationToken::class);
+        return $this->hasMany(\App\Models\Notifications\NotificationPushToken::class);
     }
 
     /**
-     * Verificar si puede recibir notificaciones por un canal
+     * Verificar si el usuario puede recibir notificaciones en un canal específico
      */
     public function canReceiveNotification(string $channel, string $type): bool
     {
-        return NotificationSetting::isEnabled($this->id, $channel, $type);
+        return \App\Models\Notifications\NotificationPreference::isEnabled($this->id, $channel, $type);
     }
 
     /**
-     * Obtener tokens activos para push notifications
+     * Obtener tokens activos de push notifications
      */
     public function getActivePushTokens()
     {
-        return $this->pushTokens()->where('active', true)->get();
+        return \App\Models\Notifications\NotificationPushToken::activeForUser($this->id);
+    }
+
+    /**
+     * Obtener notificaciones no leídas con datos formateados
+     */
+    public function getFormattedUnreadNotifications()
+    {
+        return $this->unreadNotifications->map(function ($notification) {
+            $data = $notification->data;
+
+            return [
+                'id' => $notification->id,
+                'type' => $notification->type,
+                'title' => $data['title'] ?? 'Notificación',
+                'message' => $data['message'] ?? '',
+                'icon' => $data['icon'] ?? 'fas fa-bell',
+                'color' => $data['color'] ?? 'primary',
+                'action_url' => $data['action_url'] ?? null,
+                'action_text' => $data['action_text'] ?? 'Ver',
+                'priority' => $data['priority'] ?? 'normal',
+                'created_at' => $notification->created_at->diffForHumans(),
+                'is_read' => false,
+            ];
+        });
+    }
+
+    /**
+     * Obtener todas las notificaciones con datos formateados
+     */
+    public function getFormattedNotifications(int $limit = 50)
+    {
+        return $this->notifications()
+            ->take($limit)
+            ->get()
+            ->map(function ($notification) {
+                $data = $notification->data;
+
+                return [
+                    'id' => $notification->id,
+                    'type' => $notification->type,
+                    'title' => $data['title'] ?? 'Notificación',
+                    'message' => $data['message'] ?? '',
+                    'icon' => $data['icon'] ?? 'fas fa-bell',
+                    'color' => $data['color'] ?? 'primary',
+                    'action_url' => $data['action_url'] ?? null,
+                    'action_text' => $data['action_text'] ?? 'Ver',
+                    'priority' => $data['priority'] ?? 'normal',
+                    'created_at' => $notification->created_at->diffForHumans(),
+                    'is_read' => $notification->read_at !== null,
+                    'read_at' => $notification->read_at?->toIso8601String(),
+                ];
+            });
+    }
+
+    /**
+     * Contar notificaciones no leídas
+     */
+    public function unreadNotificationsCount(): int
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    /**
+     * Marcar todas las notificaciones como leídas
+     */
+    public function markAllNotificationsAsRead(): void
+    {
+        $this->unreadNotifications()->update(['read_at' => now()]);
+    }
+
+    /**
+     * Personalizar el canal de broadcast para notificaciones
+     * Esto define el canal privado donde este usuario recibirá notificaciones en tiempo real
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.'.$this->id;
     }
 
     /**
@@ -2162,9 +2242,9 @@ class User extends Authenticatable
     public function routeNotificationFor($driver, $notification = null)
     {
         if ($driver === 'vonage') {
-            return $this->phone;
+            return $this->phone ?? null;
         }
 
-        return parent::routeNotificationFor($driver, $notification);
+        return $this->routeNotificationForNotifiable($driver, $notification);
     }
 }

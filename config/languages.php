@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
     'aa' => 'Afar',
     'ab' => 'Abkhaz',
     'ae' => 'Avestan',
@@ -185,4 +185,4 @@ return array(
     'za' => 'Zhuang, Chuang',
     'zh' => 'Chinese',
     'zu' => 'Zulu',
-);
+];

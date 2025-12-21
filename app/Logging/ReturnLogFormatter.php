@@ -87,14 +87,14 @@ class ReturnLogFormatter extends LineFormatter
         $domain = $parts[1];
 
         $maskedUsername = strlen($username) > 2
-            ? substr($username, 0, 2) . str_repeat('*', strlen($username) - 2)
+            ? substr($username, 0, 2).str_repeat('*', strlen($username) - 2)
             : str_repeat('*', strlen($username));
 
         $domainParts = explode('.', $domain);
         $maskedDomain = count($domainParts) > 1
-            ? str_repeat('*', strlen($domainParts[0])) . '.' . end($domainParts)
+            ? str_repeat('*', strlen($domainParts[0])).'.'.end($domainParts)
             : str_repeat('*', strlen($domain));
 
-        return $maskedUsername . '@' . $maskedDomain;
+        return $maskedUsername.'@'.$maskedDomain;
     }
 }

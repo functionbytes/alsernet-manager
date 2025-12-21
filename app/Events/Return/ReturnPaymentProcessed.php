@@ -2,8 +2,8 @@
 
 namespace App\Events\Return;
 
-use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnPayment;
+use App\Models\Return\ReturnRequest;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -13,8 +13,11 @@ class ReturnPaymentProcessed
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $return;
+
     public $payment;
+
     public $processedBy;
+
     public $metadata;
 
     public function __construct(
@@ -46,7 +49,7 @@ class ReturnPaymentProcessed
             'transaction_id' => $this->payment->transaction_id,
             'processed_by' => $this->processedBy,
             'metadata' => $this->metadata,
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
     }
 
@@ -79,7 +82,7 @@ class ReturnPaymentProcessed
      */
     public function shouldUpdateReturnStatus(): bool
     {
-        return $this->isSuccessful() && !$this->return->is_refunded;
+        return $this->isSuccessful() && ! $this->return->is_refunded;
     }
 
     /**

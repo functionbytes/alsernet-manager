@@ -1,18 +1,17 @@
 <?php
 
-
 namespace App\Http\Controllers\Managers\Faqs;
-
 
 use App\Http\Controllers\Controller;
 use App\Models\Faq\FaqCategorie;
+use App\Models\Faq\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\Faq\Template;
 
 class FaqsController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $available = null ?? $request->available;
@@ -20,7 +19,7 @@ class FaqsController extends Controller
         $faqs = Template::descending();
 
         if ($searchKey) {
-            $faqs = $faqs->where('title', 'like', '%' . $searchKey . '%');
+            $faqs = $faqs->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($request->available != null) {
@@ -36,27 +35,29 @@ class FaqsController extends Controller
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
 
         $availables = collect([
             ['id' => '1', 'label' => 'Publico'],
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $categories = FaqCategorie::latest()->available()->get();
-        $categories->prepend('' , '');
-        $categories = $categories->pluck('title','id');
+        $categories->prepend('', '');
+        $categories = $categories->pluck('title', 'id');
 
         return view('managers.views.settings.faqs.faqs.create')->with([
             'availables' => $availables,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $faq = Template::uid($uid);
 
@@ -65,10 +66,10 @@ class FaqsController extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         $categories = FaqCategorie::latest()->available()->get();
-        $categories = $categories->pluck('title','id');
+        $categories = $categories->pluck('title', 'id');
 
         return view('managers.views.settings.faqs.faqs.edit')->with([
             'availables' => $availables,
@@ -77,7 +78,8 @@ class FaqsController extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $faq = new Template;
         $faq->uid = $this->generate_uid('faqs');
@@ -95,7 +97,8 @@ class FaqsController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $faq = Template::uid($request->uid);
         $faq->title = $request->title;
@@ -112,12 +115,12 @@ class FaqsController extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
-       $faq = Template::uid($uid);
-       $faq->delete();
+        $faq = Template::uid($uid);
+        $faq->delete();
 
-       return redirect()->route('manager.faqs');
+        return redirect()->route('manager.faqs');
     }
-
 }

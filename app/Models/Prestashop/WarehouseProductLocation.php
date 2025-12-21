@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\Warehouse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\Warehouse;
 
 class WarehouseProductLocation extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_warehouse_product_location';
+
     protected $primaryKey = 'id_warehouse_product_location';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class WarehouseProductLocation extends Model
         'location',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_warehouse_product_location' => 'integer',
         'id_product' => 'integer',
         'id_product_attribute' => 'integer',

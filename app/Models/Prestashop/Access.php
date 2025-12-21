@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Access extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_access';
+
     protected $primaryKey = 'id_profile';
+
     public $timestamps = false;
 
     protected $fillable = [

@@ -64,8 +64,8 @@
                             <th>Nombre</th>
                             <th>Categoría</th>
                             <th>Módulo</th>
-                            <th>Estado</th>
                             <th>Sistema</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -113,23 +113,20 @@
                                     </span>
                                 </td>
                                 <td>
+                                    @if ($variable->is_system)
+
+                                        Sistema
+                                    @else
+                                        Custom
+                                    @endif
+                                </td>
+                                <td>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input toggle-status" type="checkbox"
                                             @checked($variable->is_enabled)
                                             data-variable-id="{{ $variable->id }}"
                                             data-url="{{ route('manager.settings.mailers.variables.toggle-status', $variable) }}">
                                     </div>
-                                </td>
-                                <td>
-                                    @if ($variable->is_system)
-                                        <span class="badge bg-light-danger text-danger rounded-3 py-2">
-                                            <i class="fa-duotone fa-lock"></i> Sistema
-                                        </span>
-                                    @else
-                                        <span class="badge bg-light-secondary text-secondary rounded-3 py-2">
-                                            Custom
-                                        </span>
-                                    @endif
                                 </td>
                                 <td class="text-left">
                                     <div class="dropdown dropstart">
@@ -139,7 +136,7 @@
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $variable->id }}">
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.settings.mailers.variables.edit', $variable) }}">
-                                                    <i class="fa-duotone fa-pen-to-square"></i> Editar
+                                                    Editar
                                                 </a>
                                             </li>
                                             @if (!$variable->is_system)
@@ -148,7 +145,7 @@
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 text-danger confirm-delete" data-href="{{ route('manager.settings.mailers.variables.destroy', $variable) }}">
-                                                        <i class="fa-duotone fa-trash"></i> Eliminar
+                                                        Eliminar
                                                     </a>
                                                 </li>
                                             @endif

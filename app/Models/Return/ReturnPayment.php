@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnPayment extends Model
 {
     protected $table = 'return_payments';
+
     protected $primaryKey = 'id_return_payment';
 
     protected $fillable = [
         'id_return_request', 'amount', 'payment_method', 'transaction_id',
-        'payment_status', 'processed_at', 'notes', 'id_employee'
+        'payment_status', 'processed_at', 'notes', 'id_employee',
     ];
 
     protected $casts = [
@@ -62,18 +63,28 @@ class ReturnPayment extends Model
 
     // Constantes para estados de pago
     const STATUS_PENDING = 'pending';
+
     const STATUS_PROCESSING = 'processing';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_FAILED = 'failed';
+
     const STATUS_CANCELLED = 'cancelled';
+
     const STATUS_REFUNDED = 'refunded';
 
     // Constantes para métodos de pago
     const METHOD_BANK_TRANSFER = 'bank_transfer';
+
     const METHOD_CREDIT_CARD = 'credit_card';
+
     const METHOD_PAYPAL = 'paypal';
+
     const METHOD_WALLET = 'wallet';
+
     const METHOD_CASH = 'cash';
+
     const METHOD_OTHER = 'other';
 
     /**
@@ -115,7 +126,7 @@ class ReturnPayment extends Model
     {
         $data = [
             'payment_status' => self::STATUS_COMPLETED,
-            'processed_at' => now()
+            'processed_at' => now(),
         ];
 
         if ($transactionId) {
@@ -136,7 +147,7 @@ class ReturnPayment extends Model
     {
         $data = [
             'payment_status' => self::STATUS_FAILED,
-            'processed_at' => now()
+            'processed_at' => now(),
         ];
 
         if ($notes) {
@@ -157,7 +168,7 @@ class ReturnPayment extends Model
             self::STATUS_COMPLETED => 'Completado',
             self::STATUS_FAILED => 'Fallido',
             self::STATUS_CANCELLED => 'Cancelado',
-            self::STATUS_REFUNDED => 'Reembolsado'
+            self::STATUS_REFUNDED => 'Reembolsado',
         ];
 
         return $statuses[$this->payment_status] ?? 'Desconocido';
@@ -174,7 +185,7 @@ class ReturnPayment extends Model
             self::METHOD_PAYPAL => 'PayPal',
             self::METHOD_WALLET => 'Monedero Digital',
             self::METHOD_CASH => 'Efectivo',
-            self::METHOD_OTHER => 'Otro'
+            self::METHOD_OTHER => 'Otro',
         ];
 
         return $methods[$this->payment_method] ?? 'Desconocido';
@@ -191,7 +202,7 @@ class ReturnPayment extends Model
             self::STATUS_COMPLETED => 'success',
             self::STATUS_FAILED => 'danger',
             self::STATUS_CANCELLED => 'secondary',
-            self::STATUS_REFUNDED => 'primary'
+            self::STATUS_REFUNDED => 'primary',
         ];
 
         return $colors[$this->payment_status] ?? 'secondary';
@@ -202,7 +213,7 @@ class ReturnPayment extends Model
      */
     public function getFormattedAmount(): string
     {
-        return number_format($this->amount, 2, ',', '.') . ' €';
+        return number_format($this->amount, 2, ',', '.').' €';
     }
 
     /**
@@ -221,6 +232,7 @@ class ReturnPayment extends Model
     public static function isReturnFullyRefunded($returnId, $expectedAmount): bool
     {
         $totalRefunded = static::getTotalForReturn($returnId);
+
         return $totalRefunded >= $expectedAmount;
     }
 }

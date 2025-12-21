@@ -2,19 +2,19 @@
 
 namespace App\Mail;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
-use Symfony\Component\Mime\Email;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Mime\Email;
 
 class DirectMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $email;
+
     public $ticket;
     // protected $ticket;
     // protected $replySubject;

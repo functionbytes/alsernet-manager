@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Pasirinkti',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'dir',
     'Type' => 'Tipas',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Pasirinkote per daug failų/katalogų atlikti "%s" operacijai. Limitas: %d failų/katalogų', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Jūs neturite teisių atlikti "%s" funkcijos failams.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Nepavyko išsaugoti nuotraukos',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Nepavyko ištraukti. Failas gali būti sugadintas.',
     'Zip_Invalid' => 'Toks formatas yra neleidžiamas. Galimi formatai: zip, gz, tar.',
     'Dir_No_Write' => 'Katalogas, kurį pasirinkote neturi įrašymo teisių.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'File permission',
     'File_Permission_Not_Allowed' => 'Changing %s permissions are not allowed.', // %s = files or folders
     'File_Permission_Recursive' => 'Apply recursively?',
-    'File_Permission_Wrong_Mode' => "The supplied permission mode is incorrect.",
+    'File_Permission_Wrong_Mode' => 'The supplied permission mode is incorrect.',
     'User' => 'User',
     'Group' => 'Group',
     'Yes' => 'Yes',
@@ -116,32 +116,32 @@ return array(
     'File_Open_Edit_Not_Allowed' => 'You are not allowed to %s this file.', // %s = open or edit
     'Edit' => 'Edit',
     'Edit_File' => "Edit file's content",
-    'File_Save_OK' => "File successfully saved.",
-    'File_Save_Error' => "There was an error while saving the file.",
+    'File_Save_OK' => 'File successfully saved.',
+    'File_Save_Error' => 'There was an error while saving the file.',
     'New_File' => 'New File',
     'No_Extension' => 'You have to add a file extension.',
     'Valid_Extensions' => 'Valid extensions: %s', // %s = txt,log etc.
-    'Upload_message' => "Drop file here to upload",
+    'Upload_message' => 'Drop file here to upload',
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Forbiden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size",
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Forbiden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class SpecificPrice extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_specific_price';
+
     protected $primaryKey = 'id_specific_price';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +31,7 @@ class SpecificPrice extends Model
         'to',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_product' => 'integer',
         'id_product_attribute' => 'integer',
         'id_shop' => 'integer',

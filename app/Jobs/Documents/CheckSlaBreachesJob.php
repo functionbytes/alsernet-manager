@@ -216,9 +216,9 @@ class CheckSlaBreachesJob implements ShouldQueue
      * Escalate a breach by notifying administrators
      */
     private function escalateBreach(
-        DocumentSlaBreach                      $breach,
+        DocumentSlaBreach $breach,
         \App\Models\Document\DocumentSlaPolicy $slaPolicy,
-        Document                               $document
+        Document $document
     ): void {
         try {
             $breach->update(['escalated' => true, 'escalated_at' => now()]);

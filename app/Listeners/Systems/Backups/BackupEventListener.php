@@ -26,7 +26,7 @@ class BackupEventListener
     public function handleBackupHasSucceeded(BackupHasSucceeded $event): void
     {
         // Log backup success
-        \Log::info('Backup created successfully: ' . $event->backupDestination->disk() . ' disk');
+        \Log::info('Backup created successfully: '.$event->backupDestination->disk().' disk');
     }
 
     /**
@@ -35,7 +35,7 @@ class BackupEventListener
     public function handleBackupHasFailed(BackupHasFailed $event): void
     {
         // Log backup failure
-        \Log::error('Backup failed: ' . $event->exception->getMessage());
+        \Log::error('Backup failed: '.$event->exception->getMessage());
     }
 
     /**
@@ -53,9 +53,8 @@ class BackupEventListener
     public function handleBackupWasNotSuccessful(BackupWasNotSuccessful $event): void
     {
         // Log backup completion error
-        \Log::error('Backup process had errors: ' . $event->exception->getMessage());
+        \Log::error('Backup process had errors: '.$event->exception->getMessage());
     }
-
 
     /**
      * Handle backup successful event

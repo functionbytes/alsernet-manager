@@ -31,7 +31,7 @@ class CleanupOldLogs extends Command
         $cutoffDate = now()->subDays($days);
 
         $this->info('🧹 Starting log cleanup...');
-        $this->line('Keeping logs from the last ' . $days . ' days');
+        $this->line('Keeping logs from the last '.$days.' days');
 
         // Clean database logs
         $deletedDbLogs = ApplicationLog::where('created_at', '<', $cutoffDate)
@@ -58,7 +58,7 @@ class CleanupOldLogs extends Command
         $logsPath = storage_path('logs');
         $deletedCount = 0;
 
-        if (!is_dir($logsPath)) {
+        if (! is_dir($logsPath)) {
             return 0;
         }
 
@@ -73,7 +73,7 @@ class CleanupOldLogs extends Command
      */
     private function deleteOldDirectories($path, $cutoffDate, &$count): void
     {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -84,7 +84,7 @@ class CleanupOldLogs extends Command
                 continue;
             }
 
-            $itemPath = $path . '/' . $item;
+            $itemPath = $path.'/'.$item;
 
             // Check if this looks like a date directory (YYYY/MM/DD)
             if (is_dir($itemPath) && preg_match('/^\d{4}$/', $item)) {
@@ -114,7 +114,7 @@ class CleanupOldLogs extends Command
     {
         $logsPath = storage_path('logs');
 
-        if (!is_dir($logsPath)) {
+        if (! is_dir($logsPath)) {
             return;
         }
 
@@ -141,7 +141,7 @@ class CleanupOldLogs extends Command
         if (is_dir($path)) {
             foreach (scandir($path) as $file) {
                 if ($file !== '.' && $file !== '..') {
-                    $filePath = $path . '/' . $file;
+                    $filePath = $path.'/'.$file;
                     $size += is_file($filePath) ? filesize($filePath) : $this->getDirectorySize($filePath);
                 }
             }
@@ -160,7 +160,7 @@ class CleanupOldLogs extends Command
         if (is_dir($path)) {
             foreach (scandir($path) as $file) {
                 if ($file !== '.' && $file !== '..') {
-                    $filePath = $path . '/' . $file;
+                    $filePath = $path.'/'.$file;
                     $count += is_file($filePath) ? 1 : $this->countFiles($filePath);
                 }
             }
@@ -180,6 +180,6 @@ class CleanupOldLogs extends Command
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round($bytes, $precision).' '.$units[$pow];
     }
 }

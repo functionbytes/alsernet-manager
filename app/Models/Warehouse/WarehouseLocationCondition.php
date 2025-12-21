@@ -11,7 +11,7 @@ class WarehouseLocationCondition extends Model
 {
     use HasFactory, HasUid;
 
-    protected $table = "warehouse_location_conditions";
+    protected $table = 'warehouse_location_conditions';
 
     protected $fillable = [
         'uid',
@@ -48,7 +48,6 @@ class WarehouseLocationCondition extends Model
      * SCOPES
      * ===============================================
      */
-
     public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();

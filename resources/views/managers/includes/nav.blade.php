@@ -430,14 +430,36 @@
 
                         <li><span class="sidebar-divider"></span></li>
 
-                        <!-- Integraciones -->
+                        <!-- Documentos -->
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Integraciones</span>
+                            <span class="hide-menu">Documentos</span>
                         </li>
                         <li class="sidebar-item">
                             <a href="{{ route('manager.settings.documents.configurations') }}" class="sidebar-link">
-                                <span class="hide-menu">Documentos</span>
+                                <span class="hide-menu">Configuraciones</span>
                             </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Grupos de validación</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.documents.types') }}" class="sidebar-link">
+                                <span class="hide-menu">Tipos de documento</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.documents.conditions') }}" class="sidebar-link">
+                                <span class="hide-menu">Condiciones de validación</span>
+                            </a>
+                        </li>
+
+                        <li><span class="sidebar-divider"></span></li>
+
+                        <!-- Integraciones -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Integraciones</span>
                         </li>
                         <li class="sidebar-item">
                             <a href="{{ route('manager.settings.erp.index') }}" class="sidebar-link">
@@ -448,6 +470,40 @@
                             <a href="{{ route('manager.settings.prestashop.index') }}" class="sidebar-link">
                                 <span class="hide-menu">Prestashop</span>
                             </a>
+                        </li>
+
+                        <li><span class="sidebar-divider"></span></li>
+
+                        <!-- Automatización de Proveedores -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Automatización Proveedores</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.suppliers.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Proveedores</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.supplier-prompts.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Prompts AI</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.supplier-automation.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Automatización</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.supplier-content.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Contenido AI</span>
+                            </a>
+                        </li>
+
+                        <li><span class="sidebar-divider"></span></li>
+
+                        <!-- Comunicaciones -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Comunicaciones</span>
                         </li>
                         <li class="sidebar-item">
                             <a href="{{ route('manager.settings.email.index') }}" class="sidebar-link">

@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HttpsProtocolMiddleware
@@ -12,25 +12,25 @@ class HttpsProtocolMiddleware
     {
         try {
             DB::connection()->getPdo();
-            if(!DB::getSchemaBuilder()->hasTable('settings')){
+            if (! DB::getSchemaBuilder()->hasTable('settings')) {
 
                 return $next($request);
-            }else{
+            } else {
 
-                if(setting('FORCE_SSL') == 'on'){
-                if (!$request->secure()) {
-                    return redirect()->secure($request->getPathInfo());
+                if (setting('FORCE_SSL') == 'on') {
+                    if (! $request->secure()) {
+                        return redirect()->secure($request->getPathInfo());
+                    }
+
+                    return $next($request);
+                } else {
+                    return $next($request);
                 }
-                return $next($request);
-            }else{
-                return $next($request);
-            }
             }
         } catch (\Exception $e) {
             return $next($request);
-            die("Could not connect to the database.  Please check your configuration. error:" . $e );
+            exit('Could not connect to the database.  Please check your configuration. error:'.$e);
         }
-
 
     }
 }

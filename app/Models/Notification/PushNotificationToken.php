@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property-read User|null $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken query()
+ *
  * @mixin \Eloquent
  */
 class PushNotificationToken extends Model

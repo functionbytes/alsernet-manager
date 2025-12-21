@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FeatureValue extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_feature_value';
+
     protected $primaryKey = 'id_feature_value';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +20,7 @@ class FeatureValue extends Model
         'value',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_feature' => 'integer',
     ];
 

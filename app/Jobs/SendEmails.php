@@ -2,15 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Mail\mailmailablesend;
+use App\Models\EmailTemplate;
+use DOMDocument;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
-use App\Models\EmailTemplate;
-use DOMDocument;
 use Twilio\Rest\Client;
 
 class SendEmails implements ShouldQueue
@@ -30,7 +28,7 @@ class SendEmails implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($user,$templateCode,$ticketData)
+    public function __construct($user, $templateCode, $ticketData)
     {
         $this->user = $user;
         $this->templateCode = $templateCode;
@@ -47,24 +45,24 @@ class SendEmails implements ShouldQueue
         $data = $this->ticketData;
 
         $body = $template->body;
-        foreach($this->ticketData as $key => $value){
-            $body = str_replace('{{'.$key.'}}' , $this->ticketData[$key] , $body);
-            $body = str_replace('{{ '.$key.' }}' , $this->ticketData[$key] , $body);
+        foreach ($this->ticketData as $key => $value) {
+            $body = str_replace('{{'.$key.'}}', $this->ticketData[$key], $body);
+            $body = str_replace('{{ '.$key.' }}', $this->ticketData[$key], $body);
         }
 
-        $body = '<!DOCTYPE html><html><head><title>Email Content</title></head><body>' . $body . '</body></html>';
-        $dom = new DOMDocument();
+        $body = '<!DOCTYPE html><html><head><title>Email Content</title></head><body>'.$body.'</body></html>';
+        $dom = new DOMDocument;
         libxml_use_internal_errors(true);
         $dom->loadHTML($body);
         libxml_clear_errors();
 
         $text = '';
         foreach ($dom->getElementsByTagName('p') as $paragraph) {
-            $text .= $paragraph->nodeValue . "\n";
+            $text .= $paragraph->nodeValue."\n";
         }
 
         foreach ($dom->getElementsByTagName('div') as $div) {
-            $text .= $div->nodeValue . "\n";
+            $text .= $div->nodeValue."\n";
         }
 
         $account_sid = setting('twilio_auth_id');
@@ -75,7 +73,7 @@ class SendEmails implements ShouldQueue
 
         $client->messages->create($this->user, [
             'from' => $twilio_number,
-            'body' => $text
+            'body' => $text,
         ]);
     }
 }

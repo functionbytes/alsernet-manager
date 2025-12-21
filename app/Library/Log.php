@@ -22,9 +22,9 @@
 
 namespace App\Library;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 /**
  * Read configuration settings
@@ -33,6 +33,7 @@ use Monolog\Formatter\LineFormatter;
 class Log
 {
     public static $logger;
+
     public static $path;
 
     /**

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Manufacturer extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_manufacturer';
+
     protected $primaryKey = 'id_manufacturer';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class Manufacturer extends Model
         'active',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'active' => 'boolean',

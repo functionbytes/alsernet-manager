@@ -59,7 +59,7 @@ class UploadingSettingsController extends Controller
                 ->with('success', 'Configuración de carga de archivos actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
+                ->with('error', 'Error al actualizar la configuración: '.$e->getMessage())
                 ->withInput();
         }
     }

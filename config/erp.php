@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'url_erp' => env('ERP_URL'),
     // Constantes para bonos

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class RangePrice extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_range_price';
+
     protected $primaryKey = 'id_range_price';
+
     public $timestamps = false;
 
     protected $fillable = [

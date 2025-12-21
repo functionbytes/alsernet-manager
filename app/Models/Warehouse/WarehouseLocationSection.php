@@ -5,8 +5,8 @@ namespace App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class WarehouseLocationSection extends Model
 {
@@ -40,19 +40,17 @@ class WarehouseLocationSection extends Model
         'level' => 'integer',
     ];
 
-
-
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
-    public function scopeUid($query ,$uid)
+    public function scopeUid($query, $uid)
     {
         return $query->where('uid', $uid)->first();
     }
 
-    public function scopeBarcode($query ,$barcode)
+    public function scopeBarcode($query, $barcode)
     {
         return $query->where('barcode', $barcode)->first();
     }
@@ -70,7 +68,7 @@ class WarehouseLocationSection extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (!$model->uid && Schema::hasColumn('warehouse_location_sections', 'uid')) {
+            if (! $model->uid && Schema::hasColumn('warehouse_location_sections', 'uid')) {
                 $model->uid = Str::uuid();
             }
         });
@@ -144,11 +142,12 @@ class WarehouseLocationSection extends Model
      */
     public function isNearCapacity(float $threshold = 0.85): bool
     {
-        if (!$this->max_quantity) {
+        if (! $this->max_quantity) {
             return false;
         }
 
         $current = $this->getTotalQuantity();
+
         return $current >= ($this->max_quantity * $threshold);
     }
 

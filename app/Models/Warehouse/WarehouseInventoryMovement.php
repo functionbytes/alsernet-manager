@@ -49,11 +49,14 @@ class WarehouseInventoryMovement extends Model
      * CONSTANTES
      * ===============================================
      */
-
     const TYPE_ADD = 'add';
+
     const TYPE_SUBTRACT = 'subtract';
+
     const TYPE_CLEAR = 'clear';
+
     const TYPE_MOVE = 'move';
+
     const TYPE_COUNT = 'count';
 
     /**

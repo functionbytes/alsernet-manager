@@ -47,7 +47,7 @@ class DatabaseSettingsController extends Controller
                 ->with('success', 'Configuración de base de datos actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
+                ->with('error', 'Error al actualizar la configuración: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -77,14 +77,14 @@ class DatabaseSettingsController extends Controller
                 'success' => true,
                 'status' => 'connected',
                 'message' => 'Conexión a base de datos exitosa',
-                'version' => $conn['version'] ?? 'Desconocida'
+                'version' => $conn['version'] ?? 'Desconocida',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'status' => 'error',
-                'message' => 'Error en la conexión: ' . $e->getMessage()
+                'message' => 'Error en la conexión: '.$e->getMessage(),
             ], 200); // Return 200 so JavaScript success block handles it
         }
     }
@@ -103,7 +103,7 @@ class DatabaseSettingsController extends Controller
                 (int) $settings['db_port']
             );
 
-            if (!$conn) {
+            if (! $conn) {
                 throw new \Exception(mysqli_connect_error() ?: 'Error desconocido en MySQL');
             }
 
@@ -114,7 +114,7 @@ class DatabaseSettingsController extends Controller
 
             return [
                 'success' => true,
-                'version' => $version_info['version'] ?? 'Desconocida'
+                'version' => $version_info['version'] ?? 'Desconocida',
             ];
         } catch (\Exception $e) {
             throw $e;
@@ -140,7 +140,7 @@ class DatabaseSettingsController extends Controller
                 $settings['db_password'],
                 [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_TIMEOUT => 5
+                    \PDO::ATTR_TIMEOUT => 5,
                 ]
             );
 
@@ -150,10 +150,10 @@ class DatabaseSettingsController extends Controller
 
             return [
                 'success' => true,
-                'version' => $version_info['version'] ?? 'Desconocida'
+                'version' => $version_info['version'] ?? 'Desconocida',
             ];
         } catch (\Exception $e) {
-            throw new \Exception('Error de conexión PostgreSQL: ' . $e->getMessage());
+            throw new \Exception('Error de conexión PostgreSQL: '.$e->getMessage());
         }
     }
 
@@ -167,11 +167,11 @@ class DatabaseSettingsController extends Controller
 
             // SQLite doesn't use host/port, just file path
             $pdo = new \PDO(
-                'sqlite:' . $dbPath,
+                'sqlite:'.$dbPath,
                 null,
                 null,
                 [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 ]
             );
 
@@ -181,10 +181,10 @@ class DatabaseSettingsController extends Controller
 
             return [
                 'success' => true,
-                'version' => $version_info['version'] ?? 'Desconocida'
+                'version' => $version_info['version'] ?? 'Desconocida',
             ];
         } catch (\Exception $e) {
-            throw new \Exception('Error de conexión SQLite: ' . $e->getMessage());
+            throw new \Exception('Error de conexión SQLite: '.$e->getMessage());
         }
     }
 }

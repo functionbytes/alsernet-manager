@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $locations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product\ProductLocation> $stock
  * @property-read int|null $stock_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product available()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product barcode($barcode)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product barcodeExits($barcode)
@@ -52,14 +53,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereValidate($value)
+ *
  * @mixin \Eloquent
  */
 class Product extends Model
 {
-
     use HasFactory;
 
-    protected $table = "products";
+    protected $table = 'products';
 
     protected $fillable = [
         'uid',
@@ -70,30 +71,30 @@ class Product extends Model
         'stock',
         'available',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
     public function scopeBarcode($query, $barcode)
     {
-        return $query->where('barcode',$barcode)->first();
+        return $query->where('barcode', $barcode)->first();
     }
 
     public function scopeBarcodeExits($query, $barcode)
     {
-        return $query->where('barcode',$barcode)  ->exists();
+        return $query->where('barcode', $barcode)->exists();
     }
 
     public function scopeUid($query, $uid)
     {
-            return $query->where('uid', $uid)->first();
+        return $query->where('uid', $uid)->first();
     }
 
-    public function scopeSlug($query ,$slug)
+    public function scopeSlug($query, $slug)
     {
         return $query->where('slug', $slug)->first();
     }
@@ -124,12 +125,11 @@ class Product extends Model
     }
 
     public function scopeKardex($query, $product)
-
     {
-        $kardex = new Kardex();
+        $kardex = new Kardex;
         $response = $kardex->searchParameters('refencia', $product->reference);
 
-        if ($response!=null && isset($response[0]->KAR_CANTIDAD)) {
+        if ($response != null && isset($response[0]->KAR_CANTIDAD)) {
             $product->kardex = $response[0]->KAR_CANTIDAD;
             $product->save();
         }
@@ -137,25 +137,21 @@ class Product extends Model
 
     /**
      * Validar que el código de barras sea válido
-     *
-     * @param string $barcode
-     * @return bool
      */
     public function isValidBarcode(string $barcode): bool
     {
         // Validar que sea numérico y tenga longitud razonable
-        if (!is_numeric($barcode)) {
+        if (! is_numeric($barcode)) {
             return false;
         }
 
         $length = strlen($barcode);
+
         return $length >= 8 && $length <= 13;
     }
 
     /**
      * Obtener el total de stock del producto en todas las ubicaciones
-     *
-     * @return int
      */
     public function getTotalStock(): int
     {
@@ -175,8 +171,7 @@ class Product extends Model
     /**
      * Buscar productos por criterio (barcode, referencia o título)
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $search
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSearchByCriteria($query, string $search)
@@ -185,5 +180,4 @@ class Product extends Model
             ->orWhere('reference', $search)
             ->orWhere('title', 'like', "%$search%");
     }
-
 }

@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Queue\Events\JobProcessed;
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Support\Facades\Queue;
 use App\Library\Log as MailLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\ServiceProvider;
 
 class JobServiceProvider extends ServiceProvider
 {
@@ -40,31 +40,30 @@ class JobServiceProvider extends ServiceProvider
         });
     }
 
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     private function getJobObject($event): ?object
     {
         try {
             $data = $event->job->payload();
             $command = unserialize($data['data']['command']);
+
             return $command instanceof ShouldQueue ? $command : null;
         } catch (\Throwable $e) {
-            \Log::error('Failed to unserialize job command: ' . $e->getMessage());
+            \Log::error('Failed to unserialize job command: '.$e->getMessage());
+
             return null;
         }
     }
 
     private function initMailLog(): void
     {
-        $logPath = storage_path('logs/' . php_sapi_name() . '/mail.log');
+        $logPath = storage_path('logs/'.php_sapi_name().'/mail.log');
 
-        if (!is_dir(dirname($logPath))) {
+        if (! is_dir(dirname($logPath))) {
             mkdir(dirname($logPath), 0755, true);
         }
 
         MailLog::configure($logPath);
     }
-
 }

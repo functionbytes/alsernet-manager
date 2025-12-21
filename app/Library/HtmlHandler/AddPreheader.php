@@ -2,8 +2,8 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 use Soundasleep\Html2Text;
 
 class AddPreheader implements StageInterface
@@ -12,7 +12,7 @@ class AddPreheader implements StageInterface
 
     public function __construct($preheader)
     {
-        if (!is_null($preheader)) {
+        if (! is_null($preheader)) {
             // trim() does not work with null param
             $this->preheader = trim($preheader);
         }
@@ -28,7 +28,7 @@ class AddPreheader implements StageInterface
             $body = $dom->getElementsByTagName('body')->item(0);
 
             // Convert preheader to PLAIN
-            $plain = Html2Text::convert($this->preheader, [ 'ignore_errors' => true ]);
+            $plain = Html2Text::convert($this->preheader, ['ignore_errors' => true]);
             $plain = htmlentities($plain);
 
             $e = $dom->createElement('div', $plain);

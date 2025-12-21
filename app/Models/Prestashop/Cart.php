@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Shop\ShopGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\ShopGroup;
-use App\Models\Prestashop\Shop\Shop;
 
 class Cart extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_cart';
+
     protected $primaryKey = 'id_cart';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -33,7 +36,7 @@ class Cart extends Model
         'delivery_option',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'gift_message' => 'boolean',
@@ -83,7 +86,6 @@ class Cart extends Model
         return $this->belongsTo(Language::class, 'id_lang');
     }
 
-
     public function guest()
     {
         return $this->belongsTo('App\Models\Prestashop\Guest', 'id_guest', 'id_guest');
@@ -98,6 +100,4 @@ class Cart extends Model
     {
         return $this->belongsTo('App\Models\Prestashop\Carrier', 'id_carrier', 'id_carrier');
     }
-
-
 }

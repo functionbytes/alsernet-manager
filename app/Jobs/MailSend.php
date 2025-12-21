@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Mail\mailmailablesend;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Mail\mailmailablesend;
 use Illuminate\Support\Facades\Mail;
 
 class MailSend implements ShouldQueue
@@ -27,7 +27,7 @@ class MailSend implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($email,$templateCode,$ticketData)
+    public function __construct($email, $templateCode, $ticketData)
     {
         $this->email = $email;
         $this->templateCode = $templateCode;

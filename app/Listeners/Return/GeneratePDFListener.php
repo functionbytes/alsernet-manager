@@ -26,17 +26,18 @@ class GeneratePDFListener implements ShouldQueue
     {
         try {
             // Solo generar PDF si está configurado para hacerlo
-            if (!$event->shouldGeneratePDF()) {
+            if (! $event->shouldGeneratePDF()) {
                 Log::info('PDF generation skipped', [
                     'return_id' => $event->return->id_return_request,
-                    'reason' => 'Configuration or conditions not met'
+                    'reason' => 'Configuration or conditions not met',
                 ]);
+
                 return;
             }
 
             Log::info('Starting PDF generation', [
                 'return_id' => $event->return->id_return_request,
-                'created_by' => $event->createdBy
+                'created_by' => $event->createdBy,
             ]);
 
             // Generar y guardar PDF
@@ -48,14 +49,14 @@ class GeneratePDFListener implements ShouldQueue
             Log::info('PDF generated successfully', [
                 'return_id' => $event->return->id_return_request,
                 'pdf_path' => $pdfPath,
-                'file_size' => $this->getFileSize($pdfPath)
+                'file_size' => $this->getFileSize($pdfPath),
             ]);
 
         } catch (\Exception $e) {
             Log::error('Failed to generate PDF', [
                 'return_id' => $event->return->id_return_request,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             // Re-lanzar la excepción para que Laravel retry el job si está en cola
@@ -71,7 +72,7 @@ class GeneratePDFListener implements ShouldQueue
         Log::critical('PDF generation failed permanently', [
             'return_id' => $event->return->id_return_request,
             'error' => $exception->getMessage(),
-            'attempts' => $this->attempts ?? 'unknown'
+            'attempts' => $this->attempts ?? 'unknown',
         ]);
 
         // Opcional: Notificar a los administradores sobre el fallo
@@ -85,7 +86,8 @@ class GeneratePDFListener implements ShouldQueue
     private function getFileSize(string $path): ?int
     {
         try {
-            $fullPath = storage_path('app/public/' . $path);
+            $fullPath = storage_path('app/public/'.$path);
+
             return file_exists($fullPath) ? filesize($fullPath) : null;
         } catch (\Exception $e) {
             return null;

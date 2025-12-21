@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ComponentShipment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ComponentShipment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ComponentShipment query()
+ *
  * @mixin \Eloquent
  */
 class ComponentShipment extends Model
@@ -59,16 +60,22 @@ class ComponentShipment extends Model
      * Estados de envío
      */
     const STATUS_PREPARING = 'preparing';
+
     const STATUS_SHIPPED = 'shipped';
+
     const STATUS_IN_TRANSIT = 'in_transit';
+
     const STATUS_DELIVERED = 'delivered';
+
     const STATUS_RETURNED = 'returned';
 
     /**
      * Tipos de envío
      */
     const TYPE_PARTIAL = 'partial';
+
     const TYPE_COMPLETE = 'complete';
+
     const TYPE_BACKORDER = 'backorder';
 
     /**
@@ -117,7 +124,7 @@ class ComponentShipment extends Model
     public static function generateShipmentNumber(): string
     {
         do {
-            $number = 'SHP-' . now()->format('Y') . '-' . strtoupper(uniqid());
+            $number = 'SHP-'.now()->format('Y').'-'.strtoupper(uniqid());
         } while (self::where('shipment_number', $number)->exists());
 
         return $number;
@@ -193,7 +200,7 @@ class ComponentShipment extends Model
      */
     public function isOverdue(): bool
     {
-        if (!$this->estimated_delivery_date || $this->status === self::STATUS_DELIVERED) {
+        if (! $this->estimated_delivery_date || $this->status === self::STATUS_DELIVERED) {
             return false;
         }
 
@@ -230,7 +237,7 @@ class ComponentShipment extends Model
         foreach ($this->items as $item) {
             $itemWeight = $item->weight * $item->quantity_shipped;
 
-            if ($currentWeight + $itemWeight > $maxWeightPerPackage && !empty($currentPackage)) {
+            if ($currentWeight + $itemWeight > $maxWeightPerPackage && ! empty($currentPackage)) {
                 // Crear paquete actual y empezar uno nuevo
                 $packages[] = [
                     'package_number' => count($packages) + 1,
@@ -255,7 +262,7 @@ class ComponentShipment extends Model
         }
 
         // Agregar último paquete
-        if (!empty($currentPackage)) {
+        if (! empty($currentPackage)) {
             $packages[] = [
                 'package_number' => count($packages) + 1,
                 'weight' => $currentWeight,

@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 
 class Referrer extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_referrer';
+
     protected $primaryKey = 'id_referrer';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -31,7 +34,7 @@ class Referrer extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_shop' => 'integer',
     ];

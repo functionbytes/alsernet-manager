@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Queue;
 
 class SystemSettingsController extends Controller
@@ -93,12 +92,12 @@ class SystemSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Configuración de cola actualizada correctamente'
+                'message' => 'Configuración de cola actualizada correctamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la configuración: ' . $e->getMessage()
+                'message' => 'Error al actualizar la configuración: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -192,12 +191,12 @@ class SystemSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Configuración de websockets actualizada correctamente'
+                'message' => 'Configuración de websockets actualizada correctamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la configuración: ' . $e->getMessage()
+                'message' => 'Error al actualizar la configuración: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -215,12 +214,12 @@ class SystemSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Conexión de cola funcionando correctamente'
+                'message' => 'Conexión de cola funcionando correctamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error en la conexión: ' . $e->getMessage()
+                'message' => 'Error en la conexión: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -235,12 +234,12 @@ class SystemSettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Workers de cola reiniciados correctamente'
+                'message' => 'Workers de cola reiniciados correctamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al reiniciar workers: ' . $e->getMessage()
+                'message' => 'Error al reiniciar workers: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -252,7 +251,7 @@ class SystemSettingsController extends Controller
     {
         $path = base_path('.env');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return false;
         }
 

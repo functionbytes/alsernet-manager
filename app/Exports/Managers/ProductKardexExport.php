@@ -11,17 +11,22 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class ProductKardexExport implements FromQuery, Responsable, WithMapping, WithHeadings, WithStrictNullComparison
+class ProductKardexExport implements FromQuery, Responsable, WithHeadings, WithMapping, WithStrictNullComparison
 {
     use Exportable;
-    private $course;
-    private $enterprise;
-    private $modalitie;
-    public function __construct(){
 
-    }
-    public function query() {
+    private $course;
+
+    private $enterprise;
+
+    private $modalitie;
+
+    public function __construct() {}
+
+    public function query()
+    {
         $products = DB::table('products')->where('count', '=', 0)->orderByDesc('count');
+
         return $products;
     }
 
@@ -37,7 +42,8 @@ class ProductKardexExport implements FromQuery, Responsable, WithMapping, WithHe
         ];
     }
 
-    public function queryss() {
+    public function queryss()
+    {
 
         $products = DB::table('products')
             ->join('inventarie_locations_items', function ($join) {
@@ -67,28 +73,30 @@ class ProductKardexExport implements FromQuery, Responsable, WithMapping, WithHe
         return $products;
 
     }
+
     public function maps($row): array
     {
         return [
-            $row->title == null ?  '' : $row->title,
-            $row->reference == null ?  '' : $row->reference,
-            $row->barcode == null ?  '' : $row->barcode,
-            $row->validate_id == null ?  '' : Location::id($row->validate_id)->title,
-            $row->original_id == null ?  '' : Location::id($row->original_id)->title,
-            $row->inventory_count == null ?  '' : $row->inventory_count,
+            $row->title == null ? '' : $row->title,
+            $row->reference == null ? '' : $row->reference,
+            $row->barcode == null ? '' : $row->barcode,
+            $row->validate_id == null ? '' : Location::id($row->validate_id)->title,
+            $row->original_id == null ? '' : Location::id($row->original_id)->title,
+            $row->inventory_count == null ? '' : $row->inventory_count,
         ];
     }
 
     public function map($row): array
     {
         return [
-            $row->title == null ?  '' : $row->title,
-            $row->reference == null ?  '' : $row->reference,
-            $row->barcode == null ?  '' : $row->barcode,
-            $row->count == null ?  '' : $row->count,
+            $row->title == null ? '' : $row->title,
+            $row->reference == null ? '' : $row->reference,
+            $row->barcode == null ? '' : $row->barcode,
+            $row->count == null ? '' : $row->count,
         ];
 
     }
+
     public function headings(): array
     {
         return [
@@ -97,7 +105,4 @@ class ProductKardexExport implements FromQuery, Responsable, WithMapping, WithHe
             'INVENTARIO',
         ];
     }
-
-
 }
-

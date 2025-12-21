@@ -33,6 +33,7 @@ use App\Models\Notification;
  * @property string|null $read_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl query()
@@ -44,6 +45,7 @@ use App\Models\Notification;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl whereReadAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SystemUrl whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class SystemUrl extends Notification

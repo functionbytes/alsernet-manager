@@ -21,6 +21,14 @@ class DatabaseSeeder extends Seeder
             Coruna1LocationsSeeder::class,
             DocumentConfigurationSeeder::class,
             DocumentUploadTypeSeeder::class,
+
+            // Supplier Automation System Seeders
+            SupplierSeeder::class,
+            SupplierSourceSeeder::class,
+            SupplierSourceOptionSeeder::class,
+            SupplierSourceTemplateSeeder::class,
+            SupplierPromptSeeder::class,
+            SupplierAutomationSettingSeeder::class,
         ]);
     }
 }

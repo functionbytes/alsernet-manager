@@ -2,19 +2,21 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
 use App\Models\Campaign\CampaignTrackingDomain;
 use App\Models\Template\Template;
 use Exception;
+use League\Pipeline\StageInterface;
 
 class TransformUrl implements StageInterface
 {
     public $template;
+
     public $msgId;
+
     public $domain;
 
-    public function __construct(Template $template, $msgId, CampaignTrackingDomain $domain = null)
+    public function __construct(Template $template, $msgId, ?CampaignTrackingDomain $domain = null)
     {
         $this->template = $template;
         $this->msgId = $msgId;
@@ -25,8 +27,8 @@ class TransformUrl implements StageInterface
     {
         // Convert a normal link to (click) trackable link
         $transformClosure = function ($url, $element) {
-            if (!parse_url($url, PHP_URL_HOST)) {
-                throw new Exception("TransformUrl only works with public URLs. i.e. URLs with http:// or https:// or //");
+            if (! parse_url($url, PHP_URL_HOST)) {
+                throw new Exception('TransformUrl only works with public URLs. i.e. URLs with http:// or https:// or //');
             }
 
             // Transform LINKS only, to track click
@@ -52,6 +54,7 @@ class TransformUrl implements StageInterface
         };
 
         $html = $this->template->getContentWithTransformedAssetsUrls($html, $withHost = true, $transformClosure, $this->domain);
+
         return $html;
     }
 }

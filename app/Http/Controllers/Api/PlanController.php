@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * /api/v1/plans - API controller for managing plans.
@@ -22,8 +22,8 @@ class PlanController extends Controller
         $user = \Auth::guard('api')->user();
 
         // authorize
-        if (!$user->can('read', new \Acelle\Model\PlanGeneral())) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('read', new \Acelle\Model\PlanGeneral)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         $rows = \Acelle\Model\PlanGeneral::limit(100)->get();
@@ -52,19 +52,18 @@ class PlanController extends Controller
      *
      * POST /api/v1/plans
      *
-     * @param \Illuminate\Http\Request $request All plan information
-     *
+     * @param  \Illuminate\Http\Request  $request  All plan information
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $user = \Auth::guard('api')->user();
 
-        $plan = new \Acelle\Model\PlanGeneral();
+        $plan = new \Acelle\Model\PlanGeneral;
 
         // authorize
-        if (!$user->can('create', $plan)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('create', $plan)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         // save posted data
@@ -109,11 +108,11 @@ class PlanController extends Controller
                 $plan->updateEmailVerificationServers($request->email_verification_servers);
             }
 
-            return \Response::json(array(
+            return \Response::json([
                 'status' => 1,
                 'message' => trans('messages.plan.created'),
-                'plan_uid' => $plan->uid
-            ), 200);
+                'plan_uid' => $plan->uid,
+            ], 200);
         }
     }
 }

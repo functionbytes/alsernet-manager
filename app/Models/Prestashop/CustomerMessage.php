@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CustomerMessage extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_customer_message';
+
     protected $primaryKey = 'id_customer_message';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class CustomerMessage extends Model
         'read',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_customer_thread' => 'integer',

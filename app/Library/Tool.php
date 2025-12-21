@@ -22,20 +22,19 @@
 
 namespace App\Library;
 
-use ZipArchive;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
 use Exception;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use ZipArchive;
 
 class Tool
 {
     /**
      * Copy a file, or recursively copy a folder and its contents.
      *
-     * @param string $source      Source path
-     * @param string $dest        Destination path
-     * @param int    $permissions New folder creation permissions
-     *
+     * @param  string  $source  Source path
+     * @param  string  $dest  Destination path
+     * @param  int  $permissions  New folder creation permissions
      * @return bool Returns true on success, false on failure
      */
     public static function xcopy($source, $dest, $permissions = 0755)
@@ -51,7 +50,7 @@ class Tool
         }
 
         // Make destination directory
-        if (!is_dir($dest)) {
+        if (! is_dir($dest)) {
             $oldmask = umask(0);
             mkdir($dest, $permissions, true);
             umask($oldmask);
@@ -78,13 +77,12 @@ class Tool
     /**
      * Delete a file, or recursively delete a folder and its contents.
      *
-     * @param string $source Source path
-     *
+     * @param  string  $source  Source path
      * @return bool Returns true on success, false on failure
      */
     public static function xdelete($file)
     {
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             throw new Exception("File {$file} does not exist");
         }
 
@@ -105,7 +103,7 @@ class Tool
     public static function allTimeZones()
     {
         // Get all time zones with offset
-        $zones_array = array();
+        $zones_array = [];
         $timestamp = time();
         foreach (timezone_identifiers_list() as $key => $zone) {
             date_default_timezone_set($zone);
@@ -142,14 +140,13 @@ class Tool
      * Change singular to plural.
      *
      * @param       string
-     *
      * @return string
      */
     public static function getPluralPrase($phrase, $value)
     {
         $plural = '';
         if ($value > 1) {
-            for ($i = 0; $i < strlen($phrase); ++$i) {
+            for ($i = 0; $i < strlen($phrase); $i++) {
                 if ($i == strlen($phrase) - 1) {
                     $plural .= ($phrase[$i] == 'y' && $phrase != 'day') ? 'ies' : (($phrase[$i] == 's' || $phrase[$i] == 'x' || $phrase[$i] == 'z' || $phrase[$i] == 'ch' || $phrase[$i] == 'sh') ? $phrase[$i].'es' : $phrase[$i].'s');
                 } else {
@@ -167,22 +164,21 @@ class Tool
      * Get bytes from string.
      *
      * @param string
-     *
      * @return string
      */
     public static function returnBytes($val)
     {
-        //$val = trim($val);
-        //$last = strtolower($val[strlen($val)-1]);
-        //switch($last)
-        //{
+        // $val = trim($val);
+        // $last = strtolower($val[strlen($val)-1]);
+        // switch($last)
+        // {
         //    case 'g':
         //    $val *= 1024;
         //    case 'm':
         //    $val *= 1024;
         //    case 'k':
         //    $val *= 1024;
-        //}
+        // }
         return $val;
     }
 
@@ -190,17 +186,17 @@ class Tool
      * Get max upload file.
      *
      * @param string
-     *
      * @return string
      */
     public static function maxFileUploadInBytes()
     {
-        //select maximum upload size
+        // select maximum upload size
         $max_upload = self::returnBytes(ini_get('upload_max_filesize'));
-        //select post limit
+        // select post limit
         $max_post = self::returnBytes(ini_get('post_max_size'));
-        //select memory limit
+        // select memory limit
         $memory_limit = self::returnBytes(ini_get('memory_limit'));
+
         // return the smallest of them, this defines the real limit
         return min($max_upload, $max_post);
     }
@@ -209,7 +205,6 @@ class Tool
      * Day of week select options.
      *
      * @param string
-     *
      * @return array
      */
     public static function dayOfWeekSelectOptions()
@@ -229,7 +224,6 @@ class Tool
      * Day of week arrays.
      *
      * @param string
-     *
      * @return array
      */
     public static function weekdaysArray()
@@ -246,7 +240,6 @@ class Tool
      * Month select options.
      *
      * @param string
-     *
      * @return array
      */
     public static function monthSelectOptions()
@@ -271,7 +264,6 @@ class Tool
      * Month array.
      *
      * @param string
-     *
      * @return array
      */
     public static function monthsArray()
@@ -288,7 +280,6 @@ class Tool
      * Week select options.
      *
      * @param string
-     *
      * @return array
      */
     public static function weekSelectOptions()
@@ -306,7 +297,6 @@ class Tool
      * Week array.
      *
      * @param string
-     *
      * @return array
      */
     public static function weeksArray()
@@ -323,13 +313,12 @@ class Tool
      * Month select options.
      *
      * @param string
-     *
      * @return array
      */
     public static function dayOfMonthSelectOptions()
     {
         $arr = [];
-        for ($i = 1; $i < 32; ++$i) {
+        for ($i = 1; $i < 32; $i++) {
             $arr[] = ['value' => $i, 'text' => $i];
         }
 
@@ -357,7 +346,6 @@ class Tool
      * Get php paths select options.
      *
      * @param timestamp
-     *
      * @return string
      */
     public static function phpPathsSelectOptions($paths)
@@ -383,14 +371,13 @@ class Tool
      * Check php bin path is valid.
      *
      * @param string
-     *
      * @return bool
      */
     public static function checkPHPBinPath($path)
     {
         $result = '';
         try {
-            if (!file_exists($path) || !is_executable($path)) {
+            if (! file_exists($path) || ! is_executable($path)) {
                 return $result;
             }
         } catch (\Exception $ex) {
@@ -411,7 +398,6 @@ class Tool
      * Get available System Background Methods Select Options.
      *
      * @param timestamp
-     *
      * @return string
      */
     public static function availableSystemBackgroundMethodSelectOptions()
@@ -429,8 +415,8 @@ class Tool
                 'text' => trans('messages.async_job_type'),
                 'description' => trans('messages.async_job_type_desc'),
                 'value' => 'async',
-                'disabled' => true, //exec_enabled(),
-                'tooltip' => (!exec_enabled() ? 'Your server does not support async' : ''),
+                'disabled' => true, // exec_enabled(),
+                'tooltip' => (! exec_enabled() ? 'Your server does not support async' : ''),
             ];
         }
 
@@ -441,7 +427,6 @@ class Tool
      * Control cronjob update request.
      *
      * @param timestamp
-     *
      * @return string
      */
     public static function cronjobUpdateController($request, $controller)
@@ -499,7 +484,7 @@ class Tool
         $php_bin_path_value = empty($paths) ? '' : $paths[0];
 
         $setting_php_bin_path = \Acelle\Model\Setting::get('php_bin_path');
-        if (!empty($setting_php_bin_path)) {
+        if (! empty($setting_php_bin_path)) {
             if (in_array($setting_php_bin_path, $paths)) {
                 $php_bin_path = $setting_php_bin_path;
             } else {
@@ -508,7 +493,7 @@ class Tool
             $php_bin_path_value = $setting_php_bin_path;
         }
 
-        if (!empty($request->old())) {
+        if (! empty($request->old())) {
             $php_bin_path = $request->old()['php_bin_path'];
             $php_bin_path_value = $request->old()['php_bin_path_value'];
             $queue_driver = $request->old()['queue_driver'];
@@ -593,7 +578,7 @@ class Tool
      */
     public static function checkReCaptcha($request)
     {
-        if (!isset($request->all()['g-recaptcha-response'])) {
+        if (! isset($request->all()['g-recaptcha-response'])) {
             return false;
         }
 
@@ -612,7 +597,6 @@ class Tool
      * Format price.
      *
      * @param string
-     *
      * @return string
      */
     public static function format_price($price, $format = '{PRICE}')
@@ -655,7 +639,7 @@ class Tool
 
         // IMPORTANT: $folder  must be an absolute path
         // Initialize archive object
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         $zip->open($zipfile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         // Create recursive directory iterator
@@ -667,10 +651,10 @@ class Tool
 
         foreach ($files as $name => $file) {
             // Skip directories (they would be added automatically)
-            if (!$file->isDir()) {
+            if (! $file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
-                $relativePath = str_replace($folder, "", $filePath);
+                $relativePath = str_replace($folder, '', $filePath);
 
                 // Add current file to archive
                 $zip->addFile($filePath, $relativePath);

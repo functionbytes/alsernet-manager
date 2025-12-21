@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
-use App\Models\Setting;
-use Artisan;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
@@ -22,9 +17,7 @@ class Controller extends BaseController
     /**
      * Create a new controller instance.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Check if the user is not authorized.
@@ -81,9 +74,11 @@ class Controller extends BaseController
 
         if ($request->view == 'backend') {
             session()->put('demo', 'backend');
+
             return redirect()->action('Admin\HomeController@index');
         } else {
             session()->put('demo', 'frontend');
+
             return redirect()->action('HomeController@index');
         }
     }
@@ -138,7 +133,7 @@ class Controller extends BaseController
     {
         $user = \Acelle\Model\User::where('one_time_api_token', $token)->first();
 
-        if (!$user) {
+        if (! $user) {
             return view('somethingWentWrong', ['message' => trans('messages.token_expired')]);
         }
 
@@ -215,6 +210,7 @@ class Controller extends BaseController
     public function userDisabled()
     {
         \Auth::logout();
+
         return view('isDisabled');
     }
 

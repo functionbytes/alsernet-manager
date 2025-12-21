@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\Campaign;
 
 use App\Library\Traits\HasUid;
@@ -15,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Campaign\CampaignField $field
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption query()
@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption whereValue($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignFieldOption extends Model
@@ -37,7 +38,7 @@ class CampaignFieldOption extends Model
         'field_id',
     ];
 
-    protected $table = "campaigns_maillists_field_options";
+    protected $table = 'campaigns_maillists_field_options';
 
     public function field()
     {

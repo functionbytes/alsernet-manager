@@ -3,8 +3,8 @@
 namespace App\Services\Returns;
 
 use App\Models\Return\ReturnRequest;
-use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class ReturnPDFService
 {
@@ -27,7 +27,7 @@ class ReturnPDFService
     public function generateAndSaveReturnPDF(ReturnRequest $return): string
     {
         $pdf = $this->generateReturnPDF($return);
-        $filename = 'returns/devolucion-' . $return->id_return_request . '.pdf';
+        $filename = 'returns/devolucion-'.$return->id_return_request.'.pdf';
 
         Storage::disk('public')->put($filename, $pdf);
 

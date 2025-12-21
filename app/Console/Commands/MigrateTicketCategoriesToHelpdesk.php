@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MigrateTicketCategoriesToHelpdesk extends Command
 {
@@ -35,6 +35,7 @@ class MigrateTicketCategoriesToHelpdesk extends Command
 
             if ($oldCategories->isEmpty()) {
                 $this->warn('No categories found in old system.');
+
                 return 0;
             }
 
@@ -46,7 +47,7 @@ class MigrateTicketCategoriesToHelpdesk extends Command
                     ->where('name', $oldCategory->title)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     DB::table('helpdesk_ticket_categories')->insert([
                         'name' => $oldCategory->title,
                         'slug' => Str::slug($oldCategory->title),
@@ -67,10 +68,12 @@ class MigrateTicketCategoriesToHelpdesk extends Command
             }
 
             $this->info('Migration completed successfully!');
+
             return 0;
 
         } catch (\Exception $e) {
-            $this->error('Migration failed: ' . $e->getMessage());
+            $this->error('Migration failed: '.$e->getMessage());
+
             return 1;
         }
     }

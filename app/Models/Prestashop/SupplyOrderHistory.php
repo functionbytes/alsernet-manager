@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\SupplyOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\SupplyOrder;
 
 class SupplyOrderHistory extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_history';
+
     protected $primaryKey = 'id_supply_order_history';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class SupplyOrderHistory extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_supply_order_history' => 'integer',
         'id_supply_order' => 'integer',

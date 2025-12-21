@@ -22,18 +22,16 @@
 
 namespace App\Library;
 
+use Closure;
 use DOMDocument;
 use DomXpath;
-use Closure;
-use Exception;
 
 class StringHelper
 {
     /**
      * Custom base64 encoding. Replace unsafe url chars.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function base64UrlEncode($string)
@@ -42,15 +40,14 @@ class StringHelper
             return null;
         }
 
-        return str_replace(['+','/','='], ['-','_',''], base64_encode($string));
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($string));
     }
 
     /**
      * Custom base64 decode. Replace custom url safe values with normal
      * base64 characters before decoding.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function base64UrlDecode($string)
@@ -59,15 +56,14 @@ class StringHelper
             return null;
         }
 
-        return base64_decode(str_replace(['-','_'], ['+','/'], $string));
+        return base64_decode(str_replace(['-', '_'], ['+', '/'], $string));
     }
 
     /**
      * Custom base64 decode. Replace custom url safe values with normal
      * base64 characters before decoding.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function cleanupMessageId($msgId)
@@ -79,8 +75,7 @@ class StringHelper
      * Custom base64 decode. Replace custom url safe values with normal
      * base64 characters before decoding.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function getDomainFromEmail($email)
@@ -91,8 +86,7 @@ class StringHelper
     /**
      * Generate MessageId from domain name.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function generateMessageId($domain, $test = false)
@@ -111,8 +105,7 @@ class StringHelper
     /**
      * Check if a given string is a test Message Id.
      *
-     * @param string $messageId
-     *
+     * @param  string  $messageId
      * @return bool
      */
     public static function isTestMessageId($messageId)
@@ -124,8 +117,7 @@ class StringHelper
      * Custom base64 decode. Replace custom url safe values with normal
      * base64 characters before decoding.
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function joinUrl()
@@ -141,8 +133,7 @@ class StringHelper
      * Extract SendGrid X-Message-Id from Smtp-Id
      * For example, extract "GuUFV1znQTmkQyPXrPLyxA" from "<GuUFV1znQTmkQyPXrPLyxA@ismtpd0019p1sin1.sendgrid.net>".
      *
-     * @param string $val
-     *
+     * @param  string  $val
      * @return string
      */
     public static function extractSendGridMessageId($smtpId)
@@ -156,7 +147,6 @@ class StringHelper
      * Detect file encoding.
      *
      * @param string file path
-     *
      * @return string encoding or false if cannot detect one
      */
     public static function detectEncoding($file, $max = 100)
@@ -170,7 +160,7 @@ class StringHelper
 
         $sample = '';
         $count = 0;
-        while (!feof($file) && $count <= $max) {
+        while (! feof($file) && $count <= $max) {
             $count += 1;
             $sample .= fgets($file);
         }
@@ -203,7 +193,7 @@ class StringHelper
         $text = file_get_contents($file);
         $matched = preg_match("/^$bom/", $text, $result);
 
-        if (!$matched) {
+        if (! $matched) {
             return false;
         }
 
@@ -225,13 +215,14 @@ class StringHelper
         // ﻿﻿madrevgra@aol.com
         // ﻿﻿madrasathleticclub@yahoo.com
         $text = str_replace("\xEF\xBB\xBF", '', $text);
+
         return $text;
     }
 
     public static function appendHtml($content, $html)
     {
         return StringHelper::updateHtml($content, function ($document) use ($html) {
-            $tmpDoc = new DOMDocument();
+            $tmpDoc = new DOMDocument;
             $tmpDoc->encoding = 'utf-8';
             $tmpDoc->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_HTML_NODEFDTD);
             foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $node) {
@@ -371,7 +362,7 @@ class StringHelper
             '196.22.6.0',
             '205.160.111.0',
             '116.96.30.0',
-            '117.242.81.0'
+            '117.242.81.0',
         ];
 
         return $ips[array_rand($ips)];
@@ -381,7 +372,7 @@ class StringHelper
     {
         $defaults = ['script'];
         $defaults = array_merge($defaults, $tags);
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         libxml_use_internal_errors(true); // disable warning for invalid tags
         $dom->loadHTML($html, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
         foreach ($defaults as $tag) {
@@ -396,6 +387,7 @@ class StringHelper
                 $item->parentNode->removeChild($item);
             }
         }
+
         return $dom->saveHTML();
     }
 
@@ -450,11 +442,12 @@ class StringHelper
     // + Others?
     public static function updateHtml(string $content, Closure $callback)
     {
-        $document = new DOMDocument();
+        $document = new DOMDocument;
         $document->encoding = 'utf-8';
         $document->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_NOWARNING | LIBXML_NOERROR);
 
         $callback($document);
+
         // IMPORTANT:
         // Do not use urldecode() here, use rawurldecode() instead
         // Otherwise, it will encode plus (+) chars to spaces, breaking IMG tag with Base64 src content:
@@ -472,6 +465,7 @@ class StringHelper
         // Use it as an explicit & final step before rendering HTML content
         $output = rawurldecode($document->saveHTML($document->documentElement));
         $output = '<!DOCTYPE html>'.$output; // saveHTML(params) removes DOCTYPE
+
         return $output;
     }
 

@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int $total_returns
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Return\ReturnRequest> $returns
  * @property-read int|null $returns_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer byEmail($email)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer byErpId($erpId)
@@ -44,11 +45,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSubscriberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Customer extends Model
 {
     protected $table = 'customers';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -69,7 +72,7 @@ class Customer extends Model
         'accept_legitimate_interest',
         'lopd_acceptance_date',
         'catalogs',
-        'erp_data'
+        'erp_data',
     ];
 
     protected $casts = [
@@ -79,7 +82,7 @@ class Customer extends Model
         'accept_data_sharing' => 'boolean',
         'accept_legitimate_interest' => 'boolean',
         'catalogs' => 'json',
-        'erp_data' => 'json'
+        'erp_data' => 'json',
     ];
 
     // Relaciones
@@ -112,7 +115,7 @@ class Customer extends Model
     // Métodos auxiliares
     public function getFullNameAttribute(): string
     {
-        return trim($this->name . ' ' . $this->last_name);
+        return trim($this->name.' '.$this->last_name);
     }
 
     public function getTotalOrdersAttribute(): int
@@ -128,22 +131,23 @@ class Customer extends Model
     public function getReturnRateAttribute(): float
     {
         $totalOrders = $this->total_orders;
+
         return $totalOrders > 0 ? ($this->total_returns / $totalOrders) * 100 : 0;
     }
 
     public function hasActiveCatalogs(): bool
     {
-        return !empty($this->catalogs) &&
+        return ! empty($this->catalogs) &&
             collect($this->catalogs)->where('estado', '1')->isNotEmpty();
     }
 
     public static function createFromErpData(array $data, array $orderClientData = []): self
     {
-        $clientData = !empty($orderClientData) ? $orderClientData : $data;
+        $clientData = ! empty($orderClientData) ? $orderClientData : $data;
 
         return self::create([
             'erp_client_id' => $erpData['idcliente'] ?? $clientData['idcliente'],
-            'fullname' => $erpData['nombre'] ." ".$erpData['apellidos'] ?? $clientData['nombre'] ." ".$clientData['apellidos'],
+            'fullname' => $erpData['nombre'].' '.$erpData['apellidos'] ?? $clientData['nombre'].' '.$clientData['apellidos'],
             'firstname' => $erpData['nombre'] ?? $clientData['nombre'],
             'lastname' => $erpData['apellidos'] ?? $clientData['apellidos'],
             'email' => $erpData['email'] ?? $clientData['email'],
@@ -155,9 +159,9 @@ class Customer extends Model
     {
         return $this->update([
             'erp_client_id' => $data['idcliente'],
-            'fullname' => $data['nombre'] ." ".$data['apellidos'],
+            'fullname' => $data['nombre'].' '.$data['apellidos'],
             'firstname' => $data['nombre'],
-            'lastname' => $data['apellidos'] ,
+            'lastname' => $data['apellidos'],
             'email' => $data['email'],
         ]);
     }
@@ -173,11 +177,11 @@ class Customer extends Model
 
         return collect($this->catalogs)
             ->where('estado', '1')
-            ->map(function($catalog) {
+            ->map(function ($catalog) {
                 return [
                     'id' => $catalog['idcatalogo'],
                     'subscription_date' => $catalog['fsuscripcion'] ?? null,
-                    'status' => $catalog['estado']
+                    'status' => $catalog['estado'],
                 ];
             })
             ->values()
@@ -208,10 +212,10 @@ class Customer extends Model
             'cif' => $this->cif,
             'total_orders' => $this->total_orders,
             'total_returns' => $this->total_returns,
-            'return_rate' => round($this->return_rate, 2) . '%',
+            'return_rate' => round($this->return_rate, 2).'%',
             'active_catalogs' => $this->getActiveCatalogs(),
             'can_make_returns' => $this->canMakeReturns(),
-            'member_since' => $this->creation_date?->format('d/m/Y')
+            'member_since' => $this->creation_date?->format('d/m/Y'),
         ];
     }
 }

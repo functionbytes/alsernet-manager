@@ -1,4 +1,6 @@
-<?php return array (
-  'next' => 'ŽŸ‚Ö &raquo;',
-  'previous' => '&laquo; ‘O‚É–ß‚é',
-) ?>
+<?php
+
+return [
+    'next' => 'ŽŸ‚Ö &raquo;',
+    'previous' => '&laquo; ‘O‚É–ß‚é',
+];

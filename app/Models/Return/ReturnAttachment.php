@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Storage;
 class ReturnAttachment extends Model
 {
     protected $table = 'return_attachments';
+
     protected $primaryKey = 'id_return_attachment';
 
     protected $fillable = [
-        'id_return_request', 'filename', 'original_name', 'mime_type', 'file_size', 'uploaded_by'
+        'id_return_request', 'filename', 'original_name', 'mime_type', 'file_size', 'uploaded_by',
     ];
 
     protected $casts = [
@@ -31,7 +32,7 @@ class ReturnAttachment extends Model
 
     public function scopeByType($query, $mimeType)
     {
-        return $query->where('mime_type', 'like', $mimeType . '%');
+        return $query->where('mime_type', 'like', $mimeType.'%');
     }
 
     public function scopeImages($query)
@@ -44,7 +45,7 @@ class ReturnAttachment extends Model
         return $query->whereIn('mime_type', [
             'application/pdf',
             'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         ]);
     }
 
@@ -53,7 +54,7 @@ class ReturnAttachment extends Model
      */
     public function getFilePath(): string
     {
-        return storage_path('app/returns/attachments/' . $this->filename);
+        return storage_path('app/returns/attachments/'.$this->filename);
     }
 
     /**
@@ -61,9 +62,10 @@ class ReturnAttachment extends Model
      */
     public function getPublicUrl(): ?string
     {
-        if (Storage::disk('public')->exists('returns/attachments/' . $this->filename)) {
-            return Storage::disk('public')->url('returns/attachments/' . $this->filename);
+        if (Storage::disk('public')->exists('returns/attachments/'.$this->filename)) {
+            return Storage::disk('public')->url('returns/attachments/'.$this->filename);
         }
+
         return null;
     }
 
@@ -72,7 +74,7 @@ class ReturnAttachment extends Model
      */
     public function fileExists(): bool
     {
-        return Storage::exists('returns/attachments/' . $this->filename);
+        return Storage::exists('returns/attachments/'.$this->filename);
     }
 
     /**
@@ -83,13 +85,13 @@ class ReturnAttachment extends Model
         $bytes = $this->file_size;
 
         if ($bytes >= 1073741824) {
-            return number_format($bytes / 1073741824, 2) . ' GB';
+            return number_format($bytes / 1073741824, 2).' GB';
         } elseif ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . ' MB';
+            return number_format($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . ' KB';
+            return number_format($bytes / 1024, 2).' KB';
         } else {
-            return $bytes . ' bytes';
+            return $bytes.' bytes';
         }
     }
 
@@ -118,7 +120,7 @@ class ReturnAttachment extends Model
             'application/pdf',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'text/plain'
+            'text/plain',
         ];
 
         return in_array($this->mime_type, $documentTypes);
@@ -149,7 +151,7 @@ class ReturnAttachment extends Model
 
         // Eliminar archivo físico si existe
         if ($this->fileExists()) {
-            $deleted = Storage::delete('returns/attachments/' . $this->filename);
+            $deleted = Storage::delete('returns/attachments/'.$this->filename);
         }
 
         // Eliminar registro de la base de datos
@@ -169,7 +171,7 @@ class ReturnAttachment extends Model
             'image/jpeg', 'image/png', 'image/gif',
             'application/pdf',
             'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         ]);
 
         return in_array($mimeType, $allowedTypes);
@@ -181,6 +183,7 @@ class ReturnAttachment extends Model
     public static function isAllowedFileSize($fileSize): bool
     {
         $maxSize = config('returns.validation.max_file_size', 5120) * 1024; // KB a bytes
+
         return $fileSize <= $maxSize;
     }
 }

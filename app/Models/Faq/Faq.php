@@ -21,6 +21,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Faq\FaqCategorie $categorie
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq ascending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq available()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq descending()
@@ -38,15 +39,16 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Faq extends Model
 {
     use HasFactory  , LogsActivity;
 
-    protected $table = "faqs";
+    protected $table = 'faqs';
 
-    protected static $recordEvents = ['deleted','updated','created'];
+    protected static $recordEvents = ['deleted', 'updated', 'created'];
 
     protected $fillable = [
         'uid',
@@ -56,7 +58,7 @@ class Faq extends Model
         'available',
         'category_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -65,7 +67,7 @@ class Faq extends Model
         return LogOptions::defaults()
             ->logOnlyDirty()
             ->logFillable()
-            ->setDescriptionForEvent(fn(string $eventName) => "This model has been {$eventName}");
+            ->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");
 
     }
 
@@ -83,19 +85,19 @@ class Faq extends Model
     {
         return $query->orderBy('created_at', 'asc');
     }
-    public function scopeId($query ,$id)
+
+    public function scopeId($query, $id)
     {
-        return $query->where('id' ,$id)->first();
+        return $query->where('id', $id)->first();
     }
 
-    public function scopeUid($query ,$uid)
+    public function scopeUid($query, $uid)
     {
         return $query->where('uid', $uid)->first();
     }
 
     public function categorie(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Faq\FaqCategorie','category_id','id');
+        return $this->belongsTo('App\Models\Faq\FaqCategorie', 'category_id', 'id');
     }
-
 }

@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnReasonLang extends Model
 {
     protected $table = 'return_reason_lang';
+
     protected $primaryKey = null;
+
     public $incrementing = false;
 
     protected $fillable = [
-        'id_return_reason', 'id_lang', 'id_shop', 'name'
+        'id_return_reason', 'id_lang', 'id_shop', 'name',
     ];
 
     public function returnReason(): BelongsTo

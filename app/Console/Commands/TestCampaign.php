@@ -2,26 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Acelle\Library\StringHelper;
 use Acelle\Library\ExtendedSwiftMessage;
-use Acelle\Model\Campaign;
-use Acelle\Model\User;
-use Acelle\Model\MailList;
-use Acelle\Model\Subscriber;
-use Acelle\Model\CampaignTrackingLog;
-use Acelle\Model\SendingServer;
-use Acelle\Model\AutoTrigger;
-use Acelle\Model\SendingServerElasticEmailApi;
-use Acelle\Model\SendingServerElasticEmail;
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Console\Command;
 
 class TestCampaign extends Command
 {
-
     protected $signature = 'campaign:test';
 
     protected $description = 'Command description';
@@ -34,6 +19,7 @@ class TestCampaign extends Command
     public function handle()
     {
         $this->testImap();
+
         return 0;
     }
 
@@ -46,20 +32,20 @@ class TestCampaign extends Command
         $mailer = new \Swift_Mailer($transport);
 
         $message = new ExtendedSwiftMessage('Wonderful Subject');
-        $message->setFrom(array('' => 'Awsome Sender'));
-        $message->setTo(array('' => 'Awsome Recipient'));
+        $message->setFrom(['' => 'Awsome Sender']);
+        $message->setTo(['' => 'Awsome Recipient']);
         $message->setBody('Here is the message itself');
         $mailer->send($message);
-        
+
     }
 
     public function testImap()
     {
-        $imapPath = "{mail.example.com:993/imap/tls}INBOX";
+        $imapPath = '{mail.example.com:993/imap/tls}INBOX';
         $inbox = imap_open($imapPath, 'user@example.com', 'password');
         $emails = imap_search($inbox, 'UNSEEN');
 
-        if (!empty($emails)) {
+        if (! empty($emails)) {
             foreach ($emails as $message) {
                 var_dump($message);
             }

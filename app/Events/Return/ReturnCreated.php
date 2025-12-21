@@ -12,8 +12,11 @@ class ReturnCreated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $return;
+
     public $createdBy;
+
     public $ipAddress;
+
     public $userAgent;
 
     public function __construct(ReturnRequest $return, string $createdBy = 'web', ?string $ipAddress = null, ?string $userAgent = null)
@@ -40,7 +43,7 @@ class ReturnCreated
             'created_by' => $this->createdBy,
             'ip_address' => $this->ipAddress,
             'user_agent' => $this->userAgent,
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
     }
 
@@ -58,7 +61,7 @@ class ReturnCreated
      */
     public function shouldGeneratePDF(): bool
     {
-        return !empty($this->return->email) &&
+        return ! empty($this->return->email) &&
             in_array($this->createdBy, ['admin', 'callcenter', 'web']);
     }
 }

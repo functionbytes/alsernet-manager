@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Selectează',
     'Deselect_All' => 'Deselect All',
@@ -41,10 +41,10 @@ return array(
     'Text_filter' => 'filtru text',
     'Swipe_help' => 'Glisează pe numele fișierului/folderului pentru opțiuni',
     'Upload_base' => 'Upload standard',
-    'Upload_base_help' => "Adaugă fișiere (drag & drop - browsere moderne) sau click pe butonul Adaugă fișier(e), de mai sus apoi pe butonul Start upload. După ce upload-ul este finalizat, apăsați pe butonul Înapoi la lista de fișiere.",
+    'Upload_base_help' => 'Adaugă fișiere (drag & drop - browsere moderne) sau click pe butonul Adaugă fișier(e), de mai sus apoi pe butonul Start upload. După ce upload-ul este finalizat, apăsați pe butonul Înapoi la lista de fișiere.',
     'Upload_add_files' => 'Adaugă fișier(e)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'Dimensiunea fișierului uploadat depășește valoarea din directiva upload_max_filesize din fișierul php.ini',
         2 => 'Dimensiunea fișierului uploadat depășește valoarea din directiva MAX_FILE_SIZE specificată în formularul HTML',
         3 => 'Fișierul uploadat a fost încărcat parțial ',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Rezoluția imaginii depășește înălțimea maximă admisă',
         'min_height' => 'Rezoluția imaginii este mai mică decât înălțimea minimă necesară',
         'abort' => 'Procesul de upload a fost întrerupt',
-        'image_resize' => 'Imaginea nu a putut fi redimensionată'
-    ),
+        'image_resize' => 'Imaginea nu a putut fi redimensionată',
+    ],
     'Upload_url' => 'Din url',
     'Type_dir' => 'dir',
     'Type' => 'Tip',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Ați selectat prea multe foldere/fișiere pentru a %1$s. Limita maximă: %2$d files/operațiune', // %1$s = cut or copy, %2$d = max count
     'Copy_Cut_Not_Allowed' => 'Nu aveți permisiuni pentru a %1$s %2$s.', // %12$s = cut or copy, %2$s = files or folders
     'Image_Editor_No_Save' => 'Imaginea nu poate fi salvată',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Fisierele din arhivă nu pot fi extrase. Este posibil ca arhiva să fie coruptă.',
     'Zip_Invalid' => 'Extensia nu este suportată. Extensii valide: zip, gz, tar.',
     'Dir_No_Write' => 'Folderul selectat nu are permisiuni de scriere.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Permisiuni fișier',
     'File_Permission_Not_Allowed' => 'Modificare permisiunilor pentru %s nu este permisă.', // %s = files or folders
     'File_Permission_Recursive' => 'Execută în mod recursiv?',
-    'File_Permission_Wrong_Mode' => "Permisiunea furnizată nu este permisă.",
+    'File_Permission_Wrong_Mode' => 'Permisiunea furnizată nu este permisă.',
     'User' => 'Utilizator',
     'Group' => 'Grup',
     'Yes' => 'Da',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Fisierul nu poate fi găsit.',
     'File_Open_Edit_Not_Allowed' => 'Nu aveți permisiuni pentru a %s acest fișier.', // %s = open or edit
     'Edit' => 'Editare',
-    'Edit_File' => "Editare conținut fișier",
-    'File_Save_OK' => "Fișierul a fost salvat cu succes.",
-    'File_Save_Error' => "A intervenit o eroare la salvarea fișierului.",
+    'Edit_File' => 'Editare conținut fișier',
+    'File_Save_OK' => 'Fișierul a fost salvat cu succes.',
+    'File_Save_Error' => 'A intervenit o eroare la salvarea fișierului.',
     'New_File' => 'Fișier nou',
     'No_Extension' => 'Este necesar să adăugați o extensie validă la fișier.',
     'Valid_Extensions' => 'Extensii valide: %s', // %s = txt,log etc.
-    'Upload_message' => "Drag & drop la fișiere pentru upload",
+    'Upload_message' => 'Drag & drop la fișiere pentru upload',
 
-    'SERVER ERROR' => "EROARE SERVER",
-    'forbidden' => "Interzis",
-    'wrong path' => "Cale incorectă",
-    'wrong name' => "Denumire incorectă",
-    'wrong extension' => "Extensie incorectă",
-    'wrong option' => "Opțiune incorectă",
-    'wrong data' => "Data incorectă",
-    'wrong action' => "Acțiune incorectă",
-    'wrong sub-action' => "Subacțiune incorectă",
-    'no action passed' => "Nicio acțiune nu s-a finalizat",
-    'no path' => "Cale inexistentă",
-    'no file' => "Fișier inexistent",
-    'view type number missing' => "Lipsă număr tip de vizualizare",
-    'Not enough Memory' => "Memorie insuficientă",
-    'max_size_reached' => "Folderul de imagini a atins dimensiunea maximă de %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Dimensiune totală",
-);
+    'SERVER ERROR' => 'EROARE SERVER',
+    'forbidden' => 'Interzis',
+    'wrong path' => 'Cale incorectă',
+    'wrong name' => 'Denumire incorectă',
+    'wrong extension' => 'Extensie incorectă',
+    'wrong option' => 'Opțiune incorectă',
+    'wrong data' => 'Data incorectă',
+    'wrong action' => 'Acțiune incorectă',
+    'wrong sub-action' => 'Subacțiune incorectă',
+    'no action passed' => 'Nicio acțiune nu s-a finalizat',
+    'no path' => 'Cale inexistentă',
+    'no file' => 'Fișier inexistent',
+    'view type number missing' => 'Lipsă număr tip de vizualizare',
+    'Not enough Memory' => 'Memorie insuficientă',
+    'max_size_reached' => 'Folderul de imagini a atins dimensiunea maximă de %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Dimensiune totală',
+];

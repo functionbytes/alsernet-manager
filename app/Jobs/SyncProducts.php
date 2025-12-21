@@ -2,14 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Model\Source;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Model\Source;
-use App\Model\Customer;
 
 class SyncProducts implements ShouldQueue
 {

@@ -4,41 +4,41 @@ namespace App\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
-use App\Models\Citie;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\Lang;
+use Illuminate\Http\Request;
 
 class LangsController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
-            $searchKey = null ?? $request->search;
-            $available = null ?? $request->available;
+        $searchKey = null ?? $request->search;
+        $available = null ?? $request->available;
 
-            $langs = Lang::descending();
+        $langs = Lang::descending();
 
-            if ($searchKey) {
-                $langs = $langs->where('title', 'like', '%' . $searchKey . '%');
-            }
+        if ($searchKey) {
+            $langs = $langs->where('title', 'like', '%'.$searchKey.'%');
+        }
 
-            if ($request->available != null) {
-                $langs = $langs->where('available', $available);
-            }
+        if ($request->available != null) {
+            $langs = $langs->where('available', $available);
+        }
 
-            $langs = $langs->paginate(paginationNumber());
+        $langs = $langs->paginate(paginationNumber());
 
-            return view('managers.views.settings.langs.index')->with([
-                'langs' => $langs,
-                'available' => $available,
-                'searchKey' => $searchKey,
-            ]);
+        return view('managers.views.settings.langs.index')->with([
+            'langs' => $langs,
+            'available' => $available,
+            'searchKey' => $searchKey,
+        ]);
 
     }
 
-    public function create(){
+    public function create()
+    {
 
-        $categories = Categorie::orderBy('title' , 'desc')->pluck('title','id');
+        $categories = Categorie::orderBy('title', 'desc')->pluck('title', 'id');
 
         return view('managers.views.settings.langs.create')->with([
             'categories' => $categories,
@@ -46,21 +46,23 @@ class LangsController extends Controller
 
     }
 
-    public function view($uid){
+    public function view($uid)
+    {
 
         $lang = Lang::uid($uid);
 
         return view('managers.views.settings.langs.view')->with([
-            'categorie' => $lang
+            'categorie' => $lang,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $lang = Lang::uid($uid);
 
-        $categories = Categorie::orderBy('title' , 'desc')->pluck('title','id');
+        $categories = Categorie::orderBy('title', 'desc')->pluck('title', 'id');
 
         return view('managers.views.settings.langs.edit')->with([
             'lang' => $lang,
@@ -69,7 +71,8 @@ class LangsController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $lang = new Lang;
         $lang->uid = $this->generate_uid('langs');
@@ -94,7 +97,8 @@ class LangsController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $lang = Lang::uid($request->uid);
         $lang->title = $request->title;
@@ -118,7 +122,8 @@ class LangsController extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
         $lang = Lang::uid($uid);
         $lang->delete();
@@ -127,26 +132,22 @@ class LangsController extends Controller
 
     }
 
-
     public static function getCategories(Request $request)
     {
         $formatted_tags = [];
 
-        if (!empty($request->term)) {
+        if (! empty($request->term)) {
             $lang = Lang::where('id', $request->term)->first();
             $categories = $lang->categories;
 
             foreach ($categories as $categorie) {
                 $formatted_tags[] = [
                     'id' => $categorie->id,
-                    'text' => $categorie->title
+                    'text' => $categorie->title,
                 ];
             }
         }
 
         return response()->json($formatted_tags);
     }
-
-
-
 }

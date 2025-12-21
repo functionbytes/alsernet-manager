@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 class PushNotificationService
 {
     protected $fcmServerKey;
+
     protected $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
 
     public function __construct()
@@ -24,19 +25,22 @@ class PushNotificationService
             $payload = $this->buildPayload($token, $data, $deviceType);
 
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $this->fcmServerKey,
+                'Authorization' => 'key='.$this->fcmServerKey,
                 'Content-Type' => 'application/json',
             ])->post($this->fcmUrl, $payload);
 
             if ($response->successful()) {
                 $result = $response->json();
+
                 return $result['success'] > 0;
             }
 
-            Log::error('Error enviando push notification: ' . $response->body());
+            Log::error('Error enviando push notification: '.$response->body());
+
             return false;
         } catch (\Exception $e) {
-            Log::error('Excepción enviando push notification: ' . $e->getMessage());
+            Log::error('Excepción enviando push notification: '.$e->getMessage());
+
             return false;
         }
     }
@@ -62,7 +66,7 @@ class PushNotificationService
     {
         try {
             $payload = [
-                'to' => '/topics/' . $topic,
+                'to' => '/topics/'.$topic,
                 'notification' => [
                     'title' => $data['title'] ?? 'Notificación',
                     'body' => $data['body'] ?? '',
@@ -73,13 +77,14 @@ class PushNotificationService
             ];
 
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $this->fcmServerKey,
+                'Authorization' => 'key='.$this->fcmServerKey,
                 'Content-Type' => 'application/json',
             ])->post($this->fcmUrl, $payload);
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('Error enviando push notification a topic: ' . $e->getMessage());
+            Log::error('Error enviando push notification a topic: '.$e->getMessage());
+
             return false;
         }
     }
@@ -125,13 +130,14 @@ class PushNotificationService
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $this->fcmServerKey,
+                'Authorization' => 'key='.$this->fcmServerKey,
                 'Content-Type' => 'application/json',
-            ])->post('https://iid.googleapis.com/iid/v1/' . $token . '/rel/topics/' . $topic);
+            ])->post('https://iid.googleapis.com/iid/v1/'.$token.'/rel/topics/'.$topic);
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('Error suscribiendo a topic: ' . $e->getMessage());
+            Log::error('Error suscribiendo a topic: '.$e->getMessage());
+
             return false;
         }
     }
@@ -143,13 +149,14 @@ class PushNotificationService
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $this->fcmServerKey,
+                'Authorization' => 'key='.$this->fcmServerKey,
                 'Content-Type' => 'application/json',
-            ])->delete('https://iid.googleapis.com/iid/v1/' . $token . '/rel/topics/' . $topic);
+            ])->delete('https://iid.googleapis.com/iid/v1/'.$token.'/rel/topics/'.$topic);
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('Error desuscribiendo de topic: ' . $e->getMessage());
+            Log::error('Error desuscribiendo de topic: '.$e->getMessage());
+
             return false;
         }
     }

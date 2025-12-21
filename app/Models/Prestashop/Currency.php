@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Currency extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_currency';
+
     protected $primaryKey = 'id_currency';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -31,15 +34,13 @@ class Currency extends Model
         'pattern',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'conversion_rate' => 'float',
     ];
-
 
     public function carts(): HasMany
     {
         return $this->hasMany('App\Models\Prestashop\Cart\Cart', 'id_currency', 'id_currency');
     }
-
 }

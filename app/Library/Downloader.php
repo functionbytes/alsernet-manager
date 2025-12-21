@@ -31,8 +31,8 @@ class Downloader
         curl_close($curlSession);
         fclose($fp);
 
-        if (!empty($error)) {
-            throw new Exception("Error downloading upgrade package: " . $error);
+        if (! empty($error)) {
+            throw new Exception('Error downloading upgrade package: '.$error);
         }
     }
 

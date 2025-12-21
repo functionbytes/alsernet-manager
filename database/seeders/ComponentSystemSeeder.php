@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\ComponentSubstitution;
 use App\Models\Product;
 use App\Models\ProductComponent;
-use App\Models\ComponentSubstitution;
 use App\Models\Supplier;
 use Illuminate\Database\Seeder;
 
@@ -71,8 +71,8 @@ class ComponentSystemSeeder extends Seeder
         $essentialComponents = [
             [
                 'name' => 'Adaptador de corriente',
-                'code' => 'PWR-ADAPT-' . $product->id,
-                'sku' => 'PWR-' . strtoupper(uniqid()),
+                'code' => 'PWR-ADAPT-'.$product->id,
+                'sku' => 'PWR-'.strtoupper(uniqid()),
                 'category' => ProductComponent::CATEGORY_ELECTRONICS,
                 'type' => ProductComponent::TYPE_ESSENTIAL,
                 'quantity_per_product' => 1,
@@ -87,8 +87,8 @@ class ComponentSystemSeeder extends Seeder
             ],
             [
                 'name' => 'Cable USB',
-                'code' => 'USB-CABLE-' . $product->id,
-                'sku' => 'USB-' . strtoupper(uniqid()),
+                'code' => 'USB-CABLE-'.$product->id,
+                'sku' => 'USB-'.strtoupper(uniqid()),
                 'category' => ProductComponent::CATEGORY_ELECTRONICS,
                 'type' => ProductComponent::TYPE_ESSENTIAL,
                 'quantity_per_product' => 1,
@@ -107,8 +107,8 @@ class ComponentSystemSeeder extends Seeder
         $optionalComponents = [
             [
                 'name' => 'Manual de usuario',
-                'code' => 'MANUAL-' . $product->id,
-                'sku' => 'MAN-' . strtoupper(uniqid()),
+                'code' => 'MANUAL-'.$product->id,
+                'sku' => 'MAN-'.strtoupper(uniqid()),
                 'category' => ProductComponent::CATEGORY_ACCESSORY,
                 'type' => ProductComponent::TYPE_OPTIONAL,
                 'quantity_per_product' => 1,
@@ -124,8 +124,8 @@ class ComponentSystemSeeder extends Seeder
             ],
             [
                 'name' => 'Estuche protector',
-                'code' => 'CASE-' . $product->id,
-                'sku' => 'CASE-' . strtoupper(uniqid()),
+                'code' => 'CASE-'.$product->id,
+                'sku' => 'CASE-'.strtoupper(uniqid()),
                 'category' => ProductComponent::CATEGORY_ACCESSORY,
                 'type' => ProductComponent::TYPE_ACCESSORY,
                 'quantity_per_product' => 1,
@@ -158,7 +158,7 @@ class ComponentSystemSeeder extends Seeder
         $component = ProductComponent::create(array_merge($componentData, [
             'product_id' => $product->id,
             'supplier_id' => $supplier->id,
-            'supplier_sku' => 'SUP-' . strtoupper(uniqid()),
+            'supplier_sku' => 'SUP-'.strtoupper(uniqid()),
             'lead_time_days' => rand(3, 14),
             'dimensions' => [
                 'length' => rand(5, 30),
@@ -169,7 +169,7 @@ class ComponentSystemSeeder extends Seeder
             'has_serial_numbers' => $componentData['type'] === ProductComponent::TYPE_ESSENTIAL && rand(0, 1) == 1,
             'is_replaceable' => true,
             'compatibility_level' => 'strict',
-            'location' => 'A' . rand(1, 10) . '-' . rand(1, 20),
+            'location' => 'A'.rand(1, 10).'-'.rand(1, 20),
             'metadata' => [
                 'is_fragile' => rand(0, 1) == 1,
                 'requires_special_handling' => false,

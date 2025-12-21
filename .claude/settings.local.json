@@ -165,11 +165,22 @@
       "mcp__dev-chrome__select",
       "mcp__dev-chrome__get_resource",
       "mcp__dev-chrome__list_pages",
-      "WebFetch(domain:manager.test)"
+      "WebFetch(domain:manager.test)",
+      "mcp__laravel-boost__tinker",
+      "mcp__laravel-boost__application-info",
+      "mcp__laravel-boost__database-schema",
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__read-log-entries",
+      "mcp__laravel-boost__get-config",
+      "Bash(do php -l \"$file\")",
+      "Bash(do php -l \"$f\")",
+      "mcp__laravel-boost__list-routes",
+      "mcp__laravel-boost__get-absolute-url"
     ],
     "deny": [],
     "ask": []
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "n8n-mcp",
     "n8n-workflows Docs",
@@ -194,5 +205,5 @@
     "mcp-mongodb",
     "mcp-codemap"
   ],
-  "enableAllProjectMcpServers": true
+  "outputStyle": "Learning"
 }

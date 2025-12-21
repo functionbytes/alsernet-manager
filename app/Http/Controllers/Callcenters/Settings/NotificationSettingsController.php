@@ -91,9 +91,10 @@ class NotificationSettingsController extends Controller
 
         try {
             $user->notify($testNotification);
+
             return response()->json(['success' => true, 'message' => 'Notificación de prueba enviada.']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error enviando notificación: ' . $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Error enviando notificación: '.$e->getMessage()]);
         }
     }
 }

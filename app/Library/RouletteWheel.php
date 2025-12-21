@@ -49,7 +49,7 @@ class RouletteWheel
         }
 
         // just in case
-        return array_keys($a)[sizeof($a) - 1];
+        return array_keys($a)[count($a) - 1];
     }
 
     /**

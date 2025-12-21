@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Warehouse extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_warehouse';
+
     protected $primaryKey = 'id_warehouse';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class Warehouse extends Model
         'management_type',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_address' => 'integer',
         'id_employee' => 'integer',
         'id_currency' => 'integer',

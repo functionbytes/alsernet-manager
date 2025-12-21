@@ -22,14 +22,15 @@
 
 namespace App\Library;
 
-use ZipArchive;
-use Illuminate\Support\Facades\Log as LaravelLog; // something wrong, cannot use the default name Log
 use App\Library\Facades\Hook;
-use App\ModelS\Lang;
+use App\ModelS\Lang; // something wrong, cannot use the default name Log
+use Illuminate\Support\Facades\Log as LaravelLog;
+use ZipArchive;
 
 class UpgradeManager
 {
     protected $source;
+
     protected $target;
 
     protected $allTranslationFiles;
@@ -72,7 +73,7 @@ class UpgradeManager
         try {
             // Extract the zip file
             $old = umask(0);
-            $zip = new ZipArchive();
+            $zip = new ZipArchive;
             $res = $zip->open($path);
             if ($res === true) {
                 $zip->extractTo($this->source);
@@ -122,7 +123,7 @@ class UpgradeManager
     public function cleanup()
     {
         // Check WRITE permission
-        if (!$this->isWritable($this->source)) {
+        if (! $this->isWritable($this->source)) {
             throw new \Exception("Cannot write to folder {$this->source}");
         }
 
@@ -158,7 +159,7 @@ class UpgradeManager
     private function getMetaInfo()
     {
         $path = join_paths($this->source, self::META_FILE);
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             // Clean up invalid package (without meta file)
             // Then raise an exception
             // So that user will only see this message once
@@ -187,7 +188,7 @@ class UpgradeManager
                 LaravelLog::info('Start upgrading');
             }
 
-            if (!$test) {
+            if (! $test) {
                 // set umask(0) and back up the current umask
                 $old = umask(0);
             }
@@ -205,7 +206,7 @@ class UpgradeManager
                 $source = join_paths($this->source, $dir);
                 $target = join_paths($this->target, $dir);
                 if ($test) {
-                    if (!$this->isWritable($target)) {
+                    if (! $this->isWritable($target)) {
                         $errors[] = $target;
                     }
                 } else {
@@ -221,12 +222,12 @@ class UpgradeManager
                 $target = join_paths($this->target, $file);
 
                 // File is deleted in build.sh script
-                if (!\Illuminate\Support\Facades\File::exists($source)) {
+                if (! \Illuminate\Support\Facades\File::exists($source)) {
                     continue;
                 }
 
                 if ($test) {
-                    if (!$this->isWritable($target)) {
+                    if (! $this->isWritable($target)) {
                         $errors[] = $target;
                     }
                 } else {
@@ -244,7 +245,7 @@ class UpgradeManager
                 $target = join_paths($this->target, $file);
 
                 if ($test) {
-                    if (!$this->isWritable($target)) {
+                    if (! $this->isWritable($target)) {
                         $errors[] = $target;
                     }
                 } else {
@@ -258,7 +259,7 @@ class UpgradeManager
                 $source = join_paths($this->source, 'vendor', $dir);
                 $target = join_paths($this->target, 'vendor', $dir);
                 if ($test) {
-                    if (!$this->isWritable($target)) {
+                    if (! $this->isWritable($target)) {
                         $errors[] = $target;
                     }
                 } else {
@@ -277,14 +278,14 @@ class UpgradeManager
             LaravelLog::info('Cleaning up');
             $this->cleanup();
 
-            if (!$test) {
+            if (! $test) {
                 // restore the umask
                 umask($old);
             }
 
             return true;
         } catch (\Exception $e) {
-            if (!$test) {
+            if (! $test) {
                 // restore the umask
                 umask($old);
             }
@@ -309,7 +310,7 @@ class UpgradeManager
             'bootstrap/cache/packages.php',
             'bootstrap/cache/config.php',
             'bootstrap/cache/services.php',
-            'bootstrap/cache/compiled.php'
+            'bootstrap/cache/compiled.php',
         ];
 
         foreach ($files as $file) {
@@ -325,7 +326,7 @@ class UpgradeManager
      */
     public function mergeEnv($updatefile)
     {
-        if (!file_exists($updatefile)) {
+        if (! file_exists($updatefile)) {
             return;
         }
 
@@ -341,7 +342,7 @@ class UpgradeManager
                 continue;
             }
 
-            list($updatekey, $updatevalue) = explode('=', $updaterecord, 2);
+            [$updatekey, $updatevalue] = explode('=', $updaterecord, 2);
             $updatevalue = stripslashes(trim(trim($updatevalue), '"'));
             \Acelle\Helpers\write_env($updatekey, $updatevalue, $overwrite = false);
         }
@@ -375,13 +376,14 @@ class UpgradeManager
      * Check if an existing file is writable or a new path can be created.
      *
      * @input string file path
+     *
      * @output boolean
      */
     private function isWritable($path)
     {
         if (is_writable($path)) {
             return true;
-        } elseif (!file_exists($path) && $this->canCreateFile($path)) {
+        } elseif (! file_exists($path) && $this->canCreateFile($path)) {
             return true;
         } else {
             // file exists but not writable
@@ -399,7 +401,7 @@ class UpgradeManager
     {
         $a = explode(DIRECTORY_SEPARATOR, $path);
         $parent = null;
-        for ($i = 0; $i < sizeof($a); $i += 1) {
+        for ($i = 0; $i < count($a); $i += 1) {
             $tmppath = implode(DIRECTORY_SEPARATOR, array_slice($a, 0, $i));
 
             if (empty($tmppath)) {
@@ -407,7 +409,7 @@ class UpgradeManager
             }
 
             try {
-                if (!file_exists($tmppath)) {
+                if (! file_exists($tmppath)) {
                     break;
                 } else {
                     $parent = $tmppath;
@@ -426,11 +428,11 @@ class UpgradeManager
      */
     private function rm($src)
     {
-        if (!file_exists($src)) {
+        if (! file_exists($src)) {
             return;
         }
 
-        if (!is_dir($src)) {
+        if (! is_dir($src)) {
             unlink($src);
 
             return;
@@ -454,7 +456,6 @@ class UpgradeManager
     /**
      * Copy file or directory to a destination (always REMOVE and REPLACE the destination).
      * Make sure parent directories are always created, similarly to "cp -p"
-     *
      */
     public function copy($src, $dst)
     {
@@ -469,7 +470,7 @@ class UpgradeManager
         } else {
             // Make sure the PARENT directory exists
             $dirname = pathinfo($dst)['dirname'];
-            if (!\Illuminate\Support\Facades\File::exists($dirname)) {
+            if (! \Illuminate\Support\Facades\File::exists($dirname)) {
                 \Illuminate\Support\Facades\File::makeDirectory($dirname, 0777, true, true);
             }
         }

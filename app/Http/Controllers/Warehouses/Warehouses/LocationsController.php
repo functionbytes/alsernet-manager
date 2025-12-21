@@ -6,18 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
 use App\Models\Shop;
 use App\Models\Warehouse\Warehouse;
-use App\Models\Warehouse\WarehouseLocation;
-use App\Models\Warehouse\WarehouseInventorySlot;
 use App\Models\Warehouse\WarehouseInventoryOperation;
+use App\Models\Warehouse\WarehouseLocation;
 use App\Models\Warehouse\WarehouseLocationSection;
 use App\Services\Inventories\BarcodeReadingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class LocationsController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $available = null ?? $request->available;
@@ -25,7 +24,7 @@ class LocationsController extends Controller
         $warehouses = Warehouse::latest();
 
         if ($searchKey != null) {
-            $warehouses = $warehouses->where('title', 'like', '%' . $searchKey . '%');
+            $warehouses = $warehouses->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($available != null) {
@@ -42,7 +41,8 @@ class LocationsController extends Controller
 
     }
 
-    public function content($uid){
+    public function content($uid)
+    {
 
         $warehouse = Warehouse::uid($uid);
 
@@ -52,16 +52,15 @@ class LocationsController extends Controller
 
     }
 
-
-
-    public function section($warehouse, $location, $section){
+    public function section($warehouse, $location, $section)
+    {
 
         $warehouse = Warehouse::uid($warehouse);
         $location = WarehouseLocation::uid($location);
         $section = WarehouseLocationSection::uid($section);
 
         // Validar que los registros existan
-        if (!$warehouse || !$location || !$section) {
+        if (! $warehouse || ! $location || ! $section) {
             return abort(404, 'Warehouse, Location o Section no encontrado');
         }
 
@@ -73,29 +72,30 @@ class LocationsController extends Controller
         ]);
     }
 
-    public function modalitie($warehouse, $location, $section){
+    public function modalitie($warehouse, $location, $section)
+    {
 
         $warehouse = Warehouse::uid($warehouse);
         $location = WarehouseLocation::uid($location);
         $section = WarehouseLocationSection::uid($section);
 
         // Validar que los registros existan
-        if (!$warehouse || !$location || !$section) {
+        if (! $warehouse || ! $location || ! $section) {
             return abort(404, 'Warehouse, Location o Section no encontrado');
         }
-//
-//        // Verificar si existe una operación activa
-//        $operationValidate = WarehouseInventoryOperation::getActiveByWarehouse($warehouse->id);
-//
-//        if ($operationValidate) {
-//            // Si existe una operación activa, mostrar la ubicación completa
-//            return view('warehouses.views.warehouses.warehouses.complete')->with([
-//                'location' => $location,
-//                'warehouse' => $warehouse,
-//                'section' => $section,
-//                'operation' => $operationValidate,
-//            ]);
-//        }
+        //
+        //        // Verificar si existe una operación activa
+        //        $operationValidate = WarehouseInventoryOperation::getActiveByWarehouse($warehouse->id);
+        //
+        //        if ($operationValidate) {
+        //            // Si existe una operación activa, mostrar la ubicación completa
+        //            return view('warehouses.views.warehouses.warehouses.complete')->with([
+        //                'location' => $location,
+        //                'warehouse' => $warehouse,
+        //                'section' => $section,
+        //                'operation' => $operationValidate,
+        //            ]);
+        //        }
 
         // Si no existe operación, mostrar vista para seleccionar modalidad
         return view('warehouses.views.warehouses.warehouses.modalities.modalitie')->with([
@@ -105,52 +105,53 @@ class LocationsController extends Controller
         ]);
     }
 
-
-    public function automatic($warehouse, $location, $section){
+    public function automatic($warehouse, $location, $section)
+    {
 
         $warehouse = Warehouse::uid($warehouse);
         $location = WarehouseLocation::uid($location);
         $section = WarehouseLocationSection::uid($section);
 
         // Validar que los registros existan
-        if (!$warehouse || !$location || !$section) {
+        if (! $warehouse || ! $location || ! $section) {
             return abort(404, 'Warehouse, Location o Section no encontrado');
         }
 
-//        // Crear u obtener operación activa
-//        $operation = WarehouseInventoryOperation::getActiveByWarehouse($warehouse->id);
-//
-//        if (!$operation) {
-//            $operation = WarehouseInventoryOperation::create([
-//                'warehouse_id' => $warehouse->id,
-//                'user_id' => auth()->id(),
-//                'started_at' => now(),
-//            ]);
-//        }
+        //        // Crear u obtener operación activa
+        //        $operation = WarehouseInventoryOperation::getActiveByWarehouse($warehouse->id);
+        //
+        //        if (!$operation) {
+        //            $operation = WarehouseInventoryOperation::create([
+        //                'warehouse_id' => $warehouse->id,
+        //                'user_id' => auth()->id(),
+        //                'started_at' => now(),
+        //            ]);
+        //        }
 
         return view('warehouses.views.warehouses.warehouses.modalities.automatic')->with([
             'warehouse' => $warehouse,
             'location' => $location,
             'section' => $section,
-            //'operation' => $operation,
+            // 'operation' => $operation,
         ]);
     }
 
-    public function manual($warehouse, $location, $section){
+    public function manual($warehouse, $location, $section)
+    {
 
         $warehouse = Warehouse::uid($warehouse);
         $location = WarehouseLocation::uid($location);
         $section = WarehouseLocationSection::uid($section);
 
         // Validar que los registros existan
-        if (!$warehouse || !$location || !$section) {
+        if (! $warehouse || ! $location || ! $section) {
             return abort(404, 'Warehouse, Location o Section no encontrado');
         }
 
         // Crear u obtener operación activa
         $operation = WarehouseInventoryOperation::getActiveByWarehouse($warehouse->id);
 
-        if (!$operation) {
+        if (! $operation) {
             $operation = WarehouseInventoryOperation::create([
                 'warehouse_id' => $warehouse->id,
                 'user_id' => auth()->id(),
@@ -166,17 +167,20 @@ class LocationsController extends Controller
         ]);
     }
 
-    public function validateGenerate(Request $request){
+    public function validateGenerate(Request $request)
+    {
         // NOTE: This method needs refactoring - validateExits method is deprecated
         // For new warehouse system, use WarehouseLocation with floor_id instead
-        $shop  = Shop::uid($request->shop);
+        $shop = Shop::uid($request->shop);
 
         return response()->json([
             'success' => false,
             'message' => 'Método deprecado. Por favor usar nueva API de Warehouse',
         ]);
     }
-    public function validateLocation(Request $request){
+
+    public function validateLocation(Request $request)
+    {
 
         $warehouse = app('warehouses');
 
@@ -186,21 +190,20 @@ class LocationsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'uid'   => $location->uid
+                'uid' => $location->uid,
             ]);
 
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Ubicación no encontrada.'
+                'message' => 'Ubicación no encontrada.',
             ]);
         }
 
     }
 
-
-
-    public function validateSection(Request $request){
+    public function validateSection(Request $request)
+    {
 
         $warehouse = app('warehouses');
 
@@ -213,22 +216,22 @@ class LocationsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'section'   => $section->uid,
-                'location'   => $location->uid,
-                'warehouse'   => $warehoouse->uid
+                'section' => $section->uid,
+                'location' => $location->uid,
+                'warehouse' => $warehoouse->uid,
             ]);
 
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Ubicación no encontrada.'
+                'message' => 'Ubicación no encontrada.',
             ]);
         }
 
     }
 
-
-    public function validateProduct(Request $request, BarcodeReadingService $barcodeService){
+    public function validateProduct(Request $request, BarcodeReadingService $barcodeService)
+    {
 
         $request->validate([
             'product' => 'required|string|min:1',
@@ -249,7 +252,8 @@ class LocationsController extends Controller
 
     }
 
-    public function close(Request $request){
+    public function close(Request $request)
+    {
 
         $user = app('warehouses');
         $locationValidate = Location::uid($request->location);
@@ -257,16 +261,15 @@ class LocationsController extends Controller
 
         if ($request->modalitie == 'automatic') {
 
-            $products = json_decode($request->products, true);;
-
+            $products = json_decode($request->products, true);
 
             foreach ($products as $product) {
 
                 $productItem = Product::uid($product['uid']);
                 // $locationProductItem = $productItem->localization;
-                //$locationProductItem = 1;
+                // $locationProductItem = 1;
 
-                $warehouseItem = new InventarieLocationItem();
+                $warehouseItem = new InventarieLocationItem;
                 $warehouseItem->uid = $this->generate_uid('inventarie_locations_items');
                 $warehouseItem->product_id = $productItem->id;
                 $warehouseItem->location_id = $locationItem->id;
@@ -283,49 +286,47 @@ class LocationsController extends Controller
                 $warehouseItem->save();
             }
 
-
             $itemsGroupedByProduct = $locationItem->items() // Relación de items
-            ->select('product_id', DB::raw('count(*) as product_count'))
+                ->select('product_id', DB::raw('count(*) as product_count'))
                 ->groupBy('product_id')
                 ->get();
 
             foreach ($itemsGroupedByProduct as $itemGroup) {
 
-                //$product = Product::id($itemGroup->product_id);
-                //$shopId = $user->shop_id;
+                // $product = Product::id($itemGroup->product_id);
+                // $shopId = $user->shop_id;
 
-                //if ($product) {
+                // if ($product) {
                 //    $location = ProductLocation::where('product_id', $product->id)->first();
                 //    $location->count+= $itemGroup->product_count;
                 //    $location->update();
-                //}
+                // }
 
                 $product = Product::id($itemGroup->product_id);
                 $shopId = $user->shop_id;
 
-                $locations = $product->localizations->filter(function($localization) use ($shopId) {
+                $locations = $product->localizations->filter(function ($localization) use ($shopId) {
                     return $localization->shop_id == $shopId;
-                });$locations->first();
+                });
+                $locations->first();
 
                 if ($product) {
                     foreach ($locations as $location) {
-                        $location->count+= $itemGroup->product_count;
+                        $location->count += $itemGroup->product_count;
                         $location->update();
                     }
                 }
 
-
             }
 
-
-        }elseif ($request->modalitie == 'manual') {
+        } elseif ($request->modalitie == 'manual') {
 
             $productItem = Product::barcode($request->product);
 
             // $locationProductItem = $productItem->localization;
             $locationProductItem = 1;
 
-            $warehouseItem = new InventarieLocationItem();
+            $warehouseItem = new InventarieLocationItem;
             $warehouseItem->uid = $this->generate_uid('inventarie_locations_items');
             $warehouseItem->product_id = $productItem->id;
             $warehouseItem->location_id = $locationItem->id;
@@ -341,13 +342,13 @@ class LocationsController extends Controller
             $warehouseItem->save();
 
             $itemsGroupedByProduct = $locationItem->items() // Relación de items
-            ->select('product_id', DB::raw('SUM(count) as total_count'))
+                ->select('product_id', DB::raw('SUM(count) as total_count'))
                 ->groupBy('product_id')  // Agrupar por 'product_id'
                 ->get();
 
             foreach ($itemsGroupedByProduct as $itemGroup) {
 
-                //$product = Product::id($itemGroup->product_id);
+                // $product = Product::id($itemGroup->product_id);
                 // $shopId = $user->shop_id;
 
                 // if ($product) {
@@ -359,13 +360,13 @@ class LocationsController extends Controller
                 $product = Product::id($itemGroup->product_id);
                 $shopId = $user->shop_id;
 
-                $locations = $product->localizations->filter(function($localization) use ($shopId) {
+                $locations = $product->localizations->filter(function ($localization) use ($shopId) {
                     return $localization->shop_id == $shopId;
                 });
 
                 if ($product) {
                     foreach ($locations as $location) {
-                        $location->count+= $itemGroup->total_count;
+                        $location->count += $itemGroup->total_count;
                         $location->update();
                     }
                 }
@@ -373,7 +374,7 @@ class LocationsController extends Controller
 
         }
 
-        //$locationItem->complete = 1;
+        // $locationItem->complete = 1;
         $locationItem->update();
 
         return response()->json([
@@ -382,7 +383,4 @@ class LocationsController extends Controller
         ]);
 
     }
-
-
 }
-

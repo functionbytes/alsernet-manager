@@ -2,9 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Model\MailList;
-use Exception;
 use App\Library\Traits\Trackable;
+use Exception;
 use Illuminate\Bus\Batchable;
 
 class VerifyMailListJob extends Base
@@ -13,8 +12,11 @@ class VerifyMailListJob extends Base
     use Trackable;
 
     public $timeout = 14400;
+
     protected $mailList;
+
     protected $server;
+
     protected $subscription;
 
     public function __construct($mailList, $server, $subscription)
@@ -47,7 +49,7 @@ class VerifyMailListJob extends Base
         // Get subscribers that are not verified
         $query = $this->mailList->subscribers()->unverified();
 
-        if (!$query->exists()) {
+        if (! $query->exists()) {
             throw new Exception('There is no unverified contact in your list');
         }
 

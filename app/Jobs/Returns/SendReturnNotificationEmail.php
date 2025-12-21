@@ -1,33 +1,38 @@
 <?php
 
-
 namespace App\Jobs\Returns;
 
-use App\Models\Return\ReturnRequest;
 use App\Mail\Return\ReturnConfirmationMail;
 use App\Mail\Return\ReturnStatusUpdateMail;
+use App\Models\Return\ReturnRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendReturnNotificationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $returnRequest;
+
     protected $emailType;
+
     protected $additionalData;
 
     public $tries = 5;
+
     public $timeout = 60;
+
     public $backoff = [5, 15, 30, 60, 120];
 
     const TYPE_CONFIRMATION = 'confirmation';
+
     const TYPE_STATUS_UPDATE = 'status_update';
+
     const TYPE_ADMIN_NOTIFICATION = 'admin_notification';
 
     public function __construct(ReturnRequest $returnRequest, string $emailType, array $additionalData = [])
@@ -43,7 +48,7 @@ class SendReturnNotificationEmail implements ShouldQueue
         Log::info('Enviando email de devolución', [
             'return_id' => $this->returnRequest->id_return_request,
             'email_type' => $this->emailType,
-            'recipient' => $this->returnRequest->email
+            'recipient' => $this->returnRequest->email,
         ]);
 
         try {
@@ -66,14 +71,14 @@ class SendReturnNotificationEmail implements ShouldQueue
 
             Log::info('Email enviado exitosamente', [
                 'return_id' => $this->returnRequest->id_return_request,
-                'email_type' => $this->emailType
+                'email_type' => $this->emailType,
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error enviando email', [
                 'return_id' => $this->returnRequest->id_return_request,
                 'email_type' => $this->emailType,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -111,7 +116,7 @@ class SendReturnNotificationEmail implements ShouldQueue
             'return_id' => $this->returnRequest->id_return_request,
             'email_type' => $this->emailType,
             'error' => $exception->getMessage(),
-            'attempts' => $this->attempts()
+            'attempts' => $this->attempts(),
         ]);
 
         // Opcional: Registrar el fallo en la base de datos
@@ -121,7 +126,7 @@ class SendReturnNotificationEmail implements ShouldQueue
             'recipient' => $this->returnRequest->email,
             'error_message' => $exception->getMessage(),
             'failed_at' => now(),
-            'attempts' => $this->attempts()
+            'attempts' => $this->attempts(),
         ]);
     }
 

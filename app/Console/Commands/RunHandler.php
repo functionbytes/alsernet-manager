@@ -22,15 +22,14 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use Acelle\Library\Lockable;
+use Acelle\Library\Log;
 use Acelle\Model\BounceHandler;
 use Acelle\Model\FeedbackLoopHandler;
-use Acelle\Library\Log;
-use Acelle\Library\Lockable;
+use Illuminate\Console\Command;
 
 class RunHandler extends Command
 {
-
     protected $signature = 'handler:run';
 
     protected $description = 'Command description';
@@ -42,8 +41,7 @@ class RunHandler extends Command
 
     public function handle()
     {
-        $timeoutCallback = function () {
-        };
+        $timeoutCallback = function () {};
 
         $lock = new Lockable(storage_path('locks/bounce-feedback-handler'));
         $lock->getExclusiveLock(function () {
@@ -60,20 +58,20 @@ class RunHandler extends Command
         Log::info('Try to start handling process...');
 
         $handlers = BounceHandler::get();
-        Log::info(sizeof($handlers).' bounce handlers found');
+        Log::info(count($handlers).' bounce handlers found');
         $count = 1;
         foreach ($handlers as $handler) {
-            Log::info('Starting handler '.$handler->name." ($count/".sizeof($handlers).')');
+            Log::info('Starting handler '.$handler->name." ($count/".count($handlers).')');
             $handler->start();
             Log::info('Finish processing handler '.$handler->name);
             $count += 1;
         }
 
         $handlers = FeedbackLoopHandler::get();
-        Log::info(sizeof($handlers).' feedback loop handlers found');
+        Log::info(count($handlers).' feedback loop handlers found');
         $count = 1;
         foreach ($handlers as $handler) {
-            Log::info('Starting handler '.$handler->name." ($count/".sizeof($handlers).')');
+            Log::info('Starting handler '.$handler->name." ($count/".count($handlers).')');
             $handler->start();
             Log::info('Finish processing handler '.$handler->name);
             $count += 1;

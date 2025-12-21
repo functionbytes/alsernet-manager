@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Guest extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_guest';
+
     protected $primaryKey = 'id_guest';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -31,7 +34,7 @@ class Guest extends Model
         'mobile_theme',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'mobile_theme' => 'boolean',
         'id_operating_system' => 'integer',
         'id_web_browser' => 'integer',
@@ -47,5 +50,4 @@ class Guest extends Model
     {
         return $this->hasMany('App\Models\Prestashop\Cart\Cart', 'id_guest', 'id_guest');
     }
-
 }

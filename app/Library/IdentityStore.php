@@ -5,6 +5,7 @@ namespace App\Library;
 class IdentityStore
 {
     private $identities;
+
     private $defaultIdentityAttributes = [
         'Selected' => true,
         'VerificationStatus' => 'Pending',
@@ -31,7 +32,7 @@ class IdentityStore
     private function normalize($data)
     {
         if (is_string($data)) {
-            $data = [ $data => [] ];
+            $data = [$data => []];
         }
 
         foreach ($data as $key => $attributes) {
@@ -59,7 +60,7 @@ class IdentityStore
             'NotStarted' => 'Pending',
         ];
 
-        if (!array_key_exists($status, $map)) {
+        if (! array_key_exists($status, $map)) {
             throw new \Exception("Status '{$status}' of verification status not recognized by Acelle");
         }
 
@@ -92,7 +93,6 @@ class IdentityStore
                 $newIdentities[$key] = $attributes;
             }
         }
-
 
         if ($replace) {
             // replace this object data
@@ -147,6 +147,7 @@ class IdentityStore
         // $identity must be an array [ 'key' => [ attributes ]]
         $normalized = $this->normalize($data);
         $this->identities = array_merge($this->identities, $normalized);
+
         return $this;
     }
 
@@ -156,6 +157,7 @@ class IdentityStore
         if (array_key_exists($key, $this->identities)) {
             unset($this->identities[$key]);
         }
+
         return $this;
     }
 }

@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class State extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_state';
+
     protected $primaryKey = 'id_state';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,7 +22,7 @@ class State extends Model
         'name',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_country' => 'integer',
         'id_zone' => 'integer',
     ];

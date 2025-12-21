@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $currency_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie ascending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie descending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie newModelQuery()
@@ -29,18 +30,19 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Countrie whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Countrie extends Model
 {
     use HasFactory;
 
-    protected $table = "countries";
+    protected $table = 'countries';
 
     protected $fillable = [
         'title',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function scopeDescending($query)
@@ -52,5 +54,4 @@ class Countrie extends Model
     {
         return $query->orderBy('created_at', 'asc');
     }
-
 }

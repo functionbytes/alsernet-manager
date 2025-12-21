@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrderCartRule extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_cart_rule';
+
     protected $primaryKey = 'id_order_cart_rule';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class OrderCartRule extends Model
         'deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'deleted' => 'boolean',
         'id_order_cart_rule' => 'integer',
         'id_order' => 'integer',

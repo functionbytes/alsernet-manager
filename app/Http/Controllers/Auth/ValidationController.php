@@ -12,5 +12,4 @@ class ValidationController extends Controller
     {
         return view('auth.validation');
     }
-
 }

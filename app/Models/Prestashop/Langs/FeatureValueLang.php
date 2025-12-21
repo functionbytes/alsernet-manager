@@ -2,17 +2,20 @@
 
 namespace App\Models\Prestashop\Langs;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\FeatureValue;
 use App\Models\Prestashop\Language;
+use App\Models\Prestashop\Shop\Shop;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FeatureValueLang extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_feature_value_lang';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,12 +31,11 @@ class FeatureValueLang extends Model
         'id_shop' => 'integer',
     ];
 
-
     protected function setKeysForSaveQuery($query)
     {
         return $query->where('id_feature_value', $this->getAttribute('id_feature_value'))
-                     ->where('id_lang', $this->getAttribute('id_lang'))
-                     ->where('id_shop', $this->getAttribute('id_shop'));
+            ->where('id_lang', $this->getAttribute('id_lang'))
+            ->where('id_shop', $this->getAttribute('id_shop'));
     }
 
     public function featureValue(): BelongsTo

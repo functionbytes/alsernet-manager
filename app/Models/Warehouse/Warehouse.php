@@ -13,11 +13,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Warehouse extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $table = 'warehouses';
+
     protected $primaryKey = 'id';
+
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     protected $fillable = [
@@ -27,7 +30,7 @@ class Warehouse extends Model
         'description',
         'available',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
@@ -41,15 +44,15 @@ class Warehouse extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnlyDirty() ->logFillable() ->setDescriptionForEvent(fn(string $eventName) => "This model has been {$eventName}");
+        return LogOptions::defaults()->logOnlyDirty()->logFillable()->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");
     }
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
-    public function scopeUid($query ,$uid)
+    public function scopeUid($query, $uid)
     {
         return $query->where('uid', $uid)->first();
     }
@@ -61,7 +64,7 @@ class Warehouse extends Model
 
     public function shop(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Shop','shop_id','id');
+        return $this->belongsTo('App\Models\Shop', 'shop_id', 'id');
     }
 
     /**
@@ -92,7 +95,7 @@ class Warehouse extends Model
             'warehouse_id',
             'user_id'
         )->withPivot('is_default', 'can_transfer', 'can_inventory')
-        ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
@@ -126,6 +129,4 @@ class Warehouse extends Model
             }
         });
     }
-
 }
-

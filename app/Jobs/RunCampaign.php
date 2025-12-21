@@ -2,28 +2,30 @@
 
 namespace App\Jobs;
 
+use App\Library\Contracts\CampaignInterface;
+use App\Library\Traits\Trackable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Library\Traits\Trackable;
-use App\Library\Contracts\CampaignInterface;
 
 class RunCampaign implements ShouldQueue
 {
-    use Trackable;
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use Trackable;
 
     protected CampaignInterface $campaign;
 
     public $timeout = 300;
+
     public $failOnTimeout = true;
+
     public $tries = 1;
+
     public $maxExceptions = 1;
 
     /**
@@ -48,10 +50,10 @@ class RunCampaign implements ShouldQueue
         }
 
         try {
-            $this->campaign->logger()->info("Launch campaign ---------------------->");
+            $this->campaign->logger()->info('Launch campaign ---------------------->');
             $this->campaign->run();
         } catch (\Throwable $e) {
-            $errorMsg = "Error scheduling campaign: ".$e->getMessage()."\n".$e->getTraceAsString();
+            $errorMsg = 'Error scheduling campaign: '.$e->getMessage()."\n".$e->getTraceAsString();
             $this->campaign->setError($errorMsg);
 
             // To set the job to failed

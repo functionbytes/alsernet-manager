@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Tab extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tab';
+
     protected $primaryKey = 'id_tab';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +27,7 @@ class Tab extends Model
         'wording_domain',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_parent' => 'integer',
         'position' => 'integer',
     ];

@@ -11,7 +11,7 @@ trait HasReturnStatus
     {
         return in_array($this->status->state_id, [
             ReturnState::STATE_NEW,
-            ReturnState::STATE_VERIFICATION
+            ReturnState::STATE_VERIFICATION,
         ]);
     }
 
@@ -23,17 +23,17 @@ trait HasReturnStatus
     public function canBeRefunded(): bool
     {
         return $this->status->state_id === ReturnState::STATE_RESOLVED &&
-            !$this->is_refunded;
+            ! $this->is_refunded;
     }
 
     public function transitionTo($statusId, $notes = null)
     {
-        DB::transaction(function() use ($statusId, $notes) {
+        DB::transaction(function () use ($statusId, $notes) {
             ReturnHistory::create([
                 'id_return_request' => $this->id,
                 'id_return_status' => $statusId,
                 'description' => $notes,
-                'id_employee' => auth()->id() ?? 0
+                'id_employee' => auth()->id() ?? 0,
             ]);
 
             // Actualizar estado

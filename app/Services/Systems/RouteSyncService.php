@@ -74,6 +74,7 @@ class RouteSyncService
             }
 
             Log::info('Route synchronization completed', $changes);
+
             return $changes;
         } catch (\Exception $e) {
             Log::error('Error syncing routes', [
@@ -134,7 +135,7 @@ class RouteSyncService
     protected function shouldSkipRoute($route)
     {
         // Skip routes without names
-        if (!$route->getName()) {
+        if (! $route->getName()) {
             return true;
         }
 
@@ -162,6 +163,7 @@ class RouteSyncService
         $methods = $route->methods;
         // Remove 'HEAD' method, keep only meaningful ones
         $methods = array_diff($methods, ['HEAD']);
+
         return implode('|', array_values($methods));
     }
 
@@ -193,7 +195,7 @@ class RouteSyncService
 
         // Check by path prefix
         foreach ($this->profileMapping as $profile => $file) {
-            if (str_starts_with($path, '/' . $profile)) {
+            if (str_starts_with($path, '/'.$profile)) {
                 return $profile;
             }
         }
@@ -251,6 +253,7 @@ class RouteSyncService
     protected function requiresAuth($route)
     {
         $middleware = $route->middleware();
+
         return in_array('auth', $middleware) || in_array('auth:web', $middleware);
     }
 

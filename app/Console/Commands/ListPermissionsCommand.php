@@ -32,10 +32,11 @@ class ListPermissionsCommand extends Command
 
         if ($permissions->isEmpty()) {
             $this->warn('⚠️  No permissions found. Run: php artisan permissions:create');
+
             return;
         }
 
-        $this->info('📋 All Permissions (' . $permissions->count() . '):');
+        $this->info('📋 All Permissions ('.$permissions->count().'):');
         $this->newLine();
 
         $rows = [];
@@ -58,8 +59,9 @@ class ListPermissionsCommand extends Command
     {
         $role = Role::where('name', $roleName)->first();
 
-        if (!$role) {
+        if (! $role) {
             $this->error("❌ Role '{$roleName}' not found");
+
             return;
         }
 
@@ -67,6 +69,7 @@ class ListPermissionsCommand extends Command
 
         if ($permissions->isEmpty()) {
             $this->warn("⚠️  Role '{$roleName}' has no permissions assigned");
+
             return;
         }
 
@@ -91,8 +94,9 @@ class ListPermissionsCommand extends Command
     {
         $user = \App\Models\User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("❌ User with ID {$userId} not found");
+
             return;
         }
 
@@ -126,7 +130,7 @@ class ListPermissionsCommand extends Command
         $this->newLine();
 
         // Show inherited permissions from roles
-        $this->line('<fg=blue>Permissions from Roles (Total: ' . $inheritedPermissions->count() . '):</fg=blue>');
+        $this->line('<fg=blue>Permissions from Roles (Total: '.$inheritedPermissions->count().'):</fg=blue>');
         if ($inheritedPermissions->isEmpty()) {
             $this->line('  (none)');
         } else {

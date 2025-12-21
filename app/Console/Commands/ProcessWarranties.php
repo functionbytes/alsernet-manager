@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class ProcessWarranties extends Command
 {
     protected $signature = 'warranties:process {--sync-manufacturers : Sincronizar con fabricantes}';
+
     protected $description = 'Procesar garantías: notificaciones, estados, sincronización';
 
     protected $warrantyService;
@@ -43,6 +44,7 @@ class ProcessWarranties extends Command
         }
 
         $this->info('Procesamiento de garantías completado.');
+
         return 0;
     }
 }

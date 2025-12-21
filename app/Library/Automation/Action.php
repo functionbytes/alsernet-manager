@@ -9,17 +9,23 @@ use Throwable;
 abstract class Action
 {
     protected $id;
+
     protected $title;
+
     protected $type; // ElementCondition (Evaluate), ElementTrigger (Trigger), ElementWait (Wait), ElementAction (Send)
+
     protected $child;
+
     protected $options;
 
     // Own attributes that should be kept
     protected $last_executed = null;
+
     protected $evaluationResult = null;
 
     // parent object
     protected $autoTrigger;
+
     protected $logger;
 
     public function __construct($params = [])
@@ -143,10 +149,10 @@ abstract class Action
     public function update(array $json)
     {
         // Keep the following attributes, do not overwrite
-        $keep = [ 'last_executed', 'evaluationResult' ];
+        $keep = ['last_executed', 'evaluationResult'];
 
         foreach ($json as $key => $value) {
-            if (!in_array($key, $keep)) {
+            if (! in_array($key, $keep)) {
                 $this->{$key} = $value;
             }
         }
@@ -178,8 +184,8 @@ abstract class Action
 
         try {
             // Execute once only
-            if (!is_null($this->getLastExecuted())) {
-                throw new Exception("Action already executed");
+            if (! is_null($this->getLastExecuted())) {
+                throw new Exception('Action already executed');
             }
 
             // Actually execute, implemented by child classes

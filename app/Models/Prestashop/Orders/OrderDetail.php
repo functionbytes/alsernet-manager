@@ -2,19 +2,20 @@
 
 namespace App\Models\Prestashop\Orders;
 
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Stock\Warehouse;
+use App\Models\Prestashop\Tax\TaxRulesGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\Order;
-use App\Models\Prestashop\Orders\OrderInvoice;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Tax\TaxRulesGroup;
-use App\Models\Prestashop\Stock\Warehouse;
 
 class OrderDetail extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_detail';
+
     protected $primaryKey = 'id_order_detail';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -65,7 +66,7 @@ class OrderDetail extends Model
         'total_refunded_tax_incl',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_order' => 'integer',
         'id_order_invoice' => 'integer',
         'id_shop' => 'integer',

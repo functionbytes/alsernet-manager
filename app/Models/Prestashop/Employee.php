@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Employee extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_employee';
+
     protected $primaryKey = 'id_employee';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -38,7 +41,7 @@ class Employee extends Model
         'reset_password_validity',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'last_passwd_gen' => 'datetime',
         'id_profile' => 'integer',
         'id_lang' => 'integer',

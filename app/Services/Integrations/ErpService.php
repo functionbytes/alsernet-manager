@@ -12,21 +12,34 @@ use Illuminate\Support\Facades\Log;
 class ErpService
 {
     protected Client $client;
+
     protected string $urlErp;
 
     // Constantes para formas de pago
     const PAYMENT_CASHONDELIVERY = 1;
+
     const PAYMENT_WIRE = 2;
+
     const PAYMENT_CREDITCARD = 3;
+
     const PAYMENT_BIZUM = 4;
+
     const PAYMENT_REDSYS = 5;
+
     const PAYMENT_GOOGLE = 6;
+
     const PAYMENT_APPLE = 7;
+
     const PAYMENT_PAYPAL = 8;
+
     const PAYMENT_FINANCE = 9;
+
     const PAYMENT_SEQURA = 10;
+
     const PAYMENT_AlsernetFINANCE = 11;
+
     const PAYMENT_TRANSFERENCIA_ONLINE = 12;
+
     const PAYMENT_BAN_LENDISMART = 13;
 
     public function __construct()
@@ -62,21 +75,24 @@ class ErpService
             $status = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
-            if ($status === 200 && !empty($body)) {
+            if ($status === 200 && ! empty($body)) {
                 return $this->parseXmlResponse($body, $endpoint);
             }
 
             Log::error("GET {$endpoint} -> Respuesta no exitosa", [
                 'status' => $status,
-                'body' => $body
+                'body' => $body,
             ]);
+
             return null;
 
         } catch (RequestException $e) {
             $this->logRequestException($e, 'GET', $endpoint);
+
             return null;
         } catch (\Exception $e) {
-            Log::error("GET {$endpoint} -> Error inesperado: " . $e->getMessage());
+            Log::error("GET {$endpoint} -> Error inesperado: ".$e->getMessage());
+
             return null;
         }
     }
@@ -94,21 +110,24 @@ class ErpService
             $status = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
-            if ($status === 200 && !empty($body)) {
+            if ($status === 200 && ! empty($body)) {
                 return $this->parseXmlResponse($body, $endpoint);
             }
 
             Log::error("POST {$endpoint} -> Respuesta no exitosa", [
                 'status' => $status,
-                'body' => $body
+                'body' => $body,
             ]);
+
             return null;
 
         } catch (RequestException $e) {
             $this->logRequestException($e, 'POST', $endpoint);
+
             return null;
         } catch (\Exception $e) {
-            Log::error("POST {$endpoint} -> Error inesperado: " . $e->getMessage());
+            Log::error("POST {$endpoint} -> Error inesperado: ".$e->getMessage());
+
             return null;
         }
     }
@@ -135,25 +154,28 @@ class ErpService
             if ($status === 200 && $body === 'OK') {
                 return [
                     'status' => 'success',
-                    'message' => 'Operation completed successfully.'
+                    'message' => 'Operation completed successfully.',
                 ];
             }
 
-            if ($status === 200 && !empty($body)) {
+            if ($status === 200 && ! empty($body)) {
                 return $this->parseXmlResponse($body, $endpoint);
             }
 
             Log::error("PUT {$endpoint} -> Respuesta no exitosa", [
                 'status' => $status,
-                'body' => $body
+                'body' => $body,
             ]);
+
             return null;
 
         } catch (RequestException $e) {
             $this->logRequestException($e, 'PUT', $endpoint);
+
             return null;
         } catch (\Exception $e) {
-            Log::error("PUT {$endpoint} -> Error inesperado: " . $e->getMessage());
+            Log::error("PUT {$endpoint} -> Error inesperado: ".$e->getMessage());
+
             return null;
         }
     }
@@ -171,21 +193,24 @@ class ErpService
             $status = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
-            if ($status === 200 && !empty($body)) {
+            if ($status === 200 && ! empty($body)) {
                 return $this->parseXmlResponse($body, $endpoint);
             }
 
             Log::error("DELETE {$endpoint} -> Respuesta no exitosa", [
                 'status' => $status,
-                'body' => $body
+                'body' => $body,
             ]);
+
             return null;
 
         } catch (RequestException $e) {
             $this->logRequestException($e, 'DELETE', $endpoint);
+
             return null;
         } catch (\Exception $e) {
-            Log::error("DELETE {$endpoint} -> Error inesperado: " . $e->getMessage());
+            Log::error("DELETE {$endpoint} -> Error inesperado: ".$e->getMessage());
+
             return null;
         }
     }
@@ -201,12 +226,13 @@ class ErpService
         if ($xmlObject === false) {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
-                Log::error("XML Parsing Error", [
+                Log::error('XML Parsing Error', [
                     'endpoint' => $endpoint,
-                    'error' => $error->message
+                    'error' => $error->message,
                 ]);
             }
             libxml_clear_errors();
+
             return null;
         }
 
@@ -215,9 +241,11 @@ class ErpService
             $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
             Log::info("Datos recibidos de {$endpoint}", ['data' => $data]);
+
             return $data;
         } catch (\JsonException $e) {
-            Log::error("Error al convertir JSON en {$endpoint}: " . $e->getMessage());
+            Log::error("Error al convertir JSON en {$endpoint}: ".$e->getMessage());
+
             return null;
         }
     }
@@ -234,7 +262,7 @@ class ErpService
         Log::error("Error HTTP en {$method} {$endpoint}", [
             'message' => $e->getMessage(),
             'status' => $statusCode,
-            'body' => $errorBody
+            'body' => $errorBody,
         ]);
     }
 
@@ -247,7 +275,7 @@ class ErpService
      */
     public function recuperarClienteErp(int $idWeb): ?array
     {
-        $endpoint = "/api-gestion/cliente/";
+        $endpoint = '/api-gestion/cliente/';
         $params = ['idclienteweb' => $idWeb];
 
         return $this->get($endpoint, $params);
@@ -274,11 +302,11 @@ class ErpService
     {
         $idCliente = $this->recuperarIdClienteErp($idWeb);
 
-        if (!$idCliente) {
+        if (! $idCliente) {
             return null;
         }
 
-        $endpoint = "/api-gestion/pedido-cliente/";
+        $endpoint = '/api-gestion/pedido-cliente/';
         $params = ['idcliente' => $idCliente];
 
         $data = $this->get($endpoint, $params);
@@ -291,10 +319,10 @@ class ErpService
      */
     public function recuperarPedido(string $nPedidoCli, string $serie): ?array
     {
-        $endpoint = "/api-gestion/pedido-cliente/";
+        $endpoint = '/api-gestion/pedido-cliente/';
         $params = [
             'serie' => $serie,
-            'npedidocli' => $nPedidoCli
+            'npedidocli' => $nPedidoCli,
         ];
 
         $data = $this->get($endpoint, $params);
@@ -312,8 +340,9 @@ class ErpService
 
         $data = $this->get($endpoint, $params);
 
-        if (!$data) {
+        if (! $data) {
             Log::warning("No se pudo recuperar el pedido con identificador: {$identificadorOrigen}");
+
             return null;
         }
 
@@ -327,14 +356,14 @@ class ErpService
 
         $data = $this->get($endpoint, $params);
 
-        if (!$data) {
+        if (! $data) {
             Log::warning("No se pudo recuperar el pedido con identificador: {$identificadorOrigen}");
+
             return null;
         }
 
         return $this->formatOrderArrayErp($data);
     }
-
 
     /**
      * Recuperar cliente del ERP por email
@@ -346,13 +375,12 @@ class ErpService
 
         $data = $this->get($endpoint, $params);
 
-        if (!$data) {
+        if (! $data) {
             return null;
         }
 
         return $data;
     }
-
 
     /**
      * Guardar cliente en ERP
@@ -378,10 +406,10 @@ class ErpService
             ], 400);
 
         } catch (\Exception $e) {
-            Log::error('Error guardando cliente: ' . $e->getMessage());
+            Log::error('Error guardando cliente: '.$e->getMessage());
 
             return response()->json([
-                'error' => 'Error saving client: ' . $e->getMessage(),
+                'error' => 'Error saving client: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -391,7 +419,7 @@ class ErpService
      */
     public function saveLopd(string $email, string $date, string $commercial, string $parties): JsonResponse
     {
-        if (!$email) {
+        if (! $email) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Email is required.',
@@ -421,10 +449,10 @@ class ErpService
             ], 400);
 
         } catch (\Exception $e) {
-            Log::error('Error guardando LOPD: ' . $e->getMessage());
+            Log::error('Error guardando LOPD: '.$e->getMessage());
 
             return response()->json([
-                'error' => 'Error saving LOPD: ' . $e->getMessage(),
+                'error' => 'Error saving LOPD: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -468,7 +496,7 @@ class ErpService
         $params = [
             'codigo_verificacion' => $codigoVerificacion,
             'importe_venta' => $importeVenta,
-            'origen' => $origen
+            'origen' => $origen,
         ];
 
         $data = $this->get($endpoint, $params);
@@ -476,13 +504,13 @@ class ErpService
         if ($data) {
             return [
                 'success' => true,
-                'data' => $data
+                'data' => $data,
             ];
         }
 
         return [
             'success' => false,
-            'message' => 'Bono no encontrado o inválido'
+            'message' => 'Bono no encontrado o inválido',
         ];
     }
 
@@ -503,7 +531,7 @@ class ErpService
             'codigo_verificacion' => $codigoVerificacion,
             'importe_venta' => $importeVenta,
             'importe_inicial_tarjeta_regalo' => $importeInicialTarjetaRegalo,
-            'origen' => $origen
+            'origen' => $origen,
         ];
 
         return $this->put($endpoint, $data);
@@ -514,7 +542,7 @@ class ErpService
      */
     private function formatOrderArrayErp(?array $data): ?array
     {
-        if (!$data) {
+        if (! $data) {
             return null;
         }
 
@@ -583,12 +611,14 @@ class ErpService
     {
         $data = $this->construirDatosPedido($idPedido, $idClienteGestion);
 
-        if (!$data) {
+        if (! $data) {
             Log::error("No se pudieron construir los datos del pedido {$idPedido}");
+
             return null;
         }
 
-        $endpoint = "/api-gestion/pedido-cliente/";
+        $endpoint = '/api-gestion/pedido-cliente/';
+
         return $this->post($endpoint, $data);
     }
 
@@ -605,7 +635,7 @@ class ErpService
             // Obtener pedido de la base de datos
             $order = DB::table('orders')->find($idPedido);
 
-            if (!$order) {
+            if (! $order) {
                 return null;
             }
 
@@ -624,7 +654,8 @@ class ErpService
             return $data;
 
         } catch (\Exception $e) {
-            Log::error("Error construyendo datos de pedido: " . $e->getMessage());
+            Log::error('Error construyendo datos de pedido: '.$e->getMessage());
+
             return null;
         }
     }
@@ -684,6 +715,7 @@ class ErpService
             if ($tpv == config('services.erp.apple_tpv_id')) {
                 return self::PAYMENT_APPLE;
             }
+
             return self::PAYMENT_REDSYS;
         }
 
@@ -706,7 +738,7 @@ class ErpService
         try {
             $stats = \App\Models\Setting::getErpStats();
 
-            if (!$stats) {
+            if (! $stats) {
                 return null;
             }
 
@@ -719,7 +751,8 @@ class ErpService
                 'is_active' => $stats['is_active'] ?? false,
             ];
         } catch (\Exception $e) {
-            Log::error('Error obteniendo estadísticas del ERP: ' . $e->getMessage());
+            Log::error('Error obteniendo estadísticas del ERP: '.$e->getMessage());
+
             return null;
         }
     }
@@ -737,12 +770,14 @@ class ErpService
             Cache::forget('erp_stock');
 
             // Limpiar todas las claves que comienzan con 'erp_'
-            $keys = Cache::getStore()->getPrefix() . 'erp_*';
+            $keys = Cache::getStore()->getPrefix().'erp_*';
 
             Log::info('Cache del ERP limpiado correctamente');
+
             return true;
         } catch (\Exception $e) {
-            Log::error('Error limpiando cache del ERP: ' . $e->getMessage());
+            Log::error('Error limpiando cache del ERP: '.$e->getMessage());
+
             return false;
         }
     }
@@ -786,22 +821,22 @@ class ErpService
             ];
 
         } catch (RequestException $e) {
-            Log::error('Error de conexión con ERP: ' . $e->getMessage());
+            Log::error('Error de conexión con ERP: '.$e->getMessage());
 
             return [
                 'success' => false,
                 'status' => 'offline',
-                'message' => 'No se pudo establecer conexión con el servidor ERP: ' . $e->getMessage(),
+                'message' => 'No se pudo establecer conexión con el servidor ERP: '.$e->getMessage(),
                 'url' => $this->urlErp,
                 'timestamp' => now()->toIso8601String(),
             ];
         } catch (\Exception $e) {
-            Log::error('Error inesperado verificando conexión ERP: ' . $e->getMessage());
+            Log::error('Error inesperado verificando conexión ERP: '.$e->getMessage());
 
             return [
                 'success' => false,
                 'status' => 'error',
-                'message' => 'Error inesperado: ' . $e->getMessage(),
+                'message' => 'Error inesperado: '.$e->getMessage(),
                 'url' => $this->urlErp,
                 'timestamp' => now()->toIso8601String(),
             ];
@@ -816,8 +851,9 @@ class ErpService
         try {
             $erpSettings = \App\Models\Setting::getErpSettings();
 
-            if (!$erpSettings || !$erpSettings['erp_sync_url']) {
+            if (! $erpSettings || ! $erpSettings['erp_sync_url']) {
                 Log::warning('Configuración de sincronización no disponible');
+
                 return null;
             }
 
@@ -847,11 +883,11 @@ class ErpService
             $status = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
-            if ($status === 200 && !empty($body)) {
+            if ($status === 200 && ! empty($body)) {
                 $data = $this->parseXmlResponse($body, $endpoint);
 
                 if ($data) {
-                    Log::info("Cambios pendientes obtenidos", [
+                    Log::info('Cambios pendientes obtenidos', [
                         'count' => count($data),
                         'limit' => $limit,
                         'offset' => $offset,
@@ -866,7 +902,7 @@ class ErpService
                 }
             }
 
-            Log::error("Error obteniendo cambios pendientes", [
+            Log::error('Error obteniendo cambios pendientes', [
                 'status' => $status,
                 'body' => $body,
             ]);
@@ -874,10 +910,12 @@ class ErpService
             return null;
 
         } catch (RequestException $e) {
-            Log::error('Error de conexión obteniendo cambios pendientes: ' . $e->getMessage());
+            Log::error('Error de conexión obteniendo cambios pendientes: '.$e->getMessage());
+
             return null;
         } catch (\Exception $e) {
-            Log::error('Error inesperado obteniendo cambios pendientes: ' . $e->getMessage());
+            Log::error('Error inesperado obteniendo cambios pendientes: '.$e->getMessage());
+
             return null;
         }
     }

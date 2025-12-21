@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\Callcenters\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 class SettingsController extends Controller
 {
-    public function profile(){
+    public function profile()
+    {
 
         $user = User::auth();
 
         return view('callcenters.views.settings.profile.setting')->with([
-            'user' => $user
+            'user' => $user,
         ]);
     }
-    public function notifications(){
+
+    public function notifications()
+    {
 
         $user = User::auth();
 
@@ -26,21 +29,23 @@ class SettingsController extends Controller
         ]);
 
     }
-    public function updateProfile(Request $request) {
+
+    public function updateProfile(Request $request)
+    {
 
         $user = User::uid($request->uid);
 
-        if($user->email != $request->email || $user->identification != $request->identification){
+        if ($user->email != $request->email || $user->identification != $request->identification) {
 
             $validates = User::where('email', $request->email)->orWhere('identification', $request->identification)->get();
 
-            if (count($validates)>0) {
+            if (count($validates) > 0) {
 
-                $email =  User::where('email', $request->email)->get();
+                $email = User::where('email', $request->email)->get();
 
-                if(count($email)>0){
+                if (count($email) > 0) {
 
-                    if($user->email != $request->email){
+                    if ($user->email != $request->email) {
 
                         $response = [
                             'success' => false,
@@ -62,12 +67,12 @@ class SettingsController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Se ha actualizado correctamente.'
+                    'message' => 'Se ha actualizado correctamente.',
                 ]);
 
             }
 
-        }else {
+        } else {
 
             $user = User::uid($request->uid);
             $user->firstname = Str::upper($request->firstname);
@@ -79,34 +84,34 @@ class SettingsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Se ha actualizado correctamente.'
+                'message' => 'Se ha actualizado correctamente.',
             ]);
         }
 
-
-    }
-    public function updateNotifications(Request $request){
-
-                $user = User::uid($request->uid);
-                $user->mail_notification = $request->mail_notification == 'true' ? 1 : 0;
-                $user->inscription_notification = $request->inscription_notification == 'true' ? 1 : 0;
-                $user->invoice_notification = $request->invoice_notification == 'true' ? 1 : 0;
-
-                if ($user->isDirty()) {
-
-                    $user->update();
-
-                    activity()
-                        ->performedOn($user)
-                        ->withProperties($user->getChanges())
-                        ->log('updated');
-                }
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Se ha actualizado correctamente.'
-                ]);
-
     }
 
+    public function updateNotifications(Request $request)
+    {
+
+        $user = User::uid($request->uid);
+        $user->mail_notification = $request->mail_notification == 'true' ? 1 : 0;
+        $user->inscription_notification = $request->inscription_notification == 'true' ? 1 : 0;
+        $user->invoice_notification = $request->invoice_notification == 'true' ? 1 : 0;
+
+        if ($user->isDirty()) {
+
+            $user->update();
+
+            activity()
+                ->performedOn($user)
+                ->withProperties($user->getChanges())
+                ->log('updated');
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Se ha actualizado correctamente.',
+        ]);
+
+    }
 }

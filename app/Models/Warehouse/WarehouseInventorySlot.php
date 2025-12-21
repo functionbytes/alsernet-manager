@@ -13,8 +13,11 @@ class WarehouseInventorySlot extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_inventory_slots';
+
     protected $primaryKey = 'id';
+
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     /**
@@ -174,7 +177,7 @@ class WarehouseInventorySlot extends Model
             $floor?->name ?? 'N/A',
             $location?->code ?? 'N/A',
             $this->section?->code ?? 'N/A',
-            'L' . $this->section?->level ?? 'N/A',
+            'L'.$this->section?->level ?? 'N/A',
         ]));
     }
 
@@ -296,7 +299,7 @@ class WarehouseInventorySlot extends Model
     /**
      * Mover producto a otra sección
      */
-    public function moveTo(WarehouseLocationSection $newSection, int $quantity = null, ?string $reason = null, ?int $userId = null): bool
+    public function moveTo(WarehouseLocationSection $newSection, ?int $quantity = null, ?string $reason = null, ?int $userId = null): bool
     {
         $moveQuantity = $quantity ?? $this->quantity;
 
@@ -316,10 +319,10 @@ class WarehouseInventorySlot extends Model
         );
 
         // Restar de la sección actual
-        $this->subtractQuantity($moveQuantity, $reason ?? 'Moved to ' . $newSection->code, $userId);
+        $this->subtractQuantity($moveQuantity, $reason ?? 'Moved to '.$newSection->code, $userId);
 
         // Agregar a la nueva sección
-        $newSlot->addQuantity($moveQuantity, $reason ?? 'Moved from ' . $this->section->code, $userId);
+        $newSlot->addQuantity($moveQuantity, $reason ?? 'Moved from '.$this->section->code, $userId);
 
         // Actualizar last_section_id
         $newSlot->update(['last_section_id' => $this->section_id]);

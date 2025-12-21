@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Gender extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_gender';
+
     protected $primaryKey = 'id_gender';
+
     public $timestamps = false;
 
     protected $fillable = [

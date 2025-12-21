@@ -54,6 +54,7 @@ class ProductCategory extends Model
     public function allowsReturns(): bool
     {
         $rule = $this->getActiveReturnRule();
+
         return $rule ? $rule->is_returnable : $this->allow_returns;
     }
 
@@ -63,6 +64,7 @@ class ProductCategory extends Model
     public function getReturnPeriod(): int
     {
         $rule = $this->getActiveReturnRule();
+
         return $rule && $rule->return_period_days ? $rule->return_period_days : $this->default_return_days;
     }
 }

@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RangeWeight extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_range_weight';
+
     protected $primaryKey = 'id_range_weight';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,7 +22,7 @@ class RangeWeight extends Model
         'delimiter2',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_range_weight' => 'integer',
         'id_carrier' => 'integer',
     ];

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ImageType extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_image_type';
+
     protected $primaryKey = 'id_image_type';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class ImageType extends Model
         'stores',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'width' => 'float',
         'height' => 'float',
     ];

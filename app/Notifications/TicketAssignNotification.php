@@ -2,12 +2,10 @@
 
 namespace App\Notifications;
 
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
-use Illuminate\Bus\Queueable;
-
 use App\Models\Ticket\Ticket;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class TicketAssignNotification extends Notification
 {
@@ -17,6 +15,7 @@ class TicketAssignNotification extends Notification
     {
         $this->ticket = $ticket;
     }
+
     public function via($notifiable)
     {
         return ['database'];
@@ -25,9 +24,9 @@ class TicketAssignNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     public function toArray($notifiable)
@@ -40,9 +39,8 @@ class TicketAssignNotification extends Notification
             'ticketassign' => $this->ticket->myassignuser_id ? 'yes' : 'no',
             'ticketassignee_id' => $this->ticket->myassignuser_id,
             'overduestatus' => $this->ticket->overduestatus,
-            'link' => route('admin.ticketshow',$this->ticket->ticket_id),
-            'clink' => route('loadmore.load_data',$this->ticket->ticket_id),
+            'link' => route('admin.ticketshow', $this->ticket->ticket_id),
+            'clink' => route('loadmore.load_data', $this->ticket->ticket_id),
         ];
     }
-
 }

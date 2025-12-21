@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class CorreosCarrier implements CarrierInterface
 {
     protected $carrier;
+
     protected $config;
 
     public function __construct()
@@ -24,14 +25,14 @@ class CorreosCarrier implements CarrierInterface
             // Autenticación con CORREOS
             $auth = $this->authenticate();
 
-            if (!$auth['success']) {
+            if (! $auth['success']) {
                 return $auth;
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $auth['token'],
-                'Content-Type' => 'application/json'
-            ])->post($this->config['endpoint'] . '/recogidas', [
+                'Authorization' => 'Bearer '.$auth['token'],
+                'Content-Type' => 'application/json',
+            ])->post($this->config['endpoint'].'/recogidas', [
                 'codContrato' => $this->config['contract_code'],
                 'fechaRecogida' => $data['pickup_date'],
                 'horaRecogidaDesde' => explode('-', $data['pickup_time_slot'])[0] ?? '09:00',
@@ -40,41 +41,42 @@ class CorreosCarrier implements CarrierInterface
                 'peso' => $data['total_weight'] * 1000, // CORREOS usa gramos
                 'remitente' => [
                     'nombre' => $data['contact_name'],
-                    'direccion' => $data['pickup_address']['street'] . ' ' . $data['pickup_address']['number'],
+                    'direccion' => $data['pickup_address']['street'].' '.$data['pickup_address']['number'],
                     'localidad' => $data['pickup_address']['city'],
                     'provincia' => $data['pickup_address']['province'],
                     'cp' => $data['pickup_address']['postal_code'],
                     'telefonoContacto' => $data['contact_phone'],
-                    'email' => $data['contact_email']
+                    'email' => $data['contact_email'],
                 ],
-                'observaciones' => 'Devolución ' . $data['return_number']
+                'observaciones' => 'Devolución '.$data['return_number'],
             ]);
 
             if ($response->successful()) {
                 $result = $response->json();
+
                 return [
                     'success' => true,
                     'pickup_code' => $result['codRecogida'],
                     'tracking_number' => $result['codEnvio'] ?? null,
-                    'response' => $result
+                    'response' => $result,
                 ];
             }
 
             return [
                 'success' => false,
                 'error' => 'Error en la respuesta de CORREOS',
-                'response' => $response->json()
+                'response' => $response->json(),
             ];
 
         } catch (\Exception $e) {
             Log::error('CORREOS Pickup Error', [
                 'error' => $e->getMessage(),
-                'data' => $data
+                'data' => $data,
             ]);
 
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -84,20 +86,21 @@ class CorreosCarrier implements CarrierInterface
         try {
             $auth = $this->authenticate();
 
-            if (!$auth['success']) {
+            if (! $auth['success']) {
                 return false;
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $auth['token']
-            ])->delete($this->config['endpoint'] . '/recogidas/' . $pickupCode);
+                'Authorization' => 'Bearer '.$auth['token'],
+            ])->delete($this->config['endpoint'].'/recogidas/'.$pickupCode);
 
             return $response->successful();
         } catch (\Exception $e) {
             Log::error('CORREOS Cancel Pickup Error', [
                 'error' => $e->getMessage(),
-                'pickup_code' => $pickupCode
+                'pickup_code' => $pickupCode,
             ]);
+
             return false;
         }
     }
@@ -106,7 +109,7 @@ class CorreosCarrier implements CarrierInterface
     {
         try {
             // CORREOS no requiere autenticación para tracking
-            $response = Http::get($this->config['tracking_endpoint'] . '/' . $trackingNumber);
+            $response = Http::get($this->config['tracking_endpoint'].'/'.$trackingNumber);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -117,7 +120,7 @@ class CorreosCarrier implements CarrierInterface
                     'EN TRANSITO' => 'IN_TRANSIT',
                     'EN REPARTO' => 'OUT_FOR_DELIVERY',
                     'ENTREGADO' => 'DELIVERED',
-                    'DEVUELTO' => 'RETURNED'
+                    'DEVUELTO' => 'RETURNED',
                 ];
 
                 $currentStatus = $data['estado'] ?? 'UNKNOWN';
@@ -129,24 +132,24 @@ class CorreosCarrier implements CarrierInterface
                     'location' => $data['ultimaUbicacion'] ?? null,
                     'events' => $this->mapTrackingEvents($data['eventos'] ?? []),
                     'delivered' => $mappedStatus === 'DELIVERED',
-                    'delivery_date' => $data['fechaEntrega'] ?? null
+                    'delivery_date' => $data['fechaEntrega'] ?? null,
                 ];
             }
 
             return [
                 'success' => false,
-                'error' => 'No se pudo obtener el estado del envío'
+                'error' => 'No se pudo obtener el estado del envío',
             ];
 
         } catch (\Exception $e) {
             Log::error('CORREOS Tracking Error', [
                 'error' => $e->getMessage(),
-                'tracking' => $trackingNumber
+                'tracking' => $trackingNumber,
             ]);
 
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -156,34 +159,33 @@ class CorreosCarrier implements CarrierInterface
         try {
             $auth = $this->authenticate();
 
-            if (!$auth['success']) {
+            if (! $auth['success']) {
                 throw new \Exception('Error de autenticación con CORREOS');
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $auth['token']
-            ])->post($this->config['endpoint'] . '/etiquetas', [
+                'Authorization' => 'Bearer '.$auth['token'],
+            ])->post($this->config['endpoint'].'/etiquetas', [
                 'codEnvio' => $data['tracking_number'],
                 'formato' => 'PDF',
-                'tamano' => 'A4'
+                'tamano' => 'A4',
             ]);
 
             if ($response->successful()) {
                 $result = $response->json();
                 $pdfContent = base64_decode($result['etiqueta']);
 
-                $path = 'carriers/labels/correos/' . $data['tracking_number'] . '.pdf';
+                $path = 'carriers/labels/correos/'.$data['tracking_number'].'.pdf';
                 \Storage::put($path, $pdfContent);
 
                 return $path;
             }
 
             throw new \Exception('Error al generar etiqueta');
-
         } catch (\Exception $e) {
             Log::error('CORREOS Label Generation Error', [
                 'error' => $e->getMessage(),
-                'data' => $data
+                'data' => $data,
             ]);
             throw $e;
         }
@@ -193,17 +195,18 @@ class CorreosCarrier implements CarrierInterface
     {
         // CORREOS puede validar direcciones españolas
         try {
-            $response = Http::get($this->config['endpoint'] . '/validar-direccion', [
-                'direccion' => $address['street'] . ' ' . $address['number'],
+            $response = Http::get($this->config['endpoint'].'/validar-direccion', [
+                'direccion' => $address['street'].' '.$address['number'],
                 'cp' => $address['postal_code'],
-                'localidad' => $address['city']
+                'localidad' => $address['city'],
             ]);
 
             return $response->successful() && $response->json()['valida'] === true;
         } catch (\Exception $e) {
             Log::warning('CORREOS Address Validation Error', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return true; // Asumir válida si el servicio falla
         }
     }
@@ -213,19 +216,19 @@ class CorreosCarrier implements CarrierInterface
         try {
             $auth = $this->authenticate();
 
-            if (!$auth['success']) {
+            if (! $auth['success']) {
                 return [];
             }
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $auth['token']
-            ])->post($this->config['endpoint'] . '/tarifas', [
+                'Authorization' => 'Bearer '.$auth['token'],
+            ])->post($this->config['endpoint'].'/tarifas', [
                 'peso' => $package['weight'] * 1000, // gramos
                 'cpOrigen' => $package['origin_postal_code'],
                 'cpDestino' => $package['destination_postal_code'],
                 'largo' => $package['dimensions']['length'] ?? 30,
                 'ancho' => $package['dimensions']['width'] ?? 20,
-                'alto' => $package['dimensions']['height'] ?? 10
+                'alto' => $package['dimensions']['height'] ?? 10,
             ]);
 
             if ($response->successful()) {
@@ -233,7 +236,7 @@ class CorreosCarrier implements CarrierInterface
                     return [
                         'service' => $rate['producto'],
                         'price' => $rate['precio'],
-                        'delivery_time' => $rate['plazoEntrega']
+                        'delivery_time' => $rate['plazoEntrega'],
                     ];
                 }, $response->json()['tarifas'] ?? []);
             }
@@ -241,8 +244,9 @@ class CorreosCarrier implements CarrierInterface
             return [];
         } catch (\Exception $e) {
             Log::error('CORREOS Rates Error', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return [];
         }
     }
@@ -254,24 +258,24 @@ class CorreosCarrier implements CarrierInterface
 
         $slots = [
             'morning' => ['09:00-14:00', '10:00-13:00'],
-            'afternoon' => ['16:00-20:00', '17:00-19:00']
+            'afternoon' => ['16:00-20:00', '17:00-19:00'],
         ];
 
         // Ajustar según la zona
         if ($zone === 'remote') {
             return [
-                ['start' => '09:00', 'end' => '14:00', 'label' => 'Mañana (09:00-14:00)']
+                ['start' => '09:00', 'end' => '14:00', 'label' => 'Mañana (09:00-14:00)'],
             ];
         }
 
         $availableSlots = [];
         foreach ($slots as $period => $times) {
             foreach ($times as $time) {
-                list($start, $end) = explode('-', $time);
+                [$start, $end] = explode('-', $time);
                 $availableSlots[] = [
                     'start' => $start,
                     'end' => $end,
-                    'label' => ucfirst($period) . " ({$time})"
+                    'label' => ucfirst($period)." ({$time})",
                 ];
             }
         }
@@ -287,24 +291,24 @@ class CorreosCarrier implements CarrierInterface
         try {
             $response = Http::post($this->config['auth_endpoint'], [
                 'usuario' => $this->config['auth']['username'],
-                'password' => $this->config['auth']['secret']
+                'password' => $this->config['auth']['secret'],
             ]);
 
             if ($response->successful()) {
                 return [
                     'success' => true,
-                    'token' => $response->json()['token']
+                    'token' => $response->json()['token'],
                 ];
             }
 
             return [
                 'success' => false,
-                'error' => 'Error de autenticación'
+                'error' => 'Error de autenticación',
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -320,7 +324,7 @@ class CorreosCarrier implements CarrierInterface
                 'time' => $event['hora'],
                 'status' => $event['estado'],
                 'location' => $event['oficina'] ?? $event['localidad'] ?? null,
-                'description' => $event['descripcion'] ?? null
+                'description' => $event['descripcion'] ?? null,
             ];
         }, $events);
     }
@@ -344,5 +348,4 @@ class CorreosCarrier implements CarrierInterface
 
         return 'standard';
     }
-
 }

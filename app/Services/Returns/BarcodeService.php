@@ -23,7 +23,7 @@ class BarcodeService
                 ->where('return_product_id', $product->id)
                 ->first();
 
-            if (!$existingBarcode) {
+            if (! $existingBarcode) {
                 $barcode = ReturnBarcode::createForReturnProduct(
                     $returnRequest->id,
                     $product->id
@@ -48,14 +48,14 @@ class BarcodeService
             'return' => $returnRequest,
             'barcodes' => $barcodes,
             'customer' => $returnRequest->customer,
-            'order' => $returnRequest->order
+            'order' => $returnRequest->order,
         ];
 
         $pdf = PDF::loadView('returns.labels.barcode-sheet', $data);
         $pdf->setPaper('A4', 'portrait');
 
         // Guardar PDF
-        $filename = "return_{$returnRequest->id}_labels_" . time() . ".pdf";
+        $filename = "return_{$returnRequest->id}_labels_".time().'.pdf';
         $path = "returns/labels/{$returnRequest->id}";
         Storage::makeDirectory($path);
 
@@ -69,7 +69,7 @@ class BarcodeService
             'file_path' => $fullPath,
             'file_name' => $filename,
             'file_size' => Storage::size($fullPath),
-            'generated_at' => now()
+            'generated_at' => now(),
         ]);
 
         return $fullPath;
@@ -82,11 +82,11 @@ class BarcodeService
     {
         $barcode = ReturnBarcode::where('barcode_number', $barcodeNumber)->first();
 
-        if (!$barcode) {
+        if (! $barcode) {
             return [
                 'success' => false,
                 'message' => 'Código de barras no encontrado',
-                'code' => 'NOT_FOUND'
+                'code' => 'NOT_FOUND',
             ];
         }
 
@@ -95,7 +95,7 @@ class BarcodeService
                 'success' => false,
                 'message' => 'Este código ya fue escaneado',
                 'code' => 'ALREADY_SCANNED',
-                'scanned_at' => $barcode->scanned_at
+                'scanned_at' => $barcode->scanned_at,
             ];
         }
 
@@ -110,7 +110,7 @@ class BarcodeService
             'message' => $isValid ? 'Código validado correctamente' : 'Código rechazado',
             'barcode' => $barcode,
             'product' => $barcode->returnProduct,
-            'return' => $barcode->returnRequest
+            'return' => $barcode->returnRequest,
         ];
     }
 
@@ -130,11 +130,11 @@ class BarcodeService
             'rejected' => $barcodes->where('status', ReturnBarcode::STATUS_REJECTED)->count(),
             'pending' => $barcodes->whereIn('status', [
                 ReturnBarcode::STATUS_GENERATED,
-                ReturnBarcode::STATUS_PRINTED
+                ReturnBarcode::STATUS_PRINTED,
             ])->count(),
             'completion_percentage' => $barcodes->count() > 0
                 ? round(($barcodes->where('status', ReturnBarcode::STATUS_VALIDATED)->count() / $barcodes->count()) * 100, 2)
-                : 0
+                : 0,
         ];
     }
 

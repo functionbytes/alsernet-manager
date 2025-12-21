@@ -7,9 +7,9 @@ use App\Models\Return\ReturnRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\HtmlString;
 
@@ -18,8 +18,11 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public ReturnRequest $return;
+
     public ReturnCommunication $communication;
+
     public array $customData;
+
     public bool $useTemplate;
 
     /**
@@ -80,7 +83,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
         $attachments = [];
 
         // Archivos adjuntos personalizados
-        if (!empty($this->customData['attachments'])) {
+        if (! empty($this->customData['attachments'])) {
             foreach ($this->customData['attachments'] as $attachment) {
                 if (is_string($attachment) && file_exists($attachment)) {
                     $attachments[] = Attachment::fromPath($attachment);
@@ -133,7 +136,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
         if ($this->customData['wrap_in_layout'] ?? true) {
             $content = view('emails.layouts.basic', [
                 'content' => $content,
-                'return' => $this->return
+                'return' => $this->return,
             ])->render();
         }
 
@@ -151,6 +154,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
 
         // Convertir HTML a texto plano
         $content = strip_tags($this->customData['content'] ?? '');
+
         return $this->replaceVariables($content);
     }
 
@@ -165,8 +169,8 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
             '{{customer_email}}' => $this->return->customer_email,
             '{{return_status}}' => $this->return->status_label,
             '{{return_date}}' => $this->return->created_at->format('d/m/Y'),
-            '{{original_amount}}' => number_format($this->return->original_amount, 2) . ' €',
-            '{{final_refund}}' => number_format($this->return->final_refund, 2) . ' €',
+            '{{original_amount}}' => number_format($this->return->original_amount, 2).' €',
+            '{{final_refund}}' => number_format($this->return->final_refund, 2).' €',
             '{{portal_url}}' => route('customer.returns.search'),
             '{{return_url}}' => $this->generateReturnUrl(),
             '{{company_name}}' => config('app.name'),
@@ -175,9 +179,9 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
         ];
 
         // Variables personalizadas adicionales
-        if (!empty($this->customData['variables'])) {
+        if (! empty($this->customData['variables'])) {
             foreach ($this->customData['variables'] as $key => $value) {
-                $variables['{{' . $key . '}}'] = $value;
+                $variables['{{'.$key.'}}'] = $value;
             }
         }
 
@@ -191,20 +195,20 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
     {
         $buttons = [];
 
-        if (!empty($this->customData['action_buttons'])) {
+        if (! empty($this->customData['action_buttons'])) {
             foreach ($this->customData['action_buttons'] as $button) {
                 $buttons[] = [
                     'text' => $button['text'] ?? 'Ver Devolución',
                     'url' => $button['url'] ?? $this->generateReturnUrl(),
                     'style' => $button['style'] ?? 'primary', // primary, secondary, danger
-                    'icon' => $button['icon'] ?? null
+                    'icon' => $button['icon'] ?? null,
                 ];
             }
         } elseif ($this->customData['show_default_button'] ?? true) {
             $buttons[] = [
                 'text' => 'Ver Estado de la Devolución',
                 'url' => $this->generateReturnUrl(),
-                'style' => 'primary'
+                'style' => 'primary',
             ];
         }
 
@@ -216,16 +220,16 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
      */
     private function getFromAddress(): array
     {
-        if (!empty($this->customData['from'])) {
+        if (! empty($this->customData['from'])) {
             return [
                 'address' => $this->customData['from']['address'],
-                'name' => $this->customData['from']['name'] ?? config('app.name')
+                'name' => $this->customData['from']['name'] ?? config('app.name'),
             ];
         }
 
         return [
             'address' => config('returns.notifications.from.address', 'noreply@ejemplo.com'),
-            'name' => config('returns.notifications.from.name', config('app.name'))
+            'name' => config('returns.notifications.from.name', config('app.name')),
         ];
     }
 
@@ -234,7 +238,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
      */
     private function getReplyTo(): array
     {
-        if (!empty($this->customData['reply_to'])) {
+        if (! empty($this->customData['reply_to'])) {
             return is_array($this->customData['reply_to'])
                 ? $this->customData['reply_to']
                 : [$this->customData['reply_to']];
@@ -264,7 +268,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
     {
         $bcc = [];
 
-        if (!empty($this->customData['bcc'])) {
+        if (! empty($this->customData['bcc'])) {
             $bcc = is_array($this->customData['bcc'])
                 ? $this->customData['bcc']
                 : [$this->customData['bcc']];
@@ -316,7 +320,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
 
         return route('customer.returns.show', [
             'return' => $this->return->id,
-            'token' => $token
+            'token' => $token,
         ]);
     }
 
@@ -327,7 +331,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
     {
         $trackingId = $this->communication->metadata['tracking_id'] ?? null;
 
-        if (!$trackingId || !($this->customData['enable_tracking'] ?? true)) {
+        if (! $trackingId || ! ($this->customData['enable_tracking'] ?? true)) {
             return '';
         }
 
@@ -339,9 +343,9 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
      */
     private function getDefaultSignature(): string
     {
-        return "Atentamente,<br>" .
-            "El equipo de " . config('app.name') . "<br>" .
-            config('returns.support_email') . " | " . config('returns.support_phone');
+        return 'Atentamente,<br>'.
+            'El equipo de '.config('app.name').'<br>'.
+            config('returns.support_email').' | '.config('returns.support_phone');
     }
 
     /**
@@ -356,7 +360,7 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
         ];
 
         // Headers personalizados adicionales
-        if (!empty($this->customData['headers'])) {
+        if (! empty($this->customData['headers'])) {
             foreach ($this->customData['headers'] as $key => $value) {
                 $headers[$key] = $value;
             }
@@ -369,5 +373,4 @@ class ReturnCustomMail extends Mailable implements ShouldQueue
 
         return $headers;
     }
-
 }

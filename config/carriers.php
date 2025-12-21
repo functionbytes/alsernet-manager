@@ -25,7 +25,7 @@ return [
             'endpoint' => env('INPOST_API_ENDPOINT', 'https://api.inpost.es/v1'),
             'token' => env('INPOST_API_TOKEN'),
             'test_mode' => env('INPOST_TEST_MODE', false),
-        ]
+        ],
     ],
 
     'pickup' => [
@@ -39,5 +39,5 @@ return [
         'format' => 'PDF',
         'size' => 'A4',
         'dpi' => 300,
-    ]
+    ],
 ];

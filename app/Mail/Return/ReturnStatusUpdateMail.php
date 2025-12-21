@@ -20,13 +20,13 @@ class ReturnStatusUpdateMail extends Mailable
 
     public function build()
     {
-        $subject = 'Actualización de tu Solicitud de Devolución #' . $this->return->id_return_request;
+        $subject = 'Actualización de tu Solicitud de Devolución #'.$this->return->id_return_request;
 
         // Personalizar asunto según el estado
         if ($this->return->isCompleted()) {
-            $subject = 'Tu Devolución ha sido Completada #' . $this->return->id_return_request;
+            $subject = 'Tu Devolución ha sido Completada #'.$this->return->id_return_request;
         } elseif ($this->return->status->color === '#dc3545') { // Estado rechazado
-            $subject = 'Información sobre tu Solicitud de Devolución #' . $this->return->id_return_request;
+            $subject = 'Información sobre tu Solicitud de Devolución #'.$this->return->id_return_request;
         }
 
         return $this->subject($subject)
@@ -45,7 +45,7 @@ class ReturnStatusUpdateMail extends Mailable
                 'is_refunded' => $this->return->is_refunded,
                 'company_info' => config('returns.company_info'),
                 'tracking_url' => $this->getTrackingUrl(),
-                'next_steps' => $this->getNextSteps()
+                'next_steps' => $this->getNextSteps(),
             ]);
     }
 
@@ -71,10 +71,10 @@ class ReturnStatusUpdateMail extends Mailable
      */
     private function getTrackingUrl(): string
     {
-        return url('/returns/status?' . http_build_query([
-                'order_id' => $this->return->id_order,
-                'email' => $this->return->email
-            ]));
+        return url('/returns/status?'.http_build_query([
+            'order_id' => $this->return->id_order,
+            'email' => $this->return->email,
+        ]));
     }
 
     /**
@@ -89,7 +89,7 @@ class ReturnStatusUpdateMail extends Mailable
                 $steps = [
                     'Hemos recibido tu solicitud de devolución',
                     'Nuestro equipo la revisará en las próximas 24-48 horas',
-                    'Te notificaremos cuando tengamos una respuesta'
+                    'Te notificaremos cuando tengamos una respuesta',
                 ];
                 break;
 
@@ -98,13 +98,13 @@ class ReturnStatusUpdateMail extends Mailable
                     $steps = [
                         'Hemos programado la recogida de tu paquete',
                         'Recibirás un email con los detalles de recogida',
-                        'Asegúrate de tener el paquete listo en la fecha acordada'
+                        'Asegúrate de tener el paquete listo en la fecha acordada',
                     ];
                 } else {
                     $steps = [
                         'Tu solicitud ha sido aprobada',
                         'Por favor, envía el producto a nuestra dirección de devoluciones',
-                        'Incluye una copia de este email en el paquete'
+                        'Incluye una copia de este email en el paquete',
                     ];
                 }
                 break;
@@ -113,7 +113,7 @@ class ReturnStatusUpdateMail extends Mailable
                 $steps = [
                     'Necesitamos más información sobre tu solicitud',
                     'Revisa los comentarios en tu panel de devoluciones',
-                    'Responde con la información adicional solicitada'
+                    'Responde con la información adicional solicitada',
                 ];
                 break;
 
@@ -122,13 +122,13 @@ class ReturnStatusUpdateMail extends Mailable
                     $steps = [
                         'Tu reembolso ha sido procesado',
                         'El dinero aparecerá en tu cuenta en 3-5 días hábiles',
-                        'Recibirás un email de confirmación de pago'
+                        'Recibirás un email de confirmación de pago',
                     ];
                 } else {
                     $steps = [
                         'Tu solicitud ha sido resuelta',
                         'Revisa los detalles en tu panel de devoluciones',
-                        'Contacta con nosotros si tienes alguna pregunta'
+                        'Contacta con nosotros si tienes alguna pregunta',
                     ];
                 }
                 break;
@@ -138,13 +138,13 @@ class ReturnStatusUpdateMail extends Mailable
                     $steps = [
                         'Lamentablemente no podemos procesar tu devolución',
                         'Revisa los motivos en tu panel de devoluciones',
-                        'Puedes contactar con atención al cliente si tienes dudas'
+                        'Puedes contactar con atención al cliente si tienes dudas',
                     ];
                 } else { // Completado
                     $steps = [
                         'Tu devolución ha sido completada exitosamente',
                         'Gracias por confiar en nosotros',
-                        'Esperamos verte pronto de nuevo'
+                        'Esperamos verte pronto de nuevo',
                     ];
                 }
                 break;

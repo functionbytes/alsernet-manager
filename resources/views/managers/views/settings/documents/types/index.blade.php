@@ -1,6 +1,6 @@
 @extends('layouts.managers')
 
-@section('title', 'Tipos de Documentos')
+@section('title', 'Tipos de documentos')
 
 @section('content')
 
@@ -74,14 +74,13 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="5%"></th>
-                                    <th width="15%">Tipo</th>
-                                    <th width="25%">Etiqueta</th>
-                                    <th width="10%" class="text-center">Requisitos</th>
-                                    <th width="10%" class="text-center">Traducciones</th>
-                                    <th width="10%" class="text-center">Estado</th>
-                                    <th width="10%" class="text-center">Orden</th>
-                                    <th width="10%" class="text-center">Acciones</th>
+                                    <th >Etiqueta</th>
+                                    <th >Tipo</th>
+                                    <th  class="text-center">Requisitos</th>
+                                    <th  class="text-center">Traducciones</th>
+                                    <th  class="text-center">Estado</th>
+                                    <th  class="text-center">Orden</th>
+                                    <th  class="text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,28 +92,22 @@
                                         $translationPercentage = $totalLangs > 0 ? round(($completedLangs / $totalLangs) * 100) : 0;
                                     @endphp
                                     <tr>
-                                        <td class="text-center align-middle">
-                                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                                 style="width: 32px; height: 32px; background-color: {{ $type->color }}20;">
-                                                <i class="{{ $type->icon }}" style="color: {{ $type->color }};"></i>
+
+                                        <td>
+                                            <div>
+                                                <strong>{{ $type->getLabel() }}</strong>
+                                                @if($type->getDescription())
+                                                    <br>
+                                                    <small class="text-muted">{{ Str::limit($type->getDescription(), 60) }}</small>
+                                                @endif
                                             </div>
                                         </td>
                                         <td>
                                             <code class="bg-light px-2 py-1 rounded">{{ $type->slug }}</code>
                                         </td>
-                                        <td>
-                                            <div>
-                                                <strong>{{ $translation?->label ?? $type->slug }}</strong>
-                                                @if($translation?->description)
-                                                    <br>
-                                                    <small class="text-muted">{{ Str::limit($translation->description, 60) }}</small>
-                                                @endif
-                                            </div>
-                                        </td>
                                         <td class="text-center">
                                             @if($type->requirements->count() > 0)
                                                 <span class="badge bg-info-subtle text-info">
-                                                    <i class="fa fa-file-lines me-1"></i>
                                                     {{ $type->requirements->count() }}
                                                 </span>
                                             @else
@@ -126,17 +119,14 @@
                                         <td class="text-center">
                                             @if($translationPercentage === 100)
                                                 <span class="badge bg-success-subtle text-success">
-                                                    <i class="fa fa-circle-check me-1"></i>
                                                     {{ $completedLangs }}/{{ $totalLangs }}
                                                 </span>
                                             @elseif($translationPercentage > 0)
                                                 <span class="badge bg-warning-subtle text-warning">
-                                                    <i class="fa fa-triangle-exclamation me-1"></i>
                                                     {{ $completedLangs }}/{{ $totalLangs }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-danger-subtle text-danger">
-                                                    <i class="fa fa-circle-xmark me-1"></i>
                                                     0/{{ $totalLangs }}
                                                 </span>
                                             @endif
@@ -144,12 +134,10 @@
                                         <td class="text-center">
                                             @if($type->is_active)
                                                 <span class="badge bg-success-subtle text-success">
-                                                    <i class="fa fa-circle-check me-1"></i>
                                                     Activo
                                                 </span>
                                             @else
                                                 <span class="badge bg-secondary-subtle text-secondary">
-                                                    <i class="fa fa-circle-pause me-1"></i>
                                                     Inactivo
                                                 </span>
                                             @endif
@@ -185,9 +173,9 @@
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <button type="button"
-                                                                class="dropdown-item text-danger delete-btn"
+                                                                class="dropdown-item  delete-btn"
                                                                 data-type="{{ $type->slug }}"
-                                                                data-label="{{ $translation?->label ?? $type->slug }}">
+                                                                data-label="{{ $type->getLabel() }}">
                                                             Eliminar
                                                         </button>
                                                     </li>

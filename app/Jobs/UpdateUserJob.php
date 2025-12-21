@@ -20,7 +20,7 @@ class UpdateUserJob extends Base
      */
     public function handle()
     {
-        if (config('app.saas') && !is_null($this->customer->getCurrentActiveGeneralSubscription())) {
+        if (config('app.saas') && ! is_null($this->customer->getCurrentActiveGeneralSubscription())) {
             $this->customer->updateCache();
         }
     }

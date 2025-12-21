@@ -2,9 +2,7 @@
 
 namespace App\Events;
 
-use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class AdminLoggedIn extends Event
 {
@@ -21,5 +19,4 @@ class AdminLoggedIn extends Event
     {
         return [];
     }
-
 }

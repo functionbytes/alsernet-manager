@@ -68,7 +68,7 @@ class WarrantyType extends Model
     /**
      * Calcular costo de garantía para un producto
      */
-    public function calculateCost(float $productPrice, int $months = null): float
+    public function calculateCost(float $productPrice, ?int $months = null): float
     {
         $months = $months ?? $this->default_duration_months;
 
@@ -90,11 +90,12 @@ class WarrantyType extends Model
      */
     public function covers(string $issueType): bool
     {
-        if (!$this->coverage_details) {
+        if (! $this->coverage_details) {
             return false;
         }
 
         $coveredIssues = $this->coverage_details['issues'] ?? [];
+
         return in_array($issueType, $coveredIssues);
     }
 
@@ -103,11 +104,12 @@ class WarrantyType extends Model
      */
     public function excludes(string $issueType): bool
     {
-        if (!$this->exclusions) {
+        if (! $this->exclusions) {
             return false;
         }
 
         $excludedIssues = $this->exclusions['issues'] ?? [];
+
         return in_array($issueType, $excludedIssues);
     }
 
@@ -118,9 +120,9 @@ class WarrantyType extends Model
     {
         $coverage = $this->coverage_details['description'] ?? '';
 
-        if (!$coverage && isset($this->coverage_details['issues'])) {
+        if (! $coverage && isset($this->coverage_details['issues'])) {
             $issues = $this->coverage_details['issues'];
-            $coverage = 'Cubre: ' . implode(', ', $issues);
+            $coverage = 'Cubre: '.implode(', ', $issues);
         }
 
         return $coverage;

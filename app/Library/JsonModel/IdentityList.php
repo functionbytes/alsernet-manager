@@ -2,8 +2,6 @@
 
 namespace App\Library\JsonModel;
 
-use Exception;
-
 // Do not extend base
 class IdentityList
 {
@@ -22,7 +20,7 @@ class IdentityList
 
     public function getIdentityByName($name): ?Identity
     {
-        if (!array_key_exists($name, $this->data)) {
+        if (! array_key_exists($name, $this->data)) {
             return null;
         }
 

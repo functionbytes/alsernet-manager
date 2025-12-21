@@ -3,13 +3,12 @@
 namespace App\Helpers;
 
 use App\Library\StringHelper;
-use Exception;
 use Closure;
-use Carbon\Carbon;
-use SimpleXMLElement;
-use Mika56\SPFCheck\SPFCheck;
-use Mika56\SPFCheck\DNSRecordGetterDirect;
+use Exception;
 use Mika56\SPFCheck\DNSRecordGetter;
+use Mika56\SPFCheck\DNSRecordGetterDirect;
+use Mika56\SPFCheck\SPFCheck;
+use SimpleXMLElement;
 
 function generatePublicPath($absPath, $withHost = false)
 {
@@ -41,10 +40,10 @@ function generatePublicPath($absPath, $withHost = false)
     $subdirectory = getAppSubdirectory();
 
     if (empty($subdirectory) || $withHost) {
-        $url = route('public_assets', [ 'dirname' => $encodedDirname, 'basename' => rawurlencode($basename) ], $withHost);
+        $url = route('public_assets', ['dirname' => $encodedDirname, 'basename' => rawurlencode($basename)], $withHost);
     } else {
         $subdirectory = join_paths('/', $subdirectory);
-        $url = join_paths($subdirectory, route('public_assets', [ 'dirname' => $encodedDirname, 'basename' => $basename ], $withHost));
+        $url = join_paths($subdirectory, route('public_assets', ['dirname' => $encodedDirname, 'basename' => $basename], $withHost));
     }
 
     return $url;
@@ -59,6 +58,7 @@ function getAppSubdirectory()
     }
 
     $path = trim($path, '/');
+
     return empty($path) ? null : $path;
 }
 
@@ -67,7 +67,7 @@ function getAppHost()
     $fullUrl = config('app.url');
     $meta = parse_url($fullUrl);
 
-    if (!array_key_exists('scheme', $meta) || !array_key_exists('host', $meta)) {
+    if (! array_key_exists('scheme', $meta) || ! array_key_exists('host', $meta)) {
         throw new Exception('Invalid app.url setting');
     }
 
@@ -110,7 +110,7 @@ function updateTranslationFile($targetFile, $sourceFile, $overwriteTargetPhrases
 
 function pcopy($src, $dst)
 {
-    if (!\Illuminate\Support\Facades\File::exists($src)) {
+    if (! \Illuminate\Support\Facades\File::exists($src)) {
         throw new Exception("File `{$src}` does not exist");
     }
 
@@ -124,7 +124,7 @@ function pcopy($src, $dst)
     } else {
         // Make sure the PARENT directory exists
         $dirname = pathinfo($dst)['dirname'];
-        if (!\Illuminate\Support\Facades\File::exists($dirname)) {
+        if (! \Illuminate\Support\Facades\File::exists($dirname)) {
             \Illuminate\Support\Facades\File::makeDirectory($dirname, 0777, true, true);
         }
     }
@@ -140,7 +140,7 @@ function pcopy($src, $dst)
 function ptouch($filepath)
 {
     $dirname = dirname($filepath);
-    if (!\Illuminate\Support\Facades\File::exists($dirname)) {
+    if (! \Illuminate\Support\Facades\File::exists($dirname)) {
         \Illuminate\Support\Facades\File::makeDirectory($dirname, 0777, true, true);
     }
 
@@ -153,21 +153,22 @@ function xml_to_array(SimpleXMLElement $xml)
         $nodes = $xml->children();
         $attributes = $xml->attributes();
 
-        if (0 !== count($attributes)) {
+        if (count($attributes) !== 0) {
             foreach ($attributes as $attrName => $attrValue) {
                 $collection['attributes'][$attrName] = html_entity_decode(strval($attrValue));
             }
         }
 
-        if (0 === $nodes->count()) {
+        if ($nodes->count() === 0) {
             // $collection['value'] = strval($xml);
             // return $collection;
             return html_entity_decode(strval($xml));
         }
 
         foreach ($nodes as $nodeName => $nodeValue) {
-            if (count($nodeValue->xpath('../' . $nodeName)) < 2) {
+            if (count($nodeValue->xpath('../'.$nodeName)) < 2) {
                 $collection[$nodeName] = $parser($nodeValue);
+
                 continue;
             }
 
@@ -178,7 +179,7 @@ function xml_to_array(SimpleXMLElement $xml)
     };
 
     return [
-        $xml->getName() => $parser($xml)
+        $xml->getName() => $parser($xml),
     ];
 }
 
@@ -189,9 +190,9 @@ function spfcheck($ipOrHostname, $domain)
     // $checker = new SPFCheck(new DNSRecordGetter());
     $result = $checker->isIPAllowed($ipOrHostname, $domain);
 
-    if (SPFCheck::RESULT_PASS != $result) {
+    if ($result != SPFCheck::RESULT_PASS) {
         // try again with another method
-        $checker = new SPFCheck(new DNSRecordGetter());
+        $checker = new SPFCheck(new DNSRecordGetter);
         $result = $checker->isIPAllowed($ipOrHostname, $domain);
     }
 
@@ -201,7 +202,7 @@ function spfcheck($ipOrHostname, $domain)
 function forceAddCustomerToUnlimitedPlan($customer)
 {
     // Default subscription
-    $subscription = new \App\Model\Subscription();
+    $subscription = new \App\Model\Subscription;
     $subscription->status = \App\Model\Subscription::STATUS_ACTIVE;
     $subscription->current_period_ends_at = \Carbon\Carbon::now()->addYears(1000);
     $subscription->plan_id = \App\Model\PlanGeneral::UNLIMITED_PLAN_ID;
@@ -240,7 +241,7 @@ function write_env($key, $value, $overwrite = true)
     $envs = load_env_from_file(app()->environmentFilePath());
 
     // Set the value if overwrite is set to true or the key value is empty
-    if ($overwrite || !array_key_exists($key, $envs) || empty($envs[$key])) {
+    if ($overwrite || ! array_key_exists($key, $envs) || empty($envs[$key])) {
         // Quote if there is at least one space or # or any suspected char!
         if (preg_match('/[\s\#!\$]/', $value)) {
             // Escape single quote
@@ -274,7 +275,7 @@ function write_envs($params)
 function reset_app_url($force = false)
 {
     $envs = load_env_from_file(app()->environmentFilePath());
-    if (!array_key_exists('APP_URL', $envs) || $force) {
+    if (! array_key_exists('APP_URL', $envs) || $force) {
         $url = url('/');
         write_env('APP_URL', $url);
     }
@@ -283,17 +284,17 @@ function reset_app_url($force = false)
 function url_get_contents_ssl_safe($url)
 {
     // Check if $url is a URL
-    if (!preg_match('/^https{0,1}:\/\//', $url)) {
+    if (! preg_match('/^https{0,1}:\/\//', $url)) {
         throw new \Exception('url_get_contents_ssl_safe() requires a URL as input. Received: '.$url);
     }
 
     $client = curl_init();
-    curl_setopt_array($client, array(
+    curl_setopt_array($client, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HEADER => false,
-        CURLOPT_SSL_VERIFYPEER => false
-    ));
+        CURLOPT_SSL_VERIFYPEER => false,
+    ]);
 
     $result = curl_exec($client);
     curl_close($client);
@@ -303,7 +304,7 @@ function url_get_contents_ssl_safe($url)
 
 function is_non_web_link($url)
 {
-    $preserved = [ '#', 'mailto:', 'tel:', 'file:', 'ftp:', 'rss:', 'feed:', ':telnet', 'gopher:', 'ssh:', 'nntp:'];
+    $preserved = ['#', 'mailto:', 'tel:', 'file:', 'ftp:', 'rss:', 'feed:', ':telnet', 'gopher:', 'ssh:', 'nntp:'];
 
     // Important: do not use filter_var($url, FILTER_VALIDATE_URL);
     $matched = false;
@@ -338,7 +339,7 @@ function load_env_from_file($path)
 
     $output = [];
     foreach ($lines as $line) {
-        list($key, $value) = explode('=', $line, 2);
+        [$key, $value] = explode('=', $line, 2);
 
         if (is_null($value)) {
             $value = '';
@@ -346,7 +347,7 @@ function load_env_from_file($path)
             $value = trim($value);
         }
 
-        $output[ $key ] = $value;
+        $output[$key] = $value;
     }
 
     return $output;

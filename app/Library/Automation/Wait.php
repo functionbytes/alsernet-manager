@@ -24,6 +24,7 @@ class Wait extends Action
     {
         if (config('app.demo') == true) {
             $check = (bool) random_int(0, 1);
+
             return $check;
         }
 
@@ -49,7 +50,7 @@ class Wait extends Action
     {
         $nameOrEmail = $this->autoTrigger->subscriber->getFullNameOrEmail();
 
-        return trans('messages.automation.action.wait.executed_description', [ 'wait' => $this->getOption('time') ]);
+        return trans('messages.automation.action.wait.executed_description', ['wait' => $this->getOption('time')]);
     }
 
     public function getProgressDescription($timezone = null, $locale = null)
@@ -70,13 +71,13 @@ class Wait extends Action
                 return trans('messages.automation.action.wait.status_description_expired', [
                     'wait' => $this->getOption('time'),
                     'until' => $until,
-                    'diff' => $due->diffForHumans()
+                    'diff' => $due->diffForHumans(),
                 ]);
             } else {
                 return trans('messages.automation.action.wait.status_description', [
                     'wait' => $this->getOption('time'),
                     'until' => $until,
-                    'diff' => $due->diffForHumans()
+                    'diff' => $due->diffForHumans(),
                 ]);
             }
         } else {

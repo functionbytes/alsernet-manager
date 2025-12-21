@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContactsController extends Controller
 {
-
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $reviewed = null ?? $request->reviewed;
         $contacts = Contact::orderBy('created_at', 'desc')->latest();
 
         if ($searchKey != null) {
-            $contacts->when(!strpos($searchKey, '-'), function ($query) use ($searchKey) {
-                $query->where('contacts.firstname', 'like', '%' . $searchKey . '%')
-                    ->orWhere('contacts.lastname', 'like', '%' . $searchKey . '%')
-                    ->orWhere(DB::raw("CONCAT(contacts.firstname, ' ', contacts.lastname)"), 'like', '%' . $searchKey . '%');
+            $contacts->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
+                $query->where('contacts.firstname', 'like', '%'.$searchKey.'%')
+                    ->orWhere('contacts.lastname', 'like', '%'.$searchKey.'%')
+                    ->orWhere(DB::raw("CONCAT(contacts.firstname, ' ', contacts.lastname)"), 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -38,16 +38,17 @@ class ContactsController extends Controller
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
-        $contact = Contact::uid($uid);;
+        $contact = Contact::uid($uid);
 
         $revieweds = collect([
             ['id' => '1', 'label' => 'Gestionado'],
             ['id' => '0', 'label' => 'Pendiente'],
         ]);
 
-        $revieweds = $revieweds->pluck('label','id');
+        $revieweds = $revieweds->pluck('label', 'id');
 
         return view('managers.views.settings.contacts.edit')->with([
             'contact' => $contact,
@@ -56,11 +57,11 @@ class ContactsController extends Controller
 
     }
 
-
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $contact = Contact::uid($request->uid);
-        $contact->reviewed =  $request->reviewed;
+        $contact->reviewed = $request->reviewed;
         $contact->update();
 
         return response()->json([
@@ -68,15 +69,14 @@ class ContactsController extends Controller
             'message' => 'Se actualizo correctamente el formulario de contacto',
         ]);
 
-
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
         $contact = Contact::uid($uid);
         $contact->delete();
 
         return redirect()->route('manager.contacts');
     }
-
 }

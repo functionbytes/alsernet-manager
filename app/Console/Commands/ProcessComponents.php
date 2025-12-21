@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Returns\ComponentService;
 use App\Models\ProductComponent;
+use App\Services\Returns\ComponentService;
 use Illuminate\Console\Command;
 
 class ProcessComponents extends Command
@@ -39,7 +39,7 @@ class ProcessComponents extends Command
             $this->generateReorderSuggestions();
         }
 
-        if (!$this->option('check-stock') && !$this->option('optimize') && !$this->option('reorder')) {
+        if (! $this->option('check-stock') && ! $this->option('optimize') && ! $this->option('reorder')) {
             // Ejecutar todas las tareas por defecto
             $this->checkStockLevels();
             $this->optimizeAllocations();
@@ -47,6 +47,7 @@ class ProcessComponents extends Command
         }
 
         $this->info('Procesamiento de componentes completado.');
+
         return 0;
     }
 
@@ -88,10 +89,11 @@ class ProcessComponents extends Command
 
         if (empty($reorderItems)) {
             $this->info('No hay componentes que requieran reorden en este momento.');
+
             return;
         }
 
-        $this->line("Componentes que requieren reorden: " . count($reorderItems));
+        $this->line('Componentes que requieren reorden: '.count($reorderItems));
 
         $this->table(
             ['Código', 'Nombre', 'Stock Actual', 'Punto Reorden', 'Proveedor', 'Cantidad Sugerida'],
@@ -108,7 +110,7 @@ class ProcessComponents extends Command
         );
 
         if (count($reorderItems) > 10) {
-            $this->line('... y ' . (count($reorderItems) - 10) . ' componentes más.');
+            $this->line('... y '.(count($reorderItems) - 10).' componentes más.');
         }
     }
 }

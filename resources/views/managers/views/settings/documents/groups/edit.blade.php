@@ -1,0 +1,287 @@
+@extends('layouts.managers')
+
+@section('content')
+
+    <div class="card w-100">
+
+        <form id="formGroup" method="POST" action="{{ route('manager.settings.documents.groups.update', $group->id) }}">
+
+            {{ csrf_field() }}
+            @method('PUT')
+
+            <div class="card-body">
+                <div class="d-flex no-block align-items-center">
+                    <h5 class="mb-0">Editar grupo de validación</h5>
+                </div>
+                <p class="card-subtitle mb-3 mt-1">
+                    Modifica la configuración de este grupo. Los cambios afectarán los workflows de validación.
+                </p>
+
+                <div class="row">
+
+                    <!-- Basic Information -->
+                    <div class="col-12">
+                        <h6 class="mb-1 mt-3 fw-semibold">Información básica</h6>
+                        <p class="text-muted small mb-3">Define el nombre y descripción del grupo.</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label col-form-label">
+                                Nombre del grupo
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-control" value="{{ old('name', $group->name) }}" required placeholder="Ej: Documentación">
+                            <small class="form-text text-muted">Nombre visible del grupo</small>
+                            @error('name')
+                                <span class="field-validation-error"><i class="fa fa-circle-exclamation"></i> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label col-form-label">
+                                Clave única
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="key" class="form-control" value="{{ old('key', $group->key) }}" required placeholder="Ej: documentation" pattern="[a-z0-9_-]+" title="Solo letras minúsculas, números, guiones y guiones bajos">
+                            <small class="form-text text-muted">Identificador único para el workflow (sin espacios, minúsculas)</small>
+                            @error('key')
+                                <span class="field-validation-error"><i class="fa fa-circle-exclamation"></i> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label col-form-label">Descripción</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Descripción del grupo">{{ old('description', $group->description) }}</textarea>
+                            <small class="form-text text-muted">Proporciona más contexto sobre este grupo</small>
+                            @error('description')
+                                <span class="field-validation-error"><i class="fa fa-circle-exclamation"></i> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Assignment Configuration -->
+                    <div class="col-12">
+                        <hr class="my-4">
+                        <h6 class="mb-1 fw-semibold">Configuración de asignación</h6>
+                        <p class="text-muted small mb-3">Define cómo se asignarán los documentos a los miembros del grupo.</p>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label col-form-label">
+                                Modo de asignación
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select name="assignment_mode" class="form-select" required>
+                                <option value="manual" {{ old('assignment_mode', $group->assignment_mode) == 'manual' ? 'selected' : '' }}>
+                                    Manual - El administrador asigna manualmente
+                                </option>
+                                <option value="round_robin" {{ old('assignment_mode', $group->assignment_mode) == 'round_robin' ? 'selected' : '' }}>
+                                    Round Robin - Rotación entre usuarios
+                                </option>
+                                <option value="load_balanced" {{ old('assignment_mode', $group->assignment_mode) == 'load_balanced' ? 'selected' : '' }}>
+                                    Balance de Carga - Asigna al usuario con menos documentos activos
+                                </option>
+                            </select>
+                            <small class="form-text text-muted">Estrategia de asignación automática de documentos</small>
+                            @error('assignment_mode')
+                                <span class="field-validation-error"><i class="fa fa-circle-exclamation"></i> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Members -->
+                    <div class="col-12">
+                        <hr class="my-4">
+                        <h6 class="mb-1 fw-semibold">Miembros del grupo</h6>
+                        <p class="text-muted small mb-3">Selecciona los usuarios que pertenecen a este grupo y asigna sus prioridades.</p>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label col-form-label mb-2">
+                                Usuarios disponibles
+                                @if(isset($users) && count($users) > 0)
+                                    <span class="badge bg-info ms-2">{{ count($users) }} disponibles</span>
+                                @endif
+                            </label>
+
+                            @if(isset($users) && count($users) > 0)
+                                @php
+                                    $selectedUserIds = old('users', $group->users->pluck('id')->toArray());
+                                    $userPriorities = old('user_priorities', $group->users->pluck('pivot.priority', 'id')->toArray());
+                                @endphp
+
+                                <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                                    <div class="row g-2">
+                                        @foreach($users as $user)
+                                            @php
+                                                $isSelected = in_array($user->id, $selectedUserIds);
+                                                $priority = $userPriorities[$user->id] ?? 'primary';
+                                            @endphp
+                                            <div class="col-md-6">
+                                                <div class="card border h-100 {{ $isSelected ? 'border-primary' : '' }}">
+                                                    <div class="card-body p-3">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input user-checkbox"
+                                                                   type="checkbox"
+                                                                   name="users[]"
+                                                                   value="{{ $user->id }}"
+                                                                   id="user_{{ $user->id }}"
+                                                                   {{ $isSelected ? 'checked' : '' }}>
+                                                            <label class="form-check-label w-100" for="user_{{ $user->id }}">
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <div class="flex-grow-1">
+                                                                        <div class="fw-semibold">{{ $user->firstname }} {{ $user->lastname }}</div>
+                                                                        <small class="text-muted">{{ $user->email }}</small>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="mt-2 priority-selector" style="{{ $isSelected ? '' : 'display: none;' }}">
+                                                            <select name="user_priorities[]" class="form-select form-select-sm">
+                                                                <option value="primary" {{ $priority == 'primary' ? 'selected' : '' }}>Primario</option>
+                                                                <option value="backup" {{ $priority == 'backup' ? 'selected' : '' }}>Respaldo</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted">
+                                        <span id="selected-count">{{ count($selectedUserIds) }}</span> usuario(s) seleccionado(s)
+                                    </small>
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">
+                                            <i class="fas fa-check-square me-1"></i> Seleccionar todos
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="deselect-all">
+                                            <i class="fas fa-square me-1"></i> Deseleccionar todos
+                                        </button>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    No hay usuarios disponibles. Asegúrate de que existan usuarios confirmados y disponibles en el sistema.
+                                </div>
+                            @endif
+
+                            @error('users')
+                                <span class="field-validation-error d-block mt-2"><i class="fa fa-circle-exclamation"></i> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="col-12">
+                        <hr class="my-4">
+                        <h6 class="mb-1 fw-semibold">Opciones</h6>
+                        <p class="text-muted small mb-3">Configura el comportamiento del grupo.</p>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="form-check form-switch">
+                                <input type="hidden" name="is_active" value="0">
+                                <input type="checkbox" name="is_active" class="form-check-input" id="activeCheck" value="1" {{ old('is_active', $group->is_active) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="activeCheck">
+                                    <strong>Grupo activo</strong>
+                                    <small class="d-block text-muted">Permite que este grupo esté disponible para asignación de documentos.</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="form-check form-switch">
+                                <input type="hidden" name="is_default" value="0">
+                                <input type="checkbox" name="is_default" class="form-check-input" id="defaultCheck" value="1" {{ old('is_default', $group->is_default) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="defaultCheck">
+                                    <strong>Grupo por defecto</strong>
+                                    <small class="d-block text-muted">Se selecciona automáticamente para nuevos documentos sin grupo asignado.</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
+                    Guardar
+                </button>
+                <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                    Volver
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    @if (session('success'))
+        toastr.success('{{ session('success') }}', 'Grupo actualizado');
+    @endif
+
+    @if (session('error'))
+        toastr.error('{{ session('error') }}', 'Error');
+    @endif
+
+    // Función para actualizar el contador de usuarios seleccionados
+    function updateSelectedCount() {
+        const count = $('.user-checkbox:checked').length;
+        $('#selected-count').text(count);
+    }
+
+    // Manejar cambios en los checkboxes
+    $('.user-checkbox').on('change', function() {
+        const $card = $(this).closest('.card-body');
+        const $prioritySelector = $card.find('.priority-selector');
+
+        if ($(this).is(':checked')) {
+            $prioritySelector.slideDown(200);
+            $card.closest('.card').addClass('border-primary');
+        } else {
+            $prioritySelector.slideUp(200);
+            $card.closest('.card').removeClass('border-primary');
+        }
+
+        updateSelectedCount();
+    });
+
+    // Seleccionar todos
+    $('#select-all').on('click', function() {
+        $('.user-checkbox').prop('checked', true).trigger('change');
+    });
+
+    // Deseleccionar todos
+    $('#deselect-all').on('click', function() {
+        $('.user-checkbox').prop('checked', false).trigger('change');
+    });
+
+    // Inicializar estados
+    $('.user-checkbox:checked').each(function() {
+        $(this).closest('.card-body').find('.priority-selector').show();
+        $(this).closest('.card').addClass('border-primary');
+    });
+});
+</script>
+@endsection

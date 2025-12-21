@@ -15,9 +15,7 @@ class DocumentUploadedMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(protected Document $document)
-    {
-    }
+    public function __construct(protected Document $document) {}
 
     /**
      * Build the message.
@@ -41,7 +39,7 @@ class DocumentUploadedMail extends Mailable
                 ->format('d/m/Y H:i')
             : null;
 
-        return $this->subject('Confirmación de recepción de documentos ' . ($orderReference ? '#'.$orderReference : ''))
+        return $this->subject('Confirmación de recepción de documentos '.($orderReference ? '#'.$orderReference : ''))
             ->view('mailers.documents.uploaded')
             ->with([
                 'document' => $this->document,

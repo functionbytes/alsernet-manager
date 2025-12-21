@@ -46,6 +46,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
         try {
             // Try to connect to database
             \DB::connection()->getPDO();
+
             return true;
         } catch (\Exception $e) {
             return false;

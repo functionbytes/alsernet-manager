@@ -2,18 +2,19 @@
 
 namespace App\Models\Prestashop\Tax;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Tax\TaxRulesGroup;
-use App\Models\Prestashop\Tax\Tax;
 use App\Models\Prestashop\Country;
 use App\Models\Prestashop\State;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TaxRule extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tax_rule';
+
     protected $primaryKey = 'id_tax_rule';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +28,7 @@ class TaxRule extends Model
         'description',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_tax_rules_group' => 'integer',
         'id_country' => 'integer',
         'id_state' => 'integer',

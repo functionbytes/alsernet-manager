@@ -2,8 +2,8 @@
 
 namespace App\Services\Returns;
 
-use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnDocument;
+use App\Models\Return\ReturnRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -50,7 +50,7 @@ class DocumentService
             'order' => $returnRequest->order,
             'warehouse_address' => $this->getWarehouseAddress(),
             'tracking_number' => $this->generateTrackingNumber($returnRequest),
-            'carrier' => $returnRequest->carrier ?? null
+            'carrier' => $returnRequest->carrier ?? null,
         ];
 
         $pdf = PDF::loadView('returns.documents.shipping-label', $data);
@@ -60,7 +60,7 @@ class DocumentService
             $returnRequest->id,
             ReturnDocument::TYPE_SHIPPING_LABEL,
             $pdf->output(),
-            'shipping_label_' . $returnRequest->id . '.pdf'
+            'shipping_label_'.$returnRequest->id.'.pdf'
         );
     }
 
@@ -75,7 +75,7 @@ class DocumentService
             'order' => $returnRequest->order,
             'products' => $returnRequest->products,
             'return_number' => $returnRequest->getReturnNumber(),
-            'instructions' => $this->getReturnInstructions($returnRequest)
+            'instructions' => $this->getReturnInstructions($returnRequest),
         ];
 
         $pdf = PDF::loadView('returns.documents.return-slip', $data);
@@ -85,7 +85,7 @@ class DocumentService
             $returnRequest->id,
             ReturnDocument::TYPE_RETURN_SLIP,
             $pdf->output(),
-            'return_slip_' . $returnRequest->id . '.pdf'
+            'return_slip_'.$returnRequest->id.'.pdf'
         );
     }
 
@@ -100,7 +100,7 @@ class DocumentService
             'order' => $returnRequest->order,
             'products' => $returnRequest->products,
             'financial_summary' => $returnRequest->getFinancialSummary(),
-            'estimated_refund_date' => now()->addDays(config('returns.refund_days', 14))
+            'estimated_refund_date' => now()->addDays(config('returns.refund_days', 14)),
         ];
 
         $pdf = PDF::loadView('returns.documents.customer-receipt', $data);
@@ -110,7 +110,7 @@ class DocumentService
             $returnRequest->id,
             ReturnDocument::TYPE_CUSTOMER_RECEIPT,
             $pdf->output(),
-            'customer_receipt_' . $returnRequest->id . '.pdf'
+            'customer_receipt_'.$returnRequest->id.'.pdf'
         );
     }
 
@@ -124,9 +124,9 @@ class DocumentService
             'carrier' => \App\Models\Carrier::find($carrierId),
             'manifest_number' => $this->generateManifestNumber(),
             'pickup_date' => now(),
-            'total_packages' => collect($returnRequests)->sum(function($return) {
+            'total_packages' => collect($returnRequests)->sum(function ($return) {
                 return $return->products->count();
-            })
+            }),
         ];
 
         $pdf = PDF::loadView('returns.documents.carrier-manifest', $data);
@@ -139,7 +139,7 @@ class DocumentService
                 $return->id,
                 ReturnDocument::TYPE_CARRIER_MANIFEST,
                 $pdf->output(),
-                'manifest_' . $data['manifest_number'] . '.pdf'
+                'manifest_'.$data['manifest_number'].'.pdf'
             );
         }
 
@@ -166,8 +166,8 @@ class DocumentService
             'generated_at' => now(),
             'metadata' => [
                 'generated_by' => auth()->id(),
-                'ip_address' => request()->ip()
-            ]
+                'ip_address' => request()->ip(),
+            ],
         ]);
 
         return $fullPath;
@@ -185,7 +185,7 @@ class DocumentService
             'city' => config('warehouse.city'),
             'postal_code' => config('warehouse.postal_code'),
             'country' => config('warehouse.country'),
-            'phone' => config('warehouse.phone')
+            'phone' => config('warehouse.phone'),
         ];
     }
 
@@ -194,7 +194,7 @@ class DocumentService
      */
     protected function generateTrackingNumber(ReturnRequest $returnRequest): string
     {
-        return 'RET' . str_pad($returnRequest->id, 8, '0', STR_PAD_LEFT) . strtoupper(Str::random(4));
+        return 'RET'.str_pad($returnRequest->id, 8, '0', STR_PAD_LEFT).strtoupper(Str::random(4));
     }
 
     /**
@@ -202,7 +202,7 @@ class DocumentService
      */
     protected function generateManifestNumber(): string
     {
-        return 'MAN' . date('Ymd') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        return 'MAN'.date('Ymd').str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -214,7 +214,7 @@ class DocumentService
             'Imprima este albarán y la hoja de códigos de barras',
             'Pegue un código de barras en cada producto a devolver',
             'Incluya este albarán dentro del paquete',
-            'Pegue la etiqueta de envío en el exterior del paquete'
+            'Pegue la etiqueta de envío en el exterior del paquete',
         ];
 
         // Agregar instrucciones específicas según el método de recogida
@@ -242,7 +242,7 @@ class DocumentService
             ->whereIn('document_type', [
                 ReturnDocument::TYPE_RETURN_SLIP,
                 ReturnDocument::TYPE_BARCODE_SHEET,
-                ReturnDocument::TYPE_CUSTOMER_RECEIPT
+                ReturnDocument::TYPE_CUSTOMER_RECEIPT,
             ])
             ->get();
 

@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Events\Campaigns\GiftvoucherCreated;
 use App\Events\Document\DocumentCreated;
 use App\Events\Document\DocumentStatusChanged;
+use App\Events\Documents\DocumentValidationStageApproved;
 use App\Listeners\Campaigns\GiftvoucherListener;
 use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;
 use App\Listeners\Documents\SendDocumentUploadNotification;
+use App\Listeners\Documents\SendStageNotifications;
 use App\Listeners\Systems\Backups\BackupEventListener;
 use App\Listeners\Systems\LogToDatabase;
 use Illuminate\Auth\Events\Registered;
@@ -40,6 +42,10 @@ class EventServiceProvider extends ServiceProvider
 
         DocumentStatusChanged::class => [
             LogDocumentStatusChange::class,
+        ],
+
+        DocumentValidationStageApproved::class => [
+            SendStageNotifications::class,
         ],
 
         // Eventos de Backup

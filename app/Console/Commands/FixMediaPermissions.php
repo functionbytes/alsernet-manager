@@ -77,7 +77,7 @@ class FixMediaPermissions extends Command
             $this->line("  DIR:  {$mediaPath} → 755", 'comment');
 
             $this->newLine();
-            $this->info("✓ Complete!");
+            $this->info('✓ Complete!');
             $this->line("  Directories processed: {$dirCount}");
             $this->line("  Files processed: {$fileCount}");
 

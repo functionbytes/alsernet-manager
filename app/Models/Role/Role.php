@@ -16,7 +16,7 @@ class Role extends SpatieRole
         'slug',
         'is_default',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     protected $casts = [

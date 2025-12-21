@@ -2,29 +2,29 @@
 
 namespace App\Library\Traits;
 
-use App\Models\Template\Template;
-use Exception;
 use App\Library\ExtendedSwiftMessage;
-use App\Models\Setting;
-use App\Library\StringHelper;
-use League\Pipeline\PipelineBuilder;
-use App\Library\HtmlHandler\ParseRss;
-use App\Library\HtmlHandler\ReplaceBareLineFeed;
-use App\Library\HtmlHandler\AppendHtml;
-use App\Library\HtmlHandler\TransformTag;
-use App\Library\HtmlHandler\InjectTrackingPixel;
-use App\Library\HtmlHandler\MakeInlineCss;
-use App\Library\HtmlHandler\TransformUrl;
-use App\Library\HtmlHandler\TransformWidgets;
 use App\Library\HtmlHandler\AddDoctype;
-use App\Library\HtmlHandler\RemoveTitleTag;
 use App\Library\HtmlHandler\AddPreheader;
+use App\Library\HtmlHandler\AppendHtml;
+use App\Library\HtmlHandler\DecodeHtmlSpecialChars;
 use App\Library\HtmlHandler\GenerateSpintax;
 use App\Library\HtmlHandler\GenerateSpintaxForPlainText;
-use App\Library\HtmlHandler\DecodeHtmlSpecialChars;
 use App\Library\HtmlHandler\InjectMessageIdToBody;
+use App\Library\HtmlHandler\InjectTrackingPixel;
+use App\Library\HtmlHandler\MakeInlineCss;
+use App\Library\HtmlHandler\ParseRss;
+use App\Library\HtmlHandler\RemoveTitleTag;
+use App\Library\HtmlHandler\ReplaceBareLineFeed;
+use App\Library\HtmlHandler\TransformTag;
+use App\Library\HtmlHandler\TransformUrl;
+use App\Library\HtmlHandler\TransformWidgets;
 use App\Library\Lockable;
+use App\Library\StringHelper;
+use App\Models\Setting;
+use App\Models\Template\Template;
 use Cache;
+use Exception;
+use League\Pipeline\PipelineBuilder;
 use Soundasleep\Html2Text;
 
 trait HasTemplate
@@ -105,7 +105,7 @@ trait HasTemplate
      */
     public function updatePlainFromHtml()
     {
-        if (!$this->plain) {
+        if (! $this->plain) {
             $this->plain = preg_replace('/\s+/', ' ', preg_replace('/\r\n/', ' ', strip_tags($this->getTemplateContent())));
             $this->save();
         }
@@ -116,14 +116,14 @@ trait HasTemplate
      */
     public function setTemplateContent($content, $callback = null)
     {
-        if (!$this->template) {
+        if (! $this->template) {
             throw new Exception('Cannot set content: campaign/email does not have template!');
         }
 
         $template = $this->template;
         $template->content = $content;
         $template->save();
-        if (!is_null($callback)) {
+        if (! is_null($callback)) {
             $callback($this);
         }
     }
@@ -133,7 +133,7 @@ trait HasTemplate
      */
     public function getTemplateContent()
     {
-        if (!$this->template) {
+        if (! $this->template) {
             throw new Exception('Cannot get content: campaign/email does not have template!');
         }
 
@@ -158,19 +158,19 @@ trait HasTemplate
             }
         }
 
-        $headers = array(
+        $headers = [
             'X-Acelle-Campaign-Id' => $this->uid,
             'X-Acelle-Subscriber-Id' => $subscriber->uid,
             'X-Acelle-Customer-Id' => $this->customer->uid,
             'X-Acelle-Message-Id' => $msgId,
             'X-Acelle-Sending-Server-Id' => $server->uid,
             'Precedence' => 'bulk',
-        );
+        ];
 
         if ($unsubscribeUrl) {
             $headers['List-Unsubscribe'] = "<{$unsubscribeUrl}>";
         } else {
-            $sampleUnsubscribeUrl = route('campaign_message', ['message' => StringHelper::base64UrlEncode(trans('messages.email.test_link_note')) ]);
+            $sampleUnsubscribeUrl = route('campaign_message', ['message' => StringHelper::base64UrlEncode(trans('messages.email.test_link_note'))]);
             $headers['List-Unsubscribe'] = "<{$sampleUnsubscribeUrl}>";
         }
 
@@ -181,7 +181,7 @@ trait HasTemplate
      * Check if the given variable is a subscriber object (for actually sending a email)
      * Or a stdClass subscriber (for sending test email).
      *
-     * @param object $object
+     * @param  object  $object
      */
     public function isStdClassSubscriber($object)
     {
@@ -202,7 +202,7 @@ trait HasTemplate
         $customHeaders = $this->getCustomHeaders($subscriber, $this);
         $msgId = $customHeaders['X-Acelle-Message-Id'];
 
-        $message = new ExtendedSwiftMessage();
+        $message = new ExtendedSwiftMessage;
         $message->setId($msgId);
 
         if (is_null($this->type) || $this->type == self::TYPE_REGULAR) {
@@ -216,22 +216,22 @@ trait HasTemplate
         }
 
         // @TODO for AWS, setting returnPath requires verified domain or email address
-        if (!is_null($server) && $server->allowCustomReturnPath()) {
+        if (! is_null($server) && $server->allowCustomReturnPath()) {
             $returnPath = $server->getVerp($subscriber->email);
             if ($returnPath) {
                 $message->setReturnPath($returnPath);
             }
         }
         $message->setSubject($this->getSubject($subscriber, $msgId));
-        $message->setFrom(array($this->from_email => $this->from_name));
+        $message->setFrom([$this->from_email => $this->from_name]);
         $message->setTo($subscriber->email);
 
-        if (!empty(Setting::get('campaign.bcc'))) {
+        if (! empty(Setting::get('campaign.bcc'))) {
             $addresses = array_filter(preg_split('/\s*,\s*/', Setting::get('campaign.bcc')));
             $message->setBcc($addresses);
         }
 
-        if (!empty(Setting::get('campaign.cc'))) {
+        if (! empty(Setting::get('campaign.cc'))) {
             $addresses = array_filter(preg_split('/\s*,\s*/', Setting::get('campaign.cc')));
             $message->setCc($addresses);
         }
@@ -241,10 +241,10 @@ trait HasTemplate
         if (is_null($this->type) || $this->type == self::TYPE_REGULAR) {
             $html = $this->getHtmlContent($subscriber, $msgId, $server, $fromCache, $expiresInSeconds);
 
-            $options = array(
-              'ignore_errors' => true,
-              // other options go here
-            );
+            $options = [
+                'ignore_errors' => true,
+                // other options go here
+            ];
 
             $plain = Html2Text::convert($html, $options);
 
@@ -267,11 +267,11 @@ trait HasTemplate
                 $attachment = \Swift_Attachment::fromPath($file->file);
                 $message->attach($attachment);
                 // This is used by certain delivery services like ElasticEmail
-                $message->extAttachments[] = [ 'path' => $file->file, 'type' => $attachment->getContentType()];
+                $message->extAttachments[] = ['path' => $file->file, 'type' => $attachment->getContentType()];
             }
         } else {
             // Campaign model
-            //@todo attach function used for any attachment of Campaign
+            // @todo attach function used for any attachment of Campaign
             $path_campaign = $this->getAttachmentPath();
             if (is_dir($path_campaign)) {
                 $files = \Illuminate\Support\Facades\File::allFiles($path_campaign);
@@ -279,12 +279,12 @@ trait HasTemplate
                     $attachment = \Swift_Attachment::fromPath((string) $file);
                     $message->attach($attachment);
                     // This is used by certain delivery services like ElasticEmail
-                    $message->extAttachments[] = [ 'path' => (string) $file, 'type' => $attachment->getContentType()];
+                    $message->extAttachments[] = ['path' => (string) $file, 'type' => $attachment->getContentType()];
                 }
             }
         }
 
-        return array($message, $msgId);
+        return [$message, $msgId];
     }
 
     /**
@@ -294,18 +294,19 @@ trait HasTemplate
      */
     public function getSubject($subscriber = null, $msgId = null)
     {
-        $pipeline = new PipelineBuilder();
+        $pipeline = new PipelineBuilder;
 
-        if (!is_null($subscriber)) {
+        if (! is_null($subscriber)) {
             if (is_null($msgId)) {
                 throw new Exception('MessageID must not be null');
             }
             $pipeline->add(new TransformTag($this, $subscriber, $msgId));
         }
 
-        $pipeline->add(new DecodeHtmlSpecialChars());
-        $pipeline->add(new GenerateSpintaxForPlainText());
-        $pipeline->add(new ReplaceBareLineFeed());
+        $pipeline->add(new DecodeHtmlSpecialChars);
+        $pipeline->add(new GenerateSpintaxForPlainText);
+        $pipeline->add(new ReplaceBareLineFeed);
+
         return $pipeline->build()->process($this->subject);
     }
 
@@ -313,7 +314,9 @@ trait HasTemplate
      * Check if email footer enabled.
      *
      * @return string
+     *
      * @deprecated this is a very poorly designed function with dependencies session!
+     *
      * @todo so, we are adding if/else to facilitate testing only
      */
     public function footerEnabled()
@@ -329,7 +332,9 @@ trait HasTemplate
      * Get HTML footer.
      *
      * @return string
+     *
      * @deprecated this is a very poorly designed function with dependencies session!
+     *
      * @todo so, we are adding if/else to facilitate testing only
      */
     public function getHtmlFooter()
@@ -402,22 +407,22 @@ trait HasTemplate
         $baseHtml = $this->getBaseHtmlContent($fromCache, $expiresInSeconds);
 
         // Bind subscriber/message/server information to email content
-        $pipeline = new PipelineBuilder();
+        $pipeline = new PipelineBuilder;
         $pipeline->add(new TransformTag($this, $subscriber, $msgId, $server));
 
-        if (!$this->isStageExcluded(InjectTrackingPixel::class)) {
+        if (! $this->isStageExcluded(InjectTrackingPixel::class)) {
             $pipeline->add(new InjectTrackingPixel($this, $msgId));
         }
 
         $pipeline->add(new InjectMessageIdToBody($msgId));
 
-        if (!$this->isStageExcluded(TransformUrl::class)) {
+        if (! $this->isStageExcluded(TransformUrl::class)) {
             $pipeline->add(new TransformUrl($this->template, $msgId, $this->trackingDomain));
         }
 
-        $pipeline->add(new DecodeHtmlSpecialChars());
-        $pipeline->add(new GenerateSpintax());
-        $pipeline->add(new ReplaceBareLineFeed());
+        $pipeline->add(new DecodeHtmlSpecialChars);
+        $pipeline->add(new GenerateSpintax);
+        $pipeline->add(new ReplaceBareLineFeed);
 
         // ReplaceBareLineFeed should go into the base HTML content instead
         // However, we need it here, as the last step, to make sure there is no bare LF produced
@@ -433,23 +438,23 @@ trait HasTemplate
     // Which is not associated with any subscriber/message/server
     public function getBaseHtmlContent($fromCache = false, $expiresInSeconds = 600)
     {
-        if (!$this->template) {
+        if (! $this->template) {
             throw new Exception('No template available');
         }
 
         $cacheId = $this->getCachedHtmlId();
-        $updateCacheFlag = $fromCache && !Cache::has($cacheId);
+        $updateCacheFlag = $fromCache && ! Cache::has($cacheId);
         $html = null;
 
-        if (!$fromCache || $updateCacheFlag) {
-            $pipeline = new PipelineBuilder();
-            $pipeline->add(new AddDoctype());
+        if (! $fromCache || $updateCacheFlag) {
+            $pipeline = new PipelineBuilder;
+            $pipeline->add(new AddDoctype);
             $pipeline->add(new AddPreheader($this->preheader));
-            $pipeline->add(new RemoveTitleTag());
+            $pipeline->add(new RemoveTitleTag);
             $pipeline->add(new AppendHtml($this->getHtmlFooter()));
-            $pipeline->add(new ParseRss());
+            $pipeline->add(new ParseRss);
             $pipeline->add(new MakeInlineCss($this->template->findCssFiles()));
-            $pipeline->add(new TransformWidgets());
+            $pipeline->add(new TransformWidgets);
             // $pipeline->add(new TransformTag($this, $subscriber, $msgId, $server));
             // $pipeline->add(new InjectTrackingPixel($this, $msgId));
             // $pipeline->add(new TransformUrl($this->template, $msgId, $this->trackingDomain));
@@ -482,15 +487,15 @@ trait HasTemplate
     public function getPlainContent($subscriber = null, $msgId = null, $server = null)
     {
         $plain = $this->plain.$this->getPlainTextFooter();
-        $pipeline = new PipelineBuilder();
+        $pipeline = new PipelineBuilder;
 
-        if (!is_null($subscriber)) {
+        if (! is_null($subscriber)) {
             $pipeline->add(new TransformTag($this, $subscriber, $msgId, $server));
         }
 
-        $pipeline->add(new DecodeHtmlSpecialChars());
-        $pipeline->add(new GenerateSpintaxForPlainText());
-        $pipeline->add(new ReplaceBareLineFeed());
+        $pipeline->add(new DecodeHtmlSpecialChars);
+        $pipeline->add(new GenerateSpintaxForPlainText);
+        $pipeline->add(new ReplaceBareLineFeed);
         $plain = $pipeline->build()->process($plain);
 
         return $plain;
@@ -500,7 +505,9 @@ trait HasTemplate
      * Get PLAIN TEXT footer.
      *
      * @return string
+     *
      * @deprecated this is a very poorly designed function with dependencies session!
+     *
      * @todo so, we are adding if/else to facilitate testing only
      */
     public function getPlainTextFooter()
@@ -518,7 +525,7 @@ trait HasTemplate
      * However, a test email address is not yet a subscriber object, so we have to build a fake stdClass object
      * which can be used as a real subscriber.
      *
-     * @param array $subscriber
+     * @param  array  $subscriber
      */
     public function createStdClassSubscriber($subscriber)
     {
@@ -535,7 +542,7 @@ trait HasTemplate
 
     public function makeTrackingPixel($msgId)
     {
-        if (!is_null($msgId)) {
+        if (! is_null($msgId)) {
             $url = route('openTrackingUrl', ['message_id' => StringHelper::base64UrlEncode($msgId)], true);
             if ($this->trackingDomain) {
                 $url = $this->trackingDomain->buildTrackingUrl($url);
@@ -549,7 +556,7 @@ trait HasTemplate
 
     public function makeSampleLink()
     {
-        $sampleLink = route('campaign_message', [ 'message' => StringHelper::base64UrlEncode(trans('messages.email.test_link_note')) ]);
+        $sampleLink = route('campaign_message', ['message' => StringHelper::base64UrlEncode(trans('messages.email.test_link_note'))]);
         if ($this->trackingDomain) {
             $sampleLink = $this->trackingDomain->buildTrackingUrl($sampleLink);
         }

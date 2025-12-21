@@ -20,7 +20,7 @@ class ReturnDocument extends Model
         'metadata',
         'generated_at',
         'downloaded_at',
-        'download_count'
+        'download_count',
     ];
 
     protected $casts = [
@@ -28,14 +28,18 @@ class ReturnDocument extends Model
         'generated_at' => 'datetime',
         'downloaded_at' => 'datetime',
         'file_size' => 'integer',
-        'download_count' => 'integer'
+        'download_count' => 'integer',
     ];
 
     // Tipos de documento
     const TYPE_SHIPPING_LABEL = 'shipping_label';
+
     const TYPE_RETURN_SLIP = 'return_slip';
+
     const TYPE_BARCODE_SHEET = 'barcode_sheet';
+
     const TYPE_CUSTOMER_RECEIPT = 'customer_receipt';
+
     const TYPE_CARRIER_MANIFEST = 'carrier_manifest';
 
     // Relaciones
@@ -65,7 +69,7 @@ class ReturnDocument extends Model
             self::TYPE_RETURN_SLIP => 'Albarán de Devolución',
             self::TYPE_BARCODE_SHEET => 'Hoja de Códigos de Barras',
             self::TYPE_CUSTOMER_RECEIPT => 'Recibo del Cliente',
-            self::TYPE_CARRIER_MANIFEST => 'Manifiesto del Transportista'
+            self::TYPE_CARRIER_MANIFEST => 'Manifiesto del Transportista',
         ];
 
         return $types[$this->document_type] ?? 'Documento';
@@ -78,7 +82,7 @@ class ReturnDocument extends Model
     {
         return route('returns.documents.download', [
             'document' => $this->id,
-            'token' => $this->generateDownloadToken()
+            'token' => $this->generateDownloadToken(),
         ]);
     }
 
@@ -89,7 +93,7 @@ class ReturnDocument extends Model
     {
         return encrypt([
             'document_id' => $this->id,
-            'expires_at' => now()->addHours(24)->timestamp
+            'expires_at' => now()->addHours(24)->timestamp,
         ]);
     }
 
@@ -106,7 +110,7 @@ class ReturnDocument extends Model
      */
     public function getFileContent()
     {
-        if (!$this->fileExists()) {
+        if (! $this->fileExists()) {
             throw new \Exception('El archivo no existe');
         }
 
@@ -130,11 +134,11 @@ class ReturnDocument extends Model
         $bytes = $this->file_size;
 
         if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . ' MB';
+            return number_format($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . ' KB';
+            return number_format($bytes / 1024, 2).' KB';
         } else {
-            return $bytes . ' bytes';
+            return $bytes.' bytes';
         }
     }
 

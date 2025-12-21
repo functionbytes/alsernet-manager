@@ -2,12 +2,11 @@
 
 namespace App\Mail\Subscribers;
 
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Crypt;
 
 class SubscriberCheckMail extends Mailable
@@ -15,7 +14,9 @@ class SubscriberCheckMail extends Mailable
     use Queueable, SerializesModels;
 
     public $subscriber;
+
     public $layout;
+
     public $url;
 
     public function __construct($subscriber, $layout)
@@ -53,7 +54,7 @@ class SubscriberCheckMail extends Mailable
         $token = $this->generateVerificationToken();
 
         $replacements = [
-            '{URLCHECK}' => "{$baseUrl}/module/Alsernetforms/verification?token={$token}"
+            '{URLCHECK}' => "{$baseUrl}/module/Alsernetforms/verification?token={$token}",
         ];
 
         foreach ($replacements as $tag => $value) {
@@ -66,6 +67,7 @@ class SubscriberCheckMail extends Mailable
     public function generateVerificationToken()
     {
         $token = Crypt::encryptString($this->subscriber->email);
+
         return rtrim($token, '=');
     }
 
@@ -74,4 +76,3 @@ class SubscriberCheckMail extends Mailable
         return [];
     }
 }
-

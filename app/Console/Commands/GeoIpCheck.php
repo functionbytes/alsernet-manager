@@ -2,17 +2,16 @@
 
 namespace App\Console\Commands;
 
+use Acelle\Library\Lockable;
+use Acelle\Model\Notification;
+use Acelle\Model\Setting;
+use App;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log as LaravelLog;
-use App;
-use Acelle\Model\Setting;
-use Acelle\Model\Notification;
-use Exception;
-use Acelle\Library\Lockable;
 
 class GeoIpCheck extends Command
 {
-
     protected $signature = 'geoip:check';
 
     protected $description = 'Check the current GeoIp service';
@@ -24,8 +23,7 @@ class GeoIpCheck extends Command
 
     public function handle()
     {
-        $timeoutCallback = function () {
-        };
+        $timeoutCallback = function () {};
 
         $lock = new Lockable(storage_path('locks/geoip-setup'));
         $lock->getExclusiveLock(function () {
@@ -41,6 +39,7 @@ class GeoIpCheck extends Command
 
         if (Setting::get('geoip.enabled') == 'installing') {
             LaravelLog::info('GeoIP installation is already in progress');
+
             return;
         }
 
@@ -52,7 +51,7 @@ class GeoIpCheck extends Command
 
         Notification::warning([
             'title' => 'GeoIP setup',
-            'message' => 'GeoIP database is being installed in the background. Process '.getmypid().' started at '.date("M-d-Y H:i:s")]);
+            'message' => 'GeoIP database is being installed in the background. Process '.getmypid().' started at '.date('M-d-Y H:i:s')]);
 
         LaravelLog::info('Setting up GeoIP database');
 
@@ -71,5 +70,4 @@ class GeoIpCheck extends Command
             throw $ex;
         }
     }
-
 }

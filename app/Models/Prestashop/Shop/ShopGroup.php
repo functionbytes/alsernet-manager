@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ShopGroup extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_shop_group';
+
     protected $primaryKey = 'id_shop_group';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +23,7 @@ class ShopGroup extends Model
         'deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'deleted' => 'boolean',
     ];
 }

@@ -19,7 +19,7 @@ class InlineStyleWrapper
     /**
      * Prepare all the necessary objects
      *
-     * @param string $html
+     * @param  string  $html
      */
     public function __construct($html = '')
     {
@@ -37,7 +37,7 @@ class InlineStyleWrapper
     /**
      * Load HTML file
      *
-     * @param string $filename
+     * @param  string  $filename
      */
     public function loadHTMLFile($filename)
     {
@@ -47,11 +47,11 @@ class InlineStyleWrapper
     /**
      * Load HTML string (UTF-8 encoding assumed)
      *
-     * @param string $html
+     * @param  string  $html
      */
     public function loadHTML($html)
     {
-        $document = new \DOMDocument();
+        $document = new \DOMDocument;
         $document->encoding = 'utf-8';
         $document->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_HTML_NODEFDTD);
         $this->loadDomDocument($document);
@@ -59,8 +59,6 @@ class InlineStyleWrapper
 
     /**
      * Load the HTML as a DOMDocument directly
-     *
-     * @param \DOMDocument $domDocument
      */
     public function loadDomDocument(\DOMDocument $domDocument)
     {
@@ -76,7 +74,7 @@ class InlineStyleWrapper
     /**
      * Applies one or more stylesheets to the current document
      *
-     * @param string $stylesheet
+     * @param  string  $stylesheet
      * @return InlineStyle self
      */
     public function applyStylesheet($stylesheet)
@@ -86,7 +84,7 @@ class InlineStyleWrapper
             $parsed = $this->parseStylesheet($ss);
             $parsed = $this->sortSelectorsOnSpecificity($parsed);
             foreach ($parsed as $arr) {
-                list($selector, $style) = $arr;
+                [$selector, $style] = $arr;
                 $this->applyRule($selector, $style);
             }
         }
@@ -95,7 +93,7 @@ class InlineStyleWrapper
     }
 
     /**
-     * @param string $sel Css Selector
+     * @param  string  $sel  Css Selector
      * @return array|\DOMNodeList|\DOMElement[]
      */
     private function _getNodesForCssSelector($sel)
@@ -113,13 +111,14 @@ class InlineStyleWrapper
             // ignore css rule parse exceptions
         }
 
-        return array();
+        return [];
     }
 
     /**
      * Applies a style rule on the document
-     * @param string $selector
-     * @param string $style
+     *
+     * @param  string  $selector
+     * @param  string  $style
      * @return InlineStyle self
      */
     public function applyRule($selector, $style)
@@ -129,13 +128,13 @@ class InlineStyleWrapper
             $style = $this->_styleToArray($style);
 
             foreach ($nodes as $node) {
-                $current = $node->hasAttribute("style") ?
-                    $this->_styleToArray($node->getAttribute("style")) :
-                    array();
+                $current = $node->hasAttribute('style') ?
+                    $this->_styleToArray($node->getAttribute('style')) :
+                    [];
 
                 $current = $this->_mergeStyles($current, $style);
 
-                $node->setAttribute("style", $this->_arrayToStyle($current));
+                $node->setAttribute('style', $this->_arrayToStyle($current));
             }
         }
 
@@ -151,16 +150,16 @@ class InlineStyleWrapper
     {
         $clone = $this;
         foreach ($clone->_getNodesForCssSelector('[inlinestyle-original-style]') as $node) {
-            $current = $node->hasAttribute("style") ?
-                $this->_styleToArray($node->getAttribute("style")) :
-                array();
-            $original = $node->hasAttribute("inlinestyle-original-style") ?
-                $this->_styleToArray($node->getAttribute("inlinestyle-original-style")) :
-                array();
+            $current = $node->hasAttribute('style') ?
+                $this->_styleToArray($node->getAttribute('style')) :
+                [];
+            $original = $node->hasAttribute('inlinestyle-original-style') ?
+                $this->_styleToArray($node->getAttribute('inlinestyle-original-style')) :
+                [];
 
             $current = $clone->_mergeStyles($current, $original);
 
-            $node->setAttribute("style", $this->_arrayToStyle($current));
+            $node->setAttribute('style', $this->_arrayToStyle($current));
             $node->removeAttribute('inlinestyle-original-style');
         }
 
@@ -173,32 +172,32 @@ class InlineStyleWrapper
      * This cannot be done with XPath or a CSS selector because the order in
      * which the elements are found matters
      *
-     * @param \DOMNode $node leave empty to extract from the whole document
-     * @param string $base The base URI for relative stylesheets
-     * @param array $devices Considered devices
-     * @param boolean $remove Should it remove the original stylesheets
+     * @param  \DOMNode  $node  leave empty to extract from the whole document
+     * @param  string  $base  The base URI for relative stylesheets
+     * @param  array  $devices  Considered devices
+     * @param  bool  $remove  Should it remove the original stylesheets
      * @return array the extracted stylesheets
      */
-    public function extractStylesheets($node = null, $base = '', $devices = array('all', 'screen', 'handheld'), $remove = true)
+    public function extractStylesheets($node = null, $base = '', $devices = ['all', 'screen', 'handheld'], $remove = true)
     {
-        if (null === $node) {
+        if ($node === null) {
             $node = $this->_dom;
         }
 
-        $stylesheets = array();
+        $stylesheets = [];
         if ($node->hasChildNodes()) {
-            $removeQueue = array();
+            $removeQueue = [];
             /** @var $child \DOMElement */
             foreach ($node->childNodes as $child) {
                 $nodeName = strtolower($child->nodeName);
-                if ($nodeName === "style" && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
+                if ($nodeName === 'style' && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
                     $stylesheets[] = $child->nodeValue;
                     $removeQueue[] = $child;
-                } elseif ($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet' && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
-                    if ($child->hasAttribute("href")) {
-                        $href = $child->getAttribute("href");
+                } elseif ($nodeName === 'link' && strtolower($child->getAttribute('rel')) === 'stylesheet' && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
+                    if ($child->hasAttribute('href')) {
+                        $href = $child->getAttribute('href');
 
-                        if ($base && false === strpos($href, "://")) {
+                        if ($base && strpos($href, '://') === false) {
                             $href = "{$base}/{$href}";
                         }
 
@@ -230,12 +229,12 @@ class InlineStyleWrapper
     /**
      * Extracts the stylesheet nodes nodes specified by the xpath
      *
-     * @param string $xpathQuery xpath query to the desired stylesheet
+     * @param  string  $xpathQuery  xpath query to the desired stylesheet
      * @return array the extracted stylesheets
      */
     public function extractStylesheetsWithXpath($xpathQuery)
     {
-        $stylesheets = array();
+        $stylesheets = [];
 
         $nodes = $this->_getDomXpath()->query($xpathQuery);
         foreach ($nodes as $node) {
@@ -248,22 +247,23 @@ class InlineStyleWrapper
 
     /**
      * Parses a stylesheet to selectors and properties
-     * @param string $stylesheet
+     *
+     * @param  string  $stylesheet
      * @return array
      */
     public function parseStylesheet($stylesheet)
     {
-        $parsed = array();
+        $parsed = [];
         $stylesheet = $this->_stripStylesheet($stylesheet);
-        $stylesheet = trim(trim($stylesheet), "}");
-        foreach (explode("}", $stylesheet) as $rule) {
-            //Don't parse empty rules
-            if (!trim($rule)) {
+        $stylesheet = trim(trim($stylesheet), '}');
+        foreach (explode('}', $stylesheet) as $rule) {
+            // Don't parse empty rules
+            if (! trim($rule)) {
                 continue;
             }
-            list($selector, $style) = explode("{", $rule, 2);
+            [$selector, $style] = explode('{', $rule, 2);
             foreach (explode(',', $selector) as $sel) {
-                $parsed[] = array(trim($sel), trim(trim($style), ";"));
+                $parsed[] = [trim($sel), trim(trim($style), ';')];
             }
         }
 
@@ -272,7 +272,8 @@ class InlineStyleWrapper
 
     public function sortSelectorsOnSpecificity($parsed)
     {
-        usort($parsed, array($this, 'sortOnSpecificity'));
+        usort($parsed, [$this, 'sortOnSpecificity']);
+
         return $parsed;
     }
 
@@ -286,37 +287,39 @@ class InlineStyleWrapper
                 return $a[$i] < $b[$i] ? -1 : 1;
             }
         }
+
         return -1;
     }
 
     public function getScoreForSelector($selector)
     {
-        return array(
+        return [
             preg_match_all('/#\w/i', $selector, $result), // ID's
             preg_match_all('/\.\w/i', $selector, $result), // Classes
-            preg_match_all('/^\w|\ \w|\(\w|\:[^not]/i', $selector, $result) // Tags
-        );
+            preg_match_all('/^\w|\ \w|\(\w|\:[^not]/i', $selector, $result), // Tags
+        ];
     }
 
     /**
      * Parses style properties to a array which can be merged by mergeStyles()
-     * @param string $style
+     *
+     * @param  string  $style
      * @return array
      */
     private function _styleToArray($style)
     {
-        $styles = array();
-        $style = trim(trim($style), ";");
+        $styles = [];
+        $style = trim(trim($style), ';');
         if ($style) {
-            foreach (explode(";", $style) as $props) {
-                $props = trim(trim($props), ";");
-                //Don't parse empty props
-                if (!trim($props)) {
+            foreach (explode(';', $style) as $props) {
+                $props = trim(trim($props), ';');
+                // Don't parse empty props
+                if (! trim($props)) {
                     continue;
                 }
-                //Only match valid CSS rules
+                // Only match valid CSS rules
                 if (preg_match('#^([-a-z0-9\*]+):(.*)$#i', $props, $matches) && isset($matches[0], $matches[1], $matches[2])) {
-                    list(, $prop, $val) = $matches;
+                    [, $prop, $val] = $matches;
                     $styles[$prop] = $val;
                 }
             }
@@ -327,24 +330,24 @@ class InlineStyleWrapper
 
     private function _arrayToStyle($array)
     {
-        $st = array();
+        $st = [];
         foreach ($array as $prop => $val) {
             $st[] = "{$prop}:{$val}";
         }
+
         return \implode(';', $st);
     }
 
     /**
      * Merges two sets of style properties taking !important into account
-     * @param array $styleA
-     * @param array $styleB
+     *
      * @return array
      */
     private function _mergeStyles(array $styleA, array $styleB)
     {
         foreach ($styleB as $prop => $val) {
-            if (!isset($styleA[$prop])
-                || substr(str_replace(" ", "", strtolower($styleA[$prop])), -10) !== "!important") {
+            if (! isset($styleA[$prop])
+                || substr(str_replace(' ', '', strtolower($styleA[$prop])), -10) !== '!important') {
                 $styleA[$prop] = $val;
             }
         }
@@ -380,10 +383,11 @@ class InlineStyleWrapper
 
         foreach ($mediaDevices as $device) {
             $device = trim($device);
-            if (!$device || in_array($device, $devices)) {
+            if (! $device || in_array($device, $devices)) {
                 return true;
             }
         }
+
         return false;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Välj', // Select
     'Deselect_All' => 'Deselect All',
     'Select_All' => 'Select All',
     'Erase' => 'Radera', // Erase
     'Open' => 'Öppna', // Open
-    'Confirm_del' => 'Är du säker på att du vill radera denna fil?', //Are you sure you want to delete this file?
+    'Confirm_del' => 'Är du säker på att du vill radera denna fil?', // Are you sure you want to delete this file?
     'All' => 'Alla', // All
     'Files' => 'Filer', // Files
     'Images' => 'Bilder', // Images
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'katalog', // dir
     'Type' => 'Typ', // Type
@@ -85,7 +85,7 @@ return array(
     'Copy' => 'Kopiera', // Copy
     'Cut' => 'Klipp ut', // Cut
     'Paste' => 'Klistra in', // Paste
-    'CB' => 'Urklipp', //CB,  clipboard
+    'CB' => 'Urklipp', // CB,  clipboard
     'Paste_Here' => 'Klistra in i denna mapp', // Paste to this directory
     'Paste_Confirm' => 'Är du säker på att du vill klistra in i denna mapp? Befintliga filer och mappar kan bli överskrivna.', // Are you sure you want to paste to this directory? This will overwrite existing files/folders if encountered any.
     'Paste_Failed' => 'Misslyckades med att klistra in fil(er)', // Failed to paste file(s)
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'För många filer/mappar är valda för att de ska kunna %s. Gräns: #d filer per operation', // You selected too many files/folders to %s. Limit: %d files/operation     %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Du har ej behörighet att %s filer.', // You are not allowed to %s files.        %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Misslyckades med att spara bild', // Could not save image
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Misslyckades med att packa upp. Filen kan eventuellt vara korrupt.', // Could not extract. File might be corrupt.
     'Zip_Invalid' => 'Filtypen stöds ej. Stödja filtyper: zip, gz och tar.', // This extension is not supported. Valid: zip, gz, tar.
     'Dir_No_Write' => 'Det går ej att skriva till den valda sökvägen.', // The directory you selected is not writable.
@@ -133,15 +133,15 @@ return array(
     'wrong action' => 'Fel åtgärd', // "Wrong action",
     'wrong sub-action' => 'Fel delåtgärd', // "Wrong sub-actio",
     'no action passed' => 'Ingen åtgärd skickad', // "No action passed",
-    'no path' => 'Ingen sökväg', //"No path",
-    'no file' => 'Ingen fil', //"No file",
+    'no path' => 'Ingen sökväg', // "No path",
+    'no file' => 'Ingen fil', // "No file",
     'view type number missing' => 'Vytypsnummer saknas', // "View type number missing",
     'Not enough Memory' => 'Inte tillräckligt med minne', // "Not enough Memory",
     'max_size_reached' => 'Din bildkatalog har nått den maximala storleken av %d MB', // "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
     'total size' => 'Total storlek', // "Total size",
-);
+];

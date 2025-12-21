@@ -55,6 +55,11 @@ use App\Http\Controllers\Managers\Settings\SearchSettingsController;
 use App\Http\Controllers\Managers\Settings\ServerAccessController;
 use App\Http\Controllers\Managers\Settings\SettingsController;
 use App\Http\Controllers\Managers\Settings\SupervisorController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SupplierContentController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SupplierPromptsController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SuppliersController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SupplierSourcesController;
 use App\Http\Controllers\Managers\Settings\SystemCacheController;
 use App\Http\Controllers\Managers\Settings\SystemSettingsController;
 use App\Http\Controllers\Managers\Settings\TranslationController;
@@ -85,6 +90,14 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'dashboard'])->name('manager.dashboard');
+
+    // User Notification Routes (Laravel Native Notifications)
+    Route::prefix('notifications')->name('notifications')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Managers\NotificationsController::class, 'index'])->name('index');
+        Route::post('/{id}/read', [\App\Http\Controllers\Managers\NotificationsController::class, 'markAsRead'])->name('mark-as-read');
+        Route::post('/mark-all-read', [\App\Http\Controllers\Managers\NotificationsController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{id}', [\App\Http\Controllers\Managers\NotificationsController::class, 'destroy'])->name('destroy');
+    });
 
     // User Management Routes (APPROACH 1: Middleware-Based)
     // These routes are protected by CheckRolesAndPermissions middleware
@@ -365,6 +378,17 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/export/all', [DocumentTypeController::class, 'export'])->name('manager.settings.documents.types.export');
             });
 
+            // Validation Conditions
+            Route::group(['prefix' => 'conditions'], function () {
+                Route::get('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'index'])->name('manager.settings.documents.conditions');
+                Route::get('/create', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'create'])->name('manager.settings.documents.conditions.create');
+                Route::post('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'store'])->name('manager.settings.documents.conditions.store');
+                Route::get('/edit/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'edit'])->name('manager.settings.documents.conditions.edit');
+                Route::post('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'update'])->name('manager.settings.documents.conditions.update');
+                Route::delete('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'destroy'])->name('manager.settings.documents.conditions.destroy');
+                Route::post('/{condition}/toggle-active', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'toggleActive'])->name('manager.settings.documents.conditions.toggle-active');
+            });
+
             // SLA Policies
             Route::prefix('sla-policies')->name('sla-policies.')->group(function () {
                 Route::get('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'index'])->name('index');
@@ -374,6 +398,18 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::put('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'update'])->name('update');
                 Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'toggle'])->name('toggle');
                 Route::delete('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'destroy'])->name('destroy');
+            });
+
+            // Document Groups
+            Route::group(['prefix' => 'groups'], function () {
+                Route::get('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'index'])->name('manager.settings.documents.groups.index');
+                Route::get('create', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'create'])->name('manager.settings.documents.groups.create');
+                Route::post('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'store'])->name('manager.settings.documents.groups.store');
+                Route::get('{group}/edit', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'edit'])->name('manager.settings.documents.groups.edit');
+                Route::put('{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'update'])->name('manager.settings.documents.groups.update');
+                Route::patch('{group}/toggle', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'toggle'])->name('manager.settings.documents.groups.toggle');
+                Route::delete('{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'destroy'])->name('manager.settings.documents.groups.destroy');
+                Route::post('reorder', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'reorder'])->name('manager.settings.documents.groups.reorder');
             });
 
             // Document Settings
@@ -419,6 +455,67 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::post('/reset-stats', [PrestashopSettingsController::class, 'resetStats'])->name('manager.settings.prestashop.reset-stats');
             Route::get('/get-stats', [PrestashopSettingsController::class, 'getStats'])->name('manager.settings.prestashop.get-stats');
             Route::post('/test-sync', [PrestashopSettingsController::class, 'testSync'])->name('manager.settings.prestashop.test-sync');
+
+            // Product Blockades Sync
+            Route::post('/sync-blockades', [PrestashopSettingsController::class, 'syncProductBlockades'])->name('manager.settings.prestashop.sync-blockades');
+            Route::get('/blockades-status', [PrestashopSettingsController::class, 'getBlockadesSyncStatus'])->name('manager.settings.prestashop.blockades-status');
+            Route::post('/create-blockade', [PrestashopSettingsController::class, 'createBlockade'])->name('manager.settings.prestashop.create-blockade');
+            Route::delete('/delete-blockade', [PrestashopSettingsController::class, 'deleteBlockade'])->name('manager.settings.prestashop.delete-blockade');
+            Route::post('/save-blockade-labels', [PrestashopSettingsController::class, 'saveBlockadeLabels'])->name('manager.settings.prestashop.save-blockade-labels');
+        });
+
+        // Supplier Automation Routes
+        Route::group(['prefix' => 'suppliers'], function () {
+            Route::get('/', [SuppliersController::class, 'index'])->name('manager.settings.suppliers.index');
+            Route::get('/data', [SuppliersController::class, 'getData'])->name('manager.settings.suppliers.data');
+            Route::get('/create', [SuppliersController::class, 'create'])->name('manager.settings.suppliers.create');
+            Route::post('/', [SuppliersController::class, 'store'])->name('manager.settings.suppliers.store');
+            Route::get('/{uid}', [SuppliersController::class, 'show'])->name('manager.settings.suppliers.show');
+            Route::get('/{uid}/edit', [SuppliersController::class, 'edit'])->name('manager.settings.suppliers.edit');
+            Route::put('/{uid}', [SuppliersController::class, 'update'])->name('manager.settings.suppliers.update');
+            Route::delete('/{uid}', [SuppliersController::class, 'destroy'])->name('manager.settings.suppliers.destroy');
+            Route::post('/{uid}/toggle', [SuppliersController::class, 'toggle'])->name('manager.settings.suppliers.toggle');
+            Route::post('/test-all', [SuppliersController::class, 'testAll'])->name('manager.settings.suppliers.test-all');
+
+            // Sources
+            Route::prefix('{supplierUid}/sources')->name('manager.settings.suppliers.sources.')->group(function () {
+                Route::get('/', [SupplierSourcesController::class, 'index'])->name('index');
+                Route::get('/create', [SupplierSourcesController::class, 'create'])->name('create');
+                Route::post('/', [SupplierSourcesController::class, 'store'])->name('store');
+                Route::get('/{uid}/edit', [SupplierSourcesController::class, 'edit'])->name('edit');
+                Route::put('/{uid}', [SupplierSourcesController::class, 'update'])->name('update');
+                Route::delete('/{uid}', [SupplierSourcesController::class, 'destroy'])->name('destroy');
+                Route::post('/{uid}/test', [SupplierSourcesController::class, 'testConnection'])->name('test');
+            });
+        });
+
+        Route::group(['prefix' => 'supplier-prompts'], function () {
+            Route::get('/', [SupplierPromptsController::class, 'index'])->name('manager.settings.supplier-prompts.index');
+            Route::get('/create', [SupplierPromptsController::class, 'create'])->name('manager.settings.supplier-prompts.create');
+            Route::post('/', [SupplierPromptsController::class, 'store'])->name('manager.settings.supplier-prompts.store');
+            Route::get('/{uid}/edit', [SupplierPromptsController::class, 'edit'])->name('manager.settings.supplier-prompts.edit');
+            Route::put('/{uid}', [SupplierPromptsController::class, 'update'])->name('manager.settings.supplier-prompts.update');
+            Route::delete('/{uid}', [SupplierPromptsController::class, 'destroy'])->name('manager.settings.supplier-prompts.destroy');
+            Route::post('/{uid}/toggle', [SupplierPromptsController::class, 'toggle'])->name('manager.settings.supplier-prompts.toggle');
+            Route::post('/{uid}/test', [SupplierPromptsController::class, 'test'])->name('manager.settings.supplier-prompts.test');
+        });
+
+        Route::group(['prefix' => 'supplier-automation'], function () {
+            Route::get('/', [SupplierAutomationController::class, 'index'])->name('manager.settings.supplier-automation.index');
+            Route::get('/dashboard', [SupplierAutomationController::class, 'dashboard'])->name('manager.settings.supplier-automation.dashboard');
+            Route::post('/run/{uid}', [SupplierAutomationController::class, 'run'])->name('manager.settings.supplier-automation.run');
+            Route::post('/schedule/{uid}', [SupplierAutomationController::class, 'schedule'])->name('manager.settings.supplier-automation.schedule');
+            Route::get('/logs', [SupplierAutomationController::class, 'logs'])->name('manager.settings.supplier-automation.logs');
+            Route::get('/stats', [SupplierAutomationController::class, 'stats'])->name('manager.settings.supplier-automation.stats');
+        });
+
+        Route::group(['prefix' => 'supplier-content'], function () {
+            Route::get('/', [SupplierContentController::class, 'index'])->name('manager.settings.supplier-content.index');
+            Route::get('/{uid}', [SupplierContentController::class, 'show'])->name('manager.settings.supplier-content.show');
+            Route::post('/{uid}/approve', [SupplierContentController::class, 'approve'])->name('manager.settings.supplier-content.approve');
+            Route::post('/{uid}/reject', [SupplierContentController::class, 'reject'])->name('manager.settings.supplier-content.reject');
+            Route::post('/{uid}/edit', [SupplierContentController::class, 'edit'])->name('manager.settings.supplier-content.edit');
+            Route::get('/filter/{status}', [SupplierContentController::class, 'filterByStatus'])->name('manager.settings.supplier-content.filter');
         });
 
         Route::group(['prefix' => 'email'], function () {
@@ -940,7 +1037,7 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
     });
 
     Route::group(['prefix' => 'notifications'], function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('manager.notifications');
+        Route::get('/', [NotificationController::class, 'index'])->name('manager.notifications.index');
         Route::get('/popup', [NotificationController::class, 'popup'])->name('manager.notifications.popup');
         Route::post('/delete', [NotificationController::class, 'delete'])->name('manager.notifications.delete');
         Route::post('/listing', [NotificationController::class, 'listing'])->name('manager.notifications.listing');

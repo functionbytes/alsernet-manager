@@ -2,23 +2,25 @@
 
 namespace App\Models\Prestashop\Orders;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\ShopGroup;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Orders\OrderState;
 use App\Models\Prestashop\Address;
+use App\Models\Prestashop\Carrier;
 use App\Models\Prestashop\Cart;
 use App\Models\Prestashop\Currency;
-use App\Models\Prestashop\Language;
 use App\Models\Prestashop\Customer;
-use App\Models\Prestashop\Carrier;
+use App\Models\Prestashop\Language;
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_orders';
+
     protected $primaryKey = 'id_order';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -67,7 +69,7 @@ class Order extends Model
         'round_type',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'gift_message' => 'boolean',
@@ -149,6 +151,4 @@ class Order extends Model
     {
         return $this->belongsTo(OrderState::class, 'current_state');
     }
-
-
 }

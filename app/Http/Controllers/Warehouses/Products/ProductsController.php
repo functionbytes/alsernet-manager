@@ -2,119 +2,121 @@
 
 namespace App\Http\Controllers\Warehouses\Products;
 
-use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductsController extends Controller
 {
+    public function index(Request $request)
+    {
 
-    public function index(Request $request){
+        $searchKey = null ?? $request->search;
+        $available = null ?? $request->available;
 
-            $searchKey = null ?? $request->search;
-            $available = null ?? $request->available;
+        $products = Product::latest();
 
-            $products = Product::latest();
-
-            if ($searchKey != null) {
-                $products = $products->where('title', 'like', '%' . $searchKey . '%');
-            }
-
-            if ($available != null) {
-                $products = $products->where('available', $available);
-            }
-
-            $products = $products->paginate(paginationNumber());
-
-            return view('warehouses.views.products.products.index')->with([
-                'products' => $products,
-                'available' => $available,
-                'searchKey' => $searchKey,
-            ]);
-
+        if ($searchKey != null) {
+            $products = $products->where('title', 'like', '%'.$searchKey.'%');
         }
 
+        if ($available != null) {
+            $products = $products->where('available', $available);
+        }
 
-      public function create(){
+        $products = $products->paginate(paginationNumber());
 
-          $availables = collect([
-              ['id' => '1', 'label' => 'Publico'],
-              ['id' => '0', 'label' => 'Oculto'],
-          ]);
+        return view('warehouses.views.products.products.index')->with([
+            'products' => $products,
+            'available' => $available,
+            'searchKey' => $searchKey,
+        ]);
 
-          $availables->prepend('' , '');
-          $availables = $availables->pluck('label','id');
+    }
 
-          return view('warehouses.views.products.products.create')->with([
-              'availables' => $availables
-            ]);
+    public function create()
+    {
 
-      }
+        $availables = collect([
+            ['id' => '1', 'label' => 'Publico'],
+            ['id' => '0', 'label' => 'Oculto'],
+        ]);
 
-      public function edit($uid){
+        $availables->prepend('', '');
+        $availables = $availables->pluck('label', 'id');
 
-            $product = Product::uid($uid);
+        return view('warehouses.views.products.products.create')->with([
+            'availables' => $availables,
+        ]);
 
-            $availables = collect([
-                ['id' => '1', 'label' => 'Publico'],
-                ['id' => '0', 'label' => 'Oculto'],
-            ]);
+    }
 
-            $availables = $availables->pluck('label','id');
-
-            return view('warehouses.views.products.products.edit')->with([
-              'product' => $product,
-              'availables' => $availables,
-            ]);
-
-      }
-
-
-      public function update(Request $request){
-
-          $product = Product::uid($request->uid);
-          $product->title = Str::upper($request->title);
-          $product->slug  = Str::slug($request->title, '-');
-          $product->reference = $request->reference;
-          $product->barcode = $request->barcode;
-          $product->available = $request->available;
-          $product->update();
-
-          return response()->json([
-            'status' => true,
-            'uid' => $product->uid,
-            'message' => 'Se actualizo la clase correctamente',
-          ]);
-
-      }
-
-      public function store(Request $request){
-
-          $product = new Product;
-          $product->uid = $this->generate_uid('products');
-          $product->title = Str::upper($request->title);
-          $product->slug  = Str::slug($request->title, '-');
-          $product->reference = $request->reference;
-          $product->barcode = $request->barcode;
-          $product->available = $request->available;
-          $product->save();
-
-          return response()->json([
-            'status' => true,
-            'uid' => $product->uid,
-            'message' => 'Se creo el curso correctamente',
-          ]);
-
-      }
-
-      public function getThumbnails($uid){
+    public function edit($uid)
+    {
 
         $product = Product::uid($uid);
 
-        if ($product->getMedia('thumbnail')->count()>0) {
+        $availables = collect([
+            ['id' => '1', 'label' => 'Publico'],
+            ['id' => '0', 'label' => 'Oculto'],
+        ]);
+
+        $availables = $availables->pluck('label', 'id');
+
+        return view('warehouses.views.products.products.edit')->with([
+            'product' => $product,
+            'availables' => $availables,
+        ]);
+
+    }
+
+    public function update(Request $request)
+    {
+
+        $product = Product::uid($request->uid);
+        $product->title = Str::upper($request->title);
+        $product->slug = Str::slug($request->title, '-');
+        $product->reference = $request->reference;
+        $product->barcode = $request->barcode;
+        $product->available = $request->available;
+        $product->update();
+
+        return response()->json([
+            'status' => true,
+            'uid' => $product->uid,
+            'message' => 'Se actualizo la clase correctamente',
+        ]);
+
+    }
+
+    public function store(Request $request)
+    {
+
+        $product = new Product;
+        $product->uid = $this->generate_uid('products');
+        $product->title = Str::upper($request->title);
+        $product->slug = Str::slug($request->title, '-');
+        $product->reference = $request->reference;
+        $product->barcode = $request->barcode;
+        $product->available = $request->available;
+        $product->save();
+
+        return response()->json([
+            'status' => true,
+            'uid' => $product->uid,
+            'message' => 'Se creo el curso correctamente',
+        ]);
+
+    }
+
+    public function getThumbnails($uid)
+    {
+
+        $product = Product::uid($uid);
+
+        if ($product->getMedia('thumbnail')->count() > 0) {
 
             $thumbnails = $product->getMedia('thumbnail');
 
@@ -126,7 +128,7 @@ class ProductsController extends Controller
                     'name' => $thumbnail->name,
                     'file' => $thumbnail->file_name,
                     'path' => $thumbnail->getfullUrl(),
-                    'size' =>  $thumbnail->size
+                    'size' => $thumbnail->size,
                 ];
             }
 
@@ -139,29 +141,32 @@ class ProductsController extends Controller
 
     }
 
-    public function storeThumbnails(Request $request){
+    public function storeThumbnails(Request $request)
+    {
 
-        if($request->hasFile('file') && $request->file('file')->isValid()){
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
 
             $product = Product::uid(Str::remove('"', $request->product));
             $product->addMediaFromRequest('file')->toMediaCollection('thumbnail');
 
-            return response()->json(['status' => "success", 'product' => $product->uid]);
+            return response()->json(['status' => 'success', 'product' => $product->uid]);
 
         }
 
     }
 
-    public function deleteThumbnails($id){
+    public function deleteThumbnails($id)
+    {
         Media::find($id)->delete();
-        return response()->json(['status' => "success"]);
+
+        return response()->json(['status' => 'success']);
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
         $product = Product::uid($uid);
         $product->delete();
+
         return redirect()->route('manager.products');
     }
-
 }
-

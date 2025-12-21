@@ -4,7 +4,6 @@ namespace App\Services\Returns;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 
 class PdfGeneratorService
 {

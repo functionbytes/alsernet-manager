@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Managers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Models\Enterprise\Enterprise;
-use App\Models\Enterprise\EnterpriseUser;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,11 +34,11 @@ class UsersController extends Controller
         // Search by name, email, or identification
         if ($searchKey) {
             $users->where(function ($query) use ($searchKey) {
-                $query->where('users.firstname', 'like', '%' . $searchKey . '%')
-                    ->orWhere('users.lastname', 'like', '%' . $searchKey . '%')
-                    ->orWhere(DB::raw("CONCAT(users.firstname, ' ', users.lastname)"), 'like', '%' . $searchKey . '%')
-                    ->orWhere('users.email', 'like', '%' . $searchKey . '%')
-                    ->orWhere('users.identification', 'like', '%' . $searchKey . '%');
+                $query->where('users.firstname', 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.lastname', 'like', '%'.$searchKey.'%')
+                    ->orWhere(DB::raw("CONCAT(users.firstname, ' ', users.lastname)"), 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.email', 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.identification', 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -92,13 +90,13 @@ class UsersController extends Controller
         ]);
 
         try {
-            $user = new User();
+            $user = new User;
             $user->uid = $this->generate_uid('users');
             $user->firstname = Str::upper($request->firstname);
             $user->lastname = Str::upper($request->lastname);
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
-            $user->available = (bool)$request->available;
+            $user->available = (bool) $request->available;
             $user->shop_id = $this->shouldAssignShop($request->role) ? $request->shop : null;
             $user->save();
 
@@ -124,7 +122,7 @@ class UsersController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el usuario: ' . $e->getMessage(),
+                'message' => 'Error al crear el usuario: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -133,7 +131,7 @@ class UsersController extends Controller
     {
         $user = User::uid($uid);
 
-        if (!$user) {
+        if (! $user) {
             abort(404, 'Usuario no encontrado');
         }
 
@@ -153,7 +151,7 @@ class UsersController extends Controller
     {
         $user = User::uid($uid);
 
-        if (!$user) {
+        if (! $user) {
             abort(404, 'Usuario no encontrado');
         }
 
@@ -173,7 +171,7 @@ class UsersController extends Controller
     {
         $user = User::where('uid', $request->uid)->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Usuario no encontrado.',
@@ -204,7 +202,7 @@ class UsersController extends Controller
                 $user->password = bcrypt($request->password);
             }
 
-            $user->available = (bool)$request->available;
+            $user->available = (bool) $request->available;
             $user->shop_id = $this->shouldAssignShop($request->role) ? $request->shop : null;
             $user->save();
 
@@ -230,7 +228,7 @@ class UsersController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el usuario: ' . $e->getMessage(),
+                'message' => 'Error al actualizar el usuario: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -239,7 +237,7 @@ class UsersController extends Controller
     {
         $user = User::uid($uid);
 
-        if (!$user) {
+        if (! $user) {
             abort(404, 'Usuario no encontrado');
         }
 
@@ -272,7 +270,7 @@ class UsersController extends Controller
     {
         $role = SpatieRole::find($roleId);
 
-        if (!$role) {
+        if (! $role) {
             return false;
         }
 

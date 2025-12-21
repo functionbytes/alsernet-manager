@@ -3,13 +3,12 @@
 namespace App\Library\HtmlHandler;
 
 use League\Pipeline\StageInterface;
-use SimpleXMLElement;
-use Twig\TwigFunction;
-use Twig\Loader\ArrayLoader;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\TwigFunction;
 
-use function Acelle\Helpers\xml_to_array;
 use function Acelle\Helpers\url_get_contents_ssl_safe;
+use function Acelle\Helpers\xml_to_array;
 
 class ParseRss implements StageInterface
 {
@@ -20,6 +19,7 @@ class ParseRss implements StageInterface
             $x = xml_to_array($dom);
             $x = ($x['rss']['channel']);
             $x['item'] = array_slice($x['item'], 0, $count);
+
             return $x;
         });
 

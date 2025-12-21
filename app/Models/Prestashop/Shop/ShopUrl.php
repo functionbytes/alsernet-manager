@@ -4,13 +4,15 @@ namespace App\Models\Prestashop\Shop;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 
 class ShopUrl extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_shop_url';
+
     protected $primaryKey = 'id_shop_url';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +25,7 @@ class ShopUrl extends Model
         'active',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'id_shop' => 'integer',
     ];

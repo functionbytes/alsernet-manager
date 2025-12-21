@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Bus\Queueable;
 
 class UserNeedsConfirmation extends Notification
 {
@@ -24,7 +24,7 @@ class UserNeedsConfirmation extends Notification
 
     public function toMail($notifiable)
     {
-        return (new MailMessage())
+        return (new MailMessage)
             ->subject(app_name().': '.__('exceptions.frontend.auth.confirmation.confirm'))
             ->line(__('strings.emails.auth.click_to_confirm'))
             ->action(__('buttons.emails.auth.confirm_account'), route('frontend.auth.account.confirm', $this->confirmation_code))

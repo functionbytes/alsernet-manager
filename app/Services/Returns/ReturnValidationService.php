@@ -2,13 +2,10 @@
 
 namespace App\Services\Returns;
 
-
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductReturnRule;
 use App\Models\ReturnValidation;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class ReturnValidationService
 {
@@ -98,14 +95,14 @@ class ReturnValidationService
         $results = ['valid' => true, 'errors' => [], 'warnings' => []];
 
         // Verificar que la orden existe y está pagada
-        if (!$order || $order->status !== 'completed') {
+        if (! $order || $order->status !== 'completed') {
             $results['valid'] = false;
             $results['errors'][] = 'La orden debe estar completada para procesar devoluciones';
         }
 
         // Verificar que el producto existe en la orden
         $orderItem = $order->items()->where('product_id', $product->id)->first();
-        if (!$orderItem) {
+        if (! $orderItem) {
             $results['valid'] = false;
             $results['errors'][] = 'El producto no se encuentra en esta orden';
         }
@@ -150,7 +147,7 @@ class ReturnValidationService
         }
 
         // Verificar si la categoría permite devoluciones
-        if ($product->category && !$product->category->allow_returns) {
+        if ($product->category && ! $product->category->allow_returns) {
             $results['valid'] = false;
             $results['errors'][] = 'Los productos de esta categoría no permiten devoluciones';
         }
@@ -202,11 +199,11 @@ class ReturnValidationService
      */
     protected function determineValidationStatus(array $results): string
     {
-        if (!$results['valid']) {
+        if (! $results['valid']) {
             return ReturnValidation::STATUS_FAILED;
         }
 
-        if (!empty($results['warnings'])) {
+        if (! empty($results['warnings'])) {
             // Si hay advertencias, requiere revisión manual
             return ReturnValidation::STATUS_MANUAL_REVIEW;
         }
@@ -233,6 +230,7 @@ class ReturnValidationService
     protected function getProductPriceFromOrder(Order $order, Product $product): float
     {
         $orderItem = $order->items()->where('product_id', $product->id)->first();
+
         return $orderItem ? $orderItem->price : $product->price;
     }
 
@@ -242,7 +240,7 @@ class ReturnValidationService
     protected function getAvailableReturnQuantity(Order $order, Product $product): int
     {
         $orderItem = $order->items()->where('product_id', $product->id)->first();
-        if (!$orderItem) {
+        if (! $orderItem) {
             return 0;
         }
 

@@ -5,8 +5,11 @@ namespace App\Library;
 class RateLimit
 {
     protected $amount;
+
     protected $periodValue;
+
     protected $periodUnit;
+
     protected $description;
 
     public const UNLIMITED = -1;

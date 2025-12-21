@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Finder\Finder;
 use ReflectionClass;
+use Symfony\Component\Finder\Finder;
 
 class GenerateCommandsDocumentation extends Command
 {
@@ -20,7 +20,7 @@ class GenerateCommandsDocumentation extends Command
 
         // Ensure directory exists
         $dir = dirname($outputPath);
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
@@ -32,7 +32,7 @@ class GenerateCommandsDocumentation extends Command
         file_put_contents($outputPath, $markdown);
 
         $this->info("✅ Documentación generada en: {$outputPath}");
-        $this->info("📊 Total comandos documentados: " . (count($customCommands) + count($laravelCommands)));
+        $this->info('📊 Total comandos documentados: '.(count($customCommands) + count($laravelCommands)));
 
         return Command::SUCCESS;
     }
@@ -45,16 +45,16 @@ class GenerateCommandsDocumentation extends Command
         $commands = [];
         $commandPath = app_path('Console/Commands');
 
-        if (!is_dir($commandPath)) {
+        if (! is_dir($commandPath)) {
             return [];
         }
 
-        $finder = new Finder();
+        $finder = new Finder;
         $finder->files()->in($commandPath)->name('*.php');
 
         foreach ($finder as $file) {
             try {
-                $className = 'App\\Console\\Commands\\' . $file->getBasename('.php');
+                $className = 'App\\Console\\Commands\\'.$file->getBasename('.php');
 
                 if (class_exists($className) && is_subclass_of($className, Command::class)) {
                     $reflection = new ReflectionClass($className);
@@ -70,7 +70,7 @@ class GenerateCommandsDocumentation extends Command
                     $signature = $this->extractPropertyValue($fileContents, 'signature');
                     $description = $this->extractPropertyValue($fileContents, 'description');
 
-                    if (!$signature) {
+                    if (! $signature) {
                         continue; // Skip if no signature found
                     }
 
@@ -83,7 +83,7 @@ class GenerateCommandsDocumentation extends Command
                         'signature' => $signature,
                         'description' => $description ?: 'No description available',
                         'file' => $file->getRelativePathname(),
-                        'type' => 'custom'
+                        'type' => 'custom',
                     ];
                 }
             } catch (\Exception $e) {
@@ -92,6 +92,7 @@ class GenerateCommandsDocumentation extends Command
         }
 
         ksort($commands);
+
         return $commands;
     }
 
@@ -101,14 +102,14 @@ class GenerateCommandsDocumentation extends Command
     private function extractPropertyValue(string $fileContents, string $property): ?string
     {
         // Match pattern: protected $property = 'value'; or protected $property = "value";
-        $pattern = "/protected\s+\\\$" . preg_quote($property) . "\s*=\s*['\"]([^'\"]*?)['\"]/s";
+        $pattern = "/protected\s+\\\$".preg_quote($property)."\s*=\s*['\"]([^'\"]*?)['\"]/s";
 
         if (preg_match($pattern, $fileContents, $matches)) {
             return trim($matches[1]);
         }
 
         // Also try multiline strings with regex
-        $pattern = "/protected\s+\\\$" . preg_quote($property) . "\s*=\s*['\"]([^'\"]*(?:['\"][^'\"]*)*)['\"];/s";
+        $pattern = "/protected\s+\\\$".preg_quote($property)."\s*=\s*['\"]([^'\"]*(?:['\"][^'\"]*)*)['\"];/s";
         if (preg_match($pattern, $fileContents, $matches)) {
             return trim($matches[1]);
         }
@@ -130,7 +131,7 @@ class GenerateCommandsDocumentation extends Command
             $laravelNamespaces = ['Illuminate\\', 'Laravel\\'];
 
             foreach ($allCommands as $command) {
-                if (!is_object($command)) {
+                if (! is_object($command)) {
                     continue;
                 }
 
@@ -146,7 +147,7 @@ class GenerateCommandsDocumentation extends Command
                 }
 
                 // Skip custom commands and migration commands
-                if (!$isLaravel || strpos($commandClass, 'Illuminate\\Database\\Console\\Migrations') === 0) {
+                if (! $isLaravel || strpos($commandClass, 'Illuminate\\Database\\Console\\Migrations') === 0) {
                     continue;
                 }
 
@@ -163,7 +164,7 @@ class GenerateCommandsDocumentation extends Command
                         'class' => $commandClass,
                         'signature' => $name,
                         'description' => $description,
-                        'type' => 'laravel'
+                        'type' => 'laravel',
                     ];
                 } catch (\Exception $e) {
                     continue;
@@ -174,6 +175,7 @@ class GenerateCommandsDocumentation extends Command
         }
 
         ksort($commands);
+
         return $commands;
     }
 
@@ -190,8 +192,8 @@ class GenerateCommandsDocumentation extends Command
 
         // Table of contents
         $markdown .= "## 📑 Tabla de Contenidos\n\n";
-        $markdown .= "- [Comandos Personalizados](#comandos-personalizados) (" . count($customCommands) . ")\n";
-        $markdown .= "- [Comandos de Laravel](#comandos-de-laravel) (" . count($laravelCommands) . ")\n";
+        $markdown .= '- [Comandos Personalizados](#comandos-personalizados) ('.count($customCommands).")\n";
+        $markdown .= '- [Comandos de Laravel](#comandos-de-laravel) ('.count($laravelCommands).")\n";
         $markdown .= "- [Guía de Uso](#guía-de-uso)\n\n";
 
         // Custom Commands

@@ -2,9 +2,8 @@
 
 namespace App\Models\Return;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ReturnCost extends Model
 {
@@ -18,26 +17,32 @@ class ReturnCost extends Model
         'amount',
         'description',
         'is_automatic',
-        'applied_by'
+        'applied_by',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
         'is_automatic' => 'boolean',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
 
     // Constantes para tipos de coste
     const TYPE_SHIPPING = 'shipping';
+
     const TYPE_RESTOCKING = 'restocking';
+
     const TYPE_INSPECTION = 'inspection';
+
     const TYPE_DAMAGE = 'damage';
+
     const TYPE_OTHER = 'other';
 
     // Estados de costes
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_REJECTED = 'rejected';
 
     // Relaciones
@@ -75,7 +80,7 @@ class ReturnCost extends Model
     // Métodos de acceso
     public function getFormattedAmountAttribute()
     {
-        return number_format($this->amount, 2) . ' €';
+        return number_format($this->amount, 2).' €';
     }
 
     public function getCostTypeLabelAttribute()
@@ -85,7 +90,7 @@ class ReturnCost extends Model
             self::TYPE_RESTOCKING => 'Reposición de Stock',
             self::TYPE_INSPECTION => 'Inspección',
             self::TYPE_DAMAGE => 'Daños',
-            self::TYPE_OTHER => 'Otros'
+            self::TYPE_OTHER => 'Otros',
         ];
 
         return $labels[$this->cost_type] ?? 'Desconocido';

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
 
 class PermissionBladeServiceProvider extends ServiceProvider
 {
@@ -49,7 +49,8 @@ class PermissionBladeServiceProvider extends ServiceProvider
 
         // Directiva para acciones en devoluciones
         Blade::directive('canmanagereturn', function ($expression) {
-            list($return, $action) = explode(',', $expression);
+            [$return, $action] = explode(',', $expression);
+
             return "<?php if(\App\Helpers\PermissionHelper::canManageReturn({$return}, {$action})): ?>";
         });
 

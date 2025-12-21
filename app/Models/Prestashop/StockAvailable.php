@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockAvailable extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_available';
+
     protected $primaryKey = 'id_stock_available';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class StockAvailable extends Model
         'location',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_stock_available' => 'integer',
         'id_product' => 'integer',
         'id_product_attribute' => 'integer',

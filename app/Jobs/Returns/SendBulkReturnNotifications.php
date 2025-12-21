@@ -2,24 +2,27 @@
 
 namespace App\Jobs\Returns;
 
+use App\Models\Return\Return as ReturnModel;
+use App\Services\Returns\ReturnNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use App\Models\Return\Return as ReturnModel;
-use App\Services\Returns\ReturnNotificationService;
 
 class SendBulkReturnNotifications implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 1;
+
     public $timeout = 300;
 
     private Collection $returnIds;
+
     private string $notificationType;
+
     private array $customData;
 
     public function __construct(Collection $returnIds, string $notificationType, array $customData = [])

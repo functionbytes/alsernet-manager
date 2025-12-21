@@ -2,11 +2,11 @@
 
 namespace App\Services\Carriers;
 
+use App\Contracts\Carriers\CarrierInterface;
 use App\Models\Carrier;
 use App\Models\CarrierPickupRequest;
 use App\Models\ReturnRequest;
 use App\Models\StoreLocation;
-use App\Contracts\Carriers\CarrierInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -19,22 +19,23 @@ class CarrierService
      */
     public function getCarrier(string $code): ?CarrierInterface
     {
-        if (!isset($this->carriers[$code])) {
+        if (! isset($this->carriers[$code])) {
             $carrier = Carrier::where('code', $code)->first();
 
-            if (!$carrier || !$carrier->is_active) {
+            if (! $carrier || ! $carrier->is_active) {
                 return null;
             }
 
             // Instanciar la clase específica del carrier
             $className = "App\\Services\\Carriers\\{$code}Carrier";
 
-            if (!class_exists($className)) {
+            if (! class_exists($className)) {
                 Log::warning("Carrier class not found: {$className}");
+
                 return null;
             }
 
-            $this->carriers[$code] = new $className();
+            $this->carriers[$code] = new $className;
         }
 
         return $this->carriers[$code];
@@ -43,7 +44,7 @@ class CarrierService
     /**
      * Obtener carriers disponibles para un código postal
      */
-    public function getAvailableCarriers(string $postalCode, string $type = null): \Illuminate\Support\Collection
+    public function getAvailableCarriers(string $postalCode, ?string $type = null): \Illuminate\Support\Collection
     {
         $query = Carrier::active();
 
@@ -77,20 +78,20 @@ class CarrierService
                 'packages_count' => $data['packages_count'] ?? 1,
                 'total_weight' => $data['total_weight'] ?? $this->calculateWeight($returnRequest),
                 'dimensions' => $data['dimensions'] ?? null,
-                'status' => CarrierPickupRequest::STATUS_PENDING
+                'status' => CarrierPickupRequest::STATUS_PENDING,
             ]);
 
             // Obtener carrier
             $carrier = Carrier::find($data['carrier_id']);
             $carrierService = $this->getCarrier($carrier->code);
 
-            if (!$carrierService) {
+            if (! $carrierService) {
                 throw new \Exception("Servicio de carrier no disponible: {$carrier->code}");
             }
 
             // Preparar datos para el carrier
             $carrierData = array_merge($data, [
-                'return_number' => $returnRequest->getReturnNumber()
+                'return_number' => $returnRequest->getReturnNumber(),
             ]);
 
             // Crear pickup en el servicio del carrier
@@ -112,7 +113,7 @@ class CarrierService
                 Log::info('Pickup request created successfully', [
                     'return_id' => $returnRequest->id,
                     'carrier' => $carrier->code,
-                    'pickup_code' => $result['pickup_code'] ?? null
+                    'pickup_code' => $result['pickup_code'] ?? null,
                 ]);
 
                 return $pickupRequest;
@@ -125,7 +126,7 @@ class CarrierService
 
             Log::error('Error creating pickup request', [
                 'return_id' => $returnRequest->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             if (isset($pickupRequest)) {
@@ -141,7 +142,7 @@ class CarrierService
      */
     public function cancelPickupRequest(CarrierPickupRequest $pickupRequest): bool
     {
-        if (!$pickupRequest->canBeCancelled()) {
+        if (! $pickupRequest->canBeCancelled()) {
             return false;
         }
 
@@ -152,10 +153,10 @@ class CarrierService
             if ($carrierService && $pickupRequest->pickup_code) {
                 $cancelled = $carrierService->cancelPickup($pickupRequest->pickup_code);
 
-                if (!$cancelled) {
+                if (! $cancelled) {
                     Log::warning('Carrier failed to cancel pickup', [
                         'pickup_id' => $pickupRequest->id,
-                        'carrier' => $carrier->code
+                        'carrier' => $carrier->code,
                     ]);
                 }
             }
@@ -167,7 +168,7 @@ class CarrierService
         } catch (\Exception $e) {
             Log::error('Error cancelling pickup request', [
                 'pickup_id' => $pickupRequest->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return false;
@@ -182,10 +183,10 @@ class CarrierService
         try {
             $carrierService = $this->getCarrier($carrierCode);
 
-            if (!$carrierService) {
+            if (! $carrierService) {
                 return [
                     'success' => false,
-                    'error' => 'Carrier no disponible'
+                    'error' => 'Carrier no disponible',
                 ];
             }
 
@@ -195,12 +196,12 @@ class CarrierService
             Log::error('Error getting tracking status', [
                 'tracking' => $trackingNumber,
                 'carrier' => $carrierCode,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -214,15 +215,15 @@ class CarrierService
             $carrier = $pickupRequest->carrier;
             $carrierService = $this->getCarrier($carrier->code);
 
-            if (!$carrierService) {
-                throw new \Exception("Servicio de carrier no disponible");
+            if (! $carrierService) {
+                throw new \Exception('Servicio de carrier no disponible');
             }
 
             $labelPath = $carrierService->generateLabel([
                 'tracking_number' => $pickupRequest->tracking_number,
                 'pickup_code' => $pickupRequest->pickup_code,
                 'format' => 'PDF',
-                'size' => 'A4'
+                'size' => 'A4',
             ]);
 
             // Registrar como documento
@@ -235,8 +236,8 @@ class CarrierService
                 'generated_at' => now(),
                 'metadata' => [
                     'carrier' => $carrier->code,
-                    'tracking_number' => $pickupRequest->tracking_number
-                ]
+                    'tracking_number' => $pickupRequest->tracking_number,
+                ],
             ]);
 
             return $labelPath;
@@ -244,7 +245,7 @@ class CarrierService
         } catch (\Exception $e) {
             Log::error('Error generating shipping label', [
                 'pickup_id' => $pickupRequest->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }
@@ -261,7 +262,7 @@ class CarrierService
             $store = StoreLocation::findOrFail($data['store_location_id']);
 
             // Verificar disponibilidad
-            if (!$store->hasAvailability($data['expected_delivery_date'])) {
+            if (! $store->hasAvailability($data['expected_delivery_date'])) {
                 throw new \Exception('La tienda no tiene disponibilidad para esa fecha');
             }
 
@@ -272,13 +273,13 @@ class CarrierService
                 'expected_delivery_date' => $data['expected_delivery_date'],
                 'confirmation_code' => $this->generateConfirmationCode(),
                 'status' => 'scheduled',
-                'notes' => $data['notes'] ?? null
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // Actualizar return request
             $returnRequest->update([
                 'logistics_mode' => 'store_delivery',
-                'carrier_id' => null
+                'carrier_id' => null,
             ]);
 
             DB::commit();
@@ -293,7 +294,7 @@ class CarrierService
 
             Log::error('Error scheduling store delivery', [
                 'return_id' => $returnRequest->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -319,7 +320,7 @@ class CarrierService
                     'is_open' => $store->isOpen(),
                     'today_hours' => $store->getTodayHours(),
                     'phone' => $store->phone,
-                    'maps_url' => $store->getGoogleMapsUrl()
+                    'maps_url' => $store->getGoogleMapsUrl(),
                 ];
             });
     }
@@ -338,7 +339,7 @@ class CarrierService
             } catch (\Exception $e) {
                 Log::warning('Could not get time slots from carrier service', [
                     'carrier' => $carrier->code,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -355,6 +356,7 @@ class CarrierService
         return $returnRequest->products->sum(function ($product) {
             $orderProduct = $product->orderProduct;
             $weight = $orderProduct->weight ?? 0.5; // Peso por defecto si no está definido
+
             return $weight * $product->quantity;
         });
     }
@@ -364,7 +366,7 @@ class CarrierService
      */
     protected function generateConfirmationCode(): string
     {
-        return strtoupper(\Str::random(3) . '-' . \Str::random(3));
+        return strtoupper(\Str::random(3).'-'.\Str::random(3));
     }
 
     /**
@@ -376,7 +378,7 @@ class CarrierService
         Log::info('Store delivery confirmation sent', [
             'return_id' => $storeDelivery->return_request_id,
             'store_id' => $storeDelivery->store_location_id,
-            'confirmation_code' => $storeDelivery->confirmation_code
+            'confirmation_code' => $storeDelivery->confirmation_code,
         ]);
     }
 
@@ -388,7 +390,7 @@ class CarrierService
         $pickupRequests = CarrierPickupRequest::whereIn('status', [
             CarrierPickupRequest::STATUS_CONFIRMED,
             CarrierPickupRequest::STATUS_IN_TRANSIT,
-            CarrierPickupRequest::STATUS_COLLECTED
+            CarrierPickupRequest::STATUS_COLLECTED,
         ])
             ->whereNotNull('tracking_number')
             ->get();
@@ -411,10 +413,9 @@ class CarrierService
             } catch (\Exception $e) {
                 Log::error('Error updating tracking status', [
                     'pickup_id' => $request->id,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
     }
 }
-

@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 
 class Category extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_category';
+
     protected $primaryKey = 'id_category';
+
     public $timestamps = false;
 
     protected $fillable = [

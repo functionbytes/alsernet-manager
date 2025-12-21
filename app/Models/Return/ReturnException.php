@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\Return;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,37 +22,51 @@ class ReturnException extends Model
         'resolution_notes',
         'requires_escalation',
         'escalated_to',
-        'escalated_at'
+        'escalated_at',
     ];
 
     protected $casts = [
         'compensation_amount' => 'decimal:2',
         'resolved_at' => 'datetime',
         'escalated_at' => 'datetime',
-        'requires_escalation' => 'boolean'
+        'requires_escalation' => 'boolean',
     ];
 
     // Tipos de excepción
     const TYPE_LOST_IN_TRANSIT = 'lost_in_transit';
+
     const TYPE_DAMAGED_BY_CARRIER = 'damaged_by_carrier';
+
     const TYPE_WRONG_PRODUCT = 'wrong_product';
+
     const TYPE_MISSING_PARTS = 'missing_parts';
+
     const TYPE_COUNTERFEIT = 'counterfeit';
+
     const TYPE_USED_AS_NEW = 'used_as_new';
+
     const TYPE_QUANTITY_MISMATCH = 'quantity_mismatch';
 
     // Niveles de severidad
     const SEVERITY_LOW = 'low';
+
     const SEVERITY_MEDIUM = 'medium';
+
     const SEVERITY_HIGH = 'high';
+
     const SEVERITY_CRITICAL = 'critical';
 
     // Tipos de resolución
     const RESOLUTION_PENDING = 'pending';
+
     const RESOLUTION_COMPENSATION = 'compensation';
+
     const RESOLUTION_REPLACEMENT = 'replacement';
+
     const RESOLUTION_INVESTIGATION = 'investigation';
+
     const RESOLUTION_ESCALATED = 'escalated';
+
     const RESOLUTION_CLOSED = 'closed';
 
     // Relaciones
@@ -113,7 +126,7 @@ class ReturnException extends Model
         // 3. Tipos específicos
         $escalateTypes = [
             self::TYPE_COUNTERFEIT,
-            self::TYPE_LOST_IN_TRANSIT
+            self::TYPE_LOST_IN_TRANSIT,
         ];
 
         if (in_array($this->exception_type, $escalateTypes)) {
@@ -132,7 +145,7 @@ class ReturnException extends Model
             'requires_escalation' => true,
             'escalated_to' => $userId,
             'escalated_at' => now(),
-            'resolution' => self::RESOLUTION_ESCALATED
+            'resolution' => self::RESOLUTION_ESCALATED,
         ]);
     }
 
@@ -145,7 +158,7 @@ class ReturnException extends Model
             'resolution' => $resolution,
             'resolved_by' => $userId,
             'resolved_at' => now(),
-            'resolution_notes' => $notes
+            'resolution_notes' => $notes,
         ];
 
         if ($compensationAmount !== null) {
@@ -167,7 +180,7 @@ class ReturnException extends Model
             self::TYPE_MISSING_PARTS => 'Partes faltantes',
             self::TYPE_COUNTERFEIT => 'Producto falsificado',
             self::TYPE_USED_AS_NEW => 'Usado vendido como nuevo',
-            self::TYPE_QUANTITY_MISMATCH => 'Cantidad incorrecta'
+            self::TYPE_QUANTITY_MISMATCH => 'Cantidad incorrecta',
         ];
 
         return $labels[$this->exception_type] ?? 'Otro';
@@ -182,11 +195,9 @@ class ReturnException extends Model
             self::SEVERITY_LOW => 'info',
             self::SEVERITY_MEDIUM => 'warning',
             self::SEVERITY_HIGH => 'danger',
-            self::SEVERITY_CRITICAL => 'dark'
+            self::SEVERITY_CRITICAL => 'dark',
         ];
 
         return $colors[$this->severity] ?? 'secondary';
     }
 }
-
-

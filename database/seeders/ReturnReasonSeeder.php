@@ -17,8 +17,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Producto defectuoso',
-                    'en' => 'Defective product'
-                ]
+                    'en' => 'Defective product',
+                ],
             ],
             [
                 'id' => 2,
@@ -26,8 +26,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'No es lo que esperaba',
-                    'en' => 'Not what I expected'
-                ]
+                    'en' => 'Not what I expected',
+                ],
             ],
             [
                 'id' => 3,
@@ -35,8 +35,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Producto dañado en el envío',
-                    'en' => 'Product damaged in shipping'
-                ]
+                    'en' => 'Product damaged in shipping',
+                ],
             ],
             [
                 'id' => 4,
@@ -44,8 +44,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Talla incorrecta',
-                    'en' => 'Wrong size'
-                ]
+                    'en' => 'Wrong size',
+                ],
             ],
             [
                 'id' => 5,
@@ -53,8 +53,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Color incorrecto',
-                    'en' => 'Wrong color'
-                ]
+                    'en' => 'Wrong color',
+                ],
             ],
             [
                 'id' => 6,
@@ -62,8 +62,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Cambié de opinión',
-                    'en' => 'Changed my mind'
-                ]
+                    'en' => 'Changed my mind',
+                ],
             ],
 
             // Motivos para Reemplazo
@@ -73,8 +73,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Producto defectuoso - Quiero reemplazo',
-                    'en' => 'Defective product - Want replacement'
-                ]
+                    'en' => 'Defective product - Want replacement',
+                ],
             ],
             [
                 'id' => 8,
@@ -82,8 +82,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Talla incorrecta - Cambiar talla',
-                    'en' => 'Wrong size - Change size'
-                ]
+                    'en' => 'Wrong size - Change size',
+                ],
             ],
             [
                 'id' => 9,
@@ -91,8 +91,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Color incorrecto - Cambiar color',
-                    'en' => 'Wrong color - Change color'
-                ]
+                    'en' => 'Wrong color - Change color',
+                ],
             ],
             [
                 'id' => 10,
@@ -100,8 +100,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Producto incompleto',
-                    'en' => 'Incomplete product'
-                ]
+                    'en' => 'Incomplete product',
+                ],
             ],
 
             // Motivos para Reparación
@@ -111,8 +111,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Fallo de funcionamiento',
-                    'en' => 'Malfunction'
-                ]
+                    'en' => 'Malfunction',
+                ],
             ],
             [
                 'id' => 12,
@@ -120,8 +120,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Problema de software',
-                    'en' => 'Software issue'
-                ]
+                    'en' => 'Software issue',
+                ],
             ],
             [
                 'id' => 13,
@@ -129,8 +129,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Daño físico menor',
-                    'en' => 'Minor physical damage'
-                ]
+                    'en' => 'Minor physical damage',
+                ],
             ],
             [
                 'id' => 14,
@@ -138,8 +138,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Garantía - Reparación',
-                    'en' => 'Warranty - Repair'
-                ]
+                    'en' => 'Warranty - Repair',
+                ],
             ],
 
             // Motivos generales (para todos los tipos)
@@ -149,8 +149,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Producto no coincide con la descripción',
-                    'en' => 'Product does not match description'
-                ]
+                    'en' => 'Product does not match description',
+                ],
             ],
             [
                 'id' => 16,
@@ -158,8 +158,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Llegó muy tarde',
-                    'en' => 'Arrived too late'
-                ]
+                    'en' => 'Arrived too late',
+                ],
             ],
             [
                 'id' => 17,
@@ -167,8 +167,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Pedido duplicado por error',
-                    'en' => 'Duplicate order by mistake'
-                ]
+                    'en' => 'Duplicate order by mistake',
+                ],
             ],
             [
                 'id' => 18,
@@ -176,8 +176,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Encontré mejor precio en otro lugar',
-                    'en' => 'Found better price elsewhere'
-                ]
+                    'en' => 'Found better price elsewhere',
+                ],
             ],
             [
                 'id' => 19,
@@ -185,8 +185,8 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Ya no lo necesito',
-                    'en' => 'No longer needed'
-                ]
+                    'en' => 'No longer needed',
+                ],
             ],
             [
                 'id' => 20,
@@ -194,9 +194,9 @@ class ReturnReasonSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Otro motivo',
-                    'en' => 'Other reason'
-                ]
-            ]
+                    'en' => 'Other reason',
+                ],
+            ],
         ];
 
         foreach ($reasons as $reason) {

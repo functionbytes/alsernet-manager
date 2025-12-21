@@ -183,6 +183,19 @@ When user asks: *"Design a product listing page"*
 **NEVER use Tabler Icons:** Do NOT use `ti ti-*` classes - this project exclusively uses Font Awesome
 **Spacing:** Bootstrap scale `mb-2`, `p-3`, `gap-2`
 
+### Typography and Capitalization Rules
+
+**Section Titles (h6 with icons):**
+- ALWAYS capitalize only the first word, rest in lowercase
+- Format: `<h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-icon me-2"></i>Primera palabra en mayúscula</h6>`
+- ✅ Correct: `<i class="fa fa-info-circle me-2"></i>Información básica`
+- ✅ Correct: `<i class="fa fa-tags me-2"></i>Tipos de venta`
+- ❌ Wrong: `<i class="fa fa-info-circle me-2"></i>Información Básica`
+- ❌ Wrong: `<i class="fa fa-tags me-2"></i>Tipos De Venta`
+
+**Exception:** Proper nouns and acronyms maintain their original capitalization
+- Example: `<i class="fa fa-database me-2"></i>Configuración de PostgreSQL`
+
 ### Demo URLs Always Available
 
 - Main: https://bootstrapdemos.adminmart.com/modernize/dist/main/index.html

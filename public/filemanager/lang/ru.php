@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Выбрать',
     'Deselect_All' => 'Deselect All',
@@ -41,10 +41,10 @@ return array(
     'Text_filter' => 'фильтр',
     'Swipe_help' => 'Наведите на имя файла/папки, чтобы увидеть опции',
     'Upload_base' => 'Основная загрузка',
-    'Upload_base_help' => "Перетащите файлы (современные браузеры) или нажмите на верхнюю кнопку, чтобы добавить файл(ы), и нажмите «Начать загрузку». Когда загрузка будет завершена, нажмите кнопку «Возврат к списку файлов».",
+    'Upload_base_help' => 'Перетащите файлы (современные браузеры) или нажмите на верхнюю кнопку, чтобы добавить файл(ы), и нажмите «Начать загрузку». Когда загрузка будет завершена, нажмите кнопку «Возврат к списку файлов».',
     'Upload_add_files' => 'Добавить файл(ы)',
     'Upload_start' => 'Начать загрузку',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'Загруженный файл превышает параметр upload_max_filesize в php.ini',
         2 => 'Загруженный файл превышает параметр MAX_FILE_SIZE, указанный в HTML-форме',
         3 => 'Файл был загружен только частично',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Изображение превышает максимальную высоту',
         'min_height' => 'Изображение требует минимальной высоты',
         'abort' => 'Загрузка файла прервана',
-        'image_resize' => 'Не удалось изменить размер изображения'
-    ),
+        'image_resize' => 'Не удалось изменить размер изображения',
+    ],
     'Upload_url' => 'По адресу',
     'Type_dir' => 'папка',
     'Type' => 'Тип',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Выбрано слишком много файлов/папок для %s. Ограничение: %d файлов за одну операцию', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Вы не можете %s файлы.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Невозможно сохранить изображение.',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Извлечь невозможно. Возможно файл повреждён.',
     'Zip_Invalid' => 'Это расширение не поддерживается.  Разрешённые: zip, gz, tar.',
     'Dir_No_Write' => 'Выбранный каталог недоступен для записи.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Разрешения на файл',
     'File_Permission_Not_Allowed' => 'Изменение разрешений %s не допускается.', // %s = files or folders
     'File_Permission_Recursive' => 'Применить рекурсивно?',
-    'File_Permission_Wrong_Mode' => "Выбранные режим разрешений некорректен.",
+    'File_Permission_Wrong_Mode' => 'Выбранные режим разрешений некорректен.',
     'User' => 'Пользователь',
     'Group' => 'Группа',
     'Yes' => 'Да',
@@ -115,32 +115,32 @@ return array(
     'File_Not_Found' => 'Невозможно найти файл',
     'File_Open_Edit_Not_Allowed' => 'Вы не можете %s этот файл.', // %s = open or edit
     'Edit' => 'Редактировать',
-    'Edit_File' => "Редактировать содержимое файла",
-    'File_Save_OK' => "Файл успешно сохранён",
-    'File_Save_Error' => "Произошла ошибка при сохранении файла",
+    'Edit_File' => 'Редактировать содержимое файла',
+    'File_Save_OK' => 'Файл успешно сохранён',
+    'File_Save_Error' => 'Произошла ошибка при сохранении файла',
     'New_File' => 'Новый файл',
     'No_Extension' => 'Необходимо добавить расширение файла',
     'Valid_Extensions' => 'Разрешённые расширения файла: %s', // %s = txt,log etc.
-    'Upload_message' => "Перетащите файл сюда, чтобы загрузить",
-    'SERVER ERROR' => "СЕРВЕРНАЯ ОШИБКА",
-    'forbidden' => "Запрещено",
-    'wrong path' => "Неверный путь",
-    'wrong name' => "Неверное имя",
-    'wrong extension' => "Неверное расширение",
-    'wrong option' => "Неверная опция",
-    'wrong data' => "Неверные данные",
-    'wrong action' => "Неверное действие",
-    'wrong sub-action' => "Неверное доп.действие",
-    'no action passed' => "Действие не сработало",
-    'no path' => "Путь не существует",
-    'no file' => "Файл не существует",
-    'view type number missing' => "Данный тип отсутствует",
-    'Not enough Memory' => "Недостаточно памяти",
-    'max_size_reached' => "Папка достигла максимального размера в %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Общий размер",
-);
+    'Upload_message' => 'Перетащите файл сюда, чтобы загрузить',
+    'SERVER ERROR' => 'СЕРВЕРНАЯ ОШИБКА',
+    'forbidden' => 'Запрещено',
+    'wrong path' => 'Неверный путь',
+    'wrong name' => 'Неверное имя',
+    'wrong extension' => 'Неверное расширение',
+    'wrong option' => 'Неверная опция',
+    'wrong data' => 'Неверные данные',
+    'wrong action' => 'Неверное действие',
+    'wrong sub-action' => 'Неверное доп.действие',
+    'no action passed' => 'Действие не сработало',
+    'no path' => 'Путь не существует',
+    'no file' => 'Файл не существует',
+    'view type number missing' => 'Данный тип отсутствует',
+    'Not enough Memory' => 'Недостаточно памяти',
+    'max_size_reached' => 'Папка достигла максимального размера в %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Общий размер',
+];

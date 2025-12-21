@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Campaign\Campaign $campaign
  * @property-read \App\Models\Campaign\CampaignMaillist|null $mailList
  * @property-read \App\Models\Campaign\CampaignSegment|null $segment
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment query()
@@ -23,12 +24,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment whereMaillistId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment whereSegmentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignListsSegment extends Model
 {
-
-    protected $table = "campaigns_lists_segments";
+    protected $table = 'campaigns_lists_segments';
 
     public function campaign()
     {
@@ -44,5 +45,4 @@ class CampaignListsSegment extends Model
     {
         return $this->belongsTo('App\Models\Campaign\CampaignSegment');
     }
-
 }

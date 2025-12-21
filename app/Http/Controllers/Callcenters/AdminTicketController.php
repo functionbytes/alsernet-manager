@@ -18,14 +18,12 @@ use App\Models\Projects;
 use App\Models\Seosetting;
 use App\Models\Ticket\Category;
 use App\Models\Ticket\Ticket;
-use App\Models\Ticket\TicketComment;
 use App\Models\TicketCustomfield;
 use App\Models\tickethistory;
 use App\Models\Ticketnote;
 use App\Models\User;
 use App\Notifications\TicketCreateNotifications;
 use Auth;
-use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -97,7 +95,7 @@ class AdminTicketController extends Controller
 
         $finalassigne = [];
         $assignee = $ticket->ticketassignmutliples;
-        foreach($assignee as $assignees){
+        foreach ($assignee as $assignees) {
             array_push($finalassigne, $assignees->toassignuser_id);
         }
 
@@ -105,7 +103,7 @@ class AdminTicketController extends Controller
             $data['allowreply'] = true;
         } else {
             $aa = $ticket->category->groupscategoryc()->get();
-            if($aa->isNotEmpty()){
+            if ($aa->isNotEmpty()) {
                 $categoryArr = Category::with('groupscategoryc')->get();
                 foreach ($categoryArr as $individualCategory) {
                     if ($individualCategory->id == $ticket->category->id) {
@@ -124,10 +122,10 @@ class AdminTicketController extends Controller
                         }
                     }
                 }
-            }else{
+            } else {
                 $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                foreach($admins as $admin) {
-                    if($admin->id == Auth::user()->id){
+                foreach ($admins as $admin) {
+                    if ($admin->id == Auth::user()->id) {
                         $data['allowreply'] = true;
                     }
                 }
@@ -136,13 +134,13 @@ class AdminTicketController extends Controller
 
         if (request()->ajax()) {
 
-            $view = view('admin.viewticket.showticketdata',compact('ticket', 'category','comments'))->render();
-            return response()->json(['html'=>$view]);
+            $view = view('admin.viewticket.showticketdata', compact('ticket', 'category', 'comments'))->render();
+
+            return response()->json(['html' => $view]);
         }
 
-        return view('admin.viewticket.showticket', compact('ticket','category', 'comments', 'title','footertext'))->with($data);
+        return view('admin.viewticket.showticket', compact('ticket', 'category', 'comments', 'title', 'footertext'))->with($data);
     }
-
 
     public function purchasedetailsverify(Request $request)
     {
@@ -150,7 +148,7 @@ class AdminTicketController extends Controller
         $ticket->usernameverify = 'verified';
         $ticket->update();
 
-        return response()->json(['success'=>lang('The cutomer was verified successfully.', 'alerts')]);
+        return response()->json(['success' => lang('The cutomer was verified successfully.', 'alerts')]);
     }
 
     public function wrongcustomer(Request $request)
@@ -159,62 +157,61 @@ class AdminTicketController extends Controller
         $ticket->usernameverify = 'wrongcustomer';
         $ticket->update();
 
-        return response()->json(['success'=>lang('The cutomer mentioned details are wrong.', 'alerts')]);
+        return response()->json(['success' => lang('The cutomer mentioned details are wrong.', 'alerts')]);
     }
 
+    public function commentshow($ticket_id)
+    {
 
-    public function commentshow($ticket_id){
-
-        if(request()->ajax()){
+        if (request()->ajax()) {
             $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
-            if(request()->id > 0){
+            if (request()->id > 0) {
                 $comments = $ticket->comments()->where('id', '<', request()->id)
-                ->orderBy('id', 'DESC')
-                ->limit(6)
-                ->latest()
-                ->get();
-            }else{
+                    ->orderBy('id', 'DESC')
+                    ->limit(6)
+                    ->latest()
+                    ->get();
+            } else {
                 $comments = $ticket->comments()
-                ->orderBy('id', 'DESC')
-                ->limit(6)
-                ->latest()
-                ->get();
+                    ->orderBy('id', 'DESC')
+                    ->limit(6)
+                    ->latest()
+                    ->get();
             }
 
             $output = '';
             $last_id = '';
             $i = 0;
             $len = count($comments);
-            if(!$comments->isEmpty())
-            {
-            foreach($comments as $comment){
-                if($comment->user_id != null){
+            if (! $comments->isEmpty()) {
+                foreach ($comments as $comment) {
+                    if ($comment->user_id != null) {
 
-                    if($i == 0){
-                        $output .= '
+                        if ($i == 0) {
+                            $output .= '
                         <div class="card-body">
                             <div class="d-sm-flex">
                                 <div class="d-flex me-3">
                                     <a href="#">';
-                                        if($comment->user != null){
-                                            if ($comment->user->image == null){
-                                                $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
-                                            }else{
-                                                $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->user->image.'" src="'.asset('uploads/profile/'. $ticket->user->image).'">';
-                                            }
-                                        }else{
-                                            $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
-                                        }
-                                        $output .=
+                            if ($comment->user != null) {
+                                if ($comment->user->image == null) {
+                                    $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
+                                } else {
+                                    $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->user->image.'" src="'.asset('uploads/profile/'.$ticket->user->image).'">';
+                                }
+                            } else {
+                                $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
+                            }
+                            $output .=
                                     '</a>
                                 </div>
                                 <div class="media-body">';
-                                    if($comment->user != null){
-                                        $output .= '<h5 class="mt-1 mb-1 font-weight-semibold">'.$comment->user->name.'<span class="badge badge-primary-light badge-md ms-2">'.$comment->user->getRoleNames()[0].'</span></h5>';
-                                    }else{
-                                        $output .= '<h5 class="mt-1 mb-1 font-weight-semibold text-muted">~</h5>';
-                                    }
-                                    $output .= '<small class="text-muted"><i class="feather feather-clock"></i> '.$comment->created_at->diffForHumans().'</small>
+                            if ($comment->user != null) {
+                                $output .= '<h5 class="mt-1 mb-1 font-weight-semibold">'.$comment->user->name.'<span class="badge badge-primary-light badge-md ms-2">'.$comment->user->getRoleNames()[0].'</span></h5>';
+                            } else {
+                                $output .= '<h5 class="mt-1 mb-1 font-weight-semibold text-muted">~</h5>';
+                            }
+                            $output .= '<small class="text-muted"><i class="feather feather-clock"></i> '.$comment->created_at->diffForHumans().'</small>
                                     <span class="fs-13 mb-0 mt-1" value="">
                                         '.$comment->comment.'
                                     </span>
@@ -228,10 +225,10 @@ class AdminTicketController extends Controller
                                         </form>
                                     </div>
                                     ';
-                                    if(Auth::id() == $comment->user_id){
-                                        $output .= '<div class="row galleryopen">';
-                                            foreach ($comment->getMedia('comments') as $commentss){
-                                                $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
+                            if (Auth::id() == $comment->user_id) {
+                                $output .= '<div class="row galleryopen">';
+                                foreach ($comment->getMedia('comments') as $commentss) {
+                                    $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
                                                     <div class="product-image  ">
                                                         <a href="'.$commentss->getFullUrl().'" class="imageopen">
                                                             <img src="'.$commentss->getFullUrl().'" class="br-5" alt="'.$commentss->file_name.'">
@@ -241,98 +238,98 @@ class AdminTicketController extends Controller
                                                         </ul>
                                                     </div>
                                                     <span class="file-name-1">
-                                                        '.Str::limit($commentss->file_name, 10, $end='.......').'
+                                                        '.Str::limit($commentss->file_name, 10, $end = '.......').'
                                                     </span>
                                                 </div>
                                                 ';
-                                            }
-                                        $output .= '</div>';
-                                    }else{
-                                        $output .= '<div class="row galleryopen">';
-                                            foreach ($comment->getMedia('comments') as $commentss){
-                                                $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
+                                }
+                                $output .= '</div>';
+                            } else {
+                                $output .= '<div class="row galleryopen">';
+                                foreach ($comment->getMedia('comments') as $commentss) {
+                                    $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
                                                     <div class="product-image">
                                                         <a href="'.$commentss->getFullUrl().'" class="imageopen">
                                                             <img src="'.$commentss->getFullUrl().'" class="br-5" alt="'.$commentss->file_name.'">
                                                         </a>
                                                     </div>
                                                     <span class="file-name-1">
-                                                        '.Str::limit($commentss->file_name, 10, $end='.......').'
+                                                        '.Str::limit($commentss->file_name, 10, $end = '.......').'
                                                     </span>
                                                 </div>
                                                 ';
-                                            }
-                                        $output .= '</div>';
-                                    }
+                                }
                                 $output .= '</div>';
+                            }
+                            $output .= '</div>';
 
-                                    if (Auth::id() == $comment->user_id){
-                                        if($comment->display != null)
-                                        $output .= '<div class="ms-auto">
+                            if (Auth::id() == $comment->user_id) {
+                                if ($comment->display != null) {
+                                    $output .= '<div class="ms-auto">
                                         <span class="action-btns supportnote-icon" onclick="showEditForm('.$comment->id.')"><i class="feather feather-edit text-primary fs-16"></i></span>
                                     </div>';
-                                    }
-
+                                }
+                            }
 
                             $output .= '</div>
                         </div>';
-                    }else{
+                        } else {
 
-                        $output .= '<div class="card-body">
+                            $output .= '<div class="card-body">
                             <div class="d-sm-flex">
                                 <div class="d-flex me-3">
                                     <a href="#">';
-                                        if($comment->user != null){
-                                            if ($comment->user->image == null){
-                                                $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
-                                            }else{
-                                                $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->user->image.'" src="'.asset('uploads/profile/'. $ticket->user->image).'">';
-                                            }
-                                        }else{
-                                            $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
-                                        }
-                                    $output .= '</a>
+                            if ($comment->user != null) {
+                                if ($comment->user->image == null) {
+                                    $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
+                                } else {
+                                    $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->user->image.'" src="'.asset('uploads/profile/'.$ticket->user->image).'">';
+                                }
+                            } else {
+                                $output .= '<img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
+                            }
+                            $output .= '</a>
                                 </div>
                                 <div class="media-body">';
-                                    if($comment->user != null){
-                                        $output .= '<h5 class="mt-1 mb-1 font-weight-semibold">'.$comment->user->name.'<span class="badge badge-primary-light badge-md ms-2">'.$comment->user->getRoleNames()[0].'</span></h5>';
-                                    }else{
-                                        $output .= '<h5 class="mt-1 mb-1 font-weight-semibold text-muted">~</h5>';
-                                    }
-                                    $output .= '<small class="text-muted"><i class="feather feather-clock"></i>'.$comment->created_at->diffForHumans().'</small>
+                            if ($comment->user != null) {
+                                $output .= '<h5 class="mt-1 mb-1 font-weight-semibold">'.$comment->user->name.'<span class="badge badge-primary-light badge-md ms-2">'.$comment->user->getRoleNames()[0].'</span></h5>';
+                            } else {
+                                $output .= '<h5 class="mt-1 mb-1 font-weight-semibold text-muted">~</h5>';
+                            }
+                            $output .= '<small class="text-muted"><i class="feather feather-clock"></i>'.$comment->created_at->diffForHumans().'</small>
                                     <span class="fs-13 mb-0 mt-1" value="">
                                         '.$comment->comment.'
                                     </span>
                                     <div class="row galleryopen">';
-                                        foreach ($comment->getMedia('comments') as $commentss){
-                                            $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove{{$commentss->id}}">
+                            foreach ($comment->getMedia('comments') as $commentss) {
+                                $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove{{$commentss->id}}">
                                                 <div class="product-image  ">
                                                     <a href="'.$commentss->getFullUrl().'" class="imageopen">
                                                         <img src="'.$commentss->getFullUrl().'" class="br-5" alt="'.$commentss->file_name.'">
                                                     </a>
                                                 </div>
                                                 <span class="file-name-1">
-                                                    '.Str::limit($commentss->file_name, 10, $end='.......').'
+                                                    '.Str::limit($commentss->file_name, 10, $end = '.......').'
                                                 </span>
                                             </div>';
-                                        }
-                                    $output .= '</div>
+                            }
+                            $output .= '</div>
                                 </div>
                             </div>
                         </div>';
 
-                    }
-                }else{
-                    $output .= '<div class="card-body">
+                        }
+                    } else {
+                        $output .= '<div class="card-body">
                         <div class="d-sm-flex">
                             <div class="d-flex me-3">
                                 <a href="#">';
-                                    if ($comment->cust->image == null){
-                                        $output .= ' <img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
-                                    }else{
-                                        $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->cust->image.'" src="'.asset('uploads/profile/'. $ticket->cust->image).'">';
-                                    }
-                                $output .= ' </a>
+                        if ($comment->cust->image == null) {
+                            $output .= ' <img src="'.asset('uploads/profile/user-profile.png').'"  class="media-object brround avatar-lg" alt="default">';
+                        } else {
+                            $output .= '<img class="media-object brround avatar-lg" alt="'.$comment->cust->image.'" src="'.asset('uploads/profile/'.$ticket->cust->image).'">';
+                        }
+                        $output .= ' </a>
                             </div>
                             <div class="media-body">
                                 <h5 class="mt-1 mb-1 font-weight-semibold">'.$comment->cust->username.'<span class="badge badge-primary-light badge-md ms-2">'.$comment->cust->userType.'</span></h5>
@@ -341,46 +338,43 @@ class AdminTicketController extends Controller
                                     '.$comment->comment.'
                                 </span>
                                 <div class="row galleryopen">';
-                                    foreach ($comment->getMedia('comments') as $commentss){
-                                        $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
+                        foreach ($comment->getMedia('comments') as $commentss) {
+                            $output .= '<div class="file-image-1  removespruko'.$commentss->id.'" id="imageremove'.$commentss->id.'">
                                             <div class="product-image">
                                                 <a href="'.$commentss->getFullUrl().'" class="imageopen">
                                                     <img src="'.$commentss->getFullUrl().'" class="br-5" alt="'.$commentss->file_name.'">
                                                 </a>
                                             </div>
                                             <span class="file-name-1">
-                                                '.Str::limit($commentss->file_name, 10, $end='.......').'
+                                                '.Str::limit($commentss->file_name, 10, $end = '.......').'
                                             </span>
                                         </div>';
-                                    }
-                                $output .= '</div>
+                        }
+                        $output .= '</div>
                             </div>
                         </div>
                     </div>';
+                    }
+                    $last_id = $comment->id;
+                    $i++;
                 }
-                $last_id = $comment->id;
-                $i++;
-            }
 
-            $output .= '
+                $output .= '
        <div id="load_more">
         <button type="button" name="load_more_button" class="btn btn-success" data-id="'.$last_id.'" id="load_more_button">Load More</button>
        </div>
        ';
-            }
-            else
-                {
+            } else {
                 $output .= '
                 <div id="load_more">
                     <button type="button" name="load_more_button" class="btn btn-info ">No Data Found</button>
                 </div>
                 ';
-                }
+            }
 
             return response()->json(['html' => $output, 'coment' => $comments]);
         }
     }
-
 
     /**
      * Close the specified ticket.
@@ -388,8 +382,7 @@ class AdminTicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
-    public function close(Request $request,$ticket_id, AppMailer $mailer)
+    public function close(Request $request, $ticket_id, AppMailer $mailer)
     {
         $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
 
@@ -401,7 +394,7 @@ class AdminTicketController extends Controller
 
         $mailer->sendTicketStatusNotification($ticketOwner, $ticket);
 
-        return redirect()->back()->with("warning", lang('The ticket has been closed.', 'alerts'));
+        return redirect()->back()->with('warning', lang('The ticket has been closed.', 'alerts'));
     }
 
     /**
@@ -419,19 +412,18 @@ class AdminTicketController extends Controller
 
         $comment = $ticket->comments()->get();
 
-
         if (count($comment) > 0) {
             $media = $ticket->getMedia('ticket');
 
             foreach ($media as $media) {
 
-                    $media->delete();
+                $media->delete();
 
             }
             $medias = $ticket->comments()->get();
 
             foreach ($medias as $mediass) {
-                foreach($mediass->getMedia('comments') as $mediasss){
+                foreach ($mediass->getMedia('comments') as $mediasss) {
 
                     $mediasss->delete();
                 }
@@ -439,33 +431,33 @@ class AdminTicketController extends Controller
             }
             $comment->each->delete();
 
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
+            if ($ticket->ticketnote->isEmpty()) {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
                 }
 
-            }else{
-                if($ticket->overduestatus != null){
+            } else {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -490,44 +482,44 @@ class AdminTicketController extends Controller
             // $ticket->ticketassignmutliples()->delete();
             $ticket->delete();
 
-            return response()->json(['success'=>lang('The ticket was successfully deleted.', 'alerts')]);
-        }else{
+            return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
+        } else {
 
             $media = $ticket->getMedia('ticket');
 
             foreach ($media as $media) {
 
-                    $media->delete();
+                $media->delete();
 
             }
 
-            $tickethistory = new tickethistory();
+            $tickethistory = new tickethistory;
             $tickethistory->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
+            if ($ticket->ticketnote->isEmpty()) {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
                 }
 
-            }else{
-                if($ticket->overduestatus != null){
+            } else {
+                if ($ticket->overduestatus != null) {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
+                } else {
                     $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -549,44 +541,41 @@ class AdminTicketController extends Controller
             $tickethistory->ticketactions = $output;
             $tickethistory->save();
 
-            foreach($ticket->ticket_history as $deletetickethistory)
-            {
+            foreach ($ticket->ticket_history as $deletetickethistory) {
                 $deletetickethistory->delete();
             }
 
             // $ticket->ticketassignmutliples()->delete();
             $ticket->delete();
 
-            return response()->json(['success'=>lang('The ticket was successfully deleted.', 'alerts')]);
+            return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
 
         }
     }
 
-
-    public function ticketmassdestroy(Request $request){
+    public function ticketmassdestroy(Request $request)
+    {
 
         $student_id_array = $request->input('id');
 
         $tickets = Ticket::whereIn('id', $student_id_array)->get();
 
-
-        foreach($tickets as $ticket){
+        foreach ($tickets as $ticket) {
 
             $comment = $ticket->comments()->get();
-
 
             if (count($comment) > 0) {
                 $media = $ticket->getMedia('ticket');
 
                 foreach ($media as $media) {
 
-                        $media->delete();
+                    $media->delete();
 
                 }
                 $medias = $ticket->comments()->get();
 
                 foreach ($medias as $mediass) {
-                    foreach($mediass->getMedia('comments') as $mediasss){
+                    foreach ($mediass->getMedia('comments') as $mediasss) {
 
                         $mediasss->delete();
                     }
@@ -594,41 +583,41 @@ class AdminTicketController extends Controller
                 }
                 $comment->each->delete();
 
-                $tickethistory = new tickethistory();
-            $tickethistory->ticket_id = $ticket->id;
+                $tickethistory = new tickethistory;
+                $tickethistory->ticket_id = $ticket->id;
 
-            $output = '<div class="d-flex align-items-center">
+                $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
-                    $output .= '
+                if ($ticket->ticketnote->isEmpty()) {
+                    if ($ticket->overduestatus != null) {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
-                    $output .= '
+                    } else {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
-                }
+                    }
 
-            }else{
-                if($ticket->overduestatus != null){
-                    $output .= '
+                } else {
+                    if ($ticket->overduestatus != null) {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
-                    $output .= '
+                    } else {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
+                    }
                 }
-            }
 
-            $output .= '
+                $output .= '
                 <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::user()->name.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
             </div>
             <div class="ms-auto">
@@ -639,60 +628,60 @@ class AdminTicketController extends Controller
 
             </div>
             ';
-            $tickethistory->ticketactions = $output;
-            $tickethistory->save();
-            foreach($ticket->ticket_history as $deletetickethistory)
-            {
-                $deletetickethistory->delete();
-            }
+                $tickethistory->ticketactions = $output;
+                $tickethistory->save();
+                foreach ($ticket->ticket_history as $deletetickethistory) {
+                    $deletetickethistory->delete();
+                }
 
                 $tickets->each->delete();
-                return response()->json(['success'=> lang('The ticket was successfully deleted.', 'alerts')]);
-            }else{
+
+                return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
+            } else {
 
                 $media = $ticket->getMedia('ticket');
 
                 foreach ($media as $media) {
 
-                        $media->delete();
+                    $media->delete();
 
                 }
 
-                $tickethistory = new tickethistory();
-            $tickethistory->ticket_id = $ticket->id;
+                $tickethistory = new tickethistory;
+                $tickethistory->ticket_id = $ticket->id;
 
-            $output = '<div class="d-flex align-items-center">
+                $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
-                    $output .= '
+                if ($ticket->ticketnote->isEmpty()) {
+                    if ($ticket->overduestatus != null) {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
-                    $output .= '
+                    } else {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
-                }
+                    }
 
-            }else{
-                if($ticket->overduestatus != null){
-                    $output .= '
+                } else {
+                    if ($ticket->overduestatus != null) {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
-                }else{
-                    $output .= '
+                    } else {
+                        $output .= '
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
+                    }
                 }
-            }
 
-            $output .= '
+                $output .= '
                 <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::user()->name.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
             </div>
             <div class="ms-auto">
@@ -703,17 +692,17 @@ class AdminTicketController extends Controller
 
             </div>
             ';
-            $tickethistory->ticketactions = $output;
-            $tickethistory->save();
+                $tickethistory->ticketactions = $output;
+                $tickethistory->save();
 
-            foreach($ticket->ticket_history as $deletetickethistory)
-                {
+                foreach ($ticket->ticket_history as $deletetickethistory) {
                     $deletetickethistory->delete();
                 }
                 $tickets->each->delete();
             }
         }
-        return response()->json(['success'=> lang('The ticket was successfully deleted.', 'alerts')]);
+
+        return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
 
     }
 
@@ -722,23 +711,23 @@ class AdminTicketController extends Controller
     {
 
         $this->authorize('Ticket Create');
-            $title = Apptitle::first();
-            $data['title'] = $title;
+        $title = Apptitle::first();
+        $data['title'] = $title;
 
-            $footertext = Footertext::first();
-            $data['footertext'] = $footertext;
+        $footertext = Footertext::first();
+        $data['footertext'] = $footertext;
 
-            $seopage = Seosetting::first();
-            $data['seopage'] = $seopage;
+        $seopage = Seosetting::first();
+        $data['seopage'] = $seopage;
 
-            $post = Pages::all();
-            $data['page'] = $post;
+        $post = Pages::all();
+        $data['page'] = $post;
 
-            $categories = Category::whereIn('display',['ticket', 'both'])->where('status', '1')->get();
-            $data['categories'] = $categories;
+        $categories = Category::whereIn('display', ['ticket', 'both'])->where('status', '1')->get();
+        $data['categories'] = $categories;
 
-            $customfields = Customfield::whereIn('displaytypes', ['both', 'createticket'])->where('status','1')->get();
-            $data['customfields'] = $customfields;
+        $customfields = Customfield::whereIn('displaytypes', ['both', 'createticket'])->where('status', '1')->get();
+        $data['customfields'] = $customfields;
 
         return view('admin.viewticket.createticket')->with($data);
     }
@@ -750,40 +739,44 @@ class AdminTicketController extends Controller
 
         $this->authorize('Ticket Create');
 
-        $categories = CategoryEnvato::where('category_id',$request->category)->first();
+        $categories = CategoryEnvato::where('category_id', $request->category)->first();
 
-        if(setting('ENVATO_ON') == 'on' && $categories != null && $request->envato_id == 'undefined'){
+        if (setting('ENVATO_ON') == 'on' && $categories != null && $request->envato_id == 'undefined') {
             return response()->json(['message' => 'envatoerror', 'message' => lang('Please enter valid details to create a ticket.', 'alerts')], 200);
         }
 
-        $email  = $request->email;
-        $completeDomain = substr(strrchr($email, "@"), 1);
-        $domain = explode(".",$completeDomain)[0];
+        $email = $request->email;
+        $completeDomain = substr(strrchr($email, '@'), 1);
+        $domain = explode('.', $completeDomain)[0];
         $emaildomainlist = setting('EMAILDOMAIN_LIST');
-        $emaildomainlistArray = explode(",", $emaildomainlist);
-        if(setting('EMAILDOMAIN_BLOCKTYPE') == 'blockemail'){
-            if(setting('EMAILDOMAIN_LIST') == null){
+        $emaildomainlistArray = explode(',', $emaildomainlist);
+        if (setting('EMAILDOMAIN_BLOCKTYPE') == 'blockemail') {
+            if (setting('EMAILDOMAIN_LIST') == null) {
                 $ticket = $this->emailpassgueststore($request);
-                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id], 200);
-            }else{
-                if(in_array($domain, $emaildomainlistArray)){
+
+                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id], 200);
+            } else {
+                if (in_array($domain, $emaildomainlistArray)) {
 
                     return response()->json(['message' => 'domainblock', 'message' => lang('Domain is Blocked List', 'alerts')], 200);
                 }
                 $ticket = $this->emailpassgueststore($request);
-                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id], 200);
+
+                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id], 200);
             }
         }
-        if(setting('EMAILDOMAIN_BLOCKTYPE') == 'allowemail'){
-            if(setting('EMAILDOMAIN_LIST') == null){
-                $ticket =  $this->emailpassgueststore($request);
-                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id], 200);
-            }else{
-                if(in_array($domain, $emaildomainlistArray))
-                {
+        if (setting('EMAILDOMAIN_BLOCKTYPE') == 'allowemail') {
+            if (setting('EMAILDOMAIN_LIST') == null) {
+                $ticket = $this->emailpassgueststore($request);
+
+                return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id], 200);
+            } else {
+                if (in_array($domain, $emaildomainlistArray)) {
                     $ticket = $this->emailpassgueststore($request);
-                    return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id], 200);
+
+                    return response()->json(['message' => 'createticket', 'success' => lang('A ticket has been opened with the ticket ID', 'alerts').$ticket->ticket_id], 200);
                 }
+
                 return response()->json(['message' => 'domainblock', 'message' => lang('Domain is Blocked List', 'alerts')], 200);
 
             }
@@ -802,19 +795,17 @@ class AdminTicketController extends Controller
             'email' => 'required|max:255',
         ]);
 
-        if($request->ccemail)
-        {
+        if ($request->ccemail) {
             $this->validate($request, [
-                'ccmail' => 'email|indisposable'
+                'ccmail' => 'email|indisposable',
             ]);
         }
 
-
         $userexits = Customer::where('email', $request->email)->count();
-        if($userexits == 1){
+        if ($userexits == 1) {
             $guest = Customer::where('email', $request->email)->first();
 
-        }else{
+        } else {
             $guest = Customer::create([
 
                 'firstname' => '',
@@ -829,7 +820,7 @@ class AdminTicketController extends Controller
                 'image' => null,
 
             ]);
-            $customersetting = new CustomerSetting();
+            $customersetting = new CustomerSetting;
             $customersetting->custs_id = $guest->id;
             $customersetting->save();
         }
@@ -845,11 +836,11 @@ class AdminTicketController extends Controller
         $ticket = Ticket::find($ticket->id);
         $ticket->ticket_id = setting('CUSTOMER_TICKETID').'G-'.$ticket->id;
         $ticket->user_id = Auth::user()->id;
-        if($request->input('envato_id')){
+        if ($request->input('envato_id')) {
 
             $ticket->purchasecode = encrypt($request->input('envato_id'));
         }
-        if($request->input('envato_support')){
+        if ($request->input('envato_support')) {
 
             $ticket->purchasecodesupport = $request->input('envato_support');
         }
@@ -862,24 +853,24 @@ class AdminTicketController extends Controller
 
         $customfields = Customfield::whereIn('displaytypes', ['both', 'createticket'])->get();
 
-        foreach($customfields as $customfield){
-            $ticketcustomfield = new TicketCustomfield();
+        foreach ($customfields as $customfield) {
+            $ticketcustomfield = new TicketCustomfield;
             $ticketcustomfield->ticket_id = $ticket->id;
             $ticketcustomfield->fieldnames = $customfield->fieldnames;
             $ticketcustomfield->fieldtypes = $customfield->fieldtypes;
-            if($customfield->fieldtypes == 'checkbox'){
-                if($request->input('custom_'.$customfield->id) != null){
+            if ($customfield->fieldtypes == 'checkbox') {
+                if ($request->input('custom_'.$customfield->id) != null) {
 
                     $string = implode(',', $request->input('custom_'.$customfield->id));
                     $ticketcustomfield->values = $string;
                 }
 
             }
-            if($customfield->fieldtypes != 'checkbox'){
-                if($customfield->fieldprivacy == '1'){
-                    $ticketcustomfield->privacymode  = $customfield->fieldprivacy;
+            if ($customfield->fieldtypes != 'checkbox') {
+                if ($customfield->fieldprivacy == '1') {
+                    $ticketcustomfield->privacymode = $customfield->fieldprivacy;
                     $ticketcustomfield->values = encrypt($request->input('custom_'.$customfield->id));
-                }else{
+                } else {
 
                     $ticketcustomfield->values = $request->input('custom_'.$customfield->id);
                 }
@@ -888,39 +879,38 @@ class AdminTicketController extends Controller
 
         }
 
-        $ccmails = new CCMAILS();
+        $ccmails = new CCMAILS;
         $ccmails->ticket_id = $ticket->id;
         $ccmails->ccemails = $request->ccmail;
         $ccmails->save();
 
-
-        $tickethistory = new tickethistory();
+        $tickethistory = new tickethistory;
         $tickethistory->ticket_id = $ticket->id;
 
         $output = '<div class="d-flex align-items-center">
             <div class="mt-0">
                 <p class="mb-0 fs-12 mb-1">Status
             ';
-        if($ticket->ticketnote->isEmpty()){
-            if($ticket->overduestatus != null){
+        if ($ticket->ticketnote->isEmpty()) {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 ';
             }
 
-        }else{
-            if($ticket->overduestatus != null){
+        } else {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -942,50 +932,48 @@ class AdminTicketController extends Controller
         $tickethistory->ticketactions = $output;
         $tickethistory->save();
 
-
         foreach ($request->input('ticket', []) as $file) {
-            $ticket->addMedia(public_path('uploads/guestticket/' . $file))->toMediaCollection('ticket');
+            $ticket->addMedia(public_path('uploads/guestticket/'.$file))->toMediaCollection('ticket');
         }
 
         // create ticket notification
         $notificationcat = $ticket->category->groupscategoryc()->get();
-        $icc = array();
-            if($notificationcat->isNotEmpty()){
+        $icc = [];
+        if ($notificationcat->isNotEmpty()) {
 
-                foreach($notificationcat as $igc){
+            foreach ($notificationcat as $igc) {
 
-                    foreach($igc->groupsc->groupsuser()->get() as $user){
-                        $icc[] .= $user->users_id;
-                    }
-                }
-
-                if(!$icc){
-                    $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                    foreach($admins as $admin){
-                        $admin->notify(new TicketCreateNotifications($ticket));
-                    }
-
-                }else{
-
-                    $user = User::whereIn('id', $icc)->get();
-                    foreach($user as $users){
-                        $users->notify(new TicketCreateNotifications($ticket));
-                    }
-                    $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                    foreach($admins as $admin){
-                        if($admin->getRoleNames()[0] == 'superadmin'){
-                            $admin->notify(new TicketCreateNotifications($ticket));
-                        }
-                    }
-
-
-                }
-            }else{
-                $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                foreach($admins as $admin){
-                    $admin->notify(new TicketCreateNotifications($ticket));
+                foreach ($igc->groupsc->groupsuser()->get() as $user) {
+                    $icc[] .= $user->users_id;
                 }
             }
+
+            if (! $icc) {
+                $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new TicketCreateNotifications($ticket));
+                }
+
+            } else {
+
+                $user = User::whereIn('id', $icc)->get();
+                foreach ($user as $users) {
+                    $users->notify(new TicketCreateNotifications($ticket));
+                }
+                $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                foreach ($admins as $admin) {
+                    if ($admin->getRoleNames()[0] == 'superadmin') {
+                        $admin->notify(new TicketCreateNotifications($ticket));
+                    }
+                }
+
+            }
+        } else {
+            $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new TicketCreateNotifications($ticket));
+            }
+        }
         $cust = Customer::with('custsetting')->find($ticket->cust_id);
         $cust->notify(new TicketCreateNotifications($ticket));
 
@@ -999,79 +987,78 @@ class AdminTicketController extends Controller
             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
         ];
 
-        try{
+        try {
 
             $notificationcatss = $ticket->category->groupscategoryc()->get();
-            $icc = array();
-            if($notificationcatss->isNotEmpty()){
+            $icc = [];
+            if ($notificationcatss->isNotEmpty()) {
 
-                foreach($notificationcatss as $igc){
+                foreach ($notificationcatss as $igc) {
 
-                    foreach($igc->groupsc->groupsuser()->get() as $user){
+                    foreach ($igc->groupsc->groupsuser()->get() as $user) {
                         $icc[] .= $user->users_id;
                     }
                 }
 
-                if(!$icc){
-                    $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                    foreach($admins as $admin){
-                        if($admin->usetting->emailnotifyon == 1){
+                if (! $icc) {
+                    $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                    foreach ($admins as $admin) {
+                        if ($admin->usetting->emailnotifyon == 1) {
                             Mail::to($admin->email)
-                            ->send( new mailmailablesend( 'admin_send_email_ticket_created', $ticketData ) );
+                                ->send(new mailmailablesend('admin_send_email_ticket_created', $ticketData));
                         }
                     }
 
-                }else{
+                } else {
 
                     $user = User::whereIn('id', $icc)->get();
-                    foreach($user as $users){
-                        if($users->usetting->emailnotifyon == 1){
+                    foreach ($user as $users) {
+                        if ($users->usetting->emailnotifyon == 1) {
                             Mail::to($users->email)
-                            ->send( new mailmailablesend( 'admin_send_email_ticket_created', $ticketData ) );
+                                ->send(new mailmailablesend('admin_send_email_ticket_created', $ticketData));
                         }
                     }
-                    $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                    foreach($admins as $admin){
-                        if($admin->getRoleNames()[0] == 'superadmin' && $admin->usetting->emailnotifyon == 1){
+                    $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                    foreach ($admins as $admin) {
+                        if ($admin->getRoleNames()[0] == 'superadmin' && $admin->usetting->emailnotifyon == 1) {
                             Mail::to($admin->email)
-                            ->send( new mailmailablesend( 'admin_send_email_ticket_created', $ticketData ) );
+                                ->send(new mailmailablesend('admin_send_email_ticket_created', $ticketData));
                         }
                     }
-
 
                 }
-            }else{
-                $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-                foreach($admins as $admin){
-                    if($admin->usetting->emailnotifyon == 1){
+            } else {
+                $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+                foreach ($admins as $admin) {
+                    if ($admin->usetting->emailnotifyon == 1) {
                         Mail::to($admin->email)
-                        ->send( new mailmailablesend( 'admin_send_email_ticket_created', $ticketData ) );
+                            ->send(new mailmailablesend('admin_send_email_ticket_created', $ticketData));
                     }
                 }
             }
 
             Mail::to($ticket->cust->email)
-            ->send( new mailmailablesend('customer_send_guestticket_created', $ticketData ) );
+                ->send(new mailmailablesend('customer_send_guestticket_created', $ticketData));
 
-            Mail::to($ccemailsend->ccemails )
-                ->send( new mailmailablesend('customer_send_guestticket_created', $ticketData ) );
+            Mail::to($ccemailsend->ccemails)
+                ->send(new mailmailablesend('customer_send_guestticket_created', $ticketData));
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return $ticket;
         }
+
         return $ticket;
 
     }
 
-
-     public function employeesreplyingstore(Request $request)
+    public function employeesreplyingstore(Request $request)
     {
         $this->authorize('Ticket Edit');
         $ticket = Ticket::findOrFail($request->ticketId);
         $oldemp = $ticket->employeesreplying;
-        $oldempArray = explode(",", $oldemp);
-        array_push($oldempArray,$request->userID);
-        $oldempArray = implode(",", $oldempArray);
+        $oldempArray = explode(',', $oldemp);
+        array_push($oldempArray, $request->userID);
+        $oldempArray = implode(',', $oldempArray);
         $ticket->employeesreplying = $oldempArray;
         $ticket->save();
     }
@@ -1082,15 +1069,15 @@ class AdminTicketController extends Controller
         $id = $request->userID;
         $ticket = Ticket::findOrFail($request->ticketId);
         $oldemp = $ticket->employeesreplying;
-        $oldempArray = explode(",", $oldemp);
+        $oldempArray = explode(',', $oldemp);
 
         $newArr = [];
-        foreach($oldempArray as $new){
-            if($new != $id){
+        foreach ($oldempArray as $new) {
+            if ($new != $id) {
                 array_push($newArr, $new);
             }
         }
-        $newArr = implode(",", $newArr);
+        $newArr = implode(',', $newArr);
         $ticket->employeesreplying = $newArr;
         $ticket->save();
     }
@@ -1099,14 +1086,14 @@ class AdminTicketController extends Controller
     {
         $this->authorize('Ticket Edit');
         $ticket = Ticket::findOrFail($ticket_id);
-        $empList = explode(",", $ticket->employeesreplying);
+        $empList = explode(',', $ticket->employeesreplying);
 
         $employee = User::get();
 
         $employees = [];
         $empnames = 'empnames';
-        forEach($employee as $emp){
-            if(in_array($emp->id , $empList) && $emp->id != Auth::id()){
+        foreach ($employee as $emp) {
+            if (in_array($emp->id, $empList) && $emp->id != Auth::id()) {
                 array_push($employees, $emp);
             }
         }
@@ -1114,65 +1101,64 @@ class AdminTicketController extends Controller
         return response()->json(['employees' => $employees, 'empnames' => $empnames]);
     }
 
-
-
     public function guestmedia(Request $request)
     {
         $path = public_path('uploads/guestticket/');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             mkdir($path, 0777, true);
         }
 
         $file = $request->file('file');
 
-        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $name = uniqid().'_'.trim($file->getClientOriginalName());
 
         $file->move($path, $name);
 
         return response()->json([
-            'name'          => $name,
+            'name' => $name,
             'original_name' => $file->getClientOriginalName(),
         ]);
     }
 
-    public function note(Request $request){
+    public function note(Request $request)
+    {
 
         $ticketnote = Ticketnote::create([
             'ticket_id' => $request->input('ticket_id'),
             'user_id' => Auth::user()->id,
-            'ticketnotes' => $request->input('ticketnote')
+            'ticketnotes' => $request->input('ticketnote'),
         ]);
 
         $ticket = Ticket::where('id', $request->input('ticket_id'))->firstOrFail();
 
-        $tickethistory = new tickethistory();
+        $tickethistory = new tickethistory;
         $tickethistory->ticket_id = $ticket->id;
 
         $output = '<div class="d-flex align-items-center">
             <div class="mt-0">
                 <p class="mb-0 fs-12 mb-1">Status
             ';
-        if($ticket->ticketnote->isEmpty()){
-            if($ticket->overduestatus != null){
+        if ($ticket->ticketnote->isEmpty()) {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 ';
             }
 
-        }else{
-            if($ticket->overduestatus != null){
+        } else {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -1202,22 +1188,20 @@ class AdminTicketController extends Controller
             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
         ];
 
-        try{
-            $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
-            foreach($admins as $admin){
-                if($admin->usetting->emailnotifyon == 1 && $admin->getRoleNames()[0] == 'superadmin' && setting('NOTE_CREATE_MAILS') == 'on' && $ticketnote->user_id != $admin->id){
+        try {
+            $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.groups_id')->whereNull('groups_users.users_id')->get();
+            foreach ($admins as $admin) {
+                if ($admin->usetting->emailnotifyon == 1 && $admin->getRoleNames()[0] == 'superadmin' && setting('NOTE_CREATE_MAILS') == 'on' && $ticketnote->user_id != $admin->id) {
                     // $admin->notify(new TicketCreateNotifications($ticketcategory));
                     Mail::to($admin->email)
-                    ->send( new mailmailablesend('send_mail_to_admin_when_ticket_note_created', $ticketData) );
+                        ->send(new mailmailablesend('send_mail_to_admin_when_ticket_note_created', $ticketData));
                 }
             }
-        }
-        catch(\Exception $e){
-            return response()->json(['success'=> lang('The note was successfully submitted.', 'alerts')]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => lang('The note was successfully submitted.', 'alerts')]);
         }
 
-
-        return response()->json(['success'=> lang('The note was successfully submitted.', 'alerts')]);
+        return response()->json(['success' => lang('The note was successfully submitted.', 'alerts')]);
     }
 
     public function noteshow($ticket_id)
@@ -1238,53 +1222,50 @@ class AdminTicketController extends Controller
         $post = Pages::all();
         $data['page'] = $post;
 
-
-        return view('admin.viewticket.note', compact('ticket','category', 'comments', 'title','footertext'))->with($data);
+        return view('admin.viewticket.note', compact('ticket', 'category', 'comments', 'title', 'footertext'))->with($data);
     }
 
     public function notedestroy($id)
     {
         $ticketnotedelete = Ticketnote::find($id);
 
-
-
         $ticket = Ticket::where('id', $ticketnotedelete->ticket_id)->firstOrFail();
 
-            $tickethistory = new tickethistory();
-            $tickethistory->ticket_id = $ticket->id;
+        $tickethistory = new tickethistory;
+        $tickethistory->ticket_id = $ticket->id;
 
-            $output = '<div class="d-flex align-items-center">
+        $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->ticketnote->isEmpty()){
-                if($ticket->overduestatus != null){
-                    $output .= '
+        if ($ticket->ticketnote->isEmpty()) {
+            if ($ticket->overduestatus != null) {
+                $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
-                    $output .= '
+            } else {
+                $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
-                }
-
-            }else{
-                if($ticket->overduestatus != null){
-                    $output .= '
-                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
-                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
-                    <span class="text-warning font-weight-semibold mx-1">Note</span>
-                    ';
-                }else{
-                    $output .= '
-                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
-                    <span class="text-warning font-weight-semibold mx-1">Note</span>
-                    ';
-                }
             }
 
-            $output .= '
+        } else {
+            if ($ticket->overduestatus != null) {
+                $output .= '
+                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
+                    <span class="text-warning font-weight-semibold mx-1">Note</span>
+                    ';
+            } else {
+                $output .= '
+                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-warning font-weight-semibold mx-1">Note</span>
+                    ';
+            }
+        }
+
+        $output .= '
                 <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::user()->name.'<span class="fs-11 mx-1 text-muted">(Note Deleted)</span></p>
             </div>
             <div class="ms-auto">
@@ -1295,33 +1276,32 @@ class AdminTicketController extends Controller
 
             </div>
             ';
-            $tickethistory->ticketactions = $output;
-            $tickethistory->save();
-
+        $tickethistory->ticketactions = $output;
+        $tickethistory->save();
 
         $ticketnotedelete->delete();
 
-        return response()->json(['success'=> lang('The note was successfully deleted.', 'alerts')]);
-
+        return response()->json(['success' => lang('The note was successfully deleted.', 'alerts')]);
 
     }
 
-    public function sublist(Request $request){
+    public function sublist(Request $request)
+    {
 
         $parent_id = $request->cat_id;
 
-        $subcategories =Projects::select('projects.*','projects_categories.category_id')->join('projects_categories','projects_categories.projects_id', 'projects.id')
-        ->where('projects_categories.category_id',$parent_id)
-        ->get();
+        $subcategories = Projects::select('projects.*', 'projects_categories.category_id')->join('projects_categories', 'projects_categories.projects_id', 'projects.id')
+            ->where('projects_categories.category_id', $parent_id)
+            ->get();
 
         return response()->json([
-            'subcategories' => $subcategories
+            'subcategories' => $subcategories,
         ]);
 
     }
 
-
-    public function changepriority(Request $req){
+    public function changepriority(Request $req)
+    {
 
         $this->validate($req, [
             'priority_user_id' => 'required',
@@ -1331,33 +1311,33 @@ class AdminTicketController extends Controller
         $priority->priority = $req->priority_user_id;
         $priority->update();
 
-        $tickethistory = new tickethistory();
+        $tickethistory = new tickethistory;
         $tickethistory->ticket_id = $priority->id;
 
         $output = '<div class="d-flex align-items-center">
             <div class="mt-0">
                 <p class="mb-0 fs-12 mb-1">Status
             ';
-        if($priority->ticketnote->isEmpty()){
-            if($priority->overduestatus != null){
+        if ($priority->ticketnote->isEmpty()) {
+            if ($priority->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$priority->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$priority->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$priority->status.'</span>
                 ';
             }
 
-        }else{
-            if($priority->overduestatus != null){
+        } else {
+            if ($priority->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$priority->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$priority->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$priority->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -1380,19 +1360,19 @@ class AdminTicketController extends Controller
         $tickethistory->save();
 
         $priorityname = $priority->priority;
-        return response()->json(['priority' => $priorityname,'success' => lang('Updated successfully', 'alerts')], 200);
+
+        return response()->json(['priority' => $priorityname, 'success' => lang('Updated successfully', 'alerts')], 200);
     }
 
     public function alltickets()
     {
 
-        if(Auth::user()->role == 'manager'){
+        if (Auth::user()->role == 'manager') {
             return $this->adminalltickets();
         }
-        if(Auth::user()->role == 'Employee' || Auth::user()->dashboard == null){
+        if (Auth::user()->role == 'Employee' || Auth::user()->dashboard == null) {
             return $this->employeealltickets();
         }
-
 
     }
 
@@ -1444,30 +1424,29 @@ class AdminTicketController extends Controller
         $groupexists = Groupsusers::where('users_id', Auth::id())->exists();
 
         // if there in group get group tickets
-        if($groupexists){
+        if ($groupexists) {
 
-            $gticket = Ticket::select('tickets.*',"groups_categories.group_id","groups_users.users_id")
-            ->leftJoin('groups_categories','groups_categories.category_id','tickets.category_id')
-            ->leftJoin('groups_users','groups_users.groups_id','groups_categories.group_id')
-            ->whereNotNull('groups_users.users_id')
-            ->where('groups_users.users_id', Auth::id())
-            ->latest('tickets.updated_at')
-            ->get();
+            $gticket = Ticket::select('tickets.*', 'groups_categories.group_id', 'groups_users.users_id')
+                ->leftJoin('groups_categories', 'groups_categories.category_id', 'tickets.category_id')
+                ->leftJoin('groups_users', 'groups_users.groups_id', 'groups_categories.group_id')
+                ->whereNotNull('groups_users.users_id')
+                ->where('groups_users.users_id', Auth::id())
+                ->latest('tickets.updated_at')
+                ->get();
             $data['gtickets'] = $gticket;
 
-        $ticketnote = DB::table('ticketnotes')->pluck('ticketnotes.ticket_id')->toArray();
-        $data['ticketnote'] = $ticketnote;
+            $ticketnote = DB::table('ticketnotes')->pluck('ticketnotes.ticket_id')->toArray();
+            $data['ticketnote'] = $ticketnote;
         }
         // If no there in group we get the all tickets
-        else{
+        else {
 
-
-            $gtickets = Ticket::select('tickets.*',"groups_categories.group_id","groups_users.users_id")
-            ->leftJoin('groups_categories','groups_categories.category_id','tickets.category_id')
-            ->leftJoin('groups_users','groups_users.groups_id','groups_categories.group_id')
-            ->whereNull('groups_users.users_id')
-            ->latest('tickets.updated_at')
-            ->get();;
+            $gtickets = Ticket::select('tickets.*', 'groups_categories.group_id', 'groups_users.users_id')
+                ->leftJoin('groups_categories', 'groups_categories.category_id', 'tickets.category_id')
+                ->leftJoin('groups_users', 'groups_users.groups_id', 'groups_categories.group_id')
+                ->whereNull('groups_users.users_id')
+                ->latest('tickets.updated_at')
+                ->get();
             $data['gtickets'] = $gtickets;
 
             $ticketnote = DB::table('ticketnotes')->pluck('ticketnotes.ticket_id')->toArray();

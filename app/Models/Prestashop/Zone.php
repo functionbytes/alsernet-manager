@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Zone extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_zone';
+
     protected $primaryKey = 'id_zone';
+
     public $timestamps = false;
 
     protected $fillable = [

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class SupplyOrderState extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_state';
+
     protected $primaryKey = 'id_supply_order_state';
+
     public $timestamps = false;
 
     protected $fillable = [

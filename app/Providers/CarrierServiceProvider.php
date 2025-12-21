@@ -2,15 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Services\Carriers\CarrierService;
+use Illuminate\Support\ServiceProvider;
 
 class CarrierServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->singleton('carrier.service', function ($app) {
-            return new CarrierService();
+            return new CarrierService;
         });
     }
 

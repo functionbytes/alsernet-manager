@@ -43,17 +43,17 @@ class ReturnCommunicationController extends Controller
         if (request()->wantsJson()) {
             return response()->json([
                 'communications' => $communications,
-                'stats' => $stats
+                'stats' => $stats,
             ]);
         }
 
-    return view('returns.communications.index', compact('return', 'communications', 'stats'));
+        return view('returns.communications.index', compact('return', 'communications', 'stats'));
     }
 
-/**
- * Mostrar formulario para enviar email personalizado
- */
-public function create(ReturnRequest $return)
+    /**
+     * Mostrar formulario para enviar email personalizado
+     */
+    public function create(ReturnRequest $return)
     {
         $this->authorize('manageCommunications', $return);
 
@@ -61,7 +61,7 @@ public function create(ReturnRequest $return)
             'custom' => 'Email personalizado',
             'update' => 'Actualización de estado',
             'request_info' => 'Solicitar información adicional',
-            'shipping_reminder' => 'Recordatorio de envío'
+            'shipping_reminder' => 'Recordatorio de envío',
         ];
 
         return view('returns.communications.create', compact('return', 'templates'));
@@ -84,7 +84,7 @@ public function create(ReturnRequest $return)
                     $emailData['attachments'] = [];
                     foreach ($request->file('attachments') as $file) {
                         $path = $file->store('temp/attachments');
-                        $emailData['attachments'][] = storage_path('app/' . $path);
+                        $emailData['attachments'][] = storage_path('app/'.$path);
                     }
                 }
 
@@ -95,7 +95,7 @@ public function create(ReturnRequest $return)
             if ($request->wantsJson()) {
                 return response()->json([
                     'message' => 'Email enviado exitosamente',
-                    'communication' => $communication
+                    'communication' => $communication,
                 ], 201);
             }
 
@@ -106,12 +106,12 @@ public function create(ReturnRequest $return)
         } catch (\Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'error' => 'Error al enviar el email: ' . $e->getMessage()
+                    'error' => 'Error al enviar el email: '.$e->getMessage(),
                 ], 422);
             }
 
             return back()
-                ->withErrors(['error' => 'Error al enviar el email: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Error al enviar el email: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -147,7 +147,7 @@ public function create(ReturnRequest $return)
 
         if ($communication->status === ReturnCommunication::STATUS_SENT) {
             return response()->json([
-                'error' => 'Esta comunicación ya fue enviada exitosamente'
+                'error' => 'Esta comunicación ya fue enviada exitosamente',
             ], 422);
         }
 
@@ -164,14 +164,14 @@ public function create(ReturnRequest $return)
                 $this->notificationService->sendCustomEmail($return, [
                     'recipient' => $request->input('recipient', $communication->recipient),
                     'subject' => $communication->subject,
-                    'content' => $communication->content
+                    'content' => $communication->content,
                 ]);
             }
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'message' => 'Comunicación reenviada exitosamente',
-                    'communication' => $communication->fresh()
+                    'communication' => $communication->fresh(),
                 ]);
             }
 
@@ -182,11 +182,11 @@ public function create(ReturnRequest $return)
         } catch (\Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'error' => 'Error al reenviar: ' . $e->getMessage()
+                    'error' => 'Error al reenviar: '.$e->getMessage(),
                 ], 422);
             }
 
-            return back()->withErrors(['error' => 'Error al reenviar: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Error al reenviar: '.$e->getMessage()]);
         }
     }
 
@@ -200,7 +200,7 @@ public function create(ReturnRequest $return)
         $template = $request->input('template', 'pending');
         $validTemplates = ['pending', 'approved', 'rejected', 'processing', 'completed'];
 
-        if (!in_array($template, $validTemplates)) {
+        if (! in_array($template, $validTemplates)) {
             abort(404);
         }
 
@@ -210,30 +210,30 @@ public function create(ReturnRequest $return)
             'return_url' => route('returns.show', $return),
             'costs_summary' => [
                 'total_deductions' => $return->total_costs ?? 0,
-                'final_refund' => $return->final_refund ?? $return->original_amount
-            ]
+                'final_refund' => $return->final_refund ?? $return->original_amount,
+            ],
         ];
 
-        return view('emails.returns.' . $template, $emailData);
+        return view('emails.returns.'.$template, $emailData);
     }
 
     /**
      * Marcar comunicación como leída (endpoint para tracking)
      */
     public function track(Request $request)
-{
-    $trackingId = $request->input('id');
+    {
+        $trackingId = $request->input('id');
 
-    if ($trackingId) {
-        $this->notificationService->markAsRead($trackingId);
+        if ($trackingId) {
+            $this->notificationService->markAsRead($trackingId);
+        }
+
+        // Retornar pixel transparente 1x1
+        return response()->file(public_path('images/pixel.png'), [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ]);
     }
-
-    // Retornar pixel transparente 1x1
-    return response()->file(public_path('images/pixel.png'), [
-        'Content-Type' => 'image/png',
-        'Cache-Control' => 'no-cache, no-store, must-revalidate'
-    ]);
-}
 
     /**
      * Obtener estadísticas de comunicaciones
@@ -261,7 +261,7 @@ public function create(ReturnRequest $return)
                 'read' => $return->communications()->where('status', 'read')->count(),
                 'rate' => $return->communications()->sent()->count() > 0
                     ? round(($return->communications()->where('status', 'read')->count() / $return->communications()->sent()->count()) * 100, 2)
-                    : 0
+                    : 0,
             ],
             'timeline' => $return->communications()
                 ->select(
@@ -272,7 +272,7 @@ public function create(ReturnRequest $return)
                 ->groupBy('date', 'status')
                 ->orderBy('date', 'desc')
                 ->limit(30)
-                ->get()
+                ->get(),
         ];
 
         return response()->json($stats);

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnDiscussion extends Model
 {
     protected $table = 'return_discussions';
+
     protected $primaryKey = 'id_return_discussion';
 
     protected $fillable = [
-        'id_return_request', 'id_employee', 'message', 'file_name', 'private'
+        'id_return_request', 'id_employee', 'message', 'file_name', 'private',
     ];
 
     protected $casts = [
@@ -58,7 +59,7 @@ class ReturnDiscussion extends Model
      */
     public function hasAttachment(): bool
     {
-        return !empty($this->file_name);
+        return ! empty($this->file_name);
     }
 
     /**
@@ -66,7 +67,7 @@ class ReturnDiscussion extends Model
      */
     public function getAttachmentPath(): ?string
     {
-        return $this->file_name ? storage_path('app/returns/discussions/' . $this->file_name) : null;
+        return $this->file_name ? storage_path('app/returns/discussions/'.$this->file_name) : null;
     }
 
     /**
@@ -106,7 +107,7 @@ class ReturnDiscussion extends Model
             'has_attachment' => $this->hasAttachment(),
             'file_name' => $this->file_name,
             'created_at' => $this->created_at,
-            'formatted_date' => $this->created_at->format('d/m/Y H:i')
+            'formatted_date' => $this->created_at->format('d/m/Y H:i'),
         ];
     }
 }

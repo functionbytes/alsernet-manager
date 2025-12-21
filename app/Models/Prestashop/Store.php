@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Store extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_store';
+
     protected $primaryKey = 'id_store';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,7 +33,7 @@ class Store extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_country' => 'integer',

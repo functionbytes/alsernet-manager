@@ -9,9 +9,9 @@ use App\Models\Return\ReturnRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 
 class ReturnReminderMail extends Mailable implements ShouldQueue
@@ -19,8 +19,11 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public ReturnRequest $return;
+
     public ReturnCommunication $communication;
+
     public array $emailData;
+
     public string $reminderType;
 
     /**
@@ -39,7 +42,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
-        $subject = match($this->reminderType) {
+        $subject = match ($this->reminderType) {
             'shipping' => "⏰ Recordatorio: Envíe su devolución - #{$this->return->number}",
             'expiring' => "⚠️ Su devolución está por expirar - #{$this->return->number}",
             'action_required' => "📋 Acción requerida en su devolución - #{$this->return->number}",
@@ -113,7 +116,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
      */
     private function determineTemplate(): string
     {
-        return match($this->reminderType) {
+        return match ($this->reminderType) {
             'shipping' => 'emails.returns.reminders.shipping',
             'expiring' => 'emails.returns.reminders.expiring',
             'action_required' => 'emails.returns.reminders.action-required',
@@ -139,7 +142,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
     {
         $trackingId = $this->communication->metadata['tracking_id'] ?? null;
 
-        if (!$trackingId) {
+        if (! $trackingId) {
             return '';
         }
 
@@ -155,7 +158,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
 
         return route('customer.returns.show', [
             'return' => $this->return->id,
-            'token' => $token
+            'token' => $token,
         ]);
     }
 
@@ -183,7 +186,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
         $token = encrypt([
             'return_id' => $this->return->id,
             'email' => $this->return->customer_email,
-            'type' => 'reminders'
+            'type' => 'reminders',
         ]);
 
         return route('unsubscribe', ['token' => $token]);
@@ -208,8 +211,7 @@ class ReturnReminderMail extends Mailable implements ShouldQueue
             'X-Return-ID' => $this->return->id,
             'X-Communication-ID' => $this->communication->id,
             'X-Reminder-Type' => $this->reminderType,
-            'List-Unsubscribe' => '<' . $this->generateUnsubscribeUrl() . '>',
+            'List-Unsubscribe' => '<'.$this->generateUnsubscribeUrl().'>',
         ];
     }
-
 }

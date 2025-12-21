@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Campaign\CampaignField|null $field
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition query()
@@ -46,13 +47,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegmentCondition whereValue($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignSegmentCondition extends Model
 {
     use HasUid;
 
-    protected $table = "campaigns_maillists_segment_conditions";
+    protected $table = 'campaigns_maillists_segment_conditions';
 
     /**
      * The attributes that are mass assignable.

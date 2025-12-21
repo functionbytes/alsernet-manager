@@ -22,7 +22,7 @@ class UpdateHistoryListener implements ShouldQueue
                 'return_id' => $event->return->id_return_request,
                 'previous_status' => $event->previousStatus->id_return_status,
                 'new_status' => $event->newStatus->id_return_status,
-                'changed_by' => $event->changedBy
+                'changed_by' => $event->changedBy,
             ]);
 
             // Crear entrada en el historial
@@ -33,13 +33,13 @@ class UpdateHistoryListener implements ShouldQueue
                 'id_employee' => $event->changedBy,
                 'set_pickup' => $event->newStatus->is_pickup ?? false,
                 'is_refunded' => $event->newStatus->is_refunded ?? false,
-                'shown_to_customer' => $event->newStatus->shown_to_customer ?? true
+                'shown_to_customer' => $event->newStatus->shown_to_customer ?? true,
             ]);
 
             Log::info('History entry created successfully', [
                 'return_id' => $event->return->id_return_request,
                 'history_id' => $historyEntry->id_return_history,
-                'transition_type' => $event->getTransitionType()
+                'transition_type' => $event->getTransitionType(),
             ]);
 
             // Actualizar campos relacionados en la devolución si es necesario
@@ -49,7 +49,7 @@ class UpdateHistoryListener implements ShouldQueue
             Log::error('Failed to create history entry', [
                 'return_id' => $event->return->id_return_request,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             throw $e;
@@ -62,7 +62,7 @@ class UpdateHistoryListener implements ShouldQueue
     private function generateDescription(ReturnStatusChanged $event): string
     {
         // Si ya hay una descripción personalizada, usarla
-        if (!empty($event->description)) {
+        if (! empty($event->description)) {
             return $event->description;
         }
 
@@ -86,13 +86,13 @@ class UpdateHistoryListener implements ShouldQueue
         }
 
         // Agregar metadata si existe
-        if (!empty($event->metadata)) {
+        if (! empty($event->metadata)) {
             $metadataInfo = [];
             foreach ($event->metadata as $key => $value) {
                 $metadataInfo[] = "{$key}: {$value}";
             }
-            if (!empty($metadataInfo)) {
-                $description .= ' (' . implode(', ', $metadataInfo) . ')';
+            if (! empty($metadataInfo)) {
+                $description .= ' ('.implode(', ', $metadataInfo).')';
             }
         }
 
@@ -112,7 +112,7 @@ class UpdateHistoryListener implements ShouldQueue
 
             Log::info('Updating refund status', [
                 'return_id' => $event->return->id_return_request,
-                'new_refund_status' => true
+                'new_refund_status' => true,
             ]);
         }
 
@@ -122,12 +122,12 @@ class UpdateHistoryListener implements ShouldQueue
 
             Log::info('Setting pickup date', [
                 'return_id' => $event->return->id_return_request,
-                'pickup_date' => $updateData['pickup_date']
+                'pickup_date' => $updateData['pickup_date'],
             ]);
         }
 
         // Aplicar actualizaciones si hay alguna
-        if (!empty($updateData)) {
+        if (! empty($updateData)) {
             $event->return->update($updateData);
         }
     }
@@ -140,7 +140,7 @@ class UpdateHistoryListener implements ShouldQueue
         Log::critical('History update failed permanently', [
             'return_id' => $event->return->id_return_request,
             'error' => $exception->getMessage(),
-            'event_data' => $event->getEventData()
+            'event_data' => $event->getEventData(),
         ]);
     }
 

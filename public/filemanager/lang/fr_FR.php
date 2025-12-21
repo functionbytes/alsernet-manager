@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Sélectionner',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => 'Glisser-Déposer des fichiers (navigateurs récents) ou cliquer sur le bontons en haut pour ajouter des fichiers. Cliquer sur "Envoyer les fichiers". Lorsque le chargement est complet, cliquer sur "Revenir à la liste des fichiers".',
     'Upload_add_files' => 'Ajouter des fichiers',
     'Upload_start' => 'Envoyer les fichiers',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'La taille du fichier dépasse la limite fixée par le paramètre upload_max_filesize dans php.ini',
         2 => 'La taille du fichier dépasse la limite fixée par le paramètre MAX_FILE_SIZE du formulaire',
         3 => 'Le fichier n\'a pas été correctement téléchargé',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'La hauteur de l\'image est supérieure à la limite maximum autorisée',
         'min_height' => 'La hauteur de l\'image est inférieure à la limite minimum autorisée',
         'abort' => 'Téléchargement des fichiers annulé',
-        'image_resize' => 'Impossible de redimensionner l\'image'
-    ),
+        'image_resize' => 'Impossible de redimensionner l\'image',
+    ],
     'Upload_url' => 'Depuis une URL',
     'Type_dir' => 'dir',
     'Type' => 'Type',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Vous avez sélectionné trop de fichiers/dossier pour %1$s. Limite: %2$d fichiers/opération', // %1$s = cut or copy, %2$d = max count
     'Copy_Cut_Not_Allowed' => 'Vous n\'êtes pas autorisé à %1$s des %2$s.', // %12$s = cut or copy, %2$s = files or folders
     'Image_Editor_No_Save' => 'Impossible d\'enregistrer l\'image',
-    'Image_Editor_Exit' => "Sortie",
-    'Image_Editor_Save' => "Sauvegarder",
+    'Image_Editor_Exit' => 'Sortie',
+    'Image_Editor_Save' => 'Sauvegarder',
     'Zip_No_Extract' => 'Extraction impossible. Le fichier est peut-être corrompu.',
     'Zip_Invalid' => 'Cette extension n\'est pas supportée. Extensions valides: zip, gz, tar.',
     'Dir_No_Write' => 'Le répertoire que vous avez sélectionné n\'est pas accessible en écriture.',
@@ -123,25 +123,25 @@ return array(
     'Valid_Extensions' => 'Extensions valides: %s', // %s = txt,log etc.
     'Upload_message' => 'Glissez les fichiers ici pour les ajouter',
 
-    'SERVER ERROR' => "ERREUR SERVEUR",
-    'forbidden' => "Interdit",
-    'wrong path' => "Chemin invalide",
-    'wrong name' => "Nom invalide",
-    'wrong extension' => "Extension invalide",
-    'wrong option' => "Option invalide",
-    'wrong data' => "Données invalides",
-    'wrong action' => "Action invalide",
-    'wrong sub-action' => "Sous-action invalide",
-    'no action passed' => "Aucune action demandée",
-    'no path' => "Chemin manquant",
-    'no file' => "Fichier manquant",
-    'view type number missing' => "Type de vue manquant",
-    'Not enough Memory' => "Mémoire insuffisante",
-    'max_size_reached' => "Votre répertoire d'image a déjà atteind sa taille maximale de %d mo.", //%d = max overall size
-    'B' => "o",
-    'KB' => "Ko",
-    'MB' => "Mo",
-    'GB' => "Go",
-    'TB' => "To",
-    'total size' => "Taille totale",
-);
+    'SERVER ERROR' => 'ERREUR SERVEUR',
+    'forbidden' => 'Interdit',
+    'wrong path' => 'Chemin invalide',
+    'wrong name' => 'Nom invalide',
+    'wrong extension' => 'Extension invalide',
+    'wrong option' => 'Option invalide',
+    'wrong data' => 'Données invalides',
+    'wrong action' => 'Action invalide',
+    'wrong sub-action' => 'Sous-action invalide',
+    'no action passed' => 'Aucune action demandée',
+    'no path' => 'Chemin manquant',
+    'no file' => 'Fichier manquant',
+    'view type number missing' => 'Type de vue manquant',
+    'Not enough Memory' => 'Mémoire insuffisante',
+    'max_size_reached' => "Votre répertoire d'image a déjà atteind sa taille maximale de %d mo.", // %d = max overall size
+    'B' => 'o',
+    'KB' => 'Ko',
+    'MB' => 'Mo',
+    'GB' => 'Go',
+    'TB' => 'To',
+    'total size' => 'Taille totale',
+];

@@ -17,37 +17,37 @@ class SendCustomEmailRequest extends FormRequest
             'recipient' => [
                 'nullable',
                 'email',
-                'max:255'
+                'max:255',
             ],
             'subject' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
             'content' => [
                 'required',
                 'string',
-                'max:10000'
+                'max:10000',
             ],
             'template' => [
                 'nullable',
                 'string',
-                'in:custom,update,request_info,shipping_reminder'
+                'in:custom,update,request_info,shipping_reminder',
             ],
             'attachments' => [
                 'nullable',
                 'array',
-                'max:3' // Máximo 3 archivos
+                'max:3', // Máximo 3 archivos
             ],
             'attachments.*' => [
                 'file',
                 'max:5120', // 5MB
-                'mimes:pdf,jpg,jpeg,png,doc,docx'
+                'mimes:pdf,jpg,jpeg,png,doc,docx',
             ],
             'send_copy' => [
                 'nullable',
-                'boolean'
-            ]
+                'boolean',
+            ],
         ];
     }
 
@@ -58,7 +58,7 @@ class SendCustomEmailRequest extends FormRequest
             'content.required' => 'El contenido del email es obligatorio',
             'content.max' => 'El contenido no puede exceder 10,000 caracteres',
             'attachments.*.max' => 'Cada archivo no puede exceder 5MB',
-            'attachments.*.mimes' => 'Solo se permiten archivos PDF, imágenes, Word'
+            'attachments.*.mimes' => 'Solo se permiten archivos PDF, imágenes, Word',
         ];
     }
 }

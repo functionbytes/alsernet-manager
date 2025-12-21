@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ReturnReason extends Model
 {
     protected $table = 'return_reasons';
+
     protected $primaryKey = 'id_return_reason';
 
     protected $fillable = [
-        'return_type', 'active'
+        'return_type', 'active',
     ];
 
     protected $casts = [
@@ -48,8 +49,11 @@ class ReturnReason extends Model
 
     // Constantes para tipos de motivo
     const TYPE_REFUND = 'refund';       // Para reembolsos
+
     const TYPE_REPLACEMENT = 'replacement'; // Para reemplazos
+
     const TYPE_REPAIR = 'repair';       // Para reparaciones
+
     const TYPE_ALL = 'all';            // Para todos los tipos
 
     /**
@@ -58,11 +62,11 @@ class ReturnReason extends Model
     public static function getByReturnType($returnType, $langId = 1, $shopId = 1)
     {
         return static::where('active', true)
-            ->where(function($query) use ($returnType) {
+            ->where(function ($query) use ($returnType) {
                 $query->where('return_type', $returnType)
                     ->orWhere('return_type', self::TYPE_ALL);
             })
-            ->with(['translations' => function($q) use ($langId, $shopId) {
+            ->with(['translations' => function ($q) use ($langId, $shopId) {
                 $q->where('id_lang', $langId)
                     ->where('id_shop', $shopId);
             }])

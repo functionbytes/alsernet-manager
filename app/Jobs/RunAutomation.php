@@ -13,7 +13,7 @@ class RunAutomation extends Base
     public function __construct($automation)
     {
         $this->automation = $automation;
-        if (!$this->automation->allowApiCall()) {
+        if (! $this->automation->allowApiCall()) {
             throw new Exception(sprintf('Automation "%s" is not set up to be triggered via API. Cannot start!', $this->automation->name));
         }
     }
@@ -25,9 +25,9 @@ class RunAutomation extends Base
      */
     public function handle()
     {
-        if (!$this->automation->allowApiCall()) {
+        if (! $this->automation->allowApiCall()) {
             $this->automation->logger()->info(sprintf('Automation "%s" is not set up to be triggered via API (job handle)', $this->automation->name));
-            throw new Exception("Automation is not set up to be triggered via API (job handle)");
+            throw new Exception('Automation is not set up to be triggered via API (job handle)');
         }
         $this->automation->logger()->info(sprintf('Actually run automation "%s" in response to API call', $this->automation->name));
         $this->automation->execute();

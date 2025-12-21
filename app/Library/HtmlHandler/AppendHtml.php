@@ -2,8 +2,8 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 
 class AppendHtml implements StageInterface
 {
@@ -19,6 +19,7 @@ class AppendHtml implements StageInterface
         if (empty($this->newHtml)) {
             return $html;
         }
+
         return StringHelper::appendHtml($html, $this->newHtml);
     }
 }

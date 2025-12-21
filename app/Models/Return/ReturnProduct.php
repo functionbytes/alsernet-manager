@@ -25,6 +25,4 @@ class ReturnProduct extends Model
     {
         return $this->belongsTo(ReturnRequest::class, 'id_return_request', 'id_return_request');
     }
-
-
 }

@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Mail extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_mail';
+
     protected $primaryKey = 'id_mail';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,6 @@ class Mail extends Model
         'id_mail' => 'integer',
         'id_lang' => 'integer',
     ];
-
 
     public function lang(): BelongsTo
     {

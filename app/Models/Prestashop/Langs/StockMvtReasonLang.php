@@ -2,17 +2,20 @@
 
 namespace App\Models\Prestashop\Langs;
 
+use App\Models\Prestashop\Language;
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Stock\StockMvtReason;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\StockMvtReason;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Language;
 
 class StockMvtReasonLang extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_mvt_reason_lang';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,12 +31,11 @@ class StockMvtReasonLang extends Model
         'id_shop' => 'integer',
     ];
 
-
     protected function setKeysForSaveQuery($query)
     {
         return $query->where('id_stock_mvt_reason', $this->getAttribute('id_stock_mvt_reason'))
-                     ->where('id_lang', $this->getAttribute('id_lang'))
-                     ->where('id_shop', $this->getAttribute('id_shop'));
+            ->where('id_lang', $this->getAttribute('id_lang'))
+            ->where('id_shop', $this->getAttribute('id_shop'));
     }
 
     public function stockMvtReason(): BelongsTo

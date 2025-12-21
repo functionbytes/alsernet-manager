@@ -5,8 +5,6 @@ namespace App\Models\Campaign;
 use App\Library\Log;
 use App\Library\Traits\HasCache;
 use App\Library\Traits\HasUid;
-use App\Models\Campaign\CampaignMaillist;
-use App\Models\Campaign\CampaignSegmentCondition;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read CampaignMaillist|null $mailList
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment query()
@@ -28,14 +27,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignSegment whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignSegment extends Model
 {
-    use HasUid;
     use HasCache;
+    use HasUid;
 
-    protected $table = "campaigns_maillists_segments";
+    protected $table = 'campaigns_maillists_segments';
 
     protected $fillable = [
         'name', 'matching',
@@ -43,10 +43,10 @@ class CampaignSegment extends Model
 
     public static $itemsPerPage = 25;
 
-    public static $rules = array(
+    public static $rules = [
         'name' => 'required',
         'matching' => 'required',
-    );
+    ];
 
     public function mailList()
     {
@@ -70,7 +70,7 @@ class CampaignSegment extends Model
         $query = self::select('segments.*')->where('segments.maillist_id', '=', $list->id);
 
         // Keyword
-        if (!empty(trim($request->keyword))) {
+        if (! empty(trim($request->keyword))) {
             $query = $query->where('name', 'like', '%'.$request->keyword.'%');
         }
 
@@ -156,6 +156,7 @@ class CampaignSegment extends Model
             ['text' => trans('messages.segment.less_than_days'), 'value' => 'last_open_email_less_than_days'],
         ];
     }
+
     public static function clickLinkOperators()
     {
         return [
@@ -167,7 +168,7 @@ class CampaignSegment extends Model
     public function getSubscribersConditions()
     {
 
-        if (!$this->segmentConditions()->exists()) {
+        if (! $this->segmentConditions()->exists()) {
             return null;
         }
 
@@ -242,7 +243,7 @@ class CampaignSegment extends Model
                         $cond = '(LOWER(sf'.$number.".value) = '' OR LOWER(sf".$number.'.value) IS NULL)';
                         break;
                     default:
-                        throw new \Exception("Unknown segment condition type (operator): ".$condition->operator);
+                        throw new \Exception('Unknown segment condition type (operator): '.$condition->operator);
                 }
 
                 // add to joins array
@@ -303,12 +304,12 @@ class CampaignSegment extends Model
                         $conditions[] = '(UNIX_TIMESTAMP('.\DB::getTablePrefix().'subscribers.created_at) >= '.$ts.')';
                         break;
                     default:
-                        throw new \Exception("Unknown segment condition type (operator): ".$condition->operator);
+                        throw new \Exception('Unknown segment condition type (operator): '.$condition->operator);
                 }
             }
         }
 
-        //return $conditions;
+        // return $conditions;
         if ($this->matching == 'any') {
             $conditions = implode(' OR ', $conditions);
         } else {
@@ -321,7 +322,6 @@ class CampaignSegment extends Model
         ];
     }
 
-
     public function subscribers()
     {
         $query = $this->mailList->subscribers();
@@ -331,7 +331,7 @@ class CampaignSegment extends Model
         $conditions = $this->getSubscribersConditions();
 
         // Apply the filter
-        if (!empty($conditions['joins'])) {
+        if (! empty($conditions['joins'])) {
             foreach ($conditions['joins'] as $joining) {
                 $query = $query->leftJoin($joining['table'], function ($join) use ($joining) {
                     // Example: sf5da53d2f9c856.subscriber_id => m_subscribers.id
@@ -345,7 +345,7 @@ class CampaignSegment extends Model
         }
 
         // var_dump($conditions['conditions']);die();
-        if (!empty($conditions['conditions'])) {
+        if (! empty($conditions['conditions'])) {
             $query = $query->whereRaw('('.$conditions['conditions'].')');
         }
 
@@ -357,8 +357,8 @@ class CampaignSegment extends Model
     public function isSubscriberIncluded($subscriber)
     {
         return $this->subscribers()
-                    ->where('uid', $subscriber->uid)
-                    ->exists();
+            ->where('uid', $subscriber->uid)
+            ->exists();
     }
 
     public function log($name, $customer, $add_datas = [])
@@ -414,7 +414,7 @@ class CampaignSegment extends Model
             $this->segmentConditions()->delete();
         }
         foreach ($conditions as $key => $param) {
-            $condition = new CampaignSegmentCondition();
+            $condition = new CampaignSegmentCondition;
             $condition->fill($param);
 
             if (strpos($condition->operator, 'created_date') === 0 && $condition->operator !== 'created_date_last_x_days') {

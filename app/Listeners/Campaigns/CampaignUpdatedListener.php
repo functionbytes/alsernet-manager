@@ -7,10 +7,7 @@ use App\Jobs\UpdateCampaignJob;
 
 class CampaignUpdatedListener
 {
-
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(CampaignUpdated $event)
     {
@@ -20,5 +17,4 @@ class CampaignUpdatedListener
             $event->campaign->updateCache();
         }
     }
-
 }

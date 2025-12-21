@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Seleziona',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_add_files' => 'Aggiungi file',
     'Upload_start' => "Esegui l'upload",
     'Upload_base_help' => "Trascina i file nell'area superiore (per i moderni browser) o clicca sul bottone \"Aggiungi file\" e clicca sul bottone \"Esegui l'upload\".  Quando il caricamento dei file è terminato clicca sul bottone di ritorno in alto.",
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'URL',
     'Type_dir' => 'dir',
     'Type' => 'Tipo',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Hai selezionato troppi file/cartelle da %s. Il limite è: %d file/operazione', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Non hai i permessi per %s %s.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Non è stato possibile salvare l\'immagine',
-    'Image_Editor_Exit' => "Esci",
-    'Image_Editor_Save' => "Salva",
+    'Image_Editor_Exit' => 'Esci',
+    'Image_Editor_Save' => 'Salva',
     'Zip_No_Extract' => 'Non si può estrarre il pacchetto perchè sembra corrotto',
     'Zip_Invalid' => 'Questa estensione non è supportata. Le estensioni valide sono: zip, gz, tar.',
     'Dir_No_Write' => 'La cartella selezionata non è scrivibile.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Permessi file',
     'File_Permission_Not_Allowed' => 'Il cambiamento dei permessi di %s non è permesso.', // %s = files or folders
     'File_Permission_Recursive' => 'Applica ricorsivamente?',
-    'File_Permission_Wrong_Mode' => "La modalità di autorizzazione non è corretta.",
+    'File_Permission_Wrong_Mode' => 'La modalità di autorizzazione non è corretta.',
     'User' => 'Utente',
     'Group' => 'Gruppo',
     'Yes' => 'Si',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Il file non è stato trovato.',
     'File_Open_Edit_Not_Allowed' => 'Non hai il permesso di %s questo file.', // %s = open or edit
     'Edit' => 'Modifica',
-    'Edit_File' => "Modifica il contenuto di questo file",
-    'File_Save_OK' => "Il file è stato salvato con successo.",
+    'Edit_File' => 'Modifica il contenuto di questo file',
+    'File_Save_OK' => 'Il file è stato salvato con successo.',
     'File_Save_Error' => "C'è stato un errore nel salvataggio del file.",
     'New_File' => 'Nuovo file',
-    'No_Extension',"Non hai inserito l'estensione del file.",
+    'No_Extension', "Non hai inserito l'estensione del file.",
     'Valid_Extensions' => 'Estensioni valide: %s', // %s = txt,log etc.
     'Upload_message' => "Trascina qui i file per l'upload",
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Forbiden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size"
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Forbiden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

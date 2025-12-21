@@ -23,17 +23,17 @@ class ReturnCostController extends Controller
      */
     public function index(ReturnRequest $return)
     {
-            $this->authorize('view', $return);
+        $this->authorize('view', $return);
 
-            $costsBreakdown = $this->costService->getCostsBreakdown($return);
-            $refundCalculation = $this->costService->calculateFinalRefund($return);
+        $costsBreakdown = $this->costService->getCostsBreakdown($return);
+        $refundCalculation = $this->costService->calculateFinalRefund($return);
 
-            if (request()->wantsJson()) {
-                return response()->json([
-                    'costs' => $costsBreakdown,
-                    'refund' => $refundCalculation
-                ]);
-            }
+        if (request()->wantsJson()) {
+            return response()->json([
+                'costs' => $costsBreakdown,
+                'refund' => $refundCalculation,
+            ]);
+        }
 
         return view('returns.costs.index', compact('return', 'costsBreakdown', 'refundCalculation'));
     }
@@ -52,7 +52,7 @@ class ReturnCostController extends Controller
                 return response()->json([
                     'message' => 'Costo agregado exitosamente',
                     'cost' => $cost->load('return'),
-                    'refund' => $this->costService->calculateFinalRefund($return)
+                    'refund' => $this->costService->calculateFinalRefund($return),
                 ], 201);
             }
 
@@ -83,13 +83,13 @@ class ReturnCostController extends Controller
                 return response()->json([
                     'message' => 'Deducciones automáticas aplicadas',
                     'applied_costs' => $appliedCosts,
-                    'refund' => $this->costService->calculateFinalRefund($return)
+                    'refund' => $this->costService->calculateFinalRefund($return),
                 ]);
             }
 
             return redirect()
                 ->route('returns.costs.index', $return)
-                ->with('success', 'Deducciones automáticas aplicadas: ' . $appliedCosts->count() . ' costos agregados');
+                ->with('success', 'Deducciones automáticas aplicadas: '.$appliedCosts->count().' costos agregados');
 
         } catch (\Exception $e) {
             if (request()->wantsJson()) {
@@ -118,7 +118,7 @@ class ReturnCostController extends Controller
             if (request()->wantsJson()) {
                 return response()->json([
                     'message' => 'Costo eliminado exitosamente',
-                    'refund' => $this->costService->calculateFinalRefund($return)
+                    'refund' => $this->costService->calculateFinalRefund($return),
                 ]);
             }
 
@@ -146,5 +146,4 @@ class ReturnCostController extends Controller
 
         return response()->json($summary);
     }
-
 }

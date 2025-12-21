@@ -2,12 +2,12 @@
 
 namespace App\Services\Returns;
 
-use App\Models\Warranty;
-use App\Models\WarrantyClaim;
-use App\Models\WarrantyType;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Warranty;
+use App\Models\WarrantyClaim;
+use App\Models\WarrantyType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class WarrantyService
             foreach ($order->items as $item) {
                 $product = $item->product;
 
-                if (!$product->has_warranty) {
+                if (! $product->has_warranty) {
                     continue;
                 }
 
@@ -138,7 +138,7 @@ class WarrantyService
         // Filtrar por fabricante si tiene políticas específicas
         if ($product->manufacturer && $product->manufacturer->warranty_policies) {
             $allowedTypes = $product->manufacturer->warranty_policies['allowed_types'] ?? [];
-            if (!empty($allowedTypes)) {
+            if (! empty($allowedTypes)) {
                 $types = $types->whereIn('code', $allowedTypes);
             }
         }
@@ -151,7 +151,7 @@ class WarrantyService
      */
     public function registerWarrantyWithManufacturer(Warranty $warranty): array
     {
-        if (!$warranty->manufacturer) {
+        if (! $warranty->manufacturer) {
             return [
                 'success' => false,
                 'message' => 'No hay fabricante asociado',
@@ -184,7 +184,7 @@ class WarrantyService
         User $user,
         array $claimData
     ): WarrantyClaim {
-        if (!$warranty->isActive()) {
+        if (! $warranty->isActive()) {
             throw new \InvalidArgumentException('La garantía no está activa');
         }
 
@@ -309,7 +309,7 @@ class WarrantyService
         User $newOwner,
         array $transferData = []
     ): bool {
-        if (!$warranty->warrantyType->transferable) {
+        if (! $warranty->warrantyType->transferable) {
             throw new \InvalidArgumentException('Esta garantía no es transferible');
         }
 
@@ -359,14 +359,14 @@ class WarrantyService
             ->active()
             ->first();
 
-        if (!$extensionTypes) {
+        if (! $extensionTypes) {
             return false;
         }
 
         // Verificar políticas del fabricante
         if ($warranty->manufacturer && $warranty->manufacturer->warranty_policies) {
             $allowExtensions = $warranty->manufacturer->warranty_policies['allow_extensions'] ?? true;
-            if (!$allowExtensions) {
+            if (! $allowExtensions) {
                 return false;
             }
         }

@@ -2,8 +2,8 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use bjoernffm\Spintax\Parser;
+use League\Pipeline\StageInterface;
 
 class GenerateSpintaxForPlainText implements StageInterface
 {
@@ -16,6 +16,7 @@ class GenerateSpintaxForPlainText implements StageInterface
     {
         // REGEXP to check if a text contains Spintax {}
         $containsSpintaxRegexp = '/{.+|.+}/';
+
         return preg_match($containsSpintaxRegexp, $text) == true;
     }
 }

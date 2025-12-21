@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Orders\Order;
 use App\Models\Prestashop\Orders\OrderInvoice;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderCarrier extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_carrier';
+
     protected $primaryKey = 'id_order_carrier';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +29,7 @@ class OrderCarrier extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_order_carrier' => 'integer',
         'id_order' => 'integer',

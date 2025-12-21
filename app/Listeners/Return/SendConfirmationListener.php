@@ -26,27 +26,29 @@ class SendConfirmationListener implements ShouldQueue
     {
         try {
             // Verificar si debe enviar notificaciones
-            if (!$event->shouldSendNotifications()) {
+            if (! $event->shouldSendNotifications()) {
                 Log::info('Confirmation email skipped', [
                     'return_id' => $event->return->id_return_request,
-                    'reason' => 'Notifications disabled in configuration'
+                    'reason' => 'Notifications disabled in configuration',
                 ]);
+
                 return;
             }
 
             // Verificar que tenemos un email válido
-            if (empty($event->return->email) || !filter_var($event->return->email, FILTER_VALIDATE_EMAIL)) {
+            if (empty($event->return->email) || ! filter_var($event->return->email, FILTER_VALIDATE_EMAIL)) {
                 Log::warning('Invalid email address for confirmation', [
                     'return_id' => $event->return->id_return_request,
-                    'email' => $event->return->email
+                    'email' => $event->return->email,
                 ]);
+
                 return;
             }
 
             Log::info('Sending confirmation email', [
                 'return_id' => $event->return->id_return_request,
                 'email' => $event->return->email,
-                'created_by' => $event->createdBy
+                'created_by' => $event->createdBy,
             ]);
 
             // Enviar email de confirmación
@@ -55,7 +57,7 @@ class SendConfirmationListener implements ShouldQueue
             Log::info('Confirmation email sent successfully', [
                 'return_id' => $event->return->id_return_request,
                 'email' => $event->return->email,
-                'sent_at' => now()->toISOString()
+                'sent_at' => now()->toISOString(),
             ]);
 
             // Opcional: Marcar en la base de datos que se envió el email
@@ -66,7 +68,7 @@ class SendConfirmationListener implements ShouldQueue
                 'return_id' => $event->return->id_return_request,
                 'email' => $event->return->email,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             // Re-lanzar la excepción para retry automático
@@ -83,7 +85,7 @@ class SendConfirmationListener implements ShouldQueue
             'return_id' => $event->return->id_return_request,
             'email' => $event->return->email,
             'error' => $exception->getMessage(),
-            'attempts' => $this->attempts ?? 'unknown'
+            'attempts' => $this->attempts ?? 'unknown',
         ]);
 
         // Opcional: Marcar el fallo en la base de datos

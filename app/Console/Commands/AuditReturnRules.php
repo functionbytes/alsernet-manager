@@ -3,13 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Models\ProductReturnRule;
-use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Console\Command;
 
 class AuditReturnRules extends Command
 {
     protected $signature = 'returns:audit-rules {--fix : Reparar conflictos automáticamente}';
+
     protected $description = 'Auditar reglas de devolución para detectar conflictos y problemas';
 
     public function handle()
@@ -20,34 +19,35 @@ class AuditReturnRules extends Command
 
         // Verificar reglas duplicadas
         $duplicates = $this->checkDuplicateRules();
-        if (!empty($duplicates)) {
+        if (! empty($duplicates)) {
             $issues['duplicates'] = $duplicates;
-            $this->warn('Se encontraron reglas duplicadas: ' . count($duplicates));
+            $this->warn('Se encontraron reglas duplicadas: '.count($duplicates));
         }
 
         // Verificar reglas huérfanas
         $orphans = $this->checkOrphanRules();
-        if (!empty($orphans)) {
+        if (! empty($orphans)) {
             $issues['orphans'] = $orphans;
-            $this->warn('Se encontraron reglas huérfanas: ' . count($orphans));
+            $this->warn('Se encontraron reglas huérfanas: '.count($orphans));
         }
 
         // Verificar conflictos de prioridad
         $conflicts = $this->checkPriorityConflicts();
-        if (!empty($conflicts)) {
+        if (! empty($conflicts)) {
             $issues['conflicts'] = $conflicts;
-            $this->warn('Se encontraron conflictos de prioridad: ' . count($conflicts));
+            $this->warn('Se encontraron conflictos de prioridad: '.count($conflicts));
         }
 
         // Verificar reglas inconsistentes
         $inconsistent = $this->checkInconsistentRules();
-        if (!empty($inconsistent)) {
+        if (! empty($inconsistent)) {
             $issues['inconsistent'] = $inconsistent;
-            $this->warn('Se encontraron reglas inconsistentes: ' . count($inconsistent));
+            $this->warn('Se encontraron reglas inconsistentes: '.count($inconsistent));
         }
 
         if (empty($issues)) {
             $this->info('✅ No se encontraron problemas en las reglas de devolución.');
+
             return 0;
         }
 

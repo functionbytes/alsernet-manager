@@ -2,17 +2,20 @@
 
 namespace App\Models\Prestashop\Langs;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Prestashop\Language;
 use App\Models\Prestashop\Orders\OrderState;
 use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Language;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderStateLang extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_state_lang';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,12 +32,11 @@ class OrderStateLang extends Model
         'id_shop' => 'integer',
     ];
 
-
     protected function setKeysForSaveQuery($query)
     {
         return $query->where('id_order_state', $this->getAttribute('id_order_state'))
-                     ->where('id_lang', $this->getAttribute('id_lang'))
-                     ->where('id_shop', $this->getAttribute('id_shop'));
+            ->where('id_lang', $this->getAttribute('id_lang'))
+            ->where('id_shop', $this->getAttribute('id_shop'));
     }
 
     public function orderState(): BelongsTo

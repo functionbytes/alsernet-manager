@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Attribute extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_attribute';
+
     protected $primaryKey = 'id_attribute';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +23,7 @@ class Attribute extends Model
         'default',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_attribute_group' => 'integer',
         'position' => 'integer',
     ];

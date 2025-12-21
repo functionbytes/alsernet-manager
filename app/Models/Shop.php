@@ -3,15 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Shop extends Model
 {
-
     use HasFactory;
 
-    protected $table = "shops";
+    protected $table = 'shops';
 
     protected $fillable = [
         'uid',
@@ -22,20 +20,20 @@ class Shop extends Model
         'stock',
         'available',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
     public function scopeUid($query, $uid)
-{
+    {
         return $query->where('uid', $uid)->first();
-}
+    }
 
-    public function scopeSlug($query ,$slug)
+    public function scopeSlug($query, $slug)
     {
         return $query->where('slug', $slug)->first();
     }
@@ -49,6 +47,4 @@ class Shop extends Model
     {
         return $this->hasMany('App\Models\Location');
     }
-
-
 }

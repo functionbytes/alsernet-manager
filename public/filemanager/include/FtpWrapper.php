@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the `nicolab/php-ftp-client` package.
  *
@@ -9,6 +10,7 @@
  *
  * @copyright Nicolas Tallefourtane http://nicolab.net
  */
+
 namespace FtpClient;
 
 /**
@@ -61,7 +63,7 @@ class FtpWrapper
     /**
      * Constructor.
      *
-     * @param resource &$connection The FTP (or SSL-FTP) connection (takes by reference).
+     * @param  resource  &$connection  The FTP (or SSL-FTP) connection (takes by reference).
      */
     public function __construct(&$connection)
     {
@@ -71,17 +73,18 @@ class FtpWrapper
     /**
      * Forward the method call to FTP functions
      *
-     * @param  string       $function
-     * @param  array        $arguments
+     * @param  string  $function
      * @return mixed
+     *
      * @throws FtpException When the function is not valid
      */
     public function __call($function, array $arguments)
     {
-        $function = 'ftp_' . $function;
+        $function = 'ftp_'.$function;
 
         if (function_exists($function)) {
             array_unshift($arguments, $this->conn);
+
             return call_user_func_array($function, $arguments);
         }
 
@@ -91,9 +94,9 @@ class FtpWrapper
     /**
      * Opens a FTP connection
      *
-     * @param  string   $host
-     * @param  int      $port
-     * @param  int      $timeout
+     * @param  string  $host
+     * @param  int  $port
+     * @param  int  $timeout
      * @return resource
      */
     public function connect($host, $port = 21, $timeout = 90)
@@ -103,9 +106,10 @@ class FtpWrapper
 
     /**
      * Opens a Secure SSL-FTP connection
-     * @param  string   $host
-     * @param  int      $port
-     * @param  int      $timeout
+     *
+     * @param  string  $host
+     * @param  int  $port
+     * @param  int  $timeout
      * @return resource
      */
     public function ssl_connect($host, $port = 21, $timeout = 90)

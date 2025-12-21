@@ -13,10 +13,15 @@ class ReturnStatusChanged
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $return;
+
     public $previousStatus;
+
     public $newStatus;
+
     public $changedBy;
+
     public $description;
+
     public $metadata;
 
     public function __construct(
@@ -48,17 +53,17 @@ class ReturnStatusChanged
             'previous_status' => [
                 'id' => $this->previousStatus->id_return_status,
                 'name' => $this->previousStatus->getTranslation()->name ?? 'Desconocido',
-                'state' => $this->previousStatus->state->name
+                'state' => $this->previousStatus->state->name,
             ],
             'new_status' => [
                 'id' => $this->newStatus->id_return_status,
                 'name' => $this->newStatus->getTranslation()->name ?? 'Desconocido',
-                'state' => $this->newStatus->state->name
+                'state' => $this->newStatus->state->name,
             ],
             'changed_by' => $this->changedBy,
             'description' => $this->description,
             'metadata' => $this->metadata,
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
     }
 
@@ -77,7 +82,7 @@ class ReturnStatusChanged
      */
     public function shouldUpdateRefundStatus(): bool
     {
-        return $this->newStatus->is_refunded && !$this->return->is_refunded;
+        return $this->newStatus->is_refunded && ! $this->return->is_refunded;
     }
 
     /**

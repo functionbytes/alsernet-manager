@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Callcenters\Returns;
 
 use App\Http\Controllers\Controller;
@@ -18,7 +19,7 @@ class ReturnsController extends Controller
 {
     protected $erpService;
 
-    public function __construct(ErpService $erpService,BarcodeService $barcodeService,DocumentService $documentService)
+    public function __construct(ErpService $erpService, BarcodeService $barcodeService, DocumentService $documentService)
     {
         $this->erpService = $erpService;
         $this->barcodeService = $barcodeService;
@@ -45,7 +46,7 @@ class ReturnsController extends Controller
             // Obtener orden del ERP
             $orderData = $this->erpService->retrieveOrderById($uid);
 
-            if (!$orderData || empty($orderData['resource'])) {
+            if (! $orderData || empty($orderData['resource'])) {
                 return back()->with('error', 'No se encontró el pedido en ERP.');
             }
 
@@ -61,7 +62,7 @@ class ReturnsController extends Controller
             // Sincronizar cliente
             $customer = $this->syncErpClientToCustomer($erpOrder['resource']['cliente'], $this->erpService);
 
-            if (!$customer) {
+            if (! $customer) {
                 return back()->with('error', 'No se pudo sincronizar el cliente.');
             }
 
@@ -86,31 +87,31 @@ class ReturnsController extends Controller
                 'validation' => $validation,
                 'returnableProducts' => $returnableProducts,
                 'returnReasons' => $this->getReturnReasons(),
-                'returnConditions' => $this->getReturnConditions()
+                'returnConditions' => $this->getReturnConditions(),
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error in generate method', [
                 'uid' => $uid,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
-            return back()->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
+            return back()->with('error', 'Error al procesar la solicitud: '.$e->getMessage());
         }
     }
 
     public function proceedToGenerate(Request $request)
     {
         $request->validate([
-            'return_request_id' => 'required|exists:return_requests,id'
+            'return_request_id' => 'required|exists:return_requests,id',
         ]);
 
         try {
             $returnRequest = ReturnRequest::with(['order', 'customer'])->findOrFail($request->return_request_id);
 
             // Validar que la solicitud esté en estado válido
-            if (!$returnRequest) {
+            if (! $returnRequest) {
                 return redirect()->route('callcenters.returns.create')
                     ->with('error', 'La solicitud de devolución no es válida.');
             }
@@ -118,7 +119,7 @@ class ReturnsController extends Controller
             // Revalidar elegibilidad por seguridad
             $validation = $returnRequest->validateOrderEligibility();
 
-            if (!($validation['can_proceed'] ?? true)) {
+            if (! ($validation['can_proceed'] ?? true)) {
                 return redirect()->route('callcenters.returns.create')
                     ->with('error', 'No se puede proceder con esta devolución.')
                     ->with('validation_errors', $validation['errors'] ?? []);
@@ -134,17 +135,17 @@ class ReturnsController extends Controller
                 'validation' => $validation,
                 'returnableProducts' => $returnableProducts,
                 'returnReasons' => $this->getReturnReasons(),
-                'returnConditions' => $this->getReturnConditions()
+                'returnConditions' => $this->getReturnConditions(),
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error proceeding to generate', [
                 'return_request_id' => $request->return_request_id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('callcenters.returns.create')
-                ->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
+                ->with('error', 'Error al procesar la solicitud: '.$e->getMessage());
         }
     }
 
@@ -167,7 +168,7 @@ class ReturnsController extends Controller
                     'already_returned' => $alreadyReturned,
                     'available_to_return' => $availableToReturn,
                     'unit_price' => $orderProduct->unit_price,
-                    'total_price' => $orderProduct->total_price
+                    'total_price' => $orderProduct->total_price,
                 ];
             }
         }
@@ -181,121 +182,119 @@ class ReturnsController extends Controller
             'unopened' => 'Sin abrir',
             'opened_unused' => 'Abierto pero sin usar',
             'used' => 'Usado',
-            'damaged' => 'Dañado'
+            'damaged' => 'Dañado',
         ];
     }
 
     public function generates($uid)
     {
-         $validation = [];
-            // Obtener orden del ERP
-            $orderData = $this->erpService->retrieveOrderById($uid);
+        $validation = [];
+        // Obtener orden del ERP
+        $orderData = $this->erpService->retrieveOrderById($uid);
 
-            if (!$orderData || empty($orderData['resource'])) {
-                return back()->with('error', 'No se encontró el pedido en ERP.');
-            }
+        if (! $orderData || empty($orderData['resource'])) {
+            return back()->with('error', 'No se encontró el pedido en ERP.');
+        }
 
-            $erpOrder = $orderData;
+        $erpOrder = $orderData;
 
-            if (empty($erpOrder['resource']['cliente'])) {
-                return back()->with('error', 'El pedido no tiene información de cliente.');
-            }
+        if (empty($erpOrder['resource']['cliente'])) {
+            return back()->with('error', 'El pedido no tiene información de cliente.');
+        }
 
-            // Buscar o crear la orden en nuestra base de datos
-            $order = $this->findOrCreateOrder($erpOrder);
+        // Buscar o crear la orden en nuestra base de datos
+        $order = $this->findOrCreateOrder($erpOrder);
 
-            // Sincronizar cliente
-            $customer = $this->syncErpClientToCustomer($erpOrder['resource']['cliente'], $this->erpService);
+        // Sincronizar cliente
+        $customer = $this->syncErpClientToCustomer($erpOrder['resource']['cliente'], $this->erpService);
 
-            if (!$customer) {
-                return back()->with('error', 'No se pudo sincronizar el cliente.');
-            }
+        if (! $customer) {
+            return back()->with('error', 'No se pudo sincronizar el cliente.');
+        }
 
-            // Crear solicitud de devolución base
-            $returnRequest = ReturnRequest::createFromOrder($order, [
-                'customer_id' => $customer->id,
-                'type_id' => 1, // Reembolso por defecto
-                'description' => 'Devolución creada desde call center',
-                'created_by' => auth()->id(),
-            ]);
+        // Crear solicitud de devolución base
+        $returnRequest = ReturnRequest::createFromOrder($order, [
+            'customer_id' => $customer->id,
+            'type_id' => 1, // Reembolso por defecto
+            'description' => 'Devolución creada desde call center',
+            'created_by' => auth()->id(),
+        ]);
 
-            // Validar elegibilidad
-            $validation = $returnRequest->validateOrderEligibility();
+        // Validar elegibilidad
+        $validation = $returnRequest->validateOrderEligibility();
 
-            // Obtener productos devolvibles
-            $returnableProducts = $this->getReturnableProducts($order);
+        // Obtener productos devolvibles
+        $returnableProducts = $this->getReturnableProducts($order);
 
-            return view('callcenters.views.returns.generate')->with([
-                'return' => $returnRequest,
-                'customer' => $customer,
-                'order' => $order,
-                'validation' => $validation,
-                'returnableProducts' => $returnableProducts,
-                'returnReasons' => $this->getReturnReasons(),
-                'returnConditions' => $this->getReturnConditions()
-            ]);
+        return view('callcenters.views.returns.generate')->with([
+            'return' => $returnRequest,
+            'customer' => $customer,
+            'order' => $order,
+            'validation' => $validation,
+            'returnableProducts' => $returnableProducts,
+            'returnReasons' => $this->getReturnReasons(),
+            'returnConditions' => $this->getReturnConditions(),
+        ]);
 
     }
 
     public function validateOrder(Request $request)
     {
         $request->validate([
-            'order_number' => 'required|string'
+            'order_number' => 'required|string',
         ]);
 
-        //try {
-            $orderNumber = trim($request->order_number);
+        // try {
+        $orderNumber = trim($request->order_number);
 
-            $orderData = $this->erpService->retrieveOrderById($orderNumber);
+        $orderData = $this->erpService->retrieveOrderById($orderNumber);
 
-            if (!$orderData || empty($orderData['resource'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se encontró el pedido en el sistema ERP.'
-                ]);
-            }
-
-            $erpOrder = $orderData['resource'];
-
-            if (empty($erpOrder['cliente'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El pedido no tiene información de cliente.'
-                ]);
-            }
-
-            $order = $this->findOrCreateOrder($erpOrder);
-
-            $customer = $this->syncErpClientToCustomer($erpOrder, $this->erpService);
-
-            if (!$customer) {
-                return redirect()->back()->with('error', 'No se pudo sincronizar el cliente.');
-            }
-
-            $returnRequest = ReturnRequest::createFromOrder($order, [
-                'customer_id' => $customer->id,
-                'type_id' => 1,
-                'description' => 'Devolución creada desde call center',
-                'created_by' => auth()->id(),
-            ]);
-
+        if (! $orderData || empty($orderData['resource'])) {
             return response()->json([
-                'success' => true,
-                'message' => 'Pedido encontrado correctamente.',
-                'redirect_url' => route('callcenters.returns.generate', $returnRequest->uid)
+                'success' => false,
+                'message' => 'No se encontró el pedido en el sistema ERP.',
             ]);
+        }
 
-        //} catch (\Exception $e) {
+        $erpOrder = $orderData['resource'];
+
+        if (empty($erpOrder['cliente'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El pedido no tiene información de cliente.',
+            ]);
+        }
+
+        $order = $this->findOrCreateOrder($erpOrder);
+
+        $customer = $this->syncErpClientToCustomer($erpOrder, $this->erpService);
+
+        if (! $customer) {
+            return redirect()->back()->with('error', 'No se pudo sincronizar el cliente.');
+        }
+
+        $returnRequest = ReturnRequest::createFromOrder($order, [
+            'customer_id' => $customer->id,
+            'type_id' => 1,
+            'description' => 'Devolución creada desde call center',
+            'created_by' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedido encontrado correctamente.',
+            'redirect_url' => route('callcenters.returns.generate', $returnRequest->uid),
+        ]);
+
+        // } catch (\Exception $e) {
         //    Log::error('Error en validateOrder()', [
         //        'order_number' => $request->order_number,
         //        'error' => $e->getMessage(),
         //    ]);
 
         //    return redirect()->back()->with('error', 'Error interno al validar el pedido: ' . $e->getMessage());
-       // }
+        // }
     }
-
-
 
     private function findOrCreateOrder(array $orderData): ReturnOrder
     {
@@ -308,7 +307,7 @@ class ReturnsController extends Controller
             $order->updateFromErpData($orderData);
         } else {
             $order = ReturnOrder::createFromErp($orderData);
-            if (!empty($orderData['lineas_pedido_cliente']['resource'])) {
+            if (! empty($orderData['lineas_pedido_cliente']['resource'])) {
 
                 ReturnOrderProduct::createFromErp(
                     $order->id,
@@ -327,18 +326,18 @@ class ReturnsController extends Controller
     private function syncErpClientToCustomer(array $data, ErpService $erpService): ?Customer
     {
 
-        //try {
-        $customer = $data['cliente'];;
+        // try {
+        $customer = $data['cliente'];
         $erpClientId = $customer['idcliente'];
 
         // Buscar cliente existente
         $customer = Customer::where('erp_client_id', $erpClientId)->first();
 
-        if (!$customer) {
+        if (! $customer) {
             // Obtener datos completos del cliente desde ERP
             $customerData = $erpService->retrieveErpClientId($erpClientId);
 
-            if ($customerData && !empty($customerData)) {
+            if ($customerData && ! empty($customerData)) {
                 $customer = Customer::createFromErpData($customerData, $data);
                 Log::info('Customer created from ERP', ['customer_id' => $customer->id, 'erp_id' => $erpClientId]);
             }
@@ -351,8 +350,7 @@ class ReturnsController extends Controller
         //       'error' => $e->getMessage()
         //   ]);
         //   return null;
-        //}
-
+        // }
 
     }
 
@@ -368,7 +366,7 @@ class ReturnsController extends Controller
             'selected_products.*.reason_id' => 'required|exists:return_reasons,reason_id',
             'selected_products.*.condition' => 'required|in:new,good,fair,poor,damaged',
             'selected_products.*.notes' => 'nullable|string|max:500',
-            'selected_products.*.replacement_requested' => 'boolean'
+            'selected_products.*.replacement_requested' => 'boolean',
         ]);
 
         try {
@@ -387,7 +385,7 @@ class ReturnsController extends Controller
                 Log::info('Products selected for return', [
                     'return_id' => $returnId,
                     'products_count' => count($request->selected_products),
-                    'total_amount' => $returnRequest->fresh()->total_amount
+                    'total_amount' => $returnRequest->fresh()->total_amount,
                 ]);
             });
 
@@ -398,12 +396,12 @@ class ReturnsController extends Controller
         } catch (\Exception $e) {
             Log::error('Error processing product selection', [
                 'return_id' => $returnId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()
                 ->withInput()
-                ->with('error', 'Error al procesar la selección: ' . $e->getMessage());
+                ->with('error', 'Error al procesar la selección: '.$e->getMessage());
         }
     }
 
@@ -417,7 +415,7 @@ class ReturnsController extends Controller
             'products.orderProduct',
             'products.returnReason',
             'status',
-            'returnType'
+            'returnType',
         ])->findOrFail($returnId);
 
         if ($returnRequest->products->isEmpty()) {
@@ -429,7 +427,7 @@ class ReturnsController extends Controller
         return view('callcenters.views.returns.review')->with([
             'return' => $returnRequest,
             'totalProducts' => $returnRequest->getTotalProductsQuantity(),
-            'totalAmount' => $returnRequest->total_amount
+            'totalAmount' => $returnRequest->total_amount,
         ]);
     }
 
@@ -441,7 +439,7 @@ class ReturnsController extends Controller
         $request->validate([
             'final_notes' => 'nullable|string|max:1000',
             'logistics_mode' => 'required|in:customer_transport,home_pickup,store_delivery,inpost',
-            'return_address' => 'required_if:logistics_mode,home_pickup|nullable|string|max:500'
+            'return_address' => 'required_if:logistics_mode,home_pickup|nullable|string|max:500',
         ]);
 
         try {
@@ -453,7 +451,7 @@ class ReturnsController extends Controller
                     'description' => $request->final_notes ?? $returnRequest->description,
                     'logistics_mode' => $request->logistics_mode,
                     'return_address' => $request->return_address,
-                    'status_id' => config('returns.default_status_id', 1)
+                    'status_id' => config('returns.default_status_id', 1),
                 ]);
 
                 // Disparar evento de creación (esto activará PDF, emails, etc.)
@@ -463,7 +461,7 @@ class ReturnsController extends Controller
                     'return_id' => $returnId,
                     'total_products' => $returnRequest->getTotalProductsQuantity(),
                     'total_amount' => $returnRequest->total_amount,
-                    'logistics_mode' => $request->logistics_mode
+                    'logistics_mode' => $request->logistics_mode,
                 ]);
             });
 
@@ -474,12 +472,12 @@ class ReturnsController extends Controller
         } catch (\Exception $e) {
             Log::error('Error confirming return request', [
                 'return_id' => $returnId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()
                 ->withInput()
-                ->with('error', 'Error al confirmar la devolución: ' . $e->getMessage());
+                ->with('error', 'Error al confirmar la devolución: '.$e->getMessage());
         }
     }
 
@@ -492,7 +490,7 @@ class ReturnsController extends Controller
             ->findOrFail($returnId);
 
         return view('callcenters.views.returns.success')->with([
-            'return' => $returnRequest
+            'return' => $returnRequest,
         ]);
     }
 
@@ -506,14 +504,14 @@ class ReturnsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'products' => $products->map(function($product) {
+                'products' => $products->map(function ($product) {
                     return $product->getDisplayInfo();
-                })
+                }),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -535,7 +533,6 @@ class ReturnsController extends Controller
         return view('callcenters.views.returns.show', compact('return'));
     }
 
-
     public function validateProducts(Request $request)
     {
         $request->validate([
@@ -544,7 +541,7 @@ class ReturnsController extends Controller
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.reason' => 'required|string',
-            'products.*.condition' => 'required|string'
+            'products.*.condition' => 'required|string',
         ]);
 
         $returnRequest = ReturnRequest::findOrFail($request->return_id);
@@ -558,11 +555,12 @@ class ReturnsController extends Controller
                 ->where('product_id', $productData['product_id'])
                 ->first();
 
-            if (!$orderProduct) {
+            if (! $orderProduct) {
                 $errors[] = [
                     'product_id' => $productData['product_id'],
-                    'message' => 'El producto no pertenece a esta orden'
+                    'message' => 'El producto no pertenece a esta orden',
                 ];
+
                 continue;
             }
 
@@ -573,8 +571,9 @@ class ReturnsController extends Controller
             if ($productData['quantity'] > $availableToReturn) {
                 $errors[] = [
                     'product_id' => $productData['product_id'],
-                    'message' => "Cantidad excede lo disponible. Máximo: {$availableToReturn}"
+                    'message' => "Cantidad excede lo disponible. Máximo: {$availableToReturn}",
                 ];
+
                 continue;
             }
 
@@ -585,7 +584,7 @@ class ReturnsController extends Controller
                 'unit_price' => $orderProduct->unit_price,
                 'total' => $productData['quantity'] * $orderProduct->unit_price,
                 'reason' => $productData['reason'],
-                'condition' => $productData['condition']
+                'condition' => $productData['condition'],
             ];
         }
 
@@ -593,7 +592,7 @@ class ReturnsController extends Controller
             'success' => empty($errors),
             'errors' => $errors,
             'valid_products' => $validProducts,
-            'total_refund' => collect($validProducts)->sum('total')
+            'total_refund' => collect($validProducts)->sum('total'),
         ]);
     }
 
@@ -609,7 +608,7 @@ class ReturnsController extends Controller
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.reason' => 'required|string',
             'products.*.condition' => 'required|string',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -633,7 +632,7 @@ class ReturnsController extends Controller
                     'unit_price' => $orderProduct->unit_price,
                     'reason' => $productData['reason'],
                     'condition' => $productData['condition'],
-                    'notes' => $productData['notes'] ?? null
+                    'notes' => $productData['notes'] ?? null,
                 ]);
             }
 
@@ -648,8 +647,8 @@ class ReturnsController extends Controller
             // Validar productos una vez más
             $validationErrors = $returnRequest->validateReturnedProducts();
 
-            if (!empty($validationErrors)) {
-                throw new \Exception('Errores de validación: ' . implode(', ', $validationErrors));
+            if (! empty($validationErrors)) {
+                throw new \Exception('Errores de validación: '.implode(', ', $validationErrors));
             }
 
             DB::commit();
@@ -658,7 +657,7 @@ class ReturnsController extends Controller
                 'success' => true,
                 'message' => 'Solicitud de devolución creada exitosamente',
                 'return_id' => $returnRequest->id_return_request,
-                'total_amount' => $returnRequest->total_amount
+                'total_amount' => $returnRequest->total_amount,
             ]);
 
         } catch (\Exception $e) {
@@ -666,12 +665,12 @@ class ReturnsController extends Controller
 
             Log::error('Error saving return request', [
                 'error' => $e->getMessage(),
-                'request' => $request->all()
+                'request' => $request->all(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al guardar la solicitud: ' . $e->getMessage()
+                'message' => 'Error al guardar la solicitud: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -685,7 +684,7 @@ class ReturnsController extends Controller
             ->findOrFail($id);
 
         // Verificar que se pueda editar
-        if (!in_array($returnRequest->status, ['pending', 'draft'])) {
+        if (! in_array($returnRequest->status, ['pending', 'draft'])) {
             return back()->with('error', 'Esta solicitud ya no se puede editar');
         }
 
@@ -699,7 +698,7 @@ class ReturnsController extends Controller
                 'quantity' => $item->quantity,
                 'reason' => $item->reason,
                 'condition' => $item->condition,
-                'notes' => $item->notes
+                'notes' => $item->notes,
             ];
         })->toArray();
 
@@ -711,7 +710,7 @@ class ReturnsController extends Controller
             'returnableProducts' => $returnableProducts,
             'currentItems' => $currentItems,
             'returnReasons' => $this->getReturnReasons(),
-            'returnConditions' => $this->getReturnConditions()
+            'returnConditions' => $this->getReturnConditions(),
         ]);
     }
 
@@ -723,10 +722,10 @@ class ReturnsController extends Controller
         // Similar a store() pero actualizando la solicitud existente
         $returnRequest = ReturnRequest::findOrFail($id);
 
-        if (!in_array($returnRequest->status, ['pending', 'draft'])) {
+        if (! in_array($returnRequest->status, ['pending', 'draft'])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Esta solicitud ya no se puede editar'
+                'message' => 'Esta solicitud ya no se puede editar',
             ], 403);
         }
 
@@ -745,9 +744,7 @@ class ReturnsController extends Controller
             'damaged' => 'Producto dañado',
             'not_as_described' => 'No coincide con la descripción',
             'changed_mind' => 'Cambio de opinión',
-            'other' => 'Otra razón'
+            'other' => 'Otra razón',
         ];
     }
-
-
 }

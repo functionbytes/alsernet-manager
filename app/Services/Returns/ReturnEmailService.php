@@ -2,10 +2,10 @@
 
 namespace App\Services\Returns;
 
-use App\Models\Return\ReturnRequest;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\Return\ReturnConfirmationMail;
 use App\Mail\Return\ReturnStatusUpdateMail;
+use App\Models\Return\ReturnRequest;
+use Illuminate\Support\Facades\Mail;
 
 class ReturnEmailService
 {

@@ -6,7 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class BaseUserRequest extends FormRequest
 {
-    public function mappedAttributes(array $otherAttributes = []) {
+    public function mappedAttributes(array $otherAttributes = [])
+    {
         $attributeMap = array_merge([
             'data.attributes.name' => 'name',
             'data.attributes.email' => 'email',

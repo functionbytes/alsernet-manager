@@ -2,23 +2,23 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\Order;
+use App\Models\Prestashop\Orders\OrderState;
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Shop\ShopGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\Order;
-use App\Models\Prestashop\Shop\ShopGroup;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Orders\OrderState;
-use Illuminate\Database\Eloquent\Relations\{
-    BelongsTo,
-    HasMany,
-    HasOne
-};
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_orders';
+
     protected $primaryKey = 'id_order';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -71,7 +71,7 @@ class Order extends Model
         'note',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'recyclable' => 'boolean',
@@ -108,7 +108,7 @@ class Order extends Model
     ];
 
     // BelongsTo Relationships
-    public function customer() : BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Customer',
@@ -117,7 +117,7 @@ class Order extends Model
         );
     }
 
-    public function addressDelivery() : BelongsTo
+    public function addressDelivery(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Address',
@@ -126,7 +126,7 @@ class Order extends Model
         );
     }
 
-    public function addressInvoice() : BelongsTo
+    public function addressInvoice(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Address',
@@ -135,7 +135,7 @@ class Order extends Model
         );
     }
 
-    public function cart() : BelongsTo
+    public function cart(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Cart',
@@ -144,7 +144,7 @@ class Order extends Model
         );
     }
 
-    public function currency() : BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Currency',
@@ -153,7 +153,7 @@ class Order extends Model
         );
     }
 
-    public function language() : BelongsTo
+    public function language(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Language',
@@ -162,7 +162,7 @@ class Order extends Model
         );
     }
 
-    public function carrier() : BelongsTo
+    public function carrier(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Carrier',
@@ -171,7 +171,7 @@ class Order extends Model
         );
     }
 
-    public function shop() : BelongsTo
+    public function shop(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Shop',
@@ -180,7 +180,7 @@ class Order extends Model
         );
     }
 
-    public function shopGroup() : BelongsTo
+    public function shopGroup(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\ShopGroup',
@@ -189,7 +189,7 @@ class Order extends Model
         );
     }
 
-    public function currentOrderState() : BelongsTo
+    public function currentOrderState(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\OrderState',
@@ -199,7 +199,7 @@ class Order extends Model
     }
 
     // HasMany Relationships
-    public function orderDetails() : HasMany
+    public function orderDetails(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderDetail',
@@ -208,7 +208,7 @@ class Order extends Model
         );
     }
 
-    public function orderHistory() : HasMany
+    public function orderHistory(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderHistory',
@@ -217,7 +217,7 @@ class Order extends Model
         );
     }
 
-    public function orderPayments() : HasMany
+    public function orderPayments(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderPayment',
@@ -226,7 +226,7 @@ class Order extends Model
         );
     }
 
-    public function orderInvoices() : HasMany
+    public function orderInvoices(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderInvoice',
@@ -235,7 +235,7 @@ class Order extends Model
         );
     }
 
-    public function orderCarriers() : HasMany
+    public function orderCarriers(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderCarrier',
@@ -244,7 +244,7 @@ class Order extends Model
         );
     }
 
-    public function orderCartRules() : HasMany
+    public function orderCartRules(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderCartRule',
@@ -253,7 +253,7 @@ class Order extends Model
         );
     }
 
-    public function orderMessages() : HasMany
+    public function orderMessages(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderMessage',
@@ -262,7 +262,7 @@ class Order extends Model
         );
     }
 
-    public function orderSlips() : HasMany
+    public function orderSlips(): HasMany
     {
         return $this->hasMany(
             'App\Models\Prestashop\OrderSlip',

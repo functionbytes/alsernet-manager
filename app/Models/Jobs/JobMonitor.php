@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Bus;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Jobs\Job|null $job
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor byJobType($jobType)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor newModelQuery()
@@ -39,20 +40,25 @@ use Illuminate\Support\Facades\Bus;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor whereSubjectName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobMonitor whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class JobMonitor extends Model
 {
     use HasFactory;
     use HasUid;
+
     public const STATUS_QUEUED = 'queued';
+
     public const STATUS_RUNNING = 'running';
+
     public const STATUS_DONE = 'done';
+
     public const STATUS_FAILED = 'failed';
 
     public static function makeInstance($subject, $jobType)
     {
-        $monitor = new self();
+        $monitor = new self;
         $monitor->status = self::STATUS_QUEUED;
         $monitor->subject_name = get_class($subject);
         $monitor->subject_id = $subject->id;
@@ -108,7 +114,7 @@ class JobMonitor extends Model
     public function setFailed($exception)
     {
         $this->status = self::STATUS_FAILED;
-        $errorMsg = "Error executing job. ".$exception->getMessage();
+        $errorMsg = 'Error executing job. '.$exception->getMessage();
         $this->error = $errorMsg;
         $this->save();
     }
@@ -176,7 +182,7 @@ class JobMonitor extends Model
         $job = $this->getJob();
 
         // Remove it from queue, if any
-        if (!is_null($job)) {
+        if (! is_null($job)) {
             $job->delete();
         }
     }
@@ -188,7 +194,7 @@ class JobMonitor extends Model
         // So we can just cancel it to have its remaining jobs perish!
         // It will be pruned with queue:prune-batches command
         $batch = $this->getBatch();
-        if (!is_null($batch)) {
+        if (! is_null($batch)) {
             $batch->cancel();
         }
     }

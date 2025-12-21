@@ -6,20 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class CartProduct extends Model
 {
-
     protected $connection = 'prestashop';
-    protected $table = "aalv_cart_product";
+
+    protected $table = 'aalv_cart_product';
+
     public $timestamps = false;
 
     protected $fillable = [
-        "id_cart",
-        "id_product",
-        "id_address_delivery",
-        "id_shop",
-        "id_product_attribute",
-        "id_customization",
-        "quantity",
-        "date_add",
+        'id_cart',
+        'id_product',
+        'id_address_delivery',
+        'id_shop',
+        'id_product_attribute',
+        'id_customization',
+        'quantity',
+        'date_add',
     ];
 
     public function cart()
@@ -36,6 +37,4 @@ class CartProduct extends Model
     {
         return $this->belongsTo('App\Models\Prestashop\Shop', 'id_shop', 'id_shop');
     }
-
 }
-

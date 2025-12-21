@@ -23,7 +23,7 @@
 			var sidebar = new Sidebar();
 			if(!sidebar.showed()) {
 				sidebar.load({
-					url: '{{ route('manager.notifications') }}'
+					url: '{{ route('manager.notifications.index') }}'
 				});
 			} else {
 				sidebar.hide();

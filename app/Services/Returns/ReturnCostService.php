@@ -4,13 +4,14 @@ namespace App\Services\Returns;
 
 use App\Models\Return\ReturnCost;
 use App\Models\Return\ReturnRequest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ReturnCostService
 {
     // Porcentajes de deducciones automáticas
     const RESTOCKING_FEE_PERCENTAGE = 15; // 15% de reposición
+
     const INSPECTION_FEE_FIXED = 5.00; // 5€ fijo de inspección
 
     /**
@@ -20,11 +21,11 @@ class ReturnCostService
     {
         return DB::transaction(function () use ($return, $data) {
             $cost = $return->costs()->create([
-            'cost_type' => $data['cost_type'],
-            'amount' => $data['amount'],
-            'description' => $data['description'] ?? null,
-            'is_automatic' => false,
-            'applied_by' => auth()->user()->name ?? 'Sistema'
+                'cost_type' => $data['cost_type'],
+                'amount' => $data['amount'],
+                'description' => $data['description'] ?? null,
+                'is_automatic' => false,
+                'applied_by' => auth()->user()->name ?? 'Sistema',
             ]);
 
             $this->recalculateRefund($return);
@@ -41,20 +42,20 @@ class ReturnCostService
         $appliedCosts = collect();
 
         DB::transaction(function () use ($return, &$appliedCosts) {
-    // Eliminar costos automáticos previos
+            // Eliminar costos automáticos previos
             $return->costs()->where('is_automatic', true)->delete();
 
-    // 1. Costo de reposición (si aplica)
+            // 1. Costo de reposición (si aplica)
             if ($this->shouldApplyRestockingFee($return)) {
                 $restockingCost = $this->applyRestockingFee($return);
                 $appliedCosts->push($restockingCost);
             }
 
-    // 2. Costo de inspección (siempre aplica)
+            // 2. Costo de inspección (siempre aplica)
             $inspectionCost = $this->applyInspectionFee($return);
             $appliedCosts->push($inspectionCost);
 
-    // 3. Costo de envío de retorno (si el cliente es responsable)
+            // 3. Costo de envío de retorno (si el cliente es responsable)
             if ($this->shouldChargeReturnShipping($return)) {
                 $shippingCost = $this->applyReturnShippingCost($return);
                 $appliedCosts->push($shippingCost);
@@ -79,7 +80,7 @@ class ReturnCostService
             'original_amount' => $originalAmount,
             'total_deductions' => $totalCosts,
             'final_refund' => $finalRefund,
-            'costs_breakdown' => $this->getCostsBreakdown($return)
+            'costs_breakdown' => $this->getCostsBreakdown($return),
         ];
     }
 
@@ -100,9 +101,9 @@ class ReturnCostService
                         'description' => $cost->description,
                         'amount' => $cost->amount,
                         'is_automatic' => $cost->is_automatic,
-                        'created_at' => $cost->created_at->format('d/m/Y H:i')
+                        'created_at' => $cost->created_at->format('d/m/Y H:i'),
                     ];
-                })
+                }),
             ];
         })->values()->toArray();
     }
@@ -130,7 +131,7 @@ class ReturnCostService
 
     private function shouldApplyRestockingFee(ReturnRequest $return): bool
     {
-    // Aplicar si el producto fue abierto o usado
+        // Aplicar si el producto fue abierto o usado
         return in_array($return->reason, ['changed_mind', 'no_longer_needed', 'found_better_price']);
     }
 
@@ -141,9 +142,9 @@ class ReturnCostService
         return $return->costs()->create([
             'cost_type' => ReturnCost::TYPE_RESTOCKING,
             'amount' => round($amount, 2),
-            'description' => 'Cargo por reposición de stock (' . self::RESTOCKING_FEE_PERCENTAGE . '%)',
+            'description' => 'Cargo por reposición de stock ('.self::RESTOCKING_FEE_PERCENTAGE.'%)',
             'is_automatic' => true,
-            'applied_by' => 'Sistema'
+            'applied_by' => 'Sistema',
         ]);
     }
 
@@ -154,13 +155,13 @@ class ReturnCostService
             'amount' => self::INSPECTION_FEE_FIXED,
             'description' => 'Cargo fijo por inspección del producto',
             'is_automatic' => true,
-            'applied_by' => 'Sistema'
+            'applied_by' => 'Sistema',
         ]);
     }
 
     private function shouldChargeReturnShipping(ReturnRequest $return): bool
     {
-        return !in_array($return->reason, ['defective', 'wrong_item', 'damaged']);
+        return ! in_array($return->reason, ['defective', 'wrong_item', 'damaged']);
     }
 
     private function applyReturnShippingCost(ReturnRequest $return): ReturnCost
@@ -173,7 +174,7 @@ class ReturnCostService
             'amount' => $estimatedShippingCost,
             'description' => 'Costo de envío de devolución',
             'is_automatic' => true,
-            'applied_by' => 'Sistema'
+            'applied_by' => 'Sistema',
         ]);
     }
 
@@ -181,5 +182,4 @@ class ReturnCostService
     {
         $return->touch(); // Actualiza el timestamp
     }
-
 }

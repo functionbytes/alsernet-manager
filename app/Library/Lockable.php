@@ -35,7 +35,7 @@ class Lockable
 
     public function __construct($file)
     {
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             touch($file);
         }
 
@@ -108,11 +108,11 @@ class Lockable
      */
     public function isTimeout($startTime, $timeoutDuration)
     {
-        return (time() - $startTime > $timeoutDuration);
+        return time() - $startTime > $timeoutDuration;
     }
 
     // Convenient shortcut to shorten execution code (do not have to instiantiate the lock object)
-    public static function withExclusiveLock(string $lockFile, Closure $task, int $waitFor = 15, Closure $waitTimeoutCallback = null)
+    public static function withExclusiveLock(string $lockFile, Closure $task, int $waitFor = 15, ?Closure $waitTimeoutCallback = null)
     {
         $lock = new static($lockFile);
         $lock->getExclusiveLock($task, $waitFor, $waitTimeoutCallback);

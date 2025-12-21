@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\WarrantyType;
 use App\Models\Manufacturer;
+use App\Models\WarrantyType;
 use Illuminate\Database\Seeder;
 
 class WarrantySystemSeeder extends Seeder

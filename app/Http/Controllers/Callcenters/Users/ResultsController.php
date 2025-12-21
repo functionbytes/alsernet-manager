@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Callcenters\Users;
 
 use App\Exports\Managers\ResultsExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
-use App\Models\Users\Certificate;
 use App\Models\Course\Course;
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Users\Certificate;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ResultsController extends Controller
 {
-
-    public function index(Request $request,$uid){
+    public function index(Request $request, $uid)
+    {
 
         $searchKey = null ?? $request->search;
         $course = null ?? $request->course;
@@ -31,7 +31,7 @@ class ResultsController extends Controller
 
         if ($searchKey) {
             $certificates = $certificates->join('courses', 'certificates.course_id', '=', 'courses.id')
-                ->where('courses.title', 'like', '%' . $searchKey . '%')
+                ->where('courses.title', 'like', '%'.$searchKey.'%')
                 ->select('certificates.*');
         }
 
@@ -56,7 +56,8 @@ class ResultsController extends Controller
         ]);
     }
 
-    public function view($uid){
+    public function view($uid)
+    {
 
         $certificate = Certificate::uid($uid);
         $course = $certificate->course;
@@ -76,17 +77,15 @@ class ResultsController extends Controller
 
     }
 
-    public function download($uid){
+    public function download($uid)
+    {
 
         $certificate = Certificate::uid($uid);
         $course = $certificate->course;
         $exam = $certificate->exam;
         $user = $certificate->user;
 
-        return Excel::download(new ResultsExport($exam), $course->title . ' - '.$user->identification.'.xlsx');
+        return Excel::download(new ResultsExport($exam), $course->title.' - '.$user->identification.'.xlsx');
 
     }
-
-
-
 }

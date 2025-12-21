@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Stock\StockMvtReason;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\StockMvtReason;
 
 class StockMvtReason extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock_mvt_reason';
+
     protected $primaryKey = 'id_stock_mvt_reason';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -22,7 +25,7 @@ class StockMvtReason extends Model
         'deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'deleted' => 'boolean',

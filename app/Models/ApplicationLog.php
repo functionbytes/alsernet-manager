@@ -76,12 +76,12 @@ class ApplicationLog extends Model
      */
     public function getLevelBadgeAttribute()
     {
-        return match($this->level) {
-            'ERROR', 'CRITICAL' => '<span class="badge bg-danger">' . $this->level . '</span>',
-            'WARNING' => '<span class="badge bg-warning">' . $this->level . '</span>',
-            'INFO' => '<span class="badge bg-info">' . $this->level . '</span>',
-            'DEBUG' => '<span class="badge bg-secondary">' . $this->level . '</span>',
-            default => '<span class="badge bg-light text-dark">' . $this->level . '</span>',
+        return match ($this->level) {
+            'ERROR', 'CRITICAL' => '<span class="badge bg-danger">'.$this->level.'</span>',
+            'WARNING' => '<span class="badge bg-warning">'.$this->level.'</span>',
+            'INFO' => '<span class="badge bg-info">'.$this->level.'</span>',
+            'DEBUG' => '<span class="badge bg-secondary">'.$this->level.'</span>',
+            default => '<span class="badge bg-light text-dark">'.$this->level.'</span>',
         };
     }
 
@@ -90,6 +90,6 @@ class ApplicationLog extends Model
      */
     public function getTruncatedMessageAttribute($length = 100)
     {
-        return substr($this->message, 0, $length) . (strlen($this->message) > $length ? '...' : '');
+        return substr($this->message, 0, $length).(strlen($this->message) > $length ? '...' : '');
     }
 }

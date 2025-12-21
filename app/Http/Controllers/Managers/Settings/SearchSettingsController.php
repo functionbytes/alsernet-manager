@@ -47,7 +47,7 @@ class SearchSettingsController extends Controller
                 ->with('success', 'Configuración de búsqueda actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
+                ->with('error', 'Error al actualizar la configuración: '.$e->getMessage())
                 ->withInput();
         }
     }

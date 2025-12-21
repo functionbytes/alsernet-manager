@@ -31,6 +31,7 @@ class ListRolesCommand extends Command
 
         if ($roles->isEmpty()) {
             $this->warn('⚠️  No roles found. Run: php artisan roles:create');
+
             return;
         }
 
@@ -75,6 +76,7 @@ class ListRolesCommand extends Command
 
         if ($users->isEmpty()) {
             $this->warn('⚠️  No users found');
+
             return;
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Setting;
+use Illuminate\Console\Command;
 
 class ConfigureMaintenanceTools extends Command
 {
@@ -30,8 +30,9 @@ class ConfigureMaintenanceTools extends Command
         $phpPath = $this->option('php');
 
         if ($composerPath) {
-            if (!file_exists($composerPath)) {
+            if (! file_exists($composerPath)) {
                 $this->error("❌ Composer no encontrado en: {$composerPath}");
+
                 return 1;
             }
             Setting::set('composer_path', $composerPath);
@@ -39,16 +40,17 @@ class ConfigureMaintenanceTools extends Command
         }
 
         if ($phpPath) {
-            if (!file_exists($phpPath)) {
+            if (! file_exists($phpPath)) {
                 $this->error("❌ PHP no encontrado en: {$phpPath}");
+
                 return 1;
             }
             Setting::set('php_path', $phpPath);
             $this->info("✓ Ruta de PHP guardada: {$phpPath}");
         }
 
-        if (!$composerPath && !$phpPath) {
-            $this->info("Configuración actual:");
+        if (! $composerPath && ! $phpPath) {
+            $this->info('Configuración actual:');
             $this->table(
                 ['Setting', 'Valor'],
                 [

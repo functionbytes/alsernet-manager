@@ -2,17 +2,14 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Acelle\Model\Log;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log as LaravelLog;
 
 class SystemCleanup extends Command
 {
-
     protected $signature = 'system:cleanup';
-
 
     protected $description = 'System cleanup';
 

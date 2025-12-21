@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\ApplicationLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Carbon\Carbon;
 
 class ServerAccessController extends Controller
 {
@@ -71,7 +70,7 @@ class ServerAccessController extends Controller
         $logsPath = storage_path('logs');
         $logs = [];
 
-        if (!is_dir($logsPath)) {
+        if (! is_dir($logsPath)) {
             return [];
         }
 
@@ -84,12 +83,12 @@ class ServerAccessController extends Controller
         });
 
         foreach ($files as $file) {
-            if (!is_file($file) || !str_contains($file, 'laravel')) {
+            if (! is_file($file) || ! str_contains($file, 'laravel')) {
                 continue;
             }
 
             $content = @file_get_contents($file);
-            if (!$content) {
+            if (! $content) {
                 continue;
             }
 
@@ -106,7 +105,7 @@ class ServerAccessController extends Controller
                         'timestamp' => $matches[1],
                         'level' => $matches[2],
                         'message' => $matches[3],
-                        'raw' => $line
+                        'raw' => $line,
                     ];
 
                     if ($limit && count($logs) >= $limit) {
@@ -126,7 +125,7 @@ class ServerAccessController extends Controller
     {
         $files = [];
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return $files;
         }
 
@@ -135,7 +134,7 @@ class ServerAccessController extends Controller
                 continue;
             }
 
-            $itemPath = $path . '/' . $item;
+            $itemPath = $path.'/'.$item;
 
             if (is_dir($itemPath)) {
                 $files = array_merge($files, $this->getAllLogFiles($itemPath));
@@ -168,7 +167,7 @@ class ServerAccessController extends Controller
         ];
 
         return view('managers.views.settings.server.stats.index', [
-            'stats' => $stats
+            'stats' => $stats,
         ]);
     }
 
@@ -182,6 +181,7 @@ class ServerAccessController extends Controller
         }
 
         $uptime = shell_exec('uptime');
+
         return trim($uptime);
     }
 
@@ -195,7 +195,8 @@ class ServerAccessController extends Controller
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
-        return round($bytes, 2) . ' ' . $units[$pow];
+
+        return round($bytes, 2).' '.$units[$pow];
     }
 
     /**
@@ -212,12 +213,12 @@ class ServerAccessController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Logs limpiados correctamente'
+                'message' => 'Logs limpiados correctamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al limpiar logs: ' . $e->getMessage()
+                'message' => 'Error al limpiar logs: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -229,10 +230,10 @@ class ServerAccessController extends Controller
     {
         $logPath = storage_path('logs/laravel.log');
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             return back()->with('error', 'No hay logs disponibles');
         }
 
-        return response()->download($logPath, 'laravel-logs-' . date('Y-m-d-His') . '.log');
+        return response()->download($logPath, 'laravel-logs-'.date('Y-m-d-His').'.log');
     }
 }

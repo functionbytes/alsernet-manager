@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Customization extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_customization';
+
     protected $primaryKey = 'id_customization';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class Customization extends Model
         'in_cart',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_product_attribute' => 'integer',
         'id_address_delivery' => 'integer',
         'id_cart' => 'integer',

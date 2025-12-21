@@ -2,8 +2,8 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 
 class InjectMessageIdToBody implements StageInterface
 {
@@ -20,6 +20,7 @@ class InjectMessageIdToBody implements StageInterface
         // It is used to track reply
         $msgId = $this->msgId ?? '[ null ]';
         $pixel = sprintf('<img src="%s" data="X-Client-Message-Id: %s" alt="X-Client-Message-Id: %s" width="0" height="0" alt="" style="visibility:hidden" />', asset('images/transparent.gif'), $msgId, $msgId);
+
         return StringHelper::appendHtml($html, $pixel);
     }
 }

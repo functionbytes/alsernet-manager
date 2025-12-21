@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Selecionar',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'dir',
     'Type' => 'Tipo',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Você selecionou muitos arquivos/pastas para %s. Limite: %d arquivos/operação', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Você não tem permissão para %s arquivos.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Não foi possível salvar a imagem',
-    'Image_Editor_Exit' => "Saída",
-    'Image_Editor_Save' => "Salve",
+    'Image_Editor_Exit' => 'Saída',
+    'Image_Editor_Save' => 'Salve',
     'Zip_No_Extract' => 'Não foi possível extrair. Arquivo pode estar corrompido.',
     'Zip_Invalid' => 'Esta extensão não é suportada. Válidos: zip, gz, tar.',
     'Dir_No_Write' => 'O diretório selecionado não é gravável.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Permissão arquivo',
     'File_Permission_Not_Allowed' => 'Mudanças de permissões de %s não são permitidos.', // %s = files or folders
     'File_Permission_Recursive' => 'Aplicar recursivamente?',
-    'File_Permission_Wrong_Mode' => "O modo de permissão fornecido está incorreto.",
+    'File_Permission_Wrong_Mode' => 'O modo de permissão fornecido está incorreto.',
     'User' => 'Usuário',
     'Group' => 'Grupo',
     'Yes' => 'Sim',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Não foi possível encontrar o arquivo.',
     'File_Open_Edit_Not_Allowed' => 'Você não tem permissão para %s este arquivo.', // %s = open or edit
     'Edit' => 'Editar',
-    'Edit_File' => "Editar conteúdo do arquivo",
-    'File_Save_OK' => "Arquivo salvo com sucesso.",
-    'File_Save_Error' => "Houve um erro ao salvar o arquivo.",
+    'Edit_File' => 'Editar conteúdo do arquivo',
+    'File_Save_OK' => 'Arquivo salvo com sucesso.',
+    'File_Save_Error' => 'Houve um erro ao salvar o arquivo.',
     'New_File' => 'Novo Arquivo',
     'No_Extension' => 'Você tem que adicionar uma extensão de arquivo.',
     'Valid_Extensions' => 'Extensões válidas: %s', // %s = txt,log etc.
-    'Upload_message' => "Arraste arquivo aqui para enviar",
+    'Upload_message' => 'Arraste arquivo aqui para enviar',
 
-    'SERVER ERROR' => "ERRO SERVIDOR",
-    'forbidden' => "proibido",
-    'wrong path' => "caminho errado",
-    'wrong name' => "nome errado",
-    'wrong extension' => "extensão errada",
-    'wrong option' => "opção errada",
-    'wrong data' => "dados errados",
-    'wrong action' => "ação errada",
-    'wrong sub-action' => "sub-ação errada",
-    'no action passed' => "nenhuma ação passada",
-    'no path' => "nenhum caminho",
-    'no file' => "nenhum arquivo",
-    'view type number missing' => "Ver tipo de número faltando",
-    'Not enough Memory' => "Memória insuficiente",
-    'max_size_reached' => "Sua pasta de imagens atingiu seu tamanho máximo de %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Tamanho total",
-);
+    'SERVER ERROR' => 'ERRO SERVIDOR',
+    'forbidden' => 'proibido',
+    'wrong path' => 'caminho errado',
+    'wrong name' => 'nome errado',
+    'wrong extension' => 'extensão errada',
+    'wrong option' => 'opção errada',
+    'wrong data' => 'dados errados',
+    'wrong action' => 'ação errada',
+    'wrong sub-action' => 'sub-ação errada',
+    'no action passed' => 'nenhuma ação passada',
+    'no path' => 'nenhum caminho',
+    'no file' => 'nenhum arquivo',
+    'view type number missing' => 'Ver tipo de número faltando',
+    'Not enough Memory' => 'Memória insuficiente',
+    'max_size_reached' => 'Sua pasta de imagens atingiu seu tamanho máximo de %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Tamanho total',
+];

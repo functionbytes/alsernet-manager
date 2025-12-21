@@ -15,7 +15,6 @@ class Template extends Model
         'title',
         'subject',
         'body',
-        'code'
+        'code',
     ];
-    
 }

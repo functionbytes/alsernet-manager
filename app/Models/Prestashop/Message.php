@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_message';
+
     protected $primaryKey = 'id_message';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -22,7 +25,7 @@ class Message extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_cart' => 'integer',
         'id_order' => 'integer',

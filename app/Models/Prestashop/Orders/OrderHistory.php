@@ -2,17 +2,18 @@
 
 namespace App\Models\Prestashop\Orders;
 
+use App\Models\Prestashop\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\Order;
-use App\Models\Prestashop\Orders\OrderState;
-use App\Models\Prestashop\Employee;
 
 class OrderHistory extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_history';
+
     protected $primaryKey = 'id_order_history';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +24,7 @@ class OrderHistory extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_order' => 'integer',

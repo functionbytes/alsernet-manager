@@ -22,5 +22,3 @@ class SubscriberResource extends JsonResource
         ];
     }
 }
-
-

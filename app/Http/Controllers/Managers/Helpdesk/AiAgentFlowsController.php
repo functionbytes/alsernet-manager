@@ -19,16 +19,16 @@ class AiAgentFlowsController extends Controller
 
         $agent = AiAgent::first();
 
-        if (!$agent) {
+        if (! $agent) {
             return redirect()
                 ->route('manager.helpdesk.ai-agent.settings')
                 ->with('error', 'Primero debes configurar un agente IA');
         }
 
         $flows = $agent->flows()
-            ->when($request->status, fn($q) => $q->where('status', $request->status))
-            ->when($request->trigger, fn($q) => $q->where('trigger', $request->trigger))
-            ->when($request->search, fn($q) => $q->where('name', 'like', '%' . $request->search . '%'))
+            ->when($request->status, fn ($q) => $q->where('status', $request->status))
+            ->when($request->trigger, fn ($q) => $q->where('trigger', $request->trigger))
+            ->when($request->search, fn ($q) => $q->where('name', 'like', '%'.$request->search.'%'))
             ->latest()
             ->paginate(20);
 
@@ -53,7 +53,7 @@ class AiAgentFlowsController extends Controller
 
         $agent = AiAgent::first();
 
-        if (!$agent) {
+        if (! $agent) {
             return redirect()->route('manager.helpdesk.ai-agent.settings');
         }
 
@@ -199,7 +199,7 @@ class AiAgentFlowsController extends Controller
         $this->authorize('create', AiAgentFlow::class);
 
         $newFlow = $flow->replicate();
-        $newFlow->name = $flow->name . ' (Copia)';
+        $newFlow->name = $flow->name.' (Copia)';
         $newFlow->status = 'draft';
         $newFlow->published_at = null;
         $newFlow->save();

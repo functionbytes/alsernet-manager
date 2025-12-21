@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_profile';
+
     protected $primaryKey = 'id_profile';
+
     public $timestamps = false;
 
     protected $fillable = [

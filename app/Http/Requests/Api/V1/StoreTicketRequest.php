@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\V1;
 
 use App\Permissions\V1\Abilities;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 class StoreTicketRequest extends BaseTicketRequest
@@ -42,28 +41,30 @@ class StoreTicketRequest extends BaseTicketRequest
             $rules['data.relationships.author.data'] = 'required|array';
         }
 
-        $rules[$authorIdAttr] = $authorRule . '|size:' . $user->id;
+        $rules[$authorIdAttr] = $authorRule.'|size:'.$user->id;
 
         if ($user->tokenCan(Abilities::CreateTicket)) {
             $rules[$authorIdAttr] = $authorRule;
         }
-        
+
         return $rules;
     }
 
-    protected function prepareForValidation() {
+    protected function prepareForValidation()
+    {
         if ($this->routeIs('authors.tickets.store')) {
             $this->merge([
-                'author' => $this->route('author')
+                'author' => $this->route('author'),
             ]);
         }
     }
 
-    public function bodyParameters() {
+    public function bodyParameters()
+    {
         $documentation = [
             'data.attributes.title' => [
                 'description' => "The ticket's title (method)",
-                'example' => 'No-example'
+                'example' => 'No-example',
             ],
             'data.attributes.description' => [
                 'description' => "The ticket's description",
@@ -78,12 +79,12 @@ class StoreTicketRequest extends BaseTicketRequest
         if ($this->routeIs('tickets.store')) {
             $documentation['data.relationships.author.data.id'] = [
                 'description' => 'The author assigned to the ticket.',
-                'example' => 'No-example'
+                'example' => 'No-example',
             ];
         } else {
             $documentation['author'] = [
                 'description' => 'The author assigned to the ticket.',
-                'example' => 'No-example'
+                'example' => 'No-example',
             ];
         }
 

@@ -13,7 +13,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    public function report(){
+    public function report()
+    {
 
         $conditions = OrderCondition::available()->get();
         $conditions->prepend('', '');
@@ -34,17 +35,18 @@ class ReportController extends Controller
         ]);
 
     }
-    public function generate(Request $request){
 
-        $type  = $request->type;
-        $method  = $request->methods;
-        $condition  = $request->condition;
-        $date = explode(" - ", $request->range);
+    public function generate(Request $request)
+    {
+
+        $type = $request->type;
+        $method = $request->methods;
+        $condition = $request->condition;
+        $date = explode(' - ', $request->range);
         $start = Carbon::parse($date[0])->startOfDay();
         $end = Carbon::parse($date[1])->endOfDay();
 
-        return Excel::download(new OrdersExport($type,$method,$condition,$start,$end), 'Reporte Ordenes.xlsx');
+        return Excel::download(new OrdersExport($type, $method, $condition, $start, $end), 'Reporte Ordenes.xlsx');
 
     }
-
 }

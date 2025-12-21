@@ -15,7 +15,9 @@ class ImportSubscribersListsJob extends Base
     public $timeout = 7200;
 
     protected $list;
+
     protected $lists;
+
     protected $file;
 
     /**
@@ -40,11 +42,12 @@ class ImportSubscribersListsJob extends Base
         });
 
     }
+
     public function handle()
     {
 
         $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
-        $logfile = $this->file.".log";
+        $logfile = $this->file.'.log';
         $stream = new StreamHandler($logfile, Logger::DEBUG);
         $stream->setFormatter($formatter);
 
@@ -62,7 +65,7 @@ class ImportSubscribersListsJob extends Base
             $this->file,
             function ($processed, $total, $failed, $message) use ($logger) {
 
-                $percentage = ($total && $processed) ? (int)($processed * 100 / $total) : 0;
+                $percentage = ($total && $processed) ? (int) ($processed * 100 / $total) : 0;
 
                 $this->monitor->updateJsonData([
                     'percentage' => $percentage,
@@ -76,7 +79,7 @@ class ImportSubscribersListsJob extends Base
                 $logger->info(sprintf('Procesado: %s/%s, Saltado: %s', $processed, $total, $failed));
             },
             function ($invalidRecord, $error) use ($logger) {
-                $logger->warning('Invalid record: [' . implode(",", array_values($invalidRecord)) . "] | Validation error: " . implode(";", $error));
+                $logger->warning('Invalid record: ['.implode(',', array_values($invalidRecord)).'] | Validation error: '.implode(';', $error));
             }
         );
 

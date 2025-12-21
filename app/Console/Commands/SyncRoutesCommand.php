@@ -58,22 +58,22 @@ class SyncRoutesCommand extends Command
         $this->line('📊 <info>Synchronization Results:</info>');
         $this->line("   Total routes processed: <fg=cyan>{$result['total']}</>");
 
-        if (!empty($result['added'])) {
-            $this->line("   <fg=green>✓ Added routes: " . count($result['added']) . "</>");
+        if (! empty($result['added'])) {
+            $this->line('   <fg=green>✓ Added routes: '.count($result['added']).'</>');
             foreach ($result['added'] as $route) {
                 $this->line("      • <fg=green>{$route}</>");
             }
         }
 
-        if (!empty($result['updated'])) {
-            $this->line("   <fg=yellow>⟳ Updated routes: " . count($result['updated']) . "</>");
+        if (! empty($result['updated'])) {
+            $this->line('   <fg=yellow>⟳ Updated routes: '.count($result['updated']).'</>');
             foreach ($result['updated'] as $route) {
                 $this->line("      • <fg=yellow>{$route}</>");
             }
         }
 
-        if (!empty($result['deleted'])) {
-            $this->line("   <fg=red>✗ Deleted routes: " . count($result['deleted']) . "</>");
+        if (! empty($result['deleted'])) {
+            $this->line('   <fg=red>✗ Deleted routes: '.count($result['deleted']).'</>');
             foreach ($result['deleted'] as $route) {
                 $this->line("      • <fg=red>{$route}</>");
             }
@@ -95,7 +95,7 @@ class SyncRoutesCommand extends Command
         $this->line("   Total routes in database: <fg=cyan>{$stats['total_routes']}</>");
         $this->line("   Active routes: <fg=green>{$stats['active_routes']}</>");
 
-        if (!empty($stats['by_profile'])) {
+        if (! empty($stats['by_profile'])) {
             $this->line('   <info>Routes by Profile:</info>');
             foreach ($stats['by_profile'] as $profile => $count) {
                 $profileName = $profile ?? 'unassigned';
@@ -103,7 +103,7 @@ class SyncRoutesCommand extends Command
             }
         }
 
-        if (!empty($stats['by_method'])) {
+        if (! empty($stats['by_method'])) {
             $this->line('   <info>Routes by Method:</info>');
             foreach ($stats['by_method'] as $method => $count) {
                 $this->line("      • $method: <fg=cyan>$count</>");

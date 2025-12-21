@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class InpostCarrier implements CarrierInterface
 {
     protected $carrier;
+
     protected $config;
 
     public function __construct()
@@ -24,18 +25,18 @@ class InpostCarrier implements CarrierInterface
             // InPost usa lockers, no recogida a domicilio
             // Crear envío para depositar en locker
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token'],
-                'Content-Type' => 'application/json'
-            ])->post($this->config['endpoint'] . '/parcels', [
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+                'Content-Type' => 'application/json',
+            ])->post($this->config['endpoint'].'/parcels', [
                 'sender' => [
                     'name' => $data['contact_name'],
                     'email' => $data['contact_email'],
-                    'phone' => $this->formatPhoneNumber($data['contact_phone'])
+                    'phone' => $this->formatPhoneNumber($data['contact_phone']),
                 ],
                 'receiver' => [
                     'name' => config('company.name'),
                     'email' => config('returns.email'),
-                    'phone' => $this->formatPhoneNumber(config('warehouse.phone'))
+                    'phone' => $this->formatPhoneNumber(config('warehouse.phone')),
                 ],
                 'parcels' => [
                     [
@@ -43,18 +44,18 @@ class InpostCarrier implements CarrierInterface
                         'reference' => $data['return_number'],
                         'insurance' => [
                             'amount' => $data['insurance_amount'] ?? 0,
-                            'currency' => 'EUR'
-                        ]
-                    ]
+                            'currency' => 'EUR',
+                        ],
+                    ],
                 ],
                 'custom_attributes' => [
                     'target_point' => $data['locker_id'] ?? null,
                     'sending_method' => 'parcel_locker',
-                    'return_shipment' => true
+                    'return_shipment' => true,
                 ],
                 'service' => 'inpost_locker_standard',
                 'reference' => $data['return_number'],
-                'comments' => 'Devolución de pedido'
+                'comments' => 'Devolución de pedido',
             ]);
 
             if ($response->successful()) {
@@ -66,25 +67,25 @@ class InpostCarrier implements CarrierInterface
                     'tracking_number' => $result['tracking_number'],
                     'locker_id' => $result['custom_attributes']['target_point'],
                     'qr_code' => $result['qr_code'] ?? null,
-                    'response' => $result
+                    'response' => $result,
                 ];
             }
 
             return [
                 'success' => false,
                 'error' => 'Error en la respuesta de InPost',
-                'response' => $response->json()
+                'response' => $response->json(),
             ];
 
         } catch (\Exception $e) {
             Log::error('InPost Parcel Creation Error', [
                 'error' => $e->getMessage(),
-                'data' => $data
+                'data' => $data,
             ]);
 
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -94,15 +95,16 @@ class InpostCarrier implements CarrierInterface
         try {
             // En InPost se cancela el envío completo
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->delete($this->config['endpoint'] . '/parcels/' . $pickupCode);
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->delete($this->config['endpoint'].'/parcels/'.$pickupCode);
 
             return $response->successful();
         } catch (\Exception $e) {
             Log::error('InPost Cancel Error', [
                 'error' => $e->getMessage(),
-                'parcel_id' => $pickupCode
+                'parcel_id' => $pickupCode,
             ]);
+
             return false;
         }
     }
@@ -111,8 +113,8 @@ class InpostCarrier implements CarrierInterface
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->get($this->config['endpoint'] . '/parcels/tracking/' . $trackingNumber);
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->get($this->config['endpoint'].'/parcels/tracking/'.$trackingNumber);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -133,7 +135,7 @@ class InpostCarrier implements CarrierInterface
                     'pickup_reminder_sent' => 'REMINDER_SENT',
                     'avizo' => 'AVIZO',
                     'claimed' => 'CLAIMED',
-                    'returned_to_sender' => 'RETURNED'
+                    'returned_to_sender' => 'RETURNED',
                 ];
 
                 $currentStatus = $data['status'] ?? 'UNKNOWN';
@@ -149,24 +151,24 @@ class InpostCarrier implements CarrierInterface
                     'available_for_pickup' => $currentStatus === 'ready_to_pickup',
                     'pickup_deadline' => $data['custom_attributes']['pickup_deadline'] ?? null,
                     'delivery_date' => $data['delivered_at'] ?? null,
-                    'qr_code' => $data['qr_code'] ?? null
+                    'qr_code' => $data['qr_code'] ?? null,
                 ];
             }
 
             return [
                 'success' => false,
-                'error' => 'No se pudo obtener el estado del envío'
+                'error' => 'No se pudo obtener el estado del envío',
             ];
 
         } catch (\Exception $e) {
             Log::error('InPost Tracking Error', [
                 'error' => $e->getMessage(),
-                'tracking' => $trackingNumber
+                'tracking' => $trackingNumber,
             ]);
 
             return [
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
@@ -176,27 +178,26 @@ class InpostCarrier implements CarrierInterface
         try {
             // InPost genera etiquetas automáticamente
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->get($this->config['endpoint'] . '/parcels/' . $data['pickup_code'] . '/label', [
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->get($this->config['endpoint'].'/parcels/'.$data['pickup_code'].'/label', [
                 'format' => $data['format'] ?? 'pdf',
-                'type' => $data['type'] ?? 'a4'
+                'type' => $data['type'] ?? 'a4',
             ]);
 
             if ($response->successful()) {
                 $pdfContent = $response->body();
 
-                $path = 'carriers/labels/inpost/' . $data['tracking_number'] . '.pdf';
+                $path = 'carriers/labels/inpost/'.$data['tracking_number'].'.pdf';
                 \Storage::put($path, $pdfContent);
 
                 return $path;
             }
 
             throw new \Exception('Error al generar etiqueta InPost');
-
         } catch (\Exception $e) {
             Log::error('InPost Label Generation Error', [
                 'error' => $e->getMessage(),
-                'data' => $data
+                'data' => $data,
             ]);
             throw $e;
         }
@@ -206,7 +207,7 @@ class InpostCarrier implements CarrierInterface
     {
         // InPost no valida direcciones porque usa lockers
         // Validar que se haya seleccionado un locker
-        return isset($address['locker_id']) && !empty($address['locker_id']);
+        return isset($address['locker_id']) && ! empty($address['locker_id']);
     }
 
     public function getRates(array $package): array
@@ -218,7 +219,7 @@ class InpostCarrier implements CarrierInterface
             $rates = [
                 'A' => ['price' => 3.99, 'name' => 'Paquete pequeño (8x38x64cm, max 25kg)'],
                 'B' => ['price' => 4.99, 'name' => 'Paquete mediano (19x38x64cm, max 25kg)'],
-                'C' => ['price' => 5.99, 'name' => 'Paquete grande (41x38x64cm, max 25kg)']
+                'C' => ['price' => 5.99, 'name' => 'Paquete grande (41x38x64cm, max 25kg)'],
             ];
 
             if (isset($rates[$size])) {
@@ -227,15 +228,16 @@ class InpostCarrier implements CarrierInterface
                     'size' => $size,
                     'price' => $rates[$size]['price'],
                     'name' => $rates[$size]['name'],
-                    'delivery_time' => '24-48 horas'
+                    'delivery_time' => '24-48 horas',
                 ]];
             }
 
             return [];
         } catch (\Exception $e) {
             Log::error('InPost Rates Error', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return [];
         }
     }
@@ -247,7 +249,7 @@ class InpostCarrier implements CarrierInterface
         return [[
             'start' => '00:00',
             'end' => '23:59',
-            'label' => 'Disponible 24/7 - Deposite cuando lo desee'
+            'label' => 'Disponible 24/7 - Deposite cuando lo desee',
         ]];
     }
 
@@ -258,14 +260,14 @@ class InpostCarrier implements CarrierInterface
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->get($this->config['endpoint'] . '/points', [
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->get($this->config['endpoint'].'/points', [
                 'near_lat' => $latitude,
                 'near_lng' => $longitude,
                 'max_distance' => $radius * 1000, // metros
                 'type' => 'parcel_locker',
                 'functions' => 'parcel_send',
-                'limit' => 20
+                'limit' => 20,
             ]);
 
             if ($response->successful()) {
@@ -275,19 +277,19 @@ class InpostCarrier implements CarrierInterface
                     return [
                         'id' => $point['name'],
                         'name' => $point['name'],
-                        'address' => $point['address']['line1'] . ', ' . $point['address']['line2'],
+                        'address' => $point['address']['line1'].', '.$point['address']['line2'],
                         'city' => $point['address']['city'],
                         'postal_code' => $point['address']['post_code'],
                         'location' => [
                             'latitude' => $point['location']['latitude'],
-                            'longitude' => $point['location']['longitude']
+                            'longitude' => $point['location']['longitude'],
                         ],
                         'distance' => $point['distance'] ?? null,
                         'available' => $point['status'] === 'Operating',
                         'type' => $point['type'],
                         'opening_hours' => '24/7',
                         'payment_available' => $point['payment_available'] ?? false,
-                        'functions' => $point['functions'] ?? []
+                        'functions' => $point['functions'] ?? [],
                     ];
                 }, $points);
             }
@@ -296,8 +298,9 @@ class InpostCarrier implements CarrierInterface
         } catch (\Exception $e) {
             Log::error('InPost Get Lockers Error', [
                 'error' => $e->getMessage(),
-                'location' => [$latitude, $longitude]
+                'location' => [$latitude, $longitude],
             ]);
+
             return [];
         }
     }
@@ -309,8 +312,8 @@ class InpostCarrier implements CarrierInterface
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->get($this->config['endpoint'] . '/points/' . $lockerId);
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->get($this->config['endpoint'].'/points/'.$lockerId);
 
             if ($response->successful()) {
                 $point = $response->json();
@@ -326,7 +329,7 @@ class InpostCarrier implements CarrierInterface
                     'available_services' => $point['functions'] ?? [],
                     'payment_methods' => $point['payment_type'] ?? [],
                     'photo_url' => $point['image_url'] ?? null,
-                    'directions' => $point['location_description'] ?? null
+                    'directions' => $point['location_description'] ?? null,
                 ];
             }
 
@@ -334,8 +337,9 @@ class InpostCarrier implements CarrierInterface
         } catch (\Exception $e) {
             Log::error('InPost Locker Details Error', [
                 'error' => $e->getMessage(),
-                'locker_id' => $lockerId
+                'locker_id' => $lockerId,
             ]);
+
             return null;
         }
     }
@@ -350,7 +354,7 @@ class InpostCarrier implements CarrierInterface
 
         if (strlen($phone) === 9 && in_array(substr($phone, 0, 1), ['6', '7', '9'])) {
             // Número español
-            return '34' . $phone;
+            return '34'.$phone;
         }
 
         return $phone;
@@ -396,7 +400,7 @@ class InpostCarrier implements CarrierInterface
                 'date' => $event['datetime'] ?? null,
                 'status' => $event['status'] ?? null,
                 'description' => $event['description'] ?? null,
-                'location' => $event['location'] ?? null
+                'location' => $event['location'] ?? null,
             ];
         }, $events);
     }
@@ -408,16 +412,16 @@ class InpostCarrier implements CarrierInterface
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->config['auth']['token']
-            ])->get($this->config['endpoint'] . '/parcels/' . $parcelId . '/qrcode', [
+                'Authorization' => 'Bearer '.$this->config['auth']['token'],
+            ])->get($this->config['endpoint'].'/parcels/'.$parcelId.'/qrcode', [
                 'format' => 'png',
-                'size' => 300
+                'size' => 300,
             ]);
 
             if ($response->successful()) {
                 $qrContent = $response->body();
 
-                $path = 'carriers/qrcodes/inpost/' . $parcelId . '.png';
+                $path = 'carriers/qrcodes/inpost/'.$parcelId.'.png';
                 \Storage::put($path, $qrContent);
 
                 return $path;
@@ -427,8 +431,9 @@ class InpostCarrier implements CarrierInterface
         } catch (\Exception $e) {
             Log::error('InPost QR Generation Error', [
                 'error' => $e->getMessage(),
-                'parcel_id' => $parcelId
+                'parcel_id' => $parcelId,
             ]);
+
             return null;
         }
     }

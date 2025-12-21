@@ -5,8 +5,8 @@ namespace Database\Seeders;
 use App\Models\Warehouse\Warehouse;
 use App\Models\Warehouse\WarehouseFloor;
 use App\Models\Warehouse\WarehouseLocation;
-use App\Models\Warehouse\WarehouseLocationStyle;
 use App\Models\Warehouse\WarehouseLocationSection;
+use App\Models\Warehouse\WarehouseLocationStyle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -305,6 +305,7 @@ class Coruna2LocationsSeeder extends Seeder
                     'levels' => [1],
                     'section_count' => 1,
                 ];
+
                 continue;
             }
 
@@ -315,6 +316,7 @@ class Coruna2LocationsSeeder extends Seeder
                     'levels' => [1],
                     'section_count' => 1,
                 ];
+
                 continue;
             }
 
@@ -324,21 +326,21 @@ class Coruna2LocationsSeeder extends Seeder
 
             if (is_numeric($lastPart)) {
                 $locationCode = substr($code, 0, $lastDash);
-                $level = (int)$lastPart;
+                $level = (int) $lastPart;
             } else {
                 // Sin número final (no debería llegar aquí)
                 $locationCode = $code;
                 $level = 1;
             }
 
-            if (!isset($locations[$locationCode])) {
+            if (! isset($locations[$locationCode])) {
                 $locations[$locationCode] = [
                     'code' => $locationCode,
                     'levels' => [],
                 ];
             }
 
-            if (!in_array($level, $locations[$locationCode]['levels'])) {
+            if (! in_array($level, $locations[$locationCode]['levels'])) {
                 $locations[$locationCode]['levels'][] = $level;
             }
         }
@@ -356,7 +358,7 @@ class Coruna2LocationsSeeder extends Seeder
      */
     private function getStyleForSectionCount(int $count, array $styles)
     {
-        return match(true) {
+        return match (true) {
             $count == 1 => $styles['simple'],
             $count <= 3 => $styles['multi-2-3'],
             $count == 4 => $styles['multi-4'],

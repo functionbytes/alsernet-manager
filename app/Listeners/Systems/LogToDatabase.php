@@ -23,7 +23,7 @@ class LogToDatabase
         // Solo guardar logs WARNING y superiores
         $levels = ['warning', 'error', 'critical', 'alert', 'emergency'];
 
-        if (!in_array($event->level, $levels)) {
+        if (! in_array($event->level, $levels)) {
             return;
         }
 
@@ -54,7 +54,7 @@ class LogToDatabase
             ]);
         } catch (\Throwable $e) {
             // Silenciar errores para no romper el flujo de logging
-            error_log('Failed to log to database: ' . $e->getMessage());
+            error_log('Failed to log to database: '.$e->getMessage());
         }
     }
 }

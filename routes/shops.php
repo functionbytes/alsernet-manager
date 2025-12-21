@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Shops\Subscribers\SubscribersController;
-use App\Http\Controllers\Shops\Settings\SettingsController;
-use App\Http\Controllers\Shops\DashboardController;
 use App\Http\Controllers\Managers\Users\UsersController;
+use App\Http\Controllers\Shops\DashboardController;
+use App\Http\Controllers\Shops\Settings\SettingsController;
+use App\Http\Controllers\Shops\Subscribers\SubscribersController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('shop')->middleware(['auth', 'check.roles.permissions:shop'])->group(function () {

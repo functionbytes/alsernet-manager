@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * /api/v1/file - API controller for managing user's files.
@@ -15,7 +15,6 @@ class FileController extends Controller
      *
      * GET /api/v1/file/upload
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -26,10 +25,10 @@ class FileController extends Controller
         // Get path
         $path = $user->getAssetsPath();
 
-        if (!is_array($request->all()["files"])) {
-            $files = json_decode($request->all()["files"]);
+        if (! is_array($request->all()['files'])) {
+            $files = json_decode($request->all()['files']);
         } else {
-            $files = $request->all()["files"];
+            $files = $request->all()['files'];
         }
 
         $result = [];
@@ -43,7 +42,7 @@ class FileController extends Controller
                 $validParts = [];
                 foreach ($parts as $part) {
                     if ($part) {
-                        if (strpbrk($part, "\\/?%*:|\"<>") === false) {
+                        if (strpbrk($part, '\\/?%*:|"<>') === false) {
                             $validParts[] = $part;
                         } else {
                             // return response()->json('Path is not valid', 400);
@@ -52,12 +51,13 @@ class FileController extends Controller
                                 'status' => 0,
                                 'message' => 'Subdirectory is not valid',
                             ];
+
                             continue;
                         }
                     }
                 }
 
-                $path = $path . implode('/', $validParts) . '/';
+                $path = $path.implode('/', $validParts).'/';
             }
 
             // Get file name
@@ -66,7 +66,7 @@ class FileController extends Controller
             $name = $urlArr[$ct - 1];
 
             // Update drestination path + file name
-            $destinationPath = $path . $name;
+            $destinationPath = $path.$name;
 
             // Check if file exist
             if (file_exists($destinationPath)) {
@@ -76,12 +76,13 @@ class FileController extends Controller
                     'status' => 0,
                     'message' => 'The same file name already exists',
                 ];
+
                 continue;
             }
 
             // Download file
             try {
-                if (!\Illuminate\Support\Facades\File::isDirectory($path)) {
+                if (! \Illuminate\Support\Facades\File::isDirectory($path)) {
                     \Illuminate\Support\Facades\File::makeDirectory($path, 0777, true);
                 }
 

@@ -11,7 +11,7 @@ return [
     | el UID del documento en los correos enviados.
     |
     */
-    'upload_portal_url' => env('DOCUMENTS_UPLOAD_PORTAL_URL', env('APP_URL') . '/documents/{uid}'),
+    'upload_portal_url' => env('DOCUMENTS_UPLOAD_PORTAL_URL', env('APP_URL').'/documents/{uid}'),
 
     /*
     |--------------------------------------------------------------------------

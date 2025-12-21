@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Carrier extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_carrier';
+
     protected $primaryKey = 'id_carrier';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +31,7 @@ class Carrier extends Model
         'grade',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'is_module' => 'boolean',
         'id_reference' => 'integer',
         'position' => 'integer',
@@ -37,7 +40,6 @@ class Carrier extends Model
         'max_depth' => 'float',
         'max_weight' => 'float',
     ];
-
 
     public function shop(): BelongsTo
     {
@@ -48,5 +50,4 @@ class Carrier extends Model
     {
         return $this->hasMany('App\Models\Prestashop\Cart\Cart', 'id_carrier', 'id_carrier');
     }
-
 }

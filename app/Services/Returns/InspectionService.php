@@ -1,13 +1,12 @@
 <?php
 
-
 namespace App\Services\Returns;
 
+use App\Models\Return\ReturnCost;
+use App\Models\Return\ReturnException;
+use App\Models\Return\ReturnInspection;
 use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnRequestProduct;
-use App\Models\Return\ReturnInspection;
-use App\Models\Return\ReturnException;
-use App\Models\Return\ReturnCost;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +28,7 @@ class InspectionService
                 'inspection_date' => now(),
                 'condition_grade' => $data['condition_grade'],
                 'checklist_results' => $data['checklist_results'],
-                'notes' => $data['notes'] ?? null
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // Determinar decisión automática
@@ -40,7 +39,7 @@ class InspectionService
             $inspection->requires_review = $inspection->determineIfRequiresReview();
 
             // Guardar fotos si las hay
-            if (!empty($data['photos'])) {
+            if (! empty($data['photos'])) {
                 $photoPaths = $this->saveInspectionPhotos($inspection, $data['photos']);
                 $inspection->inspection_photos = $photoPaths;
             }
@@ -50,7 +49,7 @@ class InspectionService
             // Actualizar estado del producto
             $returnItem->update([
                 'inspection_status' => $this->determineInspectionStatus($inspection),
-                'inspection_notes' => $data['notes'] ?? null
+                'inspection_notes' => $data['notes'] ?? null,
             ]);
 
             // Detectar y crear excepciones si es necesario
@@ -64,7 +63,7 @@ class InspectionService
             Log::info('Product inspection completed', [
                 'return_item_id' => $returnItem->id,
                 'grade' => $inspection->condition_grade,
-                'decision' => $inspection->final_decision
+                'decision' => $inspection->final_decision,
             ]);
 
             return $inspection;
@@ -74,7 +73,7 @@ class InspectionService
 
             Log::error('Error during product inspection', [
                 'return_item_id' => $returnItem->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -116,7 +115,7 @@ class InspectionService
             $exceptions[] = [
                 'type' => ReturnException::TYPE_USED_AS_NEW,
                 'severity' => ReturnException::SEVERITY_HIGH,
-                'description' => 'Producto reportado como sin abrir pero se encontró abierto/usado'
+                'description' => 'Producto reportado como sin abrir pero se encontró abierto/usado',
             ];
         }
 
@@ -127,23 +126,23 @@ class InspectionService
             ->pluck('item')
             ->toArray();
 
-        if (!empty($missingParts)) {
+        if (! empty($missingParts)) {
             $exceptions[] = [
                 'type' => ReturnException::TYPE_MISSING_PARTS,
                 'severity' => count($missingParts) > 2 ?
                     ReturnException::SEVERITY_MEDIUM :
                     ReturnException::SEVERITY_LOW,
-                'description' => 'Partes faltantes: ' . implode(', ', $missingParts)
+                'description' => 'Partes faltantes: '.implode(', ', $missingParts),
             ];
         }
 
         // 3. Verificar daños no reportados
         if ($inspection->condition_grade === ReturnInspection::GRADE_D &&
-            !in_array($reportedCondition, ['damaged', 'used'])) {
+            ! in_array($reportedCondition, ['damaged', 'used'])) {
             $exceptions[] = [
                 'type' => ReturnException::TYPE_DAMAGED_BY_CARRIER,
                 'severity' => ReturnException::SEVERITY_HIGH,
-                'description' => 'Producto con daños no reportados por el cliente'
+                'description' => 'Producto con daños no reportados por el cliente',
             ];
         }
 
@@ -156,7 +155,7 @@ class InspectionService
                 'severity' => $exceptionData['severity'],
                 'description' => $exceptionData['description'],
                 'resolution' => ReturnException::RESOLUTION_PENDING,
-                'requires_escalation' => $exceptionData['severity'] === ReturnException::SEVERITY_HIGH
+                'requires_escalation' => $exceptionData['severity'] === ReturnException::SEVERITY_HIGH,
             ]);
         }
     }
@@ -174,7 +173,7 @@ class InspectionService
             ReturnInspection::GRADE_A => 0,
             ReturnInspection::GRADE_B => 0.15, // 15% deducción
             ReturnInspection::GRADE_C => 0.30, // 30% deducción
-            ReturnInspection::GRADE_D => 1.00  // 100% deducción
+            ReturnInspection::GRADE_D => 1.00,  // 100% deducción
         ];
 
         $deductionRate = $conditionDeductions[$inspection->condition_grade] ?? 0;
@@ -184,7 +183,7 @@ class InspectionService
             $costs[] = [
                 'type' => 'condition_deduction',
                 'amount' => $conditionDeduction,
-                'description' => 'Deducción por condición del producto'
+                'description' => 'Deducción por condición del producto',
             ];
             $totalDeduction += $conditionDeduction;
         }
@@ -199,7 +198,7 @@ class InspectionService
             $costs[] = [
                 'type' => 'missing_part',
                 'amount' => $partCost,
-                'description' => 'Parte faltante: ' . $part['item']
+                'description' => 'Parte faltante: '.$part['item'],
             ];
             $totalDeduction += $partCost;
         }
@@ -208,7 +207,7 @@ class InspectionService
         $processingCosts = [
             ReturnInspection::DECISION_REPAIR => 25,
             ReturnInspection::DECISION_DESTROY => 15,
-            ReturnInspection::DECISION_RETURN_TO_SUPPLIER => 20
+            ReturnInspection::DECISION_RETURN_TO_SUPPLIER => 20,
         ];
 
         if (isset($processingCosts[$inspection->final_decision])) {
@@ -216,7 +215,7 @@ class InspectionService
             $costs[] = [
                 'type' => 'processing',
                 'amount' => $processingCost,
-                'description' => 'Coste de procesamiento'
+                'description' => 'Coste de procesamiento',
             ];
         }
 
@@ -228,7 +227,7 @@ class InspectionService
                 'cost_type' => $cost['type'],
                 'amount' => $cost['amount'],
                 'description' => $cost['description'],
-                'applied_by' => auth()->id()
+                'applied_by' => auth()->id(),
             ]);
         }
 
@@ -236,7 +235,7 @@ class InspectionService
         $finalRefundAmount = max(0, $returnItem->total_price - $totalDeduction);
         $returnItem->update([
             'refund_amount' => $finalRefundAmount,
-            'is_approved' => $inspection->condition_grade !== ReturnInspection::GRADE_D
+            'is_approved' => $inspection->condition_grade !== ReturnInspection::GRADE_D,
         ]);
 
         // Actualizar totales de la devolución
@@ -255,7 +254,7 @@ class InspectionService
 
         foreach ($photos as $index => $photo) {
             if ($photo->isValid()) {
-                $filename = "inspection_{$inspection->id}_{$index}." . $photo->extension();
+                $filename = "inspection_{$inspection->id}_{$index}.".$photo->extension();
                 $path = $photo->storeAs($directory, $filename);
                 $paths[] = $path;
             }
@@ -274,33 +273,33 @@ class InspectionService
             [
                 'category' => 'general',
                 'item' => 'Producto corresponde a la descripción',
-                'required' => true
+                'required' => true,
             ],
             [
                 'category' => 'general',
                 'item' => 'Número de serie/modelo coincide',
-                'required' => true
+                'required' => true,
             ],
             [
                 'category' => 'condition',
                 'item' => 'Sin daños físicos visibles',
-                'required' => true
+                'required' => true,
             ],
             [
                 'category' => 'condition',
                 'item' => 'Funciona correctamente',
-                'required' => true
+                'required' => true,
             ],
             [
                 'category' => 'packaging',
                 'item' => 'Embalaje original incluido',
-                'required' => false
+                'required' => false,
             ],
             [
                 'category' => 'packaging',
                 'item' => 'Manual de instrucciones incluido',
-                'required' => false
-            ]
+                'required' => false,
+            ],
         ];
 
         // Agregar items específicos por categoría
@@ -310,13 +309,13 @@ class InspectionService
                     'category' => 'accessories',
                     'item' => 'Cargador incluido',
                     'required' => true,
-                    'estimated_value' => 25
+                    'estimated_value' => 25,
                 ];
                 $baseChecklist[] = [
                     'category' => 'accessories',
                     'item' => 'Cables incluidos',
                     'required' => true,
-                    'estimated_value' => 15
+                    'estimated_value' => 15,
                 ];
                 break;
 
@@ -324,12 +323,12 @@ class InspectionService
                 $baseChecklist[] = [
                     'category' => 'condition',
                     'item' => 'Sin manchas o decoloración',
-                    'required' => true
+                    'required' => true,
                 ];
                 $baseChecklist[] = [
                     'category' => 'condition',
                     'item' => 'Etiquetas originales',
-                    'required' => false
+                    'required' => false,
                 ];
                 break;
 
@@ -338,12 +337,12 @@ class InspectionService
                     'category' => 'accessories',
                     'item' => 'Tornillería completa',
                     'required' => true,
-                    'estimated_value' => 10
+                    'estimated_value' => 10,
                 ];
                 $baseChecklist[] = [
                     'category' => 'condition',
                     'item' => 'Sin rayones profundos',
-                    'required' => true
+                    'required' => true,
                 ];
                 break;
         }
@@ -359,16 +358,17 @@ class InspectionService
         $results = [
             'success' => 0,
             'failed' => 0,
-            'errors' => []
+            'errors' => [],
         ];
 
         foreach ($items as $itemId) {
             try {
                 $returnItem = ReturnRequestProduct::find($itemId);
 
-                if (!$returnItem || $returnItem->is_received !== true) {
+                if (! $returnItem || $returnItem->is_received !== true) {
                     $results['errors'][] = "Producto {$itemId} no encontrado o no recibido";
                     $results['failed']++;
+
                     continue;
                 }
 
@@ -376,13 +376,13 @@ class InspectionService
                 $this->inspectProduct($returnItem, [
                     'condition_grade' => $defaultGrade,
                     'checklist_results' => $this->getQuickChecklistResults($defaultGrade),
-                    'notes' => 'Inspección masiva'
+                    'notes' => 'Inspección masiva',
                 ]);
 
                 $results['success']++;
 
             } catch (\Exception $e) {
-                $results['errors'][] = "Error en producto {$itemId}: " . $e->getMessage();
+                $results['errors'][] = "Error en producto {$itemId}: ".$e->getMessage();
                 $results['failed']++;
             }
         }
@@ -400,8 +400,8 @@ class InspectionService
 
         return collect($checklist)->map(function ($item) use ($passAll) {
             return array_merge($item, [
-                'passed' => $passAll || !$item['required'],
-                'notes' => null
+                'passed' => $passAll || ! $item['required'],
+                'notes' => null,
             ]);
         })->toArray();
     }
@@ -424,7 +424,7 @@ class InspectionService
                     ->map->count(),
                 'decision_distribution' => $inspections->groupBy('final_decision')
                     ->map->count(),
-                'requires_review' => $inspections->where('requires_review', true)->count()
+                'requires_review' => $inspections->where('requires_review', true)->count(),
             ],
             'exceptions' => ReturnException::where('return_request_id', $returnRequest->id)
                 ->with('inspection')
@@ -439,9 +439,8 @@ class InspectionService
                         return $inspection->returnItem->total_price * 0.5; // 50% valor outlet
                     }),
                 'total_deductions' => ReturnCost::where('return_request_id', $returnRequest->id)
-                    ->sum('amount')
-            ]
+                    ->sum('amount'),
+            ],
         ];
     }
 }
-

@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Country extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_country';
+
     protected $primaryKey = 'id_country';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -25,7 +28,7 @@ class Country extends Model
         'zip_code_format',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_zone' => 'integer',
         'id_currency' => 'integer',
     ];

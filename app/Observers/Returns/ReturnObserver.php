@@ -20,10 +20,9 @@ class ReturnObserver
                 'metadata' => [
                     'ip' => request()->ip(),
                     'user_agent' => request()->userAgent(),
-                    'timestamp' => now()->toIso8601String()
-                ]
+                    'timestamp' => now()->toIso8601String(),
+                ],
             ]);
         }
+    }
 }
-}
-

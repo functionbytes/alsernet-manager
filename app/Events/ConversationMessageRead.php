@@ -25,7 +25,7 @@ class ConversationMessageRead implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('conversations.' . $this->item->conversation_id),
+            new PrivateChannel('conversations.'.$this->item->conversation_id),
         ];
     }
 

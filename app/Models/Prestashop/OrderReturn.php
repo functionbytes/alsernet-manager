@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\Order;
 
 class OrderReturn extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_return';
+
     protected $primaryKey = 'id_order_return';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class OrderReturn extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_order_return' => 'integer',

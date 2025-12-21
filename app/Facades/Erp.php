@@ -11,5 +11,4 @@ class Erp extends Facade
     {
         return ErpService::class;
     }
-
 }

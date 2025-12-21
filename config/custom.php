@@ -34,5 +34,5 @@ return [
     'dryrun' => env('APP_DRYRUN', false),
 
     // License verification endpoint
-    'license_verification_endpoint' => env('LICENSE_VALIDATION_ENDPOINT', 'http://verify.acellemail.com')
+    'license_verification_endpoint' => env('LICENSE_VALIDATION_ENDPOINT', 'http://verify.acellemail.com'),
 ];

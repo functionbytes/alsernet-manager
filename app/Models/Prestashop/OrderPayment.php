@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrderPayment extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_payment';
+
     protected $primaryKey = 'id_order_payment';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +30,7 @@ class OrderPayment extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_order_payment' => 'integer',
         'id_currency' => 'integer',

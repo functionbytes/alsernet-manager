@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Selecteren',
     'Deselect_All' => 'Deselect All',
@@ -45,7 +45,7 @@ return array(
     'Upload_base_help' => "Drag & Drop bestanden (moderne browsers) of klik op de bovenste knop om het bestand (en) toe te voegen en klik op Begin uploaden. Wanneer het uploaden is voltooid, klikt u op de knop 'Terug naar bestanden'.",
     'Upload_add_files' => 'Voeg bestanden toe',
     'Upload_start' => 'Begin uploaden',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'Bestandsgrootte is te groot.',
         2 => 'Bestandsgrootte is te groot.',
         3 => 'Bestand is slechts gedeeltelijk geupload.',
@@ -63,8 +63,8 @@ return array(
         'max_height' => 'Afbeelding te hoog.',
         'min_height' => 'Afbeelding niet hoog genoeg.',
         'abort' => 'Uploaden onderbroken.',
-        'image_resize' => 'Resizen is mislukt.'
-    ),
+        'image_resize' => 'Resizen is mislukt.',
+    ],
     'Upload_url' => 'Van url',
     'Type_dir' => 'map',
     'Type' => 'Type',
@@ -97,8 +97,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'er zijn teveel mappen/bestanden geselecteerd om te %s. Maximaal: %d files/operation', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Het is niet toegestaan bestanden te %s.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Kan de afbeelding niet opslaan',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Kan niet uitpakken. Bestand is wellicht beschadigt.',
     'Zip_Invalid' => 'Deze extensie is niet toegestaan. Valid: zip, gz, tar.',
     'Dir_No_Write' => 'De geselecteerde map is niet beschrijfbaar.',
@@ -106,7 +106,7 @@ return array(
     'File_Permission' => 'Rechten',
     'File_Permission_Not_Allowed' => 'Aanpassen van de rechten van %s is niet toegestaan.', // %s = files or folders
     'File_Permission_Recursive' => 'Toepassen voor alles binnen deze map?',
-    'File_Permission_Wrong_Mode' => "De gewenste rechten zijn niet juist.",
+    'File_Permission_Wrong_Mode' => 'De gewenste rechten zijn niet juist.',
     'User' => 'Gebruiker',
     'Group' => 'Groep',
     'Yes' => 'Ja',
@@ -116,32 +116,32 @@ return array(
     'File_Not_Found' => 'Kan het bestand niet vinden.',
     'File_Open_Edit_Not_Allowed' => 'Je bent niet bevoegd dit bestand te %s.', // %s = open or edit
     'Edit' => 'Bewerken',
-    'Edit_File' => "Bewerkt de inhoud van dit bestand",
-    'File_Save_OK' => "Bestand is opgeslagen.",
-    'File_Save_Error' => "Er is een fout opgetreden tijdens het opslaan van het bestand.",
+    'Edit_File' => 'Bewerkt de inhoud van dit bestand',
+    'File_Save_OK' => 'Bestand is opgeslagen.',
+    'File_Save_Error' => 'Er is een fout opgetreden tijdens het opslaan van het bestand.',
     'No_Extension' => 'Je moet een bestands-extensie toevoegen.',
     'Valid_Extensions' => 'Geldige extensies: %s', // %s = txt,log etc.
-    'Upload_message' => "Sleep hier bestanden om te uploaden",
+    'Upload_message' => 'Sleep hier bestanden om te uploaden',
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Verboden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size",
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Verboden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

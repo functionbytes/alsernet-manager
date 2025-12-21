@@ -2,12 +2,13 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 
 class InjectTrackingPixel implements StageInterface
 {
     public $campaign;
+
     public $msgId;
 
     public function __construct($campaign, $msgId)
@@ -19,6 +20,7 @@ class InjectTrackingPixel implements StageInterface
     public function __invoke($html)
     {
         $pixel = $this->campaign->makeTrackingPixel($this->msgId);
+
         return StringHelper::appendHtml($html, $pixel);
     }
 }

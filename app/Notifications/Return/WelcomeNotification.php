@@ -4,9 +4,9 @@ namespace App\Notifications\Return;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class WelcomeNotification extends Notification implements ShouldQueue
 {
@@ -44,7 +44,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('¡Bienvenido a A-alvarez!')
-            ->greeting('¡Hola ' . $notifiable->name . '!')
+            ->greeting('¡Hola '.$notifiable->name.'!')
             ->line('Te damos la bienvenida a nuestra plataforma.')
             ->line('Estamos emocionados de tenerte con nosotros.')
             ->action('Explorar la plataforma', url('/dashboard'))
@@ -101,6 +101,6 @@ class WelcomeNotification extends Notification implements ShouldQueue
      */
     public function toSms($notifiable): string
     {
-        return "¡Hola {$notifiable->name}! Te damos la bienvenida a A-alvarez. Explora tu nueva cuenta en: " . url('/dashboard');
+        return "¡Hola {$notifiable->name}! Te damos la bienvenida a A-alvarez. Explora tu nueva cuenta en: ".url('/dashboard');
     }
 }

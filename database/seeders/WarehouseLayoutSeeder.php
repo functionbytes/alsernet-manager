@@ -16,8 +16,11 @@ use Illuminate\Support\Str;
 class WarehouseLayoutSeeder extends Seeder
 {
     private $warehouse;
+
     private $floors = [];
+
     private $styles = [];
+
     private $parser;
 
     /**
@@ -32,22 +35,23 @@ class WarehouseLayoutSeeder extends Seeder
 
             // 1. Get warehouse COR
             $this->warehouse = Warehouse::where('code', 'COR')->first();
-            if (!$this->warehouse) {
+            if (! $this->warehouse) {
                 $this->command->error("❌ Warehouse with code 'COR' not found!");
+
                 return;
             }
 
             $this->command->info("✓ Warehouse: {$this->warehouse->code} (ID: {$this->warehouse->id})");
 
             // 2. Initialize parser
-            $this->parser = new WarehouseLayoutParser();
+            $this->parser = new WarehouseLayoutParser;
 
             // 3. Load LAYOUT_SPEC
             $layoutSpec = $this->getLayoutSpec();
-            $this->command->info("✓ Loaded LAYOUT_SPEC with " . count($layoutSpec) . " sections\n");
+            $this->command->info('✓ Loaded LAYOUT_SPEC with '.count($layoutSpec)." sections\n");
 
             // 4. Parse complete layout
-            $this->command->info("📊 Parsing layout structure...");
+            $this->command->info('📊 Parsing layout structure...');
             $parsed = $this->parser->parse($layoutSpec);
 
             // 5. Display summary
@@ -74,12 +78,12 @@ class WarehouseLayoutSeeder extends Seeder
 
             DB::commit();
             $this->command->info("\n✅ Seeding completed successfully!");
-            $this->command->info("Total locations created: " . $parsed['summary']['total_locations']);
-            $this->command->info("Total sections created: " . $parsed['summary']['total_sections']);
+            $this->command->info('Total locations created: '.$parsed['summary']['total_locations']);
+            $this->command->info('Total sections created: '.$parsed['summary']['total_sections']);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error("\n❌ Error: " . $e->getMessage());
+            $this->command->error("\n❌ Error: ".$e->getMessage());
             $this->command->error($e->getTraceAsString());
             throw $e;
         }
@@ -93,7 +97,7 @@ class WarehouseLayoutSeeder extends Seeder
     {
         // Return the complete LAYOUT_SPEC array
         // In production, this would be loaded from storage/app/layout_spec.json
-        return require(__DIR__ . '/layout_spec.php');
+        return require __DIR__.'/layout_spec.php';
     }
 
     /**
@@ -101,28 +105,28 @@ class WarehouseLayoutSeeder extends Seeder
      */
     private function displaySummary(array $summary): void
     {
-        $this->command->info("─────────────────────────────────────");
-        $this->command->info("📊 PARSING SUMMARY");
-        $this->command->info("─────────────────────────────────────");
-        $this->command->info("Total Floors: " . $summary['total_floors']);
-        $this->command->info("Total Locations: " . $summary['total_locations']);
-        $this->command->info("Total Sections: " . $summary['total_sections']);
+        $this->command->info('─────────────────────────────────────');
+        $this->command->info('📊 PARSING SUMMARY');
+        $this->command->info('─────────────────────────────────────');
+        $this->command->info('Total Floors: '.$summary['total_floors']);
+        $this->command->info('Total Locations: '.$summary['total_locations']);
+        $this->command->info('Total Sections: '.$summary['total_sections']);
 
-        if (!empty($summary['floor_breakdown'])) {
+        if (! empty($summary['floor_breakdown'])) {
             $this->command->info("\nBreakdown by Floor:");
             foreach ($summary['floor_breakdown'] as $floor => $count) {
                 $this->command->info("  - Floor {$floor}: {$count} locations");
             }
         }
 
-        if (!empty($summary['style_breakdown'])) {
+        if (! empty($summary['style_breakdown'])) {
             $this->command->info("\nBreakdown by Style:");
             foreach ($summary['style_breakdown'] as $style => $count) {
                 $this->command->info("  - {$style}: {$count} locations");
             }
         }
 
-        $this->command->info("─────────────────────────────────────");
+        $this->command->info('─────────────────────────────────────');
     }
 
     /**
@@ -134,7 +138,7 @@ class WarehouseLayoutSeeder extends Seeder
             $floor = WarehouseFloor::firstOrCreate(
                 [
                     'warehouse_id' => $this->warehouse->id,
-                    'level' => $floorData['level']
+                    'level' => $floorData['level'],
                 ],
                 [
                     'uid' => Str::uuid(),
@@ -161,7 +165,7 @@ class WarehouseLayoutSeeder extends Seeder
             $this->styles[$style->code] = $style;
         }
 
-        $this->command->info("  ✓ Loaded " . count($this->styles) . " location styles");
+        $this->command->info('  ✓ Loaded '.count($this->styles).' location styles');
     }
 
     /**
@@ -175,15 +179,17 @@ class WarehouseLayoutSeeder extends Seeder
         foreach ($locations as $locationData) {
             // Get floor
             $floor = $this->floors[$locationData['floor_level']] ?? null;
-            if (!$floor) {
+            if (! $floor) {
                 $this->command->warn("  ⚠ Floor level {$locationData['floor_level']} not found for {$locationData['code']}");
+
                 continue;
             }
 
             // Get style
             $style = $this->styles[$locationData['style_code']] ?? null;
-            if (!$style) {
+            if (! $style) {
                 $this->command->warn("  ⚠ Style {$locationData['style_code']} not found for {$locationData['code']}");
+
                 continue;
             }
 
@@ -247,7 +253,7 @@ class WarehouseLayoutSeeder extends Seeder
         $json = json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         Storage::disk('local')->put('warehouse_layout.json', $json);
 
-        $this->command->info("  ✓ JSON export saved to storage/app/warehouse_layout.json");
+        $this->command->info('  ✓ JSON export saved to storage/app/warehouse_layout.json');
     }
 
     /**
@@ -255,14 +261,14 @@ class WarehouseLayoutSeeder extends Seeder
      */
     private function displayErrorsAndWarnings(array $errors, array $warnings): void
     {
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->command->warn("\n⚠ ERRORS FOUND:");
             foreach ($errors as $error) {
                 $this->command->error("  - {$error}");
             }
         }
 
-        if (!empty($warnings)) {
+        if (! empty($warnings)) {
             $this->command->warn("\n⚠ WARNINGS:");
             foreach ($warnings as $warning) {
                 $this->command->warn("  - {$warning}");

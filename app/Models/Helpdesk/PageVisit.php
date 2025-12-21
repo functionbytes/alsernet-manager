@@ -85,10 +85,12 @@ class PageVisit extends Model
 
         if ($seconds < 3600) {
             $minutes = intdiv($seconds, 60);
+
             return "{$minutes}m";
         }
 
         $hours = intdiv($seconds, 3600);
+
         return "{$hours}h";
     }
 

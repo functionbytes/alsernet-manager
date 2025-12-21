@@ -4,11 +4,14 @@ namespace App\Jobs;
 
 use App\Library\Traits\Trackable;
 
-class ExportCampaignLog extends Base {
-
+class ExportCampaignLog extends Base
+{
     use Trackable;
+
     public $timeout = 3600;
+
     protected $campaign;
+
     protected $logtype;
 
     public function __construct($campaign, $logtype)
@@ -18,10 +21,11 @@ class ExportCampaignLog extends Base {
 
         $this->afterDispatched(function ($thisJob, $monitor) {
             $monitor->setJsonData([
-                'percentage' => 0
+                'percentage' => 0,
             ]);
         });
     }
+
     public function handle()
     {
         $this->campaign->generateTrackingLogCsv($this->logtype, function ($percentage, $path) {

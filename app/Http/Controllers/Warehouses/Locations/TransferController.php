@@ -48,7 +48,7 @@ class TransferController extends Controller
             ->orWhere('title', 'like', "%$search%")
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return response()->json([
                 'success' => false,
                 'message' => 'Producto no encontrado',
@@ -77,7 +77,7 @@ class TransferController extends Controller
 
             $key = $location->id;
 
-            if (!isset($locations[$key])) {
+            if (! isset($locations[$key])) {
                 $locations[$key] = [
                     'location_id' => $location->id,
                     'location_code' => $location->code,
@@ -192,7 +192,7 @@ class TransferController extends Controller
             ->where('product_id', $productId)
             ->first();
 
-        if (!$fromSlot) {
+        if (! $fromSlot) {
             return response()->json([
                 'success' => false,
                 'message' => 'El producto no existe en la sección origen',

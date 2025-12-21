@@ -48,7 +48,7 @@ class RouteFileWatcherService
     public function startWatching(int $interval = 5)
     {
         Log::info('🔍 Route file watcher started', [
-            'interval' => $interval . ' seconds',
+            'interval' => $interval.' seconds',
             'monitored_files' => count($this->routeFiles),
         ]);
 
@@ -60,7 +60,7 @@ class RouteFileWatcherService
             try {
                 $changes = $this->detectChanges();
 
-                if (!empty($changes['added']) || !empty($changes['modified']) || !empty($changes['deleted'])) {
+                if (! empty($changes['added']) || ! empty($changes['modified']) || ! empty($changes['deleted'])) {
                     $this->handleChanges($changes);
                 }
 
@@ -91,7 +91,7 @@ class RouteFileWatcherService
 
         // Detect added and modified files
         foreach ($currentHashes as $file => $hash) {
-            if (!isset($previousHashes[$file])) {
+            if (! isset($previousHashes[$file])) {
                 $changes['added'][] = $file;
             } elseif ($previousHashes[$file] !== $hash) {
                 $changes['modified'][] = $file;
@@ -100,13 +100,13 @@ class RouteFileWatcherService
 
         // Detect deleted files
         foreach ($previousHashes as $file => $hash) {
-            if (!isset($currentHashes[$file])) {
+            if (! isset($currentHashes[$file])) {
                 $changes['deleted'][] = $file;
             }
         }
 
         // Save current hashes for next comparison
-        if (!empty($changes['added']) || !empty($changes['modified']) || !empty($changes['deleted'])) {
+        if (! empty($changes['added']) || ! empty($changes['modified']) || ! empty($changes['deleted'])) {
             $this->saveCachedHashes($currentHashes);
         }
 
@@ -143,7 +143,7 @@ class RouteFileWatcherService
         $content = file_get_contents($path);
         $mtime = filemtime($path);
 
-        return md5($content . '|' . $mtime);
+        return md5($content.'|'.$mtime);
     }
 
     /**
@@ -151,11 +151,12 @@ class RouteFileWatcherService
      */
     protected function loadCachedHashes(): array
     {
-        if (!file_exists($this->cacheFile)) {
+        if (! file_exists($this->cacheFile)) {
             return [];
         }
 
         $cached = json_decode(file_get_contents($this->cacheFile), true);
+
         return is_array($cached) ? $cached : [];
     }
 
@@ -176,16 +177,16 @@ class RouteFileWatcherService
 
         $this->output("\n⚠️  Route file changes detected at {$timestamp}");
 
-        if (!empty($changes['added'])) {
-            $this->output('✅ Added files: ' . implode(', ', $changes['added']));
+        if (! empty($changes['added'])) {
+            $this->output('✅ Added files: '.implode(', ', $changes['added']));
         }
 
-        if (!empty($changes['modified'])) {
-            $this->output('⟳ Modified files: ' . implode(', ', $changes['modified']));
+        if (! empty($changes['modified'])) {
+            $this->output('⟳ Modified files: '.implode(', ', $changes['modified']));
         }
 
-        if (!empty($changes['deleted'])) {
-            $this->output('❌ Deleted files: ' . implode(', ', $changes['deleted']));
+        if (! empty($changes['deleted'])) {
+            $this->output('❌ Deleted files: '.implode(', ', $changes['deleted']));
         }
 
         $this->output('Syncing routes with database...');
@@ -220,26 +221,26 @@ class RouteFileWatcherService
         $this->output("\n📊 Sync Results:");
         $this->output("   Total routes processed: {$result['total']}");
 
-        if (!empty($result['added'])) {
-            $this->output("   ✅ Added: " . count($result['added']));
+        if (! empty($result['added'])) {
+            $this->output('   ✅ Added: '.count($result['added']));
             foreach ($result['added'] as $route) {
                 $this->output("      • {$route}");
             }
         }
 
-        if (!empty($result['updated'])) {
-            $this->output("   ⟳ Updated: " . count($result['updated']));
+        if (! empty($result['updated'])) {
+            $this->output('   ⟳ Updated: '.count($result['updated']));
         }
 
-        if (!empty($result['deleted'])) {
-            $this->output("   ❌ Deleted: " . count($result['deleted']));
+        if (! empty($result['deleted'])) {
+            $this->output('   ❌ Deleted: '.count($result['deleted']));
             foreach ($result['deleted'] as $route) {
                 $this->output("      • {$route}");
             }
         }
 
         if (empty($result['added']) && empty($result['updated']) && empty($result['deleted'])) {
-            $this->output("   ℹ️  No route changes detected");
+            $this->output('   ℹ️  No route changes detected');
         }
     }
 
@@ -248,7 +249,7 @@ class RouteFileWatcherService
      */
     public function addFileToWatch(string $file): self
     {
-        if (!in_array($file, $this->routeFiles)) {
+        if (! in_array($file, $this->routeFiles)) {
             $this->routeFiles[] = $file;
         }
 

@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnTypeLang extends Model
 {
     protected $table = 'return_type_lang';
+
     protected $primaryKey = null;
+
     public $incrementing = false;
 
     protected $fillable = [
-        'id_return_type', 'id_lang', 'id_shop', 'name', 'day', 'return_color', 'active'
+        'id_return_type', 'id_lang', 'id_shop', 'name', 'day', 'return_color', 'active',
     ];
 
     protected $casts = [
@@ -63,7 +65,7 @@ class ReturnTypeLang extends Model
      */
     public function isWithinReturnPeriod($orderDate): bool
     {
-        if (!$this->day || !$orderDate) {
+        if (! $this->day || ! $orderDate) {
             return false;
         }
 

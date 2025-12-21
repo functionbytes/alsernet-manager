@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_page';
+
     protected $primaryKey = 'id_page';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -18,7 +21,7 @@ class Page extends Model
         'name',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_page' => 'integer',
         'id_page_type' => 'integer',
         'id_object' => 'integer',

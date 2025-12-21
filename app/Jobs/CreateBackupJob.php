@@ -15,7 +15,9 @@ class CreateBackupJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $backupTypes;
+
     protected $backupConfig;
+
     protected $dbSettings;
 
     /**
@@ -35,32 +37,32 @@ class CreateBackupJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            Log::info('Starting backup job with types: ' . implode(', ', $this->backupTypes));
-            Log::info('Files to backup: ' . json_encode($this->backupConfig['files']['include'] ?? []));
+            Log::info('Starting backup job with types: '.implode(', ', $this->backupTypes));
+            Log::info('Files to backup: '.json_encode($this->backupConfig['files']['include'] ?? []));
 
             // Create backup directory (same as Spatie)
-            $backupDir = storage_path('app/' . config('app.name', 'backup'));
-            if (!is_dir($backupDir)) {
+            $backupDir = storage_path('app/'.config('app.name', 'backup'));
+            if (! is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
 
             // Generate backup filename with timestamp
             $timestamp = date('Y-m-d-H-i-s');
-            $backupFile = $backupDir . '/' . $timestamp . '.zip';
+            $backupFile = $backupDir.'/'.$timestamp.'.zip';
 
             // Create ZIP archive
-            $zip = new ZipArchive();
+            $zip = new ZipArchive;
             if ($zip->open($backupFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-                throw new \Exception('Cannot create backup file: ' . $backupFile);
+                throw new \Exception('Cannot create backup file: '.$backupFile);
             }
 
             // Add ONLY the selected files/directories (if any)
             $filesToBackup = $this->backupConfig['files']['include'] ?? [];
-            if (!empty($filesToBackup)) {
+            if (! empty($filesToBackup)) {
                 foreach ($filesToBackup as $path) {
                     if (file_exists($path)) {
                         $this->addPathToZip($zip, $path, '');
-                        Log::info('Added to backup: ' . $path);
+                        Log::info('Added to backup: '.$path);
                     }
                 }
             } else {
@@ -76,10 +78,10 @@ class CreateBackupJob implements ShouldQueue
             $zip->close();
 
             $fileSize = filesize($backupFile);
-            Log::info('Backup file created: ' . basename($backupFile) . ' (' . $this->formatBytes($fileSize) . ')');
+            Log::info('Backup file created: '.basename($backupFile).' ('.$this->formatBytes($fileSize).')');
 
         } catch (\Exception $e) {
-            Log::error('Backup job failed: ' . $e->getMessage());
+            Log::error('Backup job failed: '.$e->getMessage());
             throw $e;
         }
     }
@@ -89,7 +91,7 @@ class CreateBackupJob implements ShouldQueue
      */
     private function addPathToZip(ZipArchive $zip, string $path, string $arcPath): void
     {
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return;
         }
 
@@ -105,7 +107,7 @@ class CreateBackupJob implements ShouldQueue
             foreach ($iterator as $file) {
                 $filePath = $file->getRealPath();
                 $relativePath = substr($filePath, strlen($path) + 1);
-                $zipPath = $arcPath ? $arcPath . '/' . $baseName . '/' . $relativePath : $baseName . '/' . $relativePath;
+                $zipPath = $arcPath ? $arcPath.'/'.$baseName.'/'.$relativePath : $baseName.'/'.$relativePath;
 
                 if (is_dir($file)) {
                     $zip->addEmptyDir($zipPath);
@@ -115,7 +117,7 @@ class CreateBackupJob implements ShouldQueue
             }
         } else {
             // For single files, add directly
-            $zipPath = $arcPath ? $arcPath . '/' . $baseName : $baseName;
+            $zipPath = $arcPath ? $arcPath.'/'.$baseName : $baseName;
             $zip->addFile($path, $zipPath);
         }
     }
@@ -126,8 +128,9 @@ class CreateBackupJob implements ShouldQueue
     private function addDatabaseDumpToZip(ZipArchive $zip, string $timestamp): void
     {
         try {
-            if (!$this->dbSettings) {
+            if (! $this->dbSettings) {
                 Log::warning('No database settings provided');
+
                 return;
             }
 
@@ -137,7 +140,7 @@ class CreateBackupJob implements ShouldQueue
             $dbName = $this->dbSettings['db_database'];
             $dbPort = $this->dbSettings['db_port'] ?? 3306;
 
-            Log::info('Creating database dump for: ' . $dbName . '@' . $dbHost);
+            Log::info('Creating database dump for: '.$dbName.'@'.$dbHost);
 
             // Build mysqldump command - try multiple paths
             $mysqldumpPath = $this->getMysqldumpPath();
@@ -145,9 +148,9 @@ class CreateBackupJob implements ShouldQueue
             $command = [
                 $mysqldumpPath,
                 '-h', $dbHost,
-                '-P', (string)$dbPort,
+                '-P', (string) $dbPort,
                 '-u', $dbUser,
-                '-p' . ($dbPass ?? ''),  // password without space
+                '-p'.($dbPass ?? ''),  // password without space
                 $dbName,
             ];
 
@@ -156,7 +159,7 @@ class CreateBackupJob implements ShouldQueue
 
             // Execute mysqldump
             $cmdStr = implode(' ', array_map('escapeshellarg', $command));
-            Log::info('Executing mysqldump command: ' . substr($cmdStr, 0, 100) . '...');
+            Log::info('Executing mysqldump command: '.substr($cmdStr, 0, 100).'...');
 
             $pipes = [];
             $process = proc_open(
@@ -171,8 +174,9 @@ class CreateBackupJob implements ShouldQueue
                 $env
             );
 
-            if (!is_resource($process)) {
-                Log::error('Failed to execute mysqldump - proc_open returned: ' . var_export($process, true));
+            if (! is_resource($process)) {
+                Log::error('Failed to execute mysqldump - proc_open returned: '.var_export($process, true));
+
                 return;
             }
 
@@ -181,36 +185,38 @@ class CreateBackupJob implements ShouldQueue
 
             // Read output
             $output = '';
-            while (!feof($pipes[1])) {
+            while (! feof($pipes[1])) {
                 $output .= fread($pipes[1], 8192);
             }
             fclose($pipes[1]);
 
             // Read errors
             $errors = '';
-            while (!feof($pipes[2])) {
+            while (! feof($pipes[2])) {
                 $errors .= fread($pipes[2], 8192);
             }
             fclose($pipes[2]);
 
             $exitCode = proc_close($process);
-            Log::info('mysqldump exit code: ' . $exitCode . ', output size: ' . strlen($output) . ' bytes');
+            Log::info('mysqldump exit code: '.$exitCode.', output size: '.strlen($output).' bytes');
 
-            if ($errors && !empty(trim($errors))) {
-                Log::warning('mysqldump stderr: ' . substr($errors, 0, 200));
+            if ($errors && ! empty(trim($errors))) {
+                Log::warning('mysqldump stderr: '.substr($errors, 0, 200));
             }
 
-            if (!$output) {
+            if (! $output) {
                 Log::error('mysqldump returned empty output');
+
                 return;
             }
 
             // Check if output contains valid SQL dump header
             // Valid dumps start with "-- MySQL dump" or "-- MariaDB dump"
-            if (!preg_match('/--\s*(MySQL|MariaDB)\s+dump/i', $output)) {
+            if (! preg_match('/--\s*(MySQL|MariaDB)\s+dump/i', $output)) {
                 // Check for actual error messages (mysqldump command not found, connection errors, etc.)
                 if (preg_match('/command not found|Connection refused|Access denied|Unknown database/i', $output)) {
-                    Log::error('mysqldump error detected: ' . substr($output, 0, 200));
+                    Log::error('mysqldump error detected: '.substr($output, 0, 200));
+
                     return;
                 }
                 // If not an error, still log that we got non-standard output
@@ -218,11 +224,11 @@ class CreateBackupJob implements ShouldQueue
             }
 
             // Add directly to ZIP from string (more reliable)
-            $zip->addFromString('database_' . $timestamp . '.sql', $output);
-            Log::info('Database dump added to backup (' . $this->formatBytes(strlen($output)) . ')');
+            $zip->addFromString('database_'.$timestamp.'.sql', $output);
+            Log::info('Database dump added to backup ('.$this->formatBytes(strlen($output)).')');
 
         } catch (\Exception $e) {
-            Log::error('Database backup failed: ' . $e->getMessage());
+            Log::error('Database backup failed: '.$e->getMessage());
             // Don't fail the entire backup if database dump fails
         }
     }
@@ -238,7 +244,7 @@ class CreateBackupJob implements ShouldQueue
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 
     /**

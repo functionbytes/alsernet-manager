@@ -2,15 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
     public const HOME = '/home';
+
     public function boot(): void
     {
         $this->configureRateLimiting();
@@ -29,7 +30,9 @@ class RouteServiceProvider extends ServiceProvider
                     Route::group([], base_path('routes/callcenters.php'));
                     Route::group([], base_path('routes/shops.php'));
                     Route::group([], base_path('routes/administratives.php'));
-            });
+                    Route::group([], base_path('routes/accountings.php'));
+                    Route::group([], base_path('routes/weapons.php'));
+                });
 
         });
     }
@@ -40,5 +43,4 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
-
 }

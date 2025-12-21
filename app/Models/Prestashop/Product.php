@@ -2,19 +2,22 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
+use App\Models\Prestashop\Tax\TaxRulesGroup;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Tax\TaxRulesGroup;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_product';
+
     protected $primaryKey = 'id_product';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -57,7 +60,7 @@ class Product extends Model
         'delivery_out_stock',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'cache_is_pack' => 'boolean',
@@ -97,29 +100,31 @@ class Product extends Model
         return $this->belongsTo(TaxRulesGroup::class, 'id_tax_rules_group');
     }
 
-
     public function newCollection(array $models = [])
     {
-        return (new class($models) extends Collection {
+        return new class($models) extends Collection
+        {
             public function __construct($models)
             {
                 parent::__construct($models);
 
                 $this->load('lang');
             }
-        });
+        };
     }
 
     public function newQuery($excludeDeleted = true)
     {
         return parent::newQuery($excludeDeleted)->with('lang');
     }
+
     public function scopeName($query, $name)
     {
         return $query->whereHas('lang', function ($q) use ($name) {
-            $q->where('name', 'like', '%' . $name . '%');
+            $q->where('name', 'like', '%'.$name.'%');
         });
     }
+
     public function getNameAttribute()
     {
         return $this->lang ? $this->lang->name : null;
@@ -130,12 +135,12 @@ class Product extends Model
         return $this->hasMany('App\Models\Prestashop\Product\ProductAttribute', 'id_product', 'id_product');
     }
 
-    public function shop() : BelongsTo
+    public function shop(): BelongsTo
     {
         return $this->belongsToMany('App\Models\Prestashop\Shop', 'ps_product_shop', 'id_product', 'id_shop');
     }
 
-    public function lang() : HasOne
+    public function lang(): HasOne
     {
         return $this->hasOne('App\Models\Prestashop\Product\ProductLang', 'id_product', 'id_product')->where('id_lang', 1);
     }

@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class BannerLang extends Model
 {
-
     protected $connection = 'prestashop';
-    protected $table = "aalv_banner_lang";
+
+    protected $table = 'aalv_banner_lang';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,9 +30,6 @@ class BannerLang extends Model
 
     public function lang()
     {
-        return $this->belongsTo('App\Models\Lang' ,'lang_id', 'id');
+        return $this->belongsTo('App\Models\Lang', 'lang_id', 'id');
     }
-
-
-
 }

@@ -4,15 +4,16 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class OrderStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $order;
+
     protected $status;
 
     public function __construct($order, string $status)
@@ -58,11 +59,11 @@ class OrderStatusNotification extends Notification implements ShouldQueue
         ];
 
         return (new MailMessage)
-            ->subject('Actualización de pedido #' . $this->order->id)
-            ->greeting('¡Hola ' . $notifiable->name . '!')
+            ->subject('Actualización de pedido #'.$this->order->id)
+            ->greeting('¡Hola '.$notifiable->name.'!')
             ->line($statusMessages[$this->status] ?? 'El estado de tu pedido ha cambiado.')
-            ->line('Número de pedido: #' . $this->order->id)
-            ->action('Ver pedido', url('/orders/' . $this->order->id))
+            ->line('Número de pedido: #'.$this->order->id)
+            ->action('Ver pedido', url('/orders/'.$this->order->id))
             ->line('¡Gracias por tu compra!');
     }
 
@@ -71,7 +72,7 @@ class OrderStatusNotification extends Notification implements ShouldQueue
         return [
             'title' => 'Actualización de pedido',
             'message' => "Tu pedido #{$this->order->id} ahora está: {$this->status}",
-            'action_url' => url('/orders/' . $this->order->id),
+            'action_url' => url('/orders/'.$this->order->id),
             'action_text' => 'Ver pedido',
             'type' => 'order_status',
             'order_id' => $this->order->id,
@@ -100,13 +101,13 @@ class OrderStatusNotification extends Notification implements ShouldQueue
                 'type' => 'order_status',
                 'order_id' => $this->order->id,
                 'status' => $this->status,
-                'action_url' => url('/orders/' . $this->order->id),
+                'action_url' => url('/orders/'.$this->order->id),
             ],
         ];
     }
 
     public function toSms($notifiable): string
     {
-        return "Actualización de pedido #{$this->order->id}: {$this->status}. Ver detalles: " . url('/orders/' . $this->order->id);
+        return "Actualización de pedido #{$this->order->id}: {$this->status}. Ver detalles: ".url('/orders/'.$this->order->id);
     }
 }

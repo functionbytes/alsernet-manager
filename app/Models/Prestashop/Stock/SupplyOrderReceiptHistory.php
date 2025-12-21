@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class SupplyOrderReceiptHistory extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_receipt_history';
+
     protected $primaryKey = 'id_supply_order_receipt_history';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class SupplyOrderReceiptHistory extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_supply_order_detail' => 'integer',
         'id_employee' => 'integer',

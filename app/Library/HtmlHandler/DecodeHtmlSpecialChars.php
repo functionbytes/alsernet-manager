@@ -3,7 +3,6 @@
 namespace App\Library\HtmlHandler;
 
 use League\Pipeline\StageInterface;
-use App\Library\StringHelper;
 
 class DecodeHtmlSpecialChars implements StageInterface
 {

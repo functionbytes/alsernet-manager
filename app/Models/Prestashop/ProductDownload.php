@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ProductDownload extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_product_download';
+
     protected $primaryKey = 'id_product_download';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class ProductDownload extends Model
         'nb_downloadable',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_product' => 'integer',
     ];

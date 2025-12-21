@@ -22,8 +22,8 @@
 
 namespace App\Library\Notification;
 
-use App\Models\Setting;
 use App\Models\Notification;
+use App\Models\Setting;
 use Carbon\Carbon;
 
 /**
@@ -35,6 +35,7 @@ use Carbon\Carbon;
  * @property string|null $read_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob query()
@@ -46,6 +47,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob whereReadAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CronJob whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class CronJob extends Notification
@@ -59,7 +61,7 @@ class CronJob extends Notification
         self::cleanupDuplicateNotifications($title);
 
         $interval = Setting::get('cronjob_min_interval');
-        if (!self::isCronjobExecutedWithin($interval)) {
+        if (! self::isCronjobExecutedWithin($interval)) {
             $warning = [
                 'title' => $title,
                 'message' => trans('messages.admin.notification.cronjob_not_active', ['cronjob_min_interval' => "$interval", 'cronjob_last_executed' => self::getLastExecutionDateTime()]),

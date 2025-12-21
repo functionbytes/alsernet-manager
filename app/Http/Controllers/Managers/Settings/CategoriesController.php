@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\Categorie;
+use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
-
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $available = null ?? $request->available;
@@ -18,7 +17,7 @@ class CategoriesController extends Controller
         $categories = Categorie::descending();
 
         if ($searchKey) {
-            $categories = $categories->where('title', 'like', '%' . $searchKey . '%');
+            $categories = $categories->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($request->available != null) {
@@ -35,7 +34,8 @@ class CategoriesController extends Controller
 
     }
 
-    public function create(){
+    public function create()
+    {
 
         return view('managers.views.settings.categories.create')->with([
 
@@ -43,17 +43,19 @@ class CategoriesController extends Controller
 
     }
 
-    public function view($uid){
+    public function view($uid)
+    {
 
         $categorie = Categorie::uid($uid);
 
         return view('managers.views.settings.categories.view')->with([
-            'categorie' => $categorie
+            'categorie' => $categorie,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $categorie = Categorie::uid($uid);
 
@@ -63,7 +65,8 @@ class CategoriesController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $categorie = new Categorie;
         $categorie->uid = $this->generate_uid('categories');
@@ -78,7 +81,8 @@ class CategoriesController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $categorie = Categorie::uid($request->uid);
         $categorie->title = $request->title;
@@ -92,7 +96,8 @@ class CategoriesController extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
 
         $categorie = Categorie::uid($uid);
         $categorie->delete();
@@ -100,9 +105,4 @@ class CategoriesController extends Controller
         return redirect()->back();
 
     }
-
-
-
-
-
 }

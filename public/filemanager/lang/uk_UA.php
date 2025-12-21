@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Вибрати',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'Тека',
     'Type' => 'Тип',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Ви вибрали забагато файлів/папок для %s. Обмеження: %d файлів/операцію', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'У вас немає прав доступу для %s файлів.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Неможливо зберегти зображення',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Неможливо видобути. Файл може бути пошкодженим',
     'Zip_Invalid' => 'Це розширення не підтримується. Можливі: zip, gz, tar.',
     'Dir_No_Write' => 'Обрана тека захищена від запису.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Права доступу',
     'File_Permission_Not_Allowed' => 'Зміна прав доступу для %s заборонена.', // %s = files or folders
     'File_Permission_Recursive' => 'Застосувати рекурсивно?',
-    'File_Permission_Wrong_Mode' => "Наданы права доступу невірні.",
+    'File_Permission_Wrong_Mode' => 'Наданы права доступу невірні.',
     'User' => 'Користувач',
     'Group' => 'Група',
     'Yes' => 'Так',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Не можу знайти файл.',
     'File_Open_Edit_Not_Allowed' => 'У вас немає прав для відкриття цього файлу %s.', // %s = open or edit
     'Edit' => 'Редагувати',
-    'Edit_File' => "Редагувати вміст файлу",
-    'File_Save_OK' => "Файл успішно збережено.",
-    'File_Save_Error' => "Виникла помилка при збереженні файлу.",
+    'Edit_File' => 'Редагувати вміст файлу',
+    'File_Save_OK' => 'Файл успішно збережено.',
+    'File_Save_Error' => 'Виникла помилка при збереженні файлу.',
     'New_File' => 'Новий файл',
     'No_Extension' => 'Вам необхідно додати розширення файлу.',
     'Valid_Extensions' => 'Дозволені розширення: %s', // %s = txt,log etc.
-    'Upload_message' => "Перетягніть сюди файл для завантаження",
+    'Upload_message' => 'Перетягніть сюди файл для завантаження',
 
-    'SERVER ERROR' => "ПОМИЛКА СЕРВЕРА",
-    'forbidden' => "Заборонено",
-    'wrong path' => "Хибний шлях",
-    'wrong name' => "Хибне ім`я",
-    'wrong extension' => "Хибне розширення",
-    'wrong option' => "Хибна операція",
-    'wrong data' => "Хибні дані",
-    'wrong action' => "Хибна дія",
-    'wrong sub-action' => "Хибна під-дія",
-    'no action passed' => "Жодної дії не передано",
-    'no path' => "Немає шляху",
-    'no file' => "Немає файлу",
-    'view type number missing' => "Відсутній номер типу перегляду",
-    'Not enough Memory' => "Недостатньо пам`яті",
-    'max_size_reached' => "Ваша тека досягла максимального ліміту у %d Мб.", //%d = max overall size
-    'B' => "Б",
-    'KB' => "Кб",
-    'MB' => "Мб",
-    'GB' => "Гб",
-    'TB' => "Тб",
-    'total size' => "Загальний розмір",
-);
+    'SERVER ERROR' => 'ПОМИЛКА СЕРВЕРА',
+    'forbidden' => 'Заборонено',
+    'wrong path' => 'Хибний шлях',
+    'wrong name' => 'Хибне ім`я',
+    'wrong extension' => 'Хибне розширення',
+    'wrong option' => 'Хибна операція',
+    'wrong data' => 'Хибні дані',
+    'wrong action' => 'Хибна дія',
+    'wrong sub-action' => 'Хибна під-дія',
+    'no action passed' => 'Жодної дії не передано',
+    'no path' => 'Немає шляху',
+    'no file' => 'Немає файлу',
+    'view type number missing' => 'Відсутній номер типу перегляду',
+    'Not enough Memory' => 'Недостатньо пам`яті',
+    'max_size_reached' => 'Ваша тека досягла максимального ліміту у %d Мб.', // %d = max overall size
+    'B' => 'Б',
+    'KB' => 'Кб',
+    'MB' => 'Мб',
+    'GB' => 'Гб',
+    'TB' => 'Тб',
+    'total size' => 'Загальний розмір',
+];

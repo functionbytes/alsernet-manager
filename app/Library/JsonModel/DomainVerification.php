@@ -7,6 +7,7 @@ use Exception;
 class DomainVerification extends Base
 {
     protected $data;
+
     protected $schema = [
         'identity' => [
             'type' => 'TXT',
@@ -18,14 +19,14 @@ class DomainVerification extends Base
                 'type' => 'TXT',
                 'name' => 'mail._domainkey.example.com',
                 'value' => 'k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDeMVIzrCa3T14...',
-            ]
+            ],
         ],
         'spf' => [
             [
                 'type' => 'TXT',
                 'name' => 'example.com',
-                'value' => 'v=spf1 include:sendinblue.com ~all'
-            ]
+                'value' => 'v=spf1 include:sendinblue.com ~all',
+            ],
         ],
         'results' => [
             'identity' => false,
@@ -45,10 +46,10 @@ class DomainVerification extends Base
 
     public function validate($data)
     {
-        $requiredKeys = [ 'identity', 'dkim', 'results' ];
+        $requiredKeys = ['identity', 'dkim', 'results'];
 
         foreach ($requiredKeys as $key) {
-            if (!array_key_exists($key, $data)) {
+            if (! array_key_exists($key, $data)) {
                 throw new Exception(sprintf('Invalid JSON structure: key "%s" missing', $key));
             }
 

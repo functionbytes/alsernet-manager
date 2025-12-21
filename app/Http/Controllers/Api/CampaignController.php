@@ -35,8 +35,8 @@ class CampaignController extends Controller
         $campaign = $user->customer->newDefaultCampaign();
 
         // authorize
-        if (!$user->can('create', $campaign)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 403);
+        if (! $user->can('create', $campaign)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 403);
         }
 
         // validator
@@ -56,11 +56,11 @@ class CampaignController extends Controller
         $campaign->saveFromArray($request->all());
 
         // success
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => trans('messages.campaign.created'),
             'attributes' => $campaign->getAttributes(),
-        ), 200);
+        ], 200);
     }
 
     public function update(Request $request, $id)
@@ -69,8 +69,8 @@ class CampaignController extends Controller
         $campaign = \Acelle\Model\Campaign::findByUid($id);
 
         // authorize
-        if (!$user->can('update', $campaign)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 403);
+        if (! $user->can('update', $campaign)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 403);
         }
 
         // validator
@@ -85,11 +85,11 @@ class CampaignController extends Controller
         $campaign->saveFromArray($request->all());
 
         // success
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => trans('messages.campaign.updated'),
             'attributes' => $campaign->getAttributes(),
-        ), 200);
+        ], 200);
     }
 
     /**
@@ -97,8 +97,7 @@ class CampaignController extends Controller
      *
      * GET /api/v1/campaigns/{id}
      *
-     * @param int $id Campaign's id
-     *
+     * @param  int  $id  Campaign's id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -109,13 +108,13 @@ class CampaignController extends Controller
             ->first();
 
         // check if item exists
-        if (!$item) {
-            return \Response::json(array('message' => 'Campaign not found'), 404);
+        if (! $item) {
+            return \Response::json(['message' => 'Campaign not found'], 404);
         }
 
         // authorize
-        if (!$user->can('read', $item)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('read', $item)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         // statistics
@@ -166,8 +165,7 @@ class CampaignController extends Controller
      *
      * GET /api/v1/campaigns/{id}
      *
-     * @param int $id Campaign's id
-     *
+     * @param  int  $id  Campaign's id
      * @return \Illuminate\Http\Response
      */
     public function pause($id)
@@ -178,13 +176,13 @@ class CampaignController extends Controller
             ->first();
 
         // check if item exists
-        if (!$campaign) {
-            return \Response::json(array('message' => 'Campaign not found'), 404);
+        if (! $campaign) {
+            return \Response::json(['message' => 'Campaign not found'], 404);
         }
 
         // authorize
-        if (!$user->can('pause', $campaign)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('pause', $campaign)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         $campaign->pause();
@@ -215,13 +213,13 @@ class CampaignController extends Controller
         $campaign = \Acelle\Model\Campaign::findByUid($id);
 
         // check if item exists
-        if (!$campaign) {
-            return \Response::json(array('message' => 'Campaign not found'), 404);
+        if (! $campaign) {
+            return \Response::json(['message' => 'Campaign not found'], 404);
         }
 
         // authorize
-        if (!$user->can('run', $campaign)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('run', $campaign)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         // @todo
@@ -253,13 +251,13 @@ class CampaignController extends Controller
         $campaign = \Acelle\Model\Campaign::findByUid($id);
 
         // check if item exists
-        if (!$campaign) {
-            return \Response::json(array('message' => 'Campaign not found'), 404);
+        if (! $campaign) {
+            return \Response::json(['message' => 'Campaign not found'], 404);
         }
 
         // authorize
-        if (!$user->can('restart', $campaign)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('restart', $campaign)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         // @todo
@@ -291,17 +289,17 @@ class CampaignController extends Controller
         $campaign = \Acelle\Model\Campaign::findByUid($uid);
 
         // check if item exists
-        if (!$campaign) {
-            return \Response::json(array('status' => 0, 'message' => 'Campaign list not found'), 404);
+        if (! $campaign) {
+            return \Response::json(['status' => 0, 'message' => 'Campaign list not found'], 404);
         }
 
         // authorize
-        if (!$user->can('delete', $campaign)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('delete', $campaign)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $campaign->deleteAndCleanup();
 
-        return \Response::json(array('status' => 1, 'message' => 'Deleted'), 200);
+        return \Response::json(['status' => 1, 'message' => 'Deleted'], 200);
     }
 }

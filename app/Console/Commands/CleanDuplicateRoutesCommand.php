@@ -39,7 +39,7 @@ class CleanDuplicateRoutesCommand extends Command
             }
         }
 
-        $this->info("✅ Cleanup complete!");
+        $this->info('✅ Cleanup complete!');
         $this->info("  ✓ Deleted: {$deletedCount} duplicate routes");
         $this->info("  ✓ Kept: {$skippedCount} unique routes");
     }

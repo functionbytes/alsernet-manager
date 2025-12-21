@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Seç',
     'Deselect_All' => 'Hiçbirini seçme',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Dosyaları sürükleyip bırakın (modern tarayıcılar) veya dosya ekleye tıklayarak dosyaları ekleyin ve Yüklemeyi başlat'a tıklayın. Yükleme tamamlandığında, 'Dosya listesine dön' düğmesini tıklayın.",
     'Upload_add_files' => 'Dosya(ları) Ekle',
     'Upload_start' => 'Yüklemeyi Başlat',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Görüntü maksimum yüksekliğini aşıyor',
         'min_height' => 'Resim minimum yükseklik gerektirir',
         'abort' => 'Dosya yükleme iptal edildi',
-        'image_resize' => 'Resim yeniden boyutlandırılamadı'
-    ),
+        'image_resize' => 'Resim yeniden boyutlandırılamadı',
+    ],
     'Upload_url' => 'URL’den',
     'Type_dir' => 'Dizin',
     'Type' => 'Tür',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Siz çok fazla dosya/klasör seçtiniz %s. Limit:%d Dosyalar/İşlemler', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => '%s Dosyaları için izin verilmez.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Bu görüntü kaydedilemedi',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Dışa çıkarma işlemi yapılamadı. Dosya bozuk olabilir.',
     'Zip_Invalid' => 'Bu dosya uzantısı desteklenmiyor. Geçerli Uzantılar: zip, gz, tar.',
     'Dir_No_Write' => 'Seçtiğiniz dizin yazılabilir değil.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Dosya İzinleri',
     'File_Permission_Not_Allowed' => '%s Dosya İzinlerinin değiştirilmesine izin verilmiyor.', // %s = files or folders
     'File_Permission_Recursive' => 'Değişlikler uygulansın mı?',
-    'File_Permission_Wrong_Mode' => "Girilen izin modu hatalı.",
+    'File_Permission_Wrong_Mode' => 'Girilen izin modu hatalı.',
     'User' => 'Kullanıcı',
     'Group' => 'Grup',
     'Yes' => 'Evet',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Dosya bulunamadı.',
     'File_Open_Edit_Not_Allowed' => 'Bu dosyayı %s izniniz bulunmuyor.', // %s = open or edit
     'Edit' => 'Düzenle',
-    'Edit_File' => "Dosyanın içeriğini düzenle",
-    'File_Save_OK' => "Dosya başarıyla kaydedildi.",
-    'File_Save_Error' => "Dosya kaydedilirken bir hata oluştu.",
+    'Edit_File' => 'Dosyanın içeriğini düzenle',
+    'File_Save_OK' => 'Dosya başarıyla kaydedildi.',
+    'File_Save_Error' => 'Dosya kaydedilirken bir hata oluştu.',
     'New_File' => 'Yeni Dosya',
     'No_Extension' => 'Lütfen bir dosya uzantısı ekleyiniz.',
     'Valid_Extensions' => 'Geçerli eklentiler: %s', // %s = txt,log etc.
-    'Upload_message' => "Drop file here to upload",
+    'Upload_message' => 'Drop file here to upload',
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Forbiden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size",
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Forbiden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

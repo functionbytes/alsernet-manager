@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Managers\Shops\Shops;
 
-use App\Models\Shop;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ShopsController  extends Controller
+class ShopsController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $available = null ?? $request->available;
@@ -18,7 +18,7 @@ class ShopsController  extends Controller
         $shops = Shop::latest();
 
         if ($searchKey != null) {
-            $shops = $shops->where('title', 'like', '%' . $searchKey . '%');
+            $shops = $shops->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($available != null) {
@@ -35,24 +35,25 @@ class ShopsController  extends Controller
 
     }
 
-
-    public function create(){
+    public function create()
+    {
 
         $availables = collect([
             ['id' => '1', 'label' => 'Publico'],
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables->prepend('' , '');
-        $availables = $availables->pluck('label','id');
+        $availables->prepend('', '');
+        $availables = $availables->pluck('label', 'id');
 
         return view('managers.views.shops.shops.create')->with([
-            'availables' => $availables
+            'availables' => $availables,
         ]);
 
     }
 
-    public function edit($uid){
+    public function edit($uid)
+    {
 
         $shop = Shop::uid($uid);
 
@@ -61,7 +62,7 @@ class ShopsController  extends Controller
             ['id' => '0', 'label' => 'Oculto'],
         ]);
 
-        $availables = $availables->pluck('label','id');
+        $availables = $availables->pluck('label', 'id');
 
         return view('managers.views.shops.shops.edit')->with([
             'shop' => $shop,
@@ -70,12 +71,12 @@ class ShopsController  extends Controller
 
     }
 
-
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $shop = Shop::uid($request->uid);
         $shop->title = Str::upper($request->title);
-        $shop->slug  = Str::slug($request->title, '-');
+        $shop->slug = Str::slug($request->title, '-');
         $shop->available = $request->available;
         $shop->update();
 
@@ -87,12 +88,13 @@ class ShopsController  extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $shop = new Shop;
         $shop->uid = $this->generate_uid('shops');
         $shop->title = Str::upper($request->title);
-        $shop->slug  = Str::slug($request->title, '-');
+        $shop->slug = Str::slug($request->title, '-');
         $shop->available = $request->available;
         $shop->save();
 
@@ -104,11 +106,11 @@ class ShopsController  extends Controller
 
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
         $shop = Shop::uid($uid);
         $shop->delete();
+
         return redirect()->route('manager.shops');
     }
-
 }
-

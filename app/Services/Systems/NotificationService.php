@@ -2,7 +2,6 @@
 
 namespace App\Services\Systems;
 
-use App\Models\NotificationSetting;
 use App\Models\User;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 class NotificationService
 {
     protected $pushService;
+
     protected $smsService;
 
     public function __construct(
@@ -47,7 +47,7 @@ class NotificationService
                     $results[$channel] = 'disabled';
                 }
             } catch (\Exception $e) {
-                Log::error("Error enviando notificación {$channel} a usuario {$user->id}: " . $e->getMessage());
+                Log::error("Error enviando notificación {$channel} a usuario {$user->id}: ".$e->getMessage());
                 $results[$channel] = false;
             }
         }
@@ -94,11 +94,12 @@ class NotificationService
      */
     protected function sendSmsNotification(User $user, Notification $notification): bool
     {
-        if (!$user->phone) {
+        if (! $user->phone) {
             return false;
         }
 
         $message = $notification->toSms($user);
+
         return $this->smsService->send($user->phone, $message);
     }
 

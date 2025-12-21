@@ -2,24 +2,26 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Batchable;
-use App\Library\Exception\NoCreditsLeft;
 use App\Library\Exception\RateLimitExceeded;
 use App\Library\Exception\VerificationTakesLongerThanNormal;
-use Exception;
 use Closure;
-
+use Exception;
+use Illuminate\Bus\Batchable;
 
 class VerifySubscriber extends Base
 {
     use Batchable;
 
     public $timeout = 120;
+
     public $maxExceptions = 1; // This is required if retryUntil is used, otherwise, the default value is 255
+
     public $failOnTimeout = true;
 
     protected $server;
+
     protected $subscriber;
+
     protected $subscription;
 
     public function __construct($subscriber, $server, $subscription)
@@ -29,12 +31,10 @@ class VerifySubscriber extends Base
         $this->subscription = $subscription;
     }
 
-
     public function retryUntil()
     {
         return now()->addHours(12);
     }
-
 
     public function handle()
     {
@@ -45,12 +45,12 @@ class VerifySubscriber extends Base
         $this->doVerify();
     }
 
-    public function doVerify(Closure $exceptionCallback = null)
+    public function doVerify(?Closure $exceptionCallback = null)
     {
         try {
             // Count related quota trackers
             $rateTrackers = [
-                $this->server->getRateTracker()
+                $this->server->getRateTracker(),
             ];
 
             // Credit limit tracker
@@ -58,7 +58,7 @@ class VerifySubscriber extends Base
                 $creditTrackers = [];
             } else {
                 $creditTrackers = [
-                    $this->subscription->getVerifyEmailCreditTracker()
+                    $this->subscription->getVerifyEmailCreditTracker(),
                 ];
             }
 
@@ -71,14 +71,14 @@ class VerifySubscriber extends Base
             // @important: silently quit leaving subscribers not verified
             return;
         } catch (RateLimitExceeded $ex) {
-            if (!is_null($exceptionCallback)) {
+            if (! is_null($exceptionCallback)) {
                 return $exceptionCallback($ex);
             }
 
             // Release the job, have it try again after 60 seconds and (hopefully) the quota limits will be lifted then as time goes by
             $this->release(60);
         } catch (Exception $ex) {
-            if (!is_null($exceptionCallback)) {
+            if (! is_null($exceptionCallback)) {
                 return $exceptionCallback($ex);
             }
 

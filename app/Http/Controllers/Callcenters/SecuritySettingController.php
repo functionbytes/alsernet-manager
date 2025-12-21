@@ -36,80 +36,83 @@ class SecuritySettingController extends Controller
 
         $data['COUNTRY_BLOCKTYPE'] = request()->countryblock;
 
-        if(request()->countrylist){
-            $countrycode = implode(',',request()->countrylist);
+        if (request()->countrylist) {
+            $countrycode = implode(',', request()->countrylist);
             $data['COUNTRY_LIST'] = $countrycode;
-        }else{
+        } else {
             $data['COUNTRY_LIST'] = request()->countrylist;
         }
 
         $this->updateSettings($data);
+
         return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
     }
 
     public function adminstore()
     {
 
-
         $admincountry = GeoIP::getLocation(request()->getClientIp());
 
-        if(request()->admincountryblock == 'block'){
-            if(request()->admincountrylist){
-                if(in_array($admincountry->iso_code,request()->admincountrylist)){
+        if (request()->admincountryblock == 'block') {
+            if (request()->admincountrylist) {
+                if (in_array($admincountry->iso_code, request()->admincountrylist)) {
                     return redirect()->back()->with('error', lang('You are not supposed to block your own country.', 'alerts'));
-                }else{
+                } else {
                     $data['ADMIN_COUNTRY_BLOCKTYPE'] = request()->admincountryblock;
-                    if(request()->admincountrylist){
-                        $admincountrycode = implode(',',request()->admincountrylist);
+                    if (request()->admincountrylist) {
+                        $admincountrycode = implode(',', request()->admincountrylist);
                         $data['ADMIN_COUNTRY_LIST'] = $admincountrycode;
-                    }else{
+                    } else {
                         $data['ADMIN_COUNTRY_LIST'] = request()->admincountrylist;
                     }
 
                     $this->updateSettings($data);
+
                     return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
                 }
-            }else{
+            } else {
                 $data['ADMIN_COUNTRY_BLOCKTYPE'] = request()->admincountryblock;
-                if(request()->admincountrylist){
-                    $admincountrycode = implode(',',request()->admincountrylist);
+                if (request()->admincountrylist) {
+                    $admincountrycode = implode(',', request()->admincountrylist);
                     $data['ADMIN_COUNTRY_LIST'] = $admincountrycode;
-                }else{
+                } else {
                     $data['ADMIN_COUNTRY_LIST'] = request()->admincountrylist;
                 }
                 $this->updateSettings($data);
+
                 return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
             }
 
         }
-        if(request()->admincountryblock == 'allow'){
-            if(request()->admincountrylist){
-                if(in_array($admincountry->iso_code,request()->admincountrylist)){
+        if (request()->admincountryblock == 'allow') {
+            if (request()->admincountrylist) {
+                if (in_array($admincountry->iso_code, request()->admincountrylist)) {
                     $data['ADMIN_COUNTRY_BLOCKTYPE'] = request()->admincountryblock;
-                    if(request()->admincountrylist){
-                        $admincountrycode = implode(',',request()->admincountrylist);
+                    if (request()->admincountrylist) {
+                        $admincountrycode = implode(',', request()->admincountrylist);
                         $data['ADMIN_COUNTRY_LIST'] = $admincountrycode;
-                    }else{
+                    } else {
                         $data['ADMIN_COUNTRY_LIST'] = request()->admincountrylist;
                     }
                     $this->updateSettings($data);
+
                     return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
-                }else{
+                } else {
                     return redirect()->back()->with('error', lang('You are not supposed to block your own country.', 'alerts'));
                 }
-            }else {
+            } else {
                 $data['ADMIN_COUNTRY_BLOCKTYPE'] = request()->admincountryblock;
-                    if(request()->admincountrylist){
-                        $admincountrycode = implode(',',request()->admincountrylist);
-                        $data['ADMIN_COUNTRY_LIST'] = $admincountrycode;
-                    }else{
-                        $data['ADMIN_COUNTRY_LIST'] = request()->admincountrylist;
-                    }
-                    $this->updateSettings($data);
-                    return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
+                if (request()->admincountrylist) {
+                    $admincountrycode = implode(',', request()->admincountrylist);
+                    $data['ADMIN_COUNTRY_LIST'] = $admincountrycode;
+                } else {
+                    $data['ADMIN_COUNTRY_LIST'] = request()->admincountrylist;
+                }
+                $this->updateSettings($data);
+
+                return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
             }
         }
-
 
     }
 
@@ -125,12 +128,12 @@ class SecuritySettingController extends Controller
         $data['IPBLOCKTYPE'] = request()->ipblocktype;
         $data['IPMAXATTEMPT'] = request()->ip_max_attempt;
         $data['IPSECONDS'] = request()->ip_seconds;
-        $data['DOS_Enable'] =  request()->has('dosswitch') ? 'on' : 'off';
+        $data['DOS_Enable'] = request()->has('dosswitch') ? 'on' : 'off';
 
         $this->updateSettings($data);
+
         return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
     }
-
 
     public function emailtoticket()
     {
@@ -181,9 +184,9 @@ class SecuritySettingController extends Controller
         $data['EMAILDOMAIN_BLOCKTYPE'] = $request->emaildomainblock;
         $data['EMAILDOMAIN_LIST'] = $request->emaildomain;
         $this->updateSettings($data);
+
         return redirect()->back()->with('success', lang('Updated successfully', 'alerts'));
     }
-
 
     /**
      *  Settings Save/Update.
@@ -193,10 +196,11 @@ class SecuritySettingController extends Controller
     private function updateSettings($data)
     {
 
-        foreach($data as $key => $val){
-        	$setting = Setting::where('key', $key);
-        	if( $setting->exists() )
-        		$setting->first()->update(['value' => $val]);
+        foreach ($data as $key => $val) {
+            $setting = Setting::where('key', $key);
+            if ($setting->exists()) {
+                $setting->first()->update(['value' => $val]);
+            }
         }
 
     }
@@ -206,6 +210,7 @@ class SecuritySettingController extends Controller
 
         \App::setlocale($locale);
         session()->put('locale', $locale);
+
         return redirect()->back()->with('success', lang('The language has been successfully updated', 'alerts'));
     }
 }

@@ -47,6 +47,7 @@ class PdfDocumentController extends Controller
     public function create()
     {
         $templates = $this->getAvailableTemplates();
+
         return view('pdf-documents.create', compact('templates'));
     }
 
@@ -82,7 +83,7 @@ class PdfDocumentController extends Controller
 
             return redirect()
                 ->route('pdf-documents.index')
-                ->with('error', 'Error al generar el documento: ' . $e->getMessage());
+                ->with('error', 'Error al generar el documento: '.$e->getMessage());
         }
     }
 
@@ -92,6 +93,7 @@ class PdfDocumentController extends Controller
     public function show(ReturnPdfDocument $ReturnPdfDocument)
     {
         $this->authorize('view', $ReturnPdfDocument);
+
         return view('pdf-documents.show', compact('ReturnPdfDocument'));
     }
 
@@ -102,13 +104,13 @@ class PdfDocumentController extends Controller
     {
         $this->authorize('view', $ReturnPdfDocument);
 
-        if (!$ReturnPdfDocument->file_path || !Storage::exists($ReturnPdfDocument->file_path)) {
+        if (! $ReturnPdfDocument->file_path || ! Storage::exists($ReturnPdfDocument->file_path)) {
             abort(404, 'Archivo no encontrado');
         }
 
         return Storage::download(
             $ReturnPdfDocument->file_path,
-            $ReturnPdfDocument->title . '.pdf'
+            $ReturnPdfDocument->title.'.pdf'
         );
     }
 
@@ -119,13 +121,13 @@ class PdfDocumentController extends Controller
     {
         $this->authorize('view', $ReturnPdfDocument);
 
-        if (!$ReturnPdfDocument->file_path || !Storage::exists($ReturnPdfDocument->file_path)) {
+        if (! $ReturnPdfDocument->file_path || ! Storage::exists($ReturnPdfDocument->file_path)) {
             abort(404, 'Archivo no encontrado');
         }
 
         return response(Storage::get($ReturnPdfDocument->file_path), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $ReturnPdfDocument->title . '.pdf"'
+            'Content-Disposition' => 'inline; filename="'.$ReturnPdfDocument->title.'.pdf"',
         ]);
     }
 
@@ -148,7 +150,7 @@ class PdfDocumentController extends Controller
 
             return redirect()
                 ->route('pdf-documents.show', $ReturnPdfDocument)
-                ->with('error', 'Error al regenerar el documento: ' . $e->getMessage());
+                ->with('error', 'Error al regenerar el documento: '.$e->getMessage());
         }
     }
 
@@ -175,16 +177,16 @@ class PdfDocumentController extends Controller
      */
     protected function generateReturnPdfDocument(ReturnPdfDocument $document)
     {
-        $viewName = 'pdf-templates.' . $document->template;
+        $viewName = 'pdf-templates.'.$document->template;
 
-        if (!view()->exists($viewName)) {
+        if (! view()->exists($viewName)) {
             throw new \Exception("Template '{$document->template}' no encontrado");
         }
 
         $pdf = $this->pdfGenerator->generateFromView($viewName, $document->data);
 
-        $filename = Str::slug($document->title) . '_' . time() . '.pdf';
-        $filePath = 'pdf-documents/' . $filename;
+        $filename = Str::slug($document->title).'_'.time().'.pdf';
+        $filePath = 'pdf-documents/'.$filename;
 
         $this->pdfGenerator->savePdf($pdf, $filePath);
 

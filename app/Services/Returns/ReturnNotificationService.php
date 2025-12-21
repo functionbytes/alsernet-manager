@@ -4,17 +4,14 @@
 
 namespace App\Services\Returns;
 
-use App\Models\Return;
-use App\Models\Return\ReturnCommunication;
 use App\Mail\Return\ReturnStatusMail;
-use App\Mail\Return\ReturnReminderMail;
-use App\Mail\Return\ReturnCustomMail;
+use App\Models\Return\ReturnCommunication;
 use App\Models\Return\ReturnRequest;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class ReturnNotificationService
 {
@@ -25,43 +22,43 @@ class ReturnNotificationService
         'pending' => [
             'subject' => 'Solicitud de Devolución Recibida - #:return_number',
             'template' => 'emails.returns.pending',
-            'attachments' => []
+            'attachments' => [],
         ],
         'approved' => [
             'subject' => 'Devolución Aprobada - #:return_number',
             'template' => 'emails.returns.approved',
-            'attachments' => ['return_label'] // Adjuntar etiqueta de envío
+            'attachments' => ['return_label'], // Adjuntar etiqueta de envío
         ],
         'rejected' => [
             'subject' => 'Devolución Rechazada - #:return_number',
             'template' => 'emails.returns.rejected',
-            'attachments' => []
+            'attachments' => [],
         ],
         'processing' => [
             'subject' => 'Devolución en Proceso - #:return_number',
             'template' => 'emails.returns.processing',
-            'attachments' => []
+            'attachments' => [],
         ],
         'completed' => [
             'subject' => 'Devolución Completada - #:return_number',
             'template' => 'emails.returns.completed',
-            'attachments' => ['receipt'] // Adjuntar recibo
+            'attachments' => ['receipt'], // Adjuntar recibo
         ],
         'refund_processed' => [
             'subject' => 'Reembolso Procesado - #:return_number',
             'template' => 'emails.returns.refund_processed',
-            'attachments' => ['refund_receipt']
+            'attachments' => ['refund_receipt'],
         ],
         'reminder' => [
             'subject' => 'Recordatorio: Devolución Pendiente - #:return_number',
             'template' => 'emails.returns.reminder',
-            'attachments' => []
+            'attachments' => [],
         ],
         'shipping_reminder' => [
             'subject' => 'Recordatorio: Envíe su Devolución - #:return_number',
             'template' => 'emails.returns.shipping_reminder',
-            'attachments' => ['return_label']
-        ]
+            'attachments' => ['return_label'],
+        ],
     ];
 
     /**
@@ -70,46 +67,46 @@ class ReturnNotificationService
     private array $retryConfig = [
         'max_attempts' => 3,
         'delay_between_attempts' => 300, // 5 minutos
-        'backoff_multiplier' => 2
+        'backoff_multiplier' => 2,
     ];
 
     /**
      * Enviar notificación por cambio de estado
      */
-    public function notifyStatusChange(ReturnRequest $return, string $previousStatus = null): ReturnCommunication
+    public function notifyStatusChange(ReturnRequest $return, ?string $previousStatus = null): ReturnCommunication
     {
         try {
             DB::beginTransaction();
 
             // Validar que existe plantilla para el estado
-            if (!isset($this->emailTemplates[$return->status])) {
+            if (! isset($this->emailTemplates[$return->status])) {
                 throw new \Exception("No hay plantilla de email para el estado: {$return->status}");
             }
 
-        // Crear registro de comunicación
-        $communication = $this->createCommunicationRecord($return, $return->status);
+            // Crear registro de comunicación
+            $communication = $this->createCommunicationRecord($return, $return->status);
 
-        // Preparar datos para el email
-        $emailData = $this->prepareEmailData($return, $previousStatus);
+            // Preparar datos para el email
+            $emailData = $this->prepareEmailData($return, $previousStatus);
 
-        // Obtener archivos adjuntos si corresponde
-        $attachments = $this->prepareAttachments($return, $return->status);
+            // Obtener archivos adjuntos si corresponde
+            $attachments = $this->prepareAttachments($return, $return->status);
 
-        // Enviar email
-        $this->sendEmail($communication, $emailData, $attachments);
+            // Enviar email
+            $this->sendEmail($communication, $emailData, $attachments);
 
-        // Marcar como enviado
-        $communication->markAsSent();
+            // Marcar como enviado
+            $communication->markAsSent();
 
-        // Registrar evento
-        $this->logNotificationEvent($return, 'status_change', [
-            'previous_status' => $previousStatus,
-            'new_status' => $return->status
-        ]);
+            // Registrar evento
+            $this->logNotificationEvent($return, 'status_change', [
+                'previous_status' => $previousStatus,
+                'new_status' => $return->status,
+            ]);
 
-        DB::commit();
+            DB::commit();
 
-        return $communication;
+            return $communication;
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -117,7 +114,7 @@ class ReturnNotificationService
             Log::error('Failed to send return notification', [
                 'return_id' => $return->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             if (isset($communication)) {
@@ -128,88 +125,88 @@ class ReturnNotificationService
         }
     }
 
-            /**
-             * Enviar email personalizado
-             */
-            public function sendCustomEmail(ReturnRequest $return, array $data): ReturnCommunication
-            {
-                return DB::transaction(function () use ($return, $data) {
-                    // Validar datos requeridos
-                    $this->validateCustomEmailData($data);
+    /**
+     * Enviar email personalizado
+     */
+    public function sendCustomEmail(ReturnRequest $return, array $data): ReturnCommunication
+    {
+        return DB::transaction(function () use ($return, $data) {
+            // Validar datos requeridos
+            $this->validateCustomEmailData($data);
 
-                    // Crear registro de comunicación
-                    $communication = $return->communications()->create([
-                        'type' => ReturnCommunication::TYPE_EMAIL,
-                        'recipient' => $data['recipient'] ?? $return->customer_email,
-                        'subject' => $data['subject'],
-                        'content' => $data['content'],
-                        'template_used' => $data['template'] ?? 'custom',
-                        'sent_by' => auth()->user()->name ?? 'Sistema',
-                        'metadata' => [
-                            'custom' => true,
-                            'attachments' => $data['attachments'] ?? [],
-                            'cc' => $data['cc'] ?? null,
-                            'bcc' => $data['bcc'] ?? null,
-                            'reply_to' => $data['reply_to'] ?? null
-                        ]
-                    ]);
+            // Crear registro de comunicación
+            $communication = $return->communications()->create([
+                'type' => ReturnCommunication::TYPE_EMAIL,
+                'recipient' => $data['recipient'] ?? $return->customer_email,
+                'subject' => $data['subject'],
+                'content' => $data['content'],
+                'template_used' => $data['template'] ?? 'custom',
+                'sent_by' => auth()->user()->name ?? 'Sistema',
+                'metadata' => [
+                    'custom' => true,
+                    'attachments' => $data['attachments'] ?? [],
+                    'cc' => $data['cc'] ?? null,
+                    'bcc' => $data['bcc'] ?? null,
+                    'reply_to' => $data['reply_to'] ?? null,
+                ],
+            ]);
 
-                    try {
-                        // Preparar y enviar email
-                        Mail::send([], [], function ($message) use ($data, $return, $communication) {
-                            $message->to($data['recipient'] ?? $return->customer_email)
-                                ->subject($data['subject']);
+            try {
+                // Preparar y enviar email
+                Mail::send([], [], function ($message) use ($data, $return, $communication) {
+                    $message->to($data['recipient'] ?? $return->customer_email)
+                        ->subject($data['subject']);
 
-                            // HTML content
-                            $message->html($this->wrapInTemplate($data['content'], $return));
+                    // HTML content
+                    $message->html($this->wrapInTemplate($data['content'], $return));
 
-                            // CC y BCC
-                            if (!empty($data['cc'])) {
-                                $message->cc($data['cc']);
-                            }
-                            if (!empty($data['bcc'])) {
-                                $message->bcc($data['bcc']);
-                            }
-
-                            // Reply-to
-                            if (!empty($data['reply_to'])) {
-                                $message->replyTo($data['reply_to']);
-                            }
-
-                            // Archivos adjuntos
-                            if (!empty($data['attachments'])) {
-                                foreach ($data['attachments'] as $attachment) {
-                                    if (Storage::exists($attachment)) {
-                                        $message->attach(Storage::path($attachment));
-                                    }
-                                }
-                            }
-
-                            // Headers para tracking
-                            $message->getHeaders()->addTextHeader(
-                                'X-Return-ID',
-                                $return->id
-                            );
-                            $message->getHeaders()->addTextHeader(
-                                'X-Communication-ID',
-                                $communication->id
-                            );
-                        });
-
-                        $communication->markAsSent();
-
-                        $this->logNotificationEvent($return, 'custom_email', [
-                            'subject' => $data['subject'],
-                            'recipient' => $data['recipient'] ?? $return->customer_email
-                        ]);
-
-                    } catch (\Exception $e) {
-                        $communication->markAsFailed($e->getMessage());
-                        throw $e;
+                    // CC y BCC
+                    if (! empty($data['cc'])) {
+                        $message->cc($data['cc']);
+                    }
+                    if (! empty($data['bcc'])) {
+                        $message->bcc($data['bcc']);
                     }
 
-                    return $communication;
+                    // Reply-to
+                    if (! empty($data['reply_to'])) {
+                        $message->replyTo($data['reply_to']);
+                    }
+
+                    // Archivos adjuntos
+                    if (! empty($data['attachments'])) {
+                        foreach ($data['attachments'] as $attachment) {
+                            if (Storage::exists($attachment)) {
+                                $message->attach(Storage::path($attachment));
+                            }
+                        }
+                    }
+
+                    // Headers para tracking
+                    $message->getHeaders()->addTextHeader(
+                        'X-Return-ID',
+                        $return->id
+                    );
+                    $message->getHeaders()->addTextHeader(
+                        'X-Communication-ID',
+                        $communication->id
+                    );
                 });
+
+                $communication->markAsSent();
+
+                $this->logNotificationEvent($return, 'custom_email', [
+                    'subject' => $data['subject'],
+                    'recipient' => $data['recipient'] ?? $return->customer_email,
+                ]);
+
+            } catch (\Exception $e) {
+                $communication->markAsFailed($e->getMessage());
+                throw $e;
+            }
+
+            return $communication;
+        });
     }
 
     /**
@@ -231,7 +228,7 @@ class ReturnNotificationService
             'days_until_expiration' => $this->calculateDaysUntilExpiration($return),
             'template' => $this->emailTemplates[$templateKey]['template'],
             'subject' => str_replace(':return_number', $return->number, $this->emailTemplates[$templateKey]['subject']),
-            'reminder_type' => $reminderType
+            'reminder_type' => $reminderType,
         ];
 
         $communication = $this->createCommunicationRecord($return, $templateKey);
@@ -243,7 +240,7 @@ class ReturnNotificationService
 
             $this->logNotificationEvent($return, 'reminder_sent', [
                 'reminder_type' => $reminderType,
-                'days_pending' => $emailData['days_pending']
+                'days_pending' => $emailData['days_pending'],
             ]);
 
             return $communication;
@@ -258,20 +255,20 @@ class ReturnNotificationService
      * Enviar notificación masiva a múltiples devoluciones
      */
     public function sendBulkNotification(array $returnIds, string $template, array $customData = []): array
-{
-    $results = [
-        'success' => 0,
-        'failed' => 0,
-        'details' => []
-    ];
+    {
+        $results = [
+            'success' => 0,
+            'failed' => 0,
+            'details' => [],
+        ];
 
-    $returns = ReturnRequest::whereIn('id', $returnIds)->get();
+        $returns = ReturnRequest::whereIn('id', $returnIds)->get();
 
         foreach ($returns as $return) {
             try {
                 if ($template === 'custom') {
                     $this->sendCustomEmail($return, array_merge($customData, [
-                        'recipient' => $return->customer_email
+                        'recipient' => $return->customer_email,
                     ]));
                 } else {
                     $this->notifyStatusChange($return);
@@ -280,7 +277,7 @@ class ReturnNotificationService
                 $results['success']++;
                 $results['details'][] = [
                     'return_id' => $return->id,
-                    'status' => 'success'
+                    'status' => 'success',
                 ];
 
             } catch (\Exception $e) {
@@ -288,7 +285,7 @@ class ReturnNotificationService
                 $results['details'][] = [
                     'return_id' => $return->id,
                     'status' => 'failed',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
@@ -300,54 +297,54 @@ class ReturnNotificationService
      * Reenviar comunicación fallida
      */
     public function resendCommunication(ReturnCommunication $communication): bool
-{
-    if ($communication->status === ReturnCommunication::STATUS_SENT) {
-        throw new \Exception('Esta comunicación ya fue enviada exitosamente');
-    }
-
-    try {
-        // Incrementar contador de intentos
-        $attempts = ($communication->metadata['attempts'] ?? 0) + 1;
-        $communication->update([
-            'metadata' => array_merge($communication->metadata ?? [], [
-                'attempts' => $attempts,
-                'last_attempt' => now()->toIso8601String()
-            ])
-        ]);
-
-        // Preparar datos según el tipo de comunicación
-        if ($communication->template_used === 'custom') {
-            $emailData = [
-                'subject' => $communication->subject,
-                'content' => $communication->content,
-                'template' => 'custom'
-            ];
-        } else {
-            $emailData = $this->prepareEmailData($communication->return);
+    {
+        if ($communication->status === ReturnCommunication::STATUS_SENT) {
+            throw new \Exception('Esta comunicación ya fue enviada exitosamente');
         }
 
-        // Reenviar
-        $this->sendEmail($communication, $emailData);
-        $communication->markAsSent();
-
-        return true;
-
-    } catch (\Exception $e) {
-        $communication->markAsFailed($e->getMessage());
-
-        // Si excede el máximo de intentos, marcar como fallido permanentemente
-        if ($attempts >= $this->retryConfig['max_attempts']) {
+        try {
+            // Incrementar contador de intentos
+            $attempts = ($communication->metadata['attempts'] ?? 0) + 1;
             $communication->update([
                 'metadata' => array_merge($communication->metadata ?? [], [
-                    'permanently_failed' => true,
-                    'final_error' => $e->getMessage()
-                ])
+                    'attempts' => $attempts,
+                    'last_attempt' => now()->toIso8601String(),
+                ]),
             ]);
-        }
 
-        throw $e;
+            // Preparar datos según el tipo de comunicación
+            if ($communication->template_used === 'custom') {
+                $emailData = [
+                    'subject' => $communication->subject,
+                    'content' => $communication->content,
+                    'template' => 'custom',
+                ];
+            } else {
+                $emailData = $this->prepareEmailData($communication->return);
+            }
+
+            // Reenviar
+            $this->sendEmail($communication, $emailData);
+            $communication->markAsSent();
+
+            return true;
+
+        } catch (\Exception $e) {
+            $communication->markAsFailed($e->getMessage());
+
+            // Si excede el máximo de intentos, marcar como fallido permanentemente
+            if ($attempts >= $this->retryConfig['max_attempts']) {
+                $communication->update([
+                    'metadata' => array_merge($communication->metadata ?? [], [
+                        'permanently_failed' => true,
+                        'final_error' => $e->getMessage(),
+                    ]),
+                ]);
+            }
+
+            throw $e;
+        }
     }
-}
 
     /**
      * Obtener historial de comunicaciones con filtros
@@ -357,16 +354,16 @@ class ReturnNotificationService
         $query = $return->communications();
 
         // Aplicar filtros
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->where('created_at', '>=', $filters['date_from']);
         }
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->where('created_at', '<=', $filters['date_to']);
         }
 
@@ -386,7 +383,7 @@ class ReturnNotificationService
                 'recipient' => $communication->recipient,
                 'template_used' => $communication->template_used,
                 'attempts' => $communication->metadata['attempts'] ?? 1,
-                'can_resend' => $this->canResend($communication)
+                'can_resend' => $this->canResend($communication),
             ];
         })->toArray();
     }
@@ -395,54 +392,54 @@ class ReturnNotificationService
      * Marcar comunicación como leída (para tracking de emails)
      */
     public function markAsRead(string $trackingId): void
-{
-    $communication = ReturnCommunication::where('metadata->tracking_id', $trackingId)
-        ->first();
+    {
+        $communication = ReturnCommunication::where('metadata->tracking_id', $trackingId)
+            ->first();
 
-    if ($communication && $communication->status === ReturnCommunication::STATUS_SENT) {
-        $communication->markAsRead();
+        if ($communication && $communication->status === ReturnCommunication::STATUS_SENT) {
+            $communication->markAsRead();
 
-        $this->logNotificationEvent($communication->return, 'email_read', [
-            'communication_id' => $communication->id,
-            'read_at' => now()->toIso8601String()
-        ]);
+            $this->logNotificationEvent($communication->return, 'email_read', [
+                'communication_id' => $communication->id,
+                'read_at' => now()->toIso8601String(),
+            ]);
+        }
     }
-}
 
     /**
      * Obtener estadísticas de comunicaciones
      */
-    public function getStatistics(Carbon $from = null, Carbon $to = null): array
-{
-    $query = ReturnCommunication::query();
+    public function getStatistics(?Carbon $from = null, ?Carbon $to = null): array
+    {
+        $query = ReturnCommunication::query();
 
-    if ($from) {
-        $query->where('created_at', '>=', $from);
-    }
-    if ($to) {
-        $query->where('created_at', '<=', $to);
-    }
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+        if ($to) {
+            $query->where('created_at', '<=', $to);
+        }
 
-    return [
-        'total' => $query->count(),
-        'by_status' => $query->groupBy('status')
-            ->select('status', DB::raw('count(*) as count'))
-            ->pluck('count', 'status')
-            ->toArray(),
-        'by_type' => $query->groupBy('type')
-            ->select('type', DB::raw('count(*) as count'))
-            ->pluck('count', 'type')
-            ->toArray(),
-        'by_template' => $query->whereNotNull('template_used')
-            ->groupBy('template_used')
-            ->select('template_used', DB::raw('count(*) as count'))
-            ->pluck('count', 'template_used')
-            ->toArray(),
-        'delivery_rate' => $this->calculateDeliveryRate($query),
-        'read_rate' => $this->calculateReadRate($query),
-        'average_read_time' => $this->calculateAverageReadTime($query)
-    ];
-}
+        return [
+            'total' => $query->count(),
+            'by_status' => $query->groupBy('status')
+                ->select('status', DB::raw('count(*) as count'))
+                ->pluck('count', 'status')
+                ->toArray(),
+            'by_type' => $query->groupBy('type')
+                ->select('type', DB::raw('count(*) as count'))
+                ->pluck('count', 'type')
+                ->toArray(),
+            'by_template' => $query->whereNotNull('template_used')
+                ->groupBy('template_used')
+                ->select('template_used', DB::raw('count(*) as count'))
+                ->pluck('count', 'template_used')
+                ->toArray(),
+            'delivery_rate' => $this->calculateDeliveryRate($query),
+            'read_rate' => $this->calculateReadRate($query),
+            'average_read_time' => $this->calculateAverageReadTime($query),
+        ];
+    }
 
     // Métodos privados de apoyo
 
@@ -450,7 +447,7 @@ class ReturnNotificationService
     {
         $template = $this->emailTemplates[$templateKey] ?? null;
 
-        if (!$template) {
+        if (! $template) {
             throw new \Exception("Plantilla no encontrada: {$templateKey}");
         }
 
@@ -465,8 +462,8 @@ class ReturnNotificationService
                 'tracking_id' => $this->generateTrackingId(),
                 'return_status' => $return->status,
                 'ip_address' => request()->ip(),
-                'user_agent' => request()->userAgent()
-            ]
+                'user_agent' => request()->userAgent(),
+            ],
         ]);
     }
 
@@ -486,7 +483,7 @@ class ReturnNotificationService
             'costs_summary' => $this->getCostsSummary($return),
             'estimated_days' => $this->getEstimatedDays($return->status),
             'support_email' => config('returns.support_email', 'soporte@ejemplo.com'),
-            'support_phone' => config('returns.support_phone', '900 123 456')
+            'support_phone' => config('returns.support_phone', '900 123 456'),
         ];
     }
 
@@ -495,7 +492,7 @@ class ReturnNotificationService
         $attachments = [];
         $templateConfig = $this->emailTemplates[$templateKey] ?? null;
 
-        if (!$templateConfig || empty($templateConfig['attachments'])) {
+        if (! $templateConfig || empty($templateConfig['attachments'])) {
             return $attachments;
         }
 
@@ -506,7 +503,7 @@ class ReturnNotificationService
                         $attachments[] = [
                             'path' => Storage::path($return->label_path),
                             'name' => "etiqueta_devolucion_{$return->number}.pdf",
-                            'mime' => 'application/pdf'
+                            'mime' => 'application/pdf',
                         ];
                     }
                     break;
@@ -517,7 +514,7 @@ class ReturnNotificationService
                         $attachments[] = [
                             'path' => $receiptPath,
                             'name' => "recibo_devolucion_{$return->number}.pdf",
-                            'mime' => 'application/pdf'
+                            'mime' => 'application/pdf',
                         ];
                     }
                     break;
@@ -528,7 +525,7 @@ class ReturnNotificationService
                         $attachments[] = [
                             'path' => $refundPath,
                             'name' => "recibo_reembolso_{$return->number}.pdf",
-                            'mime' => 'application/pdf'
+                            'mime' => 'application/pdf',
                         ];
                     }
                     break;
@@ -542,7 +539,7 @@ class ReturnNotificationService
     {
         $mailable = new ReturnStatusMail(array_merge($emailData, [
             'communication' => $communication,
-            'attachments' => $attachments
+            'attachments' => $attachments,
         ]));
 
         $queue = $this->determineQueue($communication);
@@ -560,8 +557,8 @@ class ReturnNotificationService
             }
         }
 
-        if (!empty($data['recipient']) && !filter_var($data['recipient'], FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("El email del destinatario no es válido");
+        if (! empty($data['recipient']) && ! filter_var($data['recipient'], FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('El email del destinatario no es válido');
         }
     }
 
@@ -570,7 +567,7 @@ class ReturnNotificationService
         return view('emails.layouts.custom', [
             'content' => $content,
             'return' => $return,
-            'footer' => true
+            'footer' => true,
         ])->render();
     }
 
@@ -587,7 +584,7 @@ class ReturnNotificationService
 
     private function determineReminderTemplate(ReturnRequest $return, string $type): string
     {
-        if ($return->status === 'approved' && !$return->tracking_number) {
+        if ($return->status === 'approved' && ! $return->tracking_number) {
             return 'shipping_reminder';
         }
 
@@ -604,7 +601,7 @@ class ReturnNotificationService
 
     private function getCostsSummary(ReturnRequest $return): ?array
     {
-        if (!$return->costs || $return->costs->isEmpty()) {
+        if (! $return->costs || $return->costs->isEmpty()) {
             return null;
         }
 
@@ -616,22 +613,22 @@ class ReturnNotificationService
                 return [
                     'type' => $cost->cost_type_label,
                     'amount' => $cost->amount,
-                    'description' => $cost->description
+                    'description' => $cost->description,
                 ];
-            })->toArray()
+            })->toArray(),
         ];
     }
 
     private function generateTrackingId(): string
     {
-        return 'track_' . uniqid() . '_' . time();
+        return 'track_'.uniqid().'_'.time();
     }
 
     private function generateTrackingUrl(ReturnRequest $return): string
     {
         $communication = $return->communications()->latest()->first();
 
-        if (!$communication || !isset($communication->metadata['tracking_id'])) {
+        if (! $communication || ! isset($communication->metadata['tracking_id'])) {
             return '';
         }
 
@@ -669,7 +666,7 @@ class ReturnNotificationService
             'pending' => ['min' => 1, 'max' => 3],
             'approved' => ['min' => 0, 'max' => 0],
             'processing' => ['min' => 2, 'max' => 5],
-            'completed' => ['min' => 5, 'max' => 7]
+            'completed' => ['min' => 5, 'max' => 7],
         ];
 
         return $estimates[$status] ?? ['min' => 0, 'max' => 0];
@@ -684,7 +681,7 @@ class ReturnNotificationService
         $attempts = $communication->metadata['attempts'] ?? 0;
         $permanentlyFailed = $communication->metadata['permanently_failed'] ?? false;
 
-        return !$permanentlyFailed && $attempts < $this->retryConfig['max_attempts'];
+        return ! $permanentlyFailed && $attempts < $this->retryConfig['max_attempts'];
     }
 
     private function getTypeLabel(string $type): string
@@ -692,7 +689,7 @@ class ReturnNotificationService
         $labels = [
             'email' => 'Email',
             'sms' => 'SMS',
-            'internal_note' => 'Nota Interna'
+            'internal_note' => 'Nota Interna',
         ];
 
         return $labels[$type] ?? $type;
@@ -704,7 +701,7 @@ class ReturnNotificationService
             'pending' => 'Pendiente',
             'sent' => 'Enviado',
             'failed' => 'Fallido',
-            'read' => 'Leído'
+            'read' => 'Leído',
         ];
 
         return $labels[$status] ?? $status;
@@ -713,7 +710,9 @@ class ReturnNotificationService
     private function calculateDeliveryRate($query): float
     {
         $total = $query->count();
-        if ($total === 0) return 0;
+        if ($total === 0) {
+            return 0;
+        }
 
         $sent = $query->where('status', ReturnCommunication::STATUS_SENT)->count();
 
@@ -723,7 +722,9 @@ class ReturnNotificationService
     private function calculateReadRate($query): float
     {
         $sent = $query->where('status', ReturnCommunication::STATUS_SENT)->count();
-        if ($sent === 0) return 0;
+        if ($sent === 0) {
+            return 0;
+        }
 
         $read = $query->where('status', ReturnCommunication::STATUS_READ)->count();
 
@@ -755,8 +756,7 @@ class ReturnNotificationService
             'return_id' => $return->id,
             'return_number' => $return->number,
             'customer_email' => $return->customer_email,
-            'timestamp' => now()->toIso8601String()
+            'timestamp' => now()->toIso8601String(),
         ], $data));
     }
-
 }

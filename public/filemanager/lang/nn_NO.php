@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Vel',
     'Deselect_All' => 'Deselect All',
@@ -41,10 +41,10 @@ return array(
     'Text_filter' => 'Tekst-filter',
     'Swipe_help' => 'Sveip filnamnet/mappenamnet for å sjå alternativ',
     'Upload_base' => 'Vanleg opplasting',
-    'Upload_base_help' => "Dra og slepp filer (moderne nettlesarar) eller klikk på knappen «Legg til fil(er)» øvst og deretter på «Start opplasting». Når opplastinga er ferdig, klikk knappen «Tilbake til filoversikta».",
+    'Upload_base_help' => 'Dra og slepp filer (moderne nettlesarar) eller klikk på knappen «Legg til fil(er)» øvst og deretter på «Start opplasting». Når opplastinga er ferdig, klikk knappen «Tilbake til filoversikta».',
     'Upload_add_files' => 'Legg til fil(er)',
     'Upload_start' => 'Start opplasting',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'Fila enn større enn grensa upload_max_filesize i php.ini',
         2 => 'Fila er større enn direktivet MAX_FILE_SIZE i HTML-skjemaet',
         3 => 'Fila vart berre delvis opplasta',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Biletet er for høgt',
         'min_height' => 'Biletet er ikkje høgt nok',
         'abort' => 'Filopplasting avbroten',
-        'image_resize' => 'Kunne ikkje endre storleik på biletet'
-    ),
+        'image_resize' => 'Kunne ikkje endre storleik på biletet',
+    ],
     'Upload_url' => 'URL for opplasting',
     'Type_dir' => 'Mappe',
     'Type' => 'Type',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Du valde for mange filer/mapper for %s. Grense: %d filer/operasjon', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Du har ikkje lov til å %s filer.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Kunne ikkje lagre biletet',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Kunne ikkje pakke ut. Fila kan vere skada.',
     'Zip_Invalid' => 'Dette filetternamnet er ikkje støtta. Gyldige filer: zip, gz, tar.',
     'Dir_No_Write' => 'Mappa du valde kan ikkje skrivast til.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Filløyve',
     'File_Permission_Not_Allowed' => 'Endring av %s løyve er ikkje lov.', // %s = files or folders
     'File_Permission_Recursive' => 'Utfør rekursivt?',
-    'File_Permission_Wrong_Mode' => "Filløyvet er feil.",
+    'File_Permission_Wrong_Mode' => 'Filløyvet er feil.',
     'User' => 'Brukar',
     'Group' => 'Gruppe',
     'Yes' => 'Ja',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Fann ikkje fila.',
     'File_Open_Edit_Not_Allowed' => 'Du har ikkje lov til å %s denne fila.', // %s = open or edit
     'Edit' => 'Rediger',
-    'Edit_File' => "Rediger filinnhaldet",
-    'File_Save_OK' => "Fila vart lagra.",
-    'File_Save_Error' => "Det oppstod ein feil ved lagring av fila.",
+    'Edit_File' => 'Rediger filinnhaldet',
+    'File_Save_OK' => 'Fila vart lagra.',
+    'File_Save_Error' => 'Det oppstod ein feil ved lagring av fila.',
     'New_File' => 'Ny fil',
     'No_Extension' => 'Du må legge til eit fil-etternamn.',
     'Valid_Extensions' => 'Gyldige fil-etternamn: %s', // %s = txt,log etc.
-    'Upload_message' => "Slepp fila her for å laste opp",
+    'Upload_message' => 'Slepp fila her for å laste opp',
 
-    'SERVER ERROR' => "SERVERFEIL",
-    'forbidden' => "Ikkje lov",
-    'wrong path' => "Feil bane",
-    'wrong name' => "Feil namn",
-    'wrong extension' => "Feil utviding",
-    'wrong option' => "Feil val",
-    'wrong data' => "Feil data",
-    'wrong action' => "Feil handling",
-    'wrong sub-action' => "Feil underhandling",
-    'no action passed' => "Inga handling sendt",
-    'no path' => "Ingen bane",
-    'no file' => "Inga fil",
-    'view type number missing' => "Manglar typenummer for vising",
-    'Not enough Memory' => "Ikkje nok minne",
-    'max_size_reached' => "Biletmappa di har nådd sin maksimale storleik %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total storleik",
-);
+    'SERVER ERROR' => 'SERVERFEIL',
+    'forbidden' => 'Ikkje lov',
+    'wrong path' => 'Feil bane',
+    'wrong name' => 'Feil namn',
+    'wrong extension' => 'Feil utviding',
+    'wrong option' => 'Feil val',
+    'wrong data' => 'Feil data',
+    'wrong action' => 'Feil handling',
+    'wrong sub-action' => 'Feil underhandling',
+    'no action passed' => 'Inga handling sendt',
+    'no path' => 'Ingen bane',
+    'no file' => 'Inga fil',
+    'view type number missing' => 'Manglar typenummer for vising',
+    'Not enough Memory' => 'Ikkje nok minne',
+    'max_size_reached' => 'Biletmappa di har nådd sin maksimale storleik %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total storleik',
+];

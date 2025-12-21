@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Acelle\Model\Sender;
+use Illuminate\Console\Command;
 
 class VerifySender extends Command
 {
-
     protected $signature = 'sender:verify';
 
     protected $description = 'Verify Sender';
@@ -23,7 +22,7 @@ class VerifySender extends Command
         foreach ($senders as $sender) {
             $sender->updateVerificationStatus();
         }
+
         return 0;
     }
-
 }

@@ -6,7 +6,6 @@ use App\Conversations\DataCollectionConversation;
 use App\Http\Controllers\Controller;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class ChatbotController extends Controller
 {
@@ -16,7 +15,7 @@ class ChatbotController extends Controller
         $botman = app('botman');
 
         $botman->hears('Enviar datos', function (BotMan $bot) {
-            $bot->startConversation(new DataCollectionConversation());
+            $bot->startConversation(new DataCollectionConversation);
         });
 
         $botman->listen();
@@ -26,5 +25,4 @@ class ChatbotController extends Controller
     {
         return view('pages.partials.botman');
     }
-
 }

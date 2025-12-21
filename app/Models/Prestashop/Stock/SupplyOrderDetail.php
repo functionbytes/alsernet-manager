@@ -2,18 +2,20 @@
 
 namespace App\Models\Prestashop\Stock;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\SupplyOrder;
-use App\Models\Prestashop\Product;
 use App\Models\Prestashop\Combination;
 use App\Models\Prestashop\Currency;
+use App\Models\Prestashop\Product;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SupplyOrderDetail extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_supply_order_detail';
+
     protected $primaryKey = 'id_supply_order_detail';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,7 +32,7 @@ class SupplyOrderDetail extends Model
         'exchange_rate',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_supply_order' => 'integer',
         'id_product' => 'integer',
         'id_product_attribute' => 'integer',

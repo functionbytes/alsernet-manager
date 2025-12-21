@@ -9,8 +9,9 @@ class HtmlToPlain implements StageInterface
 {
     public function __invoke($html)
     {
-        $options = [ 'ignore_errors' => true ];
+        $options = ['ignore_errors' => true];
         $plain = Html2Text::convert($html, $options);
+
         return $plain;
     }
 }

@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property-read \App\Models\Return\ProductComponent|null $component
  * @property-read \App\Models\Return\ProductComponent|null $substituteComponent
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent essential()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent missing()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent pending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderComponent query()
+ *
  * @mixin \Eloquent
  */
 class OrderComponent extends Model
@@ -70,11 +72,17 @@ class OrderComponent extends Model
      * Estados de componente en orden
      */
     const STATUS_PENDING = 'pending';
+
     const STATUS_RESERVED = 'reserved';
+
     const STATUS_ALLOCATED = 'allocated';
+
     const STATUS_PARTIAL = 'partial';
+
     const STATUS_SHIPPED = 'shipped';
+
     const STATUS_MISSING = 'missing';
+
     const STATUS_SUBSTITUTED = 'substituted';
 
     /**
@@ -186,6 +194,7 @@ class OrderComponent extends Model
                     'status' => self::STATUS_RESERVED,
                     'reserved_at' => now(),
                 ]);
+
                 return true;
             }
         }
@@ -201,6 +210,7 @@ class OrderComponent extends Model
                     'status' => $availableQuantity < $pendingQuantity ? self::STATUS_PARTIAL : self::STATUS_RESERVED,
                     'reserved_at' => now(),
                 ]);
+
                 return true;
             }
         }
@@ -217,7 +227,7 @@ class OrderComponent extends Model
     /**
      * Asignar stock (separar físicamente)
      */
-    public function allocateStock(int $quantity = null): bool
+    public function allocateStock(?int $quantity = null): bool
     {
         $quantity = $quantity ?? $this->quantity_reserved;
 
@@ -283,12 +293,12 @@ class OrderComponent extends Model
      */
     public function applySubstitution(ProductComponent $substitute, int $quantity): bool
     {
-        if (!$substitute->hasStock($quantity)) {
+        if (! $substitute->hasStock($quantity)) {
             return false;
         }
 
         // Reservar stock del sustituto
-        if (!$substitute->reserveStock($quantity, $this->order_id)) {
+        if (! $substitute->reserveStock($quantity, $this->order_id)) {
             return false;
         }
 
@@ -338,6 +348,7 @@ class OrderComponent extends Model
 
         // Calcular basado en lead time del componente
         $component = $this->component;
+
         return now()->addDays($component->getEstimatedLeadTime())->toDateString();
     }
 
@@ -346,11 +357,12 @@ class OrderComponent extends Model
      */
     public function canBeSubstituted(): bool
     {
-        if (!$this->can_substitute) {
+        if (! $this->can_substitute) {
             return false;
         }
 
         $substitutes = $this->component->getAvailableSubstitutes();
+
         return $substitutes->isNotEmpty();
     }
 

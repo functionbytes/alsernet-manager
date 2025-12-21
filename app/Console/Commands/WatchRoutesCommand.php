@@ -33,6 +33,7 @@ class WatchRoutesCommand extends Command
         // Validate interval
         if ($interval < 1 || $interval > 60) {
             $this->error('❌ Interval must be between 1 and 60 seconds');
+
             return self::FAILURE;
         }
 
@@ -49,6 +50,7 @@ class WatchRoutesCommand extends Command
             $watcher->startWatching($interval);
         } catch (\Throwable $e) {
             $this->error("❌ Watcher error: {$e->getMessage()}");
+
             return self::FAILURE;
         }
 
@@ -83,7 +85,7 @@ class WatchRoutesCommand extends Command
         }
 
         $this->newLine();
-        $this->line('<fg=yellow>⏱️  Check Interval: ' . $this->option('interval') . ' seconds</>');
+        $this->line('<fg=yellow>⏱️  Check Interval: '.$this->option('interval').' seconds</>');
         $this->newLine();
         $this->line('<fg=cyan>💡 How it works:</>');
         $this->line('   1. Monitors route file timestamps and content');

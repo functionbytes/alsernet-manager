@@ -38,7 +38,7 @@ class DocumentMissingNotificationMail extends Mailable
             ? str_replace('{uid}', $this->document->uid, rtrim($uploadPortalTemplate))
             : null;
 
-        return $this->subject('Documentación pendiente para tu pedido ' . ($orderReference ? '#'.$orderReference : ''))
+        return $this->subject('Documentación pendiente para tu pedido '.($orderReference ? '#'.$orderReference : ''))
             ->view('mailers.documents.missing')
             ->with([
                 'document' => $this->document,

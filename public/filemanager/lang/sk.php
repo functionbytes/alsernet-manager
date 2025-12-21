@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Vybrať',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'dir',
     'Type' => 'Typ',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Vybrali ste príliš veľa položiek na to aby boli vystrihnuté alebo kopírované. Limit: %d files/operácia', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Nemáte povolenie na vystrihnutie alebo kopírovanie položiek.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Obrázok nebol uložený.',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Súbor nemožno rozbaliť. Môže byť poškodený.',
     'Zip_Invalid' => 'Tento typ súboru nemožno rozbaliť. Povolené formáty: zip, gz, tar.',
     'Dir_No_Write' => 'Do vybraného adresára nemožno zapisovať.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'Povolenia súborov',
     'File_Permission_Not_Allowed' => 'Zmena povolení súborov alebo adresárov nie je povolená.', // %s = files or folders
     'File_Permission_Recursive' => 'Použiť na vnorené súbory a adresáre?',
-    'File_Permission_Wrong_Mode' => "Nesprávny mód povolenia",
+    'File_Permission_Wrong_Mode' => 'Nesprávny mód povolenia',
     'User' => 'Užívateľ',
     'Group' => 'Skupina',
     'Yes' => 'Áno',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Súbor sa nenašiel.',
     'File_Open_Edit_Not_Allowed' => 'Nemáte právo otvoriť alebo upravovať tento súbor.', // %s = open or edit
     'Edit' => 'Upraviť',
-    'Edit_File' => "Upraviť obsah súboru",
-    'File_Save_OK' => "Súbor bol uložený.",
-    'File_Save_Error' => "Nastala chyba! Súbor nebol uložený.",
+    'Edit_File' => 'Upraviť obsah súboru',
+    'File_Save_OK' => 'Súbor bol uložený.',
+    'File_Save_Error' => 'Nastala chyba! Súbor nebol uložený.',
     'New_File' => 'Nový súbor',
     'No_Extension' => 'Musíte pridať príponu súboru.',
     'Valid_Extensions' => 'Povolené prípony: %s', // %s = txt,log etc.
-    'Upload_message' => "Drop file here to upload",
+    'Upload_message' => 'Drop file here to upload',
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Forbiden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size",
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Forbiden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

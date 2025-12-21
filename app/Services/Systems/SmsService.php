@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class SmsService
 {
     protected $twilioSid;
+
     protected $twilioToken;
+
     protected $twilioFrom;
 
     public function __construct()
@@ -34,13 +36,16 @@ class SmsService
 
             if ($response->successful()) {
                 Log::info("SMS enviado exitosamente a {$to}");
+
                 return true;
             }
 
-            Log::error("Error enviando SMS a {$to}: " . $response->body());
+            Log::error("Error enviando SMS a {$to}: ".$response->body());
+
             return false;
         } catch (\Exception $e) {
-            Log::error("Excepción enviando SMS a {$to}: " . $e->getMessage());
+            Log::error("Excepción enviando SMS a {$to}: ".$e->getMessage());
+
             return false;
         }
     }
@@ -77,8 +82,8 @@ class SmsService
         $phone = preg_replace('/[^\d]/', '', $phone);
 
         // Añadir código de país si no existe
-        if (!str_starts_with($phone, '+')) {
-            $phone = $countryCode . $phone;
+        if (! str_starts_with($phone, '+')) {
+            $phone = $countryCode.$phone;
         }
 
         return $phone;
@@ -95,7 +100,8 @@ class SmsService
 
             return $response->successful() ? $response->json() : null;
         } catch (\Exception $e) {
-            Log::error("Error obteniendo estado de SMS {$messageSid}: " . $e->getMessage());
+            Log::error("Error obteniendo estado de SMS {$messageSid}: ".$e->getMessage());
+
             return null;
         }
     }

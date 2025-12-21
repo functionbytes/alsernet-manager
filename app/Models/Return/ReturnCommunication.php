@@ -20,7 +20,7 @@ class ReturnCommunication extends Model
         'sent_at',
         'read_at',
         'sent_by',
-        'metadata'
+        'metadata',
     ];
 
     protected $casts = [
@@ -28,17 +28,22 @@ class ReturnCommunication extends Model
         'read_at' => 'datetime',
         'metadata' => 'array',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
 
     // Constantes
     const TYPE_EMAIL = 'email';
+
     const TYPE_SMS = 'sms';
+
     const TYPE_INTERNAL = 'internal_note';
 
     const STATUS_PENDING = 'pending';
+
     const STATUS_SENT = 'sent';
+
     const STATUS_FAILED = 'failed';
+
     const STATUS_READ = 'read';
 
     // Relaciones
@@ -73,7 +78,7 @@ class ReturnCommunication extends Model
     {
         $this->update([
             'status' => self::STATUS_SENT,
-            'sent_at' => now()
+            'sent_at' => now(),
         ]);
     }
 
@@ -84,7 +89,7 @@ class ReturnCommunication extends Model
 
         $this->update([
             'status' => self::STATUS_FAILED,
-            'metadata' => $metadata
+            'metadata' => $metadata,
         ]);
     }
 
@@ -92,8 +97,7 @@ class ReturnCommunication extends Model
     {
         $this->update([
             'status' => self::STATUS_READ,
-            'read_at' => now()
+            'read_at' => now(),
         ]);
     }
 }
-

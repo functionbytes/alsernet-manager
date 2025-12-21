@@ -2,13 +2,17 @@
 
 namespace App\Models\Document;
 
+use App\Models\Lang;
 use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DocumentRequirement extends Model
 {
     use HasUid;
+
+    protected $table = 'document_type_requirements';
 
     protected $fillable = [
         'uid',
@@ -37,42 +41,32 @@ class DocumentRequirement extends Model
         return $this->belongsTo(DocumentType::class);
     }
 
-    // Get translations using barryvdh/laravel-translation-manager
-    public function getTranslationsList()
+    public function translations(): HasMany
     {
-        $langs = \App\Models\Lang::all();
-        $translations = [];
-
-        foreach ($langs as $lang) {
-            $locale = $lang->locale ?? $lang->code;
-            $translations[] = (object) [
-                'id' => null,
-                'lang_id' => $lang->id,
-                'name' => trans("documents.requirements.{$this->key}.name", [], $locale),
-                'help_text' => trans("documents.requirements.{$this->key}.help_text", [], $locale),
-            ];
-        }
-
-        return collect($translations);
+        return $this->hasMany(DocumentRequirementTranslation::class);
     }
 
     // Get translation for specific language
     public function translate(?int $langId = null)
     {
-        $langId = $langId ?? \App\Models\Lang::getDefaultLangId();
+        $langId = $langId ?? Lang::getDefaultLangId();
 
-        return $this->getTranslationsList()->firstWhere('lang_id', $langId);
+        return $this->translations()->where('lang_id', $langId)->first();
     }
 
-    // Translation methods using Laravel's localization
-    public function getName(): string
+    // Translation methods using database translations
+    public function getName(?int $langId = null): string
     {
-        return __("documents.requirements.{$this->key}.name");
+        $translation = $this->translate($langId);
+
+        return $translation?->name ?? $this->key;
     }
 
-    public function getHelpText(): string
+    public function getHelpText(?int $langId = null): string
     {
-        return __("documents.requirements.{$this->key}.help_text");
+        $translation = $this->translate($langId);
+
+        return $translation?->help_text ?? '';
     }
 
     // Magic getter for backwards compatibility

@@ -16,10 +16,10 @@ class DatabaseCleanupController extends Controller
         // Check if cleanup is enabled
         $cleanupEnabled = env('CMS_ENABLED_CLEANUP_DATABASE', false);
 
-        if (!$cleanupEnabled) {
+        if (! $cleanupEnabled) {
             return view('managers.views.settings.database.cleanup.disabled', [
                 'pageTitle' => 'Limpieza de Base de Datos',
-                'breadcrumb' => 'Configuración / Limpieza de Base de Datos'
+                'breadcrumb' => 'Configuración / Limpieza de Base de Datos',
             ]);
         }
 
@@ -36,7 +36,7 @@ class DatabaseCleanupController extends Controller
             ));
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error al obtener las tablas: ' . $e->getMessage());
+                ->with('error', 'Error al obtener las tablas: '.$e->getMessage());
         }
     }
 
@@ -49,10 +49,10 @@ class DatabaseCleanupController extends Controller
         $tables = [];
 
         // Get all tables from current database
-        $result = DB::select("SELECT TABLE_NAME, TABLE_ROWS
+        $result = DB::select('SELECT TABLE_NAME, TABLE_ROWS
                             FROM INFORMATION_SCHEMA.TABLES
                             WHERE TABLE_SCHEMA = ?
-                            ORDER BY TABLE_NAME ASC", [$database]);
+                            ORDER BY TABLE_NAME ASC', [$database]);
 
         foreach ($result as $row) {
             $tableName = $row->TABLE_NAME;
@@ -63,7 +63,7 @@ class DatabaseCleanupController extends Controller
             $tables[] = [
                 'name' => $tableName,
                 'records' => $actualCount,
-                'estimated' => $row->TABLE_ROWS
+                'estimated' => $row->TABLE_ROWS,
             ];
         }
 
@@ -76,35 +76,35 @@ class DatabaseCleanupController extends Controller
     public function truncate(Request $request)
     {
         // Check if cleanup is enabled
-        if (!env('CMS_ENABLED_CLEANUP_DATABASE', false)) {
+        if (! env('CMS_ENABLED_CLEANUP_DATABASE', false)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Esta característica no está habilitada. Configura CMS_ENABLED_CLEANUP_DATABASE=true en el archivo .env'
+                'message' => 'Esta característica no está habilitada. Configura CMS_ENABLED_CLEANUP_DATABASE=true en el archivo .env',
             ], 403);
         }
 
         try {
             $request->validate([
                 'tables' => 'required|array|min:1',
-                'tables.*' => 'required|string'
+                'tables.*' => 'required|string',
             ]);
 
             $tablesToTruncate = $request->input('tables');
             $database = env('DB_DATABASE');
 
             // Get all valid tables from database
-            $allTables = DB::select("SELECT TABLE_NAME
+            $allTables = DB::select('SELECT TABLE_NAME
                                     FROM INFORMATION_SCHEMA.TABLES
-                                    WHERE TABLE_SCHEMA = ?", [$database]);
+                                    WHERE TABLE_SCHEMA = ?', [$database]);
 
-            $validTableNames = array_map(fn($t) => $t->TABLE_NAME, $allTables);
+            $validTableNames = array_map(fn ($t) => $t->TABLE_NAME, $allTables);
 
             // Validate all requested tables exist
             foreach ($tablesToTruncate as $table) {
-                if (!in_array($table, $validTableNames)) {
+                if (! in_array($table, $validTableNames)) {
                     return response()->json([
                         'success' => false,
-                        'message' => "La tabla '$table' no existe o no es válida"
+                        'message' => "La tabla '$table' no existe o no es válida",
                     ], 400);
                 }
             }
@@ -123,7 +123,7 @@ class DatabaseCleanupController extends Controller
                 } catch (\Exception $e) {
                     $errors[] = [
                         'table' => $table,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ];
                 }
             }
@@ -131,11 +131,11 @@ class DatabaseCleanupController extends Controller
             // Re-enable foreign key checks
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-            if (!empty($errors)) {
+            if (! empty($errors)) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Se limpiaron $truncatedCount tabla(s) pero hubo errores en " . count($errors) . " tabla(s)",
-                    'errors' => $errors
+                    'message' => "Se limpiaron $truncatedCount tabla(s) pero hubo errores en ".count($errors).' tabla(s)',
+                    'errors' => $errors,
                 ], 400);
             }
 
@@ -147,18 +147,18 @@ class DatabaseCleanupController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => "Se limpiaron correctamente $truncatedCount tabla(s)",
-                'truncated_count' => $truncatedCount
+                'truncated_count' => $truncatedCount,
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validación fallida',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al limpiar la base de datos: ' . $e->getMessage()
+                'message' => 'Error al limpiar la base de datos: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -173,15 +173,15 @@ class DatabaseCleanupController extends Controller
             $database = env('DB_DATABASE');
 
             // Validate table exists
-            $exists = DB::select("SELECT TABLE_NAME
+            $exists = DB::select('SELECT TABLE_NAME
                                 FROM INFORMATION_SCHEMA.TABLES
-                                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?",
-                                [$database, $tableName]);
+                                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?',
+                [$database, $tableName]);
 
             if (empty($exists)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tabla no encontrada'
+                    'message' => 'Tabla no encontrada',
                 ], 404);
             }
 
@@ -189,12 +189,12 @@ class DatabaseCleanupController extends Controller
 
             return response()->json([
                 'success' => true,
-                'count' => $count
+                'count' => $count,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Error: '.$e->getMessage(),
             ], 500);
         }
     }

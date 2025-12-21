@@ -2,19 +2,21 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Batchable;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
 use Exception;
+use Illuminate\Bus\Batchable;
 
 class VerifyAndCreateSubscriber extends Base
 {
     use Batchable;
+
     public $timeout = 120;
+
     protected $list;
+
     protected $attributes;
+
     protected $logger;
+
     protected $jobMonitor;
 
     /**
@@ -29,6 +31,7 @@ class VerifyAndCreateSubscriber extends Base
         $this->logger = $logger;
         $this->jobMonitor = $jobMonitor;
     }
+
     public function handle()
     {
         if ($this->batch()->cancelled()) {
@@ -51,13 +54,13 @@ class VerifyAndCreateSubscriber extends Base
         if (is_null($verifier)) {
             throw new Exception(trans('vimport::messages.error.verification_server.missing', [
                 'email' => $subscriber->email,
-                'server' => $verifier->name
+                'server' => $verifier->name,
             ]));
         }
 
         $verifa = $subscriber->verify($verifier);
         if ($verifa->isDeliverable() || $verifa->isUnknown()) {
-            $this->done(trans('vimport::messages.import.success.message', [ 'email' => $subscriber->email, 'server' => $verifier->name ]));
+            $this->done(trans('vimport::messages.import.success.message', ['email' => $subscriber->email, 'server' => $verifier->name]));
         } else {
             // In case of failure, delete the newly created contact
             // Throw exception to log
@@ -103,7 +106,7 @@ class VerifyAndCreateSubscriber extends Base
                 $failed += 1;
             }
 
-            $notice = trans('vimport::messages.import.progress.message', [ 'imported' => $processed, 'failed' => $failed ]);
+            $notice = trans('vimport::messages.import.progress.message', ['imported' => $processed, 'failed' => $failed]);
 
             $jobMonitor->updateJsonData([
                 'processed' => $processed,

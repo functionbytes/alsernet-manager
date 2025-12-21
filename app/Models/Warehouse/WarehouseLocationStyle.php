@@ -12,8 +12,11 @@ class WarehouseLocationStyle extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_location_styles';
+
     protected $primaryKey = 'id';
+
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     /**
@@ -51,13 +54,18 @@ class WarehouseLocationStyle extends Model
 
     // Tipos de estilos disponibles
     const TYPE_ROW = 'row';
+
     const TYPE_ISLAND = 'island';
+
     const TYPE_WALL = 'wall';
 
     // Caras disponibles
     const FACE_LEFT = 'left';
+
     const FACE_RIGHT = 'right';
+
     const FACE_FRONT = 'front';
+
     const FACE_BACK = 'back';
 
     /**
@@ -180,12 +188,12 @@ class WarehouseLocationStyle extends Model
      */
     public function hasValidFaces(): bool
     {
-        if (!is_array($this->faces) || empty($this->faces)) {
+        if (! is_array($this->faces) || empty($this->faces)) {
             return false;
         }
 
         foreach ($this->faces as $face) {
-            if (!in_array($face, self::$validFaces)) {
+            if (! in_array($face, self::$validFaces)) {
                 return false;
             }
         }

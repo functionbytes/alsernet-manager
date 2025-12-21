@@ -14,14 +14,16 @@ class ImportSubscribers extends Base
 {
     use Batchable;
     use Trackable;
+
     public $timeout = 7200;
 
     protected $import;
+
     protected $file;
 
     public function __construct($import, $file)
     {
-        $this->import= $import;
+        $this->import = $import;
         $this->file = $file;
         $this->afterDispatched(function ($thisJob, $monitor) {
             $monitor->setJsonData([
@@ -39,7 +41,7 @@ class ImportSubscribers extends Base
     public function handle()
     {
         $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
-        $logfile = $this->file.".log";
+        $logfile = $this->file.'.log';
         $stream = new StreamHandler($logfile, Logger::DEBUG);
         $stream->setFormatter($formatter);
 

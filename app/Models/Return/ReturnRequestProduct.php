@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnRequestProduct extends Model
 {
     protected $table = 'return_request_products';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -25,7 +26,7 @@ class ReturnRequestProduct extends Model
         'is_approved',
         'approved_quantity',
         'refund_amount',
-        'replacement_requested'
+        'replacement_requested',
     ];
 
     protected $casts = [
@@ -35,7 +36,7 @@ class ReturnRequestProduct extends Model
         'total_price' => 'decimal:2',
         'refund_amount' => 'decimal:2',
         'is_approved' => 'boolean',
-        'replacement_requested' => 'boolean'
+        'replacement_requested' => 'boolean',
     ];
 
     // Relaciones
@@ -92,25 +93,26 @@ class ReturnRequestProduct extends Model
     public function calculateRefundAmount(): float
     {
         $quantity = $this->approved_quantity ?? $this->quantity;
+
         return $quantity * $this->unit_price;
     }
 
-    public function approve(float $approvedQuantity = null, float $refundAmount = null): bool
+    public function approve(?float $approvedQuantity = null, ?float $refundAmount = null): bool
     {
         return $this->update([
             'is_approved' => true,
             'approved_quantity' => $approvedQuantity ?? $this->quantity,
-            'refund_amount' => $refundAmount ?? $this->calculateRefundAmount()
+            'refund_amount' => $refundAmount ?? $this->calculateRefundAmount(),
         ]);
     }
 
-    public function reject(string $reason = null): bool
+    public function reject(?string $reason = null): bool
     {
         return $this->update([
             'is_approved' => false,
             'approved_quantity' => 0,
             'refund_amount' => 0,
-            'notes' => $reason ? "Rechazado: {$reason}" : $this->notes
+            'notes' => $reason ? "Rechazado: {$reason}" : $this->notes,
         ]);
     }
 
@@ -122,7 +124,7 @@ class ReturnRequestProduct extends Model
         foreach ($selectedProducts as $selection) {
             $orderProduct = ReturnOrderProduct::find($selection['order_product_id']);
 
-            if (!$orderProduct || !$orderProduct->canBeReturned()) {
+            if (! $orderProduct || ! $orderProduct->canBeReturned()) {
                 continue;
             }
 
@@ -147,7 +149,7 @@ class ReturnRequestProduct extends Model
                 'return_reason_id' => $selection['return_reason_id'] ?? null,
                 'return_condition' => $selection['condition'] ?? 'good',
                 'notes' => $selection['notes'] ?? null,
-                'replacement_requested' => $selection['replacement_requested'] ?? false
+                'replacement_requested' => $selection['replacement_requested'] ?? false,
             ]);
         }
     }
@@ -163,15 +165,15 @@ class ReturnRequestProduct extends Model
             'product_name' => $this->product_name,
             'quantity' => $this->quantity,
             'approved_quantity' => $this->approved_quantity,
-            'unit_price' => number_format($this->unit_price, 2) . ' €',
-            'total_price' => number_format($this->total_price, 2) . ' €',
-            'refund_amount' => number_format($this->refund_amount ?? 0, 2) . ' €',
+            'unit_price' => number_format($this->unit_price, 2).' €',
+            'total_price' => number_format($this->total_price, 2).' €',
+            'refund_amount' => number_format($this->refund_amount ?? 0, 2).' €',
             'return_condition' => $this->return_condition,
             'status' => $this->getStatusName(),
             'status_color' => $this->getStatusColor(),
             'replacement_requested' => $this->replacement_requested,
             'notes' => $this->notes,
-            'return_reason' => $this->returnReason?->getTranslation()?->name ?? 'No especificado'
+            'return_reason' => $this->returnReason?->getTranslation()?->name ?? 'No especificado',
         ];
     }
 
@@ -180,7 +182,7 @@ class ReturnRequestProduct extends Model
      */
     public function validateQuantity(): bool
     {
-        if (!$this->orderProduct) {
+        if (! $this->orderProduct) {
             return false;
         }
 

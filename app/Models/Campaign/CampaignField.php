@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\Campaign;
 
 use App\Library\Traits\HasUid;
@@ -21,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignFieldOption> $fieldOptions
  * @property-read int|null $field_options_count
  * @property-read \App\Models\Campaign\CampaignMaillist $mailList
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField query()
@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField whereUid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField whereVisible($value)
+ *
  * @mixin \Eloquent
  */
 class CampaignField extends Model
@@ -42,6 +43,7 @@ class CampaignField extends Model
     use HasUid;
 
     public const TYPE_DATE = 'date';
+
     public const TYPE_DATETIME = 'datetime';
 
     protected $fillable = [
@@ -55,8 +57,7 @@ class CampaignField extends Model
         'is_email',
     ];
 
-
-    protected $table = "campaigns_maillists_fields";
+    protected $table = 'campaigns_maillists_fields';
 
     public function mailList()
     {
@@ -94,6 +95,4 @@ class CampaignField extends Model
 
         return 'text';
     }
-
-
 }

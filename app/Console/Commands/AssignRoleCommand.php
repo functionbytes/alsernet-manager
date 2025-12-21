@@ -19,17 +19,19 @@ class AssignRoleCommand extends Command
 
         // Find user by email
         $user = User::where('email', $email)->first();
-        if (!$user) {
+        if (! $user) {
             $this->error("❌ Usuario no encontrado: {$email}");
+
             return 1;
         }
 
         // Check if role exists
         $role = Role::where('name', $roleName)->first();
-        if (!$role) {
+        if (! $role) {
             $this->error("❌ Rol no existe: {$roleName}");
             $this->info("\n📋 Roles disponibles:");
-            Role::all()->each(fn($r) => $this->line("  • {$r->name}"));
+            Role::all()->each(fn ($r) => $this->line("  • {$r->name}"));
+
             return 1;
         }
 
@@ -39,7 +41,7 @@ class AssignRoleCommand extends Command
         // Assign role
         $user->syncRoles([$roleName]);
 
-        $this->info("✅ Rol asignado exitosamente");
+        $this->info('✅ Rol asignado exitosamente');
         $this->line("\n📊 Resumen:");
         $this->line("  Usuario: {$user->email}");
         $this->line("  Rol anterior: {$currentRole}");
@@ -54,7 +56,7 @@ class AssignRoleCommand extends Command
     private function showAccessInfo($roleName)
     {
         $this->newLine();
-        $this->info("🔐 Permisos y acceso para este rol:");
+        $this->info('🔐 Permisos y acceso para este rol:');
 
         // Get permissions for this role
         $role = Role::where('name', $roleName)->first();

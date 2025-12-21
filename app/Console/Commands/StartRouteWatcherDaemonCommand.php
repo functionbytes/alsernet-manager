@@ -67,6 +67,7 @@ class StartRouteWatcherDaemonCommand extends Command
             $pid = trim(file_get_contents($this->pidFile));
             $this->warn("⚠️  Route watcher daemon is already running (PID: {$pid})");
             $this->line('Run: php artisan routes:daemon --stop');
+
             return self::FAILURE;
         }
 
@@ -76,6 +77,7 @@ class StartRouteWatcherDaemonCommand extends Command
         $interval = (int) $this->option('interval');
         if ($interval < 1 || $interval > 60) {
             $this->error('❌ Interval must be between 1 and 60 seconds');
+
             return self::FAILURE;
         }
 
@@ -85,7 +87,7 @@ class StartRouteWatcherDaemonCommand extends Command
 
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 // Windows
-                pclose(popen("start /B {$command}", "r"));
+                pclose(popen("start /B {$command}", 'r'));
             } else {
                 // Unix/Linux/macOS
                 $command = "{$command} >> {$this->logFile} 2>&1 &";
@@ -111,7 +113,7 @@ class StartRouteWatcherDaemonCommand extends Command
 
                                 Log::info('Route watcher daemon started', ['pid' => $pid, 'interval' => $interval]);
 
-                                $this->info("✅ Route watcher daemon started successfully!");
+                                $this->info('✅ Route watcher daemon started successfully!');
                                 $this->newLine();
                                 $this->line("<fg=green>PID: {$pid}</>");
                                 $this->line("<fg=green>Interval: {$interval} seconds</>");
@@ -120,7 +122,7 @@ class StartRouteWatcherDaemonCommand extends Command
                                 $this->line('Commands:');
                                 $this->line('  • Stop daemon: php artisan routes:daemon --stop');
                                 $this->line('  • Show status: php artisan routes:daemon --status');
-                                $this->line('  • View logs: tail -f ' . $this->logFile);
+                                $this->line('  • View logs: tail -f '.$this->logFile);
 
                                 return self::SUCCESS;
                             }
@@ -129,17 +131,20 @@ class StartRouteWatcherDaemonCommand extends Command
                 }
             } else {
                 // Windows
-                $this->info("✅ Route watcher daemon started in background");
+                $this->info('✅ Route watcher daemon started in background');
                 $this->line("<fg=cyan>Log file: {$this->logFile}</>");
                 $this->line("Tip: Monitor logs with: type {$this->logFile}");
+
                 return self::SUCCESS;
             }
 
             $this->error('❌ Could not start daemon');
+
             return self::FAILURE;
         } catch (\Exception $e) {
             Log::error('Failed to start route watcher daemon', ['error' => $e->getMessage()]);
             $this->error("❌ Error: {$e->getMessage()}");
+
             return self::FAILURE;
         }
     }
@@ -149,8 +154,9 @@ class StartRouteWatcherDaemonCommand extends Command
      */
     protected function stopDaemon(): int
     {
-        if (!$this->isDaemonRunning()) {
+        if (! $this->isDaemonRunning()) {
             $this->warn('⚠️  Route watcher daemon is not running');
+
             return self::FAILURE;
         }
 
@@ -169,6 +175,7 @@ class StartRouteWatcherDaemonCommand extends Command
 
             if ($this->isDaemonRunning()) {
                 $this->error("❌ Failed to stop daemon (PID: {$pid})");
+
                 return self::FAILURE;
             }
 
@@ -177,10 +184,12 @@ class StartRouteWatcherDaemonCommand extends Command
             Log::info('Route watcher daemon stopped', ['pid' => $pid]);
 
             $this->info("✅ Route watcher daemon stopped successfully (PID was: {$pid})");
+
             return self::SUCCESS;
         } catch (\Exception $e) {
             Log::error('Failed to stop route watcher daemon', ['error' => $e->getMessage()]);
             $this->error("❌ Error: {$e->getMessage()}");
+
             return self::FAILURE;
         }
     }
@@ -200,15 +209,15 @@ class StartRouteWatcherDaemonCommand extends Command
             $pid = trim(file_get_contents($this->pidFile));
             $this->info("✅ Status: <fg=green>RUNNING</> (PID: {$pid})");
         } else {
-            $this->warn("❌ Status: <fg=red>STOPPED</>");
+            $this->warn('❌ Status: <fg=red>STOPPED</>');
         }
 
         $this->newLine();
-        $this->line('Log file: ' . $this->logFile);
+        $this->line('Log file: '.$this->logFile);
 
         if (file_exists($this->logFile)) {
             $size = filesize($this->logFile);
-            $this->line("Size: " . $this->formatBytes($size));
+            $this->line('Size: '.$this->formatBytes($size));
 
             $lines = file($this->logFile);
             $recentLines = array_slice($lines, -5);
@@ -216,7 +225,7 @@ class StartRouteWatcherDaemonCommand extends Command
             $this->newLine();
             $this->line('<fg=yellow>Recent logs (last 5 lines):</>');
             foreach ($recentLines as $line) {
-                $this->line('  ' . trim($line));
+                $this->line('  '.trim($line));
             }
         } else {
             $this->line('<fg=gray>No logs yet</>');
@@ -232,13 +241,13 @@ class StartRouteWatcherDaemonCommand extends Command
      */
     protected function isDaemonRunning(): bool
     {
-        if (!file_exists($this->pidFile)) {
+        if (! file_exists($this->pidFile)) {
             return false;
         }
 
         $pid = trim(file_get_contents($this->pidFile));
 
-        if (!is_numeric($pid)) {
+        if (! is_numeric($pid)) {
             return false;
         }
 
@@ -246,6 +255,7 @@ class StartRouteWatcherDaemonCommand extends Command
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // Windows
             $output = shell_exec("tasklist /FI \"PID eq {$pid}\"");
+
             return str_contains($output, (string) $pid);
         } else {
             // Unix/Linux/macOS
@@ -264,6 +274,6 @@ class StartRouteWatcherDaemonCommand extends Command
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }

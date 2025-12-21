@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Library\Facades\SubscriptionFacade;
-use App\Models\SubscriptionLog;
 use App\Library\TransactionResult;
+use App\Models\SubscriptionLog;
+use Illuminate\Http\Request;
 
 /**
  * /api/v1/customers - API controller for managing customers.
@@ -26,8 +26,7 @@ class CustomerController extends Controller
      *
      * POST /api/v1/customers/store
      *
-     * @param \Illuminate\Http\Request $request All customer information.
-     *
+     * @param  \Illuminate\Http\Request  $request  All customer information.
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -35,11 +34,11 @@ class CustomerController extends Controller
         // Get current user
         $current_user = \Auth::guard('api')->user();
         $customer = \Acelle\Model\Customer::newCustomer();
-        $user = new \Acelle\Model\User();
+        $user = new \Acelle\Model\User;
 
         // authorize
-        if (!$current_user->can('create', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $current_user->can('create', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         // save posted data
@@ -52,13 +51,13 @@ class CustomerController extends Controller
             }
 
             // Create user account for customer
-            $user = new \Acelle\Model\User();
+            $user = new \Acelle\Model\User;
             $user->fill($request->all());
             $user->email = $request->email;
             $user->activated = true;
 
             // Update password
-            if (!empty($request->password)) {
+            if (! empty($request->password)) {
                 $user->password = bcrypt($request->password);
             }
             $user->save();
@@ -84,12 +83,12 @@ class CustomerController extends Controller
                     $user->removeProfileImage();
                 }
 
-                return \Response::json(array(
+                return \Response::json([
                     'status' => 1,
                     'message' => trans('messages.customer.created'),
                     'customer_uid' => $customer->uid,
-                    'api_token' => $customer->user->api_token
-                ), 200);
+                    'api_token' => $customer->user->api_token,
+                ], 200);
             }
         }
     }
@@ -99,8 +98,7 @@ class CustomerController extends Controller
      *
      * PATCH /api/v1/customers
      *
-     * @param \Illuminate\Http\Request $request All customer information.
-     *
+     * @param  \Illuminate\Http\Request  $request  All customer information.
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $uid)
@@ -110,13 +108,13 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$current_user->can('update', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $current_user->can('update', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         // save posted data
@@ -138,7 +136,7 @@ class CustomerController extends Controller
             }
 
             // Update password
-            if (!empty($request->password)) {
+            if (! empty($request->password)) {
                 $user->password = bcrypt($request->password);
             }
             $user->save();
@@ -159,11 +157,11 @@ class CustomerController extends Controller
                 $user->removeProfileImage();
             }
 
-            return \Response::json(array(
+            return \Response::json([
                 'status' => 1,
                 'message' => trans('messages.customer.updated'),
-                'customer_uid' => $customer->uid
-            ), 200);
+                'customer_uid' => $customer->uid,
+            ], 200);
         }
     }
 
@@ -172,8 +170,7 @@ class CustomerController extends Controller
      *
      * GET /api/v1/customers/{uid}
      *
-     * @param int $id customer's uid
-     *
+     * @param  int  $id  customer's uid
      * @return \Illuminate\Http\Response
      */
     public function show($uid)
@@ -183,13 +180,13 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('read', $customer)) {
-            return \Response::json(array('message' => 'Unauthorized'), 401);
+        if (! $user->can('read', $customer)) {
+            return \Response::json(['message' => 'Unauthorized'], 401);
         }
 
         // Customer info
@@ -242,8 +239,7 @@ class CustomerController extends Controller
      *
      * PATCH /api/v1/customers/{uid}
      *
-     * @param int $id customer's uid
-     *
+     * @param  int  $id  customer's uid
      * @return \Illuminate\Http\Response
      */
     public function enable($uid)
@@ -253,22 +249,22 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('enable', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('enable', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $customer->enable();
 
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => trans('messages.customer.enabled'),
-            'customer_uid' => $customer->uid
-        ), 200);
+            'customer_uid' => $customer->uid,
+        ], 200);
     }
 
     /**
@@ -276,8 +272,7 @@ class CustomerController extends Controller
      *
      * PATCH /api/v1/customers/{uid}
      *
-     * @param int $id customer's uid
-     *
+     * @param  int  $id  customer's uid
      * @return \Illuminate\Http\Response
      */
     public function disable($uid)
@@ -287,28 +282,27 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('disable', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('disable', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $customer->disable();
 
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => trans('messages.customer.disabled'),
-            'customer_uid' => $customer->uid
-        ), 200);
+            'customer_uid' => $customer->uid,
+        ], 200);
     }
 
     /**
      * Assign plan to customer.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -319,32 +313,32 @@ class CustomerController extends Controller
         $offlineGateway = \Acelle\Library\Facades\Billing::getGateway('offline');
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('assignPlan', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('assignPlan', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $plan = \Acelle\Model\PlanGeneral::findByUid($plan_uid);
 
         // check if item exists
-        if (!$plan) {
-            return \Response::json(array('status' => 0, 'message' => 'Can not find plan with id: ' . $plan_uid), 404);
+        if (! $plan) {
+            return \Response::json(['status' => 0, 'message' => 'Can not find plan with id: '.$plan_uid], 404);
         }
 
         // check if item active
-        if (!$plan->isActive()) {
-            return \Response::json(array('status' => 0, 'message' => 'Plan is not active'), 404);
+        if (! $plan->isActive()) {
+            return \Response::json(['status' => 0, 'message' => 'Plan is not active'], 404);
         }
 
         // check offline gateway if disale billing
         if ($request->disable_billing && $request->disable_billing !== 'false') {
             // check if offline payment is not active
-            if (!$offlineGateway->isActive() || !\Acelle\Library\Facades\Billing::isGatewayEnabled($offlineGateway)) {
-                return \Response::json(array('status' => 0, 'message' => 'You need to enable Offline payment in order to disable billing!'), 404);
+            if (! $offlineGateway->isActive() || ! \Acelle\Library\Facades\Billing::isGatewayEnabled($offlineGateway)) {
+                return \Response::json(['status' => 0, 'message' => 'You need to enable Offline payment in order to disable billing!'], 404);
             }
         }
 
@@ -364,12 +358,12 @@ class CustomerController extends Controller
             }
         });
 
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => 'Assigned '.$customer->displayName().' plan to '.$plan->name.' successfully.',
             'customer_uid' => $customer->uid,
-            'plan_uid' => $plan->uid
-        ), 200);
+            'plan_uid' => $plan->uid,
+        ], 200);
     }
 
     /**
@@ -377,8 +371,7 @@ class CustomerController extends Controller
      *
      * PATCH /api/v1/customers/{uid}/login-token
      *
-     * @param int $id customer's uid
-     *
+     * @param  int  $id  customer's uid
      * @return \Illuminate\Http\Response
      */
     public function loginToken(Request $request)
@@ -390,8 +383,8 @@ class CustomerController extends Controller
             $customer = Customer::findByUid($request->customer_uid);
 
             // authorize
-            if (!$user->can('loginAs', $customer)) {
-                return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+            if (! $user->can('loginAs', $customer)) {
+                return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
             }
 
             $user = $customer->user;
@@ -399,10 +392,10 @@ class CustomerController extends Controller
 
         $user->generateOneTimeToken();
 
-        echo json_encode(array(
+        echo json_encode([
             'token' => $user->one_time_api_token,
             'url' => action('Controller@tokenLogin', ['token' => $user->one_time_api_token]),
-        ), JSON_UNESCAPED_SLASHES);
+        ], JSON_UNESCAPED_SLASHES);
     }
 
     public function destroy($uid)
@@ -412,23 +405,23 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('delete', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('delete', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $uid = $customer->uid;
         $customer->deleteAccount();
 
-        return \Response::json(array(
+        return \Response::json([
             'status' => 1,
             'message' => trans('messages.customers.deleted'),
-            'customer_uid' => $uid
-        ), 200);
+            'customer_uid' => $uid,
+        ], 200);
     }
 
     public function changePlan(Request $request, $uid, $plan_uid)
@@ -437,32 +430,32 @@ class CustomerController extends Controller
         $customer = \Acelle\Model\Customer::findByUid($uid);
 
         // check if item exists
-        if (!$customer) {
-            return \Response::json(array('status' => 0, 'message' => 'Customer not found'), 404);
+        if (! $customer) {
+            return \Response::json(['status' => 0, 'message' => 'Customer not found'], 404);
         }
 
         // authorize
-        if (!$user->can('changePlan', $customer)) {
-            return \Response::json(array('status' => 0, 'message' => 'Unauthorized'), 401);
+        if (! $user->can('changePlan', $customer)) {
+            return \Response::json(['status' => 0, 'message' => 'Unauthorized'], 401);
         }
 
         $plan = \Acelle\Model\PlanGeneral::findByUid($plan_uid);
 
         // check if item exists
-        if (!$plan) {
-            return \Response::json(array('status' => 0, 'message' => 'Can not find plan with id: ' . $plan_uid), 404);
+        if (! $plan) {
+            return \Response::json(['status' => 0, 'message' => 'Can not find plan with id: '.$plan_uid], 404);
         }
 
         // check if item active
-        if (!$plan->isActive()) {
-            return \Response::json(array('status' => 0, 'message' => 'Plan is not active'), 404);
+        if (! $plan->isActive()) {
+            return \Response::json(['status' => 0, 'message' => 'Plan is not active'], 404);
         }
 
         // get current active subscription
         $subscription = $customer->getCurrentActiveGeneralSubscription();
 
-        if (!$subscription) {
-            return \Response::json(array('status' => 0, 'message' => 'The customer does not have a current active subscription.'), 404);
+        if (! $subscription) {
+            return \Response::json(['status' => 0, 'message' => 'The customer does not have a current active subscription.'], 404);
         }
 
         // Đã có change plan invoice thì xóa nó luôn, change plan khác
@@ -494,19 +487,19 @@ class CustomerController extends Controller
 
                     $message = 'Plan changed';
                 } else {
-                    $message = "Change plan invoice created. User might need to proceed with logging to the client area, then go to the Profile > Subscription dashboard to pay the invoice";
+                    $message = 'Change plan invoice created. User might need to proceed with logging to the client area, then go to the Profile > Subscription dashboard to pay the invoice';
                 }
             });
 
             // return to subscription
-            return \Response::json(array(
+            return \Response::json([
                 'status' => 1,
                 'message' => $message,
                 'customer_uid' => $customer->uid,
-                'plan_uid' => $plan->uid
-            ), 200);
+                'plan_uid' => $plan->uid,
+            ], 200);
         } catch (\Throwable $e) {
-            return \Response::json(array('status' => 0, 'message' => $e->getMessage()), 500);
+            return \Response::json(['status' => 0, 'message' => $e->getMessage()], 500);
         }
     }
 }

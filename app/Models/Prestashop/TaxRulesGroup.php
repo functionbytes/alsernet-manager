@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Tax\TaxRulesGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Tax\TaxRulesGroup;
 
 class TaxRulesGroup extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tax_rules_group';
+
     protected $primaryKey = 'id_tax_rules_group';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -22,7 +25,7 @@ class TaxRulesGroup extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'active' => 'boolean',

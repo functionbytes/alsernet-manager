@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CMSCategory extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_cms_category';
+
     protected $primaryKey = 'id_cms_category';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +30,7 @@ class CMSCategory extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_parent' => 'integer',

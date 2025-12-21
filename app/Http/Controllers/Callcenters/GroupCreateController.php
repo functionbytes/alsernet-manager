@@ -3,20 +3,14 @@
 namespace App\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\Apptitle;
 use App\Models\Footertext;
-use App\Models\Seosetting;
-use App\Models\Pages;
-use DataTables;
-use App\Models\User;
-use App\Models\CategoryUser;
 use App\Models\Groups;
-use Illuminate\Support\Str;
-
+use App\Models\Pages;
+use App\Models\Seosetting;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupCreateController extends Controller
 {
@@ -39,7 +33,7 @@ class GroupCreateController extends Controller
         $groups = Groups::get();
         $data['groups'] = $groups;
 
-        return view('admin.groups.index')->with($data)->with('i', (request()->input('page', 1) - 1) * 5);;
+        return view('admin.groups.index')->with($data)->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     public function create()
@@ -60,10 +54,8 @@ class GroupCreateController extends Controller
         $users = User::get();
         $data['users'] = $users;
 
-
         return view('admin.groups.create')->with($data);
     }
-
 
     public function store(Request $request)
     {
@@ -78,10 +70,9 @@ class GroupCreateController extends Controller
         $grop->groupstatus = 1;
         $grop->save();
 
-        if($request->input('user_id')){
+        if ($request->input('user_id')) {
             foreach ($request->input('user_id') as $value) {
                 $user_id[] = $value;
-
 
             }
         }
@@ -109,8 +100,8 @@ class GroupCreateController extends Controller
         $grop = Groups::find($id);
         $data['group'] = $grop;
 
-        $group = DB::table("groups_users")->where("groups_users.groups_id",$id)
-            ->pluck('groups_users.users_id','groups_users.users_id')
+        $group = DB::table('groups_users')->where('groups_users.groups_id', $id)
+            ->pluck('groups_users.users_id', 'groups_users.users_id')
             ->all();
         $data['grop'] = $group;
 
@@ -125,19 +116,18 @@ class GroupCreateController extends Controller
         $this->authorize('Groups Edit');
 
         $grop = Groups::find($id);
-        if($grop->groupname == $request->groupname){
+        if ($grop->groupname == $request->groupname) {
             $grop->groupstatus = 1;
             $grop->update();
-            if($request->input('user_id')){
+            if ($request->input('user_id')) {
                 foreach ($request->input('user_id') as $value) {
                     $user_id[] = $value;
-
 
                 }
             }
 
             $grop->groupsusers()->sync($request->get('user_id'));
-        }else{
+        } else {
             $request->validate([
                 'groupname' => 'required|string|max:255|unique:groups',
             ]);
@@ -146,7 +136,7 @@ class GroupCreateController extends Controller
             $grop->groupstatus = 1;
             $grop->update();
 
-            if($request->input('user_id')){
+            if ($request->input('user_id')) {
                 foreach ($request->input('user_id') as $value) {
                     $user_id[] = $value;
                 }
@@ -162,33 +152,31 @@ class GroupCreateController extends Controller
         $groupdelete = Groups::find($id);
         $groupdelete->delete();
 
-        return response()->json(['success'=> lang('The group deleted successfully.', 'alerts')]);
+        return response()->json(['success' => lang('The group deleted successfully.', 'alerts')]);
     }
-
 
     public function destroyall(Request $request)
     {
         $id_array = $request->input('id');
 
-		$groups = Groups::whereIn('id', $id_array)->get();
+        $groups = Groups::whereIn('id', $id_array)->get();
 
-		foreach($groups as $group){
-			$group->delete();
+        foreach ($groups as $group) {
+            $group->delete();
 
-		}
-		return response()->json(['success'=> lang('The group deleted successfully.', 'alerts')]);
+        }
+
+        return response()->json(['success' => lang('The group deleted successfully.', 'alerts')]);
     }
 
     public function statuschange(Request $request, $id)
     {
-            $id = $request->id;
-            $groupstatuschange = Groups::find($id);
-            $groupstatuschange->groupstatus = $request->status;
-            $groupstatuschange->update();
+        $id = $request->id;
+        $groupstatuschange = Groups::find($id);
+        $groupstatuschange->groupstatus = $request->status;
+        $groupstatuschange->update();
 
-        return response()->json(['success'=> lang('The group status updated successfully.', 'alerts')]);
+        return response()->json(['success' => lang('The group status updated successfully.', 'alerts')]);
 
     }
-
-
 }

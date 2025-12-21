@@ -3,6 +3,7 @@
 namespace App\Models\Document;
 
 use App\Library\Traits\HasUid;
+use App\Library\Traits\HasValidationWorkflow;
 use App\Services\Documents\DocumentMailService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -81,7 +82,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  */
 class Document extends Model implements HasMedia
 {
-    use HasFactory ,HasUid ,  InteractsWithMedia;
+    use HasFactory, HasUid, HasValidationWorkflow, InteractsWithMedia;
 
     protected $table = 'documents';
 
@@ -93,7 +94,13 @@ class Document extends Model implements HasMedia
         'order_date' => 'datetime',
         'required_documents' => 'array',
         'uploaded_documents' => 'array',
+        'additional_attachments' => 'array',
         'upload_type' => 'string',
+        'requires_financing' => 'boolean',
+        'current_stage' => 'integer',
+        'total_stages' => 'integer',
+        'validation_started_at' => 'datetime',
+        'validation_completed_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -122,8 +129,17 @@ class Document extends Model implements HasMedia
         'customer_company',
         'required_documents',
         'uploaded_documents',
+        'additional_attachments',
         'status_id',
         'sla_policy_id',
+        'requires_financing',
+        'validation_status',
+        'current_stage',
+        'total_stages',
+        'current_validator_group',
+        'assigned_user_id',
+        'validation_started_at',
+        'validation_completed_at',
         'created_at',
         'updated_at',
     ];
@@ -307,6 +323,14 @@ class Document extends Model implements HasMedia
     }
 
     /**
+     * Usuario asignado específicamente para validar el documento
+     */
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\User', 'assigned_user_id');
+    }
+
+    /**
      * Relación con los productos del documento
      */
     public function products()
@@ -400,6 +424,217 @@ class Document extends Model implements HasMedia
     public function mails()
     {
         return $this->hasMany(DocumentMail::class, 'document_id');
+    }
+
+    // =========================================================================
+    // VALIDATION WORKFLOW CONFIGURATION
+    // =========================================================================
+
+    /**
+     * Define the validation workflow stages for documents.
+     * Retrieves stages from DocumentType configuration and evaluates conditions.
+     *
+     * @return array<string> Array of ValidatorGroup keys in order (only stages that pass conditions)
+     */
+    public function getValidationWorkflowStages(): array
+    {
+        // Try to get stages from DocumentType configuration
+        if (! empty($this->type)) {
+            $documentType = DocumentType::where('slug', $this->type)->first();
+
+            if ($documentType && ! empty($documentType->validation_stages)) {
+                // Get stages with conditions
+                $stagesWithConditions = $documentType->getValidationStagesWithConditions();
+
+                // Filter stages based on conditions
+                $validStages = [];
+                foreach ($stagesWithConditions as $stage) {
+                    if ($this->evaluateStageConditions($stage['conditions'] ?? [])) {
+                        $validStages[] = $stage['key'];
+                    }
+                }
+
+                // Return filtered stages if any passed conditions, otherwise fallback
+                if (! empty($validStages)) {
+                    return $validStages;
+                }
+            }
+        }
+
+        // Fallback: If no DocumentType found or no stages configured,
+        // use legacy logic based on product type and financing
+        return $this->getLegacyValidationStages();
+    }
+
+    /**
+     * Evaluate if a stage's conditions are met for this document
+     *
+     * Supported conditions:
+     * - 'requires_financing' => true/false - Document requires financing
+     * - 'is_weapon' => true/false - Document is for weapon sale (escopeta/rifle/corta)
+     * - 'is_dni_only' => true/false - Document only requires DNI (no weapons)
+     * - Custom conditions can be added here
+     *
+     * @param  array  $conditions  Key-value pairs of conditions to check
+     * @return bool True if all conditions pass (empty conditions = always pass)
+     */
+    protected function evaluateStageConditions(array $conditions): bool
+    {
+        // Empty conditions = stage always applies
+        if (empty($conditions)) {
+            return true;
+        }
+
+        // Check each condition
+        foreach ($conditions as $key => $expectedValue) {
+            $actualValue = $this->getConditionValue($key);
+
+            // If expected value doesn't match actual value, condition fails
+            if ($actualValue !== $expectedValue) {
+                return false;
+            }
+        }
+
+        // All conditions passed
+        return true;
+    }
+
+    /**
+     * Get the actual value for a condition key
+     *
+     * @param  string  $key  Condition key (e.g., 'requires_financing', 'is_weapon', 'is_dni_only')
+     * @return mixed The actual value from the document
+     */
+    protected function getConditionValue(string $key): mixed
+    {
+        switch ($key) {
+            case 'requires_financing':
+                return (bool) $this->requires_financing;
+
+            case 'is_weapon':
+                return $this->isWeapon();
+
+            case 'is_dni_only':
+                return $this->isDniOnly();
+
+            default:
+                // For unknown conditions, return null (will fail comparison)
+                return null;
+        }
+    }
+
+    /**
+     * Determine if this document is for a weapon sale
+     * Uses centralized DocumentValidationCondition configuration
+     */
+    protected function isWeapon(): bool
+    {
+        $saleType = $this->getSaleType();
+
+        // Fallback: use the 'type' field if no blockade type
+        if (empty($saleType) && ! empty($this->type)) {
+            $saleType = $this->type;
+        }
+
+        if (empty($saleType)) {
+            return false;
+        }
+
+        // Check centralized validation condition (cached)
+        $condition = DocumentValidationCondition::getByKey('is_weapon');
+
+        if ($condition) {
+            return $condition->matches($saleType);
+        }
+
+        // Fallback to hardcoded defaults if no condition configured
+        return in_array($saleType, [
+            DocumentProductBlockade::TYPE_ESCOPETA,
+            DocumentProductBlockade::TYPE_RIFLE,
+            DocumentProductBlockade::TYPE_CORTA,
+            'escopeta',
+            'rifle',
+            'corta',
+            'armas',
+        ]);
+    }
+
+    /**
+     * Determine if this document only requires DNI (no weapons)
+     * Uses centralized DocumentValidationCondition configuration
+     */
+    protected function isDniOnly(): bool
+    {
+        $saleType = $this->getSaleType();
+
+        // Fallback: use the 'type' field if no blockade type
+        if (empty($saleType) && ! empty($this->type)) {
+            $saleType = $this->type;
+        }
+
+        if (empty($saleType)) {
+            return false;
+        }
+
+        // Check centralized validation condition (cached)
+        $condition = DocumentValidationCondition::getByKey('is_dni_only');
+
+        if ($condition) {
+            return $condition->matches($saleType);
+        }
+
+        // Fallback to hardcoded default: DNI type and NOT a weapon
+        return $saleType === DocumentProductBlockade::TYPE_DNI && ! $this->isWeapon();
+    }
+
+    /**
+     * Legacy validation stages logic (fallback)
+     * Used when DocumentType has no configured stages
+     *
+     * @return array<string>
+     */
+    protected function getLegacyValidationStages(): array
+    {
+        $saleType = $this->getSaleType();
+
+        // Fallback: si no hay blockade, usar el campo 'type' del documento
+        if (empty($saleType) && ! empty($this->type)) {
+            $saleType = $this->type;
+        }
+
+        $isWeapon = in_array($saleType, [
+            DocumentProductBlockade::TYPE_ESCOPETA,
+            DocumentProductBlockade::TYPE_RIFLE,
+            DocumentProductBlockade::TYPE_CORTA,
+            'escopeta', // Valores directos del campo 'type'
+            'rifle',
+            'corta',
+            'armas', // Legacy type
+        ]);
+
+        // Build stages array dynamically
+        $stages = ['documentacion']; // Always starts with documentation
+
+        if ($isWeapon) {
+            // Weapons always need licencias validation
+            $stages[] = 'licencias';
+        }
+
+        if ($this->requires_financing) {
+            // Add accounting for financing (DNI or weapons)
+            $stages[] = 'contabilidad';
+        }
+
+        return $stages;
+    }
+
+    /**
+     * Initialize the document validation workflow based on its type.
+     * Alias for initializeWorkflow() for backwards compatibility.
+     */
+    public function setupValidationWorkflow(): bool
+    {
+        return $this->initializeWorkflow();
     }
 
     /**
@@ -719,6 +954,50 @@ class Document extends Model implements HasMedia
     }
 
     /**
+     * Obtiene los adjuntos adicionales con detalles completos
+     * Estos son documentos extras cargados por administrativos
+     *
+     * @return array Adjuntos con detalles: [["id", "name", "url", "size", "uploaded_at", "uploaded_by"]]
+     */
+    public function getAdditionalAttachmentsWithDetails(): array
+    {
+        $attachments = [];
+
+        foreach ($this->getMedia('additional_attachments') as $media) {
+            $attachments[] = [
+                'id' => $media->id,
+                'name' => $media->getCustomProperty('original_name', $media->file_name),
+                'file_name' => $media->file_name,
+                'size' => $media->size,
+                'mime_type' => $media->mime_type,
+                'url' => $media->getUrl(),
+                'uploaded_at' => $media->created_at->format('Y-m-d H:i:s'),
+                'uploaded_by' => $media->getCustomProperty('uploaded_by'),
+                'notes' => $media->getCustomProperty('notes'),
+            ];
+        }
+
+        return $attachments;
+    }
+
+    /**
+     * Sincroniza el campo JSON additional_attachments con los archivos media actuales
+     */
+    public function syncAdditionalAttachmentsJson(): void
+    {
+        $this->additional_attachments = $this->getAdditionalAttachmentsWithDetails();
+        $this->save();
+    }
+
+    /**
+     * Verifica si tiene adjuntos adicionales
+     */
+    public function hasAdditionalAttachments(): bool
+    {
+        return $this->getMedia('additional_attachments')->isNotEmpty();
+    }
+
+    /**
      * Static helper to safely retrieve a document by UID
      * Encapsulates the uid() scope to ensure explicit retrieval of a single model instance
      */
@@ -729,6 +1008,96 @@ class Document extends Model implements HasMedia
         }
 
         return self::uid($uid)->first();
+    }
+
+    /**
+     * Check if any product in this document requires DNI
+     * Uses the new DocumentProductBlockade system instead of PrestaShop features
+     */
+    public function hasDniRequiredProducts(): bool
+    {
+        $productIds = $this->products()->pluck('product_id')->filter()->toArray();
+
+        if (empty($productIds)) {
+            return false;
+        }
+
+        // Check for DNI blockade in both simple products and combinations
+        return DocumentProductBlockade::where(function ($query) use ($productIds) {
+            $query->whereIn('product_id', $productIds)
+                ->orWhereIn('product_attribute_id', $productIds);
+        })
+            ->where('blockade_type', DocumentProductBlockade::TYPE_DNI)
+            ->exists();
+    }
+
+    /**
+     * Get the primary sale type (blockade type) for this document's products
+     * Returns the first blockade type found with priority: dni > escopeta > rifle > corta
+     */
+    public function getSaleType(): ?string
+    {
+        $productIds = $this->products()->pluck('product_id')->filter()->toArray();
+
+        if (empty($productIds)) {
+            return null;
+        }
+
+        // Check for blockades with priority order
+        $priorityTypes = [
+            DocumentProductBlockade::TYPE_DNI,
+            DocumentProductBlockade::TYPE_ESCOPETA,
+            DocumentProductBlockade::TYPE_RIFLE,
+            DocumentProductBlockade::TYPE_CORTA,
+        ];
+
+        foreach ($priorityTypes as $type) {
+            $exists = DocumentProductBlockade::where(function ($query) use ($productIds) {
+                $query->whereIn('product_id', $productIds)
+                    ->orWhereIn('product_attribute_id', $productIds);
+            })
+                ->where('blockade_type', $type)
+                ->exists();
+
+            if ($exists) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get all unique blockade types for this document's products
+     * Returns array of blockade type strings (e.g., ['dni', 'escopeta'])
+     */
+    public function getAllBlockadeTypes(): array
+    {
+        $productIds = $this->products()->pluck('product_id')->filter()->toArray();
+
+        if (empty($productIds)) {
+            return [];
+        }
+
+        // Get all blockade types for these products (simple products or combinations)
+        return DocumentProductBlockade::where(function ($query) use ($productIds) {
+            $query->whereIn('product_id', $productIds)
+                ->orWhereIn('product_attribute_id', $productIds);
+        })
+            ->pluck('blockade_type')
+            ->unique()
+            ->toArray();
+    }
+
+    /**
+     * Initialize the validation workflow for this document
+     * Uses the HasValidationWorkflow trait
+     */
+    public function initializeWorkflow(): bool
+    {
+        $stages = $this->getValidationWorkflowStages();
+
+        return $this->initializeValidationWorkflow($stages);
     }
 
     /**

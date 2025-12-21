@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminReturnController;
 use App\Http\Controllers\Api\Return\PublicReturnController;
 use App\Http\Controllers\Api\Return\ReturnController;
-use App\Http\Controllers\Admin\AdminReturnController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas públicas - sin autenticación

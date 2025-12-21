@@ -2,17 +2,19 @@
 
 namespace App\Models\Prestashop\Stock;
 
+use App\Models\Prestashop\Combination;
+use App\Models\Prestashop\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Stock\Warehouse;
-use App\Models\Prestashop\Product;
-use App\Models\Prestashop\Combination;
 
 class Stock extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_stock';
+
     protected $primaryKey = 'id_stock';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +30,7 @@ class Stock extends Model
         'price_te',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_warehouse' => 'integer',
         'id_product' => 'integer',
         'id_product_attribute' => 'integer',

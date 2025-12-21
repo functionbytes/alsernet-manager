@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CustomizationField extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_customization_field';
+
     protected $primaryKey = 'id_customization_field';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,7 +24,7 @@ class CustomizationField extends Model
         'is_deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'is_module' => 'boolean',
         'is_deleted' => 'boolean',
         'id_product' => 'integer',

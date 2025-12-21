@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Connection extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_connections';
+
     protected $primaryKey = 'id_connections';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +27,7 @@ class Connection extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_guest' => 'integer',
         'id_page' => 'integer',

@@ -4,8 +4,7 @@ namespace App\Http\Requests\Campaigns;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class
-StoreCampaignRequest extends FormRequest
+class StoreCampaignRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

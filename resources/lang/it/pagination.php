@@ -1,4 +1,6 @@
-<?php return array (
-  'next' => 'Successiva &raquo;',
-  'previous' => '&laquo; Precedente',
-) ?>
+<?php
+
+return [
+    'next' => 'Successiva &raquo;',
+    'previous' => '&laquo; Precedente',
+];

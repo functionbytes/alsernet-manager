@@ -3,7 +3,6 @@
 namespace App\Mail\Managers;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -11,7 +10,9 @@ class AdminOrederMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $content, $admin;
+    public $content;
+
+    public $admin;
 
     /**
      * Create a new message instance.
@@ -31,8 +32,8 @@ class AdminOrederMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails/adminOrderMail',['admin' => $this->admin])
+        return $this->markdown('emails/adminOrderMail', ['admin' => $this->admin])
             ->subject('Regarding New Order on '.env('APP_NAME'))
-            ->with('content',$this->content);
+            ->with('content', $this->content);
     }
 }

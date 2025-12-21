@@ -48,6 +48,23 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('read', [ConversationMessagesController::class, 'markAsRead']);
             Route::delete('', [ConversationMessagesController::class, 'destroy']);
         });
+    });
+
+    // Notifications API Routes
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\NotificationController::class, 'index']);
+        Route::get('/stats', [\App\Http\Controllers\Api\NotificationController::class, 'stats']);
+        Route::post('/{id}/read', [\App\Http\Controllers\Api\NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-read', [\App\Http\Controllers\Api\NotificationController::class, 'markAllAsRead']);
+        Route::delete('/{id}', [\App\Http\Controllers\Api\NotificationController::class, 'destroy']);
+
+        // Preferencias
+        Route::get('/preferences', [\App\Http\Controllers\Api\NotificationController::class, 'preferences']);
+        Route::put('/preferences', [\App\Http\Controllers\Api\NotificationController::class, 'updatePreferences']);
+
+        // Push Tokens
+        Route::post('/push-tokens', [\App\Http\Controllers\Api\NotificationController::class, 'registerPushToken']);
+        Route::delete('/push-tokens/{id}', [\App\Http\Controllers\Api\NotificationController::class, 'deactivatePushToken']);
 
         // Canned Replies
         Route::get('canned-replies', [ConversationMessagesController::class, 'getCannedReplies']);

@@ -84,7 +84,6 @@ return [
             'password' => 'Abr.755441',
         ],
 
-
         'prestashops' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST_PRESTASHOP'),

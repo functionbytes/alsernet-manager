@@ -34,7 +34,7 @@ class InventorySlotSeeder extends Seeder
                             'face' => $face,
                             'level' => $level,
                             'section' => $section,
-                            'barcode' => 'SLOT-' . str_pad($barcodeCounter++, 6, '0', STR_PAD_LEFT),
+                            'barcode' => 'SLOT-'.str_pad($barcodeCounter++, 6, '0', STR_PAD_LEFT),
                             'quantity' => 0,
                             'max_quantity' => null, // Sin límite inicialmente
                             'weight_current' => 0,

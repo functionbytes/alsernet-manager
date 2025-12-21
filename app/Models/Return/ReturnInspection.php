@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\Return;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,7 @@ class ReturnInspection extends Model
         'requires_review',
         'reviewed_by',
         'reviewed_at',
-        'review_notes'
+        'review_notes',
     ];
 
     protected $casts = [
@@ -31,20 +30,27 @@ class ReturnInspection extends Model
         'checklist_results' => 'array',
         'inspection_photos' => 'array',
         'requires_review' => 'boolean',
-        'reviewed_at' => 'datetime'
+        'reviewed_at' => 'datetime',
     ];
 
     // Constantes de grado
     const GRADE_A = 'A'; // Como nuevo
+
     const GRADE_B = 'B'; // Buen estado
+
     const GRADE_C = 'C'; // Defectos menores
+
     const GRADE_D = 'D'; // No vendible
 
     // Decisiones finales
     const DECISION_RESTOCK = 'restock';
+
     const DECISION_OUTLET = 'outlet';
+
     const DECISION_REPAIR = 'repair';
+
     const DECISION_DESTROY = 'destroy';
+
     const DECISION_RETURN_TO_SUPPLIER = 'return_to_supplier';
 
     // Relaciones
@@ -94,7 +100,7 @@ class ReturnInspection extends Model
             self::GRADE_A => self::DECISION_RESTOCK,
             self::GRADE_B => self::DECISION_OUTLET,
             self::GRADE_C => self::DECISION_REPAIR,
-            self::GRADE_D => self::DECISION_DESTROY
+            self::GRADE_D => self::DECISION_DESTROY,
         ];
 
         return $decisions[$grade] ?? self::DECISION_DESTROY;
@@ -143,7 +149,7 @@ class ReturnInspection extends Model
             self::GRADE_A => 'unopened',
             self::GRADE_B => 'opened_unused',
             self::GRADE_C => 'used',
-            self::GRADE_D => 'damaged'
+            self::GRADE_D => 'damaged',
         ];
 
         return $mapping[$this->condition_grade] ?? 'damaged';
@@ -158,7 +164,7 @@ class ReturnInspection extends Model
             self::GRADE_A => 'Como nuevo',
             self::GRADE_B => 'Buen estado',
             self::GRADE_C => 'Defectos menores',
-            self::GRADE_D => 'No vendible'
+            self::GRADE_D => 'No vendible',
         ];
 
         return $labels[$this->condition_grade] ?? 'Desconocido';
@@ -174,7 +180,7 @@ class ReturnInspection extends Model
             self::DECISION_OUTLET => 'Enviar a outlet',
             self::DECISION_REPAIR => 'Enviar a reparación',
             self::DECISION_DESTROY => 'Destruir',
-            self::DECISION_RETURN_TO_SUPPLIER => 'Devolver al proveedor'
+            self::DECISION_RETURN_TO_SUPPLIER => 'Devolver al proveedor',
         ];
 
         return $labels[$this->final_decision] ?? 'Pendiente';
@@ -188,7 +194,7 @@ class ReturnInspection extends Model
         return $this->update([
             'reviewed_by' => $reviewerId,
             'reviewed_at' => now(),
-            'review_notes' => $notes
+            'review_notes' => $notes,
         ]);
     }
 }

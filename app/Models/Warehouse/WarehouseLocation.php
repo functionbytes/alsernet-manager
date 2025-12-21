@@ -7,16 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Str;
 
 class WarehouseLocation extends Model
 {
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_locations';
+
     protected $primaryKey = 'id';
+
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     /**
@@ -57,7 +58,7 @@ class WarehouseLocation extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
@@ -69,8 +70,6 @@ class WarehouseLocation extends Model
     {
         return $query->where('uid', $uid)->first();
     }
-
-
 
     /**
      * Una estantería pertenece a un warehouse
@@ -139,7 +138,6 @@ class WarehouseLocation extends Model
         return $query->where('floor_id', $floorId);
     }
 
-
     /**
      * Scope: Buscar por estilo
      */
@@ -186,6 +184,7 @@ class WarehouseLocation extends Model
     {
         // Total = (número de caras) × (niveles) × (secciones)
         $facesCount = count($this->style?->faces ?? []);
+
         return $facesCount * $this->total_levels * $this->total_sections;
     }
 
@@ -216,9 +215,9 @@ class WarehouseLocation extends Model
         }
 
         $occupied = $this->getOccupiedSlots();
+
         return ($occupied / $total) * 100;
     }
-
 
     /**
      * Obtener una posición específica por sección code
@@ -298,9 +297,10 @@ class WarehouseLocation extends Model
     public function getVisualWidth(): float
     {
         if ($this->use_custom_visual && $this->visual_width_m !== null) {
-            return (float)$this->visual_width_m;
+            return (float) $this->visual_width_m;
         }
-        return (float)($this->style?->width ?? 1.0);
+
+        return (float) ($this->style?->width ?? 1.0);
     }
 
     /**
@@ -309,9 +309,10 @@ class WarehouseLocation extends Model
     public function getVisualHeight(): float
     {
         if ($this->use_custom_visual && $this->visual_height_m !== null) {
-            return (float)$this->visual_height_m;
+            return (float) $this->visual_height_m;
         }
-        return (float)($this->style?->height ?? 1.0);
+
+        return (float) ($this->style?->height ?? 1.0);
     }
 
     /**
@@ -320,9 +321,10 @@ class WarehouseLocation extends Model
     public function getVisualPositionX(): float
     {
         if ($this->use_custom_visual && $this->visual_position_x !== null) {
-            return (float)$this->visual_position_x;
+            return (float) $this->visual_position_x;
         }
-        return (float)($this->position_x ?? 0);
+
+        return (float) ($this->position_x ?? 0);
     }
 
     /**
@@ -331,9 +333,10 @@ class WarehouseLocation extends Model
     public function getVisualPositionY(): float
     {
         if ($this->use_custom_visual && $this->visual_position_y !== null) {
-            return (float)$this->visual_position_y;
+            return (float) $this->visual_position_y;
         }
-        return (float)($this->position_y ?? 0);
+
+        return (float) ($this->position_y ?? 0);
     }
 
     /**
@@ -348,7 +351,7 @@ class WarehouseLocation extends Model
                 'position_x' => $this->getVisualPositionX(),
                 'position_y' => $this->getVisualPositionY(),
                 'rotation' => $this->visual_rotation ?? 0,
-                'use_custom' => (bool)$this->use_custom_visual,
+                'use_custom' => (bool) $this->use_custom_visual,
             ],
             'base_dimensions' => [
                 'width_m' => $this->style?->width ?? 1.0,

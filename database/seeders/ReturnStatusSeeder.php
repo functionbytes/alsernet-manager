@@ -23,8 +23,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Solicitud Recibida',
-                    'en' => 'Request Received'
-                ]
+                    'en' => 'Request Received',
+                ],
             ],
             // Estado: Verificación (Verification)
             [
@@ -39,8 +39,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'En Verificación',
-                    'en' => 'Under Verification'
-                ]
+                    'en' => 'Under Verification',
+                ],
             ],
             // Estado: Esperando Paquete
             [
@@ -55,8 +55,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Esperando Paquete',
-                    'en' => 'Waiting for Package'
-                ]
+                    'en' => 'Waiting for Package',
+                ],
             ],
             // Estado: Paquete Recibido
             [
@@ -71,8 +71,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Paquete Recibido',
-                    'en' => 'Package Received'
-                ]
+                    'en' => 'Package Received',
+                ],
             ],
             // Estado: Negociación
             [
@@ -87,8 +87,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'En Negociación',
-                    'en' => 'Under Negotiation'
-                ]
+                    'en' => 'Under Negotiation',
+                ],
             ],
             // Estado: Rechazado
             [
@@ -103,8 +103,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Rechazado',
-                    'en' => 'Declined'
-                ]
+                    'en' => 'Declined',
+                ],
             ],
             // Estado: Completado
             [
@@ -119,8 +119,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Completado',
-                    'en' => 'Completed'
-                ]
+                    'en' => 'Completed',
+                ],
             ],
             // Estado: Recogida Programada
             [
@@ -135,8 +135,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Recogida Programada',
-                    'en' => 'Pickup Scheduled'
-                ]
+                    'en' => 'Pickup Scheduled',
+                ],
             ],
             // Estado: Pendiente
             [
@@ -151,8 +151,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Pendiente',
-                    'en' => 'Pending'
-                ]
+                    'en' => 'Pending',
+                ],
             ],
             // Estado: Reemplazado
             [
@@ -167,8 +167,8 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Reemplazado',
-                    'en' => 'Replaced'
-                ]
+                    'en' => 'Replaced',
+                ],
             ],
             // Estado: Reparado
             [
@@ -183,9 +183,9 @@ class ReturnStatusSeeder extends Seeder
                 'active' => true,
                 'translations' => [
                     'es' => 'Reparado',
-                    'en' => 'Repaired'
-                ]
-            ]
+                    'en' => 'Repaired',
+                ],
+            ],
         ];
 
         foreach ($statuses as $status) {

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_image';
+
     protected $primaryKey = 'id_image';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +23,7 @@ class Image extends Model
         'source_index',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_product' => 'integer',
         'position' => 'integer',
     ];

@@ -2,15 +2,15 @@
 
 namespace App\Models\Prestashop\Banner;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Banner extends Model
 {
-
     protected $connection = 'prestashop';
-    protected $table = "aalv_banners";
+
+    protected $table = 'aalv_banners';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,18 +20,18 @@ class Banner extends Model
         'date_end',
         'type',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    public function scopeId($query ,$id)
+    public function scopeId($query, $id)
     {
         return $query->where('id', $id)->first();
     }
 
     public function scopeUid($query, $uid)
-{
+    {
         return $query->where('uid', $uid)->first();
-}
+    }
 
     public function scopeAvailable($query)
     {
@@ -49,7 +49,4 @@ class Banner extends Model
             $q->where('id_lang', $lang);
         });
     }
-
-
-
 }

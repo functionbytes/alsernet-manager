@@ -7,10 +7,7 @@ use App\Events\MailListUnsubscription;
 
 class SendListNotificationToSubscriber
 {
-
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handleMailListSubscription(MailListSubscription $event)
     {
@@ -44,5 +41,4 @@ class SendListNotificationToSubscriber
             [SendListNotificationToSubscriber::class, 'handleMailListUnsubscription']
         );
     }
-
 }

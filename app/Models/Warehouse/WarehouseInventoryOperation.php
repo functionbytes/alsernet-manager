@@ -19,7 +19,7 @@ class WarehouseInventoryOperation extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (!$model->uid) {
+            if (! $model->uid) {
                 $model->uid = \Illuminate\Support\Str::uuid();
             }
         });
@@ -53,8 +53,11 @@ class WarehouseInventoryOperation extends Model
      * Estados de operación
      */
     const STATUS_PENDING = 'pending';
+
     const STATUS_IN_PROGRESS = 'in_progress';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
 
     /**
@@ -100,7 +103,6 @@ class WarehouseInventoryOperation extends Model
      * SCOPES
      * ===============================================
      */
-
     public function scopePending($query)
     {
         return $query->where('status', self::STATUS_PENDING);
@@ -210,6 +212,7 @@ class WarehouseInventoryOperation extends Model
         if ($pendingItems === 0) {
             // Todos los items han sido procesados
             $this->update(['status' => self::STATUS_COMPLETED]);
+
             return true;
         }
 
@@ -259,7 +262,7 @@ class WarehouseInventoryOperation extends Model
                 'closed_at' => now(),
                 'closed_by' => $userId ?? auth()->id(),
                 'status' => self::STATUS_CANCELLED,
-                'description' => $reason ? $this->description . "\n[CANCELADA: $reason]" : $this->description,
+                'description' => $reason ? $this->description."\n[CANCELADA: $reason]" : $this->description,
             ]);
 
             return true;
@@ -334,7 +337,7 @@ class WarehouseInventoryOperation extends Model
                 'items' => $this->items()
                     ->with('slot.section.location', 'slot.product')
                     ->get()
-                    ->map(fn($item) => $item->getSummary()),
+                    ->map(fn ($item) => $item->getSummary()),
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ]

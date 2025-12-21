@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Bus;
 
 trait TrackJobs
 {
-
     public function jobMonitors()
     {
         return $this->hasMany('App\Models\Jobs\JobMonitor', 'subject_id')->where('subject_name', self::class);
@@ -28,7 +27,7 @@ trait TrackJobs
         $job->setMonitor($monitor);
 
         $events = [
-            $job->eventAfterDispatched
+            $job->eventAfterDispatched,
         ];
 
         $job->eventAfterDispatched = null;
@@ -39,7 +38,7 @@ trait TrackJobs
         $monitor->save();
 
         foreach ($events as $closure) {
-            if (!is_null($closure)) {
+            if (! is_null($closure)) {
                 $closure($job, $monitor);
             }
         }
@@ -51,7 +50,7 @@ trait TrackJobs
     public function dispatchWithBatchMonitor($job, $thenCallback, $catchCallback, $finallyCallback)
     {
 
-        if (!property_exists($job, 'monitor')) {
+        if (! property_exists($job, 'monitor')) {
             throw new Exception(sprintf('Job class `%s` should use `Trackable` trait in order to use $eventAfterDispatched callback', get_class($job)));
         }
 
@@ -72,25 +71,25 @@ trait TrackJobs
             // Finish successfully
             $monitor->setDone();
 
-            if (!is_null($thenCallback)) {
+            if (! is_null($thenCallback)) {
                 $thenCallback($batch);
             }
         })->catch(function (Batch $batch, \Throwable $e) use ($monitor, $catchCallback) {
             // Failed and finish
             $monitor->setFailed($e);
 
-            if (!is_null($catchCallback)) {
+            if (! is_null($catchCallback)) {
                 $catchCallback($batch, $e);
             }
         })->finally(function (Batch $batch) use ($monitor, $finallyCallback, $events, $job) {
-            if (!is_null($finallyCallback)) {
+            if (! is_null($finallyCallback)) {
                 $finallyCallback($batch);
             }
 
             // Execute job's callback
             if (array_key_exists('afterFinished', $events)) {
                 $closure = $events['afterFinished'];
-                if (!is_null($closure)) {
+                if (! is_null($closure)) {
                     $closure($job, $monitor);
                 }
             }
@@ -102,7 +101,7 @@ trait TrackJobs
         // Execute job's callback
         if (array_key_exists('afterDispatched', $events)) {
             $closure = $events['afterDispatched'];
-            if (!is_null($closure)) {
+            if (! is_null($closure)) {
                 $closure($job, $monitor);
             }
         }
@@ -115,7 +114,7 @@ trait TrackJobs
     {
         $query = $this->jobMonitors();
 
-        if (!is_null($jobType)) {
+        if (! is_null($jobType)) {
             $query = $query->byJobType($jobType);
         }
 

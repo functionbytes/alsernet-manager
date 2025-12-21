@@ -2,8 +2,8 @@
 
 namespace App\Models\Template;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Library\Traits\HasUid;
+use Illuminate\Database\Eloquent\Model;
 
 class TemplateCategory extends Model
 {
@@ -15,7 +15,7 @@ class TemplateCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     /**

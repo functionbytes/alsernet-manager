@@ -2,8 +2,8 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 
 class ReplaceBareLineFeed implements StageInterface
 {

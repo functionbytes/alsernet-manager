@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Shop\ShopGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Delivery extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_delivery';
+
     protected $primaryKey = 'id_delivery';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,7 +27,7 @@ class Delivery extends Model
         'price',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_shop' => 'integer',
         'id_shop_group' => 'integer',
         'id_carrier' => 'integer',

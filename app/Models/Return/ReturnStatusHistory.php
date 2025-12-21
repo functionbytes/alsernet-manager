@@ -17,12 +17,12 @@ class ReturnStatusHistory extends Model
         'new_status',
         'changed_by',
         'notes',
-        'metadata'
+        'metadata',
     ];
 
     protected $casts = [
         'metadata' => 'array',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
 
     public function return()
@@ -35,4 +35,3 @@ class ReturnStatusHistory extends Model
         return $this->belongsTo('App\Models\User', 'changed_by');
     }
 }
-

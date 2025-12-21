@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\MessageTemplates;
+use DOMDocument;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\MessageTemplates;
-use DOMDocument;
 use Twilio\Rest\Client;
 
 class SendSMS implements ShouldQueue
@@ -28,7 +28,7 @@ class SendSMS implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($usernumber,$templateCode,$ticketData)
+    public function __construct($usernumber, $templateCode, $ticketData)
     {
         $this->usernumber = $usernumber;
         $this->templateCode = $templateCode;
@@ -45,24 +45,24 @@ class SendSMS implements ShouldQueue
         $data = $this->ticketData;
 
         $body = $template->body;
-        foreach($this->ticketData as $key => $value){
-            $body = str_replace('{{'.$key.'}}' , $this->ticketData[$key] , $body);
-            $body = str_replace('{{ '.$key.' }}' , $this->ticketData[$key] , $body);
+        foreach ($this->ticketData as $key => $value) {
+            $body = str_replace('{{'.$key.'}}', $this->ticketData[$key], $body);
+            $body = str_replace('{{ '.$key.' }}', $this->ticketData[$key], $body);
         }
 
-        $body = '<!DOCTYPE html><html><head><title>Email Content</title></head><body>' . $body . '</body></html>';
-        $dom = new DOMDocument();
+        $body = '<!DOCTYPE html><html><head><title>Email Content</title></head><body>'.$body.'</body></html>';
+        $dom = new DOMDocument;
         libxml_use_internal_errors(true);
         $dom->loadHTML($body);
         libxml_clear_errors();
 
         $text = '';
         foreach ($dom->getElementsByTagName('p') as $paragraph) {
-            $text .= $paragraph->nodeValue . "\n";
+            $text .= $paragraph->nodeValue."\n";
         }
 
         foreach ($dom->getElementsByTagName('div') as $div) {
-            $text .= $div->nodeValue . "\n";
+            $text .= $div->nodeValue."\n";
         }
 
         $account_sid = setting('twilio_auth_id');
@@ -73,7 +73,7 @@ class SendSMS implements ShouldQueue
 
         $client->messages->create($this->usernumber, [
             'from' => $twilio_number,
-            'body' => $text
+            'body' => $text,
         ]);
     }
 }

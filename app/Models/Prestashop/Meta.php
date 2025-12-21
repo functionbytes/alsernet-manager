@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Meta extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_meta';
+
     protected $primaryKey = 'id_meta';
+
     public $timestamps = false;
 
     protected $fillable = [

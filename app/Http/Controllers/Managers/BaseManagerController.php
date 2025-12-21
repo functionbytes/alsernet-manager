@@ -15,7 +15,7 @@ class BaseManagerController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            ...$data
+            ...$data,
         ]);
     }
 
@@ -27,7 +27,7 @@ class BaseManagerController extends Controller
         return response()->json([
             'success' => false,
             'message' => $message,
-            ...$data
+            ...$data,
         ], $status);
     }
 

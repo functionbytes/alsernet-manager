@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Administratives;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document\Document;
-use App\Models\Document\DocumentStatus;
 use App\Models\Document\DocumentLoad;
-use App\Models\Document\DocumentSync;
+use App\Models\Document\DocumentStatus;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -114,11 +113,11 @@ class DashboardController extends Controller
         // Add documents without load type
         $documentsWithoutLoad = Document::whereNull('load_id')->count();
         if ($documentsWithoutLoad > 0) {
-            $loadStats->push((object)[
+            $loadStats->push((object) [
                 'id' => null,
                 'label' => 'Sin método de carga',
                 'color' => '#6c757d',
-                'count' => $documentsWithoutLoad
+                'count' => $documentsWithoutLoad,
             ]);
         }
 

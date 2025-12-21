@@ -2,8 +2,8 @@
 
 namespace App\Library\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use App\Library\HookManager;
+use Illuminate\Support\Facades\Facade;
 
 class Hook extends Facade
 {

@@ -92,7 +92,7 @@ class MailVariableService
     {
         $variable = self::getVariable($key);
 
-        if (!$variable) {
+        if (! $variable) {
             return null;
         }
 
@@ -140,7 +140,7 @@ class MailVariableService
 
         $grouped = [];
         foreach ($variables as $variable) {
-            if (!isset($grouped[$variable->category])) {
+            if (! isset($grouped[$variable->category])) {
                 $grouped[$variable->category] = [];
             }
 

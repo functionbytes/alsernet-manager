@@ -2,13 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class CleanOldNotifications extends Command
 {
     protected $signature = 'notifications:clean {--days=30 : Días de antigüedad para eliminar notificaciones}';
+
     protected $description = 'Limpiar notificaciones antiguas de la base de datos';
 
     public function handle()

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Callcenters\Users;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Inscription;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UsersCoursesController extends Controller
 {
-    public function index(Request $request,$uid){
+    public function index(Request $request, $uid)
+    {
 
         $user = User::uid($uid);
         $searchKey = null ?? $request->search;
@@ -17,7 +18,7 @@ class UsersCoursesController extends Controller
         $inscriptions = $user->inscriptions();
 
         if ($searchKey != null) {
-            $inscriptions = $inscriptions->where('title', 'like', '%' . $searchKey . '%');
+            $inscriptions = $inscriptions->where('title', 'like', '%'.$searchKey.'%');
         }
 
         $inscriptions = $inscriptions->paginate(paginationNumber());
@@ -27,6 +28,7 @@ class UsersCoursesController extends Controller
         ]);
 
     }
+
     public function postpone($uid)
     {
         $inscription = Inscription::uid($uid);
@@ -42,6 +44,7 @@ class UsersCoursesController extends Controller
         ]);
 
     }
+
     public function destroy($uid)
     {
         $inscription = Inscription::uid($uid);
@@ -49,5 +52,4 @@ class UsersCoursesController extends Controller
 
         return back();
     }
-
 }

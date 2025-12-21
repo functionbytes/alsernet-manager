@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ReturnType extends Model
 {
     protected $table = 'return_types';
+
     protected $primaryKey = 'id_return_type';
 
     protected $fillable = [];
@@ -32,6 +33,8 @@ class ReturnType extends Model
 
     // Constantes para tipos de devolución
     const TYPE_REFUND = 1;      // Reembolso
+
     const TYPE_REPLACEMENT = 2;  // Reemplazo
+
     const TYPE_REPAIR = 3;       // Reparación
 }

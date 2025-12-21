@@ -52,7 +52,7 @@ class WarrantyClaimController extends Controller
             'warranty.manufacturer',
             'user',
             'assignedUser',
-            'resolvedBy'
+            'resolvedBy',
         ]);
 
         return view('warranty-claims.show', compact('claim'));
@@ -71,7 +71,7 @@ class WarrantyClaimController extends Controller
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
         ]);
 
-        if (!$claim->isActive()) {
+        if (! $claim->isActive()) {
             return redirect()->back()->withErrors(['claim' => 'El reclamo ya no puede ser modificado']);
         }
 
@@ -80,7 +80,7 @@ class WarrantyClaimController extends Controller
         // Agregar información adicional a la descripción
         if ($request->filled('additional_info')) {
             $currentDescription = $claim->issue_description;
-            $updateData['issue_description'] = $currentDescription . "\n\n[Información adicional del cliente]\n" . $request->additional_info;
+            $updateData['issue_description'] = $currentDescription."\n\n[Información adicional del cliente]\n".$request->additional_info;
         }
 
         // Manejar archivos adjuntos adicionales
@@ -101,7 +101,7 @@ class WarrantyClaimController extends Controller
             $updateData['attachments'] = $currentAttachments;
         }
 
-        if (!empty($updateData)) {
+        if (! empty($updateData)) {
             $claim->update($updateData);
 
             $claim->addCommunicationLog([
@@ -128,7 +128,7 @@ class WarrantyClaimController extends Controller
             'cancellation_reason' => 'required|string|max:500',
         ]);
 
-        if (!$claim->isActive()) {
+        if (! $claim->isActive()) {
             return redirect()->back()->withErrors(['cancel' => 'El reclamo ya no puede ser cancelado']);
         }
 
@@ -181,7 +181,7 @@ class WarrantyClaimController extends Controller
     {
         $this->authorize('view', $claim);
 
-        if (!$claim->manufacturer_claim_id || !$claim->warranty->manufacturer) {
+        if (! $claim->manufacturer_claim_id || ! $claim->warranty->manufacturer) {
             return response()->json([
                 'success' => false,
                 'message' => 'No hay reclamo asociado con el fabricante',
@@ -225,7 +225,7 @@ class WarrantyClaimController extends Controller
             return redirect()->back()->withErrors(['reopen' => 'El tiempo límite para reabrir este reclamo ha expirado']);
         }
 
-        $claim->changeStatus(WarrantyClaim::STATUS_UNDER_REVIEW, Auth::user(), 'Reabierto por cliente: ' . $request->reopen_reason);
+        $claim->changeStatus(WarrantyClaim::STATUS_UNDER_REVIEW, Auth::user(), 'Reabierto por cliente: '.$request->reopen_reason);
 
         // Limpiar resolución anterior
         $claim->update([

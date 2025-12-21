@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Warehouses\Warehouses;
 
-use App\Models\Product\ProductLocation;
-use App\Models\Warehouse\Warehouse;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\Controller;
-use App\Models\Inventarie\Event;
+use App\Models\Warehouse\Warehouse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class WarehousesController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
         $searchKey = null ?? $request->search;
         $available = null ?? $request->available;
@@ -20,7 +17,7 @@ class WarehousesController extends Controller
         $warehouses = Warehouse::latest();
 
         if ($searchKey != null) {
-            $warehouses = $warehouses->where('title', 'like', '%' . $searchKey . '%');
+            $warehouses = $warehouses->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($available != null) {
@@ -37,7 +34,8 @@ class WarehousesController extends Controller
 
     }
 
-    public function arrange( $uid){
+    public function arrange($uid)
+    {
 
         $warehouse = Warehouse::uid($uid);
         $user = app('warehouses');
@@ -48,7 +46,8 @@ class WarehousesController extends Controller
 
     }
 
-    public function content($uid){
+    public function content($uid)
+    {
 
         $warehouse = Warehouse::uid($uid);
 
@@ -56,14 +55,13 @@ class WarehousesController extends Controller
             'warehouse' => $warehouse,
         ]);
 
-
     }
 
-    public function destroy($uid){
+    public function destroy($uid)
+    {
         $warehouse = Warehouse::uid($uid);
         $warehouse->delete();
+
         return redirect()->route('warehouses.warehouses.index');
     }
-
 }
-

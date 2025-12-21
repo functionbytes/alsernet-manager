@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\V1;
 
 use App\Permissions\V1\Abilities;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateTicketRequest extends BaseTicketRequest

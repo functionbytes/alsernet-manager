@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 
 class ResumenController extends Controller
 {
-
-    public function resumen(){
+    public function resumen()
+    {
 
         $distributors = Distributor::available()->get();
         $distributors = $distributors->pluck('title', 'id');
@@ -32,7 +32,6 @@ class ResumenController extends Controller
         $methods->prepend('', '');
         $methods = $methods->pluck('title', 'id');
 
-
         return view('managers.views.orders.resumen.index')->with([
             'distributors' => $distributors,
             'methods' => $methods,
@@ -42,7 +41,8 @@ class ResumenController extends Controller
 
     }
 
-    public function generate(Request $request){
+    public function generate(Request $request)
+    {
 
         $conditions = OrderCondition::available()->get();
         $types = OrderType::available()->get();
@@ -78,10 +78,11 @@ class ResumenController extends Controller
 
     }
 
-    public static function getEnterprises(Request $request){
+    public static function getEnterprises(Request $request)
+    {
 
-        if ($request->distributor!=null) {
-            $enterprises  = Distributor::id($request->distributor)->enterprises;
+        if ($request->distributor != null) {
+            $enterprises = Distributor::id($request->distributor)->enterprises;
 
             $formatted_enterprises = [];
             $formatted_enterprises[] = ['id' => 0, 'text' => 'Todas'];
@@ -95,5 +96,4 @@ class ResumenController extends Controller
         return \Response::json($formatted_enterprises);
 
     }
-
 }

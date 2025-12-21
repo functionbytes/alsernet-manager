@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Callcenters\Returns;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\Warranty;
-use App\Models\Return\WarrantyClaim;
 use App\Models\Return\WarrantyType;
 use App\Services\Returns\WarrantyService;
 use Illuminate\Http\Request;
@@ -40,7 +39,7 @@ class WarrantyController extends Controller
 
         if ($request->filled('product_name')) {
             $query->whereHas('product', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->product_name . '%');
+                $q->where('name', 'like', '%'.$request->product_name.'%');
             });
         }
 
@@ -62,7 +61,7 @@ class WarrantyController extends Controller
             'manufacturer',
             'order',
             'claims.assignedUser',
-            'extensions'
+            'extensions',
         ]);
 
         $canExtend = $this->warrantyService->canExtendWarranty($warranty);
@@ -109,7 +108,7 @@ class WarrantyController extends Controller
     {
         $this->authorize('createClaim', $warranty);
 
-        if (!$warranty->isActive()) {
+        if (! $warranty->isActive()) {
             return redirect()->back()->withErrors(['warranty' => 'La garantía no está activa']);
         }
 
@@ -126,13 +125,13 @@ class WarrantyController extends Controller
         $request->validate([
             'issue_category' => 'required|string|in:hardware,software,defect,damage,performance',
             'issue_description' => 'required|string|min:10|max:1000',
-            'issue_occurred_date' => 'required|date|before_or_equal:today|after_or_equal:' . $warranty->warranty_start_date,
+            'issue_occurred_date' => 'required|date|before_or_equal:today|after_or_equal:'.$warranty->warranty_start_date,
             'symptoms' => 'array',
             'attachments' => 'array|max:5',
             'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,mp4,mov|max:10240', // 10MB
         ]);
 
-        if (!$warranty->isActive()) {
+        if (! $warranty->isActive()) {
             return redirect()->back()->withErrors(['warranty' => 'La garantía no está activa']);
         }
 
@@ -161,7 +160,7 @@ class WarrantyController extends Controller
         $claim = $this->warrantyService->createWarrantyClaim($warranty, Auth::user(), $claimData);
 
         return redirect()->route('warranties.claims.show', $claim)
-            ->with('success', 'Reclamo de garantía creado exitosamente. Número: ' . $claim->claim_number);
+            ->with('success', 'Reclamo de garantía creado exitosamente. Número: '.$claim->claim_number);
     }
 
     /**
@@ -176,7 +175,7 @@ class WarrantyController extends Controller
             'additional_months' => 'required|integer|min:1|max:60',
         ]);
 
-        if (!$this->warrantyService->canExtendWarranty($warranty)) {
+        if (! $this->warrantyService->canExtendWarranty($warranty)) {
             return redirect()->back()->withErrors(['extend' => 'Esta garantía no puede ser extendida']);
         }
 
@@ -190,7 +189,7 @@ class WarrantyController extends Controller
             );
 
             return redirect()->route('warranties.show', $warranty)
-                ->with('success', 'Garantía extendida exitosamente por ' . $request->additional_months . ' meses');
+                ->with('success', 'Garantía extendida exitosamente por '.$request->additional_months.' meses');
 
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['extend' => $e->getMessage()]);
@@ -209,7 +208,7 @@ class WarrantyController extends Controller
             'transfer_reason' => 'required|string|max:500',
         ]);
 
-        if (!$warranty->warrantyType->transferable) {
+        if (! $warranty->warrantyType->transferable) {
             return redirect()->back()->withErrors(['transfer' => 'Esta garantía no es transferible']);
         }
 
@@ -226,7 +225,7 @@ class WarrantyController extends Controller
             ]);
 
             return redirect()->route('warranties.index')
-                ->with('success', 'Garantía transferida exitosamente a ' . $newOwner->name);
+                ->with('success', 'Garantía transferida exitosamente a '.$newOwner->name);
 
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['transfer' => $e->getMessage()]);
@@ -246,7 +245,7 @@ class WarrantyController extends Controller
             ->with(['product', 'warrantyType', 'manufacturer', 'user'])
             ->first();
 
-        if (!$warranty) {
+        if (! $warranty) {
             return response()->json([
                 'found' => false,
                 'message' => 'No se encontró garantía para este número de serie',
@@ -254,7 +253,7 @@ class WarrantyController extends Controller
         }
 
         // Verificar permisos
-        if ($warranty->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        if ($warranty->user_id !== Auth::id() && ! Auth::user()->hasRole('admin')) {
             return response()->json([
                 'found' => false,
                 'message' => 'No tienes permisos para ver esta garantía',
@@ -286,7 +285,7 @@ class WarrantyController extends Controller
         // Generar PDF del certificado
         $pdf = \PDF::loadView('warranties.certificate', compact('warranty'));
 
-        return $pdf->download('garantia-' . $warranty->warranty_number . '.pdf');
+        return $pdf->download('garantia-'.$warranty->warranty_number.'.pdf');
     }
 
     /**
@@ -300,7 +299,7 @@ class WarrantyController extends Controller
             return redirect()->back()->withErrors(['register' => 'Ya está registrada con el fabricante']);
         }
 
-        if (!$warranty->manufacturer) {
+        if (! $warranty->manufacturer) {
             return redirect()->back()->withErrors(['register' => 'No hay fabricante asociado']);
         }
 

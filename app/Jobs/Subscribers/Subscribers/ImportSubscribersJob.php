@@ -4,10 +4,10 @@ namespace App\Jobs\Subscribers\Subscribers;
 
 use App\Jobs\Base;
 use App\Library\Traits\Trackable;
+use Exception;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Exception;
 
 class ImportSubscribersJob extends Base
 {
@@ -16,7 +16,9 @@ class ImportSubscribersJob extends Base
     public $timeout = 7200;
 
     protected $imports;
+
     protected $file;
+
     protected $map;
 
     public function __construct($imports, $file)
@@ -39,7 +41,7 @@ class ImportSubscribersJob extends Base
     public function handle()
     {
         $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
-        $logfile = storage_path("logs/imports/") . basename($this->file) . ".log";
+        $logfile = storage_path('logs/imports/').basename($this->file).'.log';
         $stream = new StreamHandler($logfile, Logger::DEBUG);
         $stream->setFormatter($formatter);
 
@@ -58,7 +60,7 @@ class ImportSubscribersJob extends Base
                 $this->file,
                 function ($processed, $total, $failed, $message) use ($logger) {
 
-                    $percentage = ($total && $processed) ? (int)($processed * 100 / $total) : 0;
+                    $percentage = ($total && $processed) ? (int) ($processed * 100 / $total) : 0;
 
                     $this->monitor->updateJsonData([
                         'percentage' => $percentage,
@@ -72,15 +74,15 @@ class ImportSubscribersJob extends Base
                     $logger->info(sprintf('Procesado: %s/%s, Fallido: %s', $processed, $total, $failed));
                 },
                 function ($invalidRecord, $error) use ($logger) {
-                    $logger->warning('Registro inválido: [' . implode(",", array_values($invalidRecord)) . "] | Error: " . implode(";", $error));
+                    $logger->warning('Registro inválido: ['.implode(',', array_values($invalidRecord)).'] | Error: '.implode(';', $error));
                 }
             );
 
             $logger->info('Importación finalizada con éxito.');
 
         } catch (Exception $e) {
-            $logger->error('Error en la importación: ' . $e->getMessage());
-            $this->monitor->updateJsonData(['message' => 'Error: ' . $e->getMessage()]);
+            $logger->error('Error en la importación: '.$e->getMessage());
+            $this->monitor->updateJsonData(['message' => 'Error: '.$e->getMessage()]);
         }
     }
 }

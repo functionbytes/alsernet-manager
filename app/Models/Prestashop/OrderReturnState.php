@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrderReturnState extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_return_state';
+
     protected $primaryKey = 'id_order_return_state';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,5 +23,4 @@ class OrderReturnState extends Model
     protected $casts = [
         'id_order_return_state' => 'integer',
     ];
-
 }

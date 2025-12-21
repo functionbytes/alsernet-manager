@@ -42,7 +42,7 @@ class CustomerSession extends Model
      */
     public function getDeviceTypeAttribute()
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return 'Unknown';
         }
 
@@ -62,7 +62,7 @@ class CustomerSession extends Model
      */
     public function getBrowserAttribute()
     {
-        if (!$this->user_agent) {
+        if (! $this->user_agent) {
             return 'Unknown';
         }
 

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use Illuminate\Http\Request;
-use App\Model\Notification as AppNotification;
 
 class NotificationController extends Controller
 {
@@ -15,8 +15,9 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = AppNotification::paginate(20);
-        return view('notifications.index', [ 'notifications' => $notifications ]);
+        $notifications = Notification::paginate(20);
+
+        return view('managers.notifications.index', ['notifications' => $notifications]);
     }
 
     /**
@@ -32,7 +33,6 @@ class NotificationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -65,7 +65,6 @@ class NotificationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -82,8 +81,9 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-        $notification = AppNotification::findByUid($id);
+        $notification = Notification::findByUid($id);
         $notification->delete();
+
         return response(null, 200);
     }
 
@@ -95,8 +95,9 @@ class NotificationController extends Controller
      */
     public function hide($id)
     {
-        $notification = AppNotification::findByUid($id);
+        $notification = Notification::findByUid($id);
         $notification->hide();
+
         return response(null, 200);
     }
 }

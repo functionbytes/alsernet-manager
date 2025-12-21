@@ -12,9 +12,13 @@ class ReturnCompleted
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $return;
+
     public $completionType;
+
     public $completedBy;
+
     public $totalAmount;
+
     public $metadata;
 
     public function __construct(
@@ -46,7 +50,7 @@ class ReturnCompleted
             'processing_time_days' => $this->getProcessingTimeDays(),
             'completed_by' => $this->completedBy,
             'metadata' => $this->metadata,
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ];
     }
 
@@ -109,7 +113,7 @@ class ReturnCompleted
             'processing_time_days' => $processingTime,
             'is_within_sla' => $processingTime <= 7, // SLA de 7 días
             'completion_type' => $this->completionType,
-            'customer_waited_long' => $processingTime > 14
+            'customer_waited_long' => $processingTime > 14,
         ];
     }
 }

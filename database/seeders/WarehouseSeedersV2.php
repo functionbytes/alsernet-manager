@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Warehouse\WarehouseFloor;
-use App\Models\Warehouse\WarehouseLocationStyle;
-use App\Models\Warehouse\WarehouseLocation;
 use App\Models\Warehouse\WarehouseInventorySlot;
+use App\Models\Warehouse\WarehouseLocation;
+use App\Models\Warehouse\WarehouseLocationStyle;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -39,7 +39,7 @@ class WarehouseSeedersV2 extends Seeder
 
             echo "✅ Datos previos limpiados correctamente\n";
         } catch (\Exception $e) {
-            echo "⚠️  Error al limpiar datos: " . $e->getMessage() . "\n";
+            echo '⚠️  Error al limpiar datos: '.$e->getMessage()."\n";
         }
 
         // Reactivar foreign key constraints
@@ -113,8 +113,8 @@ class WarehouseSeedersV2 extends Seeder
         // Calcular cuántas filas y columnas caben
         $availableWidth = $warehouseWidth - (2 * $margin);
         $availableHeight = $warehouseHeight - (2 * $margin);
-        $maxCols = (int)($availableWidth / $cellSizeM);
-        $maxRows = (int)($availableHeight / $cellSizeM);
+        $maxCols = (int) ($availableWidth / $cellSizeM);
+        $maxRows = (int) ($availableHeight / $cellSizeM);
 
         echo "📐 Dimensiones: {$availableWidth}m × {$availableHeight}m\n";
         echo "📊 Grilla: {$maxCols} columnas × {$maxRows} filas\n\n";
@@ -271,7 +271,7 @@ class WarehouseSeedersV2 extends Seeder
                 'left' => [
                     ['code' => 'H1-4-L1', 'color' => 'shelf--ambar'],
                     ['code' => 'H1-4-L2', 'color' => 'shelf--morado'],
-                ]
+                ],
             ],
             5 => ['right' => [
                 ['code' => 'H1-5-A1', 'color' => 'shelf--verde'],
@@ -321,7 +321,7 @@ class WarehouseSeedersV2 extends Seeder
                 'left' => [
                     ['code' => 'H1-4-L1', 'color' => 'shelf--verde'],
                     ['code' => 'H1-4-L2', 'color' => 'shelf--verde'],
-                ]
+                ],
             ],
             5 => ['right' => [
                 ['code' => 'H1-5-A1', 'color' => 'shelf--verde'],

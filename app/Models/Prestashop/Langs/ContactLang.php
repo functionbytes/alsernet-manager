@@ -2,17 +2,20 @@
 
 namespace App\Models\Prestashop\Langs;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 use App\Models\Prestashop\Contact;
 use App\Models\Prestashop\Language;
+use App\Models\Prestashop\Shop\Shop;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ContactLang extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_contact_lang';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,12 +32,11 @@ class ContactLang extends Model
         'id_shop' => 'integer',
     ];
 
-
     protected function setKeysForSaveQuery($query)
     {
         return $query->where('id_contact', $this->getAttribute('id_contact'))
-                     ->where('id_lang', $this->getAttribute('id_lang'))
-                     ->where('id_shop', $this->getAttribute('id_shop'));
+            ->where('id_lang', $this->getAttribute('id_lang'))
+            ->where('id_shop', $this->getAttribute('id_shop'));
     }
 
     public function contact(): BelongsTo

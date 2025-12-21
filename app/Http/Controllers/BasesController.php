@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 class BasesController extends Controller
 {
     /**
@@ -14,7 +13,7 @@ class BasesController extends Controller
     {
         $response = [
             'success' => true,
-            'data'    => $result,
+            'data' => $result,
             'message' => $message,
         ];
 
@@ -34,7 +33,7 @@ class BasesController extends Controller
             'message' => $error,
         ];
 
-        if(!empty($errorMessages)){
+        if (! empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
 

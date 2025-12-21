@@ -30,24 +30,24 @@ class DocumentTypeService
             'corta' => [
                 'doc_1' => 'DNI - Cara delantera',
                 'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)'
+                'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)',
             ],
             'rifle' => [
                 'doc_1' => 'DNI - Cara delantera',
                 'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas largas rayadas (tipo D)'
+                'doc_3' => 'Licencia de armas largas rayadas (tipo D)',
             ],
             'escopeta' => [
                 'doc_1' => 'DNI - Cara delantera',
                 'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de escopeta (tipo E)'
+                'doc_3' => 'Licencia de escopeta (tipo E)',
             ],
             'dni' => [
                 'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera'
+                'doc_2' => 'DNI - Cara trasera',
             ],
             'general' => [
-                'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)'
+                'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)',
             ],
         ];
 
@@ -63,7 +63,7 @@ class DocumentTypeService
         $missingDocs = [];
 
         foreach ($requiredDocs as $docKey => $docLabel) {
-            if (!isset($uploadedDocs[$docKey])) {
+            if (! isset($uploadedDocs[$docKey])) {
                 $missingDocs[$docKey] = $docLabel;
             }
         }
@@ -79,7 +79,7 @@ class DocumentTypeService
         $requiredDocs = self::getRequiredDocuments($documentType);
 
         foreach ($requiredDocs as $docKey => $docLabel) {
-            if (!isset($uploadedDocs[$docKey])) {
+            if (! isset($uploadedDocs[$docKey])) {
                 return false;
             }
         }

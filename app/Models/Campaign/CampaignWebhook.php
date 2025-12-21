@@ -2,20 +2,22 @@
 
 namespace App\Models\Campaign;
 
+use App\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Library\Traits\HasUid;
 use Illuminate\Support\Facades\Http;
 
 /**
  * @property-read \App\Models\Campaign\Campaign|null $campaign
  * @property-read \App\Models\Campaign\CampaignLink|null $campaignLink
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook click()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook open()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignWebhook unsubscribe()
+ *
  * @mixin \Eloquent
  */
 class CampaignWebhook extends Model
@@ -24,7 +26,9 @@ class CampaignWebhook extends Model
     use HasUid;
 
     public const TYPE_OPEN = 'open';
+
     public const TYPE_CLICK = 'click';
+
     public const TYPE_UNSUBSCRIBE = 'unsubscribe';
 
     public function campaignLink()
@@ -94,13 +98,13 @@ class CampaignWebhook extends Model
         return [$this, $validator];
     }
 
-    public function execute($log) # OpenLog | ClickLog | UnsubscribeLog
+    public function execute($log) // OpenLog | ClickLog | UnsubscribeLog
     {
         $attributes = $this->makePostData4Callback($log);
         $response = Http::post('http://example.com/users', $attributes);
     }
 
-    public function makePostData4Callback($log, $test = false) # OpenLog | ClickLog | UnsubscribeLog
+    public function makePostData4Callback($log, $test = false) // OpenLog | ClickLog | UnsubscribeLog
     {
         $attributes = $log->getAttributes();
         $attributes['campaign'] = $this->campaign->getAttributes();
@@ -139,5 +143,4 @@ class CampaignWebhook extends Model
     {
         return $this->type == self::TYPE_UNSUBSCRIBE;
     }
-
 }

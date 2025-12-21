@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Models\Inventarie;
 
 use Illuminate\Support\Facades\Http;
 
 class Kardex
 {
-
-    public function searchParameters(string $parameters,string $value)
+    public function searchParameters(string $parameters, string $value)
     {
         return $this->makeRequest([$parameters => $value]);
     }
@@ -27,11 +25,9 @@ class Kardex
 
             return null;
         } catch (\Exception $e) {
-            \Log::error('Error en la consulta externa: ' . $e->getMessage());
+            \Log::error('Error en la consulta externa: '.$e->getMessage());
+
             return null;
         }
     }
-
-
 }
-

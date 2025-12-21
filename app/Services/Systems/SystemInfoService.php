@@ -2,10 +2,6 @@
 
 namespace App\Services\Systems;
 
-use Composer\Factory;
-use Composer\IO\NullIO;
-use Composer\Repository\RepositoryFactory;
-
 class SystemInfoService
 {
     /**
@@ -48,7 +44,7 @@ class SystemInfoService
             'memory_limit' => ini_get('memory_limit'),
             'max_execution_time' => ini_get('max_execution_time'),
             'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
-            'operating_system' => PHP_OS_FAMILY . ' ' . php_uname('r'),
+            'operating_system' => PHP_OS_FAMILY.' '.php_uname('r'),
             'database_driver' => config('database.default'),
             'ssl_installed' => extension_loaded('openssl'),
             'cache_driver' => config('cache.default'),
@@ -92,13 +88,13 @@ class SystemInfoService
         try {
             $composerFile = base_path('composer.lock');
 
-            if (!file_exists($composerFile)) {
+            if (! file_exists($composerFile)) {
                 return [];
             }
 
             $composer = json_decode(file_get_contents($composerFile), true);
 
-            if (!isset($composer['packages']) && !isset($composer['packages-dev'])) {
+            if (! isset($composer['packages']) && ! isset($composer['packages-dev'])) {
                 return [];
             }
 
@@ -113,9 +109,9 @@ class SystemInfoService
                 $version = $package['version'] ?? 'unknown';
 
                 // Group packages by vendor
-                list($vendor, $packageName) = explode('/', $name, 2);
+                [$vendor, $packageName] = explode('/', $name, 2);
 
-                if (!isset($result[$vendor])) {
+                if (! isset($result[$vendor])) {
                     $result[$vendor] = [];
                 }
 
@@ -139,13 +135,14 @@ class SystemInfoService
     private function getServerIP(): string
     {
         // Try to get from various sources
-        if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        if (! empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
             return $_SERVER['HTTP_CF_CONNECTING_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        } elseif (! empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             // Handle multiple IPs in X-Forwarded-For
             $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+
             return trim($ips[0]);
-        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        } elseif (! empty($_SERVER['REMOTE_ADDR'])) {
             return $_SERVER['REMOTE_ADDR'];
         } else {
             return 'Unknown';
@@ -165,7 +162,7 @@ class SystemInfoService
                 continue;
             }
 
-            $filePath = $path . DIRECTORY_SEPARATOR . $file;
+            $filePath = $path.DIRECTORY_SEPARATOR.$file;
 
             if (is_dir($filePath)) {
                 // Limit recursion depth to avoid timeout
@@ -202,7 +199,7 @@ class SystemInfoService
                 continue;
             }
 
-            $filePath = $path . DIRECTORY_SEPARATOR . $file;
+            $filePath = $path.DIRECTORY_SEPARATOR.$file;
 
             if (@is_dir($filePath)) {
                 $size += $this->getDirectorySizeRecursive($filePath);
@@ -225,6 +222,6 @@ class SystemInfoService
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }

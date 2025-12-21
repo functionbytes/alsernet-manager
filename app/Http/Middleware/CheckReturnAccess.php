@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Return\ReturnRequest;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Return\ReturnRequest;
 
 class CheckReturnAccess
 {
@@ -19,7 +19,7 @@ class CheckReturnAccess
 
         $return = ReturnRequest::where('id_return_request', $id)->first();
 
-        if (!$return) {
+        if (! $return) {
             abort(404, 'Devolución no encontrada.');
         }
 
@@ -34,7 +34,7 @@ class CheckReturnAccess
             $hasAccess = true;
         }
 
-        if (!$hasAccess) {
+        if (! $hasAccess) {
             abort(403, 'No tienes permiso para acceder a esta devolución.');
         }
 

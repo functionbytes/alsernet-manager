@@ -2,16 +2,19 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\ShopGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\ShopGroup;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ShopGroup extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_shop_group';
+
     protected $primaryKey = 'id_shop_group';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -25,7 +28,7 @@ class ShopGroup extends Model
         'deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'deleted' => 'boolean',
         'id_shop_group' => 'integer',
@@ -40,5 +43,4 @@ class ShopGroup extends Model
     {
         return $this->hasMany('App\Models\Prestashop\Shop\Shop', 'id_shop_group', 'id_shop_group');
     }
-
 }

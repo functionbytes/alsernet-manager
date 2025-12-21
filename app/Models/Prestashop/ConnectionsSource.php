@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ConnectionsSource extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_connections_source';
+
     protected $primaryKey = 'id_connections_source';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,7 +22,7 @@ class ConnectionsSource extends Model
         'date_add',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'id_connections' => 'integer',
     ];

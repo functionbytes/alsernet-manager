@@ -2,23 +2,20 @@
 
 namespace App\Models\Campaign;
 
-use Illuminate\Database\Eloquent\Model;
-use Mika56\SPFCheck\DNSRecordGetterDirect;
-use Mika56\SPFCheck\DNSRecordGetter;
-use Illuminate\Support\Facades\Log;
-use App\Library\Traits\HasUid;
 use App\Library\StringHelper;
-use Mika56\SPFCheck\SPFCheck;
-use App\Library\MtaSync;
-use GuzzleHttp\Client;
-use Validator;
+use App\Library\Traits\HasUid;
 use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Validator;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignTrackingDomain newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignTrackingDomain newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignTrackingDomain query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignTrackingDomain verified()
+ *
  * @mixin \Eloquent
  */
 class CampaignTrackingDomain extends Model
@@ -26,10 +23,13 @@ class CampaignTrackingDomain extends Model
     use HasUid;
 
     public const STATUS_VERIFIED = 'verified';
+
     public const STATUS_UNVERIFIED = 'unverified';
 
     public const VERIFICATION_METHOD_HOST = 'host';
+
     public const VERIFICATION_METHOD_CNAME = 'cname';
+
     public function customer()
     {
         return $this->belongsTo('Acelle\Model\Customer');
@@ -53,7 +53,7 @@ class CampaignTrackingDomain extends Model
     }
 
     protected $fillable = [
-        'name', 'scheme', 'verification_method'
+        'name', 'scheme', 'verification_method',
     ];
 
     public static function createFromRequest($request)
@@ -65,14 +65,14 @@ class CampaignTrackingDomain extends Model
                 'max:255',
                 function ($attribute, $value, $fail) {
                     $path = parse_url($value, PHP_URL_PATH);
-                    if (!is_null($path)) {
+                    if (! is_null($path)) {
                         $fail(trans('messages.tracking_domain.validation.error.path'));
                     }
 
                     $host = parse_url($value, PHP_URL_HOST);
                     $matched = preg_match('/^(?!\-)(?:(?:[a-zA-Z\d][a-zA-Z\d\-]{0,61})?[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $host);
 
-                    if (!$matched) {
+                    if (! $matched) {
                         $fail(trans('messages.tracking_domain.validation.error.name'));
                     }
                 },
@@ -96,7 +96,7 @@ class CampaignTrackingDomain extends Model
         $attributes['name'] = $name;
 
         // Get current user
-        $domain = new self();
+        $domain = new self;
         // Save current user info
         $domain->fill($attributes);
         $domain->customer_id = $request->user()->customer->id;
@@ -112,7 +112,7 @@ class CampaignTrackingDomain extends Model
         $query = self::select('tracking_domains.*');
 
         // Keyword
-        if (!empty(trim($request->keyword))) {
+        if (! empty(trim($request->keyword))) {
             foreach (explode(' ', trim($request->keyword)) as $keyword) {
                 $query = $query->where(function ($q) use ($keyword) {
                     $q->orwhere('tracking_domains.name', 'like', '%'.$keyword.'%');
@@ -124,12 +124,12 @@ class CampaignTrackingDomain extends Model
         $filters = $request->all();
 
         // filter by status
-        if (!empty($request->status)) {
+        if (! empty($request->status)) {
             $query = $query->where('tracking_domains.status', '=', $request->status);
         }
 
         // by customer
-        if (!empty($request->customer_id)) {
+        if (! empty($request->customer_id)) {
             $query = $query->where('tracking_domains.customer_id', '=', $request->customer_id);
         }
 
@@ -140,7 +140,7 @@ class CampaignTrackingDomain extends Model
     {
         $query = self::filter($request, $server);
 
-        if (!empty($request->sort_order)) {
+        if (! empty($request->sort_order)) {
             $query = $query->orderBy($request->sort_order, $request->sort_direction);
         }
 
@@ -159,7 +159,7 @@ class CampaignTrackingDomain extends Model
 
     public function getFQDN($trailingDot = true)
     {
-        return $this->name . (($trailingDot) ? '.' : '');
+        return $this->name.(($trailingDot) ? '.' : '');
     }
 
     public function getUrl()
@@ -184,12 +184,12 @@ class CampaignTrackingDomain extends Model
             $verifyUrl = "$url/ok";
 
             $client = curl_init();
-            curl_setopt_array($client, array(
+            curl_setopt_array($client, [
                 CURLOPT_URL => $verifyUrl,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_HEADER => false,
-                CURLOPT_SSL_VERIFYPEER => false
-            ));
+                CURLOPT_SSL_VERIFYPEER => false,
+            ]);
 
             $result = curl_exec($client);
             curl_close($client);
@@ -197,13 +197,16 @@ class CampaignTrackingDomain extends Model
             if ($result == 'ok') {
                 $this->setVerified();
                 $this->save();
+
                 return true;
             } else {
                 Log::warning(sprintf('Failed verifying tracking domain %s. Error: %s', $url, $result));
+
                 return false;
             }
         } catch (\Exception $ex) {
             Log::warning(sprintf('Error verifying tracking domain %s. Error: %s', $url, $ex->getMessage()));
+
             return false;
         }
     }
@@ -214,26 +217,28 @@ class CampaignTrackingDomain extends Model
             $client = new Client(['verify' => false]);
             $response = $client->request('GET', $this->getVerificationUrl());
 
-            if ((string)$response->getBody() == get_app_identity()) {
+            if ((string) $response->getBody() == get_app_identity()) {
                 $this->setVerified();
                 $this->save();
             } else {
                 if ($debug) {
-                    echo "This app's identity: " . get_app_identity();
-                    echo "<br>";
-                    echo "Retrieved identity: " . $response->getBody();
-                    die;
+                    echo "This app's identity: ".get_app_identity();
+                    echo '<br>';
+                    echo 'Retrieved identity: '.$response->getBody();
+                    exit;
                 }
-                throw new \Exception("Verification failed");
+                throw new \Exception('Verification failed');
             }
+
             return true;
         } catch (\Exception $ex) {
             if ($debug) {
-                echo "This app's identity: " . get_app_identity();
-                echo "<br>";
+                echo "This app's identity: ".get_app_identity();
+                echo '<br>';
                 echo $ex->getMessage();
-                die;
+                exit;
             }
+
             // loggging here
             return false;
         }
@@ -241,7 +246,7 @@ class CampaignTrackingDomain extends Model
 
     public function buildTrackingUrl(string $url)
     {
-        if (!parse_url($url, PHP_URL_HOST)) {
+        if (! parse_url($url, PHP_URL_HOST)) {
             throw new Exception('Cannot build tracking URL with "'.$url.'", a valid URL is required (with leading http:// or https:// or //');
         }
 
@@ -270,6 +275,4 @@ class CampaignTrackingDomain extends Model
     {
         return $this->verification_method == self::VERIFICATION_METHOD_CNAME;
     }
-
-
 }

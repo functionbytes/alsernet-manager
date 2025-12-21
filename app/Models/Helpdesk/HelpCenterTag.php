@@ -30,10 +30,10 @@ class HelpCenterTag extends Model
     public static function generateSlug(string $name): string
     {
         $slug = Str::slug($name);
-        $count = static::where('slug', 'like', $slug . '%')->count();
+        $count = static::where('slug', 'like', $slug.'%')->count();
 
         if ($count > 0) {
-            return $slug . '-' . ($count + 1);
+            return $slug.'-'.($count + 1);
         }
 
         return $slug;
@@ -60,7 +60,7 @@ class HelpCenterTag extends Model
     {
         $tag = static::where('name', $name)->first();
 
-        if (!$tag) {
+        if (! $tag) {
             $tag = static::create(['name' => $name]);
         }
 

@@ -51,18 +51,19 @@ class RouteHelper
             'administrative' => ['super-admin', 'admin', 'administrative'],
         ];
 
-        $roles = !empty($allowedRoles) ? $allowedRoles : ($defaultRoles[$profile] ?? []);
+        $roles = ! empty($allowedRoles) ? $allowedRoles : ($defaultRoles[$profile] ?? []);
 
         Route::prefix('users')
             ->name('users.')
             ->middleware([
                 'auth',
                 function ($request, $next) use ($roles) {
-                    if (!auth()->user()?->hasAnyRole($roles)) {
+                    if (! auth()->user()?->hasAnyRole($roles)) {
                         abort(403, 'Unauthorized to access user management');
                     }
+
                     return $next($request);
-                }
+                },
             ])
             ->group(function () {
                 Route::get('/', [UsersController::class, 'index'])->name('index');

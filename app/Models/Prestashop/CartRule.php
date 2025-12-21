@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CartRule extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_cart_rule';
+
     protected $primaryKey = 'id_cart_rule';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -44,7 +47,7 @@ class CartRule extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_from' => 'datetime',
         'date_to' => 'datetime',
         'date_add' => 'datetime',

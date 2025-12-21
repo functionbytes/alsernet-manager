@@ -6,8 +6,8 @@ use App\Events\Return\ReturnStatusChanged;
 use App\Services\ReturnEmailService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class NotifyCustomerListener implements ShouldQueue
 {
@@ -17,7 +17,9 @@ class NotifyCustomerListener implements ShouldQueue
 
     // Configuración de reintentos
     public $tries = 3;
+
     public $timeout = 120;
+
     public $backoff = [60, 300, 900]; // 1min, 5min, 15min
 
     public function __construct(ReturnEmailService $emailService)
@@ -32,23 +34,25 @@ class NotifyCustomerListener implements ShouldQueue
     {
         try {
             // Verificar si debe notificar al cliente
-            if (!$this->shouldNotifyCustomer($event)) {
+            if (! $this->shouldNotifyCustomer($event)) {
                 Log::info('Customer notification skipped', [
                     'return_id' => $event->return->id_return_request,
                     'reason' => $this->getSkipReason($event),
                     'status_id' => $event->newStatus->id_return_status,
                     'send_email' => $event->newStatus->send_email ?? false,
-                    'shown_to_customer' => $event->newStatus->shown_to_customer ?? false
+                    'shown_to_customer' => $event->newStatus->shown_to_customer ?? false,
                 ]);
+
                 return;
             }
 
             // Verificar email válido
-            if (!$this->hasValidEmail($event->return->email)) {
+            if (! $this->hasValidEmail($event->return->email)) {
                 Log::warning('Invalid email for customer notification', [
                     'return_id' => $event->return->id_return_request,
-                    'email' => $event->return->email ?? 'null'
+                    'email' => $event->return->email ?? 'null',
                 ]);
+
                 return;
             }
 
@@ -57,8 +61,9 @@ class NotifyCustomerListener implements ShouldQueue
             if (Cache::has($cacheKey)) {
                 Log::info('Notification already sent, skipping duplicate', [
                     'return_id' => $event->return->id_return_request,
-                    'status_id' => $event->newStatus->id_return_status
+                    'status_id' => $event->newStatus->id_return_status,
                 ]);
+
                 return;
             }
 
@@ -67,7 +72,7 @@ class NotifyCustomerListener implements ShouldQueue
                 'email' => $this->maskEmail($event->return->email),
                 'previous_status' => $this->getStatusName($event->previousStatus),
                 'new_status' => $this->getStatusName($event->newStatus),
-                'transition_type' => $event->getTransitionType()
+                'transition_type' => $event->getTransitionType(),
             ]);
 
             // Recargar la devolución con el nuevo estado para el email
@@ -86,7 +91,7 @@ class NotifyCustomerListener implements ShouldQueue
                 'sent_at' => now()->toISOString(),
                 'is_completed' => $event->isCompleted(),
                 'is_rejected' => $event->isRejected(),
-                'attempt' => $this->attempts()
+                'attempt' => $this->attempts(),
             ]);
 
             // Enviar notificaciones adicionales según el tipo de cambio
@@ -98,7 +103,7 @@ class NotifyCustomerListener implements ShouldQueue
                 'email' => $this->maskEmail($event->return->email ?? ''),
                 'error' => $e->getMessage(),
                 'attempt' => $this->attempts(),
-                'max_attempts' => $this->tries
+                'max_attempts' => $this->tries,
             ]);
 
             // Re-lanzar para retry automático
@@ -112,12 +117,12 @@ class NotifyCustomerListener implements ShouldQueue
     private function shouldNotifyCustomer(ReturnStatusChanged $event): bool
     {
         // Verificar configuración básica
-        if (!$event->shouldNotifyCustomer()) {
+        if (! $event->shouldNotifyCustomer()) {
             return false;
         }
 
         // Verificar configuración global
-        if (!config('returns.notifications.notify_customer_on_status_change', true)) {
+        if (! config('returns.notifications.notify_customer_on_status_change', true)) {
             return false;
         }
 
@@ -143,15 +148,15 @@ class NotifyCustomerListener implements ShouldQueue
      */
     private function getSkipReason(ReturnStatusChanged $event): string
     {
-        if (!$event->newStatus->send_email) {
+        if (! $event->newStatus->send_email) {
             return 'Status not configured to send email';
         }
 
-        if (!$event->newStatus->shown_to_customer) {
+        if (! $event->newStatus->shown_to_customer) {
             return 'Status not shown to customer';
         }
 
-        if (!config('returns.notifications.notify_customer_on_status_change', true)) {
+        if (! config('returns.notifications.notify_customer_on_status_change', true)) {
             return 'Customer notifications disabled globally';
         }
 
@@ -167,7 +172,7 @@ class NotifyCustomerListener implements ShouldQueue
      */
     private function hasValidEmail(?string $email): bool
     {
-        return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+        return ! empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -177,6 +182,7 @@ class NotifyCustomerListener implements ShouldQueue
     {
         try {
             $translation = $status->getTranslation();
+
             return $translation ? $translation->name : ($status->state->name ?? 'Desconocido');
         } catch (\Exception $e) {
             return 'Desconocido';
@@ -201,10 +207,10 @@ class NotifyCustomerListener implements ShouldQueue
         $domain = $parts[1];
 
         $maskedUsername = strlen($username) > 2
-            ? substr($username, 0, 2) . str_repeat('*', strlen($username) - 2)
+            ? substr($username, 0, 2).str_repeat('*', strlen($username) - 2)
             : str_repeat('*', strlen($username));
 
-        return $maskedUsername . '@' . $domain;
+        return $maskedUsername.'@'.$domain;
     }
 
     /**
@@ -220,7 +226,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Log::info('Return completed successfully', [
                     'return_id' => $event->return->id_return_request,
                     'processing_days' => $processingDays,
-                    'within_sla' => $processingDays <= 7
+                    'within_sla' => $processingDays <= 7,
                 ]);
 
                 // Marcar para envío de encuesta de satisfacción (después de 1 día)
@@ -228,7 +234,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Cache::put($surveyKey, [
                     'return_id' => $event->return->id_return_request,
                     'completion_date' => now()->toISOString(),
-                    'processing_days' => $processingDays
+                    'processing_days' => $processingDays,
                 ], now()->addDays(2));
             }
 
@@ -237,7 +243,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Log::info('Return was rejected', [
                     'return_id' => $event->return->id_return_request,
                     'reason' => $event->description,
-                    'can_appeal' => $this->canAppeal($event->return)
+                    'can_appeal' => $this->canAppeal($event->return),
                 ]);
 
                 // Marcar para seguimiento de satisfacción
@@ -245,7 +251,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Cache::put($rejectionKey, [
                     'return_id' => $event->return->id_return_request,
                     'rejection_date' => now()->toISOString(),
-                    'reason' => $event->description
+                    'reason' => $event->description,
                 ], now()->addDays(7));
             }
 
@@ -254,7 +260,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Log::info('Pickup scheduled for return', [
                     'return_id' => $event->return->id_return_request,
                     'pickup_date' => $event->return->pickup_date,
-                    'logistics_mode' => $event->return->logistics_mode
+                    'logistics_mode' => $event->return->logistics_mode,
                 ]);
 
                 // Programar recordatorio de recogida
@@ -262,7 +268,7 @@ class NotifyCustomerListener implements ShouldQueue
                 Cache::put($reminderKey, [
                     'return_id' => $event->return->id_return_request,
                     'pickup_date' => $event->return->pickup_date,
-                    'reminder_sent' => false
+                    'reminder_sent' => false,
                 ], now()->addDays(1));
             }
 
@@ -272,7 +278,7 @@ class NotifyCustomerListener implements ShouldQueue
         } catch (\Exception $e) {
             Log::warning('Failed to send additional notifications', [
                 'return_id' => $event->return->id_return_request,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             // No re-lanzar, las notificaciones adicionales no son críticas
         }
@@ -298,7 +304,7 @@ class NotifyCustomerListener implements ShouldQueue
             'error' => $exception->getMessage(),
             'attempts' => $this->attempts(),
             'final_attempt' => true,
-            'event_data' => $event->getEventData()
+            'event_data' => $event->getEventData(),
         ]);
 
         // Notificar a administradores sobre el fallo crítico
@@ -309,7 +315,7 @@ class NotifyCustomerListener implements ShouldQueue
         Cache::put($failureKey, [
             'failed_at' => now()->toISOString(),
             'error' => $exception->getMessage(),
-            'attempts' => $this->attempts()
+            'attempts' => $this->attempts(),
         ], now()->addHours(24));
     }
 
@@ -320,18 +326,18 @@ class NotifyCustomerListener implements ShouldQueue
     {
         try {
             $adminEmail = config('returns.notifications.admin_email');
-            if (!empty($adminEmail)) {
+            if (! empty($adminEmail)) {
                 // Aquí se podría enviar un email a los administradores
                 Log::channel('critical')->critical('Admin notification needed: Customer notification failed', [
                     'return_id' => $event->return->id_return_request,
                     'customer_email' => $this->maskEmail($event->return->email ?? ''),
                     'error' => $exception->getMessage(),
-                    'admin_email' => $adminEmail
+                    'admin_email' => $adminEmail,
                 ]);
             }
         } catch (\Exception $e) {
             Log::error('Failed to notify admins about notification failure', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }

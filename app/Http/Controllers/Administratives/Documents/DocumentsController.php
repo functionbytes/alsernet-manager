@@ -396,6 +396,8 @@ class DocumentsController extends Controller
             }
 
             $productCount = 0;
+            $documentBlockades = []; // Track blockades found for this document
+
             foreach ($resources as $linea) {
                 if (! is_array($linea)) {
                     continue;
@@ -408,6 +410,7 @@ class DocumentsController extends Controller
                 $name = $articulo['descripcion'] ?? '';
                 $quantity = (float) ($linea['unidades'] ?? 1);
                 $totalPrice = (float) ($linea['total_con_impuestos'] ?? 0);
+                $idArticulo = $articulo['idarticulo'] ?? null;
 
                 // Calculate unit price from total
                 $unitPrice = $quantity > 0 ? $totalPrice / $quantity : $totalPrice;
@@ -417,8 +420,26 @@ class DocumentsController extends Controller
                     continue;
                 }
 
+                // Check for product blockades using source_id (id_origen in ERP = source_id in our table)
+                if ($idArticulo) {
+                    $blockades = \App\Models\Document\DocumentProductBlockade::where('source_id', $idArticulo)
+                        ->pluck('blockade_type')
+                        ->toArray();
+
+                    if (! empty($blockades)) {
+                        $documentBlockades = array_merge($documentBlockades, $blockades);
+
+                        \Log::info('Product blockades found for ERP article', [
+                            'document_uid' => $document->uid,
+                            'id_articulo' => $idArticulo,
+                            'product_name' => $name,
+                            'blockades' => $blockades,
+                        ]);
+                    }
+                }
+
                 $document->products()->create([
-                    'product_id' => $articulo['idarticulo'] ?? null,
+                    'product_id' => $idArticulo,
                     'product_reference' => $code,
                     'product_name' => $name,
                     'price' => round($unitPrice, 2),
@@ -426,6 +447,15 @@ class DocumentsController extends Controller
                 ]);
 
                 $productCount++;
+            }
+
+            // Store unique blockades found in document metadata
+            if (! empty($documentBlockades)) {
+                $uniqueBlockades = array_unique($documentBlockades);
+                \Log::info('Document requires blockade validation', [
+                    'document_uid' => $document->uid,
+                    'blockade_types' => $uniqueBlockades,
+                ]);
             }
 
             \Log::info('Products created from ERP order', [
@@ -641,6 +671,17 @@ class DocumentsController extends Controller
             $document->upload_id = $request->upload_id ?: null;
         }
 
+        // Actualizar requires_financing si se proporciona
+        if ($request->has('requires_financing')) {
+            $oldRequiresFinancing = $document->requires_financing;
+            $document->requires_financing = $request->boolean('requires_financing');
+
+            // Si cambió requires_financing, reinicializar el workflow para recalcular etapas
+            if ($oldRequiresFinancing !== $document->requires_financing) {
+                $document->initializeWorkflow();
+            }
+        }
+
         // Actualizar status si se proporciona
         // Los administradores pueden cambiar el estado directamente sin validación de transiciones
         if ($request->has('status_id') && ! empty($request->status_id)) {
@@ -648,6 +689,8 @@ class DocumentsController extends Controller
         }
 
         $document->save();
+
+        $emailSent = null;
 
         // Fire DocumentStatusChanged event if status was actually changed
         if ($oldStatusId !== $document->status_id && $document->status_id) {
@@ -667,6 +710,19 @@ class DocumentsController extends Controller
                     $newStatus,
                     'Manual status change via admin panel'
                 );
+
+                // Enviar email automático según el nuevo estado (si está habilitado)
+                if ($request->input('send_email', false)) {
+                    try {
+                        $emailSent = $this->sendEmailBasedOnStatus($document, $newStatus->key, $request);
+                    } catch (\Exception $e) {
+                        \Log::error('Error sending automatic email on status change', [
+                            'document_uid' => $document->uid,
+                            'status' => $newStatus->key,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+                }
             }
         }
 
@@ -683,12 +739,98 @@ class DocumentsController extends Controller
             ]);
         }
 
-        return response()->json([
+        $response = [
             'success' => true,
             'slack' => $document->uid,
             'message' => 'Se actualizo la clase correctamente',
-        ]);
+        ];
 
+        if ($emailSent) {
+            $response['email_sent'] = $emailSent;
+        }
+
+        return response()->json($response);
+
+    }
+
+    /**
+     * Envía email automático basado en el estado del documento
+     *
+     * @return array|null Info del email enviado
+     */
+    private function sendEmailBasedOnStatus(Document $document, string $statusKey, Request $request): ?array
+    {
+        $mailService = new DocumentMailService;
+
+        switch ($statusKey) {
+            case 'pending':
+            case 'awaiting_documents':
+                // Enviar solicitud inicial o recordatorio
+                $result = $mailService->sendInitialRequestMail($document);
+
+                return [
+                    'type' => 'initial_request',
+                    'label' => $statusKey === 'pending' ? 'Solicitud inicial' : 'Recordatorio',
+                    'recipient' => $document->customer_email,
+                    'sent' => $result,
+                ];
+
+            case 'received':
+                // Enviar confirmación de subida
+                $result = $mailService->sendUploadConfirmationMail($document, '');
+
+                return [
+                    'type' => 'upload_confirmation',
+                    'label' => 'Confirmación de subida',
+                    'recipient' => $document->customer_email,
+                    'sent' => $result,
+                ];
+
+            case 'incomplete':
+                // Enviar email de documentos específicos
+                $missingDocs = $request->input('missing_docs', []);
+                if (empty($missingDocs)) {
+                    $missingDocs = $document->getMissingDocuments();
+                }
+                $result = $mailService->sendMissingDocumentsMail($document, $missingDocs);
+
+                return [
+                    'type' => 'missing_documents',
+                    'label' => 'Documentos específicos',
+                    'recipient' => $document->customer_email,
+                    'sent' => $result,
+                    'missing_docs' => $missingDocs,
+                ];
+
+            case 'approved':
+                // Enviar notificación de aprobación
+                $result = $mailService->sendApprovalMail($document);
+
+                return [
+                    'type' => 'approval',
+                    'label' => 'Notificación de aprobación',
+                    'recipient' => $document->customer_email,
+                    'sent' => $result,
+                ];
+
+            case 'rejected':
+                // Enviar notificación de rechazo
+                $reason = $request->input('rejection_reason', 'No especificado');
+                $rejectedDocs = $request->input('rejected_docs', []);
+                $result = $mailService->sendRejectionMail($document, $reason, $rejectedDocs);
+
+                return [
+                    'type' => 'rejection',
+                    'label' => 'Notificación de rechazo',
+                    'recipient' => $document->customer_email,
+                    'sent' => $result,
+                    'reason' => $reason,
+                    'rejected_docs' => $rejectedDocs,
+                ];
+
+            default:
+                return null;
+        }
     }
 
     public function resendReminderEmail($uid)
@@ -764,13 +906,32 @@ class DocumentsController extends Controller
 
     public function upload(Request $request)
     {
+        // Validación de archivo
+        $request->validate([
+            'uid' => 'required|string',
+            'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx',
+        ]);
 
         $document = Document::findByUid($request->uid);
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Documento no encontrado.',
+            ], 404);
+        }
+
         $type = 'documents';
 
         $document->clearMediaCollection($type);
 
-        $media = $document->addMediaFromRequest('file')->toMediaCollection($type);
+        // Sanitizar nombre de archivo
+        $file = $request->file('file');
+        $sanitizedName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+
+        $media = $document->addMediaFromRequest('file')
+            ->usingFileName($sanitizedName)
+            ->toMediaCollection($type);
 
         // Asegurar que el archivo es accesible al servidor web
         $mediaPath = $media->getPath();
@@ -799,9 +960,26 @@ class DocumentsController extends Controller
 
     }
 
-    public function getFile($document, $type)
+    public function getFile($documentUid, $type)
     {
-        $document = Document::findByUid($document);
+        // Validar tipo de colección permitido
+        $allowedTypes = ['documents', 'additional_attachments'];
+        if (! in_array($type, $allowedTypes)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tipo de archivo no permitido.',
+            ], 400);
+        }
+
+        $document = Document::findByUid($documentUid);
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Documento no encontrado.',
+            ], 404);
+        }
+
         $media = $document->getMedia($type)->first();
 
         if (! $media) {
@@ -821,21 +999,45 @@ class DocumentsController extends Controller
     {
         $media = Media::find($id);
 
-        if ($media) {
-            $media->delete();
-
-            return response()->json(['status' => 'deleted']);
+        if (! $media) {
+            return response()->json(['status' => 'not_found'], 404);
         }
 
-        return response()->json(['status' => 'not_found'], 404);
+        // Verificar que el media pertenece a un documento
+        if ($media->model_type !== Document::class) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Acceso no autorizado.',
+            ], 403);
+        }
+
+        // Verificar que el documento existe
+        $document = Document::find($media->model_id);
+        if (! $document) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Documento asociado no encontrado.',
+            ], 404);
+        }
+
+        $media->delete();
+
+        return response()->json(['status' => 'deleted']);
     }
 
     public function destroy($uid)
     {
         $document = Document::findByUid($uid);
+
+        if (! $document) {
+            return redirect()->route('administrative.documents')
+                ->with('error', 'Documento no encontrado.');
+        }
+
         $document->delete();
 
-        return redirect()->route('administrative.documents');
+        return redirect()->route('administrative.documents')
+            ->with('success', 'Documento eliminado correctamente.');
     }
 
     /**
@@ -1082,7 +1284,11 @@ class DocumentsController extends Controller
         }
 
         // Cargar relaciones necesarias para la vista
-        $document->load('actions.performer');
+        $document->load([
+            'actions.performer',
+            'validationHistory.validator',
+            'assignedUser',
+        ]);
 
         $products = $document->products;
         $sources = ['email', 'api', 'whatsapp', 'wp', 'manual'];
@@ -2175,6 +2381,345 @@ class DocumentsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al enviar correo: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sube adjuntos adicionales desde la vista administrativa
+     * Estos documentos son visibles para contabilidad y otros grupos
+     */
+    public function uploadAdditionalAttachment(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $request->validate([
+                'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx',
+                'notes' => 'nullable|string|max:500',
+            ]);
+
+            $file = $request->file('file');
+            $notes = $request->input('notes');
+            $uploadedBy = auth()->check() ? auth()->user()->full_name : 'Admin';
+
+            // Sanitizar nombre de archivo para prevenir ataques XSS y path traversal
+            $originalName = $file->getClientOriginalName();
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $originalName);
+            $sanitizedNotes = $notes ? htmlspecialchars($notes, ENT_QUOTES, 'UTF-8') : null;
+
+            // Guardar archivo en colección de adjuntos adicionales
+            $media = $document->addMedia($file)
+                ->usingFileName($sanitizedName)
+                ->withCustomProperties([
+                    'original_name' => $originalName,
+                    'uploaded_by' => $uploadedBy,
+                    'notes' => $sanitizedNotes,
+                    'uploaded_at' => now()->toDateTimeString(),
+                ])
+                ->toMediaCollection('additional_attachments');
+
+            // Asegurar permisos
+            $mediaPath = $media->getPath();
+            if (file_exists($mediaPath)) {
+                @chmod($mediaPath, 0644);
+            }
+            $mediaDir = dirname($mediaPath);
+            if (is_dir($mediaDir)) {
+                @chmod($mediaDir, 0755);
+            }
+
+            // Sincronizar JSON
+            $document->syncAdditionalAttachmentsJson();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Adjunto adicional cargado correctamente',
+                'file' => [
+                    'id' => $media->id,
+                    'name' => $media->getCustomProperty('original_name'),
+                    'file_name' => $media->file_name,
+                    'size' => $media->size,
+                    'url' => $media->getUrl(),
+                    'uploaded_at' => $media->created_at->format('d/m/Y H:i'),
+                    'uploaded_by' => $uploadedBy,
+                    'notes' => $notes,
+                ],
+                'total_attachments' => $document->getMedia('additional_attachments')->count(),
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error uploading additional attachment', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar adjunto: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Lista todos los adjuntos adicionales de un documento
+     */
+    public function getAdditionalAttachments($uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $attachments = $document->getAdditionalAttachmentsWithDetails();
+
+            return response()->json([
+                'success' => true,
+                'attachments' => $attachments,
+                'total' => count($attachments),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener adjuntos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Elimina un adjunto adicional específico
+     */
+    public function deleteAdditionalAttachment(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $mediaId = $request->input('media_id');
+
+            if (! $mediaId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID de media no proporcionado',
+                ], 400);
+            }
+
+            $media = Media::find($mediaId);
+
+            if (! $media || $media->model_id !== $document->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Archivo no encontrado o no pertenece a este documento',
+                ], 404);
+            }
+
+            // Verificar que pertenece a la colección de adjuntos adicionales
+            if ($media->collection_name !== 'additional_attachments') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El archivo no es un adjunto adicional',
+                ], 400);
+            }
+
+            $media->delete();
+
+            // Sincronizar JSON
+            $document->syncAdditionalAttachmentsJson();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Adjunto eliminado correctamente',
+                'total_attachments' => $document->getMedia('additional_attachments')->count(),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar adjunto: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Aprobar la etapa actual y pasar a la siguiente
+     */
+    public function approveStage(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Validar que el documento está en estado de validación
+            if (! in_array($document->validation_status, ['pending', 'in_validation'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El documento no está en proceso de validación.',
+                ], 400);
+            }
+
+            $comments = $request->input('comments');
+            $assignedUserId = $request->input('assigned_user_id'); // Puede ser null
+
+            // Validar que el usuario asignado existe y pertenece al grupo correcto (si se especifica)
+            if ($assignedUserId) {
+                $user = \App\Models\User::find($assignedUserId);
+                if (! $user) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Usuario asignado no encontrado.',
+                    ], 400);
+                }
+            }
+
+            // Obtener usuario autenticado
+            $validator = auth()->user();
+            if (! $validator) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no autenticado.',
+                ], 401);
+            }
+
+            // Aprobar etapa actual
+            $result = $document->approveCurrentStage($validator, $comments, $assignedUserId);
+
+            if (! $result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al aprobar la etapa.',
+                ], 500);
+            }
+
+            // Preparar respuesta
+            $response = [
+                'success' => true,
+                'message' => 'Etapa aprobada correctamente',
+                'document' => [
+                    'validation_status' => $document->validation_status,
+                    'current_stage' => $document->current_stage,
+                    'total_stages' => $document->total_stages,
+                    'current_validator_group' => $document->current_validator_group,
+                    'assigned_user_id' => $document->assigned_user_id,
+                ],
+            ];
+
+            // Si hay siguiente etapa, incluir información
+            if ($document->validation_status === 'in_validation') {
+                $response['next_group'] = $document->current_validator_group;
+                $response['assigned_to'] = $document->assigned_user_id
+                    ? \App\Models\User::find($document->assigned_user_id)->full_name
+                    : 'Todo el grupo';
+            }
+
+            return response()->json($response);
+
+        } catch (\Exception $e) {
+            \Log::error('Error approving stage', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al aprobar etapa: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Rechazar el documento en la etapa actual
+     */
+    public function rejectStage(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Validar que el documento está en estado de validación
+            if (! in_array($document->validation_status, ['pending', 'in_validation'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El documento no está en proceso de validación.',
+                ], 400);
+            }
+
+            $request->validate([
+                'reason' => 'required|string|min:10',
+            ]);
+
+            $reason = $request->input('reason');
+
+            // Obtener usuario autenticado
+            $validator = auth()->user();
+            if (! $validator) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no autenticado.',
+                ], 401);
+            }
+
+            // Rechazar documento
+            $result = $document->rejectDocument($validator, $reason);
+
+            if (! $result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al rechazar el documento.',
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento rechazado correctamente',
+                'document' => [
+                    'validation_status' => $document->validation_status,
+                    'validation_completed_at' => $document->validation_completed_at,
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error rejecting stage', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al rechazar documento: '.$e->getMessage(),
             ], 500);
         }
     }

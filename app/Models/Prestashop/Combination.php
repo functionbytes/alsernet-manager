@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Combination extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_product_attribute';
+
     protected $primaryKey = 'id_product_attribute';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +31,7 @@ class Combination extends Model
         'default_on',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_product' => 'integer',
         'quantity' => 'integer',
         'wholesale_price' => 'float',

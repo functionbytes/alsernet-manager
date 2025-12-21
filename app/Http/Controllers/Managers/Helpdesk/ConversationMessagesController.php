@@ -68,7 +68,7 @@ class ConversationMessagesController extends Controller
         ]);
 
         // If first response and not internal, update SLA
-        if ($item->is_internal === false && !$conversation->first_response_at) {
+        if ($item->is_internal === false && ! $conversation->first_response_at) {
             $conversation->update(['first_response_at' => now()]);
         }
 
@@ -137,7 +137,7 @@ class ConversationMessagesController extends Controller
         $this->authorize('manager.helpdesk.conversations.update');
 
         // Only allow deleting own messages or if admin
-        if ($item->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
+        if ($item->user_id !== auth()->id() && ! auth()->user()->hasRole('admin')) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -154,7 +154,7 @@ class ConversationMessagesController extends Controller
         $replies = \App\Models\Helpdesk\CannedReply::query()
             ->where(function ($q) {
                 $q->where('user_id', auth()->id())
-                  ->orWhere('is_global', true);
+                    ->orWhere('is_global', true);
             })
             ->latest('usage_count')
             ->get(['id', 'title', 'body', 'html_body']);

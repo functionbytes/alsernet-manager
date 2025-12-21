@@ -2,10 +2,9 @@
 
 namespace App\Mail;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class VerifyMail extends Mailable
 {
@@ -22,5 +21,4 @@ class VerifyMail extends Mailable
     {
         return $this->view('user.emails.verifyUser');
     }
-
 }

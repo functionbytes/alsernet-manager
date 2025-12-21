@@ -18,38 +18,38 @@ class DocumentConfigurationSeeder extends Seeder
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
                     'doc_2' => 'DNI - Cara trasera',
-                    'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)'
-                ]
+                    'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)',
+                ],
             ],
             'rifle' => [
                 'label' => 'Rifles',
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
                     'doc_2' => 'DNI - Cara trasera',
-                    'doc_3' => 'Licencia de armas largas rayadas (tipo D)'
-                ]
+                    'doc_3' => 'Licencia de armas largas rayadas (tipo D)',
+                ],
             ],
             'escopeta' => [
                 'label' => 'Escopetas',
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
                     'doc_2' => 'DNI - Cara trasera',
-                    'doc_3' => 'Licencia de escopeta (tipo E)'
-                ]
+                    'doc_3' => 'Licencia de escopeta (tipo E)',
+                ],
             ],
             'dni' => [
                 'label' => 'Solo DNI',
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
-                    'doc_2' => 'DNI - Cara trasera'
-                ]
+                    'doc_2' => 'DNI - Cara trasera',
+                ],
             ],
             'general' => [
                 'label' => 'General',
                 'documents' => [
-                    'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)'
-                ]
-            ]
+                    'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)',
+                ],
+            ],
         ];
 
         foreach ($configurations as $documentType => $config) {
@@ -57,7 +57,7 @@ class DocumentConfigurationSeeder extends Seeder
                 ['document_type' => $documentType],
                 [
                     'document_type_label' => $config['label'],
-                    'required_documents' => $config['documents']
+                    'required_documents' => $config['documents'],
                 ]
             );
         }

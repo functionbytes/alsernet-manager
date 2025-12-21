@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReturnStatusLang extends Model
 {
     protected $table = 'return_status_lang';
+
     protected $primaryKey = null;
+
     public $incrementing = false;
 
     protected $fillable = [
-        'id_return_status', 'id_lang', 'id_shop', 'name'
+        'id_return_status', 'id_lang', 'id_shop', 'name',
     ];
 
     public function returnStatus(): BelongsTo

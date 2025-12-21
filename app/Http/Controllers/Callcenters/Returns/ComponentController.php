@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderComponent;
 use App\Models\ProductComponent;
-use App\Models\ComponentShipment;
 use App\Services\ComponentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ComponentController extends Controller
 {
@@ -30,7 +28,7 @@ class ComponentController extends Controller
         $order->load([
             'orderComponents.component',
             'orderComponents.substituteComponent',
-            'orderComponents.shipmentItems.shipment'
+            'orderComponents.shipmentItems.shipment',
         ]);
 
         $componentSummary = [
@@ -56,7 +54,7 @@ class ComponentController extends Controller
             'substituteComponent',
             'order',
             'orderItem.product',
-            'shipmentItems.shipment'
+            'shipmentItems.shipment',
         ]);
 
         $alternatives = [];
@@ -239,7 +237,7 @@ class ComponentController extends Controller
             return redirect()->back()->with('success', 'Stock actualizado exitosamente');
 
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['stock' => 'Error actualizando stock: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['stock' => 'Error actualizando stock: '.$e->getMessage()]);
         }
     }
 
@@ -394,7 +392,7 @@ class ComponentController extends Controller
             $file = fopen('php://output', 'w');
 
             // Escribir headers
-            if (!empty($data)) {
+            if (! empty($data)) {
                 fputcsv($file, array_keys($data[0]));
             }
 

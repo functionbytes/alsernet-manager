@@ -10,9 +10,6 @@ class BarcodeReadingService
 {
     /**
      * Validar si un código de barras existe en la base de datos
-     *
-     * @param string $barcode
-     * @return bool
      */
     public function exists(string $barcode): bool
     {
@@ -21,9 +18,6 @@ class BarcodeReadingService
 
     /**
      * Obtener un producto por código de barras
-     *
-     * @param string $barcode
-     * @return Product|null
      */
     public function getProduct(string $barcode): ?Product
     {
@@ -32,33 +26,28 @@ class BarcodeReadingService
 
     /**
      * Validar formato de código de barras
-     *
-     * @param string $barcode
-     * @return bool
      */
     public function isValidFormat(string $barcode): bool
     {
         // Validar que sea numérico y tenga longitud razonable (8-13 dígitos típico EAN)
-        if (!is_numeric($barcode)) {
+        if (! is_numeric($barcode)) {
             return false;
         }
 
         $length = strlen($barcode);
+
         return $length >= 8 && $length <= 13;
     }
 
     /**
      * Procesar código de barras (validar formato + existencia)
-     *
-     * @param string $barcode
-     * @return array
      */
     public function validate(string $barcode): array
     {
         $barcode = trim($barcode);
 
         // Validar formato
-        if (!$this->isValidFormat($barcode)) {
+        if (! $this->isValidFormat($barcode)) {
             return [
                 'success' => false,
                 'message' => 'Formato de código de barras inválido',
@@ -68,7 +57,7 @@ class BarcodeReadingService
         }
 
         // Buscar en base de datos
-        if (!$this->exists($barcode)) {
+        if (! $this->exists($barcode)) {
             return [
                 'success' => false,
                 'message' => 'Código de barras no encontrado en el sistema',
@@ -80,7 +69,7 @@ class BarcodeReadingService
         // Obtener producto
         $product = $this->getProduct($barcode);
 
-        if (!$product) {
+        if (! $product) {
             return [
                 'success' => false,
                 'message' => 'Error al obtener datos del producto',
@@ -90,7 +79,7 @@ class BarcodeReadingService
         }
 
         // Validar que el producto esté activo
-        if (!$product->available) {
+        if (! $product->available) {
             return [
                 'success' => false,
                 'message' => 'El producto no está disponible',
@@ -120,9 +109,6 @@ class BarcodeReadingService
 
     /**
      * Decodificar código de barras (extrae información si es posible)
-     *
-     * @param string $barcode
-     * @return array
      */
     public function decode(string $barcode): array
     {
@@ -139,9 +125,6 @@ class BarcodeReadingService
 
     /**
      * Detectar tipo de código de barras
-     *
-     * @param string $barcode
-     * @return string
      */
     public function detectBarcodeType(string $barcode): string
     {
@@ -155,7 +138,7 @@ class BarcodeReadingService
             return 'EAN-13';
         } elseif ($length === 14) {
             return 'GTIN-14';
-        } elseif (!is_numeric($barcode)) {
+        } elseif (! is_numeric($barcode)) {
             return 'CODE-128';
         }
 
@@ -164,12 +147,6 @@ class BarcodeReadingService
 
     /**
      * Registrar lectura de código de barras para auditoría
-     *
-     * @param string $barcode
-     * @param Product|null $product
-     * @param bool $success
-     * @param string|null $errorReason
-     * @return void
      */
     public function logReading(
         string $barcode,
@@ -199,9 +176,6 @@ class BarcodeReadingService
 
     /**
      * Obtener estadísticas de lectura en un período
-     *
-     * @param int $days
-     * @return array
      */
     public function getReadingStats(int $days = 30): array
     {
@@ -218,9 +192,6 @@ class BarcodeReadingService
 
     /**
      * Procesar múltiples códigos de barras (batch)
-     *
-     * @param array $barcodes
-     * @return array
      */
     public function validateBatch(array $barcodes): array
     {

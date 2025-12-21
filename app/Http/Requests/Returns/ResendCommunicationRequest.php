@@ -17,14 +17,13 @@ class ResendCommunicationRequest extends FormRequest
             'recipient' => [
                 'nullable',
                 'email',
-                'max:255'
+                'max:255',
             ],
             'reason' => [
                 'nullable',
                 'string',
-                'max:500'
-            ]
+                'max:500',
+            ],
         ];
     }
 }
-

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Pages;
 
-use App\Models\User;
-use Artesaos\SEOTools\Facades\OpenGraph;
-use Artesaos\SEOTools\Facades\SEOTools;
-use Artesaos\SEOTools\Facades\SEOMeta;
-use Artesaos\SEOTools\Facades\JsonLd;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Artesaos\SEOTools\Facades\JsonLd;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\SEOTools;
 
 class PagesController extends Controller
 {
-
-    public function index(){
+    public function index()
+    {
 
         SEOMeta::setTitle(getSetting()->meta_title);
         SEOMeta::setDescription(getSetting()->meta_description);
@@ -43,9 +43,9 @@ class PagesController extends Controller
 
     }
 
-    public function home(){
+    public function home()
+    {
         return User::auth()->route();
 
     }
-
 }

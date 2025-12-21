@@ -2,14 +2,17 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
+use League\Pipeline\StageInterface;
 
 class TransformTag implements StageInterface
 {
     public $campaign;
+
     public $subscriber;
+
     public $msgId;
+
     public $server;
 
     // Campaign or email
@@ -20,14 +23,15 @@ class TransformTag implements StageInterface
         $this->msgId = $msgId;
         $this->server = $server;
     }
+
     public function __invoke($html)
     {
         // DEPRECATED
-        if (!is_null($this->server) && $this->server->isElasticEmailServer()) {
+        if (! is_null($this->server) && $this->server->isElasticEmailServer()) {
             $html = $this->server->addUnsubscribeUrl($html);
         }
 
-        $tags = array(
+        $tags = [
             'CAMPAIGN_NAME' => $this->campaign->name,
             'CAMPAIGN_UID' => $this->campaign->uid,
             'CAMPAIGN_SUBJECT' => $this->campaign->subject,
@@ -37,12 +41,12 @@ class TransformTag implements StageInterface
             'CURRENT_YEAR' => date('Y'),
             'CURRENT_MONTH' => date('m'),
             'CURRENT_DAY' => date('d'),
-        );
+        ];
 
         // Use in case $subscriber or $msgId is null
         $sampleLink = $this->campaign->makeSampleLink();
 
-        # Subscriber specific
+        // Subscriber specific
         if (is_null($this->subscriber) || $this->campaign->isStdClassSubscriber($this->subscriber)) {
             $tags['UNSUBSCRIBE_URL'] = $sampleLink;
             $tags['UPDATE_PROFILE_URL'] = $sampleLink;
@@ -60,7 +64,7 @@ class TransformTag implements StageInterface
             // all lists assocated with this campaign/email
             // Notice that the Email model doesn ot have mailLists association, only defaultMailList
 
-            if (!$this->campaign->mailLists) {
+            if (! $this->campaign->mailLists) {
                 foreach ($this->campaign->defaultMailList->fields as $field) {
                     $tags['SUBSCRIBER_'.$field->tag] = $sample;
                     $tags[$field->tag] = $sample;
@@ -107,7 +111,7 @@ class TransformTag implements StageInterface
             $tags['WEB_VIEW_URL'] = $webViewUrl;
             $tags['SUBSCRIBER_UID'] = $this->subscriber->uid;
 
-            # Subscriber custom fields
+            // Subscriber custom fields
             foreach ($this->subscriber->mailList->fields as $field) {
                 $tags['SUBSCRIBER_'.$field->tag] = $this->subscriber->getValueByField($field);
                 $tags[$field->tag] = $this->subscriber->getValueByField($field);

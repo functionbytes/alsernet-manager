@@ -3,9 +3,9 @@
 namespace App\Models\Setting;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Hour extends Model
 {
@@ -15,7 +15,7 @@ class Hour extends Model
 
     protected static $recordEvents = ['updated'];
 
-    protected $fillable  = [
+    protected $fillable = [
         'weeks',
         'starttime',
         'endtime',
@@ -27,5 +27,4 @@ class Hour extends Model
     {
         return LogOptions::defaults()->logOnly(['name', 'text']);
     }
-
 }

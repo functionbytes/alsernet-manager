@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Managers\Returns;
 
 use App\Http\Controllers\Controller;
-use App\Models\Return\ProductReturnRule;
-use App\Models\Return\Category;
 use App\Models\Product;
+use App\Models\Return\Category;
+use App\Models\Return\ProductReturnRule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductReturnRuleController extends Controller
 {
@@ -71,9 +70,9 @@ class ProductReturnRuleController extends Controller
 
         // Validar que no exista duplicado
         $existingRule = ProductReturnRule::where('rule_type', $request->rule_type)
-            ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
-            ->when($request->product_id, fn($q) => $q->where('product_id', $request->product_id))
-            ->when($request->rule_type === 'global', fn($q) => $q->whereNull('category_id')->whereNull('product_id'))
+            ->when($request->category_id, fn ($q) => $q->where('category_id', $request->category_id))
+            ->when($request->product_id, fn ($q) => $q->where('product_id', $request->product_id))
+            ->when($request->rule_type === 'global', fn ($q) => $q->whereNull('category_id')->whereNull('product_id'))
             ->where('is_active', true)
             ->first();
 
@@ -107,7 +106,7 @@ class ProductReturnRuleController extends Controller
         return view('admin.return-rules.show', compact('returnRule', 'stats'));
     }
 
-    /**
+    /**per
      * Mostrar formulario de edición
      */
     public function edit(ProductReturnRule $returnRule)
@@ -147,7 +146,7 @@ class ProductReturnRuleController extends Controller
      */
     public function toggleStatus(ProductReturnRule $returnRule)
     {
-        $returnRule->update(['is_active' => !$returnRule->is_active]);
+        $returnRule->update(['is_active' => ! $returnRule->is_active]);
 
         $status = $returnRule->is_active ? 'activada' : 'desactivada';
 
@@ -204,7 +203,7 @@ class ProductReturnRuleController extends Controller
             fputcsv($file, [
                 'ID', 'Tipo', 'Categoría', 'Producto', 'Retornable',
                 'Días', 'Max %', 'Empaque Original', 'Recibo',
-                'Prioridad', 'Activa', 'Creada'
+                'Prioridad', 'Activa', 'Creada',
             ]);
 
             foreach ($rules as $rule) {
@@ -215,7 +214,7 @@ class ProductReturnRuleController extends Controller
                     $rule->product?->name ?? 'N/A',
                     $rule->is_returnable ? 'Sí' : 'No',
                     $rule->return_period_days ?? 'Sin límite',
-                    $rule->max_return_percentage . '%',
+                    $rule->max_return_percentage.'%',
                     $rule->requires_original_packaging ? 'Sí' : 'No',
                     $rule->requires_receipt ? 'Sí' : 'No',
                     $rule->priority,

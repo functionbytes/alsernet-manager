@@ -19,9 +19,9 @@ class Trigger extends Action
     public function getProgressDescription()
     {
         if (is_null($this->getLastExecuted())) {
-            return "* Triggering automation";
+            return '* Triggering automation';
         } else {
-            return "Automation triggered";
+            return 'Automation triggered';
         }
     }
 }

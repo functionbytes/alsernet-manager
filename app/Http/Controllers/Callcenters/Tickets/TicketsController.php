@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers\Callcenters\Tickets;
 
-
-use App\Mail\Supports\Tickets\NotificationCustomerReplayMails;
-use App\Mail\Supports\Tickets\NotificatioCustomernMails;
+use App\Http\Controllers\Controller;
+use App\Models\Group\Group;
+use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketCanned;
-use App\Notifications\TicketCreateNotifications;
-use App\Mail\Supports\Tickets\Note\NoteMails;
 use App\Models\Ticket\TicketCategorie;
 use App\Models\Ticket\TicketHistory;
-use App\Http\Controllers\Controller;
-use App\Models\Ticket\TicketComment;
-use App\Models\Ticket\TicketStatus;
 use App\Models\Ticket\TicketNote;
-use App\Models\Ticket\Ticket;
-use Illuminate\Http\Request;
-use App\Models\Group\Group;
+use App\Models\Ticket\TicketStatus;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Notifications\TicketCreateNotifications;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class TicketsController extends Controller
 {
@@ -33,7 +28,7 @@ class TicketsController extends Controller
         $tickets = Ticket::descending();
 
         if ($searchKey) {
-            $tickets = $tickets->where('title', 'like', '%' . $searchKey . '%');
+            $tickets = $tickets->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($request->status != null) {
@@ -47,7 +42,6 @@ class TicketsController extends Controller
         ]);
     }
 
-
     public function previous(Request $request, $uid)
     {
 
@@ -58,7 +52,7 @@ class TicketsController extends Controller
         $tickets = $user->tikets();
 
         if ($searchKey) {
-            $tickets = $tickets->where('title', 'like', '%' . $searchKey . '%');
+            $tickets = $tickets->where('title', 'like', '%'.$searchKey.'%');
         }
 
         if ($request->status != null) {
@@ -71,11 +65,12 @@ class TicketsController extends Controller
             'tickets' => $tickets,
         ]);
     }
+
     public function store(Request $request)
     {
 
         //        dd($request);
-        $user =  Auth::user();
+        $user = Auth::user();
 
         $status = TicketStatus::slug('new');
         $category = TicketCategorie::find($request->categorie);
@@ -93,9 +88,8 @@ class TicketsController extends Controller
         $ticket->updated_at = Carbon::now()->toDateTimeString();
         $ticket->toassignuser_id = 1;
         $ticket->myassignuser_id = 1;
-        $ticket->ticket_id = setting('customer_ticketid') . '-' . $ticket->id;
+        $ticket->ticket_id = setting('customer_ticketid').'-'.$ticket->id;
         $ticket->save();
-
 
         if (setting('auto_overdue_ticket') == 'true') {
             $ticket->auto_overdue_ticket = null;
@@ -110,7 +104,6 @@ class TicketsController extends Controller
                 }
             }
         }
-
 
         //        $history = new TicketHistory;
         //        $history->ticket_id = $ticket->id;
@@ -264,16 +257,17 @@ class TicketsController extends Controller
         //            return response()->json(['success' => lang('A ticket has been opened with the ticket ID', 'alerts') . $ticket->ticket_id], 200);
         //        }
 
-        return response()->json(['success' => "Se ha abierto un ticket con el ID del ticket" . $ticket->ticket_id], 200);
+        return response()->json(['success' => 'Se ha abierto un ticket con el ID del ticket'.$ticket->ticket_id], 200);
     }
+
     public function view($uid)
     {
-        $user =  Auth::user();
+        $user = Auth::user();
         $ticket = Ticket::uid($uid);
 
         $category = $ticket->category;
         $comments = $ticket->comments()->latest()->get();
-        $notes =  $ticket->notes()->latest()->get();
+        $notes = $ticket->notes()->latest()->get();
 
         $simillars = Ticket::where('cust_id', $ticket->cust->id)->count();
 
@@ -299,7 +293,7 @@ class TicketsController extends Controller
 
             $category = $ticket->category;
 
-            if ($category!=null) {
+            if ($category != null) {
 
                 $categories = TicketCategorie::with('groupscategoryc')->get();
 
@@ -336,7 +330,6 @@ class TicketsController extends Controller
                 }
             }
 
-
         }
 
         if (request()->ajax()) {
@@ -351,7 +344,7 @@ class TicketsController extends Controller
                 'cannedsjson' => $cannedsjson,
                 'canneds' => $canneds,
                 'status' => $status,
-             ]);
+            ]);
 
         }
 
@@ -367,8 +360,8 @@ class TicketsController extends Controller
             'status' => $status,
         ]);
 
-
     }
+
     public function close($uid)
     {
 
@@ -380,7 +373,7 @@ class TicketsController extends Controller
         $ticket->closedby_user = null;
         $ticket->update();
 
-        $history = new TicketHistory();
+        $history = new TicketHistory;
         $history->ticket_id = $ticket->id;
 
         $output = '<div class="d-flex align-items-center">
@@ -390,35 +383,35 @@ class TicketsController extends Controller
         if ($ticket->notes->isEmpty()) {
             if ($ticket->overduestatus != null) {
                 $output .= '
-                <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 ';
             } else {
                 $output .= '
-                <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                 ';
             }
         } else {
             if ($ticket->overduestatus != null) {
                 $output .= '
-                <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
             } else {
                 $output .= '
-                <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
             }
         }
 
         $output .= '
-            <p class="mb-0 fs-17 font-weight-semibold text-dark">' . Auth::guard('customers')->user()->username . '<span class="fs-11 mx-1 text-muted">(Re-opened)</span></p>
+            <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::guard('customers')->user()->username.'<span class="fs-11 mx-1 text-muted">(Re-opened)</span></p>
         </div>
         <div class="ms-auto">
         <span class="float-end badge badge-danger-light">
-            <span class="fs-11 font-weight-semibold">' . Auth::guard('customers')->user()->userType . '</span>
+            <span class="fs-11 font-weight-semibold">'.Auth::guard('customers')->user()->userType.'</span>
         </span>
         </div>
 
@@ -487,7 +480,7 @@ class TicketsController extends Controller
             'ticket_description' => $ticket->message,
             'ticket_status' => $ticket->status,
             'ticket_customer_url' => route('loadmore.load_data', $ticket->ticket_id),
-            'ticket_admin_url' => url('/admin/ticket-view/' . $ticket->ticket_id),
+            'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
         ];
         //
         //        try {
@@ -627,6 +620,7 @@ class TicketsController extends Controller
 
         return redirect()->route('support.tikects');
     }
+
     public function destroy($id)
     {
 
@@ -647,7 +641,7 @@ class TicketsController extends Controller
             $comment->each->delete();
             $ticket->delete();
 
-            $history = new tickethistory();
+            $history = new tickethistory;
             $history->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
@@ -657,35 +651,35 @@ class TicketsController extends Controller
             if ($ticket->notes->isEmpty()) {
                 if ($ticket->overduestatus != null) {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                    <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
                 } else {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
                 }
             } else {
                 if ($ticket->overduestatus != null) {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                    <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
                 } else {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
                 }
             }
 
             $output .= '
-                <p class="mb-0 fs-17 font-weight-semibold text-dark">' . Auth::guard('customers')->user()->username . '<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
+                <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::guard('customers')->user()->username.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
             </div>
             <div class="ms-auto">
             <span class="float-end badge badge-danger-light">
-                <span class="fs-11 font-weight-semibold">' . Auth::guard('customers')->user()->userType . '</span>
+                <span class="fs-11 font-weight-semibold">'.Auth::guard('customers')->user()->userType.'</span>
             </span>
             </div>
 
@@ -705,7 +699,7 @@ class TicketsController extends Controller
             }
             $ticket->delete();
 
-            $history = new tickethistory();
+            $history = new tickethistory;
             $history->ticket_id = $ticket->id;
 
             $output = '<div class="d-flex align-items-center">
@@ -715,35 +709,35 @@ class TicketsController extends Controller
             if ($ticket->notes->isEmpty()) {
                 if ($ticket->overduestatus != null) {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                    <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
                 } else {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
                 }
             } else {
                 if ($ticket->overduestatus != null) {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
-                    <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
                 } else {
                     $output .= '
-                    <span class="text-teal font-weight-semibold mx-1">' . $ticket->status . '</span>
+                    <span class="text-teal font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-warning font-weight-semibold mx-1">Note</span>
                     ';
                 }
             }
 
             $output .= '
-                <p class="mb-0 fs-17 font-weight-semibold text-dark">' . Auth::guard('customers')->user()->username . '<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
+                <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::guard('customers')->user()->username.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
             </div>
             <div class="ms-auto">
             <span class="float-end badge badge-danger-light">
-                <span class="fs-11 font-weight-semibold">' . Auth::guard('customers')->user()->userType . '</span>
+                <span class="fs-11 font-weight-semibold">'.Auth::guard('customers')->user()->userType.'</span>
             </span>
             </div>
 
@@ -752,10 +746,10 @@ class TicketsController extends Controller
             $history->ticketactions = $output;
             $history->save();
 
-
             return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
         }
     }
+
     public function ticketmassdestroy(Request $request)
     {
         $student_id_array = $request->input('id');
@@ -781,7 +775,7 @@ class TicketsController extends Controller
                 $comment->each->delete();
                 $ticket->delete();
 
-                $history = new tickethistory();
+                $history = new tickethistory;
                 $history->ticket_id = $ticket->id;
 
                 $output = '<div class="d-flex align-items-center">
@@ -791,35 +785,35 @@ class TicketsController extends Controller
                 if ($ticket->notes->isEmpty()) {
                     if ($ticket->overduestatus != null) {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         ';
                     } else {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                         ';
                     }
                 } else {
                     if ($ticket->overduestatus != null) {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
                     } else {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
                     }
                 }
 
                 $output .= '
-                    <p class="mb-0 fs-17 font-weight-semibold text-dark">' . Auth::guard('customers')->user()->username . '<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
+                    <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::guard('customers')->user()->username.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
                 </div>
                 <div class="ms-auto">
                 <span class="float-end badge badge-primary-light">
-                    <span class="fs-11 font-weight-semibold">' . Auth::guard('customers')->user()->userType . '</span>
+                    <span class="fs-11 font-weight-semibold">'.Auth::guard('customers')->user()->userType.'</span>
                 </span>
                 </div>
 
@@ -842,7 +836,7 @@ class TicketsController extends Controller
                 }
                 $ticket->delete();
 
-                $history = new tickethistory();
+                $history = new tickethistory;
                 $history->ticket_id = $ticket->id;
 
                 $output = '<div class="d-flex align-items-center">
@@ -852,35 +846,35 @@ class TicketsController extends Controller
                 if ($ticket->notes->isEmpty()) {
                     if ($ticket->overduestatus != null) {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         ';
                     } else {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                         ';
                     }
                 } else {
                     if ($ticket->overduestatus != null) {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->overduestatus . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
                     } else {
                         $output .= '
-                        <span class="text-danger font-weight-semibold mx-1">' . $ticket->status . '</span>
+                        <span class="text-danger font-weight-semibold mx-1">'.$ticket->status.'</span>
                         <span class="text-warning font-weight-semibold mx-1">Note</span>
                         ';
                     }
                 }
 
                 $output .= '
-                    <p class="mb-0 fs-17 font-weight-semibold text-dark">' . Auth::guard('customers')->user()->username . '<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
+                    <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::guard('customers')->user()->username.'<span class="fs-11 mx-1 text-muted">(Ticket Deleted)</span></p>
                 </div>
                 <div class="ms-auto">
                 <span class="float-end badge badge-primary-light">
-                    <span class="fs-11 font-weight-semibold">' . Auth::guard('customers')->user()->userType . '</span>
+                    <span class="fs-11 font-weight-semibold">'.Auth::guard('customers')->user()->userType.'</span>
                 </span>
                 </div>
 
@@ -893,20 +887,22 @@ class TicketsController extends Controller
                 }
             }
         }
+
         return response()->json(['success' => lang('The ticket was successfully deleted.', 'alerts')]);
     }
-    public function notestore(Request $request){
 
+    public function notestore(Request $request)
+    {
 
         $ticket = Ticket::uid($request->uid);
 
-        $note = new TicketNote();
+        $note = new TicketNote;
         $note->ticket_id = $ticket->id;
         $note->user_id = Auth::user()->id;
         $note->notes = $request->notes;
         $note->save();
 
-        $history = new TicketHistory();
+        $history = new TicketHistory;
         $history->ticket_id = $ticket->id;
 
         $output = '<div class="d-flex align-items-center">
@@ -914,26 +910,26 @@ class TicketsController extends Controller
                 <p class="mb-0 fs-12 mb-1">Status
             ';
 
-        if($ticket->notes->isEmpty()){
-            if($ticket->overduestatus != null){
+        if ($ticket->notes->isEmpty()) {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 ';
             }
 
-        }else{
-            if($ticket->overduestatus != null){
+        } else {
+            if ($ticket->overduestatus != null) {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
                 ';
-            }else{
+            } else {
                 $output .= '
                 <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                 <span class="text-warning font-weight-semibold mx-1">Note</span>
@@ -964,23 +960,23 @@ class TicketsController extends Controller
             'ticket_admin_url' => url('/admin/ticket-view/'.$ticket->ticket_id),
         ];
 
-        try{
+        try {
 
-            $admins = User::leftJoin('groups_users','groups_users.users_id','users.id')->whereNull('groups_users.group_id')->whereNull('groups_users.user_id')->get();
-            foreach($admins as $admin){
-                if($admin->usetting->emailnotifyon == 1 && $admin->getRoleNames()[0] == 'superadmin' && setting('NOTE_CREATE_MAILS') == 'on' && $note->user_id != $admin->id){
+            $admins = User::leftJoin('groups_users', 'groups_users.users_id', 'users.id')->whereNull('groups_users.group_id')->whereNull('groups_users.user_id')->get();
+            foreach ($admins as $admin) {
+                if ($admin->usetting->emailnotifyon == 1 && $admin->getRoleNames()[0] == 'superadmin' && setting('NOTE_CREATE_MAILS') == 'on' && $note->user_id != $admin->id) {
 
-//                 EmailMails::dispatch($note)->onQueue('tickets');
+                    //                 EmailMails::dispatch($note)->onQueue('tickets');
 
                 }
             }
-        }catch(\Exception $e){
-            return response()->json(['success'=> 'The note was successfully submitted.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 'The note was successfully submitted.']);
         }
 
-
-        return response()->json(['success'=> 'The note was successfully submitted.']);
+        return response()->json(['success' => 'The note was successfully submitted.']);
     }
+
     public function noteshow($ticket_id)
     {
         $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
@@ -999,50 +995,50 @@ class TicketsController extends Controller
         $post = Pages::all();
         $data['page'] = $post;
 
-
-        return view('admin.viewticket.note', compact('ticket','category', 'comments', 'title','footertext'))->with($data);
+        return view('admin.viewticket.note', compact('ticket', 'category', 'comments', 'title', 'footertext'))->with($data);
     }
+
     public function notedestroy($id)
     {
         $notedelete = note::find($id);
 
         $ticket = Ticket::where('id', $notedelete->ticket_id)->firstOrFail();
 
-            $tickethistory = new tickethistory();
-            $tickethistory->ticket_id = $ticket->id;
+        $tickethistory = new tickethistory;
+        $tickethistory->ticket_id = $ticket->id;
 
-            $output = '<div class="d-flex align-items-center">
+        $output = '<div class="d-flex align-items-center">
                 <div class="mt-0">
                     <p class="mb-0 fs-12 mb-1">Status
                 ';
-            if($ticket->note->isEmpty()){
-                if($ticket->overduestatus != null){
-                    $output .= '
+        if ($ticket->note->isEmpty()) {
+            if ($ticket->overduestatus != null) {
+                $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                     <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
                     ';
-                }else{
-                    $output .= '
+            } else {
+                $output .= '
                     <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
                     ';
-                }
-
-            }else{
-                if($ticket->overduestatus != null){
-                    $output .= '
-                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
-                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
-                    <span class="text-warning font-weight-semibold mx-1">Note</span>
-                    ';
-                }else{
-                    $output .= '
-                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
-                    <span class="text-warning font-weight-semibold mx-1">Note</span>
-                    ';
-                }
             }
 
-            $output .= '
+        } else {
+            if ($ticket->overduestatus != null) {
+                $output .= '
+                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-danger font-weight-semibold mx-1">'.$ticket->overduestatus.'</span>
+                    <span class="text-warning font-weight-semibold mx-1">Note</span>
+                    ';
+            } else {
+                $output .= '
+                    <span class="text-burnt-orange font-weight-semibold mx-1">'.$ticket->status.'</span>
+                    <span class="text-warning font-weight-semibold mx-1">Note</span>
+                    ';
+            }
+        }
+
+        $output .= '
                 <p class="mb-0 fs-17 font-weight-semibold text-dark">'.Auth::user()->name.'<span class="fs-11 mx-1 text-muted">(Note Deleted)</span></p>
             </div>
             <div class="ms-auto">
@@ -1053,14 +1049,12 @@ class TicketsController extends Controller
 
             </div>
             ';
-            $tickethistory->ticketactions = $output;
-            $tickethistory->save();
-
+        $tickethistory->ticketactions = $output;
+        $tickethistory->save();
 
         $notedelete->delete();
 
-        return response()->json(['success'=> lang('The note was successfully deleted.', 'alerts')]);
-
+        return response()->json(['success' => lang('The note was successfully deleted.', 'alerts')]);
 
     }
 
@@ -1069,15 +1063,14 @@ class TicketsController extends Controller
 
         try {
 
-
             $callcenter = app('callcenters');
 
             $ticketselfassign = Ticket::uid($request->uid);
 
-            if (!$ticketselfassign) {
+            if (! $ticketselfassign) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'El ticket no existe.'
+                    'message' => 'El ticket no existe.',
                 ], 404);
             }
 
@@ -1089,7 +1082,7 @@ class TicketsController extends Controller
                 $ticketselfassign->assign()->detach($request->assigned_userid);
             }
 
-            $tickethistory = new TicketHistory();
+            $tickethistory = new TicketHistory;
             $tickethistory->ticket_id = $ticketselfassign->id;
             $tickethistory->ticketnote = $ticketselfassign->notes()->exists();
             $tickethistory->overdue = $ticketselfassign->overdue;
@@ -1102,59 +1095,57 @@ class TicketsController extends Controller
             return response()->json([
                 'success' => true,
                 'uid' => $ticketselfassign->uid,
-                'message' => 'El ticket se asignó correctamente.'
+                'message' => 'El ticket se asignó correctamente.',
             ]);
 
         } catch (\Exception $e) {
 
             return response()->json([
                 'success' => false,
-                'message' => 'Ocurrió un error: ' . $e->getMessage()
-           ]);
+                'message' => 'Ocurrió un error: '.$e->getMessage(),
+            ]);
 
         }
     }
-
 
     public function ticketunassigns(Request $request)
     {
         try {
 
-                $callcenter = app('callcenters');
+            $callcenter = app('callcenters');
 
-                $calID = Ticket::uid($request->uid);
-                $calID->toassignuser_id	 = null;
-                $calID->myassignuser_id = null;
-                $calID->save();
-                $calID->assign()->detach($request->assigned_userid);
+            $calID = Ticket::uid($request->uid);
+            $calID->toassignuser_id = null;
+            $calID->myassignuser_id = null;
+            $calID->save();
+            $calID->assign()->detach($request->assigned_userid);
 
-                $tickethistory = new TicketHistory();
-                $tickethistory->ticket_id = $calID->id;
-                $tickethistory->ticketnote = $calID->notes()->exists();
-                $tickethistory->overdue = $calID->overdue;
-                $tickethistory->status = $calID->status;
-                $tickethistory->actions = 'UnAssigned Ticket';
-                $tickethistory->username = $callcenter->firstname.' '.$callcenter->lastname;
-                $tickethistory->type = $callcenter->roles()->first()->name ?? 'Sin rol';
-                $tickethistory->save();
+            $tickethistory = new TicketHistory;
+            $tickethistory->ticket_id = $calID->id;
+            $tickethistory->ticketnote = $calID->notes()->exists();
+            $tickethistory->overdue = $calID->overdue;
+            $tickethistory->status = $calID->status;
+            $tickethistory->actions = 'UnAssigned Ticket';
+            $tickethistory->username = $callcenter->firstname.' '.$callcenter->lastname;
+            $tickethistory->type = $callcenter->roles()->first()->name ?? 'Sin rol';
+            $tickethistory->save();
 
-                return response()->json([
-                    'success' => true,
-                    'uid' => $calID->uid,
-                    'message' => 'El ticket se asignó correctamente.'
-                ]);
+            return response()->json([
+                'success' => true,
+                'uid' => $calID->uid,
+                'message' => 'El ticket se asignó correctamente.',
+            ]);
 
         } catch (\Exception $e) {
 
             return response()->json([
-            'success' => false,
-            'message' => 'Ocurrió un error: ' . $e->getMessage()
+                'success' => false,
+                'message' => 'Ocurrió un error: '.$e->getMessage(),
             ]);
 
         }
 
     }
-
 
     public function ticketassigneds(Request $request)
     {
@@ -1162,10 +1153,10 @@ class TicketsController extends Controller
 
             $assign = Ticket::uid($request->uid);
 
-            if (!$assign) {
+            if (! $assign) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'El ticket no existe.'
+                    'message' => 'El ticket no existe.',
                 ], 404);
             }
 
@@ -1177,7 +1168,7 @@ class TicketsController extends Controller
 
             foreach ($users as $user) {
 
-                if (Auth::id() === $user->id && !in_array($user->id, $assignedUserIds)) {
+                if (Auth::id() === $user->id && ! in_array($user->id, $assignedUserIds)) {
                     continue;
                 }
 
@@ -1195,7 +1186,7 @@ class TicketsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'assign_user_exist' => !empty($assignedUserIds) ? 'yes' : 'no',
+                'assign_user_exist' => ! empty($assignedUserIds) ? 'yes' : 'no',
                 'assign_data' => $assign,
                 'table_data' => $options,
                 'total_data' => $users->count(),
@@ -1204,12 +1195,7 @@ class TicketsController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Solicitud inválida.'
+            'message' => 'Solicitud inválida.',
         ], 400);
     }
-
-
-
-
-
 }

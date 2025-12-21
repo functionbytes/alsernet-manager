@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ReturnStatus extends Model
 {
     protected $table = 'return_status';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'state_id', 'color', 'send_email', 'is_pickup', 'is_received',
-        'is_refunded', 'shown_to_customer', 'active'
+        'is_refunded', 'shown_to_customer', 'active',
     ];
 
     protected $casts = [

@@ -2,15 +2,16 @@
 
 namespace App\Models\Return\Order;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Return\ReturnRequestProduct;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class ReturnOrderProduct extends Model
 {
     protected $table = 'return_order_products';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -26,7 +27,7 @@ class ReturnOrderProduct extends Model
         'is_returnable',
         'is_gift',
         'weight',
-        'erp_line_data'
+        'erp_line_data',
     ];
 
     protected $casts = [
@@ -36,7 +37,7 @@ class ReturnOrderProduct extends Model
         'weight' => 'decimal:3',
         'is_returnable' => 'boolean',
         'is_gift' => 'boolean',
-        'erp_line_data' => 'json'
+        'erp_line_data' => 'json',
     ];
 
     // Relaciones
@@ -60,7 +61,6 @@ class ReturnOrderProduct extends Model
         return $this->hasMany(ReturnRequestProduct::class, 'product_id', 'id');
     }
 
-
     // Scopes
     public function scopeReturnable($query)
     {
@@ -77,15 +77,14 @@ class ReturnOrderProduct extends Model
     public function getReturnedQuantityAttribute(): float
     {
         return $this->requestItems()
-            ->whereHas('returnRequest', function($q) {
-                $q->whereHas('status', function($sq) {
+            ->whereHas('returnRequest', function ($q) {
+                $q->whereHas('status', function ($sq) {
                     $sq->where('active', true)
                         ->where('state_id', '!=', 5);
                 });
             })
             ->sum('quantity');
     }
-
 
     public function getAvailableForReturnAttribute(): float
     {
@@ -101,17 +100,19 @@ class ReturnOrderProduct extends Model
 
     public function getReturnDeadline(): ?\Carbon\Carbon
     {
-        if (!$this->order) {
+        if (! $this->order) {
             return null;
         }
 
         $returnDays = config('returns.return_days_limit', 30);
+
         return $this->order->order_date->addDays($returnDays);
     }
 
     public function isWithinReturnPeriod(): bool
     {
         $deadline = $this->getReturnDeadline();
+
         return $deadline && now()->lessThanOrEqualTo($deadline);
     }
 
@@ -123,26 +124,26 @@ class ReturnOrderProduct extends Model
 
         foreach ($erpLines as $line) {
 
-            $isReturnable = !empty($line['articulo']['codigo']) &&
+            $isReturnable = ! empty($line['articulo']['codigo']) &&
                 $line['total_con_impuestos'] > 0 &&
-                !str_contains(strtoupper($line['articulo']['descripcion'] ?? ''), 'PORTES') &&
-                !str_contains(strtoupper($line['articulo']['descripcion'] ?? ''), 'PROMOCION');
+                ! str_contains(strtoupper($line['articulo']['descripcion'] ?? ''), 'PORTES') &&
+                ! str_contains(strtoupper($line['articulo']['descripcion'] ?? ''), 'PROMOCION');
 
-                self::create([
-                    'order_id' => $orderId,
-                    'erp_product_id' => $line['articulo']['idarticulo'] ?? null,
-                    'product_code' => $line['articulo']['codigo'] ?? null,
-                    'product_name' => $line['articulo']['descripcion'] ?? null,
-                    'product_description' => $line['articulo']['descripcion'] ?? null,
-                    'quantity' => floatval($line['unidades'] ?? 0),
-                    'unit_price' => $line['unidades'] > 0 ?
-                        floatval($line['total_con_impuestos']) / floatval($line['unidades']) : 0,
-                    'total_price' => floatval($line['total_con_impuestos'] ?? 0),
-                    'catalog_id' => is_array($line['idcatalogo']) ? null : $line['idcatalogo'],
-                    'is_returnable' => $isReturnable,
-                    'is_gift' => floatval($line['total_con_impuestos']) == 0,
-                    'erp_line_data' => $line
-                ]);
+            self::create([
+                'order_id' => $orderId,
+                'erp_product_id' => $line['articulo']['idarticulo'] ?? null,
+                'product_code' => $line['articulo']['codigo'] ?? null,
+                'product_name' => $line['articulo']['descripcion'] ?? null,
+                'product_description' => $line['articulo']['descripcion'] ?? null,
+                'quantity' => floatval($line['unidades'] ?? 0),
+                'unit_price' => $line['unidades'] > 0 ?
+                    floatval($line['total_con_impuestos']) / floatval($line['unidades']) : 0,
+                'total_price' => floatval($line['total_con_impuestos'] ?? 0),
+                'catalog_id' => is_array($line['idcatalogo']) ? null : $line['idcatalogo'],
+                'is_returnable' => $isReturnable,
+                'is_gift' => floatval($line['total_con_impuestos']) == 0,
+                'erp_line_data' => $line,
+            ]);
         }
     }
 
@@ -165,7 +166,6 @@ class ReturnOrderProduct extends Model
             ->get();
     }
 
-
     /**
      * Formatear información para mostrar
      */
@@ -176,17 +176,16 @@ class ReturnOrderProduct extends Model
             'product_code' => $this->product_code,
             'product_name' => $this->product_name,
             'quantity' => $this->quantity,
-            'unit_price' => number_format($this->unit_price, 2) . ' €',
-            'total_price' => number_format($this->total_price, 2) . ' €',
+            'unit_price' => number_format($this->unit_price, 2).' €',
+            'total_price' => number_format($this->total_price, 2).' €',
             'available_for_return' => $this->available_for_return,
             'returned_quantity' => $this->returned_quantity,
             'can_be_returned' => $this->canBeReturned(),
             'is_within_return_period' => $this->isWithinReturnPeriod(),
             'return_deadline' => $this->getReturnDeadline()?->format('d/m/Y'),
-            'is_gift' => $this->is_gift
+            'is_gift' => $this->is_gift,
         ];
     }
-
 
     // Obtener cantidad total devuelta de un producto en una orden
     public static function getTotalReturnedQuantity($orderId, $productId)
@@ -201,7 +200,6 @@ class ReturnOrderProduct extends Model
             ->sum('rrp.quantity');
     }
 
-
     // Validar cantidad disponible para devolver
     public function validateQuantity()
     {
@@ -210,7 +208,7 @@ class ReturnOrderProduct extends Model
             ->where('product_id', $this->product_id)
             ->first();
 
-        if (!$orderProduct) {
+        if (! $orderProduct) {
             return ['valid' => false, 'message' => 'Producto no encontrado en la orden'];
         }
 
@@ -220,11 +218,10 @@ class ReturnOrderProduct extends Model
         if ($this->quantity > $availableToReturn) {
             return [
                 'valid' => false,
-                'message' => "Cantidad excede lo disponible. Disponible: {$availableToReturn}"
+                'message' => "Cantidad excede lo disponible. Disponible: {$availableToReturn}",
             ];
         }
 
         return ['valid' => true, 'available' => $availableToReturn];
     }
-
 }

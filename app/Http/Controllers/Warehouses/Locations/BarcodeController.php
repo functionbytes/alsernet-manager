@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Warehouses\Locations;
 
 use App\Http\Controllers\Controller;
@@ -9,16 +8,19 @@ use Illuminate\Http\Request;
 
 class BarcodeController extends Controller
 {
-
-    public function all(Request $request){
+    public function all(Request $request)
+    {
 
         $locations = Location::all()->take(100);
+
         return view('warehouses.views.locations.barcodes.all')->with([
             'locations' => $locations,
         ]);
 
     }
-    public function single($uid){
+
+    public function single($uid)
+    {
 
         $location = Location::uid($uid);
 
@@ -26,5 +28,4 @@ class BarcodeController extends Controller
             'location' => $location,
         ]);
     }
-
 }

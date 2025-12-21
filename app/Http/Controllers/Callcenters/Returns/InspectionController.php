@@ -7,11 +7,11 @@
 namespace App\Http\Controllers\Callcenters\Returns;
 
 use App\Http\Controllers\Controller;
+use App\Models\Return\ReturnInspection;
 use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnRequestProduct;
-use App\Models\Return\ReturnInspection;
-use App\Services\Returns\InspectionService;
 use App\Services\Returns\BarcodeService;
+use App\Services\Returns\InspectionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 class InspectionController extends Controller
 {
     protected $inspectionService;
+
     protected $barcodeService;
 
     public function __construct(
@@ -42,7 +43,7 @@ class InspectionController extends Controller
             'in_review' => ReturnInspection::pendingReview()->count(),
             'completed_today' => ReturnInspection::whereDate('inspection_date', today())
                 ->count(),
-            'exceptions' => \App\Models\Return\ReturnException::pending()->count()
+            'exceptions' => \App\Models\Return\ReturnException::pending()->count(),
         ];
 
         // Devoluciones pendientes de inspección
@@ -57,7 +58,7 @@ class InspectionController extends Controller
         // Inspecciones recientes
         $recentInspections = ReturnInspection::with([
             'returnItem.returnRequest',
-            'inspector'
+            'inspector',
         ])
             ->latest()
             ->take(10)
@@ -76,7 +77,7 @@ class InspectionController extends Controller
     public function scan(Request $request)
     {
         $request->validate([
-            'barcode' => 'required|string'
+            'barcode' => 'required|string',
         ]);
 
         try {
@@ -86,7 +87,7 @@ class InspectionController extends Controller
                 auth()->id()
             );
 
-            if (!$result['success']) {
+            if (! $result['success']) {
                 return back()->with('error', $result['message']);
             }
 
@@ -102,13 +103,13 @@ class InspectionController extends Controller
 
             // Redirigir a formulario de inspección
             return redirect()->route('warehouse.inspections.create', [
-                'item' => $returnProduct->id
+                'item' => $returnProduct->id,
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error scanning barcode for inspection', [
                 'barcode' => $request->barcode,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()->with('error', 'Error al escanear código de barras');
@@ -123,11 +124,11 @@ class InspectionController extends Controller
         $returnItem = ReturnRequestProduct::with([
             'returnRequest.customer',
             'returnRequest.order',
-            'orderProduct'
+            'orderProduct',
         ])->findOrFail($request->item);
 
         // Verificar que esté recibido
-        if (!$returnItem->is_received) {
+        if (! $returnItem->is_received) {
             return redirect()->route('warehouse.inspections.index')
                 ->with('error', 'El producto debe ser recibido antes de inspeccionar');
         }
@@ -157,7 +158,7 @@ class InspectionController extends Controller
             'final_decision' => 'nullable|in:restock,outlet,repair,destroy,return_to_supplier',
             'notes' => 'nullable|string',
             'photos' => 'nullable|array',
-            'photos.*' => 'image|max:5120' // 5MB max
+            'photos.*' => 'image|max:5120', // 5MB max
         ]);
 
         DB::beginTransaction();
@@ -170,7 +171,7 @@ class InspectionController extends Controller
                 return array_merge($item, [
                     'item' => $request->checklist_items[$index] ?? '',
                     'category' => $request->checklist_categories[$index] ?? '',
-                    'required' => $request->checklist_required[$index] ?? false
+                    'required' => $request->checklist_required[$index] ?? false,
                 ]);
             })->toArray();
 
@@ -180,7 +181,7 @@ class InspectionController extends Controller
                 'checklist_results' => $checklistResults,
                 'final_decision' => $request->final_decision,
                 'notes' => $request->notes,
-                'photos' => $request->file('photos') ?? []
+                'photos' => $request->file('photos') ?? [],
             ]);
 
             DB::commit();
@@ -199,12 +200,12 @@ class InspectionController extends Controller
 
             Log::error('Error saving inspection', [
                 'item_id' => $request->return_item_id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()
                 ->withInput()
-                ->with('error', 'Error al guardar la inspección: ' . $e->getMessage());
+                ->with('error', 'Error al guardar la inspección: '.$e->getMessage());
         }
     }
 
@@ -218,7 +219,7 @@ class InspectionController extends Controller
             'returnItem.orderProduct',
             'inspector',
             'reviewer',
-            'exceptions'
+            'exceptions',
         ]);
 
         // Calcular impacto financiero
@@ -236,7 +237,7 @@ class InspectionController extends Controller
     public function review(ReturnInspection $inspection)
     {
         // Verificar que requiere revisión
-        if (!$inspection->requires_review || $inspection->reviewed_at) {
+        if (! $inspection->requires_review || $inspection->reviewed_at) {
             return redirect()
                 ->route('warehouse.inspections.show', $inspection)
                 ->with('info', 'Esta inspección no requiere revisión o ya fue revisada');
@@ -245,7 +246,7 @@ class InspectionController extends Controller
         $inspection->load([
             'returnItem.returnRequest',
             'returnItem.orderProduct',
-            'exceptions'
+            'exceptions',
         ]);
 
         return view('warehouse.inspections.review', compact('inspection'));
@@ -260,7 +261,7 @@ class InspectionController extends Controller
             'final_decision' => 'required|in:restock,outlet,repair,destroy,return_to_supplier',
             'review_notes' => 'nullable|string',
             'approve_exceptions' => 'nullable|array',
-            'exception_resolutions' => 'nullable|array'
+            'exception_resolutions' => 'nullable|array',
         ]);
 
         DB::beginTransaction();
@@ -292,7 +293,7 @@ class InspectionController extends Controller
             // Actualizar estado del producto
             $inspection->returnItem->update([
                 'inspection_status' => 'passed',
-                'is_approved' => true
+                'is_approved' => true,
             ]);
 
             // Procesar según decisión
@@ -309,7 +310,7 @@ class InspectionController extends Controller
 
             Log::error('Error processing inspection review', [
                 'inspection_id' => $inspection->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return back()
@@ -326,7 +327,7 @@ class InspectionController extends Controller
         $request->validate([
             'return_id' => 'required|exists:return_requests,id',
             'default_grade' => 'required|in:A,B,C,D',
-            'items' => 'nullable|array'
+            'items' => 'nullable|array',
         ]);
 
         try {
@@ -356,7 +357,7 @@ class InspectionController extends Controller
             ));
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Error en inspección masiva: ' . $e->getMessage());
+            return back()->with('error', 'Error en inspección masiva: '.$e->getMessage());
         }
     }
 
@@ -412,7 +413,7 @@ class InspectionController extends Controller
             'refund_amount' => $refundAmount,
             'deductions' => $deductions,
             'recovery_value' => $recoveryValue,
-            'net_loss' => $refundAmount - $recoveryValue
+            'net_loss' => $refundAmount - $recoveryValue,
         ];
     }
 
@@ -457,7 +458,7 @@ class InspectionController extends Controller
         // Implementar notificación a supervisores
         Log::info('Inspection requires review', [
             'inspection_id' => $inspection->id,
-            'return_item_id' => $inspection->return_item_id
+            'return_item_id' => $inspection->return_item_id,
         ]);
     }
 

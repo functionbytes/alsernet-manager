@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Address extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_address';
+
     protected $primaryKey = 'id_address';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -32,7 +35,7 @@ class Address extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'id_country' => 'integer',
@@ -63,6 +66,4 @@ class Address extends Model
     {
         return $this->hasMany('App\Models\Prestashop\Cart\Cart', 'id_address_invoice', 'id_address');
     }
-
-
 }

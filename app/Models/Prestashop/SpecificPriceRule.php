@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Shop\Shop;
 
 class SpecificPriceRule extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_specific_price_rule';
+
     protected $primaryKey = 'id_specific_price_rule';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,7 +31,7 @@ class SpecificPriceRule extends Model
         'to',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_shop' => 'integer',
         'id_currency' => 'integer',
         'id_country' => 'integer',

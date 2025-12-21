@@ -2,9 +2,6 @@
 
 namespace App\Library;
 
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Http;
 
 class WordpressManager
@@ -13,9 +10,9 @@ class WordpressManager
 
     public function request($options)
     {
-        $uri = $this->endpoint . '/' . $options['path'];
+        $uri = $this->endpoint.'/'.$options['path'];
 
-        if (!isset($options['type']) || $options['type'] == 'get') {
+        if (! isset($options['type']) || $options['type'] == 'get') {
             $response = Http::get($uri, (isset($options['data']) ? $options['data'] : []));
         }
 
@@ -24,8 +21,8 @@ class WordpressManager
 
     public function __construct()
     {
-        if (!defined('DB_NAME')) {
-            $this->endpoint = config('wordpress.url') . '/wp-json/vbrand/v1';
+        if (! defined('DB_NAME')) {
+            $this->endpoint = config('wordpress.url').'/wp-json/vbrand/v1';
 
             // ** MySQL settings - You can get this info from your web host ** //
             /** The name of the database for WordPress */
@@ -38,10 +35,10 @@ class WordpressManager
             define('DB_PASSWORD', config('database.connections.wordpress.password'));
 
             /** MySQL hostname */
-            define('DB_HOST', config('database.connections.wordpress.host') . ':' . config('database.connections.wordpress.port'));
+            define('DB_HOST', config('database.connections.wordpress.host').':'.config('database.connections.wordpress.port'));
 
-            require_once base_path() . '/../wpbase/wp-load.php';
-            require_once base_path() . '/../wpbase/wp-admin/includes/admin.php';
+            require_once base_path().'/../wpbase/wp-load.php';
+            require_once base_path().'/../wpbase/wp-admin/includes/admin.php';
 
             // // Load from customer wp source code
             // require_once config('wordpress.path') . '/wp-load.php';
@@ -72,18 +69,17 @@ class WordpressManager
 
     public function getProductCategories()
     {
-        $taxonomy     = 'product_cat';
-        $orderby      = 'name';
+        $taxonomy = 'product_cat';
+        $orderby = 'name';
         $hierarchical = 1;
-        $empty        = 0;
+        $empty = 0;
 
-
-        $args = array(
-            'taxonomy'     => $taxonomy,
-            'orderby'      => $orderby,
+        $args = [
+            'taxonomy' => $taxonomy,
+            'orderby' => $orderby,
             'hierarchical' => $hierarchical,
-            'hide_empty'   => $empty,
-        );
+            'hide_empty' => $empty,
+        ];
 
         $all_categories = get_categories($args);
 

@@ -24,9 +24,10 @@ class AssignPermissionCommand extends Command
 
         // Find permission
         $permission = Permission::where('name', $permissionName)->first();
-        if (!$permission) {
+        if (! $permission) {
             $this->error("❌ Permission '{$permissionName}' not found");
             $this->showAvailablePermissions();
+
             return 1;
         }
 
@@ -45,14 +46,16 @@ class AssignPermissionCommand extends Command
     protected function assignToUser($userId, $permission)
     {
         $user = User::find($userId);
-        if (!$user) {
+        if (! $user) {
             $this->error("❌ User with ID {$userId} not found");
+
             return 1;
         }
 
         // Check if already has permission
         if ($user->hasPermissionTo($permission->name)) {
             $this->info("ℹ️  User '{$user->email}' already has permission '{$permission->name}'");
+
             return 0;
         }
 
@@ -60,7 +63,7 @@ class AssignPermissionCommand extends Command
         $user->givePermissionTo($permission->name);
 
         $this->info("✅ Permission '{$permission->name}' assigned to {$user->email}");
-        $this->line("   Total permissions: " . $user->getAllPermissions()->count());
+        $this->line('   Total permissions: '.$user->getAllPermissions()->count());
 
         return 0;
     }
@@ -71,14 +74,16 @@ class AssignPermissionCommand extends Command
     protected function assignToRole($roleId, $permission)
     {
         $role = Role::find($roleId);
-        if (!$role) {
+        if (! $role) {
             $this->error("❌ Role with ID {$roleId} not found");
+
             return 1;
         }
 
         // Check if already has permission
         if ($role->hasPermissionTo($permission->name)) {
             $this->info("ℹ️  Role '{$role->name}' already has permission '{$permission->name}'");
+
             return 0;
         }
 
@@ -86,7 +91,7 @@ class AssignPermissionCommand extends Command
         $role->givePermissionTo($permission->name);
 
         $this->info("✅ Permission '{$permission->name}' assigned to role '{$role->name}'");
-        $this->line("   Total permissions: " . $role->permissions()->count());
+        $this->line('   Total permissions: '.$role->permissions()->count());
 
         return 0;
     }
@@ -105,7 +110,7 @@ class AssignPermissionCommand extends Command
         }
 
         if (Permission::count() > 10) {
-            $this->line("  ... and " . (Permission::count() - 10) . " more");
+            $this->line('  ... and '.(Permission::count() - 10).' more');
         }
     }
 }

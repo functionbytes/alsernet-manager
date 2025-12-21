@@ -2,15 +2,18 @@
 
 namespace App\Models\Prestashop;
 
+use App\Models\Prestashop\Orders\OrderState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Prestashop\Orders\OrderState;
 
 class OrderState extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_state';
+
     protected $primaryKey = 'id_order_state';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -32,7 +35,7 @@ class OrderState extends Model
         'deleted',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'deleted' => 'boolean',
         'id_order_state' => 'integer',
     ];

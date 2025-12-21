@@ -2,19 +2,22 @@
 
 namespace App\Models\Prestashop;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Prestashop\Orders\Order;
 use App\Models\Prestashop\Orders\OrderInvoice;
 use App\Models\Prestashop\Shop\Shop;
-use App\Models\Prestashop\Tax\TaxRulesGroup;
 use App\Models\Prestashop\Stock\Warehouse;
+use App\Models\Prestashop\Tax\TaxRulesGroup;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderDetail extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_order_detail';
+
     protected $primaryKey = 'id_order_detail';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -69,7 +72,7 @@ class OrderDetail extends Model
         'total_refunded_tax_incl',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_order_detail' => 'integer',
         'id_order' => 'integer',
         'id_order_invoice' => 'integer',
@@ -101,7 +104,7 @@ class OrderDetail extends Model
     ];
 
     // BelongsTo Relationships
-    public function order() : BelongsTo
+    public function order(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Order',
@@ -110,7 +113,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function product() : BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Product',
@@ -119,7 +122,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function productAttribute() : BelongsTo
+    public function productAttribute(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Combination',
@@ -128,7 +131,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function orderInvoice() : BelongsTo
+    public function orderInvoice(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\OrderInvoice',
@@ -137,7 +140,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function shop() : BelongsTo
+    public function shop(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Shop',
@@ -146,7 +149,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function warehouse() : BelongsTo
+    public function warehouse(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\Warehouse',
@@ -155,7 +158,7 @@ class OrderDetail extends Model
         );
     }
 
-    public function taxRulesGroup() : BelongsTo
+    public function taxRulesGroup(): BelongsTo
     {
         return $this->belongsTo(
             'App\Models\Prestashop\TaxRulesGroup',

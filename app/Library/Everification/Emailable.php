@@ -2,13 +2,14 @@
 
 namespace App\Library\Everification;
 
+use App\Library\Exception\VerificationTakesLongerThanNormal;
 use Exception;
 use GuzzleHttp\Client;
-use App\Library\Exception\VerificationTakesLongerThanNormal;
 
 class Emailable
 {
     protected $options;
+
     protected $logger;
 
     public function __construct($options, $logger)
@@ -20,7 +21,7 @@ class Emailable
     public function verify($email)
     {
         // retrieve the service settings
-        $client = new Client();
+        $client = new Client;
 
         // build the request URI
         $uri = "https://api.emailable.com/v1/verify?email={$email}&api_key={$this->options['api_key']}";
@@ -39,7 +40,7 @@ class Emailable
     public function parseResult($response)
     {
         // Get raw response
-        $raw = (string)$response->getBody();
+        $raw = (string) $response->getBody();
 
         // Verify result
         if (empty($raw)) {
@@ -49,7 +50,7 @@ class Emailable
         // Convert raw response into json
         $json = json_decode($raw, true);
 
-        if (!array_key_exists('state', $json)) {
+        if (! array_key_exists('state', $json)) {
             if (array_key_exists('message', $json)) {
                 $this->logger->warning('Skipped. Server responds: '.$raw);
                 throw new VerificationTakesLongerThanNormal($raw);
@@ -66,7 +67,7 @@ class Emailable
             'unknown' => 'unknown',
         ];
 
-        if (!array_key_exists($json['state'], $map)) {
+        if (! array_key_exists($json['state'], $map)) {
             throw new Exception('Unexpected "state" value from emailable.com: '.$raw);
         }
 

@@ -2,13 +2,13 @@
 
 namespace App\Jobs\Returns;
 
+use App\Models\Return\Return as ReturnModel;
+use App\Services\Returns\ReturnNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Return\Return as ReturnModel;
-use App\Services\Returns\ReturnNotificationService;
 use Illuminate\Support\Facades\Log;
 
 class ProcessReturnReminders implements ShouldQueue
@@ -29,7 +29,7 @@ class ProcessReturnReminders implements ShouldQueue
      */
     public $timeout = 120;
 
-private ReturnModel $return;
+    private ReturnModel $return;
 
     /**
      * Create a new job instance.
@@ -39,48 +39,46 @@ private ReturnModel $return;
         $this->return = $return;
     }
 
-/**
- * Execute the job.
- */
-public function handle(ReturnNotificationService $notificationService): void
-{
-    try {
-        Log::info('Processing return reminder job', [
+    /**
+     * Execute the job.
+     */
+    public function handle(ReturnNotificationService $notificationService): void
+    {
+        try {
+            Log::info('Processing return reminder job', [
+                'return_id' => $this->return->id,
+                'return_number' => $this->return->number,
+            ]);
+
+            $notificationService->sendReminder($this->return);
+
+            Log::info('Return reminder job completed successfully', [
+                'return_id' => $this->return->id,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Return reminder job failed', [
+                'return_id' => $this->return->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(\Throwable $exception): void
+    {
+        Log::error('Return reminder job failed after all retries', [
             'return_id' => $this->return->id,
-            'return_number' => $this->return->number
+            'error' => $exception->getMessage(),
         ]);
 
-        $notificationService->sendReminder($this->return);
-
-        Log::info('Return reminder job completed successfully', [
-            'return_id' => $this->return->id
-        ]);
-
-    } catch (\Exception $e) {
-        Log::error('Return reminder job failed', [
-            'return_id' => $this->return->id,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        throw $e;
+        // Notificar al administrador
+        // Mail::to(config('returns.notifications.admin_email'))
+        //     ->send(new JobFailedNotification($this->return, $exception));
     }
 }
-
-/**
- * Handle a job failure.
- */
-public function failed(\Throwable $exception): void
-{
-    Log::error('Return reminder job failed after all retries', [
-        'return_id' => $this->return->id,
-        'error' => $exception->getMessage()
-    ]);
-
-    // Notificar al administrador
-    // Mail::to(config('returns.notifications.admin_email'))
-    //     ->send(new JobFailedNotification($this->return, $exception));
-}
-}
-
-

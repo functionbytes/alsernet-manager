@@ -2,10 +2,9 @@
 
 namespace App\Library\HtmlHandler;
 
-use League\Pipeline\StageInterface;
 use App\Library\StringHelper;
 use App\Models\Product;
-use Exception;
+use League\Pipeline\StageInterface;
 
 class TransformWidgets implements StageInterface
 {
@@ -27,12 +26,12 @@ class TransformWidgets implements StageInterface
     {
         return StringHelper::updateHtml($html, function ($dom) {
             $finder = new \DOMXPath($dom);
-            $classname = "product-list-widget";
+            $classname = 'product-list-widget';
             $nodes = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
 
             foreach ($nodes as $node) {
                 $pList = $node->getElementsByTagName('products')[0];
-                $pHtml =  Product::generateWidgetProductListHtmlContent([
+                $pHtml = Product::generateWidgetProductListHtmlContent([
                     'count' => $node->getAttribute('data-count'),
                     'cols' => $node->getAttribute('data-cols'),
                     'sort' => $node->getAttribute('data-sort'),
@@ -50,7 +49,7 @@ class TransformWidgets implements StageInterface
     {
         return StringHelper::updateHtml($html, function ($dom) {
             $finder = new \DOMXPath($dom);
-            $classname = "product-widget";
+            $classname = 'product-widget';
             $nodes = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
 
             foreach ($nodes as $node) {
@@ -74,18 +73,18 @@ class TransformWidgets implements StageInterface
     {
         return StringHelper::updateHtml($html, function ($dom) {
             $finder = new \DOMXPath($dom);
-            $classname = "rss-widget";
+            $classname = 'rss-widget';
             $nodes = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
 
             foreach ($nodes as $node) {
                 try {
-                    if (!$node->getAttribute('data-config')) {
+                    if (! $node->getAttribute('data-config')) {
                         throw new \Exception(trans('messages.rss.no_options'));
                     }
 
                     $config = json_decode(base64_decode($node->getAttribute('data-config')), true);
 
-                    if (!isset($config['url']) || !$config['url']) {
+                    if (! isset($config['url']) || ! $config['url']) {
                         throw new \Exception(trans('messages.rss.url_required'));
                     }
 
@@ -121,7 +120,7 @@ class TransformWidgets implements StageInterface
         }
 
         // try to append html
-        $tmpDoc = new \DOMDocument();
+        $tmpDoc = new \DOMDocument;
         $tmpDoc->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_NOWARNING | LIBXML_NOERROR | LIBXML_HTML_NODEFDTD);
         foreach ($tmpDoc->getElementsByTagName('body')->item(0)->childNodes as $cNode) {
             $n = $dom->importNode($cNode, true);

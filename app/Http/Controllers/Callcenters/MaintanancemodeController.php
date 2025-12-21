@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 
 class MaintanancemodeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
         $this->authorize('Maintenance Mode Access');
 
@@ -35,12 +36,13 @@ class MaintanancemodeController extends Controller
         return view('admin.maintanancemode.index')->with($data);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
-        if($request->input('maintenancemode') == 'off'){
+        if ($request->input('maintenancemode') == 'off') {
 
-            $data['MAINTENANCE_MODE']  =  $request->maintenancemode;
-            $data['MAINTENANCE_MODE_VALUE']  =  null;
+            $data['MAINTENANCE_MODE'] = $request->maintenancemode;
+            $data['MAINTENANCE_MODE_VALUE'] = null;
             $this->updateSettings($data);
 
             Artisan::call('up');
@@ -48,10 +50,10 @@ class MaintanancemodeController extends Controller
             return redirect()->back()->with('success', lang('Updated Successfully', 'alerts'));
 
         }
-        if($request->input('maintenancemode') == 'on'){
+        if ($request->input('maintenancemode') == 'on') {
 
-            $data['MAINTENANCE_MODE']  =  $request->maintenancemode;
-            $data['MAINTENANCE_MODE_VALUE']  =  $request->input('maintenancemode_value');
+            $data['MAINTENANCE_MODE'] = $request->maintenancemode;
+            $data['MAINTENANCE_MODE_VALUE'] = $request->input('maintenancemode_value');
             $this->updateSettings($data);
 
             Artisan::call('down --secret="'.setting('MAINTENANCE_MODE_VALUE').'" ');
@@ -69,10 +71,11 @@ class MaintanancemodeController extends Controller
      */
     private function updateSettings($data)
     {
-        foreach($data as $key => $val){
-        	$setting = Setting::where('key', $key);
-        	if( $setting->exists() )
-        	$setting->first()->update(['value' => $val]);
+        foreach ($data as $key => $val) {
+            $setting = Setting::where('key', $key);
+            if ($setting->exists()) {
+                $setting->first()->update(['value' => $val]);
+            }
         }
 
     }

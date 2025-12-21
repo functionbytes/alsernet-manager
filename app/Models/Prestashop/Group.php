@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_group';
+
     protected $primaryKey = 'id_group';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +23,7 @@ class Group extends Model
         'date_upd',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'date_add' => 'datetime',
         'date_upd' => 'datetime',
         'reduction' => 'float',

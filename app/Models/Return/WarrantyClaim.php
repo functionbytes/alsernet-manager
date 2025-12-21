@@ -67,27 +67,39 @@ class WarrantyClaim extends Model
      * Estados de reclamo
      */
     const STATUS_SUBMITTED = 'submitted';
+
     const STATUS_UNDER_REVIEW = 'under_review';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_REJECTED = 'rejected';
+
     const STATUS_IN_REPAIR = 'in_repair';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
 
     /**
      * Prioridades
      */
     const PRIORITY_LOW = 'low';
+
     const PRIORITY_MEDIUM = 'medium';
+
     const PRIORITY_HIGH = 'high';
+
     const PRIORITY_CRITICAL = 'critical';
 
     /**
      * Tipos de resolución
      */
     const RESOLUTION_REPAIR = 'repair';
+
     const RESOLUTION_REPLACE = 'replace';
+
     const RESOLUTION_REFUND = 'refund';
+
     const RESOLUTION_REJECT = 'reject';
 
     /**
@@ -130,7 +142,7 @@ class WarrantyClaim extends Model
         return $query->whereNotIn('status', [
             self::STATUS_COMPLETED,
             self::STATUS_CANCELLED,
-            self::STATUS_REJECTED
+            self::STATUS_REJECTED,
         ]);
     }
 
@@ -143,7 +155,7 @@ class WarrantyClaim extends Model
             self::STATUS_SUBMITTED,
             self::STATUS_UNDER_REVIEW,
             self::STATUS_APPROVED,
-            self::STATUS_IN_REPAIR
+            self::STATUS_IN_REPAIR,
         ]);
     }
 
@@ -164,7 +176,7 @@ class WarrantyClaim extends Model
             ->whereNotIn('status', [
                 self::STATUS_COMPLETED,
                 self::STATUS_CANCELLED,
-                self::STATUS_REJECTED
+                self::STATUS_REJECTED,
             ]);
     }
 
@@ -173,10 +185,10 @@ class WarrantyClaim extends Model
      */
     public function isActive(): bool
     {
-        return !in_array($this->status, [
+        return ! in_array($this->status, [
             self::STATUS_COMPLETED,
             self::STATUS_CANCELLED,
-            self::STATUS_REJECTED
+            self::STATUS_REJECTED,
         ]);
     }
 
@@ -193,7 +205,7 @@ class WarrantyClaim extends Model
     /**
      * Cambiar estado del reclamo
      */
-    public function changeStatus(string $newStatus, User $user = null, string $notes = ''): bool
+    public function changeStatus(string $newStatus, ?User $user = null, string $notes = ''): bool
     {
         $oldStatus = $this->status;
 
@@ -227,7 +239,7 @@ class WarrantyClaim extends Model
     /**
      * Asignar reclamo a usuario
      */
-    public function assignTo(User $user, string $department = null): bool
+    public function assignTo(User $user, ?string $department = null): bool
     {
         $this->update([
             'assigned_to' => $user->id,
@@ -252,7 +264,7 @@ class WarrantyClaim extends Model
     {
         $manufacturer = $this->warranty->manufacturer;
 
-        if (!$manufacturer) {
+        if (! $manufacturer) {
             return [
                 'success' => false,
                 'message' => 'No hay fabricante asociado a la garantía',
@@ -295,7 +307,7 @@ class WarrantyClaim extends Model
     public static function generateClaimNumber(): string
     {
         do {
-            $number = 'CLM-' . now()->format('Y') . '-' . strtoupper(uniqid());
+            $number = 'CLM-'.now()->format('Y').'-'.strtoupper(uniqid());
         } while (self::where('claim_number', $number)->exists());
 
         return $number;
@@ -304,7 +316,7 @@ class WarrantyClaim extends Model
     /**
      * Acciones cuando se aprueba
      */
-    protected function onApproved(User $user = null): void
+    protected function onApproved(?User $user = null): void
     {
         // Enviar al fabricante si es posible
         if ($this->warranty->manufacturer && $this->warranty->manufacturer->can_handle_claims) {
@@ -322,7 +334,7 @@ class WarrantyClaim extends Model
     /**
      * Acciones cuando entra en reparación
      */
-    protected function onInRepair(User $user = null): void
+    protected function onInRepair(?User $user = null): void
     {
         $this->addCommunicationLog([
             'type' => 'status_change',
@@ -335,7 +347,7 @@ class WarrantyClaim extends Model
     /**
      * Acciones cuando se completa
      */
-    protected function onCompleted(User $user = null): void
+    protected function onCompleted(?User $user = null): void
     {
         $totalHours = $this->created_at->diffInHours(now());
         $slaHours = 72; // Configurable
@@ -359,7 +371,7 @@ class WarrantyClaim extends Model
     /**
      * Acciones cuando se rechaza
      */
-    protected function onRejected(User $user = null, string $reason = ''): void
+    protected function onRejected(?User $user = null, string $reason = ''): void
     {
         $this->update([
             'resolved_at' => now(),

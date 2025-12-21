@@ -128,6 +128,59 @@
                 </div>
             </div>
 
+            <!-- Opción 3: Grupos de Documentos -->
+            <div class="col-md-6 mt-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header border-bottom py-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0 fw-bold text-dark">
+                                Grupos de documentos
+                            </h6>
+                            <span class="badge bg-success">Asignación</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <p class="text-muted mb-3">
+                            Organiza a los usuarios en <strong>grupos para la asignación automática</strong> de documentos
+                            según diferentes estrategias (manual, round robin, balance de carga).
+                        </p>
+
+                        <div class="alert alert-info alert-sm py-2 px-3 mb-3" role="alert">
+                            <strong>¿Qué configuras aquí?</strong>
+                        </div>
+
+                        <ul class="list-unstyled ms-3 mb-4">
+                            <li class="mb-2">
+                                <strong>Crear grupos de trabajo</strong>
+                                <br>
+                                <small class="text-muted">Define grupos de usuarios que gestionarán documentos.</small>
+                            </li>
+                            <li class="mb-2">
+                                <strong>Asignación automática</strong>
+                                <br>
+                                <small class="text-muted">Configura estrategias de asignación: manual, rotación o balance de carga.</small>
+                            </li>
+                            <li class="mb-2">
+                                <strong>Prioridades de usuarios</strong>
+                                <br>
+                                <small class="text-muted">Establece usuarios primarios y de respaldo en cada grupo.</small>
+                            </li>
+                        </ul>
+
+                        <p class="text-muted small border-top pt-3">
+                            Los grupos facilitan la distribución equitativa de trabajo y mejoran los tiempos de respuesta.
+                        </p>
+                    </div>
+
+                    <div class="card-footer border-top">
+                        <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-users me-2"></i> Ir a grupos de documentos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Callcenters\Returns;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\Return as ReturnModel;
-use App\Models\Return\ReturnStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,14 +25,14 @@ class ReturnTrackingController extends Controller
     {
         $request->validate([
             'tracking_code' => 'required|string',
-            'email' => 'required|email'
+            'email' => 'required|email',
         ]);
 
         $return = ReturnModel::where('number', $request->tracking_code)
-        ->where('customer_email', $request->email)
-        ->first();
+            ->where('customer_email', $request->email)
+            ->first();
 
-        if (!$return) {
+        if (! $return) {
             return back()
                 ->withInput()
                 ->withErrors(['tracking_code' => 'No se encontró ninguna devolución con esos datos.']);
@@ -44,7 +43,7 @@ class ReturnTrackingController extends Controller
 
         return redirect()->route('customer.returns.show', [
             'return' => $return->id,
-            'token' => $token
+            'token' => $token,
         ]);
     }
 
@@ -54,57 +53,57 @@ class ReturnTrackingController extends Controller
     public function show(Request $request, ReturnModel $return)
     {
         // Validar acceso con token
-        if (!$this->validateAccess($request, $return)) {
+        if (! $this->validateAccess($request, $return)) {
             return redirect()->route('customer.returns.search')
                 ->withErrors(['access' => 'Acceso denegado. Por favor, busque su devolución nuevamente.']);
         }
 
-// Cargar relaciones necesarias
-$return->load([
-    'items.product',
-    'statusHistory',
-    'costs',
-    'communications' => function ($query) {
-        $query->where('type', 'email')
-            ->orderBy('created_at', 'desc');
+        // Cargar relaciones necesarias
+        $return->load([
+            'items.product',
+            'statusHistory',
+            'costs',
+            'communications' => function ($query) {
+                $query->where('type', 'email')
+                    ->orderBy('created_at', 'desc');
+            },
+        ]);
+
+        // Preparar timeline
+        $timeline = $this->prepareTimeline($return);
+
+        // Documentos disponibles
+        $documents = $this->getAvailableDocuments($return);
+
+        // Calcular progreso
+        $progress = $this->calculateProgress($return);
+
+        return view('customer-portal.returns.show', compact(
+            'return',
+            'timeline',
+            'documents',
+            'progress'
+        ));
     }
-]);
 
-// Preparar timeline
-$timeline = $this->prepareTimeline($return);
-
-// Documentos disponibles
-$documents = $this->getAvailableDocuments($return);
-
-// Calcular progreso
-$progress = $this->calculateProgress($return);
-
-return view('customer-portal.returns.show', compact(
-    'return',
-    'timeline',
-    'documents',
-    'progress'
-));
-}
-
-/**
- * Descargar documento
- */
-public function downloadDocument(Request $request, ReturnModel $return, string $type)
+    /**
+     * Descargar documento
+     */
+    public function downloadDocument(Request $request, ReturnModel $return, string $type)
     {
-        if (!$this->validateAccess($request, $return)) {
+        if (! $this->validateAccess($request, $return)) {
             abort(403);
         }
 
         $allowedTypes = ['label', 'receipt', 'invoice', 'form'];
 
-        if (!in_array($type, $allowedTypes)) {
+        if (! in_array($type, $allowedTypes)) {
             abort(404);
         }
 
         $document = $this->getDocument($return, $type);
 
-        if (!$document || !Storage::exists($document['path'])) {
+        if (! $document || ! Storage::exists($document['path'])) {
             abort(404, 'Documento no encontrado');
         }
 
@@ -116,16 +115,16 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
      */
     public function updateEmail(Request $request, ReturnModel $return)
     {
-        if (!$this->validateAccess($request, $return)) {
+        if (! $this->validateAccess($request, $return)) {
             abort(403);
         }
 
         $request->validate([
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255',
         ]);
 
         $return->update([
-            'customer_email' => $request->email
+            'customer_email' => $request->email,
         ]);
 
         return back()->with('success', 'Email actualizado correctamente.');
@@ -136,7 +135,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
      */
     public function checkUpdates(Request $request, ReturnModel $return)
     {
-        if (!$this->validateAccess($request, $return)) {
+        if (! $this->validateAccess($request, $return)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -150,7 +149,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
                 ->where('created_at', '>', $lastCheck)
                 ->count(),
             'progress' => $this->calculateProgress($return),
-            'last_update' => $return->updated_at->format('Y-m-d H:i:s')
+            'last_update' => $return->updated_at->format('Y-m-d H:i:s'),
         ];
 
         return response()->json($updates);
@@ -176,7 +175,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
     {
         $token = $request->input('token') ?? $request->session()->get("return_token_{$return->id}");
 
-        if (!$token) {
+        if (! $token) {
             return false;
         }
 
@@ -185,6 +184,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
         if ($isValid) {
             // Guardar en sesión para no requerir token en cada request
             $request->session()->put("return_token_{$return->id}", $token);
+
             return true;
         }
 
@@ -202,7 +202,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
             'title' => 'Solicitud creada',
             'description' => 'Se ha creado la solicitud de devolución',
             'icon' => 'file-plus',
-            'color' => 'blue'
+            'color' => 'blue',
         ]);
 
         // Agregar cambios de estado
@@ -213,7 +213,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
                 'title' => $this->getStatusChangeTitle($history),
                 'description' => $history->notes,
                 'icon' => $this->getStatusIcon($history->new_status),
-                'color' => $this->getStatusColor($history->new_status)
+                'color' => $this->getStatusColor($history->new_status),
             ]);
         }
 
@@ -228,7 +228,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
                     'title' => 'Email enviado',
                     'description' => $communication->subject,
                     'icon' => 'mail',
-                    'color' => 'gray'
+                    'color' => 'gray',
                 ]);
             });
 
@@ -247,7 +247,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
                 'name' => 'Etiqueta de Envío',
                 'description' => 'Etiqueta prepagada para enviar su devolución',
                 'icon' => 'tag',
-                'available' => true
+                'available' => true,
             ];
         }
 
@@ -258,7 +258,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
                 'name' => 'Recibo de Devolución',
                 'description' => 'Comprobante de su devolución',
                 'icon' => 'file-text',
-                'available' => true
+                'available' => true,
             ];
         }
 
@@ -268,7 +268,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
             'name' => 'Formulario de Devolución',
             'description' => 'Resumen de su solicitud de devolución',
             'icon' => 'clipboard',
-            'available' => true
+            'available' => true,
         ];
 
         return $documents;
@@ -282,7 +282,7 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
             'approved' => ['label' => 'Aprobada', 'completed' => false],
             'shipped' => ['label' => 'Enviada', 'completed' => false],
             'received' => ['label' => 'Recibida', 'completed' => false],
-            'completed' => ['label' => 'Completada', 'completed' => false]
+            'completed' => ['label' => 'Completada', 'completed' => false],
         ];
 
         $currentStep = 1;
@@ -326,54 +326,54 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
         return [
             'steps' => $steps,
             'current' => $currentStep,
-            'percentage' => $currentStep > 0 ? round(($currentStep / 6) * 100) : 0
+            'percentage' => $currentStep > 0 ? round(($currentStep / 6) * 100) : 0,
         ];
     }
 
     private function getStatusChangeTitle($history): string
-{
-    $titles = [
-        'pending' => 'Solicitud en revisión',
-        'approved' => 'Solicitud aprobada',
-        'rejected' => 'Solicitud rechazada',
-        'shipped' => 'Producto enviado',
-        'processing' => 'Producto recibido',
-        'completed' => 'Devolución completada',
-        'cancelled' => 'Devolución cancelada'
-    ];
+    {
+        $titles = [
+            'pending' => 'Solicitud en revisión',
+            'approved' => 'Solicitud aprobada',
+            'rejected' => 'Solicitud rechazada',
+            'shipped' => 'Producto enviado',
+            'processing' => 'Producto recibido',
+            'completed' => 'Devolución completada',
+            'cancelled' => 'Devolución cancelada',
+        ];
 
-    return $titles[$history->new_status] ?? 'Estado actualizado';
-}
+        return $titles[$history->new_status] ?? 'Estado actualizado';
+    }
 
     private function getStatusIcon($status): string
-{
-    $icons = [
-        'pending' => 'clock',
-        'approved' => 'check-circle',
-        'rejected' => 'x-circle',
-        'shipped' => 'truck',
-        'processing' => 'package',
-        'completed' => 'check-square',
-        'cancelled' => 'slash'
-    ];
+    {
+        $icons = [
+            'pending' => 'clock',
+            'approved' => 'check-circle',
+            'rejected' => 'x-circle',
+            'shipped' => 'truck',
+            'processing' => 'package',
+            'completed' => 'check-square',
+            'cancelled' => 'slash',
+        ];
 
-    return $icons[$status] ?? 'info';
-}
+        return $icons[$status] ?? 'info';
+    }
 
     private function getStatusColor($status): string
-{
-    $colors = [
-        'pending' => 'yellow',
-        'approved' => 'green',
-        'rejected' => 'red',
-        'shipped' => 'blue',
-        'processing' => 'indigo',
-        'completed' => 'green',
-        'cancelled' => 'gray'
-    ];
+    {
+        $colors = [
+            'pending' => 'yellow',
+            'approved' => 'green',
+            'rejected' => 'red',
+            'shipped' => 'blue',
+            'processing' => 'indigo',
+            'completed' => 'green',
+            'cancelled' => 'gray',
+        ];
 
-    return $colors[$status] ?? 'gray';
-}
+        return $colors[$status] ?? 'gray';
+    }
 
     private function getDocument(ReturnModel $return, string $type): ?array
     {
@@ -381,19 +381,19 @@ public function downloadDocument(Request $request, ReturnModel $return, string $
             case 'label':
                 return [
                     'path' => $return->label_path,
-                    'filename' => "etiqueta_devolucion_{$return->number}.pdf"
+                    'filename' => "etiqueta_devolucion_{$return->number}.pdf",
                 ];
             case 'receipt':
                 // Generar PDF dinámicamente o obtener de storage
                 return [
                     'path' => "returns/receipts/{$return->id}.pdf",
-                    'filename' => "recibo_devolucion_{$return->number}.pdf"
+                    'filename' => "recibo_devolucion_{$return->number}.pdf",
                 ];
             case 'form':
                 // Generar resumen de la solicitud
                 return [
                     'path' => "returns/forms/{$return->id}.pdf",
-                    'filename' => "formulario_devolucion_{$return->number}.pdf"
+                    'filename' => "formulario_devolucion_{$return->number}.pdf",
                 ];
             default:
                 return null;

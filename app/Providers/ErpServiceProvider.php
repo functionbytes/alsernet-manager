@@ -7,14 +7,12 @@ use Illuminate\Support\ServiceProvider;
 
 class ErpServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->singleton(ErpService::class, function ($app) {
-            return new ErpService();
+            return new ErpService;
         });
     }
-
 
     public function boot()
     {

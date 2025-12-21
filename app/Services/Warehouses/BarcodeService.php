@@ -8,10 +8,9 @@ class BarcodeService
      * Generate a barcode from location code and section code
      * Format: LOCATION_CODE + SECTION_LEVEL + sequential number
      *
-     * @param string $locationCode - The location code (e.g., "PAB01")
-     * @param string $sectionCode - The section code (e.g., "SEC-1")
-     * @param int $sectionLevel - The section level number
-     * @return string
+     * @param  string  $locationCode  - The location code (e.g., "PAB01")
+     * @param  string  $sectionCode  - The section code (e.g., "SEC-1")
+     * @param  int  $sectionLevel  - The section level number
      */
     public static function generateFromLocationAndSection(string $locationCode, string $sectionCode, int $sectionLevel): string
     {
@@ -29,16 +28,11 @@ class BarcodeService
     /**
      * Generate a numeric barcode (for CODE128 or EAN compatibility)
      * Uses hash-based approach
-     *
-     * @param string $locationCode
-     * @param string $sectionCode
-     * @param int $sectionLevel
-     * @return string
      */
     public static function generateNumericBarcode(string $locationCode, string $sectionCode, int $sectionLevel): string
     {
         // Create a string from the inputs
-        $input = strtoupper($locationCode . $sectionCode . $sectionLevel);
+        $input = strtoupper($locationCode.$sectionCode.$sectionLevel);
 
         // Use hash to generate a numeric barcode
         $hash = crc32($input);
@@ -52,20 +46,13 @@ class BarcodeService
 
     /**
      * Generate alphanumeric barcode with location warehouse info
-     *
-     * @param string $locationCode
-     * @param string $warehouseCode
-     * @param string $floorCode
-     * @param string $sectionCode
-     * @return string
      */
     public static function generateComprehensiveBarcode(
         string $locationCode,
         string $warehouseCode,
         string $floorCode,
         string $sectionCode
-    ): string
-    {
+    ): string {
         // Create comprehensive barcode: WH-FLOOR-LOC-SECTION
         $cleanWH = substr(preg_replace('/[^A-Z0-9]/i', '', strtoupper($warehouseCode)), 0, 3);
         $cleanFloor = substr(preg_replace('/[^A-Z0-9]/i', '', strtoupper($floorCode)), 0, 3);
@@ -77,9 +64,6 @@ class BarcodeService
 
     /**
      * Validate if a string is a valid barcode format
-     *
-     * @param string $barcode
-     * @return bool
      */
     public static function isValidBarcode(string $barcode): bool
     {
@@ -89,9 +73,6 @@ class BarcodeService
 
     /**
      * Get barcode type/format suggestion based on length
-     *
-     * @param string $barcode
-     * @return string
      */
     public static function getRecommendedBarcodeType(string $barcode): string
     {
@@ -110,10 +91,6 @@ class BarcodeService
 
     /**
      * Format barcode for display (add hyphens at intervals)
-     *
-     * @param string $barcode
-     * @param int $intervalLength
-     * @return string
      */
     public static function formatBarcodeForDisplay(string $barcode, int $intervalLength = 4): string
     {

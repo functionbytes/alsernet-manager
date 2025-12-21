@@ -8,10 +8,15 @@ use Illuminate\Contracts\Mail\Mailer;
 class AppMailer
 {
     protected $mailer;
+
     protected $fromName = 'Support Ticket';
+
     protected $to;
+
     protected $subject;
+
     protected $view;
+
     protected $data = [];
 
     public function __construct(Mailer $mailer)
@@ -42,21 +47,22 @@ class AppMailer
         return $this->deliver();
     }
 
-	public function sendTicketStatusNotification($ticketOwner, Ticket $ticket)
-	{
-		$this->to = $ticketOwner->email;
-		$this->subject = "RE: $ticket->title (Ticket ID: $ticket->ticket_id)";
-		$this->view = 'user.ticket.emailticket.ticket_status';
-		$this->data = compact('ticketOwner', 'ticket');
+    public function sendTicketStatusNotification($ticketOwner, Ticket $ticket)
+    {
+        $this->to = $ticketOwner->email;
+        $this->subject = "RE: $ticket->title (Ticket ID: $ticket->ticket_id)";
+        $this->view = 'user.ticket.emailticket.ticket_status';
+        $this->data = compact('ticketOwner', 'ticket');
 
-		return $this->deliver();
-	}
+        return $this->deliver();
+    }
+
     public function deliver()
     {
-        $this->mailer->send($this->view, $this->data, function($message){
+        $this->mailer->send($this->view, $this->data, function ($message) {
 
             $message->from(env('MAIL_USERNAME'), $this->fromName)
-                    ->to($this->to)->subject($this->subject);
+                ->to($this->to)->subject($this->subject);
 
         });
     }

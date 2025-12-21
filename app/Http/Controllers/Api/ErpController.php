@@ -20,6 +20,7 @@ class ErpController extends Controller
     {
         $idweb = $request->get('idweb');
         $result = $this->erpService->get('cliente/', ['idclienteweb' => $idweb]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -29,13 +30,14 @@ class ErpController extends Controller
         $idweb = $request->get('idweb');
         $result = $this->erpService->get('cliente/', ['idclienteweb' => $idweb]);
         // Se debe procesar el XML para extraer el id, aquí se ejemplifica:
-        if ($result && $result !== "Not Found") {
+        if ($result && $result !== 'Not Found') {
             $xml = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
             $array = json_decode(json_encode($xml), true);
             $idcliente = isset($array['idcliente']) ? $array['idcliente'] : '';
         } else {
             $idcliente = '';
         }
+
         return response()->json(['result' => $idcliente]);
     }
 
@@ -50,6 +52,7 @@ class ErpController extends Controller
         } else {
             $result = false;
         }
+
         return response()->json(['result' => $result]);
     }
 
@@ -59,6 +62,7 @@ class ErpController extends Controller
         $npedidocli = $request->get('npedidocli');
         $serie = $request->get('serie');
         $result = $this->erpService->get('pedido-cliente/', ['serie' => $serie, 'npedidocli' => $npedidocli]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -67,6 +71,7 @@ class ErpController extends Controller
     {
         $identificadororigen = $request->get('identificadororigen');
         $result = $this->erpService->get('pedido-cliente/', ['identificadororigen' => $identificadororigen]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -76,23 +81,25 @@ class ErpController extends Controller
         $idweb = $request->get('idweb');
         $result = $this->erpService->get('cliente/', ['email' => $idweb]);
         // Se considera que si se devuelve algo distinto de "Not Found" es verdadero
-        $res = ($result && $result !== "Not Found") ? true : false;
+        $res = ($result && $result !== 'Not Found') ? true : false;
+
         return response()->json(['result' => $res]);
     }
 
     // 7. Recupera datos de cliente ERP a partir de DNI, apellidos, email y teléfono
     public function recuperardatosclienteerp(Request $request)
     {
-        $dni       = $request->get('dni');
+        $dni = $request->get('dni');
         $apellidos = $request->get('apellidos');
-        $email     = $request->get('email');
-        $telefono  = $request->get('telefono');
+        $email = $request->get('email');
+        $telefono = $request->get('telefono');
         $result = $this->erpService->get('cliente/', [
             'dni' => $dni,
             'apellidos' => $apellidos,
             'email' => $email,
-            'telefono1' => $telefono
+            'telefono1' => $telefono,
         ]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -101,6 +108,7 @@ class ErpController extends Controller
     {
         $idweb = $request->get('idweb');
         $result = $this->erpService->get('cliente/', ['idclienteweb' => $idweb]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -109,6 +117,7 @@ class ErpController extends Controller
     {
         $idgestion = $request->get('idgestion');
         $result = $this->erpService->get('cliente/', ['idcliente_gestion' => $idgestion]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -118,6 +127,7 @@ class ErpController extends Controller
         $id_lang_ps = $request->get('id_lang_ps');
         // La lógica puede usarse directamente desde el servicio o delegarse a otra clase
         $result = $this->erpService->getIdiomaGestion($id_lang_ps);
+
         return response()->json(['result' => $result]);
     }
 
@@ -126,6 +136,7 @@ class ErpController extends Controller
     {
         $id_lang_ps = $request->get('id_lang_ps');
         $result = $this->erpService->getPaisGestion($id_lang_ps);
+
         return response()->json(['result' => $result]);
     }
 
@@ -135,6 +146,7 @@ class ErpController extends Controller
         $params = $request->all();
         // Se invoca el método con todos los parámetros en orden
         $result = call_user_func_array([$this->erpService, 'guardardatosclienteerp'], array_values($params));
+
         return response()->json(['result' => $result]);
     }
 
@@ -143,6 +155,7 @@ class ErpController extends Controller
     {
         $idcliente_gestion = $request->get('idcliente_gestion');
         $result = $this->erpService->get('clientecatalogo/', ['idcliente_gestion' => $idcliente_gestion]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -151,8 +164,9 @@ class ErpController extends Controller
     {
         $cliente_email = $request->get('cliente_email');
         $cliente_idcatalogo = $request->get('cliente_idcatalogo');
-        $data = "cliente_email=" . $cliente_email . "&cliente_idcatalogo=" . $cliente_idcatalogo;
+        $data = 'cliente_email='.$cliente_email.'&cliente_idcatalogo='.$cliente_idcatalogo;
         $result = $this->erpService->post('clientecatalogo/', ['data' => $data]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -161,9 +175,10 @@ class ErpController extends Controller
     {
         $cliente_email = $request->get('cliente_email');
         $cliente_idcatalogo = $request->get('cliente_idcatalogo');
-        $data = "cliente_email=" . $cliente_email . "&cliente_idcatalogo=" . $cliente_idcatalogo;
-        $endpoint = 'clientecatalogo/?' . $data;
+        $data = 'cliente_email='.$cliente_email.'&cliente_idcatalogo='.$cliente_idcatalogo;
+        $endpoint = 'clientecatalogo/?'.$data;
         $result = $this->erpService->delete($endpoint);
+
         return response()->json(['result' => $result]);
     }
 
@@ -178,9 +193,10 @@ class ErpController extends Controller
             'cliente_email' => $email,
             'cliente_faceptacion_lopd' => $fecha,
             'cliente_no_info_comercial' => $no_info_comercial,
-            'cliente_no_datos_a_terceros' => $no_datos_a_terceros
+            'cliente_no_datos_a_terceros' => $no_datos_a_terceros,
         ]);
         $result = $this->erpService->put('cliente/', ['data' => $data]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -188,7 +204,8 @@ class ErpController extends Controller
     public function recuperarstockcentral(Request $request)
     {
         $idarticulo = $request->get('idarticulo');
-        $result = $this->erpService->get('stock-central-web/' . $idarticulo . '/');
+        $result = $this->erpService->get('stock-central-web/'.$idarticulo.'/');
+
         return response()->json(['result' => $result]);
     }
 
@@ -196,7 +213,8 @@ class ErpController extends Controller
     public function recuperaridarticulo(Request $request)
     {
         $codigo = $request->get('codigo');
-        $result = $this->erpService->get('articulo/' . $codigo . '/');
+        $result = $this->erpService->get('articulo/'.$codigo.'/');
+
         return response()->json(['result' => $result]);
     }
 
@@ -207,24 +225,25 @@ class ErpController extends Controller
         $codigo_verificacion = $request->get('codigo_verificacion');
         $importe_venta = $request->get('importe_venta');
         $origen = $request->get('origen');
-        $result = $this->erpService->get('bono/' . $idbono . '/', [
+        $result = $this->erpService->get('bono/'.$idbono.'/', [
             'codigo_verificacion' => $codigo_verificacion,
             'importe_venta' => $importe_venta,
-            'origen' => $origen
+            'origen' => $origen,
         ]);
         // Se procesa la respuesta XML si es necesario:
         if (substr($result, 0, 5) === '<?xml') {
-            $xml = simplexml_load_string($result, "SimpleXMLElement", LIBXML_NOCDATA);
+            $xml = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
             $result = [
                 'success' => true,
-                'data' => json_decode(json_encode($xml), true)
+                'data' => json_decode(json_encode($xml), true),
             ];
         } else {
             $result = [
                 'success' => false,
-                'message' => $result
+                'message' => $result,
             ];
         }
+
         return response()->json(['result' => $result]);
     }
 
@@ -237,8 +256,9 @@ class ErpController extends Controller
         $importe_venta = $request->get('importe_venta');
         $importe_inicial_tarjeta_regalo = $request->get('importe_inicial_tarjeta_regalo');
         $origen = $request->get('origen');
-        $data = "operacion=" . $operacion . "&codigo_verificacion=" . $codigo_verificacion . "&importe_venta=" . $importe_venta . "&importe_inicial_tarjeta_regalo=" . $importe_inicial_tarjeta_regalo;
-        $result = $this->erpService->put('bono/' . $idbono . '/?origen=' . $origen, ['data' => $data]);
+        $data = 'operacion='.$operacion.'&codigo_verificacion='.$codigo_verificacion.'&importe_venta='.$importe_venta.'&importe_inicial_tarjeta_regalo='.$importe_inicial_tarjeta_regalo;
+        $result = $this->erpService->put('bono/'.$idbono.'/?origen='.$origen, ['data' => $data]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -246,7 +266,8 @@ class ErpController extends Controller
     public function consultavalecompra(Request $request)
     {
         $idvale = $request->get('idvale');
-        $result = $this->erpService->get('vale/' . $idvale . '/');
+        $result = $this->erpService->get('vale/'.$idvale.'/');
+
         return response()->json(['result' => $result]);
     }
 
@@ -256,8 +277,9 @@ class ErpController extends Controller
         $idvale = $request->get('idvale');
         $operacion = $request->get('operacion');
         $motivo = $request->get('motivo');
-        $data = "operacion=" . $operacion . "&motivo=" . $motivo;
-        $result = $this->erpService->put('vale/' . $idvale . '/', ['data' => $data]);
+        $data = 'operacion='.$operacion.'&motivo='.$motivo;
+        $result = $this->erpService->put('vale/'.$idvale.'/', ['data' => $data]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -272,8 +294,9 @@ class ErpController extends Controller
         $tiene_codigo_comprobacion = $request->get('tiene_codigo_comprobacion');
         $id_vale_original = $request->get('id_vale_original');
         $id_vale_anterior = $request->get('id_vale_anterior');
-        $data = "importe=" . $importe . "&tipo=" . $tipo . "&idalmacen=" . $idalmacen . "&idcliente=" . $idcliente . "&observaciones=" . $observaciones . "&tiene_codigo_comprobacion=" . $tiene_codigo_comprobacion . "&id_vale_original=" . $id_vale_original . "&id_vale_anterior=" . $id_vale_anterior;
+        $data = 'importe='.$importe.'&tipo='.$tipo.'&idalmacen='.$idalmacen.'&idcliente='.$idcliente.'&observaciones='.$observaciones.'&tiene_codigo_comprobacion='.$tiene_codigo_comprobacion.'&id_vale_original='.$id_vale_original.'&id_vale_anterior='.$id_vale_anterior;
         $result = $this->erpService->post('vale/', ['data' => $data]);
+
         return response()->json(['result' => $result]);
     }
 
@@ -282,6 +305,7 @@ class ErpController extends Controller
     {
         $idweb = $request->get('idweb');
         $result = $this->erpService->get('cliente/', ['idclienteweb' => $idweb]);
+
         // En este ejemplo se retorna false, ya que la funcionalidad está desactivada.
         return response()->json(['result' => false]);
     }
@@ -291,6 +315,7 @@ class ErpController extends Controller
     {
         $cadena = $request->get('cadena');
         $result = $this->erpService->toGestion($cadena);
+
         return response()->json(['result' => $result]);
     }
 
@@ -300,6 +325,7 @@ class ErpController extends Controller
         $idpedido = $request->get('idpedido');
         $idclientegestion = $request->get('idclientegestion');
         $result = $this->erpService->construirdatospedido($idpedido, $idclientegestion);
+
         return response()->json(['result' => $result]);
     }
 
@@ -309,6 +335,7 @@ class ErpController extends Controller
         $num = $request->get('num');
         $idCountry = $request->get('idCountry');
         $result = $this->erpService->isMobilePhone($num, $idCountry);
+
         return response()->json(['result' => $result]);
     }
 
@@ -318,6 +345,7 @@ class ErpController extends Controller
         $idpedido = $request->get('idpedido');
         $idclientegestion = $request->get('idclientegestion');
         $result = $this->erpService->mandarpedido($idpedido, $idclientegestion);
+
         return response()->json(['result' => $result]);
     }
 
@@ -327,6 +355,7 @@ class ErpController extends Controller
         $module = $request->get('module');
         $idpedido = $request->get('idpedido');
         $result = $this->erpService->forma_pago($module, $idpedido);
+
         return response()->json(['result' => $result]);
     }
 
@@ -334,11 +363,13 @@ class ErpController extends Controller
     protected function obtenerIdCliente($idweb)
     {
         $data = $this->erpService->get('cliente/', ['idclienteweb' => $idweb]);
-        if ($data && $data !== "Not Found") {
+        if ($data && $data !== 'Not Found') {
             $xml = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
             $array = json_decode(json_encode($xml), true);
+
             return isset($array['idcliente']) ? $array['idcliente'] : null;
         }
+
         return null;
     }
 }

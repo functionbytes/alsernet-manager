@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Managers\Settings\Documents;
 use App\Http\Controllers\Controller;
 use App\Models\Document\DocumentRequirement;
 use App\Models\Document\DocumentType;
+use App\Models\Document\DocumentValidationCondition;
 use App\Models\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class DocumentTypeController extends Controller
         $documentTypes = DocumentType::with('requirements')
             ->orderBy('sort_order')
             ->orderBy('slug')
-            ->get();
+            ->paginate(20);
 
         $langs = Lang::all();
 
@@ -40,7 +41,11 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-        return view('managers.views.settings.documents.types.create');
+        $langs = Lang::all();
+        $validatorGroups = \App\Models\Validation\ValidatorGroup::active()->orderBy('sort_order')->get();
+        $validationConditions = DocumentValidationCondition::active()->ordered()->get();
+
+        return view('managers.views.settings.documents.types.create', compact('langs', 'validatorGroups', 'validationConditions'));
     }
 
     /**
@@ -58,6 +63,11 @@ class DocumentTypeController extends Controller
             'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer|min:0',
             'sla_multiplier' => 'nullable|numeric|min:0|max:100',
+            'validation_stages' => 'nullable|array',
+            'validation_stages.*.key' => 'required|string|exists:validator_groups,key',
+            'validation_stages.*.order' => 'required|integer|min:1',
+            'validation_stages.*.conditions' => 'nullable|array',
+            'validation_stages.*.conditions.*' => 'nullable|boolean',
 
             // Requirements
             'requirements' => 'nullable|array',
@@ -66,6 +76,10 @@ class DocumentTypeController extends Controller
             'requirements.*.accepts_multiple' => 'nullable|boolean',
             'requirements.*.max_file_size' => 'nullable|integer|min:1',
             'requirements.*.allowed_extensions' => 'nullable|array',
+            'requirements.*.translations' => 'nullable|array',
+            'requirements.*.translations.*.lang_id' => 'required|exists:langs,id',
+            'requirements.*.translations.*.name' => 'required|string|max:255',
+            'requirements.*.translations.*.help_text' => 'nullable|string',
         ]);
 
         try {
@@ -79,12 +93,13 @@ class DocumentTypeController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
                 'sort_order' => $validated['sort_order'] ?? 0,
                 'sla_multiplier' => $validated['sla_multiplier'] ?? 1.0,
+                'validation_stages' => $validated['validation_stages'] ?? null,
             ]);
 
             // Create requirements if any
             if (isset($validated['requirements']) && is_array($validated['requirements'])) {
                 foreach ($validated['requirements'] as $index => $requirementData) {
-                    DocumentRequirement::create([
+                    $requirement = DocumentRequirement::create([
                         'document_type_id' => $documentType->id,
                         'key' => $requirementData['key'],
                         'is_required' => $requirementData['is_required'] ?? true,
@@ -93,6 +108,18 @@ class DocumentTypeController extends Controller
                         'allowed_extensions' => $requirementData['allowed_extensions'] ?? ['pdf', 'jpg', 'jpeg', 'png'],
                         'sort_order' => $index,
                     ]);
+
+                    // Create translations for this requirement
+                    if (isset($requirementData['translations']) && is_array($requirementData['translations'])) {
+                        foreach ($requirementData['translations'] as $translationData) {
+                            DocumentRequirementTranslation::create([
+                                'document_requirement_id' => $requirement->id,
+                                'lang_id' => $translationData['lang_id'],
+                                'name' => $translationData['name'],
+                                'help_text' => $translationData['help_text'] ?? null,
+                            ]);
+                        }
+                    }
                 }
             }
 
@@ -124,14 +151,18 @@ class DocumentTypeController extends Controller
         // Support both slug and uid
         $type = DocumentType::where('slug', $documentType)
             ->orWhere('uid', $documentType)
-            ->with('requirements')
+            ->with(['requirements.translations'])
             ->firstOrFail();
 
         $langs = Lang::all();
+        $validatorGroups = \App\Models\Validation\ValidatorGroup::active()->orderBy('sort_order')->get();
+        $validationConditions = DocumentValidationCondition::active()->ordered()->get();
 
         return view('managers.views.settings.documents.types.edit', [
             'documentType' => $type,
             'langs' => $langs,
+            'validatorGroups' => $validatorGroups,
+            'validationConditions' => $validationConditions,
         ]);
     }
 
@@ -155,15 +186,24 @@ class DocumentTypeController extends Controller
             'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer|min:0',
             'sla_multiplier' => 'nullable|numeric|min:0|max:100',
+            'validation_stages' => 'nullable|array',
+            'validation_stages.*.key' => 'required|string|exists:validator_groups,key',
+            'validation_stages.*.order' => 'required|integer|min:1',
+            'validation_stages.*.conditions' => 'nullable|array',
+            'validation_stages.*.conditions.*' => 'nullable|boolean',
 
             // Requirements
             'requirements' => 'nullable|array',
-            'requirements.*.id' => 'nullable|exists:document_requirements,id',
+            'requirements.*.id' => 'nullable|exists:document_type_requirements,id',
             'requirements.*.key' => 'required|string|max:50',
             'requirements.*.is_required' => 'nullable|boolean',
             'requirements.*.accepts_multiple' => 'nullable|boolean',
             'requirements.*.max_file_size' => 'nullable|integer|min:1',
             'requirements.*.allowed_extensions' => 'nullable|array',
+            'requirements.*.translations' => 'nullable|array',
+            'requirements.*.translations.*.lang_id' => 'required|exists:langs,id',
+            'requirements.*.translations.*.name' => 'required|string|max:255',
+            'requirements.*.translations.*.help_text' => 'nullable|string',
         ]);
 
         try {
@@ -177,6 +217,7 @@ class DocumentTypeController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
                 'sort_order' => $validated['sort_order'] ?? 0,
                 'sla_multiplier' => $validated['sla_multiplier'] ?? 1.0,
+                'validation_stages' => $validated['validation_stages'] ?? null,
             ]);
 
             // Get existing requirement IDs
@@ -210,6 +251,21 @@ class DocumentTypeController extends Controller
                             'sort_order' => $index,
                         ]);
                         $updatedRequirementIds[] = $requirement->id;
+                    }
+
+                    // Update or create translations
+                    if (isset($requirementData['translations']) && is_array($requirementData['translations'])) {
+                        // Delete existing translations and recreate them
+                        $requirement->translations()->delete();
+
+                        foreach ($requirementData['translations'] as $translationData) {
+                            DocumentRequirementTranslation::create([
+                                'document_requirement_id' => $requirement->id,
+                                'lang_id' => $translationData['lang_id'],
+                                'name' => $translationData['name'],
+                                'help_text' => $translationData['help_text'] ?? null,
+                            ]);
+                        }
                     }
                 }
             }

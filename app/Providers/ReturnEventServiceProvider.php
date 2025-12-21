@@ -2,20 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-
+use App\Events\Return\ReturnCompleted;
 // Events
 use App\Events\Return\ReturnCreated;
-use App\Events\Return\ReturnStatusChanged;
-use App\Events\Return\ReturnCompleted;
 use App\Events\Return\ReturnPaymentProcessed;
-
-// Listeners
+use App\Events\Return\ReturnStatusChanged;
 use App\Listeners\Return\GeneratePDFListener;
+// Listeners
+use App\Listeners\Return\LogReturnActivityListener;
+use App\Listeners\Return\NotifyCustomerListener;
 use App\Listeners\Return\SendConfirmationListener;
 use App\Listeners\Return\UpdateHistoryListener;
-use App\Listeners\Return\NotifyCustomerListener;
-use App\Listeners\Return\LogReturnActivityListener;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class ReturnEventServiceProvider extends ServiceProvider
 {
@@ -29,24 +27,24 @@ class ReturnEventServiceProvider extends ServiceProvider
         ReturnCreated::class => [
             GeneratePDFListener::class,
             SendConfirmationListener::class,
-            LogReturnActivityListener::class . '@handleReturnCreated',
+            LogReturnActivityListener::class.'@handleReturnCreated',
         ],
 
         // Evento: Estado de Devolución Cambiado
         ReturnStatusChanged::class => [
             UpdateHistoryListener::class,
             NotifyCustomerListener::class,
-            LogReturnActivityListener::class . '@handleReturnStatusChanged',
+            LogReturnActivityListener::class.'@handleReturnStatusChanged',
         ],
 
         // Evento: Devolución Completada
         ReturnCompleted::class => [
-            LogReturnActivityListener::class . '@handleReturnCompleted',
+            LogReturnActivityListener::class.'@handleReturnCompleted',
         ],
 
         // Evento: Pago Procesado
         ReturnPaymentProcessed::class => [
-            LogReturnActivityListener::class . '@handleReturnPaymentProcessed',
+            LogReturnActivityListener::class.'@handleReturnPaymentProcessed',
         ],
     ];
 
@@ -97,7 +95,7 @@ class ReturnEventServiceProvider extends ServiceProvider
                 ReturnCreated::class,
                 ReturnStatusChanged::class,
                 ReturnCompleted::class,
-                ReturnPaymentProcessed::class
+                ReturnPaymentProcessed::class,
             ], function ($event) {
                 // Enviar webhook notification
                 // dispatch(new SendWebhookNotificationJob($event));
@@ -109,7 +107,7 @@ class ReturnEventServiceProvider extends ServiceProvider
             $this->app['events']->listen([
                 ReturnCreated::class,
                 ReturnCompleted::class,
-                ReturnPaymentProcessed::class
+                ReturnPaymentProcessed::class,
             ], function ($event) {
                 // Actualizar métricas en tiempo real
                 // $this->updateRealTimeMetrics($event);

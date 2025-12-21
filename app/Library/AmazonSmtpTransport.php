@@ -32,14 +32,14 @@ class AmazonSmtpTransport // extends \Swift_SmtpTransport
     /**
      * Array used to store raw SMTP responses.
      */
-    private $rawResponses = array();
+    private $rawResponses = [];
 
     /**
      * Overwrite the execute method.
      *
      * @return mixed
      */
-    public function executeCommand($command, $codes = array(), &$failures = null, $pipeline = false, $address = null)
+    public function executeCommand($command, $codes = [], &$failures = null, $pipeline = false, $address = null)
     {
         // $response = parent::executeCommand($command, $codes, $failures, $pipeline, $address);
         // $this->rawResponses[] = $response;
@@ -68,7 +68,7 @@ class AmazonSmtpTransport // extends \Swift_SmtpTransport
         $messageId = null;
         foreach ($this->rawResponses as $e) {
             preg_match('/(?<=250 ok\s)[^\s]*/i', $e, $matched);
-            if (sizeof($matched) > 0) {
+            if (count($matched) > 0) {
                 $messageId = $matched[0];
             }
         }

@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'Select' => 'Chọn',
     'Deselect_All' => 'Deselect All',
@@ -44,7 +44,7 @@ return array(
     'Upload_base_help' => "Drag & Drop files(modern browsers) or click in upper button to Add the file(s) and click on Start upload. When the upload is complete, click the 'Return to files list' button.",
     'Upload_add_files' => 'Add file(s)',
     'Upload_start' => 'Start upload',
-    'Upload_error_messages' =>array(
+    'Upload_error_messages' => [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -62,8 +62,8 @@ return array(
         'max_height' => 'Image exceeds maximum height',
         'min_height' => 'Image requires a minimum height',
         'abort' => 'File upload aborted',
-        'image_resize' => 'Failed to resize image'
-    ),
+        'image_resize' => 'Failed to resize image',
+    ],
     'Upload_url' => 'From url',
     'Type_dir' => 'dir',
     'Type' => 'Loại File',
@@ -96,8 +96,8 @@ return array(
     'Copy_Cut_Count_Limit' => 'Bạn đã chọn quá nhiều file/folder để %s. Giới hạn: %d files/thao tác', // %s = cut or copy
     'Copy_Cut_Not_Allowed' => 'Bạn không được phép để %s file.', // %s(1) = cut or copy, %s(2) = files or folders
     'Image_Editor_No_Save' => 'Không thể lưu image',
-    'Image_Editor_Exit' => "Exit",
-    'Image_Editor_Save' => "Save",
+    'Image_Editor_Exit' => 'Exit',
+    'Image_Editor_Save' => 'Save',
     'Zip_No_Extract' => 'Không thể giải nén. File có thể bị lỗi.',
     'Zip_Invalid' => 'Định dạng này không được hỗ trợ. Chấp nhận: zip, gz, tar.',
     'Dir_No_Write' => 'Thư mục bạn chọn không cho phép ghi dữ liệu vào.',
@@ -105,7 +105,7 @@ return array(
     'File_Permission' => 'File permission',
     'File_Permission_Not_Allowed' => 'Đổi permissions của %s không được chấp nhận.', // %s = files or folders
     'File_Permission_Recursive' => 'Apply recursively?',
-    'File_Permission_Wrong_Mode' => "Các permission bạn chọn không chính xác.",
+    'File_Permission_Wrong_Mode' => 'Các permission bạn chọn không chính xác.',
     'User' => 'User',
     'Group' => 'Group',
     'Yes' => 'Yes',
@@ -115,33 +115,33 @@ return array(
     'File_Not_Found' => 'Không tìm thấy file.',
     'File_Open_Edit_Not_Allowed' => 'Bạn không được phép để %s file này.', // %s = open or edit
     'Edit' => 'Sửa',
-    'Edit_File' => "Sửa nội dung file",
-    'File_Save_OK' => "File được lưu thành công.",
-    'File_Save_Error' => "Đã có lỗi khi lưu file.",
+    'Edit_File' => 'Sửa nội dung file',
+    'File_Save_OK' => 'File được lưu thành công.',
+    'File_Save_Error' => 'Đã có lỗi khi lưu file.',
     'New_File' => 'Tạo File mới',
     'No_Extension' => 'You have to add a file extension.',
     'Valid_Extensions' => 'Extension được chấp nhận: %s', // %s = txt,log etc.
-    'Upload_message' => "Drop file here to upload",
+    'Upload_message' => 'Drop file here to upload',
 
-    'SERVER ERROR' => "SERVER ERROR",
-    'forbidden' => "Forbiden",
-    'wrong path' => "Wrong path",
-    'wrong name' => "Wrong name",
-    'wrong extension' => "Wrong extension",
-    'wrong option' => "Wrong option",
-    'wrong data' => "Wrong data",
-    'wrong action' => "Wrong action",
-    'wrong sub-action' => "Wrong sub-actio",
-    'no action passed' => "No action passed",
-    'no path' => "No path",
-    'no file' => "No file",
-    'view type number missing' => "View type number missing",
-    'Not enough Memory' => "Not enough Memory",
-    'max_size_reached' => "Your image folder has reach its maximale size of %d MB.", //%d = max overall size
-    'B' => "B",
-    'KB' => "KB",
-    'MB' => "MB",
-    'GB' => "GB",
-    'TB' => "TB",
-    'total size' => "Total size",
-);
+    'SERVER ERROR' => 'SERVER ERROR',
+    'forbidden' => 'Forbiden',
+    'wrong path' => 'Wrong path',
+    'wrong name' => 'Wrong name',
+    'wrong extension' => 'Wrong extension',
+    'wrong option' => 'Wrong option',
+    'wrong data' => 'Wrong data',
+    'wrong action' => 'Wrong action',
+    'wrong sub-action' => 'Wrong sub-actio',
+    'no action passed' => 'No action passed',
+    'no path' => 'No path',
+    'no file' => 'No file',
+    'view type number missing' => 'View type number missing',
+    'Not enough Memory' => 'Not enough Memory',
+    'max_size_reached' => 'Your image folder has reach its maximale size of %d MB.', // %d = max overall size
+    'B' => 'B',
+    'KB' => 'KB',
+    'MB' => 'MB',
+    'GB' => 'GB',
+    'TB' => 'TB',
+    'total size' => 'Total size',
+];

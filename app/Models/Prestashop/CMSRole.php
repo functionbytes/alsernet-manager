@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CMSRole extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_cms_role';
+
     protected $primaryKey = 'id_cms_role';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +20,7 @@ class CMSRole extends Model
         'id_cms',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'id_cms' => 'integer',
     ];
 

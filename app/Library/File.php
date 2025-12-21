@@ -14,7 +14,7 @@ class File
      */
     public static function getFileType($filename)
     {
-        $mime_types = array(
+        $mime_types = [
 
             'txt' => 'text/plain',
             'htm' => 'text/html',
@@ -68,7 +68,7 @@ class File
             // open office
             'odt' => 'application/vnd.oasis.opendocument.text',
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        );
+        ];
 
         $arr = explode('.', $filename);
         $ext = strtolower(array_pop($arr));

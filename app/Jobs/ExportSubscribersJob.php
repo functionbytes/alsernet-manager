@@ -3,12 +3,15 @@
 namespace App\Jobs;
 
 use App\Library\Traits\Trackable;
-use Exception;
+
 class ExportSubscribersJob extends Base
 {
     use Trackable;
+
     public $timeout = 3600;
+
     protected $mailList;
+
     protected $segment;
 
     public function __construct($mailList, $segment = null)
@@ -33,7 +36,7 @@ class ExportSubscribersJob extends Base
 
         $this->mailList->export(function ($processed, $total, $failed, $message) {
 
-            $percentage = ($total && $processed) ? (int)($processed * 100 / $total) : 0;
+            $percentage = ($total && $processed) ? (int) ($processed * 100 / $total) : 0;
 
             if ($total === 0) {
                 $percentage = 100;

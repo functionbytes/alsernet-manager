@@ -2,10 +2,9 @@
 
 namespace App\Library;
 
+use App\Library\Exception\RateLimitExceeded;
 use Carbon\Carbon;
 use Exception;
-use App\Library\Exception\RateLimitExceeded;
-use Closure;
 
 /*
  * Log every credit used to a log file, group by $mode, which could be 'minute' (default), hour, day, month...
@@ -24,8 +23,11 @@ use Closure;
 class RateTracker
 {
     protected $filepath;
+
     protected $mode = 'minute'; // hour, day, month, year
+
     protected $seperator = ':';
+
     protected $blockFormat = [
         'minute' => 'YmdHi',
         'hour' => 'YmdH00',
@@ -43,7 +45,7 @@ class RateTracker
         $this->createStorageFile();
     }
 
-    public function count(Carbon $now = null)
+    public function count(?Carbon $now = null)
     {
         $lock = new Lockable($this->filepath);
         $lock->getExclusiveLock(function ($fopen) use ($now) {
@@ -63,7 +65,7 @@ class RateTracker
     {
         $lock = new Lockable($this->filepath);
         $lock->getExclusiveLock(function ($fopen) {
-            list($lastBlock, $count) = $this->parseLastRecord($fopen);
+            [$lastBlock, $count] = $this->parseLastRecord($fopen);
             if (is_null($lastBlock)) {
                 throw new Exception('Cannot rollback! There is no previous count (hey, what if file was cleaned up while SendMessage is in progress');
             }
@@ -79,7 +81,7 @@ class RateTracker
 
     private function createStorageFile()
     {
-        if (!file_exists($this->filepath)) {
+        if (! file_exists($this->filepath)) {
             touch($this->filepath);
         }
     }
@@ -87,13 +89,13 @@ class RateTracker
     private function test(Carbon $now, $fopen)
     {
         foreach ($this->limits as $limit) {
-            $period = sprintf("%s %s", $limit->getPeriodValue(), $limit->getPeriodUnit());
+            $period = sprintf('%s %s', $limit->getPeriodValue(), $limit->getPeriodUnit());
             $fromDatetime = $now->copy()->subtract($period);
 
             $creditsUsed = $this->getCreditsUsed($fromDatetime, $now, $fopen);
 
             if ($creditsUsed >= $limit->getAmount()) {
-                throw new RateLimitExceeded(sprintf("%s exceeded! %s/%s used", $limit->getDescription(), $creditsUsed, $limit->getAmount()));
+                throw new RateLimitExceeded(sprintf('%s exceeded! %s/%s used', $limit->getDescription(), $creditsUsed, $limit->getAmount()));
             }
         }
     }
@@ -102,7 +104,7 @@ class RateTracker
     {
         // Make something like: 202307231527
         $currentBlock = $this->makeBlock($now); // create block for the current date/time
-        list($lastBlock, $count) = $this->parseLastRecord($fopen);
+        [$lastBlock, $count] = $this->parseLastRecord($fopen);
 
         // EMPTY() is safer than IS_NULL()
         if ($currentBlock == $lastBlock) {
@@ -142,6 +144,7 @@ class RateTracker
     {
         $now = $now ?: Carbon::now();
         $format = $this->blockFormat[$this->mode];
+
         return $now->format($format);
     }
 
@@ -153,10 +156,10 @@ class RateTracker
         $offset = ftell($fopen) - 1; // Offset values from: -1, 0, 1, 2...
 
         if ($offset < 0) {
-            return ""; // File empty
+            return ''; // File empty
         }
 
-        fseek($fopen, $offset--); //seek to the end of the line
+        fseek($fopen, $offset--); // seek to the end of the line
 
         // Ignore consecutive empty newlines
         $char = fgetc($fopen);
@@ -167,6 +170,7 @@ class RateTracker
 
         if ($offset < 0) {
             fseek($fopen, 0);
+
             return trim(fgets($fopen)); // the whole file has Zero or One character (except \n)
         }
 
@@ -183,6 +187,7 @@ class RateTracker
         }
 
         $lastLine = fgets($fopen);
+
         return trim($lastLine);
     }
 
@@ -195,10 +200,10 @@ class RateTracker
         $offset = ftell($fopen) - 1; // Offset values from: -1, 0, 1, 2...
 
         if ($offset < 0) {
-            return ""; // File empty
+            return ''; // File empty
         }
 
-        fseek($fopen, $offset--); //seek to the end of the line
+        fseek($fopen, $offset--); // seek to the end of the line
 
         // Ignore consecutive empty newlines
         $char = fgetc($fopen);
@@ -236,7 +241,7 @@ class RateTracker
             return; // File empty
         }
 
-        fseek($fopen, $offset--); //seek to the end of the line
+        fseek($fopen, $offset--); // seek to the end of the line
 
         // Ignore consecutive empty newlines
         $char = fgetc($fopen);
@@ -249,7 +254,7 @@ class RateTracker
             fseek($fopen, 0); // either a leading newline or leading newline + 1char, overwrite leading "\nX" if any
         }
 
-        fseek($fopen, $offset); //seek to the end of the line
+        fseek($fopen, $offset); // seek to the end of the line
         $char = fgetc($fopen);
         while ($offset >= 0 && $char != "\n") {
             $offset -= 1;
@@ -268,7 +273,7 @@ class RateTracker
         if ($offset < 0) {
             fwrite($fopen, $record);
         } else {
-            fseek($fopen, $offset); //seek to the end of the line
+            fseek($fopen, $offset); // seek to the end of the line
             $char = fgetc($fopen);
             while ($offset > 0 && ($char === "\n")) {
                 $offset -= 1;
@@ -281,7 +286,7 @@ class RateTracker
         }
     }
 
-    public function getRecords(Carbon $fromDatetime = null, Carbon $toDatetime = null, $fopen = null)
+    public function getRecords(?Carbon $fromDatetime = null, ?Carbon $toDatetime = null, $fopen = null)
     {
         $fromDatetime = $fromDatetime ?: Carbon::createFromTimestamp(0); // Create the earliest date of 1970-01-01
         $toDatetime = $toDatetime ?: Carbon::now(); // Current date
@@ -300,14 +305,14 @@ class RateTracker
         }
 
         rewind($fopen);
-        while (!feof($fopen)) {
+        while (! feof($fopen)) {
             $record = trim(fgets($fopen));
 
             if (empty($record)) {
                 break;
             }
 
-            list($block, $count) = $this->parseBlock($record);
+            [$block, $count] = $this->parseBlock($record);
 
             if (empty($block)) {
                 throw new Exception("Invalid block {$record}");
@@ -326,15 +331,17 @@ class RateTracker
         return $records;
     }
 
-    public function getCreditsUsed(Carbon $fromDatetime = null, Carbon $toDatetime = null, $fopen = null)
+    public function getCreditsUsed(?Carbon $fromDatetime = null, ?Carbon $toDatetime = null, $fopen = null)
     {
         $records = $this->getRecords($fromDatetime, $toDatetime, $fopen);
         $counts = array_map(function ($record) {
-            list($block, $count) = $record;
+            [$block, $count] = $record;
+
             return $count;
         }, $records);
 
         $total = array_sum($counts);
+
         return $total;
     }
 

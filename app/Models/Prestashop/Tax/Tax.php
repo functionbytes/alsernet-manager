@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Tax extends Model
 {
     protected $connection = 'prestashop';
+
     protected $table = 'aalv_tax';
+
     protected $primaryKey = 'id_tax';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +20,7 @@ class Tax extends Model
         'active',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'active' => 'boolean',
         'rate' => 'float',
     ];
