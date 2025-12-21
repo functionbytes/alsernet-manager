@@ -1116,16 +1116,22 @@ class DocumentsController extends Controller
         }
 
         $documentConfig = [
+            // DESHABILITADAS - No mostrar en la interfaz
+            'enable_initial_request' => false,
+            'enable_reminder' => false,
+            'enable_missing_docs' => false,
+            'enable_upload_confirmation' => false,
+
+            // HABILITADAS - Solo estas 3 opciones se muestran
+            'enable_approval' => true,              // ✅ Notificación de aprobación
+            'enable_rejection' => true,            // ✅ Notificación de rechazo
+            'enable_custom_email' => true,         // ✅ Correo personalizado
+
+            // Descripciones (se ignoran si están deshabilitadas)
             'initial_request_description' => 'Envía un email al cliente solicitándole que cargue los documentos requeridos.',
             'missing_docs_description' => 'Solicita al cliente que reenvíe documentos concretos que falten o necesiten corrección.',
             'reminder_description' => 'Envía un recordatorio al cliente si aún no ha completado la carga de documentos.',
             'custom_email_description' => 'Envía un correo con contenido personalizado al cliente.',
-            'enable_initial_request' => $globalSettings['enable_initial_request'] ?? true,
-            'enable_reminder' => $globalSettings['enable_reminder'] ?? true,
-            'enable_missing_docs' => $globalSettings['enable_missing_docs'] ?? true,
-            'enable_custom_email' => $globalSettings['enable_custom_email'] ?? false,
-            'enable_approval' => $globalSettings['enable_approval'] ?? true,
-            'enable_rejection' => $globalSettings['enable_rejection'] ?? true,
         ];
 
         return view('accountings.views.documents.manage')->with([
