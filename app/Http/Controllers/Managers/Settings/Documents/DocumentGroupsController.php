@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Managers\Settings\Documents;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Validation\ValidatorGroup;
+use App\Models\Validation\ValidatorGroupConfiguration;
 use Illuminate\Http\Request;
 
 class DocumentGroupsController extends Controller
@@ -204,5 +205,183 @@ class DocumentGroupsController extends Controller
         ValidatorGroup::reorder($validated['ids']);
 
         return response()->json(['success' => true, 'message' => 'Orden actualizado exitosamente.']);
+    }
+
+    /**
+     * Show the configuration panel for a group.
+     */
+    public function configuration(ValidatorGroup $group)
+    {
+        $configurations = $group->configurations()
+            ->where('is_active', true)
+            ->orderBy('category')
+            ->orderBy('order')
+            ->get()
+            ->groupBy('category');
+
+        // Get default configurations if none exist
+        if ($configurations->isEmpty()) {
+            $this->initializeDefaultConfigurations($group);
+            $configurations = $group->configurations()
+                ->where('is_active', true)
+                ->orderBy('category')
+                ->orderBy('order')
+                ->get()
+                ->groupBy('category');
+        }
+
+        return view('managers.views.settings.documents.groups.configuration', [
+            'group' => $group,
+            'configurations' => $configurations,
+        ]);
+    }
+
+    /**
+     * Update configurations for a group.
+     */
+    public function updateConfiguration(Request $request, ValidatorGroup $group)
+    {
+        $validated = $request->validate([
+            'configurations' => 'required|array',
+            'configurations.*' => 'boolean',
+        ]);
+
+        // Update each configuration
+        foreach ($request->input('configurations', []) as $configId => $value) {
+            ValidatorGroupConfiguration::where('id', $configId)
+                ->where('validator_group_id', $group->id)
+                ->update(['value' => $value]);
+        }
+
+        return back()->with('success', 'Configuraciones actualizadas exitosamente.');
+    }
+
+    /**
+     * Initialize default configurations for a group.
+     */
+    protected function initializeDefaultConfigurations(ValidatorGroup $group): void
+    {
+        $defaultConfigs = [
+            // Email Actions
+            [
+                'key' => 'enable_initial_request',
+                'label' => 'Solicitud Inicial',
+                'description' => 'Permitir enviar solicitud inicial de documentos al cliente',
+                'category' => 'email_actions',
+                'order' => 1,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_missing_docs',
+                'label' => 'Documentos Faltantes',
+                'description' => 'Permitir solicitar documentos específicos que falten',
+                'category' => 'email_actions',
+                'order' => 2,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_reminder',
+                'label' => 'Recordatorio',
+                'description' => 'Permitir enviar recordatorios al cliente',
+                'category' => 'email_actions',
+                'order' => 3,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_upload_confirmation',
+                'label' => 'Confirmación de Subida',
+                'description' => 'Permitir confirmar recepción de documentos',
+                'category' => 'email_actions',
+                'order' => 4,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_approval',
+                'label' => 'Notificación de Aprobación',
+                'description' => 'Permitir notificar aprobación de documentos',
+                'category' => 'email_actions',
+                'order' => 5,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_rejection',
+                'label' => 'Notificación de Rechazo',
+                'description' => 'Permitir notificar rechazo de documentos',
+                'category' => 'email_actions',
+                'order' => 6,
+                'value' => true,
+            ],
+            [
+                'key' => 'enable_custom_email',
+                'label' => 'Correo Personalizado',
+                'description' => 'Permitir enviar correos personalizados',
+                'category' => 'email_actions',
+                'order' => 7,
+                'value' => true,
+            ],
+
+            // Workflow
+            [
+                'key' => 'enable_auto_approval',
+                'label' => 'Aprobación Automática',
+                'description' => 'Aprobar automáticamente cuando se cumplan condiciones',
+                'category' => 'workflow',
+                'order' => 1,
+                'value' => false,
+            ],
+            [
+                'key' => 'require_comments',
+                'label' => 'Comentarios Obligatorios',
+                'description' => 'Requerir comentario al rechazar documentos',
+                'category' => 'workflow',
+                'order' => 2,
+                'value' => false,
+            ],
+            [
+                'key' => 'allow_parallel_validation',
+                'label' => 'Validación Paralela',
+                'description' => 'Permitir validación simultanea en múltiples etapas',
+                'category' => 'workflow',
+                'order' => 3,
+                'value' => false,
+            ],
+
+            // Notifications
+            [
+                'key' => 'notify_on_assignment',
+                'label' => 'Notificar Asignación',
+                'description' => 'Notificar al usuario cuando se asigne un documento',
+                'category' => 'notifications',
+                'order' => 1,
+                'value' => true,
+            ],
+            [
+                'key' => 'notify_on_rejection',
+                'label' => 'Notificar Rechazo',
+                'description' => 'Notificar al equipo cuando se rechace un documento',
+                'category' => 'notifications',
+                'order' => 2,
+                'value' => true,
+            ],
+            [
+                'key' => 'notify_sla_breach',
+                'label' => 'Alertar Incumplimiento SLA',
+                'description' => 'Alertar cuando se incumple el SLA de validación',
+                'category' => 'notifications',
+                'order' => 3,
+                'value' => true,
+            ],
+        ];
+
+        foreach ($defaultConfigs as $config) {
+            $config['validator_group_id'] = $group->id;
+            ValidatorGroupConfiguration::firstOrCreate(
+                [
+                    'validator_group_id' => $group->id,
+                    'key' => $config['key'],
+                ],
+                $config
+            );
+        }
     }
 }

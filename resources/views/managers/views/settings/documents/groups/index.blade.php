@@ -174,7 +174,12 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.edit', $group->id) }}">
-                                                        Editar
+                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.configuration', $group->id) }}">
+                                                        <i class="fas fa-sliders me-2"></i>Configuración
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
@@ -183,7 +188,9 @@
                                                           onsubmit="return confirm('¿Estás seguro de eliminar este grupo?')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="dropdown-item">Eliminar</button>
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash me-2"></i>Eliminar
+                                                        </button>
                                                     </form>
                                                 </li>
                                             </ul>

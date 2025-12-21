@@ -6,6 +6,7 @@ use App\Library\Traits\HasUid;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -105,6 +106,14 @@ class ValidatorGroup extends Model
     public function backupUsers(): BelongsToMany
     {
         return $this->users()->wherePivot('priority', 'backup');
+    }
+
+    /**
+     * Get configurations for this validator group.
+     */
+    public function configurations(): HasMany
+    {
+        return $this->hasMany(ValidatorGroupConfiguration::class);
     }
 
     // =========================================================================

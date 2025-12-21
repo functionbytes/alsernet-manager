@@ -418,6 +418,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::patch('{group}/toggle', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'toggle'])->name('manager.settings.documents.groups.toggle');
                 Route::delete('{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'destroy'])->name('manager.settings.documents.groups.destroy');
                 Route::post('reorder', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'reorder'])->name('manager.settings.documents.groups.reorder');
+                Route::get('{group}/configuration', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'configuration'])->name('manager.settings.documents.groups.configuration');
+                Route::post('{group}/configuration', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'updateConfiguration'])->name('manager.settings.documents.groups.update-configuration');
             });
 
             // Document Settings
