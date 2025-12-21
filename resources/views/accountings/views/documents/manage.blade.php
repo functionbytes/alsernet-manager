@@ -155,17 +155,6 @@
             <!-- Document Notes -->
             @include('accountings.views.documents.includes.document-notes-sidebar')
 
-            <!-- Action History -->
-            <div id="actionHistoryContainer">
-                @include('accountings.views.documents.includes.action-history')
-            </div>
-
-            <!-- Email History -->
-            @include('accountings.views.documents.includes.email-history')
-
-            <!-- Status Timeline -->
-            @include('accountings.views.documents.includes.status-timeline')
-
         </div>
 
         <div class="col-lg-8">
