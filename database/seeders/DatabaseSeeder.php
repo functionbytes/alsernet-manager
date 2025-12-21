@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             DocumentConfigurationSeeder::class,
             DocumentUploadTypeSeeder::class,
 
+            // Document Validation Seeders
+            StageEmailActionSeeder::class,
+
             // Supplier Automation System Seeders
             SupplierSeeder::class,
             SupplierSourceSeeder::class,

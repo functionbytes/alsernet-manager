@@ -54,6 +54,7 @@ use App\Http\Controllers\Managers\Settings\Roles\RoleController;
 use App\Http\Controllers\Managers\Settings\SearchSettingsController;
 use App\Http\Controllers\Managers\Settings\ServerAccessController;
 use App\Http\Controllers\Managers\Settings\SettingsController;
+use App\Http\Controllers\Managers\Settings\StageEmailActionController;
 use App\Http\Controllers\Managers\Settings\SupervisorController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SupplierContentController;
@@ -384,9 +385,16 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/create', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'create'])->name('manager.settings.documents.conditions.create');
                 Route::post('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'store'])->name('manager.settings.documents.conditions.store');
                 Route::get('/edit/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'edit'])->name('manager.settings.documents.conditions.edit');
-                Route::post('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'update'])->name('manager.settings.documents.conditions.update');
+                Route::put('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'update'])->name('manager.settings.documents.conditions.update');
                 Route::delete('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'destroy'])->name('manager.settings.documents.conditions.destroy');
                 Route::post('/{condition}/toggle-active', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'toggleActive'])->name('manager.settings.documents.conditions.toggle-active');
+            });
+
+            // Stage Email Actions
+            Route::group(['prefix' => 'stage-email-actions'], function () {
+                Route::get('/', [StageEmailActionController::class, 'index'])->name('manager.settings.stage-email-actions.index');
+                Route::get('/{stage}/edit', [StageEmailActionController::class, 'edit'])->name('manager.settings.stage-email-actions.edit');
+                Route::put('/{stage}', [StageEmailActionController::class, 'update'])->name('manager.settings.stage-email-actions.update');
             });
 
             // SLA Policies

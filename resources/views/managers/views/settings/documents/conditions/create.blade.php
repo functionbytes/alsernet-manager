@@ -9,306 +9,283 @@
             {{ csrf_field() }}
 
             <div class="card-body">
-                <div class="d-flex no-block align-items-center mb-4">
-                    <div>
-                        <h4 class="card-title mb-1">
-                            <i class="fas fa-filter me-2" style="color: #90bb13;"></i>
-                            Crear condición de validación
-                        </h4>
-                        <p class="card-subtitle text-muted mb-0">
-                            Define condiciones personalizadas para controlar cuándo se ejecutan las etapas de validación
-                        </p>
-                    </div>
+                <div class="mb-4">
+                    <h5 class="mb-0">Crear condición de validación</h5>
+                    <p class="card-subtitle mb-0 mt-2">
+                        Define condiciones personalizadas para controlar cuándo se ejecutan las etapas de validación
+                    </p>
                 </div>
 
                 <!-- Tipo de Condición -->
-                <div class="card bg-primary-subtle border-primary mb-4">
-                    <div class="card-body">
-                        <label class="form-label fw-semibold mb-3">
-                            <i class="fas fa-shapes me-2"></i>Tipo de Condición
-                            <span class="text-danger">*</span>
-                        </label>
-                        <div class="row g-3">
-                            @foreach(\App\Models\Document\DocumentValidationCondition::AVAILABLE_TYPES as $typeKey => $typeLabel)
-                                <div class="col-md-4">
-                                    <div class="form-check card mb-0 condition-type-card {{ $loop->first ? 'active' : '' }}"
-                                         data-type="{{ $typeKey }}">
-                                        <div class="card-body">
-                                            <input class="form-check-input"
-                                                   type="radio"
-                                                   name="condition_type"
-                                                   id="type_{{ $typeKey }}"
-                                                   value="{{ $typeKey }}"
-                                                   {{ old('condition_type', $loop->first ? $typeKey : '') == $typeKey ? 'checked' : '' }}>
-                                            <label class="form-check-label w-100 ms-2" for="type_{{ $typeKey }}">
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fas fa-{{ $typeKey === 'sale_type_match' ? 'tags' : ($typeKey === 'model_field' ? 'database' : 'code') }} fa-2x me-3 text-primary"></i>
-                                                    <div>
-                                                        <strong class="d-block">{{ $typeLabel }}</strong>
-                                                        <small class="text-muted">
-                                                            @if($typeKey === 'sale_type_match')
-                                                                Mapea tipos de venta del producto
-                                                            @elseif($typeKey === 'model_field')
-                                                                Valida campos del modelo
-                                                            @else
-                                                                Expresiones y lógica personalizada
-                                                            @endif
-                                                        </small>
-                                                    </div>
+                <div class="mb-4">
+                    <h6 class="mb-0">
+                        Tipo de condición
+                        <span class="text-danger">*</span>
+                    </h6>
+                    <small class="text-muted d-block mb-3">Selecciona cómo se evaluará esta condición en los documentos</small>
+
+                    <div class="row g-3">
+                        @foreach(\App\Models\Document\DocumentValidationCondition::AVAILABLE_TYPES as $typeKey => $typeLabel)
+                            <div class="col-md-4">
+                                <div class="card mb-0 condition-type-card {{ $loop->first ? 'active' : '' }}"
+                                     data-type="{{ $typeKey }}">
+                                    <div class="card-body p-3">
+                                        <input class="condition-type-input"
+                                               type="radio"
+                                               name="condition_type"
+                                               id="type_{{ $typeKey }}"
+                                               value="{{ $typeKey }}"
+                                               {{ old('condition_type', $loop->first ? $typeKey : '') == $typeKey ? 'checked' : '' }}>
+                                        <label class="condition-type-label w-100" for="type_{{ $typeKey }}">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-{{ $typeKey === 'sale_type_match' ? 'tags' : ($typeKey === 'model_field' ? 'database' : 'code') }} fa-2x me-3 text-primary"></i>
+                                                <div>
+                                                    <strong class="d-block mb-0">{{ $typeLabel }}</strong>
+                                                    <p class="text-muted mb-0">
+                                                        @if($typeKey === 'sale_type_match')
+                                                            Mapea tipos de venta del producto
+                                                        @elseif($typeKey === 'model_field')
+                                                            Valida campos del modelo
+                                                        @else
+                                                            Expresiones y lógica personalizada
+                                                        @endif
+                                                    </p>
                                                 </div>
-                                            </label>
-                                        </div>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-                        @error('condition_type')
-                            <div class="text-danger mt-2">
-                                <i class="fa fa-circle-exclamation"></i> {{ $message }}
                             </div>
-                        @enderror
+                        @endforeach
                     </div>
+                    @error('condition_type')
+                        <div class="text-danger mt-2">
+                            <i class="fas fa-circle-exclamation"></i> {{ $message }}
+                        </div>
+                    @enderror
                 </div>
 
                 <!-- Información Básica -->
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-key me-1 text-muted"></i>Clave
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text"
-                                   class="form-control @error('key') is-invalid @enderror"
-                                   name="key"
-                                   value="{{ old('key') }}"
-                                   required
-                                   placeholder="is_weapon, is_national, is_priority"
-                                   pattern="[a-z0-9_\-]+"
-                                   title="Solo letras minúsculas, números, guiones y guiones bajos">
-                            @error('key')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @else
-                                <small class="form-text text-muted">Identificador único (snake_case)</small>
-                            @enderror
+                <div class="border-top pt-4 mt-4">
+                    <h6 class="mb-0">
+                        Información básica
+                    </h6>
+                    <small class="text-muted d-block mb-3">Identificadores y datos principales que definen esta condición en el sistema</small>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Clave <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control @error('key') is-invalid @enderror"
+                                       name="key"
+                                       value="{{ old('key') }}"
+                                       required
+                                       placeholder="is_weapon, is_national, is_priority"
+                                       pattern="[a-z0-9_\-]+"
+                                       title="Solo letras minúsculas, números, guiones y guiones bajos">
+                                @error('key')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @else
+                                    <small class="form-text text-muted">Identificador único (snake_case)</small>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-tag me-1 text-muted"></i>Nombre
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text"
-                                   class="form-control @error('name') is-invalid @enderror"
-                                   name="name"
-                                   value="{{ old('name') }}"
-                                   required
-                                   placeholder="Es un arma, Cliente nacional, Pedido prioritario">
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @else
-                                <small class="form-text text-muted">Nombre descriptivo para la interfaz</small>
-                            @enderror
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Nombre <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control @error('name') is-invalid @enderror"
+                                       name="name"
+                                       value="{{ old('name') }}"
+                                       required
+                                       placeholder="Es un arma, Cliente nacional, Pedido prioritario">
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @else
+                                    <small class="form-text text-muted">Nombre descriptivo para la interfaz</small>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-align-left me-1 text-muted"></i>Descripción
-                            </label>
-                            <textarea class="form-control @error('description') is-invalid @enderror"
-                                      name="description"
-                                      rows="2"
-                                      placeholder="Describe cuándo se debe aplicar esta condición...">{{ old('description') }}</textarea>
-                            @error('description')
+
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select @error('is_active') is-invalid @enderror"
+                                        name="is_active">
+                                    <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>
+                                        Activa
+                                    </option>
+                                    <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>
+                                        Inactiva
+                                    </option>
+                                </select>
+                                @error('is_active')
                                 <div class="invalid-feedback">{{ $message }}</div>
-                            @else
-                                <small class="form-text text-muted">Explicación detallada (opcional)</small>
-                            @enderror
+                                @else
+                                    <small class="form-text text-muted">Solo las condiciones activas se evaluarán</small>
+                                    @enderror
+                            </div>
                         </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Orden de visualización</label>
+                                <input type="number"
+                                       class="form-control @error('sort_order') is-invalid @enderror"
+                                       name="sort_order"
+                                       value="{{ old('sort_order', 0) }}"
+                                       min="0"
+                                       placeholder="0">
+                                @error('sort_order')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @else
+                                    <small class="form-text text-muted">Orden en listados (menor primero)</small>
+                                    @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror"
+                                          name="description"
+                                          rows="2"
+                                          placeholder="Describe cuándo se debe aplicar esta condición...">{{ old('description') }}</textarea>
+                                @error('description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @else
+                                    <small class="form-text text-muted">Explicación detallada (opcional)</small>
+                                    @enderror
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
+
+                <hr>
 
                 <!-- Campos Dinámicos según Tipo -->
 
                 <!-- Sale Type Match Fields -->
-                <div class="condition-fields" id="fields_sale_type_match" style="display: none;">
-                    <div class="card border-info">
-                        <div class="card-header bg-info-subtle">
-                            <h6 class="mb-0">
-                                <i class="fas fa-tags me-2"></i>Configuración de Sale Types
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <label class="form-label fw-semibold">
-                                Sale Types
-                                <span class="text-danger">*</span>
-                            </label>
-                            <select multiple
-                                    class="form-select select2-tags"
-                                    id="sale_types"
-                                    name="sale_types[]"
-                                    data-placeholder="Seleccionar o agregar sale types...">
-                                @foreach($validSaleTypes as $saleType)
-                                    <option value="{{ $saleType }}" {{ in_array($saleType, old('sale_types', [])) ? 'selected' : '' }}>
-                                        {{ $saleType }}
-                                    </option>
+                <div class="condition-fields border-top pt-4 mt-4" id="fields_sale_type_match" style="display: none;">
+                    <h6 class="mb-0">
+                        Configuración de etiquetas
+                    </h6>
+                    <small class="text-muted d-block mb-3">Define qué tipos de venta del producto deben cumplirse para aplicar esta condición</small>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Etiquetas <span class="text-danger">*</span>
+                        </label>
+                        <select multiple
+                                class="form-select select2-tags"
+                                id="sale_types"
+                                name="sale_types[]"
+                                data-placeholder="Seleccionar o agregar sale types...">
+                            @foreach($validSaleTypes as $saleType)
+                                <option value="{{ $saleType }}" {{ in_array($saleType, old('sale_types', [])) ? 'selected' : '' }}>
+                                    {{ $saleType }}
+                                </option>
+                            @endforeach
+                            @if(old('sale_types'))
+                                @foreach(old('sale_types') as $oldSaleType)
+                                    @if(!in_array($oldSaleType, $validSaleTypes))
+                                        <option value="{{ $oldSaleType }}" selected>{{ $oldSaleType }}</option>
+                                    @endif
                                 @endforeach
-                                @if(old('sale_types'))
-                                    @foreach(old('sale_types') as $oldSaleType)
-                                        @if(!in_array($oldSaleType, $validSaleTypes))
-                                            <option value="{{ $oldSaleType }}" selected>{{ $oldSaleType }}</option>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </select>
-                            <small class="form-text text-muted mt-2 d-block">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Tipos de venta que deben coincidir con <code>blockade_type</code> en <code>document_product_blockades</code>
-                            </small>
-                        </div>
+                            @endif
+                        </select>
+                        <small class="form-text text-muted mt-2 d-block">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Tipos de venta que deben coincidir con <code>blockade_type</code> en <code>document_product_blockades</code>
+                        </small>
                     </div>
                 </div>
 
                 <!-- Model Field Fields -->
-                <div class="condition-fields" id="fields_model_field" style="display: none;">
-                    <div class="card border-success">
-                        <div class="card-header bg-success-subtle">
-                            <h6 class="mb-0">
-                                <i class="fas fa-database me-2"></i>Configuración de Campo del Modelo
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold">
-                                            Campo del Modelo
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text"
-                                               class="form-control"
-                                               name="model_field"
-                                               value="{{ old('model_field') }}"
-                                               placeholder="customer.country_id, order.total">
-                                        <small class="form-text text-muted">
-                                            Usa notación de punto para relaciones: <code>customer.country_id</code>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold">
-                                            Valor(es) Esperado(s)
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text"
-                                               class="form-control"
-                                               name="expected_value_text"
-                                               value="{{ old('expected_value_text') }}"
-                                               placeholder="1, 2, 3 (separados por coma)">
-                                        <small class="form-text text-muted">
-                                            Valores separados por coma para comparación
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="alert alert-info mb-0">
-                                <i class="fas fa-lightbulb me-2"></i>
-                                <strong>Ejemplo:</strong> Campo: <code>customer.country_id</code>, Valor: <code>1</code> → valida si el país del cliente es España (ID 1)
+                <div class="condition-fields border-top pt-4 mt-4" id="fields_model_field" style="display: none;">
+                    <h6 class="mb-0">
+                        Configuración de campo del modelo
+                    </h6>
+                    <small class="text-muted d-block mb-3">Valida condiciones basadas en campos específicos del modelo y sus valores esperados</small>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Campo del modelo <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       name="model_field"
+                                       value="{{ old('model_field') }}"
+                                       placeholder="customer.country_id, order.total">
+                                <small class="form-text text-muted">
+                                    Usa notación de punto para relaciones: <code>customer.country_id</code>
+                                </small>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Valor(es) esperado(s) <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       name="expected_value_text"
+                                       value="{{ old('expected_value_text') }}"
+                                       placeholder="1, 2, 3 (separados por coma)">
+                                <small class="form-text text-muted">
+                                    Valores separados por coma para comparación
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Ejemplo:</strong> Campo: <code>customer.country_id</code>, Valor: <code>1</code> → valida si el país del cliente es España (ID 1)
                     </div>
                 </div>
 
                 <!-- Custom Expression Fields -->
-                <div class="condition-fields" id="fields_custom_expression" style="display: none;">
-                    <div class="card border-warning">
-                        <div class="card-header bg-warning-subtle">
-                            <h6 class="mb-0">
-                                <i class="fas fa-code me-2"></i>Configuración de Expresión Personalizada
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">
-                                    Expresión de Validación
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control font-monospace"
-                                          name="validation_expression"
-                                          rows="4"
-                                          placeholder="order_total > 1000&#10;customer.vip == true&#10;product_count >= 5">{{ old('validation_expression') }}</textarea>
-                                <small class="form-text text-muted">
-                                    Expresión que retorna verdadero/falso
-                                </small>
-                            </div>
-                            <div class="alert alert-warning mb-0">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Avanzado:</strong> Esta expresión se evaluará en el contexto del documento. Asegúrate de que la lógica sea correcta.
-                            </div>
-                        </div>
+                <div class="condition-fields border-top pt-4 mt-4" id="fields_custom_expression" style="display: none;">
+                    <h6 class="mb-0">
+                        Configuración de expresión personalizada
+                    </h6>
+                    <small class="text-muted d-block mb-3">Crea expresiones avanzadas con lógica personalizada para validaciones complejas</small>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Expresión de validación <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control font-monospace"
+                                  name="validation_expression"
+                                  rows="4"
+                                  placeholder="order_total > 1000&#10;customer.vip == true&#10;product_count >= 5">{{ old('validation_expression') }}</textarea>
+                        <small class="form-text text-muted">
+                            Expresión que retorna verdadero/falso
+                        </small>
+                    </div>
+                    <div class="alert bg-light mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Avanzado:</strong> Esta expresión se evaluará en el contexto del documento. Asegúrate de que la lógica sea correcta.
                     </div>
                 </div>
 
-                <!-- Estado y Orden -->
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-toggle-on me-1 text-muted"></i>Estado
-                            </label>
-                            <select class="form-select @error('is_active') is-invalid @enderror"
-                                    name="is_active">
-                                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>
-                                    <i class="fas fa-check-circle"></i> Activa
-                                </option>
-                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>
-                                    <i class="fas fa-times-circle"></i> Inactiva
-                                </option>
-                            </select>
-                            @error('is_active')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @else
-                                <small class="form-text text-muted">Solo las condiciones activas se evaluarán</small>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-sort-numeric-up me-1 text-muted"></i>Orden de visualización
-                            </label>
-                            <input type="number"
-                                   class="form-control @error('sort_order') is-invalid @enderror"
-                                   name="sort_order"
-                                   value="{{ old('sort_order', 0) }}"
-                                   min="0"
-                                   placeholder="0">
-                            @error('sort_order')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @else
-                                <small class="form-text text-muted">Orden en listados (menor primero)</small>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
 
             </div>
 
-            <div class="card-footer bg-light">
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary px-4 flex-grow-1">
-                        <i class="fas fa-save me-2"></i>Guardar Condición
-                    </button>
-                    <a href="{{ route('manager.settings.documents.conditions') }}" class="btn btn-secondary px-4">
-                        <i class="fas fa-arrow-left me-2"></i>Volver
-                    </a>
-                </div>
+            <div class="card-body border-top">
+                <button type="submit" class="btn btn-info px-4 w-100 mb-1">
+                    Guardar
+                </button>
+                <a href="{{ route('manager.settings.documents.conditions') }}" class="btn btn-light px-4 w-100">
+                    Cancelar
+                </a>
             </div>
 
         </form>
@@ -319,24 +296,38 @@
 
 @push('scripts')
 <style>
+/* Ocultar radio button visualmente pero mantenerlo funcional para accesibilidad */
+.condition-type-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Estilos de las tarjetas de selección */
 .condition-type-card {
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
 }
 
 .condition-type-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #90bb13;
 }
 
 .condition-type-card.active {
     border-color: #90bb13 !important;
     background-color: rgba(144, 187, 19, 0.05);
+    box-shadow: 0 2px 8px rgba(144, 187, 19, 0.2);
 }
 
-.condition-type-card label {
+.condition-type-label {
     cursor: pointer;
+    margin: 0;
+    display: block;
+    width: 100%;
 }
 </style>
 

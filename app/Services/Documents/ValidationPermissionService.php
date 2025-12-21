@@ -4,6 +4,7 @@ namespace App\Services\Documents;
 
 use App\Enums\Document\ValidationAction;
 use App\Models\Document\Document;
+use App\Models\Document\StageEmailAction;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -187,6 +188,22 @@ class ValidationPermissionService
         $config = Config::get('validation-permissions');
 
         return $config['rules'] ?? [];
+    }
+
+    /**
+     * Check if a specific email action is enabled for a stage
+     */
+    public function isEmailActionEnabledForStage(string $stage, string $emailAction): bool
+    {
+        return StageEmailAction::isActionEnabledForStage($stage, $emailAction);
+    }
+
+    /**
+     * Get all enabled email actions for a stage
+     */
+    public function getEnabledEmailActionsForStage(string $stage): array
+    {
+        return StageEmailAction::getEnabledActionsForStage($stage);
     }
 
     /**

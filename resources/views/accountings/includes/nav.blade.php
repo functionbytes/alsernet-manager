@@ -60,6 +60,20 @@
                                 <span class="hide-menu">Todos los documentos</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('accounting.documents.in-review') }}" class="sidebar-link">
+                                <i class="fas fa-clock me-2"></i>
+                                <span class="hide-menu">En revisión</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('accounting.documents.configuration-tags') }}" class="sidebar-link"
+                               data-bs-toggle="tooltip" data-bs-placement="right"
+                               data-bs-title="Gestiona etiquetas para clasificar documentos">
+                                <i class="fas fa-tags me-2"></i>
+                                <span class="hide-menu">Configuración de etiquetas</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
 

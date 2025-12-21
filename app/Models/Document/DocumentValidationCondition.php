@@ -31,9 +31,9 @@ class DocumentValidationCondition extends Model
     public const TYPE_CUSTOM_EXPRESSION = 'custom_expression';
 
     public const AVAILABLE_TYPES = [
-        self::TYPE_SALE_TYPE_MATCH => 'Coincidencia de Sale Type',
-        self::TYPE_MODEL_FIELD => 'Campo del Modelo',
-        self::TYPE_CUSTOM_EXPRESSION => 'Expresión Personalizada',
+        self::TYPE_SALE_TYPE_MATCH => 'Coincidencia de etiquetas',
+        self::TYPE_MODEL_FIELD => 'Campo del modelo',
+        self::TYPE_CUSTOM_EXPRESSION => 'Expresión personalizada',
     ];
 
     protected $fillable = [
