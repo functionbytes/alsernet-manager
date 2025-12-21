@@ -1,132 +1,115 @@
-@extends('layouts.managers.app')
+@extends('layouts.managers')
 
 @section('content')
-<div class="container-xxl">
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <a href="{{ route('manager.settings.stage-email-actions.index') }}" class="btn btn-sm btn-link p-0 me-2">
-                                <i class="fas fa-arrow-left"></i>
-                            </a>
-                            <h5 class="d-inline mb-0">
-                                <i class="fas fa-cog me-2"></i>
-                                Configurar acciones de email: <strong>{{ $stageName }}</strong>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="card-body">
-                    <form action="{{ route('manager.settings.stage-email-actions.update', $stage) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+    @include('managers.includes.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
 
-                        <div class="alert alert-info mb-4">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Selecciona cuáles acciones de email estarán disponibles en la etapa de <strong>{{ $stageName }}</strong>.
-                        </div>
+    <div class="widget-content">
+        @include('managers.components.alerts')
 
-                        <div class="row">
-                            @foreach($configurations as $config)
-                                @php
-                                    $action = $config->email_action;
-                                    $label = $availableActions[$action] ?? $action;
-                                    $isEnabled = old("email_actions.{$action}", $config->is_enabled ?? false);
-                                @endphp
+        <form action="{{ route('manager.settings.stage-email-actions.update', $stage) }}" method="POST">
+            @csrf
+            @method('PUT')
 
-                                <div class="col-md-6 mb-4">
-                                    <div class="card border @if($isEnabled) border-success @else border-light @endif">
-                                        <div class="card-body">
-                                            <div class="form-check form-switch">
-                                                <input
-                                                    class="form-check-input action-toggle"
-                                                    type="checkbox"
-                                                    id="action_{{ $action }}"
-                                                    name="email_actions[{{ $action }}]"
-                                                    value="1"
-                                                    @if($isEnabled) checked @endif
-                                                    data-action="{{ $action }}"
-                                                >
-                                                <label class="form-check-label fw-bold" for="action_{{ $action }}">
-                                                    {{ $label }}
-                                                </label>
-                                            </div>
+            <div class="alert alert-info mb-4">
+                <i class="fa fa-info-circle me-2"></i>
+                Selecciona cuáles acciones de email estarán disponibles en la etapa de <strong>{{ $stageName }}</strong>.
+            </div>
 
-                                            <input type="hidden" name="sort_order[{{ $action }}]" class="sort-order" value="{{ old("sort_order.{$action}", $config->sort_order ?? 0) }}">
+            <div class="row">
+                @foreach($configurations as $config)
+                    @php
+                        $action = $config->email_action;
+                        $label = $availableActions[$action] ?? $action;
+                        $isEnabled = old("email_actions.{$action}", $config->is_enabled ?? false);
+                    @endphp
 
-                                            <div class="mt-3 ps-3 d-flex gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary sort-up" data-action="{{ $action }}">
-                                                    <i class="fas fa-arrow-up"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary sort-down" data-action="{{ $action }}">
-                                                    <i class="fas fa-arrow-down"></i>
-                                                </button>
-                                                <span class="badge bg-secondary sort-order-display" data-action="{{ $action }}">
-                                                    {{ old("sort_order.{$action}", $config->sort_order ?? 0) }}
-                                                </span>
-                                            </div>
-
-                                            @switch($action)
-                                                @case('solicitud_documentos')
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="fas fa-envelope me-1"></i>
-                                                        Envía una solicitud inicial de documentos al cliente.
-                                                    </small>
-                                                    @break
-
-                                                @case('confirmacion_archivos')
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="fas fa-file me-1"></i>
-                                                        Confirma al cliente que sus archivos fueron recibidos.
-                                                    </small>
-                                                    @break
-
-                                                @case('aprobacion')
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="fas fa-check-circle me-1"></i>
-                                                        Notifica al cliente que sus documentos fueron aprobados.
-                                                    </small>
-                                                    @break
-
-                                                @case('rechazo')
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="fas fa-times-circle me-1"></i>
-                                                        Notifica al cliente que sus documentos fueron rechazados.
-                                                    </small>
-                                                    @break
-
-                                                @case('correo_personalizado')
-                                                    <small class="text-muted d-block mt-2">
-                                                        <i class="fas fa-pen me-1"></i>
-                                                        Permite enviar un correo personalizado al cliente.
-                                                    </small>
-                                                    @break
-                                            @endswitch
-                                        </div>
-                                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card border @if($isEnabled) border-success @else border-light @endif">
+                            <div class="card-body">
+                                <div class="form-check form-switch">
+                                    <input
+                                        class="form-check-input action-toggle"
+                                        type="checkbox"
+                                        id="action_{{ $action }}"
+                                        name="email_actions[{{ $action }}]"
+                                        value="1"
+                                        @if($isEnabled) checked @endif
+                                        data-action="{{ $action }}"
+                                    >
+                                    <label class="form-check-label fw-bold" for="action_{{ $action }}">
+                                        {{ $label }}
+                                    </label>
                                 </div>
-                            @endforeach
-                        </div>
 
-                        <div class="border-top pt-3 mt-4">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a href="{{ route('manager.settings.stage-email-actions.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-times me-2"></i>Cancelar
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Guardar configuración
-                                </button>
+                                <input type="hidden" name="sort_order[{{ $action }}]" class="sort-order" value="{{ old("sort_order.{$action}", $config->sort_order ?? 0) }}">
+
+                                <div class="mt-3 ps-3 d-flex gap-2 flex-wrap">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary sort-up" data-action="{{ $action }}">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary sort-down" data-action="{{ $action }}">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </button>
+                                    <span class="badge bg-secondary sort-order-display" data-action="{{ $action }}">
+                                        {{ old("sort_order.{$action}", $config->sort_order ?? 0) }}
+                                    </span>
+                                </div>
+
+                                @switch($action)
+                                    @case('solicitud_documentos')
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fa fa-envelope me-1"></i>
+                                            Envía una solicitud inicial de documentos al cliente.
+                                        </small>
+                                        @break
+
+                                    @case('confirmacion_archivos')
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fa fa-file me-1"></i>
+                                            Confirma al cliente que sus archivos fueron recibidos.
+                                        </small>
+                                        @break
+
+                                    @case('aprobacion')
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fa fa-check-circle me-1"></i>
+                                            Notifica al cliente que sus documentos fueron aprobados.
+                                        </small>
+                                        @break
+
+                                    @case('rechazo')
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fa fa-times-circle me-1"></i>
+                                            Notifica al cliente que sus documentos fueron rechazados.
+                                        </small>
+                                        @break
+
+                                    @case('correo_personalizado')
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fa fa-pen me-1"></i>
+                                            Permite enviar un correo personalizado al cliente.
+                                        </small>
+                                        @break
+                                @endswitch
                             </div>
                         </div>
-                    </form>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="border-top pt-3 mt-4">
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="{{ route('manager.settings.stage-email-actions.index') }}" class="btn btn-secondary">
+                        <i class="fa fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save me-2"></i>Guardar configuración
+                    </button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

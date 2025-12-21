@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Validation\ValidatorGroup;
 use App\Models\Validation\ValidatorGroupConfiguration;
+use App\Models\Validation\ValidatorGroupConfigurationHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentGroupsController extends Controller
 {
@@ -230,9 +232,17 @@ class DocumentGroupsController extends Controller
                 ->groupBy('category');
         }
 
+        // Get recent configuration history
+        $history = $group->configurationHistory()
+            ->with('user')
+            ->latest()
+            ->limit(10)
+            ->get();
+
         return view('managers.views.settings.documents.groups.configuration', [
             'group' => $group,
             'configurations' => $configurations,
+            'history' => $history,
         ]);
     }
 
@@ -246,11 +256,32 @@ class DocumentGroupsController extends Controller
             'configurations.*' => 'boolean',
         ]);
 
-        // Update each configuration
-        foreach ($request->input('configurations', []) as $configId => $value) {
-            ValidatorGroupConfiguration::where('id', $configId)
+        // Update each configuration and log changes
+        foreach ($request->input('configurations', []) as $configId => $newValue) {
+            $config = ValidatorGroupConfiguration::where('id', $configId)
                 ->where('validator_group_id', $group->id)
-                ->update(['value' => $value]);
+                ->first();
+
+            if ($config) {
+                $oldValue = $config->value;
+
+                // Only log if value actually changed
+                if ((bool) $oldValue !== (bool) $newValue) {
+                    ValidatorGroupConfigurationHistory::create([
+                        'validator_group_id' => $group->id,
+                        'configuration_id' => $config->id,
+                        'user_id' => Auth::id(),
+                        'configuration_key' => $config->key,
+                        'configuration_label' => $config->label,
+                        'old_value' => $oldValue,
+                        'new_value' => $newValue,
+                        'action' => 'update',
+                    ]);
+                }
+
+                // Update configuration
+                $config->update(['value' => $newValue]);
+            }
         }
 
         return back()->with('success', 'Configuraciones actualizadas exitosamente.');

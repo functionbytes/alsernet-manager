@@ -9,21 +9,89 @@
     <div class="widget-content">
         @include('managers.components.alerts')
 
+        <!-- Statistics Cards -->
+        <div class="row mb-4 g-3">
+            <div class="col-md-3">
+                <div class="card bg-light-primary stat-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div>
+                                <h6 class="card-title text-primary mb-2">Miembros</h6>
+                                <h4 class="mb-1 fw-bold">{{ $group->users->count() }}</h4>
+                                <small class="text-muted">Usuarios asignados</small>
+                            </div>
+                            <i class="fas fa-users text-primary opacity-50" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light-success stat-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div>
+                                <h6 class="card-title text-success mb-2">Activo</h6>
+                                <h4 class="mb-1 fw-bold">{{ $group->is_active ? 'Sí' : 'No' }}</h4>
+                                <small class="text-muted">Estado del grupo</small>
+                            </div>
+                            <i class="fas fa-check-circle text-success opacity-50" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light-info stat-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div>
+                                <h6 class="card-title text-info mb-2">Configuraciones</h6>
+                                <h4 class="mb-1 fw-bold">{{ $configurations->sum(fn($cats) => $cats->count()) }}</h4>
+                                <small class="text-muted">Opciones disponibles</small>
+                            </div>
+                            <i class="fas fa-sliders text-info opacity-50" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light-warning stat-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div>
+                                <h6 class="card-title text-warning mb-2">Habilitadas</h6>
+                                <h4 class="mb-1 fw-bold">
+                                    @php
+                                        $enabledCount = $configurations->sum(fn($cats) => $cats->where('value', true)->count());
+                                    @endphp
+                                    {{ $enabledCount }}
+                                </h4>
+                                <small class="text-muted">Activas</small>
+                            </div>
+                            <i class="fas fa-toggle-on text-warning opacity-50" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Sidebar -->
             <div class="col-lg-3">
+                <!-- Información del Grupo -->
                 <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0 fw-bold">
                             <i class="fas fa-info-circle me-2"></i>Información del Grupo
                         </h6>
+                    </div>
+                    <div class="card-body">
                         <div class="mb-3">
                             <label class="small text-muted d-block mb-1">Nombre</label>
                             <strong>{{ $group->name }}</strong>
                         </div>
                         <div class="mb-3">
                             <label class="small text-muted d-block mb-1">Clave</label>
-                            <code class="text-primary">{{ $group->key }}</code>
+                            <code class="text-primary small">{{ $group->key }}</code>
                         </div>
                         <div class="mb-3">
                             <label class="small text-muted d-block mb-1">Estado</label>
@@ -32,10 +100,6 @@
                             </span>
                         </div>
                         <div class="mb-3">
-                            <label class="small text-muted d-block mb-1">Miembros</label>
-                            <span class="badge bg-primary">{{ $group->users->count() }}</span>
-                        </div>
-                        <div>
                             <label class="small text-muted d-block mb-1">Modo de Asignación</label>
                             @php
                                 $modeLabels = [
@@ -44,11 +108,55 @@
                                     'load_balanced' => 'Balance de Carga'
                                 ];
                             @endphp
-                            <small>{{ $modeLabels[$group->assignment_mode] ?? $group->assignment_mode }}</small>
+                            <small class="d-block">{{ $modeLabels[$group->assignment_mode] ?? $group->assignment_mode }}</small>
                         </div>
                     </div>
                 </div>
 
+                <!-- Miembros del Grupo -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0 fw-bold">
+                            <i class="fas fa-users me-2"></i>Miembros ({{ $group->users->count() }})
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        @if($group->users->count() > 0)
+                            <div class="list-group list-group-flush">
+                                @foreach($group->users as $user)
+                                    <div class="list-group-item px-3 py-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-initials flex-shrink-0" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                                {{ strtoupper(substr($user->firstname ?? '', 0, 1)) }}{{ strtoupper(substr($user->lastname ?? '', 0, 1)) }}
+                                            </div>
+                                            <div class="flex-grow-1 min-width-0">
+                                                <small class="d-block text-truncate fw-semibold">
+                                                    {{ $user->firstname }} {{ $user->lastname }}
+                                                </small>
+                                                <small class="text-muted d-block text-truncate">{{ $user->email }}</small>
+                                            </div>
+                                            @if($user->pivot->priority === 'primary')
+                                                <span class="badge bg-primary-subtle text-primary small" data-bs-toggle="tooltip" title="Usuario principal">
+                                                    <i class="fas fa-star"></i>
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary-subtle text-secondary small" data-bs-toggle="tooltip" title="Usuario de respaldo">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-3 text-center text-muted">
+                                <small>Sin miembros asignados</small>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Acciones -->
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('manager.settings.documents.groups.edit', $group->id) }}" class="btn btn-sm btn-outline-primary w-100 mb-2">
@@ -134,6 +242,54 @@
                         </div>
                     @endif
                 </form>
+
+                <!-- Change History Widget -->
+                @if($history->count() > 0)
+                    <div class="card mt-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 fw-bold">
+                                <i class="fas fa-history me-2"></i>Historial de cambios
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="timeline-list">
+                                @foreach($history as $entry)
+                                    <div class="timeline-item px-3 py-3 border-bottom">
+                                        <div class="d-flex gap-3">
+                                            <div class="flex-shrink-0">
+                                                <div class="timeline-marker bg-{{ $entry->new_value ? 'success' : 'warning' }}">
+                                                    <i class="fas fa-{{ $entry->new_value ? 'toggle-on' : 'toggle-off' }} text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-start justify-content-between mb-1">
+                                                    <div>
+                                                        <h6 class="mb-0 fw-semibold">{{ $entry->configuration_label }}</h6>
+                                                        <small class="text-muted">
+                                                            {{ $entry->new_value ? 'Habilitada' : 'Deshabilitada' }}
+                                                        </small>
+                                                    </div>
+                                                    <small class="text-muted text-nowrap ms-2">
+                                                        {{ $entry->created_at->diffForHumans() }}
+                                                    </small>
+                                                </div>
+                                                <small class="d-block text-muted">
+                                                    Por: <strong>{{ $entry->user?->firstname }} {{ $entry->user?->lastname }}</strong>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-info mt-3" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Sin historial</strong>
+                        <p class="mb-0 small mt-2">Aún no se han realizado cambios en las configuraciones de este grupo.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -153,6 +309,37 @@
 
         .card-header {
             border-bottom: 1px solid #e9ecef;
+        }
+
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none !important;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .timeline-marker.bg-success {
+            background-color: #13C672 !important;
+        }
+
+        .timeline-marker.bg-warning {
+            background-color: #FEC90F !important;
         }
     </style>
 

@@ -116,6 +116,14 @@ class ValidatorGroup extends Model
         return $this->hasMany(ValidatorGroupConfiguration::class);
     }
 
+    /**
+     * Get configuration change history for this validator group.
+     */
+    public function configurationHistory(): HasMany
+    {
+        return $this->hasMany(ValidatorGroupConfigurationHistory::class);
+    }
+
     // =========================================================================
     // STATIC FINDERS
     // =========================================================================
