@@ -43,6 +43,9 @@ class DocumentsController extends Controller
         $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
             ->when($statusId, fn ($q) => $q->where('status_id', $statusId))
             ->when($loadId, fn ($q) => $q->where('load_id', $loadId))
+            // FILTROS DE VALIDACIÓN: Solo documentos asignados al grupo del usuario y en validación
+            ->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
+            ->whereIn('validation_status', ['pending', 'in_validation'])
             ->paginate($perPage);
 
         // Get statuses and loads for filters
@@ -59,6 +62,26 @@ class DocumentsController extends Controller
             'statuses' => $statuses,
             'loads' => $loads,
         ]);
+    }
+
+    /**
+     * Obtener los grupos de validación asignados al usuario actual
+     *
+     * @return array Keys de grupos de validación (documentacion, licencias, contabilidad)
+     */
+    private function getUserValidatorGroups($user = null)
+    {
+        if (! $user) {
+            return [];
+        }
+
+        // Obtener todos los grupos de validación que el usuario pertenece
+        $validatorGroups = \App\Models\Validation\ValidatorGroup::whereHas(
+            'users',
+            fn ($q) => $q->where('users.id', $user->id)
+        )->pluck('key')->toArray();
+
+        return $validatorGroups ?: [];
     }
 
     /**
