@@ -104,19 +104,33 @@
 
                     <div class="col-12">
                         <div class="mb-3">
+                            @php
+                                $selectedUserIds = old('users', $group->users->pluck('id')->toArray());
+                                $userPriorities = old('user_priorities', $group->users->pluck('pivot.priority', 'id')->toArray());
+                            @endphp
+
                             <label class="control-label col-form-label mb-2">
                                 Usuarios disponibles
                                 @if(isset($users) && count($users) > 0)
-                                    <span class="badge bg-info ms-2">{{ count($users) }} disponibles</span>
+                                    <span class="badge bg-primary ms-2">{{ count($users) }} disponibles</span>
                                 @endif
                             </label>
 
-                            @if(isset($users) && count($users) > 0)
-                                @php
-                                    $selectedUserIds = old('users', $group->users->pluck('id')->toArray());
-                                    $userPriorities = old('user_priorities', $group->users->pluck('pivot.priority', 'id')->toArray());
-                                @endphp
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <small class="text-muted">
+                                    <span id="selected-count">{{ count($selectedUserIds ?? []) }}</span> usuario(s) seleccionado(s)
+                                </small>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">
+                                        <i class="fas fa-check-square me-1"></i> Seleccionar todos
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="deselect-all">
+                                        <i class="fas fa-square me-1"></i> Deseleccionar todos
+                                    </button>
+                                </div>
+                            </div>
 
+                            @if(isset($users) && count($users) > 0)
                                 <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
                                     <div class="row g-2">
                                         @foreach($users as $user)
@@ -125,26 +139,25 @@
                                                 $priority = $userPriorities[$user->id] ?? 'primary';
                                             @endphp
                                             <div class="col-md-6">
-                                                <div class="card border h-100 {{ $isSelected ? 'border-primary' : '' }}">
+                                                <div class="card mb-0 user-selection-card {{ $isSelected ? 'active' : '' }}" data-user-id="{{ $user->id }}">
                                                     <div class="card-body p-3">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input user-checkbox"
-                                                                   type="checkbox"
-                                                                   name="users[]"
-                                                                   value="{{ $user->id }}"
-                                                                   id="user_{{ $user->id }}"
-                                                                   {{ $isSelected ? 'checked' : '' }}>
-                                                            <label class="form-check-label w-100" for="user_{{ $user->id }}">
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="fw-semibold">{{ $user->firstname }} {{ $user->lastname }}</div>
-                                                                        <small class="text-muted">{{ $user->email }}</small>
-                                                                    </div>
+                                                        <input class="user-checkbox-input"
+                                                               type="checkbox"
+                                                               name="users[]"
+                                                               value="{{ $user->id }}"
+                                                               id="user_{{ $user->id }}"
+                                                               {{ $isSelected ? 'checked' : '' }}>
+                                                        <label class="user-label w-100" for="user_{{ $user->id }}">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fas fa-user fa-2x me-3 text-primary"></i>
+                                                                <div>
+                                                                    <strong class="d-block mb-0">{{ $user->firstname }} {{ $user->lastname }}</strong>
+                                                                    <p class="text-muted mb-0">{{ $user->email }}</p>
                                                                 </div>
-                                                            </label>
-                                                        </div>
+                                                            </div>
+                                                        </label>
                                                         <div class="mt-2 priority-selector" style="{{ $isSelected ? '' : 'display: none;' }}">
-                                                            <select name="user_priorities[]" class="form-select form-select-sm">
+                                                            <select name="user_priorities[]" class="form-select form-select-sm select2">
                                                                 <option value="primary" {{ $priority == 'primary' ? 'selected' : '' }}>Primario</option>
                                                                 <option value="backup" {{ $priority == 'backup' ? 'selected' : '' }}>Respaldo</option>
                                                             </select>
@@ -156,19 +169,7 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <small class="text-muted">
-                                        <span id="selected-count">{{ count($selectedUserIds) }}</span> usuario(s) seleccionado(s)
-                                    </small>
-                                    <div>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">
-                                            <i class="fas fa-check-square me-1"></i> Seleccionar todos
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" id="deselect-all">
-                                            <i class="fas fa-square me-1"></i> Deseleccionar todos
-                                        </button>
-                                    </div>
-                                </div>
+
                             @else
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
@@ -235,6 +236,42 @@
 @endsection
 
 @section('scripts')
+<style>
+/* Ocultar checkbox visualmente pero mantenerlo funcional para accesibilidad */
+.user-checkbox-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Estilos de las tarjetas de selección de usuarios */
+.user-selection-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.user-selection-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #90bb13;
+}
+
+.user-selection-card.active {
+    border-color: #90bb13 !important;
+    background-color: rgba(144, 187, 19, 0.05);
+    box-shadow: 0 2px 8px rgba(144, 187, 19, 0.2);
+}
+
+.user-label {
+    cursor: pointer;
+    margin: 0;
+    display: block;
+    width: 100%;
+}
+</style>
+
 <script>
 $(document).ready(function() {
     @if (session('success'))
@@ -247,21 +284,21 @@ $(document).ready(function() {
 
     // Función para actualizar el contador de usuarios seleccionados
     function updateSelectedCount() {
-        const count = $('.user-checkbox:checked').length;
+        const count = $('.user-checkbox-input:checked').length;
         $('#selected-count').text(count);
     }
 
     // Manejar cambios en los checkboxes
-    $('.user-checkbox').on('change', function() {
+    $('.user-checkbox-input').on('change', function() {
         const $card = $(this).closest('.card-body');
         const $prioritySelector = $card.find('.priority-selector');
 
         if ($(this).is(':checked')) {
             $prioritySelector.slideDown(200);
-            $card.closest('.card').addClass('border-primary');
+            $card.closest('.user-selection-card').addClass('active');
         } else {
             $prioritySelector.slideUp(200);
-            $card.closest('.card').removeClass('border-primary');
+            $card.closest('.user-selection-card').removeClass('active');
         }
 
         updateSelectedCount();
@@ -269,18 +306,24 @@ $(document).ready(function() {
 
     // Seleccionar todos
     $('#select-all').on('click', function() {
-        $('.user-checkbox').prop('checked', true).trigger('change');
+        $('.user-checkbox-input').prop('checked', true).trigger('change');
     });
 
     // Deseleccionar todos
     $('#deselect-all').on('click', function() {
-        $('.user-checkbox').prop('checked', false).trigger('change');
+        $('.user-checkbox-input').prop('checked', false).trigger('change');
+    });
+
+    // Manejar click en toda la tarjeta
+    $('.user-selection-card').on('click', function() {
+        const checkbox = $(this).find('.user-checkbox-input');
+        checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
     });
 
     // Inicializar estados
-    $('.user-checkbox:checked').each(function() {
+    $('.user-checkbox-input:checked').each(function() {
         $(this).closest('.card-body').find('.priority-selector').show();
-        $(this).closest('.card').addClass('border-primary');
+        $(this).closest('.user-selection-card').addClass('active');
     });
 });
 </script>
