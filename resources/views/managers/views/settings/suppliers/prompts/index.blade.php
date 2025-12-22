@@ -20,7 +20,7 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.settings.supplier-prompts.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.settings.suppliers.prompts.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
@@ -91,7 +91,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.supplier-prompts.index') }}">
+                <form method="GET" action="{{ route('manager.settings.suppliers.prompts.index') }}">
                     <div class="row align-items-center">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -165,7 +165,7 @@
                                         <small class="text-muted">{{ strtoupper($prompt->output_language) }}</small>
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" action="{{ route('manager.settings.supplier-prompts.toggle', $prompt->uid) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('manager.settings.suppliers.prompts.toggle', $prompt->uid) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -182,12 +182,12 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.supplier-prompts.edit', $prompt->uid) }}">
+                                                    <a class="dropdown-item" href="{{ route('manager.settings.suppliers.prompts.edit', $prompt->uid) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.settings.supplier-prompts.duplicate', $prompt->uid) }}">
+                                                    <form method="POST" action="{{ route('manager.settings.suppliers.prompts.duplicate', $prompt->uid) }}">
                                                         @csrf
                                                         <button type="submit" class="dropdown-item">
                                                             Duplicar
@@ -200,7 +200,7 @@
                                                             class="dropdown-item text-success delete-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#delete-modal"
-                                                            data-url="{{ route('manager.settings.supplier-prompts.destroy', $prompt->uid) }}"
+                                                            data-url="{{ route('manager.settings.suppliers.prompts.destroy', $prompt->uid) }}"
                                                             data-title="Eliminar prompt: {{ $prompt->label }}">
                                                         Eliminar
                                                     </button>
