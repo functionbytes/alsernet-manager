@@ -454,6 +454,11 @@
                                 <span class="hide-menu">Condiciones de validación</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Políticas SLA</span>
+                            </a>
+                        </li>
 
                         <li><span class="sidebar-divider"></span></li>
 

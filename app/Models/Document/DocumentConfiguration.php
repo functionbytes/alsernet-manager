@@ -12,10 +12,16 @@ class DocumentConfiguration extends Model
         'document_type',
         'document_type_label',
         'required_documents',
+        'storage_disk',
+        'storage_path',
+        'storage_config',
+        'is_storage_enabled',
     ];
 
     protected $casts = [
         'required_documents' => 'array',
+        'storage_config' => 'array',
+        'is_storage_enabled' => 'boolean',
     ];
 
     /**
@@ -38,5 +44,52 @@ class DocumentConfiguration extends Model
                 'document_type_label' => $label,
             ]
         );
+    }
+
+    /**
+     * Get the storage disk name to use for this configuration
+     * Returns custom disk if enabled, otherwise returns default 'media'
+     */
+    public function getStorageDisk(): string
+    {
+        if ($this->is_storage_enabled && ! empty($this->storage_disk)) {
+            return $this->storage_disk;
+        }
+
+        return config('filesystems.default', 'media');
+    }
+
+    /**
+     * Get the storage path to use within the disk
+     * Returns custom path if configured, otherwise returns default
+     */
+    public function getStoragePath(): string
+    {
+        if ($this->is_storage_enabled && ! empty($this->storage_path)) {
+            return $this->storage_path;
+        }
+
+        return 'documents';
+    }
+
+    /**
+     * Check if custom storage is configured and enabled
+     */
+    public function hasCustomStorage(): bool
+    {
+        return $this->is_storage_enabled && ! empty($this->storage_disk);
+    }
+
+    /**
+     * Get storage configuration summary for display
+     */
+    public function getStorageConfigSummary(): array
+    {
+        return [
+            'enabled' => $this->is_storage_enabled,
+            'disk' => $this->storage_disk ?? 'default',
+            'path' => $this->storage_path ?? 'documents',
+            'has_config' => ! empty($this->storage_config),
+        ];
     }
 }

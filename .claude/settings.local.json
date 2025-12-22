@@ -175,35 +175,20 @@
       "Bash(do php -l \"$file\")",
       "Bash(do php -l \"$f\")",
       "mcp__laravel-boost__list-routes",
-      "mcp__laravel-boost__get-absolute-url"
+      "mcp__laravel-boost__get-absolute-url",
+      "Bash(npx -y @anthropic-ai/dev-chrome:*)",
+      "Bash(npx -y @anthropic-ai/claude-in-chrome --version)",
+      "Bash(open \"https://manager.test/manager/settings/documents/groups/1/configuration\")"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "n8n-mcp",
-    "n8n-workflows Docs",
     "context7",
     "chrome-devtools",
-    "mcp-filesystem",
-    "mcp-http",
-    "mcp-smtp",
-    "mcp-mongodb",
-    "mcp-codemap",
-    "laravel-boost",
-    "dev-chrome"
+    "laravel-boost"
   ],
-  "disabledMcpjsonServers": [
-    "n8n-mcp",
-    "n8n-workflows Docs",
-    "context7",
-    "chrome-devtools",
-    "mcp-filesystem",
-    "mcp-http",
-    "mcp-smtp",
-    "mcp-mongodb",
-    "mcp-codemap"
-  ],
+  "disabledMcpjsonServers": [],
   "outputStyle": "Learning"
 }

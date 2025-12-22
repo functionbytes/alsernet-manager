@@ -2817,4 +2817,140 @@ class DocumentsController extends Controller
 
         return view('administratives.views.documents.emails.preview', compact('mail', 'document'));
     }
+
+    /**
+     * Get available network disks for dropdown
+     */
+    public function getNetworkDisks()
+    {
+        try {
+            // Obtener discos desde la configuración
+            $disksConfig = config('filesystems.disks');
+            $disks = [];
+
+            foreach ($disksConfig as $diskName => $diskConfig) {
+                $driver = $diskConfig['driver'] ?? 'unknown';
+
+                $disks[] = [
+                    'name' => $diskName,
+                    'label' => ucfirst($diskName),
+                    'driver' => $driver,
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'disks' => $disks,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting network disks: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los discos configurados',
+                'disks' => [],
+            ], 500);
+        }
+    }
+
+    /**
+     * Upload documents to network drive
+     */
+    public function uploadToNetworkDrive(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Documento no encontrado',
+                ], 404);
+            }
+
+            $request->validate([
+                'network_disk' => 'required|string',
+                'documents' => 'required|array',
+                'documents.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            ]);
+
+            // Obtener el nombre del disco desde la petición
+            $diskName = $request->input('network_disk');
+
+            // Validar que el disco existe en la configuración
+            if (! config("filesystems.disks.{$diskName}")) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Disco de red no configurado en el sistema',
+                ], 400);
+            }
+
+            $uploadedFiles = [];
+            $uploadCount = 0;
+
+            foreach ($request->file('documents') as $docKey => $file) {
+                try {
+                    // Create directory structure: /documentos/{order_id}/{document_uid}/
+                    $path = "documentos/{$document->order_id}/{$document->uid}";
+
+                    // Store file using configured disk
+                    $filename = time().'_'.$file->getClientOriginalName();
+                    $diskPath = \Storage::disk($diskName)->putFileAs($path, $file, $filename);
+
+                    if ($diskPath) {
+                        $uploadedFiles[$docKey] = [
+                            'filename' => $filename,
+                            'path' => $diskPath,
+                            'disk' => $diskName,
+                        ];
+                        $uploadCount++;
+
+                        \Log::info('Document uploaded to network drive', [
+                            'document_uid' => $document->uid,
+                            'disk' => $diskName,
+                            'path' => $diskPath,
+                            'file' => $filename,
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Error uploading file to network drive', [
+                        'document_uid' => $document->uid,
+                        'file' => $docKey,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            if ($uploadCount === 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No se pudieron subir los documentos a la carpeta compartida',
+                ], 400);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Se subieron $uploadCount documento(s) al disco: {$diskName}",
+                'uploaded_files' => $uploadedFiles,
+                'disk' => $diskName,
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error uploading to network drive: '.$e->getMessage(), [
+                'uid' => $uid,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al subir los documentos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
 }

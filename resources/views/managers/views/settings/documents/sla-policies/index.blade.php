@@ -77,7 +77,7 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-danger mb-2">Con Escalamiento</h6>
+                                        <h6 class="card-title text-success mb-2">Con escalamiento</h6>
                                         <h4 class="mb-1 fw-bold">{{ $stats['with_escalation'] }}</h4>
                                         <small class="text-muted">Políticas con escalamiento</small>
                                     </div>
@@ -128,7 +128,9 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <strong>{{ $policy->name }}</strong>
+                                            <a href="{{ route('manager.settings.documents.sla-policies.edit', $policy->id) }}" class="text-decoration-none">
+                                                <strong>{{ $policy->name }}</strong>
+                                            </a>
                                             @if($policy->is_default)
                                                 <br><small class="badge bg-success-subtle text-success">Por defecto</small>
                                             @endif
@@ -178,19 +180,19 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('manager.settings.documents.sla-policies.edit', $policy->id) }}">
-                                                        <i class="fas fa-edit"></i> Editar
+                                                        Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.settings.documents.sla-policies.destroy', $policy->id) }}"
-                                                          onsubmit="return confirm('¿Estás seguro de eliminar esta política SLA?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="fas fa-trash"></i> Eliminar
-                                                        </button>
-                                                    </form>
+                                                    <a
+                                                            class="dropdown-item text-success delete-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#delete-modal"
+                                                            data-url="{{ route('manager.settings.documents.sla-policies.destroy', $policy->id) }}"
+                                                            data-title="Eliminar política SLA: {{ $policy->name }}">
+                                                        Eliminar
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -240,13 +242,25 @@
         </div>
     </div>
 
+    @include('managers.includes.delete')
+
 @endsection
 
 @push('scripts')
 <script>
 $(document).ready(function() {
+    // Toggle form handling
     $('.toggle-form').on('submit', function() {
         $(this).find('.toggle-checkbox').prop('disabled', true);
+    });
+
+    // Delete modal functionality
+    $('.delete-btn').on('click', function() {
+        const deleteUrl = $(this).data('url');
+        const deleteTitle = $(this).data('title');
+
+        $('#delete-modal .modal-title').text(deleteTitle);
+        $('#delete-link').attr('href', deleteUrl);
     });
 
     @if (session('success'))

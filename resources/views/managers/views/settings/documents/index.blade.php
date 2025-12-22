@@ -181,6 +181,59 @@
                 </div>
             </div>
 
+            <!-- Opción 4: Almacenamiento de Documentos -->
+            <div class="col-md-6 mt-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header border-bottom py-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0 fw-bold text-dark">
+                                Almacenamiento de documentos
+                            </h6>
+                            <span class="badge bg-light-warning">Almacenamiento</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <p class="text-muted mb-3">
+                            Configura <strong>dónde se guardan los archivos</strong> de documentos subidos por clientes
+                            y administradores (carpeta local, FTP, red compartida).
+                        </p>
+
+                        <div class="alert alert-info alert-sm py-2 px-3 mb-3" role="alert">
+                            <strong>¿Qué configuras aquí?</strong>
+                        </div>
+
+                        <ul class="list-unstyled ms-3 mb-4">
+                            <li class="mb-2">
+                                <strong>Almacenamiento local</strong>
+                                <br>
+                                <small class="text-muted">Guarda archivos en el servidor donde está instalada la aplicación.</small>
+                            </li>
+                            <li class="mb-2">
+                                <strong>Servidor FTP/SFTP</strong>
+                                <br>
+                                <small class="text-muted">Conecta a un servidor FTP remoto para almacenar archivos de forma centralizada.</small>
+                            </li>
+                            <li class="mb-2">
+                                <strong>Carpeta compartida en red</strong>
+                                <br>
+                                <small class="text-muted">Usa una carpeta compartida montada (SMB/NFS) para almacenar archivos accesibles desde múltiples servidores.</small>
+                            </li>
+                        </ul>
+
+                        <p class="text-muted small border-top pt-3">
+                            Configura diferentes destinos de almacenamiento según el tipo de documento para mayor control.
+                        </p>
+                    </div>
+
+                    <div class="card-footer border-top">
+                        <a href="{{ route('manager.settings.documents.configurations.storage') }}" class="btn btn-primary w-100">
+                            <i class="fa fa-hard-drive me-2"></i> Ir a configuración de almacenamiento
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 

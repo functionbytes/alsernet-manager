@@ -31,6 +31,17 @@
                             </div>
 
                             <div class="col-lg-6 mb-3">
+                                <label class="form-label">Etiqueta (Label)</label>
+                                <input type="text" class="form-control @error('label') is-invalid @enderror"
+                                       name="label" value="{{ old('label') }}"
+                                       placeholder="ej: Documento de Identidad">
+                                <small class="text-muted">Etiqueta mostrada en la interfaz</small>
+                                @error('label')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
                                 <label class="form-label">Estado</label>
                                 <select class="form-select @error('is_active') is-invalid @enderror" name="is_active">
                                     <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Activo</option>

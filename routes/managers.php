@@ -366,6 +366,10 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/', [DocumentConfigurationController::class, 'globalSettings'])->name('manager.settings.documents.configurations.global');
                 Route::post('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('manager.settings.documents.configurations.update');
                 Route::get('/search-templates', [DocumentConfigurationController::class, 'searchTemplates'])->name('manager.settings.documents.configurations.search-templates');
+
+                // Storage configuration routes
+                Route::get('/storage', [DocumentConfigurationController::class, 'storageSettings'])->name('manager.settings.documents.configurations.storage');
+                Route::post('/storage', [DocumentConfigurationController::class, 'updateStorageSettings'])->name('manager.settings.documents.configurations.storage.update');
             });
 
             Route::group(['prefix' => 'types'], function () {
@@ -398,14 +402,14 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             });
 
             // SLA Policies
-            Route::prefix('sla-policies')->name('sla-policies.')->group(function () {
-                Route::get('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'index'])->name('index');
-                Route::get('create', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'create'])->name('create');
-                Route::post('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'store'])->name('store');
-                Route::get('{policy}/edit', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'edit'])->name('edit');
-                Route::put('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'update'])->name('update');
-                Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'toggle'])->name('toggle');
-                Route::delete('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'destroy'])->name('destroy');
+            Route::group(['prefix' => 'sla-policies'], function () {
+                Route::get('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'index'])->name('manager.settings.documents.sla-policies.index');
+                Route::get('create', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'create'])->name('manager.settings.documents.sla-policies.create');
+                Route::post('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'store'])->name('manager.settings.documents.sla-policies.store');
+                Route::get('{policy}/edit', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'edit'])->name('manager.settings.documents.sla-policies.edit');
+                Route::put('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'update'])->name('manager.settings.documents.sla-policies.update');
+                Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'toggle'])->name('manager.settings.documents.sla-policies.toggle');
+                Route::delete('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'destroy'])->name('manager.settings.documents.sla-policies.destroy');
             });
 
             // Document Groups

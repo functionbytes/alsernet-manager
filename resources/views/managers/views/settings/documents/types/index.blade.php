@@ -172,12 +172,14 @@
                                                     </li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
-                                                        <button type="button"
-                                                                class="dropdown-item  delete-btn"
-                                                                data-type="{{ $type->slug }}"
-                                                                data-label="{{ $type->getLabel() }}">
+                                                        <a
+                                                                class="dropdown-item text-success delete-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete-modal"
+                                                                data-url="{{ route('manager.settings.documents.types.destroy', $type->slug) }}"
+                                                                data-title="Eliminar tipo: {{ $type->getLabel() }}">
                                                             Eliminar
-                                                        </button>
+                                                        </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -229,46 +231,7 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-danger text-white border-0">
-                    <h5 class="modal-title fw-bold" id="deleteModalLabel">
-                        <i class="fa fa-triangle-exclamation me-2"></i>
-                        Confirmar Eliminación
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <p class="mb-3">¿Estás seguro de que deseas eliminar el tipo de documento <strong class="text-danger" id="deleteTypeName"></strong>?</p>
-                    <div class="alert alert-warning bg-warning-subtle border border-warning mb-0">
-                        <div class="d-flex align-items-start">
-                            <i class="fa fa-circle-exclamation me-2 mt-1"></i>
-                            <div>
-                                <strong>Advertencia:</strong>
-                                <p class="mb-0 small mt-1">Esta acción eliminará todas las traducciones y requisitos asociados. Esta operación no se puede deshacer.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer border-0 bg-light">
-                    <button type="button" class="btn btn-light-subtle" data-bs-dismiss="modal">
-                        <i class="fa fa-xmark me-1"></i>
-                        Cancelar
-                    </button>
-                    <form id="deleteForm" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-trash me-1"></i>
-                            Eliminar
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('managers.includes.delete')
 
 @endsection
 
@@ -282,17 +245,12 @@ $(document).ready(function() {
     });
 
     // Delete modal functionality
-    const deleteModal = new bootstrap.Modal($('#deleteModal')[0]);
-    const deleteForm = $('#deleteForm');
-    const deleteTypeName = $('#deleteTypeName');
-
     $('.delete-btn').on('click', function() {
-        const typeSlug = $(this).data('type');
-        const typeLabel = $(this).data('label');
+        const deleteUrl = $(this).data('url');
+        const deleteTitle = $(this).data('title');
 
-        deleteTypeName.text(typeLabel);
-        deleteForm.attr('action', "{{ url('manager/settings/documents/types') }}/" + typeSlug);
-        deleteModal.show();
+        $('#delete-modal .modal-title').text(deleteTitle);
+        $('#delete-link').attr('href', deleteUrl);
     });
 
     @if (session('success'))

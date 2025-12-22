@@ -76,6 +76,10 @@ Route::group(['prefix' => 'administrative', 'middleware' => ['auth']], function 
         Route::get('/{uid}/emails', [DocumentsController::class, 'emailHistory'])->name('administrative.documents.emails');
         Route::get('/emails/preview/{mailUid}', [DocumentsController::class, 'emailPreview'])->name('administrative.documents.emails.preview');
 
+        // Network storage routes
+        Route::get('/network-disks', [DocumentsController::class, 'getNetworkDisks'])->name('administrative.documents.network-disks');
+        Route::post('/{uid}/upload-to-network', [DocumentsController::class, 'uploadToNetworkDrive'])->name('administrative.documents.upload-to-network');
+
     });
 
 });

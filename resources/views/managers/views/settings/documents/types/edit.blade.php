@@ -17,6 +17,44 @@
                             </a>
                         </div>
 
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-tabs mb-4" id="documentTypeTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active"
+                                        id="basic-info-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#basic-info"
+                                        type="button" role="tab">
+                                    <i class="fas fa-info-circle me-1"></i> Información básica
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link"
+                                        id="validation-stages-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#validation-stages"
+                                        type="button" role="tab">
+                                    <i class="fas fa-route me-1"></i> Etapas de validación
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link"
+                                        id="requirements-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#requirements"
+                                        type="button" role="tab">
+                                    <i class="fas fa-paperclip me-1"></i> Requisitos de documentos
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Tabs Content -->
+                        <div class="tab-content" id="documentTypeTabsContent">
+                            <!-- Tab 1: Información Básica -->
+                            <div class="tab-pane fade show active"
+                                 id="basic-info"
+                                 role="tabpanel">
+
                         <div class="row">
                             <div class="col-lg-6 mb-3">
                                 <label class="form-label">Slug <span class="text-danger">*</span></label>
@@ -25,6 +63,17 @@
                                        pattern="[a-z0-9_\-]+" required>
                                 <small class="text-muted">Identificador único, solo minúsculas, números y guiones</small>
                                 @error('slug')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <label class="form-label">Etiqueta (Label)</label>
+                                <input type="text" class="form-control @error('label') is-invalid @enderror"
+                                       name="label" value="{{ old('label', $documentType->label) }}"
+                                       placeholder="ej: Documento de Identidad">
+                                <small class="text-muted">Etiqueta mostrada en la interfaz</small>
+                                @error('label')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -92,12 +141,18 @@
                             </div>
                         </div>
 
-                        <!-- Validation Stages -->
-                        <div class="border-top pt-4 mt-4">
-                            <div class="mb-3">
-                                <h6 class="mb-2"><i class="fas fa-route text-primary me-2"></i>Etapas de validación</h6>
-                                <small class="text-muted">Configura el flujo de validación con orden y condiciones</small>
                             </div>
+                            <!-- End Tab 1: Información Básica -->
+
+                            <!-- Tab 2: Etapas de Validación -->
+                            <div class="tab-pane fade"
+                                 id="validation-stages"
+                                 role="tabpanel">
+
+                        <div class="mb-3">
+                            <h6 class="mb-0">Etapas de validación</h6>
+                            <small class="text-muted d-block mb-3">Configura el flujo de validación con orden y condiciones</small>
+                        </div>
 
                             <div id="validationStagesContainer" class="mb-3">
                                 @if($validatorGroups->isEmpty())
@@ -216,21 +271,26 @@
                                     </div>
                                 @endif
                             </div>
-                        </div>
 
-                        <!-- Requisitos -->
-                        <div class="border-top pt-4 mt-4">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div>
-                                    <h6 class="mb-1">
-                                        <i class="fas fa-paperclip text-primary me-2"></i>Requisitos de documentos
-                                    </h6>
-                                    <small class="text-muted">Archivos que el usuario debe subir para este tipo</small>
-                                </div>
-                                <button type="button" class="btn btn-sm btn-primary" id="addRequirement">
-                                    <i class="fas fa-plus me-1"></i>Agregar requisito
-                                </button>
                             </div>
+                            <!-- End Tab 2: Etapas de Validación -->
+
+                            <!-- Tab 3: Requisitos de Documentos -->
+                            <div class="tab-pane fade"
+                                 id="requirements"
+                                 role="tabpanel">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h6 class="mb-0">
+                                    Requisitos de documentos
+                                </h6>
+                                <small class="text-muted d-block">Archivos que el usuario debe subir para este tipo</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary" id="addRequirement">
+                                <i class="fas fa-plus me-1"></i>Agregar requisito
+                            </button>
+                        </div>
 
                             <div id="requirementsContainer">
                                 @forelse($documentType->requirements as $reqIndex => $requirement)
@@ -362,7 +422,12 @@
                                     </div>
                                 @endforelse
                             </div>
+
+                            </div>
+                            <!-- End Tab 3: Requisitos de Documentos -->
+
                         </div>
+                        <!-- End Tab Content -->
 
                         <!-- Footer -->
                         <div class="border-top pt-3 mt-4">

@@ -174,24 +174,24 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.edit', $group->id) }}">
-                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                        Editar
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.configuration', $group->id) }}">
-                                                        <i class="fas fa-sliders me-2"></i>Configuración
+                                                        Configuración
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.settings.documents.groups.destroy', $group->id) }}"
-                                                          onsubmit="return confirm('¿Estás seguro de eliminar este grupo?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="fas fa-trash me-2"></i>Eliminar
-                                                        </button>
-                                                    </form>
+                                                    <button type="button"
+                                                            class="dropdown-item text-success delete-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#delete-modal"
+                                                            data-url="{{ route('manager.settings.documents.groups.destroy', $group->id) }}"
+                                                            data-title="Eliminar grupo: {{ $group->name }}">
+                                                        Eliminar
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -242,13 +242,25 @@
         </div>
     </div>
 
+    @include('managers.includes.delete')
+
 @endsection
 
 @push('scripts')
 <script>
 $(document).ready(function() {
+    // Toggle form handling
     $('.toggle-form').on('submit', function() {
         $(this).find('.toggle-checkbox').prop('disabled', true);
+    });
+
+    // Delete modal functionality
+    $('.delete-btn').on('click', function() {
+        const deleteUrl = $(this).data('url');
+        const deleteTitle = $(this).data('title');
+
+        $('#delete-modal .modal-title').text(deleteTitle);
+        $('#delete-link').attr('href', deleteUrl);
     });
 
     @if (session('success'))

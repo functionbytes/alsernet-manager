@@ -20,6 +20,54 @@ class DocumentConfigurationController extends Controller
     }
 
     /**
+     * Mostrar panel de configuración de almacenamiento
+     */
+    public function storageSettings()
+    {
+        $storageSettings = $this->getStorageSettings();
+
+        return view('managers.views.settings.documents.configurations.storage', [
+            'storageSettings' => $storageSettings,
+        ]);
+    }
+
+    /**
+     * Actualizar configuración de almacenamiento
+     */
+    public function updateStorageSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'default_storage_disk' => 'required|string',
+        ]);
+
+        try {
+            // Validar que el disco existe en la configuración
+            $availableDisks = array_keys(config('filesystems.disks'));
+            if (! in_array($validated['default_storage_disk'], $availableDisks)) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'El disco seleccionado no está configurado en el sistema');
+            }
+
+            // Guardar el disco seleccionado para documentos
+            Setting::set('documents.default_storage_disk', $validated['default_storage_disk']);
+
+            return redirect()
+                ->back()
+                ->with('success', 'Disco de almacenamiento actualizado correctamente');
+        } catch (\Exception $e) {
+            \Log::error('Error updating storage configuration', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Error al actualizar la configuración: '.$e->getMessage());
+        }
+    }
+
+    /**
      * Mostrar panel de configuración global
      */
     public function globalSettings()
@@ -189,5 +237,46 @@ class DocumentConfigurationController extends Controller
                 'error' => 'Error al buscar templates: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Obtener configuración de almacenamiento
+     */
+    private function getStorageSettings(): array
+    {
+        // Obtener discos disponibles desde la configuración
+        $disksConfig = config('filesystems.disks');
+        $availableDisks = [];
+
+        foreach ($disksConfig as $diskName => $diskConfig) {
+            $driver = $diskConfig['driver'] ?? 'unknown';
+            $root = $diskConfig['root'] ?? 'N/A';
+            $url = $diskConfig['url'] ?? null;
+
+            // Crear descripción legible
+            $description = match ($driver) {
+                'local' => 'Almacenamiento local en: '.$root,
+                'ftp' => 'Servidor FTP: '.($diskConfig['host'] ?? 'No configurado'),
+                'sftp' => 'Servidor SFTP: '.($diskConfig['host'] ?? 'No configurado'),
+                's3' => 'Amazon S3: '.($diskConfig['bucket'] ?? 'No configurado'),
+                default => 'Driver: '.$driver,
+            };
+
+            $availableDisks[$diskName] = [
+                'name' => $diskName,
+                'driver' => $driver,
+                'root' => $root,
+                'url' => $url,
+                'description' => $description,
+            ];
+        }
+
+        // Obtener disco seleccionado actualmente
+        $currentDisk = Setting::get('documents.default_storage_disk', 'media');
+
+        return [
+            'available_disks' => $availableDisks,
+            'current_disk' => $currentDisk,
+        ];
     }
 }

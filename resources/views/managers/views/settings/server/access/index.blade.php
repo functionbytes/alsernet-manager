@@ -246,7 +246,7 @@
                     <i class="fa fa-times me-1"></i> Cancelar
                 </button>
                 <button type="button" class="btn btn-danger" id="confirmClearBtn">
-                    <i class="fa fa-trash me-1"></i> Confirmar limpieza
+                    Confirmar limpieza
                 </button>
             </div>
         </div>

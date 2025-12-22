@@ -26,7 +26,7 @@
                         <p class="text-muted small mb-3">Define el nombre y la descripción de la política SLA.</p>
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-12">
                         <div class="mb-3">
                             <label class="control-label col-form-label">
                                 Nombre
@@ -107,7 +107,8 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="business_hours_only" class="form-check-input" id="businessHours" {{ old('business_hours_only') ? 'checked' : 'checked' }}>
+                                <input type="hidden" name="business_hours_only" value="0">
+                                <input type="checkbox" name="business_hours_only" class="form-check-input" id="businessHours" value="1" {{ old('business_hours_only') ? 'checked' : 'checked' }}>
                                 <label class="form-check-label" for="businessHours">
                                     Solo horario comercial (Lunes a Viernes 9:00 - 17:00)
                                 </label>
@@ -116,13 +117,13 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-12">
                         <div class="mb-3">
                             <label class="control-label col-form-label">
                                 Zona horaria
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="timezone" class="form-control" required>
+                            <select name="timezone" class="form-control select2" required>
                                 <option value="America/Mexico_City" {{ old('timezone', 'America/Mexico_City') === 'America/Mexico_City' ? 'selected' : '' }}>America/Mexico_City</option>
                                 <option value="America/New_York" {{ old('timezone') === 'America/New_York' ? 'selected' : '' }}>America/New_York</option>
                                 <option value="America/Los_Angeles" {{ old('timezone') === 'America/Los_Angeles' ? 'selected' : '' }}>America/Los_Angeles</option>
@@ -146,7 +147,8 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="enable_escalation" class="form-check-input" id="enableEscalation" {{ old('enable_escalation') ? 'checked' : '' }}>
+                                <input type="hidden" name="enable_escalation" value="0">
+                                <input type="checkbox" name="enable_escalation" class="form-check-input" id="enableEscalation" value="1" {{ old('enable_escalation') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="enableEscalation">
                                     Activar escalamiento automático
                                 </label>
@@ -155,7 +157,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-12">
                         <div class="mb-3">
                             <label class="control-label col-form-label">Umbral de escalamiento (%)</label>
                             <input type="number" name="escalation_threshold_percent" class="form-control" value="{{ old('escalation_threshold_percent', 80) }}" min="1" max="100" placeholder="80">
@@ -176,7 +178,8 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="active" class="form-check-input" id="active" {{ old('active', true) ? 'checked' : '' }}>
+                                <input type="hidden" name="active" value="0">
+                                <input type="checkbox" name="active" class="form-check-input" id="active" value="1" {{ old('active', true) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="active">
                                     Activar política
                                 </label>
@@ -189,14 +192,12 @@
             </div>
 
             <div class="card-footer bg-light border-top">
-                <div class="d-flex justify-content-between">
-                    <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-chevron-left"></i> Volver
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Crear Política SLA
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-1">
+                    Guardar
+                </button>
+                <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-secondary  w-100">
+                    Volver
+                </a>
             </div>
 
         </form>

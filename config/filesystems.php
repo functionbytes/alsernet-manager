@@ -61,10 +61,18 @@ return [
             'username' => env('FTP_USERNAME'),
             'password' => env('FTP_PASSWORD'),
             'port' => env('FTP_PORT', 21),
-            'root' => env('FTP_ROOT', ''), // Directorio raíz en el servidor FTP
+            'root' => env('FTP_ROOT', ''),
             'passive' => true,
             'ssl' => false,
             'timeout' => 30,
+        ],
+
+        // Carpeta compartida en red para documentos
+        'network_shared' => [
+            'driver' => 'local',
+            'root' => env('NETWORK_SHARED_PATH', storage_path('app/network')),
+            'url' => env('NETWORK_SHARED_URL', env('APP_URL').'/network'),
+            'visibility' => 'private',
         ],
 
     ],
