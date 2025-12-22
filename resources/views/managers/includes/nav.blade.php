@@ -570,6 +570,11 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.storage') }}" class="sidebar-link">
+                                <span class="hide-menu">Almacenamiento</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a href="{{ route('manager.settings.maintenance') }}" class="sidebar-link">
                                 <span class="hide-menu">Mantenimiento</span>
                             </a>

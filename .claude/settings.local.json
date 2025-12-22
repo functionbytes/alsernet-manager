@@ -178,7 +178,8 @@
       "mcp__laravel-boost__get-absolute-url",
       "Bash(npx -y @anthropic-ai/dev-chrome:*)",
       "Bash(npx -y @anthropic-ai/claude-in-chrome --version)",
-      "Bash(open \"https://manager.test/manager/settings/documents/groups/1/configuration\")"
+      "Bash(open \"https://manager.test/manager/settings/documents/groups/1/configuration\")",
+      "Bash(open \"https://manager.test/manager/settings/documents/sla-policies\")"
     ],
     "deny": [],
     "ask": []

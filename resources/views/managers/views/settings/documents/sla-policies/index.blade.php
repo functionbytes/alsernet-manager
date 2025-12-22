@@ -175,24 +175,24 @@
                                     <td class="text-center">
                                         <div class="dropdown">
                                             <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-duotone fa-solid fa-ellipsis"></i>
+                                                <i class="fas fa-ellipsis-vertical"></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('manager.settings.documents.sla-policies.edit', $policy->id) }}">
-                                                        Editar
+                                                        <i class="fas fa-edit me-2"></i>Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <a
-                                                            class="dropdown-item text-success delete-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#delete-modal"
-                                                            data-url="{{ route('manager.settings.documents.sla-policies.destroy', $policy->id) }}"
-                                                            data-title="Eliminar política SLA: {{ $policy->name }}">
-                                                        Eliminar
-                                                    </a>
+                                                    <button type="button"
+                                                        class="dropdown-item text-danger delete-btn"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#delete-modal"
+                                                        data-url="{{ route('manager.settings.documents.sla-policies.destroy', $policy->id) }}"
+                                                        data-title="Eliminar política SLA: {{ $policy->name }}">
+                                                        <i class="fas fa-trash me-2"></i>Eliminar
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -247,29 +247,36 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Toggle form handling
-    $('.toggle-form').on('submit', function() {
-        $(this).find('.toggle-checkbox').prop('disabled', true);
-    });
+    <script>
+        $(document).ready(function() {
+            // Toggle form handling
+            $('.toggle-form').on('submit', function() {
+                $(this).find('.toggle-checkbox').prop('disabled', true);
+            });
 
-    // Delete modal functionality
-    $('.delete-btn').on('click', function() {
-        const deleteUrl = $(this).data('url');
-        const deleteTitle = $(this).data('title');
+            // Delete modal functionality
+            $('.delete-btn').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        $('#delete-modal .modal-title').text(deleteTitle);
-        $('#delete-link').attr('href', deleteUrl);
-    });
+                const deleteUrl = $(this).data('url');
+                const deleteTitle = $(this).data('title');
 
-    @if (session('success'))
-        toastr.success('{{ session('success') }}', 'Éxito');
-    @endif
+                $('#delete-modal .modal-title').text(deleteTitle);
+                $('#delete-link').attr('href', deleteUrl);
 
-    @if (session('error'))
-        toastr.error('{{ session('error') }}', 'Error');
-    @endif
-});
-</script>
+                // Show the modal explicitly
+                const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+                deleteModal.show();
+            });
+
+            @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Éxito');
+            @endif
+
+            @if (session('error'))
+            toastr.error('{{ session('error') }}', 'Error');
+            @endif
+        });
+    </script>
 @endpush
