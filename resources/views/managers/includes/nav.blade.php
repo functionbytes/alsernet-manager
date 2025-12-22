@@ -440,6 +440,11 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.documents.configurations.storage') }}" class="sidebar-link">
+                                <span class="hide-menu">Almacenamiento</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a href="{{ route('manager.settings.documents.groups.index') }}" class="sidebar-link">
                                 <span class="hide-menu">Grupos de validación</span>
                             </a>

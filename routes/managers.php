@@ -406,6 +406,7 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'index'])->name('manager.settings.documents.sla-policies.index');
                 Route::get('create', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'create'])->name('manager.settings.documents.sla-policies.create');
                 Route::post('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'store'])->name('manager.settings.documents.sla-policies.store');
+                Route::get('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'show'])->name('manager.settings.documents.sla-policies.show');
                 Route::get('{policy}/edit', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'edit'])->name('manager.settings.documents.sla-policies.edit');
                 Route::put('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'update'])->name('manager.settings.documents.sla-policies.update');
                 Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'toggle'])->name('manager.settings.documents.sla-policies.toggle');

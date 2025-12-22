@@ -49,6 +49,14 @@ class DocumentSlaPoliciesController extends Controller
     }
 
     /**
+     * Display the specified SLA policy (redirect to edit).
+     */
+    public function show(DocumentSlaPolicy $policy)
+    {
+        return redirect()->route('manager.settings.documents.sla-policies.edit', $policy->id);
+    }
+
+    /**
      * Store a newly created SLA policy.
      */
     public function store(Request $request)
