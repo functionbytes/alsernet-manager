@@ -299,6 +299,11 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/hours', [HoursSettingsController::class, 'index'])->name('manager.settings.hours');
         Route::post('/hours/update', [HoursSettingsController::class, 'update'])->name('manager.settings.hours.update');
 
+        // Storage management routes
+        Route::get('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'index'])->name('manager.settings.storage');
+        Route::post('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'update'])->name('manager.settings.storage.update');
+        Route::delete('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'destroy'])->name('manager.settings.storage.destroy');
+
         Route::group(['prefix' => 'mailers'], function () {
 
             // Templates
@@ -370,6 +375,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 // Storage configuration routes
                 Route::get('/storage', [DocumentConfigurationController::class, 'storageSettings'])->name('manager.settings.documents.configurations.storage');
                 Route::post('/storage', [DocumentConfigurationController::class, 'updateStorageSettings'])->name('manager.settings.documents.configurations.storage.update');
+                Route::post('/storage/test', [DocumentConfigurationController::class, 'testStorageConnection'])->name('manager.settings.documents.configurations.storage.test');
+                Route::get('/storage/stats/{diskName}', [DocumentConfigurationController::class, 'getStorageStats'])->name('manager.settings.documents.configurations.storage.stats');
+                Route::get('/storage/history', [DocumentConfigurationController::class, 'getStorageConfigurationHistory'])->name('manager.settings.documents.configurations.storage.history');
             });
 
             Route::group(['prefix' => 'types'], function () {

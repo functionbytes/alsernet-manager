@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Managers\Settings\Documents;
 
 use App\Http\Controllers\Controller;
+use App\Models\Document\DocumentStorageConfigurationHistory;
 use App\Models\Mail\MailTemplate;
 use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * OrderConfigurationController
@@ -38,6 +41,7 @@ class DocumentConfigurationController extends Controller
     {
         $validated = $request->validate([
             'default_storage_disk' => 'required|string',
+            'reason' => 'nullable|string|max:500',
         ]);
 
         try {
@@ -49,8 +53,29 @@ class DocumentConfigurationController extends Controller
                     ->with('error', 'El disco seleccionado no está configurado en el sistema');
             }
 
+            // Obtener disco anterior
+            $oldDisk = Setting::get('documents.default_storage_disk', 'media');
+            $newDisk = $validated['default_storage_disk'];
+
             // Guardar el disco seleccionado para documentos
-            Setting::set('documents.default_storage_disk', $validated['default_storage_disk']);
+            Setting::set('documents.default_storage_disk', $newDisk);
+
+            // Registrar cambio en el historial solo si realmente cambió
+            if ($oldDisk !== $newDisk) {
+                $diskConfig = config('filesystems.disks.'.$newDisk);
+                DocumentStorageConfigurationHistory::create([
+                    'old_disk_name' => $oldDisk,
+                    'new_disk_name' => $newDisk,
+                    'changed_by' => Auth::id(),
+                    'driver' => $diskConfig['driver'] ?? 'unknown',
+                    'reason' => $validated['reason'] ?? null,
+                    'action' => 'update',
+                    'metadata' => [
+                        'old_driver' => config('filesystems.disks.'.$oldDisk)['driver'] ?? 'unknown',
+                        'new_driver' => $diskConfig['driver'] ?? 'unknown',
+                    ],
+                ]);
+            }
 
             return redirect()
                 ->back()
@@ -271,6 +296,32 @@ class DocumentConfigurationController extends Controller
             ];
         }
 
+        // Obtener discos personalizados de la base de datos
+        $customDisksJson = Setting::get('system.custom_storage_disks', '[]');
+        $customDisks = json_decode($customDisksJson, true) ?: [];
+
+        // Agregar discos personalizados a la lista
+        foreach ($customDisks as $customDisk) {
+            $diskName = $customDisk['name'];
+            $driver = $customDisk['driver'];
+
+            $description = match ($driver) {
+                'local' => 'Almacenamiento local en: '.($customDisk['root'] ?? 'N/A'),
+                'ftp' => 'Servidor FTP: '.($customDisk['host'] ?? 'No configurado'),
+                'sftp' => 'Servidor SFTP: '.($customDisk['host'] ?? 'No configurado'),
+                's3' => 'Amazon S3: '.($customDisk['bucket'] ?? 'No configurado'),
+                default => 'Driver: '.$driver,
+            };
+
+            $availableDisks[$diskName] = [
+                'name' => $diskName,
+                'driver' => $driver,
+                'root' => $customDisk['root'] ?? 'N/A',
+                'url' => $customDisk['url'] ?? null,
+                'description' => $description.' (Personalizado)',
+            ];
+        }
+
         // Obtener disco seleccionado actualmente
         $currentDisk = Setting::get('documents.default_storage_disk', 'media');
 
@@ -278,5 +329,273 @@ class DocumentConfigurationController extends Controller
             'available_disks' => $availableDisks,
             'current_disk' => $currentDisk,
         ];
+    }
+
+    /**
+     * Probar conexión a un disco de almacenamiento.
+     */
+    public function testStorageConnection(Request $request): JsonResponse
+    {
+        $startTime = microtime(true);
+
+        try {
+            $diskName = $request->input('disk_name');
+
+            if (! $diskName) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nombre de disco requerido',
+                    'response_time' => 0,
+                ], 400);
+            }
+
+            // Validar que el disco existe
+            $availableDisks = array_keys(config('filesystems.disks'));
+            if (! in_array($diskName, $availableDisks)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Disco no configurado',
+                    'response_time' => round((microtime(true) - $startTime) * 1000),
+                ]);
+            }
+
+            $diskConfig = config('filesystems.disks.'.$diskName);
+            $driver = $diskConfig['driver'] ?? 'unknown';
+
+            // Prueba según tipo de driver
+            $result = match ($driver) {
+                'local' => $this->testLocalStorage($diskConfig, $diskName),
+                's3' => $this->testS3Connection($diskConfig, $diskName),
+                'ftp' => $this->testFtpConnection($diskConfig, $diskName),
+                'sftp' => $this->testSftpConnection($diskConfig, $diskName),
+                default => ['success' => false, 'message' => "Driver '$driver' no soporta prueba de conexión"],
+            };
+
+            $responseTime = round((microtime(true) - $startTime) * 1000);
+
+            return response()->json([
+                'success' => $result['success'],
+                'message' => $result['message'],
+                'response_time' => $responseTime,
+                'metadata' => $result['metadata'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error testing storage connection', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al probar conexión: '.$e->getMessage(),
+                'response_time' => round((microtime(true) - $startTime) * 1000),
+            ], 500);
+        }
+    }
+
+    /**
+     * Probar almacenamiento local.
+     */
+    private function testLocalStorage(array $config, string $diskName): array
+    {
+        $root = $config['root'] ?? null;
+
+        if (! $root) {
+            return ['success' => false, 'message' => 'Ruta raíz no configurada'];
+        }
+
+        if (! is_dir($root)) {
+            return ['success' => false, 'message' => "Directorio no existe: $root"];
+        }
+
+        if (! is_readable($root)) {
+            return ['success' => false, 'message' => "Directorio no es legible: $root"];
+        }
+
+        if (! is_writable($root)) {
+            return ['success' => false, 'message' => "Directorio no es escribible: $root"];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Almacenamiento local accesible',
+            'metadata' => ['path' => $root],
+        ];
+    }
+
+    /**
+     * Probar conexión a Amazon S3.
+     */
+    private function testS3Connection(array $config, string $diskName): array
+    {
+        try {
+            $disk = Storage::disk($diskName);
+            $disk->exists('.');
+
+            return [
+                'success' => true,
+                'message' => 'Conexión S3 exitosa',
+                'metadata' => ['bucket' => $config['bucket'] ?? 'unknown'],
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error en conexión S3: '.$e->getMessage()];
+        }
+    }
+
+    /**
+     * Probar conexión FTP.
+     */
+    private function testFtpConnection(array $config, string $diskName): array
+    {
+        try {
+            $disk = Storage::disk($diskName);
+            // Try to list files from the disk to verify connection
+            $disk->listContents('/');
+
+            return [
+                'success' => true,
+                'message' => 'Conexión FTP exitosa',
+                'metadata' => ['host' => $config['host'] ?? 'unknown'],
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error en conexión FTP: '.$e->getMessage()];
+        }
+    }
+
+    /**
+     * Probar conexión SFTP.
+     */
+    private function testSftpConnection(array $config, string $diskName): array
+    {
+        try {
+            $disk = Storage::disk($diskName);
+            // Try to list files from the disk to verify connection
+            $disk->listContents('/');
+
+            return [
+                'success' => true,
+                'message' => 'Conexión SFTP exitosa',
+                'metadata' => ['host' => $config['host'] ?? 'unknown'],
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error en conexión SFTP: '.$e->getMessage()];
+        }
+    }
+
+    /**
+     * Obtener estadísticas de almacenamiento de un disco.
+     */
+    public function getStorageStats(Request $request, string $diskName): JsonResponse
+    {
+        try {
+            $diskConfig = config('filesystems.disks.'.$diskName);
+
+            if (! $diskConfig) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Disco no configurado',
+                ], 404);
+            }
+
+            $driver = $diskConfig['driver'] ?? 'unknown';
+            $stats = null;
+
+            // Obtener estadísticas según tipo de driver
+            if ($driver === 'local') {
+                $root = $diskConfig['root'] ?? null;
+                if ($root && is_dir($root)) {
+                    $totalSpace = disk_total_space($root);
+                    $freeSpace = disk_free_space($root);
+                    $usedSpace = $totalSpace - $freeSpace;
+
+                    $stats = [
+                        'total' => $this->formatBytes($totalSpace),
+                        'free' => $this->formatBytes($freeSpace),
+                        'used' => $this->formatBytes($usedSpace),
+                        'percent' => round(($usedSpace / $totalSpace) * 100, 2),
+                    ];
+                }
+            }
+
+            // Para otros drivers, no disponible
+            if (! $stats) {
+                $stats = [
+                    'total' => 'N/A',
+                    'free' => 'N/A',
+                    'used' => 'N/A',
+                    'percent' => null,
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'stats' => $stats,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting storage stats', [
+                'disk' => $diskName,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener estadísticas: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtener historial de cambios de configuración de almacenamiento.
+     */
+    public function getStorageConfigurationHistory(): JsonResponse
+    {
+        try {
+            $history = DocumentStorageConfigurationHistory::with('user')
+                ->recent()
+                ->limit(10)
+                ->get()
+                ->map(function ($record) {
+                    return [
+                        'id' => $record->id,
+                        'old_disk' => $record->old_disk_name,
+                        'new_disk' => $record->new_disk_name,
+                        'driver' => $record->driver,
+                        'user' => $record->user?->firstname.' '.$record->user?->lastname,
+                        'user_id' => $record->changed_by,
+                        'action_label' => $record->action_label,
+                        'reason' => $record->reason,
+                        'created_at' => $record->created_at,
+                        'created_at_relative' => $record->created_at?->diffForHumans(),
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'history' => $history,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting storage configuration history', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener historial: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Formatear bytes a formato legible.
+     */
+    private function formatBytes(int $bytes, int $precision = 2): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, $precision).' '.$units[$pow];
     }
 }
