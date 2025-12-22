@@ -28,7 +28,18 @@ class SupplierContentController extends Controller
 
         $statusFilter = $request->input('status', 'pending');
 
-        return view('managers.views.settings.suppliers.content.index', compact('pageTitle', 'breadcrumb', 'statusFilter'));
+        // Get suppliers for filter dropdown
+        $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
+
+        // Get stats
+        $stats = [
+            'pending' => SupplierAiContent::where('status', 'pending')->count(),
+            'approved' => SupplierAiContent::where('status', 'approved')->count(),
+            'rejected' => SupplierAiContent::where('status', 'rejected')->count(),
+            'avg_quality' => 0,
+        ];
+
+        return view('managers.views.settings.suppliers.content.index', compact('pageTitle', 'breadcrumb', 'statusFilter', 'suppliers', 'stats'));
     }
 
     /**
@@ -353,6 +364,211 @@ class SupplierContentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener el costo del contenido',
+            ], 500);
+        }
+    }
+
+    /**
+     * Get stats for content review dashboard
+     */
+    public function getStats(): JsonResponse
+    {
+        try {
+            $stats = [
+                'pending' => SupplierAiContent::where('status', 'pending')->count(),
+                'approved' => SupplierAiContent::where('status', 'approved')->count(),
+                'rejected' => SupplierAiContent::where('status', 'rejected')->count(),
+                'avg_quality' => 0,
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $stats,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error getting stats: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener las estadísticas',
+            ], 500);
+        }
+    }
+
+    /**
+     * Bulk action handler (approve, reject, regenerate)
+     */
+    public function bulkAction(Request $request): JsonResponse
+    {
+        $request->validate([
+            'action' => 'required|in:approve,reject,regenerate',
+            'ids' => 'required|array',
+            'ids.*' => 'string',
+        ]);
+
+        try {
+            $action = $request->input('action');
+            $ids = $request->input('ids');
+            $successCount = 0;
+
+            foreach ($ids as $id) {
+                $content = SupplierAiContent::where('uid', $id)->first();
+                if (! $content) {
+                    continue;
+                }
+
+                $result = match ($action) {
+                    'approve' => $this->contentService->approveContent($content, [
+                        'approved_by' => auth()->id(),
+                        'approved_at' => now(),
+                    ]),
+                    'reject' => $this->contentService->rejectContent($content, [
+                        'rejected_by' => auth()->id(),
+                        'rejected_at' => now(),
+                        'rejection_reason' => 'Bulk rejection',
+                    ]),
+                    'regenerate' => $this->contentService->regenerateContent($content, [
+                        'regeneration_notes' => 'Bulk regeneration',
+                    ]),
+                    default => ['success' => false],
+                };
+
+                if ($result['success']) {
+                    $successCount++;
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Se procesaron {$successCount} de ".count($ids).' contenidos',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in bulk action: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al ejecutar la acción masiva: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Edit content inline
+     */
+    public function edit(Request $request, string $uid): JsonResponse
+    {
+        $request->validate([
+            'field' => 'required|string',
+            'value' => 'required|string',
+        ]);
+
+        try {
+            $content = SupplierAiContent::where('uid', $uid)->firstOrFail();
+            $field = $request->input('field');
+            $value = $request->input('value');
+
+            if (in_array($field, ['title', 'description', 'meta_title', 'meta_description'])) {
+                $content->update([$field => $value]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Contenido actualizado correctamente',
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Campo no permitido para edición',
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error('Error editing content: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al editar el contenido: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Filter content by status
+     */
+    public function filterByStatus(string $status): JsonResponse
+    {
+        try {
+            $validStatuses = ['pending', 'approved', 'rejected', 'published'];
+
+            if (! in_array($status, $validStatuses)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Estado inválido',
+                ], 400);
+            }
+
+            $contents = SupplierAiContent::where('status', $status)
+                ->with(['supplier', 'prompt', 'validation'])
+                ->orderBy('created_at', 'desc')
+                ->limit(50)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $contents,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error filtering content: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al filtrar el contenido',
+            ], 500);
+        }
+    }
+
+    /**
+     * Perform action on single content (approve, reject, regenerate, etc.)
+     */
+    public function action(Request $request, string $uid): JsonResponse
+    {
+        $request->validate([
+            'action' => 'required|in:approve,reject,regenerate',
+            'notes' => 'nullable|string',
+            'reason' => 'nullable|string',
+        ]);
+
+        try {
+            $content = SupplierAiContent::where('uid', $uid)->firstOrFail();
+            $action = $request->input('action');
+
+            $result = match ($action) {
+                'approve' => $this->contentService->approveContent($content, [
+                    'approved_by' => auth()->id(),
+                    'approved_at' => now(),
+                    'notes' => $request->input('notes'),
+                ]),
+                'reject' => $this->contentService->rejectContent($content, [
+                    'rejected_by' => auth()->id(),
+                    'rejected_at' => now(),
+                    'rejection_reason' => $request->input('reason', 'Manual rejection'),
+                    'notes' => $request->input('notes'),
+                ]),
+                'regenerate' => $this->contentService->regenerateContent($content, [
+                    'regeneration_notes' => $request->input('notes'),
+                ]),
+                default => ['success' => false, 'message' => 'Invalid action'],
+            };
+
+            return response()->json([
+                'success' => $result['success'],
+                'message' => $result['message'] ?? 'Action completed',
+                'content' => $result['content'] ?? null,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error performing action: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al ejecutar la acción: '.$e->getMessage(),
             ], 500);
         }
     }

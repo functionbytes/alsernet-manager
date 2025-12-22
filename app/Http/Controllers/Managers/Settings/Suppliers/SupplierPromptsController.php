@@ -24,7 +24,19 @@ class SupplierPromptsController extends Controller
         $pageTitle = 'Gestión de Prompts de IA';
         $breadcrumb = 'Configuración / Proveedores / Prompts';
 
-        return view('managers.views.settings.suppliers.prompts.index', compact('pageTitle', 'breadcrumb'));
+        // Get suppliers for filter
+        $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
+
+        // Get stats
+        $stats = [
+            'total' => SupplierPrompt::count(),
+            'active' => SupplierPrompt::where('is_active', true)->count(),
+            'global' => SupplierPrompt::whereNull('supplier_id')->count(),
+            'supplier' => SupplierPrompt::whereNotNull('supplier_id')->count(),
+            'category' => SupplierPrompt::whereNotNull('category_id')->distinct('category_id')->count(),
+        ];
+
+        return view('managers.views.settings.suppliers.prompts.index', compact('pageTitle', 'breadcrumb', 'suppliers', 'stats'));
     }
 
     /**
@@ -37,28 +49,46 @@ class SupplierPromptsController extends Controller
 
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('type', 'like', "%{$search}%")
-                        ->orWhere('category', 'like', "%{$search}%");
+                    $q->where('label', 'like', "%{$search}%")
+                        ->orWhere('scope', 'like', "%{$search}%")
+                        ->orWhere('tone', 'like', "%{$search}%");
                 });
             }
 
-            if ($type = $request->input('type')) {
-                $query->where('type', $type);
+            if ($scope = $request->input('scope')) {
+                $query->where('scope', $scope);
             }
 
-            if ($category = $request->input('category')) {
-                $query->where('category', $category);
+            if ($supplierId = $request->input('supplier_id')) {
+                $query->where('supplier_id', $supplierId);
             }
 
             $totalRecords = SupplierPrompt::count();
             $filteredRecords = $query->count();
 
+            // Map DataTables column index to actual column names
+            $columns = ['label', 'scope', 'supplier_id', 'tone', 'priority', 'is_active'];
+            $orderColumnIndex = $request->input('order.0.column', 4);
+            $orderColumn = $columns[$orderColumnIndex] ?? 'priority';
+            $orderDir = $request->input('order.0.dir', 'desc');
+
             $prompts = $query
-                ->orderBy($request->input('order.0.column', 'created_at'), $request->input('order.0.dir', 'desc'))
+                ->orderBy($orderColumn, $orderDir)
                 ->skip($request->input('start', 0))
                 ->take($request->input('length', 10))
-                ->get();
+                ->get()
+                ->map(function (SupplierPrompt $prompt) {
+                    return [
+                        'uid' => $prompt->uid,
+                        'name' => $prompt->label,
+                        'scope' => $this->formatScope($prompt->scope),
+                        'target' => $prompt->supplier?->name ?? ($prompt->category_id ? "Cat: {$prompt->category_id}" : 'Global'),
+                        'type' => ucfirst($prompt->tone),
+                        'priority' => $prompt->priority,
+                        'is_active' => $this->formatStatus($prompt->is_active),
+                        'actions' => $this->getActions($prompt),
+                    ];
+                });
 
             return response()->json([
                 'draw' => $request->input('draw'),
@@ -75,6 +105,57 @@ class SupplierPromptsController extends Controller
                 'message' => 'Error al obtener los datos de prompts',
             ], 500);
         }
+    }
+
+    /**
+     * Format scope value for display
+     */
+    private function formatScope(string $scope): string
+    {
+        return match ($scope) {
+            'global' => 'Global',
+            'supplier' => 'Proveedor',
+            'category' => 'Categoría',
+            'source' => 'Fuente',
+            default => ucfirst($scope),
+        };
+    }
+
+    /**
+     * Format status for display
+     */
+    private function formatStatus(bool $isActive): string
+    {
+        $badge = $isActive ? 'success' : 'danger';
+        $text = $isActive ? 'Activo' : 'Inactivo';
+
+        return "<span class=\"badge bg-{$badge}\">{$text}</span>";
+    }
+
+    /**
+     * Get action buttons HTML
+     */
+    private function getActions(SupplierPrompt $prompt): string
+    {
+        return "
+            <div class=\"btn-group btn-group-sm\" role=\"group\">
+                <button type=\"button\" class=\"btn btn-outline-primary edit-prompt\" data-id=\"{$prompt->uid}\" title=\"Editar\">
+                    <i class=\"fas fa-edit\"></i>
+                </button>
+                <button type=\"button\" class=\"btn btn-outline-info preview-prompt\" data-id=\"{$prompt->uid}\" title=\"Vista previa\">
+                    <i class=\"fas fa-eye\"></i>
+                </button>
+                <button type=\"button\" class=\"btn btn-outline-warning toggle-prompt\" data-id=\"{$prompt->uid}\" title=\"Cambiar estado\">
+                    <i class=\"fas fa-power-off\"></i>
+                </button>
+                <button type=\"button\" class=\"btn btn-outline-secondary duplicate-prompt\" data-id=\"{$prompt->uid}\" title=\"Duplicar\">
+                    <i class=\"fas fa-copy\"></i>
+                </button>
+                <button type=\"button\" class=\"btn btn-outline-danger delete-prompt\" data-id=\"{$prompt->uid}\" data-name=\"{$prompt->label}\" title=\"Eliminar\">
+                    <i class=\"fas fa-trash\"></i>
+                </button>
+            </div>
+        ";
     }
 
     /**
@@ -96,18 +177,15 @@ class SupplierPromptsController extends Controller
         try {
             $prompt = SupplierPrompt::create([
                 'supplier_id' => $request->supplier_id,
-                'name' => $request->name,
-                'type' => $request->type,
-                'category' => $request->category,
-                'system_prompt' => $request->system_prompt,
-                'user_prompt' => $request->user_prompt,
-                'variables' => $request->variables ?? [],
-                'model' => $request->model ?? 'gpt-4',
-                'temperature' => $request->temperature ?? 0.7,
-                'max_tokens' => $request->max_tokens ?? 2000,
+                'label' => $request->label,
+                'scope' => $request->scope ?? 'global',
+                'prompt_template' => $request->prompt_template,
+                'output_language' => $request->output_language ?? 'es',
+                'tone' => $request->tone ?? 'professional',
+                'priority' => $request->priority ?? 0,
+                'seo_focus' => $request->boolean('seo_focus', false),
                 'is_active' => $request->boolean('is_active', true),
                 'version' => 1,
-                'metadata' => $request->metadata ?? [],
             ]);
 
             return response()->json([
@@ -127,12 +205,37 @@ class SupplierPromptsController extends Controller
     }
 
     /**
+     * Show prompt details
+     */
+    public function show(string $uid): JsonResponse
+    {
+        try {
+            $prompt = SupplierPrompt::where('uid', $uid)
+                ->with(['supplier'])
+                ->firstOrFail();
+
+            return response()->json([
+                'success' => true,
+                'data' => $prompt,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error getting prompt details: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los detalles del prompt',
+            ], 500);
+        }
+    }
+
+    /**
      * Show edit prompt form
      */
     public function edit(string $uid): View
     {
         $prompt = SupplierPrompt::where('uid', $uid)->firstOrFail();
-        $pageTitle = "Editar Prompt: {$prompt->name}";
+        $pageTitle = "Editar Prompt: {$prompt->label}";
         $breadcrumb = 'Configuración / Proveedores / Prompts / Editar';
 
         return view('managers.views.settings.suppliers.prompts.edit', compact('prompt', 'pageTitle', 'breadcrumb'));
@@ -147,23 +250,19 @@ class SupplierPromptsController extends Controller
             $prompt = SupplierPrompt::where('uid', $uid)->firstOrFail();
 
             // Increment version if content changed
-            $incrementVersion = $prompt->system_prompt !== $request->system_prompt
-                || $prompt->user_prompt !== $request->user_prompt;
+            $incrementVersion = $prompt->prompt_template !== $request->prompt_template;
 
             $prompt->update([
                 'supplier_id' => $request->supplier_id,
-                'name' => $request->name,
-                'type' => $request->type,
-                'category' => $request->category,
-                'system_prompt' => $request->system_prompt,
-                'user_prompt' => $request->user_prompt,
-                'variables' => $request->variables ?? $prompt->variables,
-                'model' => $request->model,
-                'temperature' => $request->temperature,
-                'max_tokens' => $request->max_tokens,
+                'label' => $request->label,
+                'scope' => $request->scope,
+                'prompt_template' => $request->prompt_template,
+                'output_language' => $request->output_language,
+                'tone' => $request->tone,
+                'priority' => $request->priority,
+                'seo_focus' => $request->boolean('seo_focus'),
                 'is_active' => $request->boolean('is_active'),
                 'version' => $incrementVersion ? $prompt->version + 1 : $prompt->version,
-                'metadata' => $request->metadata ?? $prompt->metadata,
             ]);
 
             return response()->json([
@@ -178,6 +277,34 @@ class SupplierPromptsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el prompt: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle prompt active status
+     */
+    public function toggle(string $uid): JsonResponse
+    {
+        try {
+            $prompt = SupplierPrompt::where('uid', $uid)->firstOrFail();
+            $prompt->is_active = ! $prompt->is_active;
+            $prompt->save();
+
+            return response()->json([
+                'success' => true,
+                'is_active' => $prompt->is_active,
+                'message' => $prompt->is_active
+                    ? 'Prompt activado exitosamente'
+                    : 'Prompt desactivado exitosamente',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error toggling prompt: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cambiar el estado del prompt: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -250,7 +377,7 @@ class SupplierPromptsController extends Controller
             $prompt = SupplierPrompt::where('uid', $uid)->firstOrFail();
 
             $newPrompt = $prompt->replicate();
-            $newPrompt->name = $prompt->name.' (Copia)';
+            $newPrompt->label = $prompt->label.' (Copia)';
             $newPrompt->version = 1;
             $newPrompt->is_active = false;
             $newPrompt->save();
