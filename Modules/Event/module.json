@@ -1,0 +1,12 @@
+{
+  "name": "Event",
+  "alias": "event",
+  "description": "Event management module for calendar and marketing events",
+  "keywords": ["event", "calendar", "marketing", "schedule"],
+  "priority": 0,
+  "providers": [
+    "Modules\\Event\\Providers\\EventServiceProvider",
+    "Modules\\Event\\Providers\\RouteServiceProvider"
+  ],
+  "files": []
+}

@@ -84,6 +84,7 @@
             "Modules\\Campaign\\": "Modules/Campaign/app/",
             "Modules\\Documents\\": "Modules/Documents/app/",
             "Modules\\Mail\\": "Modules/Mail/app/",
+            "Modules\\Media\\": "Modules/Media/app/",
             "Modules\\Prestashop\\": "Modules/Prestashop/app/",
             "Modules\\Returns\\": "Modules/Returns/app/",
             "Modules\\Subscriber\\": "Modules/Subscriber/app/",

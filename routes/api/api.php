@@ -3,10 +3,9 @@
 use App\Http\Controllers\Api\ErpController;
 use App\Http\Controllers\Api\Return\PublicReturnController;
 use App\Http\Controllers\Api\Return\ReturnController;
-use Modules\Subscriber\Http\Controllers\Api\SubscribersController;
-use App\Http\Controllers\Api\TicketsController;
 use Illuminate\Support\Facades\Route;
 use Modules\Documents\Http\Controllers\Api\DocumentsController;
+use Modules\Helpdesk\Http\Controllers\Api\TicketsController;
 
 // @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php
 // Route::group(['prefix' => 'subscribers'], function () {
@@ -49,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Helpdesk Conversations - Protected (requires authentication and permissions)
     Route::prefix('helpdesk')->name('api.helpdesk.')->group(function () {
-        Route::post('conversations/{id}/reply', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'replyAsAgent'])
+        Route::post('conversations/{id}/reply', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'replyAsAgent'])
             ->name('conversations.reply');
     });
 

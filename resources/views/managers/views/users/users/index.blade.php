@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -14,18 +14,22 @@
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
                                     <div class="input-group">
-                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i data-feather="search"></i></span>
-                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar por nombre, email o identificación" @isset($searchKey) value="{{ $searchKey }}" @endisset>
+                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i
+                                                    data-feather="search"></i></span>
+                                        <input class="form-control rounded-start w-100" type="text" id="search"
+                                               name="search" placeholder="Buscar por nombre, email o identificación"
+                                               @isset($searchKey) value="{{ $searchKey }}" @endisset>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="role" data-minimum-results-for-search="Infinity">
+                                    <select class="form-select select2" name="role"
+                                            data-minimum-results-for-search="Infinity">
                                         <option value="">Filtrar por rol</option>
                                         @forelse($availableRoles as $roleName => $roleLabel)
                                             <option value="{{ $roleName }}"
-                                                @if ($roleFilter === $roleName) selected @endif>
+                                                    @if ($roleFilter === $roleName) selected @endif>
                                                 {{ ucwords(str_replace('-', ' ', $roleName)) }}
                                             </option>
                                         @empty
@@ -35,7 +39,8 @@
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Buscar">
+                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-original-title="Buscar">
                                     <i class="fa-duotone fa-magnifying-glass"></i>
                                 </button>
                             </div>
@@ -66,7 +71,8 @@
                     @foreach ($users as $key => $user)
                         <tr class="search-items">
                             <td>
-                                <span class="usr-email-addr" data-email="{{ $user->firstname . ' ' . $user->lastname }}">{{ Str::words( Str::upper(Str::lower($user->firstname . ' ' . $user->lastname)), 12, '...')  }}</span>
+                                <span class="usr-email-addr"
+                                      data-email="{{ $user->firstname . ' ' . $user->lastname }}">{{ Str::words( Str::upper(Str::lower($user->firstname . ' ' . $user->lastname)), 12, '...')  }}</span>
                             </td>
                             <td>
                                 <span class="usr-email-addr" data-email="{{ $user->email }}">{{ $user->email }}</span>
@@ -78,23 +84,27 @@
                             </td>
 
                             <td>
-                                <span class="usr-ph-no" data-phone="{{ date('Y-m-d', strtotime($user->updated_at)) }}">{{ date('Y-m-d', strtotime($user->updated_at)) }}</span>
+                                <span class="usr-ph-no"
+                                      data-phone="{{ date('Y-m-d', strtotime($user->updated_at)) }}">{{ date('Y-m-d', strtotime($user->updated_at)) }}</span>
                             </td>
                             <td class="text-left">
                                 <div class="dropdown dropstart">
-                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.users.edit', $user->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('manager.users.edit', $user->uid) }}">
                                                 Editar
                                             </a>
                                         </li>
 
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('manager.users.destroy', $user->uid) }}">Eliminar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
+                                               data-href="{{ route('manager.users.destroy', $user->uid) }}">Eliminar</a>
                                         </li>
                                     </ul>
                                 </div>

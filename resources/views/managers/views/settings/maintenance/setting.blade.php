@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -17,47 +17,60 @@
 
                             <div class="col-12 ">
 
-                                    <div class="row align-items-center">
-                                        <div class=" col-sm-11 ">
-                                            <h5 class="mb-3">Habilitar modo mantenimiento</h5>
-                                            <p class="card-subtitle mb-3 mt-0">(Si "habilita" esta configuración, los clientes solo podran ver la vista de mantenimiento hasta q no sea de nuevo desabiltiado).</p>
-                                        </div>
-                                        <div class="col-sm-1 justify-content-end d-flex align-items">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="maintenance_mode" id="maintenance_mode"   @if(setting('maintenance_mode')=='true' ) checked @endif/>
-                                            </div>
+                                <div class="row align-items-center">
+                                    <div class=" col-sm-11 ">
+                                        <h5 class="mb-3">Habilitar modo mantenimiento</h5>
+                                        <p class="card-subtitle mb-3 mt-0">(Si "habilita" esta configuración, los
+                                            clientes solo podran ver la vista de mantenimiento hasta q no sea de nuevo
+                                            desabiltiado).</p>
+                                    </div>
+                                    <div class="col-sm-1 justify-content-end d-flex align-items">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="maintenance_mode"
+                                                   id="maintenance_mode"
+                                                   @if(setting('maintenance_mode')=='true' ) checked @endif/>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="border-top mt-4 pt-4 row align-items-center maintenance_mode @if(setting('maintenance_mode')=='false' ) d-none @endif" >
-                                        <div class="mb-3">
+                                <div class="border-top mt-4 pt-4 row align-items-center maintenance_mode @if(setting('maintenance_mode')=='false' ) d-none @endif">
+                                    <div class="mb-3">
                                         <label class="form-label">Llave secreta</label>
-                                        <input type="text" id="maintenance_mode_value"  name="maintenance_mode_value" value="{{ setting('maintenance_mode_value')!=null ? setting('maintenance_mode_value') :$secret}}" class="form-control" readonly=""  placeholder="Deje un mensaje en espera">
+                                        <input type="text" id="maintenance_mode_value" name="maintenance_mode_value"
+                                               value="{{ setting('maintenance_mode_value')!=null ? setting('maintenance_mode_value') :$secret}}"
+                                               class="form-control" readonly="" placeholder="Deje un mensaje en espera">
                                         <div class="alert alert-light-warning note mt-4 mb-0">
                                             <p class="mb-0">
                                                 <b class="pb-1 d-flex"> ¿Cómo utilizar la clave secreta? </b>
                                             <ol>
                                                 <li>
-                                                    La clave secreta se utiliza básicamente para acceder a su URL web. cuando esta en <b>en modo de mantenimiento.</b>
+                                                    La clave secreta se utiliza básicamente para acceder a su URL web.
+                                                    cuando esta en <b>en modo de mantenimiento.</b>
                                                 </li>
-                                                <li>Ahora copia tu generado <b>Llave secreta</b> desde el campo de entrada y péguelo en su URL para acceder a su URL web en modo de mantenimiento
-                                                    <b>Ej: {{ getUrl() }}/{{ setting('maintenance_mode_value')!=null ? setting('maintenance_mode_value') :$secret}}</b>
+                                                <li>Ahora copia tu generado <b>Llave secreta</b> desde el campo de
+                                                    entrada y péguelo en su URL para acceder a su URL web en modo de
+                                                    mantenimiento
+                                                    <b>Ej: {{ getUrl() }}
+                                                        /{{ setting('maintenance_mode_value')!=null ? setting('maintenance_mode_value') :$secret}}</b>
                                                 </li>
-                                                <li>Y también puede permitir que otras redes o IP accedan a su sitio web al <b>intercambio</b> Tu clave secreta con ellos.</li>
+                                                <li>Y también puede permitir que otras redes o IP accedan a su sitio web
+                                                    al <b>intercambio</b> Tu clave secreta con ellos.
+                                                </li>
                                             </ol>
                                             </p>
                                         </div>
-                                        </div>
                                     </div>
+                                </div>
 
                             </div>
                             <div class="col-12">
-                            <div class="border-top pt-1 mt-4">
-                                <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                <div class="border-top pt-1 mt-4">
+                                    <button type="submit"
+                                            class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
                                         Guardar
-                                </button>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
                         </div>
 
@@ -78,11 +91,11 @@
     <script type="text/javascript">
         Dropzone.autoDiscover = false;
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            $("#maintenance_mode").click(function(){
+            $("#maintenance_mode").click(function () {
                 var check = $(this).prop('checked');
-                if(check == true) {
+                if (check == true) {
                     $(".maintenance_mode").removeClass("d-none");
                 } else {
                     $(".maintenance_mode").addClass("d-none");
@@ -106,7 +119,7 @@
                         maxlength: "Debe contener al menos 4 caracter",
                     },
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     var $form = $('#formMaintenance');
                     var formData = new FormData($form[0]);
@@ -129,9 +142,9 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: function(response) {
+                        success: function (response) {
 
-                            if(response.success == true){
+                            if (response.success == true) {
 
                                 message = response.message;
 
@@ -141,11 +154,11 @@
                                     positionClass: "toast-bottom-right"
                                 });
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location.href = "{{ route('manager.dashboard') }}";
                                 }, 2000);
 
-                            }else{
+                            } else {
 
                                 $submitButton.prop('disabled', false);
                                 error = response.message;
@@ -169,11 +182,9 @@
             });
 
 
-
         });
 
     </script>
-
 
 @endpush
 

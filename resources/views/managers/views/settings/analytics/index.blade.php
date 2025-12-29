@@ -1,12 +1,11 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
-
 
     <div class="page-container ">
         <!-- START PAGE CONTENT WRAPPER -->
         <div class="page-content-wrapper ">
-           
+
             <div class="content sm-gutter">
                 <!-- START JUMBOTRON -->
                 <div data-pages="parallax">
@@ -21,9 +20,9 @@
                     </div>
                 </div>
                 <!-- END JUMBOTRON -->
-                
+
                 <div class="container sm-padding-10 no-padding">
-                                       <div class="row">
+                    <div class="row">
                         <div class="col-lg-3 col-sm-12 d-flex flex-column">
                             <div class="card no-border widget-loader-bar m-b-10">
                                 <div class="container-xs-height full-height">
@@ -32,14 +31,14 @@
                                             <div class="card-header  top-left top-right">
                                                 <div class="card-title">
                                                     <span class="font-montserrat fs-11 all-caps">Visitas Diarias<i
-                                                            class="fa fa-chevron-right"></i>
+                                                                class="fa fa-chevron-right"></i>
                                                     </span>
                                                 </div>
                                                 <div class="card-controls">
                                                     <ul>
                                                         <li><a href="#" class="portlet-refresh text-black"
-                                                                data-toggle="refresh"><i
-                                                                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                                               data-toggle="refresh"><i
+                                                                        class="portlet-icon portlet-icon-refresh"></i></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -74,14 +73,14 @@
                                             <div class="card-header  top-left top-right">
                                                 <div class="card-title">
                                                     <span class="font-montserrat fs-11 all-caps">Visitas Semanales<i
-                                                            class="fa fa-chevron-right"></i>
+                                                                class="fa fa-chevron-right"></i>
                                                     </span>
                                                 </div>
                                                 <div class="card-controls">
                                                     <ul>
                                                         <li><a href="#" class="portlet-refresh text-black"
-                                                                data-toggle="refresh"><i
-                                                                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                                               data-toggle="refresh"><i
+                                                                        class="portlet-icon portlet-icon-refresh"></i></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -115,14 +114,14 @@
                                             <div class="card-header  top-left top-right">
                                                 <div class="card-title">
                                                     <span class="font-montserrat fs-11 all-caps">Visitas Mensuales<i
-                                                            class="fa fa-chevron-right"></i>
+                                                                class="fa fa-chevron-right"></i>
                                                     </span>
                                                 </div>
                                                 <div class="card-controls">
                                                     <ul>
                                                         <li><a href="#" class="portlet-refresh text-black"
-                                                                data-toggle="refresh"><i
-                                                                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                                               data-toggle="refresh"><i
+                                                                        class="portlet-icon portlet-icon-refresh"></i></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -157,14 +156,14 @@
                                             <div class="card-header  top-left top-right">
                                                 <div class="card-title">
                                                     <span class="font-montserrat fs-11 all-caps">Visitas Anual<i
-                                                            class="fa fa-chevron-right"></i>
+                                                                class="fa fa-chevron-right"></i>
                                                     </span>
                                                 </div>
                                                 <div class="card-controls">
                                                     <ul>
                                                         <li><a href="#" class="portlet-refresh text-black"
-                                                                data-toggle="refresh"><i
-                                                                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                                               data-toggle="refresh"><i
+                                                                        class="portlet-icon portlet-icon-refresh"></i></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -192,66 +191,65 @@
 
                             </div>
                         </div>
-                      </div>
+                    </div>
 
-                      <div class="row">
+                    <div class="row">
                         <div class="col-lg-12 m-b-10 d-flex flex-column">
-                          <!-- START WIDGET widget_tableRankings-->
-                           <div class="widget-11-2 card no-border card-condensed no-margin widget-loader-circle d-flex flex-column align-self-stretch">
-                            <div class="card-header top-right">
-                              <div class="card-controls">
-                                <ul>
-                                  <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
-                              class="portlet-icon portlet-icon-refresh"></i></a>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                            <div class="padding-25">
-                              <div class="pull-left">
-                                <h2 class="text-success no-margin">Resultado</h2>
-                                <p class="no-margin">Paginas Visitadas</p>
-                              </div>
-            
-                              <div class="clearfix"></div>
-                            </div>
-                            <div class="auto-overflow widget-11-2-table">
-                              <table class="table table-condensed table-hover">
-                                <tbody>
-                                  @foreach($pagesWeekly as $page)
-                                  <tr>
-                                    <td class="text-center font-montserrat b-r b-dashed b-grey all-caps fs-12 w-50">{{$page['pageTitle']}}</td>
-                                    <td class="text-center  font-montserrat b-r b-dashed b-grey all-caps fs-12 w-50">
-                                        {{$page['url']}}
-                                    </td>
-                                    <td class="text-center  w-25">
-                                      <span class="font-montserrat fs-18">{{$page['pageViews']}}</span>
-                                    </td>
-                                  </tr>
-                                  @endforeach
-                                </tbody>
-                              </table>
-                            </div>
-                            <div class="padding-10 mt-auto">
-            
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-              
-                
-
-                      <div class="row">
-
-                        <div class="col-lg-12 col-sm-12 m-b-10 d-flex flex-column">
                             <!-- START WIDGET widget_tableRankings-->
-                            <div
-                                class="widget-11-2 card no-border card-condensed no-margin widget-loader-circle d-flex flex-column align-self-stretch">
+                            <div class="widget-11-2 card no-border card-condensed no-margin widget-loader-circle d-flex flex-column align-self-stretch">
                                 <div class="card-header top-right">
                                     <div class="card-controls">
                                         <ul>
                                             <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
-                                                        class="portlet-icon portlet-icon-refresh"></i></a>
+                                                            class="portlet-icon portlet-icon-refresh"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="padding-25">
+                                    <div class="pull-left">
+                                        <h2 class="text-success no-margin">Resultado</h2>
+                                        <p class="no-margin">Paginas Visitadas</p>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="auto-overflow widget-11-2-table">
+                                    <table class="table table-condensed table-hover">
+                                        <tbody>
+                                        @foreach($pagesWeekly as $page)
+                                            <tr>
+                                                <td class="text-center font-montserrat b-r b-dashed b-grey all-caps fs-12 w-50">{{$page['pageTitle']}}</td>
+                                                <td class="text-center  font-montserrat b-r b-dashed b-grey all-caps fs-12 w-50">
+                                                    {{$page['url']}}
+                                                </td>
+                                                <td class="text-center  w-25">
+                                                    <span class="font-montserrat fs-18">{{$page['pageViews']}}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="padding-10 mt-auto">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-lg-12 col-sm-12 m-b-10 d-flex flex-column">
+                            <!-- START WIDGET widget_tableRankings-->
+                            <div
+                                    class="widget-11-2 card no-border card-condensed no-margin widget-loader-circle d-flex flex-column align-self-stretch">
+                                <div class="card-header top-right">
+                                    <div class="card-controls">
+                                        <ul>
+                                            <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+                                                            class="portlet-icon portlet-icon-refresh"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -272,23 +270,21 @@
                         </div>
                     </div>
                     <!-- END ROW -->
-                   
+
                     <!-- END ROW -->
                 </div>
 
-               
+
             </div>
-                
-            </div>
-            <!-- END PAGE CONTENT -->
-            <!-- START COPYRIGHT -->
-            
-            
-           
-            
+
         </div>
-       
-        <!-- END PAGE CONTENT WRAPPER -->
+        <!-- END PAGE CONTENT -->
+        <!-- START COPYRIGHT -->
+
+
+    </div>
+
+    <!-- END PAGE CONTENT WRAPPER -->
     </div>
 
 
@@ -297,7 +293,7 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
 
             // =====================================
@@ -375,14 +371,14 @@
                 return {
                     type: 'line',
                     data: {
-                      labels: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'Jul', 'aug', 'Seoptiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                      datasets: [{
-                          label: 'Visitas',
-                          borderColor: 'rgba(0, 0, 0, 1)',
-                          backgroundColor: 'rgb(0 139 206)',
-                          data: <?php echo json_encode($viewsMonthlys); ?>,
-                      }]
-                  },
+                        labels: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'Jul', 'aug', 'Seoptiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                        datasets: [{
+                            label: 'Visitas',
+                            borderColor: 'rgba(0, 0, 0, 1)',
+                            backgroundColor: 'rgb(0 139 206)',
+                            data: <?php echo json_encode($viewsMonthlys); ?>,
+                        }]
+                    },
                     options: {
                         responsive: true,
                         tooltips: {
@@ -402,7 +398,7 @@
                 };
             }
 
-            window.onload = function() {
+            window.onload = function () {
                 var container = document.querySelector('.containers');
                 var div = document.createElement('div');
                 div.classList.add('chart-container');
@@ -418,6 +414,5 @@
 
         });
     </script>
-
 
 @endsection

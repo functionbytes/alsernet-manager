@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('title', 'Editar disco de almacenamiento')
 
@@ -14,7 +14,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="mb-1 fw-bold">Editar disco de almacenamiento</h5>
-                        <p class="mb-0 text-muted small">Modifica la configuración del disco <strong class="text-primary">{{ $disk['name'] }}</strong></p>
+                        <p class="mb-0 text-muted small">Modifica la configuración del disco <strong
+                                    class="text-primary">{{ $disk['name'] }}</strong></p>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,8 @@
                         </h6>
                         <p class="text-muted mb-4">
                             @if($isFromConfig)
-                                Este disco está definido en <code class="text-warning">config/filesystems.php</code>. Puedes crear una copia editable en la base de datos.
+                                Este disco está definido en <code class="text-warning">config/filesystems.php</code>.
+                                Puedes crear una copia editable en la base de datos.
                             @else
                                 Este disco está almacenado en la base de datos y es completamente editable.
                             @endif
@@ -41,8 +43,10 @@
                     @if($isFromConfig)
                         <div class="col-12">
                             <div class="alert bg-light border-0 mb-3">
-                                <h6 class="mb-1 fw-semibold"><i class="fas fa-exclamation-triangle me-2"></i>Disco del archivo de configuración</h6>
-                                <p class="mb-0">Los cambios crearán una copia en la base de datos que sobrescribirá la configuración del archivo.</p>
+                                <h6 class="mb-1 fw-semibold"><i class="fas fa-exclamation-triangle me-2"></i>Disco del
+                                    archivo de configuración</h6>
+                                <p class="mb-0">Los cambios crearán una copia en la base de datos que sobrescribirá la
+                                    configuración del archivo.</p>
                             </div>
                         </div>
                     @endif
@@ -81,9 +85,10 @@
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name', $disk['name']) }}"
                                    placeholder="Ej: network_shared" required>
-                            <small class="form-text text-muted">Sin espacios, solo letras, números y guiones bajos</small>
+                            <small class="form-text text-muted">Sin espacios, solo letras, números y guiones
+                                bajos</small>
                             @error('name')
-                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                            <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -103,7 +108,7 @@
                                 @endforeach
                             </select>
                             @error('driver')
-                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                            <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -113,7 +118,8 @@
                         <h6 class="fw-bold mb-0 mt-4">
                             Configuración específica
                         </h6>
-                        <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento seleccionado.</p>
+                        <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento
+                            seleccionado.</p>
                     </div>
 
                     {{-- Local Driver Fields --}}
@@ -128,7 +134,7 @@
                                        placeholder="/mnt/red_compartida">
                                 <small class="form-text text-muted">Ruta absoluta en el servidor</small>
                                 @error('root')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -140,7 +146,7 @@
                                        placeholder="http://localhost/storage">
                                 <small class="form-text text-muted">URL pública para acceder a los archivos</small>
                                 @error('url')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -157,7 +163,7 @@
                                        name="host" value="{{ old('host', $disk['host'] ?? '') }}"
                                        placeholder="ftp.ejemplo.com">
                                 @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -168,7 +174,7 @@
                                        name="port" value="{{ old('port', $disk['port'] ?? '21') }}"
                                        placeholder="21">
                                 @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -180,7 +186,7 @@
                                 <input type="text" class="form-control @error('username') is-invalid @enderror"
                                        name="username" value="{{ old('username', $disk['username'] ?? '') }}">
                                 @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -190,9 +196,10 @@
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                        name="password" value="{{ old('password', $disk['password'] ?? '') }}"
                                        placeholder="Dejar en blanco para mantener la actual">
-                                <small class="form-text text-muted">Dejar vacío para mantener la contraseña actual</small>
+                                <small class="form-text text-muted">Dejar vacío para mantener la contraseña
+                                    actual</small>
                                 @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -209,7 +216,7 @@
                                        name="host" value="{{ old('host', $disk['host'] ?? '') }}"
                                        placeholder="sftp.ejemplo.com">
                                 @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -220,7 +227,7 @@
                                        name="port" value="{{ old('port', $disk['port'] ?? '22') }}"
                                        placeholder="22">
                                 @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -232,7 +239,7 @@
                                 <input type="text" class="form-control @error('username') is-invalid @enderror"
                                        name="username" value="{{ old('username', $disk['username'] ?? '') }}">
                                 @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -242,9 +249,10 @@
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                        name="password" value="{{ old('password', $disk['password'] ?? '') }}"
                                        placeholder="Dejar en blanco para mantener la actual">
-                                <small class="form-text text-muted">Dejar vacío para mantener la contraseña actual</small>
+                                <small class="form-text text-muted">Dejar vacío para mantener la contraseña
+                                    actual</small>
                                 @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -261,7 +269,7 @@
                                        name="bucket" value="{{ old('bucket', $disk['bucket'] ?? '') }}"
                                        placeholder="mi-bucket">
                                 @error('bucket')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -275,7 +283,7 @@
                                        placeholder="us-east-1">
                                 <small class="form-text text-muted">Región de AWS donde está el bucket</small>
                                 @error('region')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -287,7 +295,7 @@
                                 <input type="text" class="form-control @error('key') is-invalid @enderror"
                                        name="key" value="{{ old('key', $disk['key'] ?? '') }}">
                                 @error('key')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -301,7 +309,7 @@
                                        placeholder="Dejar en blanco para mantener la actual">
                                 <small class="form-text text-muted">Dejar vacío para mantener el secret actual</small>
                                 @error('secret')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -313,17 +321,17 @@
 
             <div class="card-footer border-top">
 
-                    <button type="submit" class="btn btn-primary w-100 mb-1">
-                        Guardar
+                <button type="submit" class="btn btn-primary w-100 mb-1">
+                    Guardar
+                </button>
+                <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
+                    Cancelar
+                </a>
+                @if(!$isFromConfig)
+                    <button type="button" class="btn btn-primary w-100" id="deleteBtn">
+                        Eliminar
                     </button>
-                    <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
-                        Cancelar
-                    </a>
-                    @if(!$isFromConfig)
-                        <button type="button" class="btn btn-primary w-100" id="deleteBtn">
-                            Eliminar
-                        </button>
-                    @endif
+                @endif
             </div>
 
         </form>
@@ -332,7 +340,8 @@
 
     {{-- Delete Form --}}
     @if(!$isFromConfig)
-        <form id="deleteDiskForm" method="POST" action="{{ route('manager.settings.storage.destroy') }}" style="display: none;">
+        <form id="deleteDiskForm" method="POST" action="{{ route('manager.settings.storage.destroy') }}"
+              style="display: none;">
             @csrf
             @method('DELETE')
             <input type="hidden" name="disk_name" value="{{ $disk['name'] }}">
@@ -342,48 +351,48 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Show driver-specific fields based on current driver
-    function toggleDriverFields() {
-        const selectedDriver = $('#driver').val();
+    <script>
+        $(document).ready(function () {
+            // Show driver-specific fields based on current driver
+            function toggleDriverFields() {
+                const selectedDriver = $('#driver').val();
 
-        // Hide all driver fields
-        $('.driver-fields').hide();
+                // Hide all driver fields
+                $('.driver-fields').hide();
 
-        // Show fields for selected driver
-        if (selectedDriver === 'local') {
-            $('#localFields').show();
-        } else if (selectedDriver === 'ftp') {
-            $('#ftpFields').show();
-        } else if (selectedDriver === 'sftp') {
-            $('#sftpFields').show();
-        } else if (selectedDriver === 's3') {
-            $('#s3Fields').show();
-        }
-    }
+                // Show fields for selected driver
+                if (selectedDriver === 'local') {
+                    $('#localFields').show();
+                } else if (selectedDriver === 'ftp') {
+                    $('#ftpFields').show();
+                } else if (selectedDriver === 'sftp') {
+                    $('#sftpFields').show();
+                } else if (selectedDriver === 's3') {
+                    $('#s3Fields').show();
+                }
+            }
 
-    // Initialize on page load
-    toggleDriverFields();
+            // Initialize on page load
+            toggleDriverFields();
 
-    // Toggle on driver change
-    $('#driver').on('change', toggleDriverFields);
+            // Toggle on driver change
+            $('#driver').on('change', toggleDriverFields);
 
-    // Delete button
-    $('#deleteBtn').on('click', function() {
-        if (confirm('¿Estás seguro de que deseas eliminar este disco?\n\nEsta acción no se puede deshacer.')) {
-            $('#deleteDiskForm').submit();
-        }
-    });
+            // Delete button
+            $('#deleteBtn').on('click', function () {
+                if (confirm('¿Estás seguro de que deseas eliminar este disco?\n\nEsta acción no se puede deshacer.')) {
+                    $('#deleteDiskForm').submit();
+                }
+            });
 
-    // Show toastr notifications
-    @if (session('success'))
-        toastr.success('{{ session('success') }}', 'Éxito');
-    @endif
+            // Show toastr notifications
+            @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Éxito');
+            @endif
 
-    @if (session('error'))
-        toastr.error('{{ session('error') }}', 'Error');
-    @endif
-});
-</script>
+            @if (session('error'))
+            toastr.error('{{ session('error') }}', 'Error');
+            @endif
+        });
+    </script>
 @endpush

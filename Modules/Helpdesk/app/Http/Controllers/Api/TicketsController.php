@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Modules\Helpdesk\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Api\V1\CCMAILS;
 use App\Http\Controllers\Api\V1\Holiday;
@@ -13,10 +14,9 @@ use App\Models\Ticket\TicketField;
 use App\Models\Ticket\TicketHistory;
 use App\Models\Ticket\TicketMail;
 use App\Models\User;
-use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use function App\Http\Controllers\Api\V1\lang;
 use function App\Http\Controllers\Api\V1\usersdata;
 

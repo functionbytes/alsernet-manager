@@ -1,0 +1,11 @@
+{
+  "name": "modules/event",
+  "type": "library",
+  "description": "Event management module",
+  "autoload": {
+    "psr-4": {
+      "Modules\\Event\\": "app/",
+      "Modules\\Event\\Database\\": "database/"
+    }
+  }
+}

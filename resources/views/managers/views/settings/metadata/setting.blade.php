@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 
 @section('content')
@@ -8,7 +8,8 @@
                 <form id="formMetadata" enctype="multipart/form-data" role="form" onSubmit="return false">
                     {{ csrf_field() }}
 
-                    <input type="hidden" id="meta_description" name="meta_description" value="{!! setting('meta_description') !!}">
+                    <input type="hidden" id="meta_description" name="meta_description"
+                           value="{!! setting('meta_description') !!}">
                     <input type="hidden" id="slack" name="slack" value="{!! setting('meta_image') !!}">
                     <input type="hidden" id="statuMetas" name="statuMetas" value="{{ $metadata }}">
                     <input type="hidden" id="statuEdit" name="statuEdit" value="true">
@@ -20,7 +21,8 @@
 
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es
+                            necesario actualizar para mantener tus datos al día.
                         </p>
                         <div class="dropzone dz-clickable" id="metadata">
                             <div class="fallback">
@@ -36,20 +38,26 @@
                             <h5 class="mb-0">Editar metadata</h5>
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera eficiente y segura. A continuación, encontrarás diversos <mark><code>campos</code></mark> que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar cualquier información que consideres necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera
+                            eficiente y segura. A continuación, encontrarás diversos
+                            <mark><code>campos</code></mark>
+                            que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar
+                            cualquier información que consideres necesario actualizar para mantener tus datos al día.
                         </p>
 
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label class="control-label col-form-label">Título</label>
-                                    <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ setting('meta_title') }}" placeholder="Ingresar título">
+                                    <input type="text" class="form-control" id="meta_title" name="meta_title"
+                                           value="{{ setting('meta_title') }}" placeholder="Ingresar título">
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label class="control-label col-form-label">Palabras clave</label>
-                                    <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ setting('meta_keywords') }}" >
+                                    <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
+                                           value="{{ setting('meta_keywords') }}">
                                 </div>
                             </div>
                             <div class="col-12 mt-3">
@@ -60,12 +68,13 @@
                                 <label id="description-error" class="error d-none" for="description"></label>
                             </div>
                             <div class="col-12">
-                            <div class="border-top pt-1 mt-4">
-                                <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                <div class="border-top pt-1 mt-4">
+                                    <button type="submit"
+                                            class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
                                         Guardar
-                                </button>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </form>
@@ -78,7 +87,7 @@
     <script type="text/javascript">
         Dropzone.autoDiscover = false;
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             $('#meta_keywords').tagsinput({
                 maxTags: 15
@@ -101,7 +110,7 @@
                         required: true,
                     },
                     metadata: {
-                        required: function() {
+                        required: function () {
                             return $("#statuMetas").val() === '';
                         }
                     }
@@ -124,14 +133,14 @@
                         required: "Es necesario una imagen.",
                     }
                 },
-                errorPlacement: function(error, element) {
+                errorPlacement: function (error, element) {
                     if (element.attr("id") == "metadata") {
                         error.insertAfter("#metadata");
                     } else {
                         error.insertAfter(element);
                     }
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     var $form = $('#formMetadata');
                     var formData = new FormData($form[0]);
@@ -156,8 +165,8 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: function(response) {
-                            if(response.success == true){
+                        success: function (response) {
+                            if (response.success == true) {
 
                                 myMetadata.processQueue();
 
@@ -169,15 +178,15 @@
                                     positionClass: "toast-bottom-right"
                                 });
 
-                                myMetadata.on("queuecomplete", function() {
+                                myMetadata.on("queuecomplete", function () {
 
                                 });
 
-                                setTimeout(function() {
-                                        window.location = "{{ route('manager.dashboard') }}";
+                                setTimeout(function () {
+                                    window.location = "{{ route('manager.dashboard') }}";
                                 }, 2000);
 
-                            }else{
+                            } else {
 
                                 $submitButton.prop('disabled', false);
                                 error = response.message;
@@ -195,7 +204,7 @@
 
 
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             toastr.error("Ha ocurrido un error. Por favor, inténtelo de nuevo.", "Error", {
                                 closeButton: true,
                                 progressBar: true,
@@ -224,14 +233,14 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                init: function() {
+                init: function () {
                     var myMetadata = this;
 
                     item = $("#slack").val();
 
-                    $.getJSON("{{ route('manager.settings.metadata.metadata.get', ':item') }}".replace(':item', item), function(data) {
+                    $.getJSON("{{ route('manager.settings.metadata.metadata.get', ':item') }}".replace(':item', item), function (data) {
 
-                        $.each(data, function(key, value) {
+                        $.each(data, function (key, value) {
 
                             var mockFile = {
                                 id: value.id,
@@ -243,28 +252,28 @@
                             };
 
                             myMetadata.options.addedfile.call(myMetadata, mockFile);
-                            myMetadata.options.thumbnail.call(myMetadata, mockFile,  value.path);
+                            myMetadata.options.thumbnail.call(myMetadata, mockFile, value.path);
                             myMetadata.options.complete.call(myMetadata, mockFile);
                             myMetadata.options.success.call(myMetadata, mockFile);
 
                         });
                     });
 
-                    myMetadata.on("maxfilesexceeded", function(file) {
+                    myMetadata.on("maxfilesexceeded", function (file) {
                         this.removeFile(file);
                     });
 
-                    myMetadata.on('sending', function(file, xhr, formData) {
+                    myMetadata.on('sending', function (file, xhr, formData) {
                         let setting = document.getElementById('slack').value;
                         formData.append('setting', setting);
                     });
 
-                    myMetadata.on("addedfile", function(file) {
+                    myMetadata.on("addedfile", function (file) {
                         $("#metadata").val(file.name);
                         $("#formMetadata").validate().element("#metadata");
                     });
 
-                    myMetadata.on("removedfile", function(file) {
+                    myMetadata.on("removedfile", function (file) {
                         $("#metadata").val('');
                         $("#formMetadata").validate().element("#metadata");
 
@@ -272,25 +281,25 @@
                             $.ajax({
                                 type: 'GET',
                                 url: "{{ route('manager.certifiers.thumbnails.delete', ':id') }}".replace(':id', file.id),
-                                success: function(result) {
+                                success: function (result) {
                                     $("#status").val('false');
                                 }
                             });
                         }
                     });
 
-                    myMetadata.on('resetFiles', function() {
+                    myMetadata.on('resetFiles', function () {
                         $("#status").val('false');
                         myMetadata.removeAllFiles();
                     });
 
-                    myMetadata.on("success", function(file, response) {
+                    myMetadata.on("success", function (file, response) {
                     });
 
-                    myMetadata.on("queuecomplete", function() {
+                    myMetadata.on("queuecomplete", function () {
                     });
 
-                    myMetadata.on("complete", function() {
+                    myMetadata.on("complete", function () {
 
                     });
                 }
@@ -303,17 +312,17 @@
         var toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote', 'code-block'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'indent': '-1' }, { 'indent': '+1' }],
-            [{ 'direction': 'rtl' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [ 'link', 'image', 'video' ],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'font': [] }],
-            [{ 'align': [] }],
+            [{'header': 1}, {'header': 2}],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'script': 'sub'}, {'script': 'super'}],
+            [{'indent': '-1'}, {'indent': '+1'}],
+            [{'direction': 'rtl'}],
+            [{'size': ['small', false, 'large', 'huge']}],
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+            ['link', 'image', 'video'],
+            [{'color': []}, {'background': []}],
+            [{'font': []}],
+            [{'align': []}],
             ['clean']
         ];
 
@@ -340,7 +349,7 @@
             }
         });
 
-        description.on('text-change', function(delta, oldDelta, source) {
+        description.on('text-change', function (delta, oldDelta, source) {
             var text = description.container.firstChild.innerHTML.replaceAll("<p><br></p>", "");
             $('#meta_description').val(text);
         });

@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -20,8 +20,10 @@
                     REST API para correo entrante
                 </h4>
                 <p class="text-muted mb-0">
-                    Esta API permite enviar correos electrónicos entrantes a Alsernet desde sistemas externos como webhooks de servicios de correo,
-                    scripts personalizados o integraciones de terceros. Todos los correos recibidos se procesarán automáticamente y se crearán
+                    Esta API permite enviar correos electrónicos entrantes a Alsernet desde sistemas externos como
+                    webhooks de servicios de correo,
+                    scripts personalizados o integraciones de terceros. Todos los correos recibidos se procesarán
+                    automáticamente y se crearán
                     como tickets o respuestas según la configuración.
                 </p>
             </div>
@@ -36,12 +38,14 @@
             </div>
             <div class="card-body">
                 <p class="mb-3">
-                    Todas las solicitudes a la API deben incluir un encabezado de autenticación con la API Key configurada.
+                    Todas las solicitudes a la API deben incluir un encabezado de autenticación con la API Key
+                    configurada.
                 </p>
 
                 <div class="alert alert-warning border-0 bg-warning-subtle">
                     <div>
-                        <strong>Importante:</strong> La API Key es sensible. Manténgala segura y no la comparta públicamente.
+                        <strong>Importante:</strong> La API Key es sensible. Manténgala segura y no la comparta
+                        públicamente.
                         Puede generar una nueva clave en cualquier momento desde la configuración de correo entrante.
                     </div>
                 </div>
@@ -78,18 +82,18 @@
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tbody>
-                            <tr>
-                                <td class="fw-bold" width="120">Método</td>
-                                <td><span class="badge bg-success">POST</span></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Content-Type</td>
-                                <td><code>application/json</code> o <code>multipart/form-data</code></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Autenticación</td>
-                                <td>API Key mediante encabezado <code>X-API-Key</code></td>
-                            </tr>
+                        <tr>
+                            <td class="fw-bold" width="120">Método</td>
+                            <td><span class="badge bg-success">POST</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Content-Type</td>
+                            <td><code>application/json</code> o <code>multipart/form-data</code></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Autenticación</td>
+                            <td>API Key mediante encabezado <code>X-API-Key</code></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -111,74 +115,74 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
-                            <tr>
-                                <th>Parámetro</th>
-                                <th>Tipo</th>
-                                <th>Requerido</th>
-                                <th>Descripción</th>
-                            </tr>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Tipo</th>
+                            <th>Requerido</th>
+                            <th>Descripción</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><code>from</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-danger">Sí</span></td>
-                                <td>Dirección de correo del remitente</td>
-                            </tr>
-                            <tr>
-                                <td><code>to</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-danger">Sí</span></td>
-                                <td>Dirección(es) de correo del destinatario</td>
-                            </tr>
-                            <tr>
-                                <td><code>subject</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-danger">Sí</span></td>
-                                <td>Asunto del correo electrónico</td>
-                            </tr>
-                            <tr>
-                                <td><code>body</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-danger">Sí</span></td>
-                                <td>Cuerpo del mensaje (texto plano o HTML)</td>
-                            </tr>
-                            <tr>
-                                <td><code>cc</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Direcciones en copia (separadas por coma)</td>
-                            </tr>
-                            <tr>
-                                <td><code>bcc</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Direcciones en copia oculta (separadas por coma)</td>
-                            </tr>
-                            <tr>
-                                <td><code>reply_to</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Dirección de respuesta</td>
-                            </tr>
-                            <tr>
-                                <td><code>html_body</code></td>
-                                <td>string</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Cuerpo del mensaje en formato HTML</td>
-                            </tr>
-                            <tr>
-                                <td><code>attachments[]</code></td>
-                                <td>file</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Archivos adjuntos (solo con multipart/form-data)</td>
-                            </tr>
-                            <tr>
-                                <td><code>headers</code></td>
-                                <td>object</td>
-                                <td><span class="badge bg-secondary">No</span></td>
-                                <td>Encabezados adicionales del correo (JSON)</td>
-                            </tr>
+                        <tr>
+                            <td><code>from</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-danger">Sí</span></td>
+                            <td>Dirección de correo del remitente</td>
+                        </tr>
+                        <tr>
+                            <td><code>to</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-danger">Sí</span></td>
+                            <td>Dirección(es) de correo del destinatario</td>
+                        </tr>
+                        <tr>
+                            <td><code>subject</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-danger">Sí</span></td>
+                            <td>Asunto del correo electrónico</td>
+                        </tr>
+                        <tr>
+                            <td><code>body</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-danger">Sí</span></td>
+                            <td>Cuerpo del mensaje (texto plano o HTML)</td>
+                        </tr>
+                        <tr>
+                            <td><code>cc</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Direcciones en copia (separadas por coma)</td>
+                        </tr>
+                        <tr>
+                            <td><code>bcc</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Direcciones en copia oculta (separadas por coma)</td>
+                        </tr>
+                        <tr>
+                            <td><code>reply_to</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Dirección de respuesta</td>
+                        </tr>
+                        <tr>
+                            <td><code>html_body</code></td>
+                            <td>string</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Cuerpo del mensaje en formato HTML</td>
+                        </tr>
+                        <tr>
+                            <td><code>attachments[]</code></td>
+                            <td>file</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Archivos adjuntos (solo con multipart/form-data)</td>
+                        </tr>
+                        <tr>
+                            <td><code>headers</code></td>
+                            <td>object</td>
+                            <td><span class="badge bg-secondary">No</span></td>
+                            <td>Encabezados adicionales del correo (JSON)</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -335,32 +339,32 @@ $data = json_decode($response->getBody(), true);</code></pre>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
-                            <tr>
-                                <th width="100">Código</th>
-                                <th>Descripción</th>
-                            </tr>
+                        <tr>
+                            <th width="100">Código</th>
+                            <th>Descripción</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="badge bg-success">200</span></td>
-                                <td>Solicitud procesada exitosamente</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge bg-warning">401</span></td>
-                                <td>API Key inválida o no proporcionada</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge bg-warning">422</span></td>
-                                <td>Error de validación - parámetros faltantes o inválidos</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge bg-danger">429</span></td>
-                                <td>Demasiadas solicitudes - límite de tasa excedido</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge bg-danger">500</span></td>
-                                <td>Error interno del servidor</td>
-                            </tr>
+                        <tr>
+                            <td><span class="badge bg-success">200</span></td>
+                            <td>Solicitud procesada exitosamente</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-warning">401</span></td>
+                            <td>API Key inválida o no proporcionada</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-warning">422</span></td>
+                            <td>Error de validación - parámetros faltantes o inválidos</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-danger">429</span></td>
+                            <td>Demasiadas solicitudes - límite de tasa excedido</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-danger">500</span></td>
+                            <td>Error interno del servidor</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -377,10 +381,12 @@ $data = json_decode($response->getBody(), true);</code></pre>
             <div class="card-body">
                 <ul class="mb-0">
                     <li class="mb-2">
-                        <strong>Seguridad:</strong> Nunca exponga su API Key en el código frontend. Úsela solo en el backend.
+                        <strong>Seguridad:</strong> Nunca exponga su API Key en el código frontend. Úsela solo en el
+                        backend.
                     </li>
                     <li class="mb-2">
-                        <strong>Rate Limiting:</strong> La API tiene límites de tasa. Implemente reintentos exponenciales en caso de errores 429.
+                        <strong>Rate Limiting:</strong> La API tiene límites de tasa. Implemente reintentos
+                        exponenciales en caso de errores 429.
                     </li>
                     <li class="mb-2">
                         <strong>Validación:</strong> Valide todos los campos antes de enviarlos para evitar errores 422.
@@ -400,34 +406,34 @@ $data = json_decode($response->getBody(), true);</code></pre>
 
     </div>
 
-@push('scripts')
-<script>
-function copyToClipboard(elementId, button) {
-    const element = document.getElementById(elementId);
-    let textToCopy = element.value || element.textContent;
+    @push('scripts')
+        <script>
+            function copyToClipboard(elementId, button) {
+                const element = document.getElementById(elementId);
+                let textToCopy = element.value || element.textContent;
 
-    // Clean up the text if it's from a code block
-    if (!element.value) {
-        textToCopy = textToCopy.trim();
-    }
+                // Clean up the text if it's from a code block
+                if (!element.value) {
+                    textToCopy = textToCopy.trim();
+                }
 
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        const originalHTML = button.innerHTML;
-        button.innerHTML = '✓ Copiado';
-        button.classList.remove('btn-outline-primary', 'btn-outline-light');
-        button.classList.add('btn-success');
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalHTML = button.innerHTML;
+                    button.innerHTML = '✓ Copiado';
+                    button.classList.remove('btn-outline-primary', 'btn-outline-light');
+                    button.classList.add('btn-success');
 
-        setTimeout(() => {
-            button.innerHTML = originalHTML;
-            button.classList.remove('btn-success');
-            button.classList.add(elementId === 'apiEndpointUrl' ? 'btn-outline-primary' : 'btn-outline-light');
-        }, 2000);
-    }).catch(err => {
-        console.error('Error al copiar:', err);
-        alert('Error al copiar al portapapeles');
-    });
-}
-</script>
-@endpush
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('btn-success');
+                        button.classList.add(elementId === 'apiEndpointUrl' ? 'btn-outline-primary' : 'btn-outline-light');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error al copiar:', err);
+                    alert('Error al copiar al portapapeles');
+                });
+            }
+        </script>
+    @endpush
 
 @endsection

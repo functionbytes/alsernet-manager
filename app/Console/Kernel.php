@@ -2,11 +2,11 @@
 
 namespace App\Console;
 
-use App\Events\CronJobExecuted;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Modules\Campaign\Entities\Automation\Automation;
 use Modules\Campaign\Entities\Campaign;
+use Modules\Campaign\Events\CronJobExecuted;
 
 class Kernel extends ConsoleKernel
 {

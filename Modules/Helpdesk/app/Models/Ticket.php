@@ -2,8 +2,8 @@
 
 namespace Modules\Helpdesk\Models;
 
-use App\Models\Helpdesk\Concerns\HasCustomAttributes;
 use Carbon\Carbon;
+use Modules\Helpdesk\Models\Concerns\HasCustomAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

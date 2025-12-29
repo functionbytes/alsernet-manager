@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -22,7 +22,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="mb-1 fw-bold">Configuración de Base de Datos</h5>
-                        <p class="small mb-0 text-muted">Gestiona la conexión a la base de datos y verifica su estado.</p>
+                        <p class="small mb-0 text-muted">Gestiona la conexión a la base de datos y verifica su
+                            estado.</p>
                     </div>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-primary" id="testConnectionBtn">
@@ -119,7 +120,8 @@
                     <div class="d-flex align-items-start gap-2">
                         <div>
                             <small class="fw-semibold">Advertencia:</small>
-                            <small class="d-block">Cambiar estas configuraciones incorrectamente puede hacer que la aplicación no funcione.</small>
+                            <small class="d-block">Cambiar estas configuraciones incorrectamente puede hacer que la
+                                aplicación no funcione.</small>
                         </div>
                     </div>
                 </div>
@@ -127,48 +129,49 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
-                            <tr>
-                                <th style="width: 25%;">Parámetro</th>
-                                <th style="width: 25%;">Valor actual</th>
-                                <th style="width: 50%;">Descripción</th>
-                            </tr>
+                        <tr>
+                            <th style="width: 25%;">Parámetro</th>
+                            <th style="width: 25%;">Valor actual</th>
+                            <th style="width: 50%;">Descripción</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><code>db_connection</code></td>
-                                <td><strong>{{ $settings['db_connection'] ?? 'mysql' }}</strong></td>
-                                <td><small class="text-muted">Tipo de base de datos (mysql, pgsql, sqlite, etc)</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_host</code></td>
-                                <td><strong>{{ $settings['db_host'] ?? 'localhost' }}</strong></td>
-                                <td><small class="text-muted">Dirección del servidor de base de datos</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_port</code></td>
-                                <td><strong>{{ $settings['db_port'] ?? '3306' }}</strong></td>
-                                <td><small class="text-muted">Puerto de la conexión (3306 MySQL, 5432 PostgreSQL)</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_database</code></td>
-                                <td><strong>{{ $settings['db_database'] ?? 'N/A' }}</strong></td>
-                                <td><small class="text-muted">Nombre de la base de datos</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_username</code></td>
-                                <td><strong>{{ $settings['db_username'] ?? 'root' }}</strong></td>
-                                <td><small class="text-muted">Usuario para la conexión</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_charset</code></td>
-                                <td><strong>{{ $settings['db_charset'] ?? 'utf8mb4' }}</strong></td>
-                                <td><small class="text-muted">Conjunto de caracteres para almacenamiento</small></td>
-                            </tr>
-                            <tr>
-                                <td><code>db_collation</code></td>
-                                <td><strong>{{ $settings['db_collation'] ?? 'utf8mb4_unicode_ci' }}</strong></td>
-                                <td><small class="text-muted">Reglas de comparación de caracteres</small></td>
-                            </tr>
+                        <tr>
+                            <td><code>db_connection</code></td>
+                            <td><strong>{{ $settings['db_connection'] ?? 'mysql' }}</strong></td>
+                            <td><small class="text-muted">Tipo de base de datos (mysql, pgsql, sqlite, etc)</small></td>
+                        </tr>
+                        <tr>
+                            <td><code>db_host</code></td>
+                            <td><strong>{{ $settings['db_host'] ?? 'localhost' }}</strong></td>
+                            <td><small class="text-muted">Dirección del servidor de base de datos</small></td>
+                        </tr>
+                        <tr>
+                            <td><code>db_port</code></td>
+                            <td><strong>{{ $settings['db_port'] ?? '3306' }}</strong></td>
+                            <td><small class="text-muted">Puerto de la conexión (3306 MySQL, 5432 PostgreSQL)</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>db_database</code></td>
+                            <td><strong>{{ $settings['db_database'] ?? 'N/A' }}</strong></td>
+                            <td><small class="text-muted">Nombre de la base de datos</small></td>
+                        </tr>
+                        <tr>
+                            <td><code>db_username</code></td>
+                            <td><strong>{{ $settings['db_username'] ?? 'root' }}</strong></td>
+                            <td><small class="text-muted">Usuario para la conexión</small></td>
+                        </tr>
+                        <tr>
+                            <td><code>db_charset</code></td>
+                            <td><strong>{{ $settings['db_charset'] ?? 'utf8mb4' }}</strong></td>
+                            <td><small class="text-muted">Conjunto de caracteres para almacenamiento</small></td>
+                        </tr>
+                        <tr>
+                            <td><code>db_collation</code></td>
+                            <td><strong>{{ $settings['db_collation'] ?? 'utf8mb4_unicode_ci' }}</strong></td>
+                            <td><small class="text-muted">Reglas de comparación de caracteres</small></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -180,65 +183,65 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Test Database Connection
-    $('#testConnectionBtn').on('click', function() {
-        var btn = $(this);
-        btn.prop('disabled', true);
-        btn.html('<i class="fa fa-spinner fa-spin me-1"></i> Probando...');
+    <script>
+        $(document).ready(function () {
+            // Test Database Connection
+            $('#testConnectionBtn').on('click', function () {
+                var btn = $(this);
+                btn.prop('disabled', true);
+                btn.html('<i class="fa fa-spinner fa-spin me-1"></i> Probando...');
 
-        $.ajax({
-            url: '{{ route("manager.settings.database.check-connection") }}',
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                if (data.success) {
-                    // Solo mostrar toastr, sin panel de alerta
-                    var versionInfo = data.version ? ' (Versión: ' + data.version + ')' : '';
-                    toastr.success('Conexión establecida correctamente' + versionInfo, 'Base de Datos');
-                    $('#connectionStatusContainer').hide();
-                } else {
-                    // Mostrar panel de alerta con el error detallado
-                    $('#connectionStatusContainer').show();
-                    $('#connectionStatusContent').html(
-                        '<div class="alert alert-danger border-0 bg-danger-subtle">' +
-                        '    <div class="d-flex align-items-start gap-2">' +
-                        '        <i class="fa fa-circle-xmark text-danger fs-5"></i>' +
-                        '        <div>' +
-                        '            <strong class="text-danger">Error de conexión</strong>' +
-                        '            <small class="d-block">' + data.message + '</small>' +
-                        '        </div>' +
-                        '    </div>' +
-                        '</div>'
-                    );
-                    toastr.error('No se pudo conectar a la base de datos', 'Error');
-                }
-            },
-            error: function(xhr, status, error) {
-                $('#connectionStatusContainer').show();
-                $('#connectionStatusContent').html(
-                    '<div class="alert alert-danger border-0 bg-danger-subtle">' +
-                    '    <div class="d-flex align-items-start gap-2">' +
-                    '        <i class="fa fa-circle-xmark text-danger fs-5"></i>' +
-                    '        <div>' +
-                    '            <strong class="text-danger">Error en la solicitud</strong>' +
-                    '            <small class="d-block">' + error + '</small>' +
-                    '        </div>' +
-                    '    </div>' +
-                    '</div>'
-                );
-                toastr.error('Error al probar la conexión', 'Error');
-            },
-            complete: function() {
-                btn.prop('disabled', false);
-                btn.html('<i class="fa fa-plug me-1"></i> Probar conexión');
-            }
+                $.ajax({
+                    url: '{{ route("manager.settings.database.check-connection") }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            // Solo mostrar toastr, sin panel de alerta
+                            var versionInfo = data.version ? ' (Versión: ' + data.version + ')' : '';
+                            toastr.success('Conexión establecida correctamente' + versionInfo, 'Base de Datos');
+                            $('#connectionStatusContainer').hide();
+                        } else {
+                            // Mostrar panel de alerta con el error detallado
+                            $('#connectionStatusContainer').show();
+                            $('#connectionStatusContent').html(
+                                '<div class="alert alert-danger border-0 bg-danger-subtle">' +
+                                '    <div class="d-flex align-items-start gap-2">' +
+                                '        <i class="fa fa-circle-xmark text-danger fs-5"></i>' +
+                                '        <div>' +
+                                '            <strong class="text-danger">Error de conexión</strong>' +
+                                '            <small class="d-block">' + data.message + '</small>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>'
+                            );
+                            toastr.error('No se pudo conectar a la base de datos', 'Error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#connectionStatusContainer').show();
+                        $('#connectionStatusContent').html(
+                            '<div class="alert alert-danger border-0 bg-danger-subtle">' +
+                            '    <div class="d-flex align-items-start gap-2">' +
+                            '        <i class="fa fa-circle-xmark text-danger fs-5"></i>' +
+                            '        <div>' +
+                            '            <strong class="text-danger">Error en la solicitud</strong>' +
+                            '            <small class="d-block">' + error + '</small>' +
+                            '        </div>' +
+                            '    </div>' +
+                            '</div>'
+                        );
+                        toastr.error('Error al probar la conexión', 'Error');
+                    },
+                    complete: function () {
+                        btn.prop('disabled', false);
+                        btn.html('<i class="fa fa-plug me-1"></i> Probar conexión');
+                    }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 @endpush

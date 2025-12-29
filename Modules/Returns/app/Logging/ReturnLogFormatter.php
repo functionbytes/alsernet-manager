@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Logging;
+namespace Modules\Returns\Logging;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\LogRecord;

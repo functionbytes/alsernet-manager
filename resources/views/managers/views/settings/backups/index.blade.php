@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -19,10 +19,12 @@
                             </div>
 
                             <div class="ms-auto d-flex gap-2">
-                                <a href="{{ route('manager.settings.backup-schedules.index') }}" class="btn btn-outline-primary waves-effect waves-light">
+                                <a href="{{ route('manager.settings.backup-schedules.index') }}"
+                                   class="btn btn-outline-primary waves-effect waves-light">
                                     Copias programados
                                 </a>
-                                <a href="{{ route('manager.settings.backups.createForm') }}" class="btn btn-primary waves-effect waves-light">
+                                <a href="{{ route('manager.settings.backups.createForm') }}"
+                                   class="btn btn-primary waves-effect waves-light">
                                     Crear copia
                                 </a>
                             </div>
@@ -60,7 +62,8 @@
                                 <i class="fa fa-circle-info"></i>
                                 <strong>Último Backup:</strong>
                                 <span id="latestBackupInfo"></span>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
@@ -90,17 +93,22 @@
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
-                                            <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <a href="#" class="text-muted" id="dropdownMenuButton"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                             </a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.settings.backups.download', $backup['name']) }}" title="Descargar backup">
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                       href="{{ route('manager.settings.backups.download', $backup['name']) }}"
+                                                       title="Descargar backup">
                                                         Descargar
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('manager.settings.backups.delete', $backup['name']) }}" title="Eliminar backup">
+                                                    <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
+                                                       data-href="{{ route('manager.settings.backups.delete', $backup['name']) }}"
+                                                       title="Eliminar backup">
                                                         Eliminar
                                                     </a>
                                                 </li>
@@ -144,7 +152,7 @@
     @include('managers.includes.delete')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Load backup status
             fetch('{{ route("manager.settings.backups.status") }}')
                 .then(response => response.json())
@@ -171,7 +179,7 @@
             // Handle delete link clicks
             const deleteLinks = document.querySelectorAll('.confirm-delete');
             deleteLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     e.preventDefault();
 
                     deleteUrl = this.getAttribute('data-href');
@@ -189,7 +197,7 @@
             });
 
             // Handle delete link button
-            deleteLink.addEventListener('click', function(e) {
+            deleteLink.addEventListener('click', function (e) {
                 if (deleteUrl) {
                     e.preventDefault();
                     deleteLink.disabled = true;
@@ -205,49 +213,49 @@
                             'Content-Type': 'application/json'
                         }
                     })
-                    .then(response => {
-                        console.log('Response status:', response.status);
-                        console.log('Response headers:', response.headers.get('content-type'));
-                        return response.text().then(text => {
-                            console.log('Response body:', text);
-                            try {
-                                return JSON.parse(text);
-                            } catch (e) {
-                                console.error('Failed to parse JSON:', e);
-                                throw new Error('Invalid JSON response: ' + text.substring(0, 100));
-                            }
-                        });
-                    })
-                    .then(data => {
-                        deleteModal.hide();
-                        deleteLink.disabled = false;
-                        deleteLink.innerHTML = 'Confirmar';
+                        .then(response => {
+                            console.log('Response status:', response.status);
+                            console.log('Response headers:', response.headers.get('content-type'));
+                            return response.text().then(text => {
+                                console.log('Response body:', text);
+                                try {
+                                    return JSON.parse(text);
+                                } catch (e) {
+                                    console.error('Failed to parse JSON:', e);
+                                    throw new Error('Invalid JSON response: ' + text.substring(0, 100));
+                                }
+                            });
+                        })
+                        .then(data => {
+                            deleteModal.hide();
+                            deleteLink.disabled = false;
+                            deleteLink.innerHTML = 'Confirmar';
 
-                        if (data.success) {
-                            // Show success message
-                            const alertDiv = document.createElement('div');
-                            alertDiv.className = 'alert bg-light-secondary alert-dismissible fade show';
-                            alertDiv.innerHTML = `
+                            if (data.success) {
+                                // Show success message
+                                const alertDiv = document.createElement('div');
+                                alertDiv.className = 'alert bg-light-secondary alert-dismissible fade show';
+                                alertDiv.innerHTML = `
                                 <i class="fa fa-check></i> Copia eliminado correctamente
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             `;
 
-                            // Insert alert at the beginning of card-body
-                            const cardBody = document.querySelector('.card-body');
-                            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                                // Insert alert at the beginning of card-body
+                                const cardBody = document.querySelector('.card-body');
+                                cardBody.insertBefore(alertDiv, cardBody.firstChild);
 
-                            // Reload the table after 1.5 seconds
-                            setTimeout(() => location.reload(), 1500);
-                        } else {
-                            alert('Error al eliminar el backup: ' + (data.message || 'Error desconocido'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        deleteLink.disabled = false;
-                        deleteLink.innerHTML = 'Confirmar';
-                        alert('Error al eliminar el backup');
-                    });
+                                // Reload the table after 1.5 seconds
+                                setTimeout(() => location.reload(), 1500);
+                            } else {
+                                alert('Error al eliminar el backup: ' + (data.message || 'Error desconocido'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            deleteLink.disabled = false;
+                            deleteLink.innerHTML = 'Confirmar';
+                            alert('Error al eliminar el backup');
+                        });
                 }
             });
         });

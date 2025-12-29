@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Helpdesk;
+namespace Modules\Helpdesk\Http\Controllers\Api\Helpdesk;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Modules\Helpdesk\Models\Conversation;
 use Modules\Helpdesk\Models\ConversationItem;
 use Modules\Helpdesk\Models\ConversationStatus;
 use Modules\Helpdesk\Models\Customer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class WidgetConversationController extends Controller
 {

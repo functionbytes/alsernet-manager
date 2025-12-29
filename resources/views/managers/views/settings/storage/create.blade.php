@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('title', 'Agregar disco de almacenamiento')
 
@@ -39,9 +39,10 @@
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name') }}"
                                    placeholder="Ej: network_shared" required>
-                            <small class="form-text text-muted">Sin espacios, solo letras, números y guiones bajos</small>
+                            <small class="form-text text-muted">Sin espacios, solo letras, números y guiones
+                                bajos</small>
                             @error('name')
-                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                            <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -61,7 +62,7 @@
                                 @endforeach
                             </select>
                             @error('driver')
-                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                            <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -71,7 +72,8 @@
                         <h6 class="fw-bold mb-0 mt-4">
                             Configuración específica
                         </h6>
-                        <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento seleccionado.</p>
+                        <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento
+                            seleccionado.</p>
                     </div>
 
                     {{-- Local Driver Fields --}}
@@ -86,7 +88,7 @@
                                        placeholder="/mnt/red_compartida">
                                 <small class="form-text text-muted">Ruta absoluta en el servidor</small>
                                 @error('root')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -98,7 +100,7 @@
                                        placeholder="http://localhost/storage">
                                 <small class="form-text text-muted">URL pública para acceder a los archivos</small>
                                 @error('url')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -115,7 +117,7 @@
                                        name="host" value="{{ old('host') }}"
                                        placeholder="ftp.ejemplo.com">
                                 @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -126,7 +128,7 @@
                                        name="port" value="{{ old('port', '21') }}"
                                        placeholder="21">
                                 @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -138,7 +140,7 @@
                                 <input type="text" class="form-control @error('username') is-invalid @enderror"
                                        name="username" value="{{ old('username') }}">
                                 @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -149,7 +151,7 @@
                                        name="password" value="{{ old('password') }}"
                                        placeholder="Contraseña FTP">
                                 @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -166,7 +168,7 @@
                                        name="host" value="{{ old('host') }}"
                                        placeholder="sftp.ejemplo.com">
                                 @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -177,7 +179,7 @@
                                        name="port" value="{{ old('port', '22') }}"
                                        placeholder="22">
                                 @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -189,7 +191,7 @@
                                 <input type="text" class="form-control @error('username') is-invalid @enderror"
                                        name="username" value="{{ old('username') }}">
                                 @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -200,7 +202,7 @@
                                        name="password" value="{{ old('password') }}"
                                        placeholder="Contraseña SFTP">
                                 @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -217,7 +219,7 @@
                                        name="bucket" value="{{ old('bucket') }}"
                                        placeholder="mi-bucket">
                                 @error('bucket')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -231,7 +233,7 @@
                                        placeholder="us-east-1">
                                 <small class="form-text text-muted">Región de AWS donde está el bucket</small>
                                 @error('region')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -243,7 +245,7 @@
                                 <input type="text" class="form-control @error('key') is-invalid @enderror"
                                        name="key" value="{{ old('key') }}">
                                 @error('key')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -256,7 +258,7 @@
                                        name="secret" value="{{ old('secret') }}"
                                        placeholder="Secret key de AWS">
                                 @error('secret')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
@@ -268,12 +270,12 @@
 
             <div class="card-footer border-top">
 
-                    <button type="submit" class="btn btn-primary w-100 mb-1">
-                        Guardar
-                    </button>
-                    <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
-                        Cancelar
-                    </a>
+                <button type="submit" class="btn btn-primary w-100 mb-1">
+                    Guardar
+                </button>
+                <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
+                    Cancelar
+                </a>
             </div>
 
         </form>
@@ -283,41 +285,41 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Show driver-specific fields based on driver selection
-    function toggleDriverFields() {
-        const selectedDriver = $('#driver').val();
+    <script>
+        $(document).ready(function () {
+            // Show driver-specific fields based on driver selection
+            function toggleDriverFields() {
+                const selectedDriver = $('#driver').val();
 
-        // Hide all driver fields
-        $('.driver-fields').hide();
+                // Hide all driver fields
+                $('.driver-fields').hide();
 
-        // Show fields for selected driver
-        if (selectedDriver === 'local') {
-            $('#localFields').show();
-        } else if (selectedDriver === 'ftp') {
-            $('#ftpFields').show();
-        } else if (selectedDriver === 'sftp') {
-            $('#sftpFields').show();
-        } else if (selectedDriver === 's3') {
-            $('#s3Fields').show();
-        }
-    }
+                // Show fields for selected driver
+                if (selectedDriver === 'local') {
+                    $('#localFields').show();
+                } else if (selectedDriver === 'ftp') {
+                    $('#ftpFields').show();
+                } else if (selectedDriver === 'sftp') {
+                    $('#sftpFields').show();
+                } else if (selectedDriver === 's3') {
+                    $('#s3Fields').show();
+                }
+            }
 
-    // Initialize on page load
-    toggleDriverFields();
+            // Initialize on page load
+            toggleDriverFields();
 
-    // Toggle on driver change
-    $('#driver').on('change', toggleDriverFields);
+            // Toggle on driver change
+            $('#driver').on('change', toggleDriverFields);
 
-    // Show toastr notifications
-    @if (session('success'))
-        toastr.success('{{ session('success') }}', 'Éxito');
-    @endif
+            // Show toastr notifications
+            @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Éxito');
+            @endif
 
-    @if (session('error'))
-        toastr.error('{{ session('error') }}', 'Error');
-    @endif
-});
-</script>
+            @if (session('error'))
+            toastr.error('{{ session('error') }}', 'Error');
+            @endif
+        });
+    </script>
 @endpush

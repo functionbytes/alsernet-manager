@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -14,7 +14,8 @@
                     <div class="card-body p-4">
                         <h4 class="card-title">Crear copia</h4>
                         <p class="card-subtitle mb-4">
-                            Selecciona qué elementos deseas incluir en tu backup. Puedes hacer backup de los archivos, la base de datos o ambos.
+                            Selecciona qué elementos deseas incluir en tu backup. Puedes hacer backup de los archivos,
+                            la base de datos o ambos.
                         </p>
 
                         @include('managers.components.alerts')
@@ -26,7 +27,7 @@
                                         Todos
                                     </button>
                                     <button type="button" id="deselectAllBtn" class="btn btn-sm btn-outline-secondary">
-                                       Ninguno
+                                        Ninguno
                                     </button>
                                 </div>
                             </div>
@@ -43,7 +44,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupAppCode" value="app_code" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupAppCode" value="app_code" role="switch" checked>
                                 </div>
                             </div>
 
@@ -59,7 +61,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupConfig" value="config" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupConfig" value="config" role="switch" checked>
                                 </div>
                             </div>
 
@@ -75,7 +78,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupRoutes" value="routes" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupRoutes" value="routes" role="switch" checked>
                                 </div>
                             </div>
 
@@ -91,7 +95,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupResources" value="resources" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupResources" value="resources" role="switch" checked>
                                 </div>
                             </div>
 
@@ -107,7 +112,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupMigrations" value="migrations" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupMigrations" value="migrations" role="switch" checked>
                                 </div>
                             </div>
 
@@ -123,7 +129,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupStorage" value="storage" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupStorage" value="storage" role="switch" checked>
                                 </div>
                             </div>
 
@@ -139,7 +146,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" name="backup_types[]" id="backupDatabase" value="database" role="switch" checked>
+                                    <input class="form-check-input" type="checkbox" name="backup_types[]"
+                                           id="backupDatabase" value="database" role="switch" checked>
                                 </div>
                             </div>
 
@@ -164,7 +172,8 @@
                                 <button type="submit" class="btn btn-primary px-4 w-100 mb-2">
                                     Crear
                                 </button>
-                                <a href="{{ route('manager.settings.backups.index') }}" class="btn btn-secondary px-4 w-100">
+                                <a href="{{ route('manager.settings.backups.index') }}"
+                                   class="btn btn-secondary px-4 w-100">
                                     Volver
                                 </a>
                             </div>
@@ -180,7 +189,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const form = document.querySelector('form');
             const checkboxes = document.querySelectorAll('input[name="backup_types[]"]');
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -194,7 +203,7 @@
             }
 
             // Select all checkboxes
-            selectAllBtn.addEventListener('click', function(e) {
+            selectAllBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = true;
@@ -203,7 +212,7 @@
             });
 
             // Deselect all checkboxes
-            deselectAllBtn.addEventListener('click', function(e) {
+            deselectAllBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = false;
@@ -212,7 +221,7 @@
             });
 
             // Form submission validation
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 const checked = Array.from(checkboxes).some(cb => cb.checked);
                 if (!checked) {
                     e.preventDefault();
@@ -225,7 +234,7 @@
 
             // Update submit button when any checkbox changes
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+                checkbox.addEventListener('change', function () {
                     updateSubmitButton();
                 });
             });

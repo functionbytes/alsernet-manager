@@ -117,11 +117,11 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/api/helpcenter/articles/{id}', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiArticle'])->name('widget.helpcenter.article');
 
         // Widget Conversation API - Public (customer-facing)
-        Route::post('/api/conversations', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'store'])->name('api.conversations.store');
-        Route::get('/api/conversations/{id}', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'show'])->name('api.conversations.show');
-        Route::post('/api/conversations/{id}/messages', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'sendMessage'])->name('api.conversations.messages.send');
-        Route::get('/api/conversations/{id}/messages', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'getMessages'])->name('api.conversations.messages.index');
-        Route::post('/api/conversations/{id}/close', [\App\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'close'])->name('api.conversations.close');
+        Route::post('/api/conversations', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'store'])->name('api.conversations.store');
+        Route::get('/api/conversations/{id}', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'show'])->name('api.conversations.show');
+        Route::post('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'sendMessage'])->name('api.conversations.messages.send');
+        Route::get('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'getMessages'])->name('api.conversations.messages.index');
+        Route::post('/api/conversations/{id}/close', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'close'])->name('api.conversations.close');
 
         // Catch-all route for React Router (BrowserRouter) - Must be last
         // This allows client-side routing for /lc/widget/*, /lc/widget/conversation, /lc/widget/help, etc.

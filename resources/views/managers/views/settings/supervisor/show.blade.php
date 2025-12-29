@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -16,7 +16,8 @@
                             <p class="text-muted mb-0">Detalles y logs del proceso</p>
                         </div>
                         <div class="ms-auto d-flex gap-2">
-                            <a href="{{ route('manager.settings.supervisor.index') }}" class="btn btn-outline-secondary waves-effect">
+                            <a href="{{ route('manager.settings.supervisor.index') }}"
+                               class="btn btn-outline-secondary waves-effect">
                                 <i class="fa fa-arrow-left me-1"></i>Volver
                             </a>
                         </div>
@@ -100,10 +101,12 @@
                         <div class="row mb-4">
                             <div class="col-lg-12">
                                 <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-warning waves-effect" onclick="stopProcess('{{ $processName }}')">
+                                    <button type="button" class="btn btn-warning waves-effect"
+                                            onclick="stopProcess('{{ $processName }}')">
                                         <i class="fa fa-stop me-1"></i> Detener Proceso
                                     </button>
-                                    <button type="button" class="btn btn-info waves-effect" onclick="restartProcess('{{ $processName }}')">
+                                    <button type="button" class="btn btn-info waves-effect"
+                                            onclick="restartProcess('{{ $processName }}')">
                                         <i class="fa fa-arrows-rotate me-1"></i> Reiniciar Proceso
                                     </button>
                                 </div>
@@ -112,7 +115,8 @@
                     @else
                         <div class="row mb-4">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-success waves-effect" onclick="startProcess('{{ $processName }}')">
+                                <button type="button" class="btn btn-success waves-effect"
+                                        onclick="startProcess('{{ $processName }}')">
                                     <i class="fa fa-play me-1"></i> Iniciar Proceso
                                 </button>
                             </div>
@@ -125,7 +129,8 @@
                             <div class="card">
                                 <div class="card-header bg-light-secondary d-flex justify-content-between align-items-center">
                                     <h6 class="mb-0">Logs del Proceso (últimas 100 líneas)</h6>
-                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="refreshLogs()">
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                            onclick="refreshLogs()">
                                         <i class="fa fa-arrows-rotate"></i> Actualizar
                                     </button>
                                 </div>
@@ -133,10 +138,10 @@
                                     <div class="bg-dark p-3 rounded" style="max-height: 500px; overflow-y: auto;">
                                         <pre id="logsContent" class="text-light mb-0" style="font-size: 12px;">
 @if(isset($logs['logs']))
-{{ $logs['logs'] }}
-@else
-No hay logs disponibles para este proceso
-@endif
+                                                {{ $logs['logs'] }}
+                                            @else
+                                                No hay logs disponibles para este proceso
+                                            @endif
                                         </pre>
                                     </div>
                                 </div>
@@ -167,18 +172,18 @@ No hay logs disponibles para este proceso
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Proceso iniciado correctamente');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + (data.message || 'Error al iniciar el proceso'));
-                    }
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Proceso iniciado correctamente');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + (data.message || 'Error al iniciar el proceso'));
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error: ' + error.message);
+                    });
             }
         }
 
@@ -191,18 +196,18 @@ No hay logs disponibles para este proceso
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Proceso detenido correctamente');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + (data.message || 'Error al detener el proceso'));
-                    }
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Proceso detenido correctamente');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + (data.message || 'Error al detener el proceso'));
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error: ' + error.message);
+                    });
             }
         }
 
@@ -215,18 +220,18 @@ No hay logs disponibles para este proceso
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Proceso reiniciado correctamente');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + (data.message || 'Error al reiniciar el proceso'));
-                    }
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Proceso reiniciado correctamente');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + (data.message || 'Error al reiniciar el proceso'));
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error: ' + error.message);
+                    });
             }
         }
 
@@ -237,20 +242,20 @@ No hay logs disponibles para este proceso
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('logsContent').textContent = data.logs || 'No hay logs disponibles';
-                    // Auto-scroll to bottom
-                    const logsContainer = document.querySelector('.bg-dark');
-                    if (logsContainer) {
-                        logsContainer.scrollTop = logsContainer.scrollHeight;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('logsContent').textContent = data.logs || 'No hay logs disponibles';
+                        // Auto-scroll to bottom
+                        const logsContainer = document.querySelector('.bg-dark');
+                        if (logsContainer) {
+                            logsContainer.scrollTop = logsContainer.scrollHeight;
+                        }
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error refreshing logs:', error);
-            });
+                })
+                .catch(error => {
+                    console.error('Error refreshing logs:', error);
+                });
         }
     </script>
 @endsection

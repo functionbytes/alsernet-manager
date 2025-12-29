@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Events;
+namespace Modules\Campaign\Events;
 
 abstract class Event {}

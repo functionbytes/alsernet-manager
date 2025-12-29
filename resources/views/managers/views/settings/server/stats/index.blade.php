@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -14,7 +14,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="mb-1 fw-bold">Estado del sistema</h5>
-                        <p class="small mb-0 text-muted">Información en tiempo real del servidor y recursos del sistema</p>
+                        <p class="small mb-0 text-muted">Información en tiempo real del servidor y recursos del
+                            sistema</p>
                     </div>
                     <div class="d-flex gap-2 align-items-center">
                         <span class="badge bg-success-subtle text-success d-flex align-items-center gap-2">
@@ -100,11 +101,13 @@
                                     <p class="fw-semibold mb-0">{{ $stats['server_ip'] ?? 'N/A' }}</p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-semibold mb-1">Nombre del Servidor</label>
+                                    <label class="form-label text-muted small fw-semibold mb-1">Nombre del
+                                        Servidor</label>
                                     <p class="fw-semibold mb-0">{{ $stats['server_name'] ?? 'N/A' }}</p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-semibold mb-1">Sistema Operativo</label>
+                                    <label class="form-label text-muted small fw-semibold mb-1">Sistema
+                                        Operativo</label>
                                     <p class="fw-semibold mb-0">{{ $stats['os'] ?? 'N/A' }}</p>
                                 </div>
                                 <div class="mb-0">
@@ -114,15 +117,18 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-semibold mb-1">Tiempo de Actividad</label>
+                                    <label class="form-label text-muted small fw-semibold mb-1">Tiempo de
+                                        Actividad</label>
                                     <p class="fw-semibold mb-0">{{ $stats['uptime'] ?? 'N/A' }}</p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-semibold mb-1">Límite de Memoria</label>
+                                    <label class="form-label text-muted small fw-semibold mb-1">Límite de
+                                        Memoria</label>
                                     <p class="fw-semibold mb-0">{{ $stats['memory_limit'] ?? 'N/A' }}</p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small fw-semibold mb-1">Max Execution Time</label>
+                                    <label class="form-label text-muted small fw-semibold mb-1">Max Execution
+                                        Time</label>
                                     <p class="fw-semibold mb-0">{{ $stats['max_execution_time'] ?? 'N/A' }}s</p>
                                 </div>
                                 <div class="mb-0">
@@ -190,10 +196,12 @@
                                 border-start border-4 mb-0" role="alert">
                                 @if($stats['disk_usage_percent'] > 80)
                                     <i class="fa fa-triangle-exclamation me-2"></i>
-                                    <strong>Crítico:</strong> El espacio en disco está casi lleno. Considera liberar espacio inmediatamente.
+                                    <strong>Crítico:</strong> El espacio en disco está casi lleno. Considera liberar
+                                    espacio inmediatamente.
                                 @elseif($stats['disk_usage_percent'] > 60)
                                     <i class="fa fa-circle-exclamation me-2"></i>
-                                    <strong>Advertencia:</strong> El espacio en disco está por encima del 60%. Monitorea el uso.
+                                    <strong>Advertencia:</strong> El espacio en disco está por encima del 60%. Monitorea
+                                    el uso.
                                 @else
                                     <i class="fa fa-check me-2"></i>
                                     <strong>Óptimo:</strong> El espacio en disco está en niveles saludables.
@@ -218,7 +226,8 @@
                     </div>
                     <div class="card-body p-3">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('manager.settings.system.access.index') }}" class="btn btn-outline-primary text-start d-flex align-items-center justify-content-between">
+                            <a href="{{ route('manager.settings.system.access.index') }}"
+                               class="btn btn-outline-primary text-start d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-list"></i>
                                     <div>
@@ -229,7 +238,9 @@
                                 <i class="fa fa-chevron-right"></i>
                             </a>
 
-                            <button type="button" class="btn btn-outline-primary text-start d-flex align-items-center justify-content-between" onclick="location.reload()">
+                            <button type="button"
+                                    class="btn btn-outline-primary text-start d-flex align-items-center justify-content-between"
+                                    onclick="location.reload()">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-arrows-rotate"></i>
                                     <div>
@@ -240,7 +251,8 @@
                                 <i class="fa fa-chevron-right"></i>
                             </button>
 
-                            <a href="{{ route('manager.settings.system.cache.index') }}" class="btn btn-outline-secondary text-start d-flex align-items-center justify-content-between">
+                            <a href="{{ route('manager.settings.system.cache.index') }}"
+                               class="btn btn-outline-secondary text-start d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fa fa-arrow-left"></i>
                                     <div>
@@ -321,17 +333,17 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Update the last update time
-    function updateTime() {
-        const now = new Date();
-        const formatted = now.toLocaleDateString('es-ES') + ' ' + now.toLocaleTimeString('es-ES');
-        $('#last-update').text(formatted);
-    }
+    <script>
+        $(document).ready(function () {
+            // Update the last update time
+            function updateTime() {
+                const now = new Date();
+                const formatted = now.toLocaleDateString('es-ES') + ' ' + now.toLocaleTimeString('es-ES');
+                $('#last-update').text(formatted);
+            }
 
-    // Update time every second
-    setInterval(updateTime, 1000);
-});
-</script>
+            // Update time every second
+            setInterval(updateTime, 1000);
+        });
+    </script>
 @endpush

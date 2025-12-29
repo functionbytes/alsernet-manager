@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -25,35 +25,43 @@
                             </h5>
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera eficiente y segura. A continuación, encontrarás diversos <mark><code>campos</code></mark> que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar cualquier información que consideres necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera
+                            eficiente y segura. A continuación, encontrarás diversos
+                            <mark><code>campos</code></mark>
+                            que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar
+                            cualquier información que consideres necesario actualizar para mantener tus datos al día.
                         </p>
 
                         <div class="row">
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="form-label">Nombres</label>
-                                        <input type="text" class="form-control" id="firstname"  name="firstname" value="{{ $user->firstname }}" placeholder="Ingresar nombres">
+                                    <label class="form-label">Nombres</label>
+                                    <input type="text" class="form-control" id="firstname" name="firstname"
+                                           value="{{ $user->firstname }}" placeholder="Ingresar nombres">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="form-label">Apellidos</label>
-                                        <input type="text" class="form-control" id="lastname"  name="lastname" value="{{ $user->lastname }}" placeholder="Ingresar apellido">
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                                <div class="mb-3">
-                                        <label  class="form-label">Correo electronico</label>
-                                        <input type="text" class="form-control" id="email"  name="email" value="{{ $user->email }}" placeholder="Ingresar correo electronico">
+                                    <label class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" id="lastname" name="lastname"
+                                           value="{{ $user->lastname }}" placeholder="Ingresar apellido">
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" id="password"  name="password" value="" placeholder="Ingresar contraseña">
+                                    <label class="form-label">Correo electronico</label>
+                                    <input type="text" class="form-control" id="email" name="email"
+                                           value="{{ $user->email }}" placeholder="Ingresar correo electronico">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="password" name="password" value=""
+                                           placeholder="Ingresar contraseña">
                                 </div>
                             </div>
 
@@ -71,11 +79,11 @@
                             </div>
 
                             <div class="col-6 mb-3">
-                                    <label class="form-label">Estado</label>
-                                    <select class="form-control select2" id="available" name="available">
-                                        <option value="1" {{ $user->available == 1 ? 'selected' : '' }}>Público</option>
-                                        <option value="0" {{ $user->available == 0 ? 'selected' : '' }}>Oculto</option>
-                                    </select>
+                                <label class="form-label">Estado</label>
+                                <select class="form-control select2" id="available" name="available">
+                                    <option value="1" {{ $user->available == 1 ? 'selected' : '' }}>Público</option>
+                                    <option value="0" {{ $user->available == 0 ? 'selected' : '' }}>Oculto</option>
+                                </select>
                             </div>
 
                             @php
@@ -89,8 +97,8 @@
                                     <option value="">Seleccione un rol</option>
                                     @foreach($roles as $id => $name)
                                         <option value="{{ $id }}"
-                                            @if ($userRoleId == $id) selected @endif
-                                            data-role-name="{{ strtolower($name) }}">
+                                                @if ($userRoleId == $id) selected @endif
+                                                data-role-name="{{ strtolower($name) }}">
                                             {{ ucwords(str_replace('-', ' ', $name)) }}
                                         </option>
                                     @endforeach
@@ -104,8 +112,9 @@
 
                             <div class="col-12">
                                 <div class="border-top pt-1 mt-4">
-                                    <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
-                                            Guardar
+                                    <button type="submit"
+                                            class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                        Guardar
                                     </button>
                                 </div>
                             </div>
@@ -127,7 +136,7 @@
     <script type="text/javascript">
         Dropzone.autoDiscover = false;
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             // Roles that require shop/warehouse assignment
             const rolesRequiringAssignment = {!! json_encode($rolesRequiringAssignment) !!};
@@ -154,7 +163,7 @@
             }
 
             // Handle role change
-            $('#roles').change(function(e) {
+            $('#roles').change(function (e) {
                 e.preventDefault();
                 updateShopVisibility();
             });
@@ -228,7 +237,7 @@
                         maxlength: "Debe contener al menos 10 caracter",
                     },
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     var $form = $('#formUsers');
                     var formData = new FormData($form[0]);
@@ -245,9 +254,9 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: function(response) {
+                        success: function (response) {
 
-                            if(response.success == true){
+                            if (response.success == true) {
 
                                 message = response.message;
 
@@ -257,11 +266,11 @@
                                     positionClass: "toast-bottom-right"
                                 });
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location.href = "{{ route('manager.users') }}";
                                 }, 2000);
 
-                            }else{
+                            } else {
 
                                 $submitButton.prop('disabled', false);
                                 error = response.message;
@@ -283,7 +292,6 @@
                 }
 
             });
-
 
 
         });

@@ -2,8 +2,8 @@
 
 namespace App\Listeners\Systems;
 
-use App\Events\CronJobExecuted;
 use App\Models\Setting;
+use Modules\Campaign\Events\CronJobExecuted;
 
 class CronJobExecutedListener
 {

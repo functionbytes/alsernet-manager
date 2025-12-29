@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -23,37 +23,45 @@
 
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera eficiente y segura. A continuación, encontrarás diversos <mark><code>campos</code></mark> que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar cualquier información que consideres necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera
+                            eficiente y segura. A continuación, encontrarás diversos
+                            <mark><code>campos</code></mark>
+                            que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar
+                            cualquier información que consideres necesario actualizar para mantener tus datos al día.
                         </p>
 
                         <div class="row">
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="control-label col-form-label">Nombres</label>
-                                        <input type="text" class="form-control" id="firstname"  name="firstname" value="" placeholder="Ingresar nombres" autocomplete="new-password">
+                                    <label class="control-label col-form-label">Nombres</label>
+                                    <input type="text" class="form-control" id="firstname" name="firstname" value=""
+                                           placeholder="Ingresar nombres" autocomplete="new-password">
 
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="control-label col-form-label">Apellidos</label>
-                                        <input type="text" class="form-control" id="lastname"  name="lastname" value="" placeholder="Ingresar apellido" autocomplete="new-password">
+                                    <label class="control-label col-form-label">Apellidos</label>
+                                    <input type="text" class="form-control" id="lastname" name="lastname" value=""
+                                           placeholder="Ingresar apellido" autocomplete="new-password">
 
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="control-label col-form-label">Correo electronico</label>
-                                        <input type="text" class="form-control" id="email"  name="email" value="" placeholder="Ingresar correo electronico" autocomplete="new-password">
+                                    <label class="control-label col-form-label">Correo electronico</label>
+                                    <input type="text" class="form-control" id="email" name="email" value=""
+                                           placeholder="Ingresar correo electronico" autocomplete="new-password">
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                        <label  class="control-label col-form-label">Contraseña</label>
-                                        <input type="password" class="form-control" id="password"  name="password" value="" placeholder="Ingresar contraseña" autocomplete="new-password">
+                                    <label class="control-label col-form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="password" name="password" value=""
+                                           placeholder="Ingresar contraseña" autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="col-6 divShops d-none">
@@ -91,12 +99,13 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                            <div class="border-top pt-1 mt-4">
-                                <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                <div class="border-top pt-1 mt-4">
+                                    <button type="submit"
+                                            class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
                                         Guardar
-                                </button>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
                         </div>
 
@@ -116,7 +125,7 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             // Roles that require shop/warehouse assignment
             const rolesRequiringAssignment = {!! json_encode($rolesRequiringAssignment) !!};
@@ -149,7 +158,7 @@
                 return false;
             }
 
-            $('#roles').change(function(e) {
+            $('#roles').change(function (e) {
                 e.preventDefault();
 
                 if (roleRequiresShop()) {
@@ -237,7 +246,7 @@
                         maxlength: "Debe contener al menos 10 caracter",
                     },
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     var $form = $('#formUsers');
                     var formData = new FormData($form[0]);
@@ -271,9 +280,9 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: function(response) {
+                        success: function (response) {
 
-                            if(response.success == true){
+                            if (response.success == true) {
 
                                 message = response.message;
 
@@ -283,11 +292,11 @@
                                     positionClass: "toast-bottom-right"
                                 });
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location.href = "{{ route('manager.users') }}";
                                 }, 2000);
 
-                            }else{
+                            } else {
 
                                 $submitButton.prop('disabled', false);
                                 error = response.message;
@@ -309,7 +318,6 @@
                 }
 
             });
-
 
 
         });

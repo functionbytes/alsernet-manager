@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Modules\Campaign\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 

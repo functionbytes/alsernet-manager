@@ -1,4 +1,4 @@
-@extends('layouts.managers')
+@extends('Modules.Campaign.views.manager.layouts.managers')
 
 @section('content')
 
@@ -12,17 +12,20 @@
                     {{ csrf_field() }}
 
 
-                    <textarea  style="display: none"  type="hidden"  id="page_description" name="page_description">{!!  setting('page_description')   !!}</textarea>
-                    <textarea  style="display: none"  type="hidden"  id="page_politic" name="page_politic">{!! setting('page_politic')  !!}</textarea>
-                    <textarea  style="display: none"  type="hidden"  id="page_term" name="page_term">{!! setting('page_term')  !!}</textarea>
-                    <input  type="hidden" id="page_logo" name="page_logo" value="{!! setting('page_logo') !!}">
-                    <input  type="hidden" id="page_favicon" name="page_favicon" value="{!! setting('page_favicon') !!}">
-                    <input  type="hidden" id="id" name="id" value="{{ $setting->id }}">
-                    <input  type="hidden" id="statuLogo" name="statuLogo" value="{{ $logo }}">
-                    <input  type="hidden" id="statuFavicon" name="statuFavicon" value="{{ $favicon}}">
-                    <input  type="hidden" id="statuEdit" name="statuEdit" value="false">
-                    <input  type="hidden" id="favicon" name="favicon">
-                    <input  type="hidden" id="logo" name="logo">
+                    <textarea style="display: none" type="hidden" id="page_description"
+                              name="page_description">{!!  setting('page_description')   !!}</textarea>
+                    <textarea style="display: none" type="hidden" id="page_politic"
+                              name="page_politic">{!! setting('page_politic')  !!}</textarea>
+                    <textarea style="display: none" type="hidden" id="page_term"
+                              name="page_term">{!! setting('page_term')  !!}</textarea>
+                    <input type="hidden" id="page_logo" name="page_logo" value="{!! setting('page_logo') !!}">
+                    <input type="hidden" id="page_favicon" name="page_favicon" value="{!! setting('page_favicon') !!}">
+                    <input type="hidden" id="id" name="id" value="{{ $setting->id }}">
+                    <input type="hidden" id="statuLogo" name="statuLogo" value="{{ $logo }}">
+                    <input type="hidden" id="statuFavicon" name="statuFavicon" value="{{ $favicon}}">
+                    <input type="hidden" id="statuEdit" name="statuEdit" value="false">
+                    <input type="hidden" id="favicon" name="favicon">
+                    <input type="hidden" id="logo" name="logo">
 
                     <div class="card-body">
                         <div class="d-flex no-block align-items-center">
@@ -30,7 +33,8 @@
 
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es
+                            necesario actualizar para mantener tus datos al día.
                         </p>
                         <div class="dropzone dz-clickable" id="logo">
                             <div class="fallback">
@@ -46,7 +50,8 @@
                             <h5 class="mb-0">Favicon</h5>
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la foto de tu perfil es
+                            necesario actualizar para mantener tus datos al día.
                         </p>
                         <div class="dropzone dz-clickable" id="favicon">
                             <div class="fallback">
@@ -63,155 +68,181 @@
 
                         </div>
                         <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera eficiente y segura. A continuación, encontrarás diversos <mark><code>campos</code></mark> que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar cualquier información que consideres necesario actualizar para mantener tus datos al día.
+                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera
+                            eficiente y segura. A continuación, encontrarás diversos
+                            <mark><code>campos</code></mark>
+                            que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar
+                            cualquier información que consideres necesario actualizar para mantener tus datos al día.
                         </p>
 
                         <div class="row">
 
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Nombres</label>
-                                                <input type="text" class="form-control" id="page_title"  name="page_title" value="{{ setting('page_title') }}" placeholder="Ingresar titulo">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Copyright</label>
-                                                <input type="text" class="form-control" id="page_copyright"  name="page_copyright" value="{{ setting('meta_title')  }}" placeholder="Ingresar copyright">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Correo electronico</label>
-                                                <input type="text" class="form-control" id="page_email"  name="page_email" value="{{ setting('page_email')  }}" placeholder="Ingresar correo electronico">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Dirección</label>
-                                                <input type="text" class="form-control" id="page_address"  name="page_address" value="{{ setting('page_address')  }}" placeholder="Ingresar nombres">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Telefono</label>
-                                                <input type="text" class="form-control" id="page_phone"  name="page_phone" value="{{ setting('page_phone')  }}" placeholder="Ingresar telefono">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Celular</label>
-                                                <input type="text" class="form-control" id="page_cellphone"  name="page_cellphone" value="{{ setting('page_cellphone')  }}" placeholder="Ingresar celular">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Whatsapp</label>
-                                                <input type="text" class="form-control" id="page_whatsapp"  name="page_whatsapp" value="{{ setting('page_whatsapp')  }}" placeholder="Ingresar whatsapp">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Facebook</label>
-                                                <input type="text" class="form-control" id="social_media_facebook"  name="social_media_facebook" value="{{ setting('social_media_facebook')  }}" placeholder="Ingresar facebook">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Instagram</label>
-                                                <input type="text" class="form-control" id="social_media_instagram"  name="social_media_instagram" value="{{ setting('social_media_instagram')  }}" placeholder="Ingresar instragram">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Linkedin</label>
-                                                <input type="text" class="form-control" id="social_media_linkedin"  name="social_media_linkedin" value="{{ setting('social_media_linkedin')  }}" placeholder="Ingresar linkedin">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Twitter</label>
-                                                <input type="text" class="form-control" id="social_media_twitter"  name="social_media_twitter" value="{{ setting('social_media_twitter')  }}" placeholder="Ingresar twitter">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Youtube</label>
-                                                <input type="text" class="form-control" id="social_media_youtube"  name="social_media_youtube" value="{{ setting('social_media_youtube')  }}" placeholder="Ingresar youtube">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Mapa</label>
-                                                <input type="text" class="form-control" id="page_map"  name="page_map" value="{{ setting('page_map')  }}" placeholder="Ingresar mapa">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Horario entre semana</label>
-                                                <input type="text" class="form-control" id="page_hour_weekend" name="page_hour_weekend"
-                                                    value="{{ setting('page_hour_weekend')  }}" placeholder="Ingresar youtube">
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                                <label  class="control-label col-form-label">Horario fines de semana</label>
-                                                <input type="text" class="form-control" id="page_hour_weekends" name="page_hour_weekends"
-                                                    value="{{ setting('page_hour_weekends')  }}" placeholder="Ingresar youtube">
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="col-12 mt-3">
-                                        <label class="control-label col-form-label">Politicas de privacidad</label>
-                                        <div class="">
-                                            <div class="quill-wrapper">
-                                                <div  id="politics">{!! setting('page_politic')  !!}</div>
-                                            </div>
-                                            <label id="politic-error" class="error d-none" for="politic"></label>
-                                        </div>
-                                    </div>
-
-                                     <div class="col-12 mt-3">
-                                        <label class="control-label col-form-label">Terminos y condiciones</label>
-                                        <div class="">
-                                            <div class="quill-wrapper">
-                                                <div  id="terms">{!! setting('page_term')  !!}</div>
-                                            </div>
-                                            <label id="term-error" class="error d-none" for="term"></label>
-                                        </div>
-                                    </div>
-
-                                     <div class="col-12 mt-3">
-                                        <label class="control-label col-form-label">Descripción</label>
-                                        <div class="">
-                                            <div class="quill-wrapper">
-                                                <div  id="descriptions">{!! setting('page_description')  !!}</div>
-                                            </div>
-                                            <label id="description-error" class="error d-none" for="description"></label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="action-form border-top mt-4">
-                                            <div class="text-center">
-                                                <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
-                                                    Guardar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Nombres</label>
+                                    <input type="text" class="form-control" id="page_title" name="page_title"
+                                           value="{{ setting('page_title') }}" placeholder="Ingresar titulo">
                                 </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Copyright</label>
+                                    <input type="text" class="form-control" id="page_copyright" name="page_copyright"
+                                           value="{{ setting('meta_title')  }}" placeholder="Ingresar copyright">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Correo electronico</label>
+                                    <input type="text" class="form-control" id="page_email" name="page_email"
+                                           value="{{ setting('page_email')  }}"
+                                           placeholder="Ingresar correo electronico">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="page_address" name="page_address"
+                                           value="{{ setting('page_address')  }}" placeholder="Ingresar nombres">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Telefono</label>
+                                    <input type="text" class="form-control" id="page_phone" name="page_phone"
+                                           value="{{ setting('page_phone')  }}" placeholder="Ingresar telefono">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Celular</label>
+                                    <input type="text" class="form-control" id="page_cellphone" name="page_cellphone"
+                                           value="{{ setting('page_cellphone')  }}" placeholder="Ingresar celular">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Whatsapp</label>
+                                    <input type="text" class="form-control" id="page_whatsapp" name="page_whatsapp"
+                                           value="{{ setting('page_whatsapp')  }}" placeholder="Ingresar whatsapp">
+                                </div>
+                            </div>
 
-                     </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Facebook</label>
+                                    <input type="text" class="form-control" id="social_media_facebook"
+                                           name="social_media_facebook" value="{{ setting('social_media_facebook')  }}"
+                                           placeholder="Ingresar facebook">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Instagram</label>
+                                    <input type="text" class="form-control" id="social_media_instagram"
+                                           name="social_media_instagram"
+                                           value="{{ setting('social_media_instagram')  }}"
+                                           placeholder="Ingresar instragram">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Linkedin</label>
+                                    <input type="text" class="form-control" id="social_media_linkedin"
+                                           name="social_media_linkedin" value="{{ setting('social_media_linkedin')  }}"
+                                           placeholder="Ingresar linkedin">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Twitter</label>
+                                    <input type="text" class="form-control" id="social_media_twitter"
+                                           name="social_media_twitter" value="{{ setting('social_media_twitter')  }}"
+                                           placeholder="Ingresar twitter">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Youtube</label>
+                                    <input type="text" class="form-control" id="social_media_youtube"
+                                           name="social_media_youtube" value="{{ setting('social_media_youtube')  }}"
+                                           placeholder="Ingresar youtube">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Mapa</label>
+                                    <input type="text" class="form-control" id="page_map" name="page_map"
+                                           value="{{ setting('page_map')  }}" placeholder="Ingresar mapa">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Horario entre semana</label>
+                                    <input type="text" class="form-control" id="page_hour_weekend"
+                                           name="page_hour_weekend"
+                                           value="{{ setting('page_hour_weekend')  }}" placeholder="Ingresar youtube">
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Horario fines de semana</label>
+                                    <input type="text" class="form-control" id="page_hour_weekends"
+                                           name="page_hour_weekends"
+                                           value="{{ setting('page_hour_weekends')  }}" placeholder="Ingresar youtube">
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 mt-3">
+                                <label class="control-label col-form-label">Politicas de privacidad</label>
+                                <div class="">
+                                    <div class="quill-wrapper">
+                                        <div id="politics">{!! setting('page_politic')  !!}</div>
+                                    </div>
+                                    <label id="politic-error" class="error d-none" for="politic"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <label class="control-label col-form-label">Terminos y condiciones</label>
+                                <div class="">
+                                    <div class="quill-wrapper">
+                                        <div id="terms">{!! setting('page_term')  !!}</div>
+                                    </div>
+                                    <label id="term-error" class="error d-none" for="term"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <label class="control-label col-form-label">Descripción</label>
+                                <div class="">
+                                    <div class="quill-wrapper">
+                                        <div id="descriptions">{!! setting('page_description')  !!}</div>
+                                    </div>
+                                    <label id="description-error" class="error d-none" for="description"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="action-form border-top mt-4">
+                                    <div class="text-center">
+                                        <button type="submit"
+                                                class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </form>
             </div>
@@ -229,7 +260,7 @@
     <script type="text/javascript">
         Dropzone.autoDiscover = false;
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
 
             jQuery.validator.addMethod(
@@ -287,31 +318,31 @@
                     },
                     social_media_facebook: {
                         required: false,
-                        url : true,
+                        url: true,
                         minlength: 3,
                         maxlength: 100,
                     },
                     social_media_instagram: {
                         required: false,
-                        url : true,
+                        url: true,
                         minlength: 3,
                         maxlength: 100,
                     },
                     social_media_linkedin: {
                         required: false,
-                        url : true,
+                        url: true,
                         minlength: 3,
                         maxlength: 100,
                     },
                     social_media_twitter: {
                         required: false,
-                        url : true,
+                        url: true,
                         minlength: 3,
                         maxlength: 100,
                     },
                     social_media_youtube: {
                         required: false,
-                        url : true,
+                        url: true,
                         minlength: 3,
                         maxlength: 100,
                     },
@@ -330,12 +361,12 @@
                         required: false,
                     },
                     logo: {
-                        required: function() {
+                        required: function () {
                             return $("#statuLogo").val() == 'true' ? false : true;
                         }
                     },
                     favicon: {
-                        required: function() {
+                        required: function () {
                             return $("#statuFavicon").val() == 'true' ? false : true;
                         }
                     }
@@ -429,7 +460,7 @@
                         required: "Es necesario una imagen.",
                     }
                 },
-                errorPlacement: function(error, element) {
+                errorPlacement: function (error, element) {
                     if (element.attr("id") == "favicon") {
                         error.insertAfter("#favicon");
                     } else if (element.attr("id") == "logo") {
@@ -438,7 +469,7 @@
                         error.insertAfter(element);
                     }
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     var $form = $('#formSetting');
                     var formData = new FormData($form[0]);
@@ -497,9 +528,9 @@
                         contentType: false,
                         processData: false,
                         data: formData,
-                        success: function(response) {
+                        success: function (response) {
 
-                            if(response.success == true){
+                            if (response.success == true) {
 
                                 myLogo.processQueue();
                                 myFavicon.processQueue();
@@ -512,19 +543,19 @@
                                     positionClass: "toast-bottom-right"
                                 });
 
-                                myLogo.on("queuecomplete", function() {
+                                myLogo.on("queuecomplete", function () {
 
                                 });
 
-                                myFavicon.on("queuecomplete", function() {
+                                myFavicon.on("queuecomplete", function () {
 
                                 });
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location = "{{ route('manager.settings') }}";
                                 }, 2000);
 
-                            }else{
+                            } else {
 
                                 $submitButton.prop('disabled', false);
                                 error = response.message;
@@ -549,7 +580,6 @@
             });
 
 
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -568,17 +598,17 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                init: function() {
+                init: function () {
 
                     var myLogo = this;
 
                     item = $("#page_logo").val();
 
-                    $.getJSON("{{ route('manager.settings.logo.get', ':item') }}".replace(':item', item), function(data) {
+                    $.getJSON("{{ route('manager.settings.logo.get', ':item') }}".replace(':item', item), function (data) {
 
-                        $.each(data, function(key, value) {
+                        $.each(data, function (key, value) {
 
-                             $("#statuLogo").val('true');
+                            $("#statuLogo").val('true');
 
                             var mockFile = {
                                 id: value.id,
@@ -590,7 +620,7 @@
                             };
 
                             myLogo.options.addedfile.call(myLogo, mockFile);
-                            myLogo.options.thumbnail.call(myLogo, mockFile,  value.path);
+                            myLogo.options.thumbnail.call(myLogo, mockFile, value.path);
                             myLogo.options.complete.call(myLogo, mockFile);
                             myLogo.options.success.call(myLogo, mockFile);
 
@@ -598,21 +628,21 @@
 
                     });
 
-                    myLogo.on("maxfilesexceeded", function(file) {
+                    myLogo.on("maxfilesexceeded", function (file) {
                         this.removeFile(file);
                     });
 
-                    myLogo.on('sending', function(file, xhr, formData) {
+                    myLogo.on('sending', function (file, xhr, formData) {
                         let setting = document.getElementById('page_logo').value;
                         formData.append('setting', setting);
                     });
 
-                    myLogo.on("addedfile", function(file) {
+                    myLogo.on("addedfile", function (file) {
                         $("#logo").val(file.name);
                         $("#formSetting").validate().element("#logo");
                     });
 
-                    myLogo.on("removedfile", function(file) {
+                    myLogo.on("removedfile", function (file) {
 
                         $("#logo").val('');
                         $("#formSetting").validate().element("#logo");
@@ -621,7 +651,7 @@
                             $.ajax({
                                 type: 'GET',
                                 url: "{{ route('manager.settings.logo.delete', ':id') }}".replace(':id', file.id),
-                                success: function(result) {
+                                success: function (result) {
                                     $("#status").val('false');
                                 }
                             });
@@ -630,19 +660,19 @@
 
                     });
 
-                    myLogo.on('resetFiles', function() {
+                    myLogo.on('resetFiles', function () {
                         $("#statuLogo").val('false');
                         myLogo.removeAllFiles();
                     });
 
-                    myLogo.on("success", function(file, response) {
+                    myLogo.on("success", function (file, response) {
                         $("#statuLogo").val('true');
                     });
 
-                    myLogo.on("queuecomplete", function() {
+                    myLogo.on("queuecomplete", function () {
                     });
 
-                    myLogo.on("complete", function() {
+                    myLogo.on("complete", function () {
                     });
                 }
             });
@@ -659,15 +689,15 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                init: function() {
+                init: function () {
 
                     var myFavicon = this;
 
                     item = $("#page_favicon").val();
 
-                    $.getJSON("{{ route('manager.settings.favicon.get', ':item') }}".replace(':item', item), function(data) {
+                    $.getJSON("{{ route('manager.settings.favicon.get', ':item') }}".replace(':item', item), function (data) {
 
-                        $.each(data, function(key, value) {
+                        $.each(data, function (key, value) {
 
 
                             $("#statuFavicon").val('true');
@@ -682,7 +712,7 @@
                             };
 
                             myFavicon.options.addedfile.call(myFavicon, mockFile);
-                            myFavicon.options.thumbnail.call(myFavicon, mockFile,  value.path);
+                            myFavicon.options.thumbnail.call(myFavicon, mockFile, value.path);
                             myFavicon.options.complete.call(myFavicon, mockFile);
                             myFavicon.options.success.call(myFavicon, mockFile);
 
@@ -691,21 +721,21 @@
                     });
 
 
-                    myFavicon.on("maxfilesexceeded", function(file) {
+                    myFavicon.on("maxfilesexceeded", function (file) {
                         this.removeFile(file);
                     });
 
-                    myFavicon.on('sending', function(file, xhr, formData) {
+                    myFavicon.on('sending', function (file, xhr, formData) {
                         let setting = document.getElementById('page_favicon').value;
                         formData.append('setting', setting);
                     });
 
-                    myFavicon.on("addedfile", function(file) {
+                    myFavicon.on("addedfile", function (file) {
                         $("#favicon").val(file.name);
                         $("#formSetting").validate().element("#favicon");
                     });
 
-                    myFavicon.on("removedfile", function(file) {
+                    myFavicon.on("removedfile", function (file) {
 
                         $("#favicon").val('');
                         $("#formSetting").validate().element("#favicon");
@@ -714,7 +744,7 @@
                             $.ajax({
                                 type: 'GET',
                                 url: "{{ route('manager.settings.favicon.delete', ':id') }}".replace(':id', file.id),
-                                success: function(result) {
+                                success: function (result) {
                                     $("#status").val('false');
                                 }
                             });
@@ -722,19 +752,19 @@
 
                     });
 
-                    myFavicon.on('resetFiles', function() {
+                    myFavicon.on('resetFiles', function () {
                         $("#statuFavicon").val('false');
                         myFavicon.removeAllFiles();
                     });
 
-                    myFavicon.on("success", function(file, response) {
+                    myFavicon.on("success", function (file, response) {
                         $("#statuFavicon").val('true');
                     });
 
-                    myFavicon.on("queuecomplete", function() {
+                    myFavicon.on("queuecomplete", function () {
                     });
 
-                    myFavicon.on("complete", function() {
+                    myFavicon.on("complete", function () {
                     });
                 }
             });
@@ -751,17 +781,17 @@
         var toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote', 'code-block'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'indent': '-1' }, { 'indent': '+1' }],
-            [{ 'direction': 'rtl' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [ 'link', 'image', 'video' ],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'font': [] }],
-            [{ 'align': [] }],
+            [{'header': 1}, {'header': 2}],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'script': 'sub'}, {'script': 'super'}],
+            [{'indent': '-1'}, {'indent': '+1'}],
+            [{'direction': 'rtl'}],
+            [{'size': ['small', false, 'large', 'huge']}],
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+            ['link', 'image', 'video'],
+            [{'color': []}, {'background': []}],
+            [{'font': []}],
+            [{'align': []}],
 
             ['clean']
         ];
@@ -792,12 +822,11 @@
             }
         });
 
-        description.on('text-change', function(delta, oldDelta, source) {
+        description.on('text-change', function (delta, oldDelta, source) {
 
             var text = description.container.firstChild.innerHTML.replaceAll("<p><br></p>", "");
             $('#page_description').val(text);
         });
-
 
 
         var term = new Quill('#terms', {
@@ -821,12 +850,11 @@
             }
         });
 
-        term.on('text-change', function(delta, oldDelta, source) {
+        term.on('text-change', function (delta, oldDelta, source) {
 
             var text = term.container.firstChild.innerHTML.replaceAll("<p><br></p>", "");
             $('#page_term').val(text);
         });
-
 
 
         var politic = new Quill('#politics', {
@@ -850,13 +878,11 @@
             }
         });
 
-        politic.on('text-change', function(delta, oldDelta, source) {
+        politic.on('text-change', function (delta, oldDelta, source) {
 
             var text = politic.container.firstChild.innerHTML.replaceAll("<p><br></p>", "");
             $('#page_politic').val(text);
         });
-
-
 
 
     </script>

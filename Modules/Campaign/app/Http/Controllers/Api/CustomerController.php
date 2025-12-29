@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Modules\Campaign\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Customer;
 use App\Http\Controllers\Controller;
 use App\Library\Facades\SubscriptionFacade;
 use app\Library\TransactionResult;
