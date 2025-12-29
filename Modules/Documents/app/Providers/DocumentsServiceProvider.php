@@ -35,7 +35,9 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(EventServiceProvider::class);
+        // Note: EventServiceProvider is intentionally NOT registered here
+        // All Document events are handled by App\Providers\EventServiceProvider
+        // which is responsible for the entire application's event-listener mappings
         $this->app->register(RouteServiceProvider::class);
 
         // Registrar PermissionService como singleton
