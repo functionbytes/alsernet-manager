@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Library\Traits\HasUid;
-use App\Models\Prestashop\Category as PrestaShopCategory;
+use app\Library\Traits\HasUid;
 use App\Models\Supplier\Supplier;
 use App\Models\Supplier\SupplierCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
+use Modules\Prestashop\Entities\Category as PrestaShopCategory;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 /**

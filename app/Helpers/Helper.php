@@ -3,6 +3,8 @@
 use App\Models\Setting\Setting;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use function App\Helpers\xml_to_array;
 
 if (! function_exists('setCoupon')) {
     function setCoupon($coupon)
@@ -485,10 +487,6 @@ function input_date($dates): string
     return ucwords($date->format('d-m-Y'));
 }
 
-use Illuminate\Support\Facades\DB;
-
-use function App\Helpers\xml_to_array;
-
 function table($name)
 {
     return \DB::getTablePrefix().$name;
@@ -905,7 +903,7 @@ function makeInlineCss($html, array $cssFiles)
 {
     libxml_use_internal_errors(true);
 
-    $htmldoc = new \App\Library\InlineStyleWrapper($html);
+    $htmldoc = new \app\Library\InlineStyleWrapper($html);
 
     foreach ($cssFiles as $file) {
         if (file_exists($file)) {

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Providers;
+namespace Modules\Returns\Providers;
 
-use App\Events\Return\ReturnCompleted;
-// Events
-use App\Events\Return\ReturnCreated;
-use App\Events\Return\ReturnPaymentProcessed;
-use App\Events\Return\ReturnStatusChanged;
-use App\Listeners\Return\GeneratePDFListener;
-// Listeners
-use App\Listeners\Return\LogReturnActivityListener;
-use App\Listeners\Return\NotifyCustomerListener;
-use App\Listeners\Return\SendConfirmationListener;
-use App\Listeners\Return\UpdateHistoryListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+// Events
+use Modules\Returns\Events\ReturnCompleted;
+use Modules\Returns\Events\ReturnCreated;
+use Modules\Returns\Events\ReturnPaymentProcessed;
+use Modules\Returns\Events\ReturnStatusChanged;
+// Listeners
+use Modules\Returns\Listeners\GeneratePDFListener;
+use Modules\Returns\Listeners\LogReturnActivityListener;
+use Modules\Returns\Listeners\NotifyCustomerListener;
+use Modules\Returns\Listeners\SendConfirmationListener;
+use Modules\Returns\Listeners\UpdateHistoryListener;
 
 class ReturnEventServiceProvider extends ServiceProvider
 {

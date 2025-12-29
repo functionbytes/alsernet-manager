@@ -2,7 +2,7 @@
 
 namespace App\Models\Warehouse;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

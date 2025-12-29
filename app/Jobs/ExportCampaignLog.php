@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Library\Traits\Trackable;
+use app\Library\Traits\Trackable;
 
 class ExportCampaignLog extends Base
 {

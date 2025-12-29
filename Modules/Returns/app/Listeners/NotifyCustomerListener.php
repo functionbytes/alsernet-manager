@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listeners\Return;
+namespace Modules\Returns\Listeners;
 
-use App\Events\Return\ReturnStatusChanged;
-use App\Services\ReturnEmailService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Events\ReturnStatusChanged;
+use Modules\Returns\Services\ReturnEmailService;
 
 class NotifyCustomerListener implements ShouldQueue
 {

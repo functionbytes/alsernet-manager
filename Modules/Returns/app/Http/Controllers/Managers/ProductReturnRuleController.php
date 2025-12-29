@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Returns;
+namespace Modules\Returns\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;

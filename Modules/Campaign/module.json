@@ -1,0 +1,14 @@
+{
+  "name": "Campaign",
+  "alias": "campaign",
+  "description": "Campaign Management Module",
+  "keywords": [],
+  "priority": 0,
+  "providers": [
+    "Modules\\Campaign\\app\\Providers\\CampaignServiceProvider",
+    "Modules\\Campaign\\app\\Providers\\RouteServiceProvider"
+  ],
+  "aliases": {},
+  "files": [],
+  "requires": []
+}

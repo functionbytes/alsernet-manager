@@ -2,7 +2,7 @@
 
 namespace App\Models\Template;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 class TemplateCategory extends Model

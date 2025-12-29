@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
 use App\Models\Order;
 use App\Models\Product;

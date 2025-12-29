@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Services\Returns\WarrantyService;
 use Illuminate\Console\Command;
+use Modules\Returns\Services\WarrantyService;
 
 class ProcessWarranties extends Command
 {
@@ -13,7 +13,7 @@ class ProcessWarranties extends Command
 
     protected $warrantyService;
 
-    public function __construct(WarrantyService $warrantyService)
+    public function __construct(?WarrantyService $warrantyService = null)
     {
         parent::__construct();
         $this->warrantyService = $warrantyService;

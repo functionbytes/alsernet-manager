@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Library\Exception\RateLimitExceeded;
-use App\Library\Exception\VerificationTakesLongerThanNormal;
+use app\Library\Exception\RateLimitExceeded;
+use app\Library\Exception\VerificationTakesLongerThanNormal;
 use Closure;
 use Exception;
 use Illuminate\Bus\Batchable;

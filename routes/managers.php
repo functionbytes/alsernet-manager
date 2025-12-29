@@ -76,22 +76,24 @@ use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
 use App\Http\Controllers\Managers\Shops\Locations\BarcodeController as LocationsBarcodesController;
 use App\Http\Controllers\Managers\Shops\Locations\LocationsController as ShopsLocationsController;
 use App\Http\Controllers\Managers\Shops\Shops\ShopsController;
-use App\Http\Controllers\Managers\Subscribers\SubscribersConditionsController;
-use App\Http\Controllers\Managers\Subscribers\SubscribersController;
-use App\Http\Controllers\Managers\Subscribers\SubscribersListsController;
-use App\Http\Controllers\Managers\Subscribers\SubscribersReportController;
+// @deprecated Subscriber controllers moved to Modules/Subscriber
+// use App\Http\Controllers\Managers\Subscribers\SubscribersConditionsController;
+// use App\Http\Controllers\Managers\Subscribers\SubscribersController;
+// use App\Http\Controllers\Managers\Subscribers\SubscribersListsController;
+// use App\Http\Controllers\Managers\Subscribers\SubscribersReportController;
 use App\Http\Controllers\Managers\SystemInfoController;
 use App\Http\Controllers\Managers\Users\UsersController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseDashboardController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseFloorsController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseHistoryController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseInventorySlotsController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseLocationsController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseLocationSectionsController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseLocationStylesController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseMapController;
-use App\Http\Controllers\Managers\Warehouses\WarehouseReportsController;
+// @deprecated Warehouse routes moved to Modules/Warehouse/routes/managers.php
+// use App\Http\Controllers\Managers\Warehouses\WarehouseController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseDashboardController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseFloorsController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseHistoryController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseInventorySlotsController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseLocationsController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseLocationSectionsController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseLocationStylesController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseMapController;
+// use App\Http\Controllers\Managers\Warehouses\WarehouseReportsController;
 use Illuminate\Support\Facades\Route;
 
 // use App\Http\Controllers\Managers\Settings\ErpIntegrationSettingsController; // TODO: Controller doesn't exist
@@ -355,26 +357,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         //     Route::put('/update', [ErpIntegrationSettingsController::class, 'update'])->name('manager.settings.erp-integration.update');
         //     Route::post('/toggle', [ErpIntegrationSettingsController::class, 'toggle'])->name('manager.settings.erp-integration.toggle');
         // });
-
-        Route::group(['prefix' => 'prestashop'], function () {
-            Route::get('/', [PrestashopSettingsController::class, 'index'])->name('manager.settings.prestashop.index');
-            Route::get('/edit', [PrestashopSettingsController::class, 'edit'])->name('manager.settings.prestashop.edit');
-            Route::put('/update', [PrestashopSettingsController::class, 'update'])->name('manager.settings.prestashop.update');
-
-            // AJAX Endpoints
-            Route::post('/check-connection', [PrestashopSettingsController::class, 'checkConnection'])->name('manager.settings.prestashop.check-connection');
-            Route::post('/toggle-active', [PrestashopSettingsController::class, 'toggleActive'])->name('manager.settings.prestashop.toggle-active');
-            Route::post('/reset-stats', [PrestashopSettingsController::class, 'resetStats'])->name('manager.settings.prestashop.reset-stats');
-            Route::get('/get-stats', [PrestashopSettingsController::class, 'getStats'])->name('manager.settings.prestashop.get-stats');
-            Route::post('/test-sync', [PrestashopSettingsController::class, 'testSync'])->name('manager.settings.prestashop.test-sync');
-
-            // Product Blockades Sync
-            Route::post('/sync-blockades', [PrestashopSettingsController::class, 'syncProductBlockades'])->name('manager.settings.prestashop.sync-blockades');
-            Route::get('/blockades-status', [PrestashopSettingsController::class, 'getBlockadesSyncStatus'])->name('manager.settings.prestashop.blockades-status');
-            Route::post('/create-blockade', [PrestashopSettingsController::class, 'createBlockade'])->name('manager.settings.prestashop.create-blockade');
-            Route::delete('/delete-blockade', [PrestashopSettingsController::class, 'deleteBlockade'])->name('manager.settings.prestashop.delete-blockade');
-            Route::post('/save-blockade-labels', [PrestashopSettingsController::class, 'saveBlockadeLabels'])->name('manager.settings.prestashop.save-blockade-labels');
-        });
 
         // Supplier Automation Routes
         Route::group(['prefix' => 'suppliers'], function () {
@@ -1039,8 +1021,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/sort', [LayoutController::class, 'sort'])->name('manager.layouts.sort');
     });
 
-    Route::group(['prefix' => 'warehouse'], function () {
-
+    // @deprecated Warehouse routes moved to Modules/Warehouse/routes/managers.php
+    // Route::group(['prefix' => 'warehouse'], function () {
+    /*
         // Warehouse Map (Visual Floor Plan)
         Route::get('/map', [WarehouseMapController::class, 'map'])->name('map');
         Route::get('/api/layout-spec', [WarehouseMapController::class, 'getLayoutSpec'])->name('manager.warehouse.api.layout');
@@ -1247,7 +1230,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/api/styles', [WarehouseLocationStylesController::class, 'apiGetAllStyles'])->name('manager.warehouse.api.styles.all');
         Route::get('/api/styles/{style_id}', [WarehouseLocationsController::class, 'getStyleDetails'])->name('manager.warehouse.api.style.details');
 
-    });
+    */
+    // });
 
     Route::group(['prefix' => 'helpdesk'], function () {
 

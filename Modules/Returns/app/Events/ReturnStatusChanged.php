@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Events\Return;
+namespace Modules\Returns\Events;
 
-use App\Models\Return\ReturnRequest;
-use App\Models\Return\ReturnStatus;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Returns\Models\ReturnRequest;
+use Modules\Returns\Models\ReturnStatus;
 
 class ReturnStatusChanged
 {

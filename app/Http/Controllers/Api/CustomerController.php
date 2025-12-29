@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Library\Facades\SubscriptionFacade;
-use App\Library\TransactionResult;
+use app\Library\TransactionResult;
 use App\Models\SubscriptionLog;
 use Illuminate\Http\Request;
 

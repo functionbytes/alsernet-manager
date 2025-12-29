@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Observers\Returns;
+namespace Modules\Returns\Observers;
 
-use App\Models\Return\ReturnRequest;
-use App\Models\Return\ReturnStatusHistory;
+use Modules\Returns\Models\ReturnRequest;
+use Modules\Returns\Models\ReturnStatusHistory;
 
 class ReturnObserver
 {

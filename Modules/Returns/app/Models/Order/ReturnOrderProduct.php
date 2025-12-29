@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Return\Order;
+namespace Modules\Returns\Models\Order;
 
 use App\Models\Return\ReturnRequestProduct;
 use Illuminate\Database\Eloquent\Model;

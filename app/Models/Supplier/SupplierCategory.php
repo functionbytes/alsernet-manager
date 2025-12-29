@@ -2,7 +2,7 @@
 
 namespace App\Models\Supplier;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Callcenters\Returns\ComponentController;
-use App\Http\Controllers\Callcenters\Returns\InspectionController;
-use App\Http\Controllers\Callcenters\Returns\PdfDocumentController;
-use App\Http\Controllers\Callcenters\Returns\ReturnCommunicationController;
-use App\Http\Controllers\Callcenters\Returns\ReturnCostController;
-use App\Http\Controllers\Callcenters\Returns\ReturnTrackingController;
-use App\Http\Controllers\Callcenters\Returns\ReturnsController;
-use App\Http\Controllers\Callcenters\Returns\WarrantyClaimController;
-use App\Http\Controllers\Callcenters\Returns\WarrantyController;
 use Illuminate\Support\Facades\Route;
+use Modules\Returns\Http\Controllers\Callcenters\ComponentController;
+use Modules\Returns\Http\Controllers\Callcenters\InspectionController;
+use Modules\Returns\Http\Controllers\Callcenters\PdfDocumentController;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnCommunicationController;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnCostController;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnsController;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnTrackingController;
+use Modules\Returns\Http\Controllers\Callcenters\WarrantyClaimController;
+use Modules\Returns\Http\Controllers\Callcenters\WarrantyController;
 
 /*
 |--------------------------------------------------------------------------

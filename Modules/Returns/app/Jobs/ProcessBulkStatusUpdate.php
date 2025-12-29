@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Jobs\Returns;
+namespace Modules\Returns\Jobs;
 
-use App\Services\Returns\ReturnService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Services\ReturnService;
 
 class ProcessBulkStatusUpdate implements ShouldQueue
 {

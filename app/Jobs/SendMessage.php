@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Library\Exception\OutOfCredits;
-use App\Library\Exception\RateLimitExceeded;
+use app\Library\Exception\OutOfCredits;
+use app\Library\Exception\RateLimitExceeded;
 use App\Model\Campaign;
 use App\Model\Email;
 use App\Model\SendingServer;
@@ -17,7 +17,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
-
 use function Acelle\Helpers\execute_with_limits;
 
 class SendMessage implements ShouldQueue

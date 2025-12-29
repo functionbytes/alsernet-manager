@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Managers\Events;
 
 use App\Http\Controllers\Controller;
-use App\Models\Prestashop\Banner\Banner;
-use App\Models\Prestashop\Event\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Prestashop\Entities\Banner\Banner;
+use Modules\Prestashop\Entities\Event\Event;
 
 class EventsController extends Controller
 {

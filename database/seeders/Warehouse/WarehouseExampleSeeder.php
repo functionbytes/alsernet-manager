@@ -2,13 +2,13 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\Warehouse;
-use App\Models\Warehouse\WarehouseFloor;
-use App\Models\Warehouse\WarehouseLocation;
-use App\Models\Warehouse\WarehouseLocationSection;
-use App\Models\Warehouse\WarehouseLocationStyle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\Warehouse;
+use Modules\Warehouse\Entities\WarehouseFloor;
+use Modules\Warehouse\Entities\WarehouseLocation;
+use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Entities\WarehouseLocationStyle;
 
 class WarehouseExampleSeeder extends Seeder
 {

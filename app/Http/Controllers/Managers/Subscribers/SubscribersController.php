@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Managers\Subscribers;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\UpdateSubscriberCategoriesJob;
-use App\Library\Facades\Hook;
+use app\Library\Facades\Hook;
 use App\Models\Categorie;
 use App\Models\Jobs\JobMonitor;
 use App\Models\Lang;

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Managers\Campaigns;
 use App\Events\Campaigns\CampaignUpdated;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportCampaignLog;
-use App\Library\StringHelper;
+use app\Library\StringHelper;
 use App\Models\Campaign\Campaign;
 use App\Models\ClickLog;
 use App\Models\IpLocation;

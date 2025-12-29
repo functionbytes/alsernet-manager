@@ -2,9 +2,9 @@
 
 namespace App\Models\Campaign;
 
-use App\Library\Log;
-use App\Library\Traits\HasCache;
-use App\Library\Traits\HasUid;
+use app\Library\Log;
+use app\Library\Traits\HasCache;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 /**

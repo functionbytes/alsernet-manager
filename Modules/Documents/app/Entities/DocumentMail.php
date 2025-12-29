@@ -2,11 +2,11 @@
 
 namespace Modules\Documents\Entities;
 
-use App\Library\Traits\HasUid;
-use Modules\Mail\Models\MailTemplate;
+use app\Library\Traits\HasUid;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Mail\Models\MailTemplate;
 
 class DocumentMail extends Model
 {

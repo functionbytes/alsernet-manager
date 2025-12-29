@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Callcenters\Returns;
+namespace Modules\Returns\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Returns\StoreReturnCostRequest;
 use App\Models\Return\ReturnCost;
 use App\Models\Return\ReturnRequest;
 use App\Services\Returns\ReturnCostService;
 use Illuminate\Http\JsonResponse;
+use Modules\Returns\Http\Requests\StoreReturnCostRequest;
 
 class ReturnCostController extends Controller
 {

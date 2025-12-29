@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Returns;
+namespace Modules\Returns\Http\Requests;
 
 use App\Models\ReturnCost;
 use Illuminate\Foundation\Http\FormRequest;

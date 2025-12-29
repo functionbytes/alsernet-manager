@@ -2,8 +2,8 @@
 
 namespace Modules\Documents\Entities;
 
-use App\Library\Traits\HasUid;
-use App\Library\Traits\HasValidationWorkflow;
+use app\Library\Traits\HasUid;
+use app\Library\Traits\HasValidationWorkflow;
 use App\Services\Documents\DocumentMailService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

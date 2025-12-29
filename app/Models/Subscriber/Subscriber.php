@@ -5,7 +5,7 @@ namespace App\Models\Subscriber;
 use App\Http\Resources\V1\SubscriberResource;
 use App\Jobs\Subscribers\AddSuscriberListJob;
 use App\Jobs\Subscribers\RemoveSuscriberListJob;
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

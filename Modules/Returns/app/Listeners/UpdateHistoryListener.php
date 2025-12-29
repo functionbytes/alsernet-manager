@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Listeners\Return;
+namespace Modules\Returns\Listeners;
 
-use App\Events\Return\ReturnStatusChanged;
-use App\Models\Return\ReturnHistory;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Events\ReturnStatusChanged;
+use Modules\Returns\Models\ReturnHistory;
 
 class UpdateHistoryListener implements ShouldQueue
 {

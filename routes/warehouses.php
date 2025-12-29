@@ -1,17 +1,22 @@
 <?php
 
-use App\Http\Controllers\Managers\Users\UsersController;
-use App\Http\Controllers\Warehouses\Locations\BarcodeController as LocationsBarcodesController;
-use App\Http\Controllers\Warehouses\Locations\TransferController;
-// Unused imports - Controllers don't exist:
+use Illuminate\Support\Facades\Route;
+
+// @deprecated Warehouse routes moved to Modules/Warehouse/routes/warehouses.php
+// The following legacy controller imports are no longer used:
+// use App\Http\Controllers\Managers\Users\UsersController;
+// use App\Http\Controllers\Warehouses\Locations\BarcodeController as LocationsBarcodesController;
+// use App\Http\Controllers\Warehouses\Locations\TransferController;
 // use App\Http\Controllers\Warehouses\Shops\Locations\LocationsController as ShopsLocationsController;
 // use App\Http\Controllers\Warehouses\Shops\Shops\ShopsController;
-use App\Http\Controllers\Warehouses\Products\BarcodeController as ProductsBarcodesController;
+// use App\Http\Controllers\Warehouses\Products\BarcodeController as ProductsBarcodesController;
 // use App\Http\Controllers\Warehouses\Warehouses\ReportsController;
 // use App\Http\Controllers\Warehouses\Warehouses\ResumenController;
-use App\Http\Controllers\Warehouses\Warehouses\LocationsController as WarehousesLocationsController;
-use App\Http\Controllers\Warehouses\Warehouses\WarehousesController;
-use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\Warehouses\Warehouses\LocationsController as WarehousesLocationsController;
+// use App\Http\Controllers\Warehouses\Warehouses\WarehousesController;
+
+/*
+// @deprecated All warehouse routes moved to Modules/Warehouse/routes/warehouses.php
 
 Route::group(['prefix' => 'warehouse', 'middleware' => ['auth', 'check.roles.permissions:warehouse']], function () {
 
@@ -86,3 +91,4 @@ Route::group(['prefix' => 'warehouse', 'middleware' => ['auth', 'check.roles.per
     });
 
 });
+*/

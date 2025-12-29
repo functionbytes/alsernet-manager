@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Callcenters\DashboardController;
-use App\Http\Controllers\Callcenters\Returns\ReturnController;
 use App\Http\Controllers\Callcenters\Settings\SettingsController;
 use Illuminate\Support\Facades\Route;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnsController as ReturnController;
 
 Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callcenter'])->name('callcenter.')->group(function () {
 

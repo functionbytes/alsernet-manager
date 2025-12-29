@@ -11,14 +11,14 @@ use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;
 use App\Jobs\VerifyMailListJob;
-use App\Library\ExtendedSwiftMessage;
-use App\Library\MailListFieldMapping;
-use App\Library\RouletteWheel;
-use App\Library\StringHelper;
-use App\Library\Traits\HasCache;
-use App\Library\Traits\HasUid;
-use App\Library\Traits\QueryHelper;
-use App\Library\Traits\TrackJobs;
+use app\Library\ExtendedSwiftMessage;
+use app\Library\MailListFieldMapping;
+use app\Library\RouletteWheel;
+use app\Library\StringHelper;
+use app\Library\Traits\HasCache;
+use app\Library\Traits\HasUid;
+use app\Library\Traits\QueryHelper;
+use app\Library\Traits\TrackJobs;
 use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;
@@ -546,7 +546,7 @@ class CampaignMaillist extends Model
     {
         $count = $this->subscribersCount($cache);
 
-        return $this->name.' - '.$count.' '.trans('messages.'.\App\Library\Tool::getPluralPrase('subscriber', $count)).'';
+        return $this->name.' - '.$count.' '.trans('messages.'. \app\Library\Tool::getPluralPrase('subscriber', $count)).'';
     }
 
     public function copy($name, $customer = null)

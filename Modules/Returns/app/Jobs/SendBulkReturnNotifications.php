@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Jobs\Returns;
+namespace Modules\Returns\Jobs;
 
-use App\Models\Return\Return as ReturnModel;
-use App\Services\Returns\ReturnNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Modules\Returns\Models\ReturnRequest as ReturnModel;
+use Modules\Returns\Services\ReturnNotificationService;
 
 class SendBulkReturnNotifications implements ShouldQueue
 {

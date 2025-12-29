@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Events\Return;
+namespace Modules\Returns\Events;
 
-use App\Models\Return\ReturnPayment;
-use App\Models\Return\ReturnRequest;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Returns\Models\ReturnPayment;
+use Modules\Returns\Models\ReturnRequest;
 
 class ReturnPaymentProcessed
 {

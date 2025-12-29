@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
-use App\Models\Return\ReturnCost;
-use App\Models\Return\ReturnRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Modules\Returns\Models\ReturnCost;
+use Modules\Returns\Models\ReturnRequest;
 
 class ReturnCostService
 {

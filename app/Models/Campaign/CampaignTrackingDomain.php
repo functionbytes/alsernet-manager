@@ -2,8 +2,8 @@
 
 namespace App\Models\Campaign;
 
-use App\Library\StringHelper;
-use App\Library\Traits\HasUid;
+use app\Library\StringHelper;
+use app\Library\Traits\HasUid;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Listeners\Return;
+namespace Modules\Returns\Listeners;
 
-use App\Events\Return\ReturnCreated;
-use App\Services\ReturnEmailService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Events\ReturnCreated;
+use Modules\Returns\Services\ReturnEmailService;
 
 class SendConfirmationListener implements ShouldQueue
 {

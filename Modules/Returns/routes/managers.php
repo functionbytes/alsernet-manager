@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Managers\Returns\ProductReturnRuleController;
 use Illuminate\Support\Facades\Route;
+use Modules\Returns\Http\Controllers\Managers\ProductReturnRuleController;
 
 /*
 |--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 namespace App\Models\Order;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,11 +10,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
- * @property-read \App\Models\Prestashop\Cart\Cart|null $cart
- * @property-read \App\Models\Prestashop\Customer|null $customer
+ * @property-read \Modules\Prestashop\Entities\Cart|null $cart
+ * @property-read \Modules\Prestashop\Entities\Customer|null $customer
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
- * @property-read \App\Models\Prestashop\Order\Order|null $order
+ * @property-read \Modules\Prestashop\Entities\Orders\Order|null $order
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order ascending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order descending()
@@ -86,16 +86,16 @@ class Order extends Model implements HasMedia
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Order\Order', 'order_id', 'id_order');
+        return $this->belongsTo('Modules\Prestashop\Entities\Orders\Order', 'order_id', 'id_order');
     }
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Customer', 'customer_id', 'id_customer');
+        return $this->belongsTo('Modules\Prestashop\Entities\Customer', 'customer_id', 'id_customer');
     }
 
     public function cart(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Cart\Cart', 'cart_id', 'id_cart');
+        return $this->belongsTo('Modules\Prestashop\Entities\Cart', 'cart_id', 'id_cart');
     }
 }

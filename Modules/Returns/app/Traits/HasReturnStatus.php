@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Modules\Returns\Traits;
 
 use App\Models\Return\ReturnHistory;
 use App\Models\Return\ReturnState;

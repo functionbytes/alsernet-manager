@@ -3,7 +3,7 @@
 namespace Modules\Mail\Mail\Subscribers;
 
 use App\Models\Layout\Layout;
-use App\Models\Subscriber\Subscriber;
+use Modules\Subscriber\Models\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

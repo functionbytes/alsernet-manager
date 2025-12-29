@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
+use Illuminate\Support\Facades\Mail;
 use Modules\Mail\Mail\Return\ReturnConfirmationMail;
 use Modules\Mail\Mail\Return\ReturnStatusUpdateMail;
-use App\Models\Return\ReturnRequest;
-use Illuminate\Support\Facades\Mail;
+use Modules\Returns\Models\ReturnRequest;
 
 class ReturnEmailService
 {

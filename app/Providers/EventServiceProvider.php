@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\Campaigns\GiftvoucherCreated;
-use App\Listeners\Campaigns\GiftvoucherListener;
+// use App\Listeners\Campaigns\GiftvoucherListener;
 use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;
 use App\Listeners\Documents\SendDocumentUploadNotification;
@@ -31,9 +31,9 @@ class EventServiceProvider extends ServiceProvider
             SendNewUserNotification::class,
         ],
 
-        GiftvoucherCreated::class => [
-            GiftvoucherListener::class,
-        ],
+        // GiftvoucherCreated::class => [
+        //     GiftvoucherListener::class,
+        // ],
 
         // Eventos de Documentos
         DocumentCreated::class => [

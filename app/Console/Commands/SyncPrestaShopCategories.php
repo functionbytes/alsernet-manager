@@ -25,9 +25,9 @@ class SyncPrestaShopCategories extends Command
      */
     protected $description = 'Synchronize categories between Laravel and PrestaShop';
 
-    protected CategorySyncService $syncService;
+    protected ?CategorySyncService $syncService;
 
-    public function __construct(CategorySyncService $syncService)
+    public function __construct(?CategorySyncService $syncService = null)
     {
         parent::__construct();
         $this->syncService = $syncService;

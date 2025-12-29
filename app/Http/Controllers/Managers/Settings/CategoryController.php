@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
-    protected CategorySyncService $syncService;
+    protected ?CategorySyncService $syncService;
 
-    public function __construct(CategorySyncService $syncService)
+    public function __construct(?CategorySyncService $syncService = null)
     {
         $this->syncService = $syncService;
     }

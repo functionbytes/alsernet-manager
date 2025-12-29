@@ -5,17 +5,17 @@ namespace App\Http\Controllers\Managers\Settings\Suppliers;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier\SupplierAiContent;
 use App\Services\Supplier\ContentGenerationService;
-use App\Services\Supplier\SyncService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Prestashop\Services\SupplierSyncService;
 
 class SupplierContentController extends Controller
 {
     public function __construct(
         protected ContentGenerationService $contentService,
-        protected SyncService $syncService
+        protected ?SupplierSyncService $syncService = null
     ) {}
 
     /**

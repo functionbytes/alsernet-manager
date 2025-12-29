@@ -2,16 +2,16 @@
 
 namespace Modules\Mail\Services\Mails;
 
-use App\Library\HtmlHandler\AddDoctype;
-use App\Library\HtmlHandler\DecodeHtmlSpecialChars;
-use App\Library\HtmlHandler\GenerateSpintax;
-use App\Library\HtmlHandler\MakeInlineCss;
-use App\Library\HtmlHandler\ParseRss;
-use App\Library\HtmlHandler\TransformWidgets;
-use Modules\Mail\Models\MailLayout;
-use Modules\Mail\Models\MailTemplate;
+use app\Library\HtmlHandler\AddDoctype;
+use app\Library\HtmlHandler\DecodeHtmlSpecialChars;
+use app\Library\HtmlHandler\GenerateSpintax;
+use app\Library\HtmlHandler\MakeInlineCss;
+use app\Library\HtmlHandler\ParseRss;
+use app\Library\HtmlHandler\TransformWidgets;
 use App\Models\Template\Template;
 use League\Pipeline\PipelineBuilder;
+use Modules\Mail\Models\MailLayout;
+use Modules\Mail\Models\MailTemplate;
 
 /**
  * TemplateRendererService

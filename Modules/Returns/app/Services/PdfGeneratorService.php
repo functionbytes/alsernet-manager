@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;

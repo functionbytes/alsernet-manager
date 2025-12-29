@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\ProductComponent;
-use App\Services\Returns\ComponentService;
 use Illuminate\Console\Command;
+use Modules\Returns\Services\ComponentService;
 
 class ProcessComponents extends Command
 {
@@ -17,7 +17,7 @@ class ProcessComponents extends Command
 
     protected $componentService;
 
-    public function __construct(ComponentService $componentService)
+    public function __construct(?ComponentService $componentService = null)
     {
         parent::__construct();
         $this->componentService = $componentService;

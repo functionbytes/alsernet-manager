@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\WarehouseShop;
 use Illuminate\Database\Seeder;
+use Modules\Warehouse\Entities\WarehouseShop;
 
 class WarehouseShopSeeder extends Seeder
 {

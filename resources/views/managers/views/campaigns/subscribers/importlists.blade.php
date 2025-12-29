@@ -1,8 +1,7 @@
 @extends('layouts.managers')
 
 @php
-    use App\Models\Setting;
-    use App\Library\Tool;
+    use app\Library\Tool;
 @endphp
 
 @section('content')
@@ -18,7 +17,9 @@
 
                     <div class="row">
 
-                        <form id="importForm" action="{{ route('manager.campaigns.maillists.subscribers.import.dispatch.lists', ['list_uid' => $list->uid]) }}" method="POST" class="ajax_upload_form form-validate-jquery">
+                        <form id="importForm"
+                              action="{{ route('manager.campaigns.maillists.subscribers.import.dispatch.lists', ['list_uid' => $list->uid]) }}"
+                              method="POST" class="ajax_upload_form form-validate-jquery">
 
                             {{ csrf_field() }}
 
@@ -35,7 +36,8 @@
 
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="lists" class="control-label col-form-label">Listado a importar</label>
+                                            <label for="lists" class="control-label col-form-label">Listado a
+                                                importar</label>
                                             @include('helpers.form_control', ['type' => 'file', 'label' => '', 'name' => 'file', 'value' => $list->title])
                                         </div>
                                     </div>
@@ -55,8 +57,11 @@
                             @endforeach
 
                             <div class="form-group processing hide">
-                                <h4 style="margin-bottom: 20px" id="notice">La importación se está ejecutando en segundo plano, espere... <br>Puede navegar o incluso cerrar esta página y volver más tarde para comprobar el progreso.</h4>
-                                <div id="errorBox" class="alert alert-danger" style="display: none; flex-direction: row; align-items: center; justify-content: space-between;">
+                                <h4 style="margin-bottom: 20px" id="notice">La importación se está ejecutando en segundo
+                                    plano, espere... <br>Puede navegar o incluso cerrar esta página y volver más tarde
+                                    para comprobar el progreso.</h4>
+                                <div id="errorBox" class="alert alert-danger"
+                                     style="display: none; flex-direction: row; align-items: center; justify-content: space-between;">
                                     <div style="display: flex; flex-direction: row; align-items: center;">
                                         <div style="margin-right:15px">
                                             <i class="lnr lnr-circle-minus"></i>
@@ -74,24 +79,28 @@
                                         <span><span class="number">0</span>% Error</span>
                                     </div>
 
-                                    <div class="progress-bar text-bg-success  progress-total active" style="width: 0%" role="progressbar">
+                                    <div class="progress-bar text-bg-success  progress-total active" style="width: 0%"
+                                         role="progressbar">
                                         <span><span class="number">0</span>% Completado</span>
                                     </div>
 
                                 </div>
                                 <label style="margin-bottom:20px;font-style:italic;" id="bottomNotice"></label>
 
-                                <a id="cancelBtn" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100 cancel processing border-top pt-1 mt-3">
+                                <a id="cancelBtn"
+                                   class="btn btn-info px-4 waves-effect waves-light mt-2 w-100 cancel processing border-top pt-1 mt-3">
                                     Cancelar
                                 </a>
                             </div>
 
                             <div class="form-group finish hide">
                                 <div class="text-left">
-                                    <a  href="{{ route('manager.subscribers', $list->uid) }}"  class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
-                                       Listado
+                                    <a href="{{ route('manager.subscribers', $list->uid) }}"
+                                       class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
+                                        Listado
                                     </a>
-                                    <a href="{{ route('manager.subscribers.create', $list->uid) }}" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100 ">
+                                    <a href="{{ route('manager.subscribers.create', $list->uid) }}"
+                                       class="btn btn-info px-4 waves-effect waves-light mt-2 w-100 ">
                                         Importar listas
                                     </a>
                                 </div>
@@ -106,8 +115,6 @@
             </div>
 
         </div>
-
-
 
 
         @endsection
@@ -130,9 +137,9 @@
                     progressCheck: null,
 
                     // Update import progress
-                    updateProgressBar: function(percentage, message) { // percentage from 0 to 100
+                    updateProgressBar: function (percentage, message) { // percentage from 0 to 100
                         var form = $("form.ajax_upload_form");
-                        var bar =  $('.progress-total');
+                        var bar = $('.progress-total');
 
                         form.find("#bottomNotice").show();
                         form.find("#bottomNotice").html(message);
@@ -142,14 +149,14 @@
                         });
                     },
 
-                    resetCurrentJob: function() {
+                    resetCurrentJob: function () {
                         SubscriptionsImport.currentImportJobUid = null;
                         SubscriptionsImport.progressCheckUrl = null;
                         SubscriptionsImport.cancelUrl = null;
                         SubscriptionsImport.logDownloadUrl = null;
                     },
 
-                    setCurrentJob: function(data) {
+                    setCurrentJob: function (data) {
                         SubscriptionsImport.currentImportJobUid = data.currentImportJobUid;
                         SubscriptionsImport.progressCheckUrl = data.progressCheckUrl;
                         SubscriptionsImport.cancelUrl = data.cancelUrl;
@@ -157,39 +164,39 @@
                     },
 
                     // Toggle: show progress bar, hide input upload bar
-                    showProgressBar: function() {
+                    showProgressBar: function () {
                         // Also hide upload input
                         $(".before").addClass('hide');
                         $(".processing").removeClass('hide');
                         //$('#errorBox').hide();
                     },
 
-                    hideProgressBar: function() {
+                    hideProgressBar: function () {
                         // Also show upload input
-                       // var form = $("form.ajax_upload_form");
+                        // var form = $("form.ajax_upload_form");
                         form.find('.before').removeClass("hide");
                         form.find(".processing").addClass('hide');
                         //$('#errorBox').hide();
                     },
 
-                    showCancelButton: function() {
+                    showCancelButton: function () {
                         $('#cancelBtn').removeClass('hide');
                     },
 
-                    hideCancelButton: function() {
+                    hideCancelButton: function () {
                         $('#cancelBtn').removeClass('hide');
                     },
 
-                    checkProgress: function(completeAlert = true) {
+                    checkProgress: function (completeAlert = true) {
                         var form = $("form.ajax_upload_form");
                         var bar = form.find('.progress-total');
                         var bar_s = form.find('.progress-success');
                         var bar_e = form.find('.progress-error');
 
                         $.ajax({
-                            url : SubscriptionsImport.progressCheckUrl,
+                            url: SubscriptionsImport.progressCheckUrl,
                             type: "GET",
-                            success: function(result, textStatus, jqXHR) {
+                            success: function (result, textStatus, jqXHR) {
                                 // Upgrade progress, no matter which status is
                                 SubscriptionsImport.showProgressBar();
                                 SubscriptionsImport.updateProgressBar(result.percentage, result.message);
@@ -232,7 +239,7 @@
                                     */
                                 } else if (result.status == "running" || result.status == "queued") {
                                     SubscriptionsImport.showProgressBar();
-                                    SubscriptionsImport.progressCheck = setTimeout(function() {
+                                    SubscriptionsImport.progressCheck = setTimeout(function () {
                                         SubscriptionsImport.checkProgress();
                                     }, 2000);
                                 } else {
@@ -243,19 +250,19 @@
                         });
                     },
 
-                    showFinishButtonBar: function() {
+                    showFinishButtonBar: function () {
                         $(".finish").removeClass('hide');
                     },
 
-                    hideFinishButtonBar: function() {
+                    hideFinishButtonBar: function () {
                         $(".finish").addClass('hide');
                     },
 
-                    stopCheckingProgress: function() {
+                    stopCheckingProgress: function () {
                         clearTimeout(SubscriptionsImport.progressCheck);
                     },
 
-                    upload: function() {
+                    upload: function () {
                         var form = $("form.ajax_upload_form");
 
                         if (!form.valid()) {
@@ -279,7 +286,7 @@
                             cache: false,
                             contentType: false,
                             processData: false
-                        }).fail(function( jqXHR, textStatus, errorThrown ) {
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
                             SubscriptionsImport.hideProgressBar();
                             notify({
                                 title: "{{ trans('messages.notify.error') }}",
@@ -288,23 +295,23 @@
                         });
                     },
 
-                    importAnotherFile: function() {
+                    importAnotherFile: function () {
                         // Same as cancel, simply delete the only import job associated with list
                         SubscriptionsImport.stopCheckingProgress();
                         var token = $('form#importForm').find('input[name="_token"]').val();
 
                         $.ajax({
-                            url : SubscriptionsImport.cancelUrl,
+                            url: SubscriptionsImport.cancelUrl,
                             type: "POST",
                             data: {
                                 '_token': token
                             },
-                            success: function(result, textStatus, jqXHR) {
+                            success: function (result, textStatus, jqXHR) {
                                 SubscriptionsImport.hideFinishButtonBar();
                                 SubscriptionsImport.hideProgressBar();
                                 SubscriptionsImport.resetCurrentJob();
                             }
-                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
                             notify({
                                 title: "{{ trans('messages.notify.error') }}",
                                 message: errorThrown,
@@ -314,22 +321,22 @@
                         });
                     },
 
-                    cancel: function() {
+                    cancel: function () {
                         SubscriptionsImport.stopCheckingProgress();
                         var token = $('form#importForm').find('input[name="_token"]').val();
 
                         $.ajax({
-                            url : SubscriptionsImport.cancelUrl,
+                            url: SubscriptionsImport.cancelUrl,
                             type: "POST",
                             data: {
                                 '_token': token
                             },
-                            success: function(result, textStatus, jqXHR) {
+                            success: function (result, textStatus, jqXHR) {
                                 SubscriptionsImport.hideFinishButtonBar();
                                 SubscriptionsImport.hideProgressBar();
                                 SubscriptionsImport.resetCurrentJob();
                             }
-                        }).fail(function(jqXHR, textStatus, errorThrown) {
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
                             new Dialog('alert', {
                                 title: "{{ trans('messages.notify.error') }}",
                                 message: errorThrown,
@@ -343,20 +350,20 @@
                     }
                 }
 
-                $(document).ready(function() {
+                $(document).ready(function () {
 
                     // Event bindings
-                    $(document).on("submit", "form.ajax_upload_form", function() {
+                    $(document).on("submit", "form.ajax_upload_form", function () {
                         SubscriptionsImport.upload();
                         return false; // avoid triggering the click action of <A>
                     });
 
-                    $(document).on("click", ".retry", function() {
+                    $(document).on("click", ".retry", function () {
                         SubscriptionsImport.importAnotherFile();
                         return false;
                     });
 
-                    $(document).on("click", "#cancelBtn", function() {
+                    $(document).on("click", "#cancelBtn", function () {
                         var cancelConfirm = confirm("{{ trans('messages.list.import.cancel') }}");
 
                         if (cancelConfirm) {
@@ -366,7 +373,7 @@
                         return false;
                     });
 
-                    $(document).on("click", "#downloadLog", function() {
+                    $(document).on("click", "#downloadLog", function () {
                         window.location.href = SubscriptionsImport.logDownloadUrl;
                         return false;
                     });
@@ -393,6 +400,6 @@
 
             </script>
 
-        @endpush
+    @endpush
 
 

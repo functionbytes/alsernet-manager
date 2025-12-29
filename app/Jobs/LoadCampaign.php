@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Library\Contracts\CampaignInterface;
-use App\Library\Traits\Trackable;
+use app\Library\Contracts\CampaignInterface;
+use app\Library\Traits\Trackable;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

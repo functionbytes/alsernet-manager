@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\WarehouseLocationStyle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\WarehouseLocationStyle;
 
 class WarehouseLocationStyleSeeder extends Seeder
 {

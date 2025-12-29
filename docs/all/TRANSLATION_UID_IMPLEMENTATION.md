@@ -58,7 +58,7 @@ php artisan migrate
 Agregó el trait `HasUid` para auto-generar UIDs:
 
 ```php
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 
 class EmailTemplateTranslation extends Model
 {

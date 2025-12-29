@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\Return;
+namespace Modules\Returns\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

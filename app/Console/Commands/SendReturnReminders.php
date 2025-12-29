@@ -4,11 +4,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Return\ReturnRequest;
-use App\Services\Returns\ReturnNotificationService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Models\ReturnRequest;
+use Modules\Returns\Services\ReturnNotificationService;
 
 class SendReturnReminders extends Command
 {
@@ -29,9 +29,9 @@ class SendReturnReminders extends Command
      */
     protected $description = 'Enviar recordatorios automáticos para devoluciones pendientes';
 
-    private ReturnNotificationService $notificationService;
+    private ?ReturnNotificationService $notificationService;
 
-    public function __construct(ReturnNotificationService $notificationService)
+    public function __construct(?ReturnNotificationService $notificationService = null)
     {
         parent::__construct();
         $this->notificationService = $notificationService;

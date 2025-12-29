@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Return;
+namespace Modules\Returns\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

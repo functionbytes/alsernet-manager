@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Callcenters\Returns;
+namespace Modules\Returns\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Campaigns\SendCustomEmailRequest;
-use App\Http\Requests\Returns\ResendCommunicationRequest;
 use App\Models\Return\ReturnCommunication;
 use App\Models\Return\ReturnRequest;
 use App\Services\Returns\ReturnNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\Returns\Http\Requests\ResendCommunicationRequest;
 
 class ReturnCommunicationController extends Controller
 {

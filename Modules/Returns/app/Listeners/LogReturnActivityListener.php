@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listeners\Return;
+namespace Modules\Returns\Listeners;
 
-use App\Events\Return\ReturnCompleted;
-use App\Events\Return\ReturnCreated;
-use App\Events\Return\ReturnPaymentProcessed;
-use App\Events\Return\ReturnStatusChanged;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Events\ReturnCompleted;
+use Modules\Returns\Events\ReturnCreated;
+use Modules\Returns\Events\ReturnPaymentProcessed;
+use Modules\Returns\Events\ReturnStatusChanged;
 
 class LogReturnActivityListener
 {

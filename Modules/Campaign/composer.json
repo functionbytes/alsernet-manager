@@ -1,0 +1,12 @@
+{
+  "name": "modules/campaign",
+  "description": "Campaign Management Module",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Modules\\Campaign\\": "app/",
+      "Modules\\Campaign\\Database\\": "database/"
+    }
+  }
+}

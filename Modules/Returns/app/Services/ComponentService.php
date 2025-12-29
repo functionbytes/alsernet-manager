@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
 use App\Models\Order;
 use App\Models\OrderComponent;
 use App\Models\ProductComponent;
-use App\Models\Return\ComponentShipment;
-use App\Models\Return\ComponentShipmentItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Models\ComponentShipment;
+use Modules\Returns\Models\ComponentShipmentItem;
 
 class ComponentService
 {

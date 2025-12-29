@@ -2,10 +2,10 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\WarehouseInventorySlot;
-use App\Models\Warehouse\WarehouseLocation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\WarehouseInventorySlot;
+use Modules\Warehouse\Entities\WarehouseLocation;
 
 class InventorySlotSeeder extends Seeder
 {

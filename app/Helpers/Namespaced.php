@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Library\StringHelper;
+use app\Library\StringHelper;
 use Closure;
 use Exception;
 use Mika56\SPFCheck\DNSRecordGetter;
@@ -376,7 +376,7 @@ function execute_with_limits(array $rateTrackers, array $creditTrackers, ?Closur
             $creditTracker->count();
             $creditCounted[] = $creditTracker;
         }
-    } catch (\App\Library\Exception\OutOfCredits $exception) {
+    } catch (\app\Library\Exception\OutOfCredits $exception) {
         // Rollback 1: when OutOfCredits
         // @important: rate is counted even for a failed operation attempt
         // So there is no need to roll it back (that's why the rollback() method is @deprecated)
@@ -393,7 +393,7 @@ function execute_with_limits(array $rateTrackers, array $creditTrackers, ?Closur
         foreach ($rateTrackers as $rateTracker) {
             $rateTracker->count();
         }
-    } catch (\App\Library\Exception\RateLimitExceeded $exception) {
+    } catch (\app\Library\Exception\RateLimitExceeded $exception) {
         // Rollback 1: when OutOfCredits
         // @important: rate is counted even for a failed operation attempt
         // So there is no need to roll it back (that's why the rollback() method is @deprecated)

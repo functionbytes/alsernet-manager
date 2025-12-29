@@ -37,7 +37,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/files/{uid}/{name?}', [function ($uid, $name) {
         $path = storage_path('app/users/'.$uid.'/home/files/'.$name);
-        $mime_type = \App\Library\File::getFileType($path);
+        $mime_type = \app\Library\File::getFileType($path);
         if (\Illuminate\Support\Facades\File::exists($path)) {
             return response()->file($path, ['Content-Type' => $mime_type]);
         } else {
@@ -50,7 +50,7 @@ Route::group(['middleware' => ['web']], function () {
         // Do not use $user->getThumbsPath($name), avoid one SQL query!
         $path = storage_path('app/users/'.$uid.'/home/thumbs/'.$name);
         if (\Illuminate\Support\Facades\File::exists($path)) {
-            $mime_type = \App\Library\File::getFileType($path);
+            $mime_type = \app\Library\File::getFileType($path);
 
             return response()->file($path, ['Content-Type' => $mime_type]);
         } else {
@@ -59,11 +59,11 @@ Route::group(['middleware' => ['web']], function () {
     }])->where('name', '.+')->name('user_thumbs');
 
     Route::get('/p/assets/{path}', [function ($token) {
-        $decodedPath = \App\Library\StringHelper::base64UrlDecode($token);
+        $decodedPath = \app\Library\StringHelper::base64UrlDecode($token);
         $absPath = storage_path($decodedPath);
 
         if (\Illuminate\Support\Facades\File::exists($absPath)) {
-            $mime_type = \App\Library\File::getFileType($absPath);
+            $mime_type = \app\Library\File::getFileType($absPath);
 
             return response()->file($absPath, [
                 'Content-Type' => $mime_type,
@@ -75,11 +75,11 @@ Route::group(['middleware' => ['web']], function () {
     }])->name('public_assets_deprecated');
 
     Route::get('assets/{dirname}/{basename}', [function ($dirname, $basename) {
-        $dirname = \App\Library\StringHelper::base64UrlDecode($dirname);
+        $dirname = \app\Library\StringHelper::base64UrlDecode($dirname);
         $absPath = storage_path(join_paths($dirname, $basename));
 
         if (\Illuminate\Support\Facades\File::exists($absPath)) {
-            $mimetype = \App\Library\File::getFileType($absPath);
+            $mimetype = \app\Library\File::getFileType($absPath);
 
             return response()->file($absPath, [
                 'Content-Type' => $mimetype,

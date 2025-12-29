@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Library\Log as MailLog;
+use app\Library\Log as MailLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;

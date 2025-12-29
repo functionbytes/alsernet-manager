@@ -118,7 +118,7 @@ CREATE TABLE validator_group_configuration_histories (
 ```php
 namespace App\Models\Validation;
 
-use App\Library\Traits\HasUid;use App\Models\User;use app\Validation\ValidatorGroupConfiguration;use app\Validation\ValidatorGroupConfigurationHistory;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsToMany;use Illuminate\Database\Eloquent\Relations\HasMany;
+use app\Library\Traits\HasUid;use App\Models\User;use app\Validation\ValidatorGroupConfiguration;use app\Validation\ValidatorGroupConfigurationHistory;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsToMany;use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ValidatorGroup extends Model
 {

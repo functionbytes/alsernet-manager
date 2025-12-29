@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Library\Traits\HasUid;
-use App\Models\Prestashop\Category as PrestaShopCategory;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Prestashop\Entities\Category as PrestaShopCategory;
 
 /**
  * PrestaShopCategoryMapping Model

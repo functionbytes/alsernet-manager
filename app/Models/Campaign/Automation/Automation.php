@@ -22,15 +22,15 @@
 
 namespace App\Models\Campaign\Automation;
 
-use App\Library\Automation\Action;
-use App\Library\Automation\Evaluate;
-use App\Library\Automation\Operate;
-use App\Library\Automation\Send;
-use App\Library\Automation\Trigger;
-use App\Library\Automation\Wait;
-use App\Library\Lockable;
-use App\Library\Traits\HasCache;
-use App\Library\Traits\HasUid;
+use app\Library\Automation\Action;
+use app\Library\Automation\Evaluate;
+use app\Library\Automation\Operate;
+use app\Library\Automation\Send;
+use app\Library\Automation\Trigger;
+use app\Library\Automation\Wait;
+use app\Library\Lockable;
+use app\Library\Traits\HasCache;
+use app\Library\Traits\HasUid;
 use App\Models\Automation\Customer;
 use App\Models\Automation\Email;
 use App\Models\Automation\Field;

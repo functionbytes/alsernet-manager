@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Listeners\Return;
+namespace Modules\Returns\Listeners;
 
-use App\Events\Return\ReturnCreated;
-use App\Services\ReturnPDFService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Modules\Returns\Events\ReturnCreated;
+use Modules\Returns\Services\ReturnPDFService;
 
 class GeneratePDFListener implements ShouldQueue
 {

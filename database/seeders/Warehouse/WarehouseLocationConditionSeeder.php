@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\WarehouseLocationCondition;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\WarehouseLocationCondition;
 
 class WarehouseLocationConditionSeeder extends Seeder
 {

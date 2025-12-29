@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Modules\Returns\Http\Middleware;
 
 use App\Models\Return\Return as ReturnModel;
 use Closure;

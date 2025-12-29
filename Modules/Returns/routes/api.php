@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\Return\PublicReturnController;
-use App\Http\Controllers\Api\Return\ReturnController;
 use Illuminate\Support\Facades\Route;
+use Modules\Returns\Http\Controllers\Api\PublicReturnController;
+use Modules\Returns\Http\Controllers\Api\ReturnController;
 
 /*
 |--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 namespace App\Models\Subscriber;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 class SubscriberCondition extends Model

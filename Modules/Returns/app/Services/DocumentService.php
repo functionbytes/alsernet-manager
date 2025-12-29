@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Returns;
+namespace Modules\Returns\Services;
 
-use App\Models\Return\ReturnDocument;
-use App\Models\Return\ReturnRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\Returns\Models\ReturnDocument;
+use Modules\Returns\Models\ReturnRequest;
 
 class DocumentService
 {

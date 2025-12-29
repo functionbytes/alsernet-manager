@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Return;
+namespace Modules\Returns\Models;
 
-use App\Library\Traits\HasUid;
+use app\Library\Traits\HasUid;
 use App\Models\Return\Order\ReturnOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

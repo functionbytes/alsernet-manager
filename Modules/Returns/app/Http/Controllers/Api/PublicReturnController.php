@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Return;
+namespace Modules\Returns\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\ReturnRequest;

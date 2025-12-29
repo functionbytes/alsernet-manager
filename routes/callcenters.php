@@ -3,11 +3,11 @@
 use App\Http\Controllers\Callcenters\DashboardController;
 use App\Http\Controllers\Callcenters\Faqs\CategoriesController as FaqsCategoriesController;
 use App\Http\Controllers\Callcenters\Faqs\FaqsController;
-use App\Http\Controllers\Callcenters\Returns\ReturnsController as ReturnController;
 use App\Http\Controllers\Callcenters\Tickets\CommentsController as TicketCommentsController;
 use App\Http\Controllers\Callcenters\Tickets\TicketsController;
 use App\Http\Controllers\Managers\Users\UsersController;
 use Illuminate\Support\Facades\Route;
+use Modules\Returns\Http\Controllers\Callcenters\ReturnsController as ReturnController;
 
 Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callcenter'])->name('callcenter.')->group(function () {
 

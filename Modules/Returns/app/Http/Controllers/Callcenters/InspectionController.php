@@ -4,7 +4,7 @@
 // 3.1 MÓDULO DE INSPECCIÓN - CONTROLADOR
 // ========================================
 
-namespace App\Http\Controllers\Callcenters\Returns;
+namespace Modules\Returns\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
 use App\Models\Return\ReturnInspection;
