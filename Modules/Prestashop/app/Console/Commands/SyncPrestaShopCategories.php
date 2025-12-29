@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Prestashop\Console\Commands;
 
 use App\Models\Category;
 use Modules\Prestashop\Services\CategorySyncService;
