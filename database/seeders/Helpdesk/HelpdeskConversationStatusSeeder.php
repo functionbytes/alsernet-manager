@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\ConversationStatus;
+use Modules\Helpdesk\Models\ConversationStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\TicketCategory;
+use Modules\Helpdesk\Models\TicketCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

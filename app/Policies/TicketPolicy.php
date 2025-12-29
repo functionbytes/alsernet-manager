@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Helpdesk\Ticket;
+use Modules\Helpdesk\Models\Ticket;
 use App\Models\User;
 
 class TicketPolicy

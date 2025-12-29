@@ -1,18 +1,15 @@
 <?php
 
-namespace Modules\Helpdesk\Events;
+namespace App\Events\Helpdesk;
 
+use App\Models\Helpdesk\Conversation;
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Helpdesk\Models\Conversation;
 
-/**
- * Event fired when a user is typing in a conversation
- */
 class ConversationUserTyping implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

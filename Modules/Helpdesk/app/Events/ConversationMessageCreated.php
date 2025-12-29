@@ -1,17 +1,14 @@
 <?php
 
-namespace Modules\Helpdesk\Events;
+namespace App\Events\Helpdesk;
 
+use App\Models\Helpdesk\ConversationItem;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Helpdesk\Models\ConversationItem;
 
-/**
- * Event fired when a new message is created in a conversation
- */
 class ConversationMessageCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

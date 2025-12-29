@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\TicketSlaPolicy;
-use App\Models\Helpdesk\TicketStatus;
+use Modules\Helpdesk\Models\TicketSlaPolicy;
+use Modules\Helpdesk\Models\TicketStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

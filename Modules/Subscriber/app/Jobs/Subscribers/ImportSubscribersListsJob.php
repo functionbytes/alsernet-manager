@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Subscribers\Subscribers;
+namespace Modules\Subscriber\Jobs\Subscribers\Subscribers;
 
 use App\Jobs\Base;
 use Modules\Campaign\Library\Traits\Trackable;

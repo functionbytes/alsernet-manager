@@ -90,7 +90,7 @@
                         </label>
                         <desc>{{ trans('messages.automation.last_activity') }} •
                             <a target="_blank" target="_blank" style="color:blue;text-decoration: underline;"
-                                href="{{ route('AutoTrigger@check', [ 'id' => $trigger->id ]) }}"
+                                href="{{ route('manager.triggers.check', [ 'id' => $trigger->id ]) }}"
                                 class="trigger-check"
                             >
                                 {{ trans('messages.trigger.check') }}

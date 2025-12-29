@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\ConversationView;
+use Modules\Helpdesk\Models\ConversationView;
 use Illuminate\Database\Seeder;
 
 class ConversationViewSeeder extends Seeder

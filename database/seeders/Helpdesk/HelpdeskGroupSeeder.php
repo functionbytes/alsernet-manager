@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\Group;
+use Modules\Helpdesk\Models\Group;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

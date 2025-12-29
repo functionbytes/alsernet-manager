@@ -2,11 +2,11 @@
 
 namespace Database\Seeders\Locations;
 
-use App\Models\Warehouse\Warehouse;
-use App\Models\Warehouse\WarehouseFloor;
-use App\Models\Warehouse\WarehouseLocation;
-use App\Models\Warehouse\WarehouseLocationSection;
-use App\Models\Warehouse\WarehouseLocationStyle;
+use Modules\Warehouse\Models\Warehouse;
+use Modules\Warehouse\Models\WarehouseFloor;
+use Modules\Warehouse\Models\WarehouseLocation;
+use Modules\Warehouse\Models\WarehouseLocationSection;
+use Modules\Warehouse\Models\WarehouseLocationStyle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

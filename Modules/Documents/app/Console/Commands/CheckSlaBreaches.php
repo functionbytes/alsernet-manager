@@ -2,9 +2,9 @@
 
 namespace Modules\Documents\Console\Commands;
 
-use App\Events\Helpdesk\TicketSlaBreached;
-use App\Models\Helpdesk\Ticket;
-use App\Models\Helpdesk\TicketSlaBreach;
+use Modules\Helpdesk\Events\SlaBreached;
+use Modules\Helpdesk\Models\Ticket;
+use Modules\Helpdesk\Models\TicketSlaBreach;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;

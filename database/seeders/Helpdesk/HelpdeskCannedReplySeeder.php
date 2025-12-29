@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\CannedReply;
+use Modules\Helpdesk\Models\CannedReply;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

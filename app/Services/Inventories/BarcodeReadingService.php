@@ -3,7 +3,7 @@
 namespace App\Services\Inventories;
 
 use App\Models\Product\Product;
-use App\Models\Warehouse\WarehouseInventoryMovement;
+use Modules\Warehouse\Models\WarehouseInventoryMovement;
 use Illuminate\Support\Facades\Log;
 
 class BarcodeReadingService

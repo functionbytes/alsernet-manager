@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\HelpCenterArticle;
-use App\Models\Helpdesk\HelpCenterCategory;
+use Modules\Helpdesk\Models\HelpCenterArticle;
+use Modules\Helpdesk\Models\HelpCenterCategory;
 use Illuminate\Database\Seeder;
 
 class HelpCenterSeeder extends Seeder

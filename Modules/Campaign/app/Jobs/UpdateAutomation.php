@@ -1,7 +1,6 @@
 <?php
 
 namespace Modules\Campaign\Jobs;
-use App\Jobs\Base;
 
 class UpdateAutomation extends Base
 {

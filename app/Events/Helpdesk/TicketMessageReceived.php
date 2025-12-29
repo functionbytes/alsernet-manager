@@ -2,8 +2,8 @@
 
 namespace App\Events\Helpdesk;
 
-use App\Models\Helpdesk\Ticket;
-use App\Models\Helpdesk\TicketItem;
+use Modules\Helpdesk\Models\Ticket;
+use Modules\Helpdesk\Models\TicketItem;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

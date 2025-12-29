@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Subscribers;
+namespace Modules\Subscriber\Jobs\Subscribers;
 
 use App\Jobs\Base;
 use App\Jobs\VerifyAndCreateSubscriber;

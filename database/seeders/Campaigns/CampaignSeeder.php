@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Campaigns;
 
-use App\Models\Helpdesk\Campaign;
-use App\Models\Helpdesk\CampaignImpression;
+use Modules\Helpdesk\Models\Campaign;
+use Modules\Helpdesk\Models\CampaignImpression;
 use Illuminate\Database\Seeder;
 
 class CampaignSeeder extends Seeder

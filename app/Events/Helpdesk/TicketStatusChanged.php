@@ -2,8 +2,8 @@
 
 namespace App\Events\Helpdesk;
 
-use App\Models\Helpdesk\Ticket;
-use App\Models\Helpdesk\TicketStatus;
+use Modules\Helpdesk\Models\Ticket;
+use Modules\Helpdesk\Models\TicketStatus;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

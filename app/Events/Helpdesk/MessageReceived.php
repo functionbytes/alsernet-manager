@@ -2,8 +2,8 @@
 
 namespace App\Events\Helpdesk;
 
-use App\Models\Helpdesk\Conversation;
-use App\Models\Helpdesk\ConversationItem;
+use Modules\Helpdesk\Models\Conversation;
+use Modules\Helpdesk\Models\ConversationItem;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

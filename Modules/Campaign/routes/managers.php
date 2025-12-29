@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations\AutomationsController;
+use Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations\AutoTrigger;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Layouts\LayoutController;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Maillists\MaillistController;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Maillists\SegmentController;
@@ -473,6 +474,15 @@ Route::group(
             // Automation listing
             Route::get('/listing', [AutomationsController::class, 'listing'])->name('listing');
 
+        });
+
+        // ===================================================================
+        // AUTO TRIGGER ROUTES - Automation trigger debugging (2 routes)
+        // ===================================================================
+
+        Route::group(['prefix' => 'triggers', 'name' => 'triggers.'], function (): void {
+            Route::get('/{id}/show', [AutoTrigger::class, 'show'])->name('show');
+            Route::get('/{id}/check', [AutoTrigger::class, 'check'])->name('check');
         });
 
         // ===================================================================

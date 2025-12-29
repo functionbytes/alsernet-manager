@@ -1,7 +1,6 @@
 <?php
 
 namespace Modules\Subscriber\Jobs;
-use App\Jobs\Base;
 
 use app\Library\Exception\RateLimitExceeded;
 use app\Library\Exception\VerificationTakesLongerThanNormal;

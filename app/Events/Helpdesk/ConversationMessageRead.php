@@ -2,7 +2,7 @@
 
 namespace App\Events\Helpdesk;
 
-use App\Models\Helpdesk\ConversationItem;
+use Modules\Helpdesk\Models\ConversationItem;
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

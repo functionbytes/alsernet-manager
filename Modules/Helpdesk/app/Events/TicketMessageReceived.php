@@ -1,30 +1,32 @@
 <?php
 
-namespace Modules\Helpdesk\Events;
+namespace App\Events\Helpdesk;
 
+use App\Models\Helpdesk\Ticket;
+use App\Models\Helpdesk\TicketItem;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Helpdesk\Models\Ticket;
-use Modules\Helpdesk\Models\TicketItem;
 
-/**
- * Event fired when a message is received on a ticket
- */
 class TicketMessageReceived implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $ticket;
+
+    public $message;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public Ticket $ticket,
-        public TicketItem $message
-    ) {
+    public function __construct(Ticket $ticket, TicketItem $message)
+    {
+        $this->ticket = $ticket;
+        $this->message = $message;
+
         // Ensure relationships are loaded
         $this->message->load(['author', 'user']);
     }

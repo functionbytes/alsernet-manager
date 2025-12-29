@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\RunAutomation;
+use Modules\Campaign\Jobs\RunAutomation;
 use App\Models\Automation2;
 
 /**

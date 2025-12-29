@@ -1,30 +1,32 @@
 <?php
 
-namespace Modules\Helpdesk\Events;
+namespace App\Events\Helpdesk;
 
+use App\Models\Helpdesk\Conversation;
+use App\Models\Helpdesk\ConversationItem;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Helpdesk\Models\Conversation;
-use Modules\Helpdesk\Models\ConversationItem;
 
-/**
- * Event fired when a message is received in a conversation
- */
 class MessageReceived implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $conversation;
+
+    public $message;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public Conversation $conversation,
-        public ConversationItem $message
-    ) {
+    public function __construct(Conversation $conversation, ConversationItem $message)
+    {
+        $this->conversation = $conversation;
+        $this->message = $message;
+
         // Ensure relationships are loaded
         $this->message->load(['author', 'user']);
     }

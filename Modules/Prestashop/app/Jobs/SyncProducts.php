@@ -1,7 +1,6 @@
 <?php
 
 namespace Modules\Prestashop\Jobs;
-use App\Jobs\Base;
 
 use App\Model\Source;
 use Illuminate\Bus\Queueable;

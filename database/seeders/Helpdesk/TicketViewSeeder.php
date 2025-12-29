@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\TicketView;
+use Modules\Helpdesk\Models\TicketView;
 use Illuminate\Database\Seeder;
 
 class TicketViewSeeder extends Seeder

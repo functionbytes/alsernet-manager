@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Helpdesk\Campaign;
-use App\Models\Helpdesk\Ticket;
+use Modules\Helpdesk\Models\Campaign;
+use Modules\Helpdesk\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;

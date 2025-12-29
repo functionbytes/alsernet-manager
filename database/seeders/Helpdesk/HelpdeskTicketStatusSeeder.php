@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Helpdesk;
 
-use App\Models\Helpdesk\TicketStatus;
+use Modules\Helpdesk\Models\TicketStatus;
 use Illuminate\Database\Seeder;
 
 class HelpdeskTicketStatusSeeder extends Seeder
