@@ -1,0 +1,9 @@
+{
+    "name": "Users",
+    "alias": "users",
+    "description": "Users Module - Manages application users and user management",
+    "keywords": ["users", "user-management", "accounts", "profiles"],
+    "priority": 8,
+    "providers": ["Modules\\Users\\Providers\\UsersServiceProvider"],
+    "files": []
+}

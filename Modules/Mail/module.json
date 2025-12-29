@@ -1,11 +1,9 @@
 {
     "name": "Mail",
     "alias": "mail",
-    "description": "Módulo de gestión de plantillas de correos electrónicos, componentes, variables y endpoints de API",
-    "keywords": ["mail", "templates", "components", "variables", "endpoints", "email"],
-    "priority": 0,
-    "providers": [
-        "Modules\\Mail\\Providers\\MailServiceProvider"
-    ],
+    "description": "Mail Configuration Module - Handles email settings, mailers, templates, and endpoints",
+    "keywords": ["mail", "email", "settings", "mailers", "templates"],
+    "priority": 15,
+    "providers": ["Modules\\Mail\\Providers\\MailServiceProvider"],
     "files": []
 }

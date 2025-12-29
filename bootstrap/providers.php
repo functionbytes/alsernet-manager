@@ -14,4 +14,10 @@ return [
     Modules\Supplier\Providers\SupplierServiceProvider::class,
     Modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
     Modules\Role\Providers\RoleServiceProvider::class,
+    Modules\Media\Providers\MediaServiceProvider::class,
+    Modules\Event\Providers\EventServiceProvider::class,
+    Modules\Mail\Providers\MailServiceProvider::class,
+    Modules\Faq\Providers\FaqServiceProvider::class,
+    Modules\Users\Providers\UsersServiceProvider::class,
+    Modules\Notification\Providers\NotificationServiceProvider::class,
 ];
