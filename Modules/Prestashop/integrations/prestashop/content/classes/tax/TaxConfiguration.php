@@ -33,13 +33,13 @@ class TaxConfigurationCore
      */
     public function includeTaxes()
     {
-        if (!Configuration::get('PS_TAX')) {
+        if (! Configuration::get('PS_TAX')) {
             return false;
         }
 
         $idCustomer = (int) Context::getContext()->cookie->id_customer;
-        if (!array_key_exists($idCustomer, $this->taxCalculationMethod)) {
-            $this->taxCalculationMethod[$idCustomer] = !Product::getTaxCalculationMethod($idCustomer);
+        if (! array_key_exists($idCustomer, $this->taxCalculationMethod)) {
+            $this->taxCalculationMethod[$idCustomer] = ! Product::getTaxCalculationMethod($idCustomer);
         }
 
         return $this->taxCalculationMethod[$idCustomer];

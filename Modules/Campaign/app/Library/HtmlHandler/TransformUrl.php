@@ -3,7 +3,7 @@
 namespace app\Library\HtmlHandler;
 
 use app\Library\StringHelper;
-use App\Models\Campaign\CampaignTrackingDomain;
+use Modules\Campaign\Entities\CampaignTrackingDomain;
 use App\Models\Template\Template;
 use Exception;
 use League\Pipeline\StageInterface;

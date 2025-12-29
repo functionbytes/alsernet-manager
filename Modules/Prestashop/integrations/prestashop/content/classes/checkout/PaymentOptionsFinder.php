@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -36,7 +37,7 @@ class PaymentOptionsFinderCore extends HookFinder
      *
      * @see HookFinder::find()
      */
-    public function find() //getPaymentOptions()
+    public function find() // getPaymentOptions()
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
         $this->hookName = 'displayPaymentEU';
@@ -57,7 +58,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
         // Safety check
         foreach ($paymentOptions as $moduleName => $paymentOption) {
-            if (!is_array($paymentOption)) {
+            if (! is_array($paymentOption)) {
                 unset($paymentOptions[$moduleName]);
             }
         }
@@ -67,7 +68,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
     public function findFree()
     {
-        $freeOption = new PaymentOption();
+        $freeOption = new PaymentOption;
         $freeOption->setModuleName('free_order')
             ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', [], 'Admin.Orderscustomers.Feature'))
             ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
@@ -75,7 +76,7 @@ class PaymentOptionsFinderCore extends HookFinder
         return ['free_order' => [$freeOption]];
     }
 
-    public function present($free = false) //getPaymentOptionsForTemplate()
+    public function present($free = false) // getPaymentOptionsForTemplate()
     {
         $id = 0;
 
@@ -83,12 +84,12 @@ class PaymentOptionsFinderCore extends HookFinder
 
         return array_map(function (array $options) use (&$id) {
             return array_map(function (PaymentOption $option) use (&$id) {
-                ++$id;
+                $id++;
                 $formattedOption = $option->toArray();
-                $formattedOption['id'] = 'payment-option-' . $id;
+                $formattedOption['id'] = 'payment-option-'.$id;
 
                 if ($formattedOption['form']) {
-                    $decorator = new PaymentOptionFormDecorator();
+                    $decorator = new PaymentOptionFormDecorator;
                     $formattedOption['form'] = $decorator->addHiddenSubmitButton(
                         $formattedOption['form'],
                         $formattedOption['id']

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Quantity Discount Pro
  *
@@ -20,27 +21,32 @@
  *  @copyright 2020 idnovate.com
  *  @license   See above
  */
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use Symfony\Component\Translation\TranslatorInterface;
+
 class CheckoutAddressesStep extends CheckoutAddressesStepCore
 {
-
     private $addressForm;
+
     private $use_same_address = true;
+
     private $need_invoice_option = false;
+
     private $need_invoice = false;
+
     private $show_delivery_address_form = false;
+
     private $show_invoice_address_form = false;
+
     private $form_has_continue_button = false;
 
     /* pedro bloqueo */
     private $productsblocked = [];
 
     private $need_dni = false;
-
 
     public function __construct(
         Context $context,
@@ -53,28 +59,27 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
     public function getDataToPersist()
     {
-        if ($this->checkNeedInvoiceByProductTypeInCart()){
+        if ($this->checkNeedInvoiceByProductTypeInCart()) {
             $this->need_invoice = true;
         }
 
-        if ($this->checkNeedDNIByProductTypeInCart()){
+        if ($this->checkNeedDNIByProductTypeInCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByProductGunCart()){
+        if ($this->checkNeedDNIByProductGunCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByCategoryInCart()){
+        if ($this->checkNeedDNIByCategoryInCart()) {
             $this->need_dni = true;
         }
 
-
-        if ($this->checkNeedDNIByCountry()){
+        if ($this->checkNeedDNIByCountry()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedInvoiceByOrderTotal()){
+        if ($this->checkNeedInvoiceByOrderTotal()) {
             $this->need_invoice = true;
         }
 
@@ -93,27 +98,27 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
             $this->need_invoice = $data['need_invoice'];
         }
 
-        if ($this->checkNeedInvoiceByProductTypeInCart()){
+        if ($this->checkNeedInvoiceByProductTypeInCart()) {
             $this->need_invoice = true;
         }
 
-        if ($this->checkNeedDNIByProductTypeInCart()){
+        if ($this->checkNeedDNIByProductTypeInCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByProductGunCart()){
+        if ($this->checkNeedDNIByProductGunCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByCategoryInCart()){
+        if ($this->checkNeedDNIByCategoryInCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByCountry()){
+        if ($this->checkNeedDNIByCountry()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedInvoiceByOrderTotal()){
+        if ($this->checkNeedInvoiceByOrderTotal()) {
             $this->need_invoice = true;
         }
 
@@ -126,7 +131,7 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
         if (array_key_exists('use_same_address', $requestParams)) {
             $this->use_same_address = (bool) $requestParams['use_same_address'];
-            if (!$this->use_same_address) {
+            if (! $this->use_same_address) {
                 $this->setCurrent(true);
             }
         }
@@ -134,36 +139,34 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
         if (array_key_exists('need_invoice', $requestParams)) {
             $this->need_invoice = (bool) $requestParams['need_invoice'];
 
-            if ($this->checkNeedInvoiceByProductTypeInCart()){
+            if ($this->checkNeedInvoiceByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByProductTypeInCart()){
+            if ($this->checkNeedDNIByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-
-            if ($this->checkNeedDNIByProductGunCart()){
+            if ($this->checkNeedDNIByProductGunCart()) {
                 $this->need_dni = true;
             }
 
-            if ($this->checkNeedDNIByCategoryInCart()){
+            if ($this->checkNeedDNIByCategoryInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByCountry()){
+            if ($this->checkNeedDNIByCountry()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedInvoiceByOrderTotal()){
+            if ($this->checkNeedInvoiceByOrderTotal()) {
                 $this->need_invoice = true;
             }
 
-            if (!$this->need_invoice) {
+            if (! $this->need_invoice) {
                 $this->setCurrent(true);
             }
         }
-
 
         if (isset($requestParams['cancelAddress'])) {
             if ($requestParams['cancelAddress'] === 'invoice') {
@@ -173,7 +176,6 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
             }
             $this->setCurrent(true);
         }
-
 
         if (isset($requestParams['need-invoice']) || $this->need_invoice) {
             $this->use_same_address = true;
@@ -187,7 +189,7 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
-            if (!$saved) {
+            if (! $saved) {
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true);
                 if ($requestParams['saveAddress'] === 'delivery') {
@@ -264,28 +266,26 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                 $this->need_invoice = false;
             }
 
-            if ($this->checkNeedInvoiceByProductTypeInCart()){
+            if ($this->checkNeedInvoiceByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByProductTypeInCart()){
+            if ($this->checkNeedDNIByProductTypeInCart()) {
                 $this->need_dni = true;
             }
 
-
-            if ($this->checkNeedDNIByProductGunCart()){
+            if ($this->checkNeedDNIByProductGunCart()) {
                 $this->need_dni = true;
             }
 
-
-            if ($this->checkNeedDNIByCategoryInCart()){
+            if ($this->checkNeedDNIByCategoryInCart()) {
                 $this->need_dni = true;
             }
-            if ($this->checkNeedDNIByCountry()){
+            if ($this->checkNeedDNIByCountry()) {
                 $this->need_dni = true;
             }
 
-            if ($this->checkNeedInvoiceByOrderTotal()){
+            if ($this->checkNeedInvoiceByOrderTotal()) {
                 $this->need_invoice = true;
             }
 
@@ -296,7 +296,7 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
             if (isset($requestParams['id_address_delivery'])) {
                 $id_address = $requestParams['id_address_delivery'];
 
-                if (!Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
+                if (! Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
                     $this->getCheckoutProcess()->setHasErrors(true);
                 } else {
                     if ($this->getCheckoutSession()->getIdAddressDelivery() != $id_address) {
@@ -304,16 +304,16 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                         $this->getCheckoutProcess()->invalidateAllStepsAfterCurrent();
                     }
                     $this->getCheckoutSession()->setIdAddressDelivery($id_address);
-                    //if ($this->use_same_address) {
+                    // if ($this->use_same_address) {
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
-                    //}
+                    // }
                 }
             }
 
             if ((isset($requestParams['need-invoice']) && $requestParams['need-invoice'] == '1') || $this->need_invoice) {
                 if (isset($requestParams['id_address_invoice'])) {
                     $id_address = $requestParams['id_address_invoice'];
-                    if (!Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
+                    if (! Customer::customerHasAddress($this->getCheckoutSession()->getCustomer()->id, $id_address)) {
                         $this->getCheckoutProcess()->setHasErrors(true);
                     } else {
                         $this->getCheckoutSession()->setIdAddressInvoice($id_address);
@@ -321,24 +321,23 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                 }
             }
 
-
-            /*Añadido Addis para control de factura*/
-            if ($this->checkNeedInvoiceByProductTypeInCart()){
+            /* Añadido Addis para control de factura */
+            if ($this->checkNeedInvoiceByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByProductTypeInCart()){
+            if ($this->checkNeedDNIByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByCategoryInCart()){
+            if ($this->checkNeedDNIByCategoryInCart()) {
                 $this->need_invoice = true;
             }
-            if ($this->checkNeedDNIByCountry()){
+            if ($this->checkNeedDNIByCountry()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedInvoiceByOrderTotal()){
+            if ($this->checkNeedInvoiceByOrderTotal()) {
                 $this->need_invoice = true;
             }
 
@@ -392,31 +391,31 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                 $this->context->need_invoice = '';
             }
 
-            if ($this->checkNeedInvoiceByProductTypeInCart()){
+            if ($this->checkNeedInvoiceByProductTypeInCart()) {
                 $this->need_invoice = 1;
                 $this->context->need_invoice = 1;
             }
 
-            if ($this->checkNeedDNIByProductTypeInCart()){
+            if ($this->checkNeedDNIByProductTypeInCart()) {
                 $this->need_invoice = 1;
                 $this->context->need_invoice = 1;
             }
 
-            if ($this->checkNeedDNIByCategoryInCart()){
+            if ($this->checkNeedDNIByCategoryInCart()) {
                 $this->need_invoice = 1;
                 $this->context->need_invoice = 1;
             }
-            if ($this->checkNeedDNIByCountry()){
-                $this->need_invoice = 1;
-                $this->context->need_invoice = 1;
-            }
-
-            if ($this->checkNeedInvoiceByOrderTotal()){
+            if ($this->checkNeedDNIByCountry()) {
                 $this->need_invoice = 1;
                 $this->context->need_invoice = 1;
             }
 
-            if (!$this->getCheckoutProcess()->hasErrors()) {
+            if ($this->checkNeedInvoiceByOrderTotal()) {
+                $this->need_invoice = 1;
+                $this->context->need_invoice = 1;
+            }
+
+            if (! $this->getCheckoutProcess()->hasErrors()) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(
                     $this->getCheckoutSession()->getIdAddressInvoice() &&
@@ -424,11 +423,11 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                 );
                 if ($this->getCheckoutSession()->getIdAddressInvoice() == $this->getCheckoutSession()->getIdAddressDelivery()) {
                     $this->use_same_address = true;
-                }else{
+                } else {
                     $this->use_same_address = false;
                 }
             }
-            /*HASTA AQUI*/
+            /* HASTA AQUI */
 
             /*if (!$this->getCheckoutProcess()->hasErrors()) {
                 $this->setNextStepAsCurrent();
@@ -459,7 +458,7 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
         if ($addresses_count === 0) {
             $this->show_delivery_address_form = true;
-        } elseif ($addresses_count < 2 && !$this->use_same_address) {
+        } elseif ($addresses_count < 2 && ! $this->use_same_address) {
             $this->show_invoice_address_form = true;
             $this->setComplete(false);
         }
@@ -477,7 +476,6 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
         /* pedro bloqueos */
 
-
         $this->setComplete($this->getCheckoutSession()->getIdAddressInvoice() &&
             $this->getCheckoutSession()->getIdAddressDelivery() &&
             $this->comprobarbloqueos() &&
@@ -489,8 +487,8 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
         $this->setTitle($this->getTranslator()->trans('Addresses', [], 'Shop.Theme.Checkout'));
 
         if (Module::isEnabled('quantitydiscountpro')) {
-            include_once(_PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php');
-            $quantityDiscount = new QuantityDiscountRule();
+            include_once _PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php';
+            $quantityDiscount = new QuantityDiscountRule;
             $quantityDiscount->createAndRemoveRules();
         }
 
@@ -498,25 +496,25 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
     }
 
     /* pedro bloqueos */
-    public function comprobarbloqueos(){
+    public function comprobarbloqueos()
+    {
 
-        $id_cart=(int)Context::getContext()->cookie->id_cart;
+        $id_cart = (int) Context::getContext()->cookie->id_cart;
         $cart = new Cart($id_cart);
         $products = $cart->getProducts();
 
         $this->productsblocked = [];
 
-        foreach ($products  as $product) {//2
+        foreach ($products as $product) {// 2
             $p = new Product($product['id_product']);
-            if ($p->isBlocked($product['id_product'])){
-                $this->productsblocked[]=$product['id_product'];
+            if ($p->isBlocked($product['id_product'])) {
+                $this->productsblocked[] = $product['id_product'];
             }
         }
-        return (count($this->productsblocked)==0);
+
+        return count($this->productsblocked) == 0;
     }
     /* fin */
-
-
 
     /* jordi si en carrito hay productos tipo arma o armero es obligatorio la factura */
     protected function checkNeedDNIByProductGunCart()
@@ -542,8 +540,10 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
         return $need_invoice;
     }
+
     /* jordi si en carrito hay productos tipo arma o armero es obligatorio la factura */
-    protected function checkNeedInvoiceByProductTypeInCart() {
+    protected function checkNeedInvoiceByProductTypeInCart()
+    {
         $need_invoice = false;
 
         $id_feature_product_type = 0;
@@ -589,7 +589,8 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
     /* fin */
 
     /* jordi si el total del carrito es >= 3000e es obligatorio la factura */
-    protected function checkNeedInvoiceByOrderTotal() {
+    protected function checkNeedInvoiceByOrderTotal()
+    {
         $need_invoice = false;
 
         $id_cart = (int) Context::getContext()->cookie->id_cart;
@@ -604,7 +605,8 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
     /* fin */
 
     /************* ALSERNET ***********/
-    protected function checkNeedDNIByProductTypeInCart() {
+    protected function checkNeedDNIByProductTypeInCart()
+    {
         $need_dni = false;
         $id_feature_value_product_type_need_dni = '';
 
@@ -623,7 +625,7 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                     if ($product['features']) {
                         foreach ($product['features'] as $feature) {
 
-                            if (strpos(',' . $id_feature_value_product_type_need_dni . ',', ',' . $feature['id_feature_value'] . ',') !== false) {
+                            if (strpos(','.$id_feature_value_product_type_need_dni.',', ','.$feature['id_feature_value'].',') !== false) {
                                 $need_dni = true;
                                 break 2;
                             }
@@ -635,37 +637,38 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
         }
 
         return $need_dni;
-        }
+    }
 
-    //DNI Y FACTURA NECESARIO PARA CLIENTES DE CANARIAS, CEUTA Y MELILLA
+    // DNI Y FACTURA NECESARIO PARA CLIENTES DE CANARIAS, CEUTA Y MELILLA
 
-    protected function checkNeedDNIByCountry() {
+    protected function checkNeedDNIByCountry()
+    {
         $need_dni = false;
         $ue_countries = [1, 2, 3, 233, 16, 76, 74, 20, 37, 191, 6, 243, 244, 242, 86, 7, 8, 9, 142, 26, 10, 124, 130, 12, 138, 13, 14, 245, 15, 36, 18];
 
         $id_address_delivery = Context::getContext()->cart->id_address_delivery;
         $address = new Address($id_address_delivery);
-        $country = new Country ($address->id_country);
+        $country = new Country($address->id_country);
         $country_id = $country->id;
 
-
-        if($country_id === 242 || $country_id === 243){
+        if ($country_id === 242 || $country_id === 243) {
             $need_dni = true;
 
-        } elseif(!in_array($country_id, $ue_countries)){
+        } elseif (! in_array($country_id, $ue_countries)) {
             $need_dni = true;
 
         }
-        return $need_dni;
 
+        return $need_dni;
 
     }
 
-    /* DNI POR CATEGORÍA*/
+    /* DNI POR CATEGORÍA */
 
-    protected function checkNeedDNIByCategoryInCart() {
+    protected function checkNeedDNIByCategoryInCart()
+    {
         $need_dni = false;
-        $category_ids_need_dni = array();
+        $category_ids_need_dni = [];
 
         // Obtener las categorías que requieren DNI
         if (Configuration::get('DNI_PRODUCT_FEATURE_VALUE_ID_LIST_PRODUCT_CATEGORY_NEED_DNI')) {
@@ -686,18 +689,18 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                         $has_required_category = false;
                         $has_additional_category = false;
 
-                        foreach ($categories as $category_id){
-                            if(in_array((int)$category_id, $category_ids_need_dni)){
+                        foreach ($categories as $category_id) {
+                            if (in_array((int) $category_id, $category_ids_need_dni)) {
                                 $has_required_category = true;
                             }
 
                             $has_additional_categories = [586, 718, 2564, 585, 2565, 180];
-                            if(in_array((int)$category_id, $has_additional_categories)){
+                            if (in_array((int) $category_id, $has_additional_categories)) {
                                 $has_additional_category = true;
                             }
                         }
 
-                        if ($has_required_category && !$has_additional_category) {
+                        if ($has_required_category && ! $has_additional_category) {
                             $need_dni = true;
                         }
                     }
@@ -708,52 +711,43 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
         return $need_dni;
     }
 
-
-
-
-
-
-    /*fin*/
-
-
-
+    /* fin */
 
     public function getTemplateParameters()
     {
 
-
-        if ($this->need_invoice && in_array($this->context->language->iso_code, ['es','en','fr', 'pt', 'de', 'it'])) {
+        if ($this->need_invoice && in_array($this->context->language->iso_code, ['es', 'en', 'fr', 'pt', 'de', 'it'])) {
             $this->need_invoice_option = true;
         }
 
-        if ($this->checkNeedInvoiceByProductTypeInCart()){
+        if ($this->checkNeedInvoiceByProductTypeInCart()) {
             $this->need_invoice = true;
         }
 
-        if ($this->checkNeedDNIByProductTypeInCart()){
+        if ($this->checkNeedDNIByProductTypeInCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByProductGunCart()){
+        if ($this->checkNeedDNIByProductGunCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByCategoryInCart()){
+        if ($this->checkNeedDNIByCategoryInCart()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedDNIByCountry()){
+        if ($this->checkNeedDNIByCountry()) {
             $this->need_dni = true;
         }
 
-        if ($this->checkNeedInvoiceByOrderTotal()){
+        if ($this->checkNeedInvoiceByOrderTotal()) {
             $this->need_invoice = true;
         }
 
         $idAddressDelivery = (int) $this->getCheckoutSession()->getIdAddressDelivery();
         $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
-        //dump($idAddressDelivery);
-        //dump($idAddressInvoice);
+        // dump($idAddressDelivery);
+        // dump($idAddressInvoice);
         $params = [
             'need_invoice_option' => $this->need_invoice_option,
             'address_form' => $this->addressForm->getProxy(),
@@ -807,38 +801,38 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
 
             if ($this->show_invoice_address_form
                 || $idAddressInvoice != $idAddressDelivery
-                || !empty($errors['invoice_address_error'])
+                || ! empty($errors['invoice_address_error'])
             ) {
                 $this->use_same_address = false;
             }
 
-            if (!empty($this->need_invoice) && is_array($this->need_invoice)) {
-                if ($this->context->need_invoice == 1) { //condicion de need_invoice
+            if (! empty($this->need_invoice) && is_array($this->need_invoice)) {
+                if ($this->context->need_invoice == 1) { // condicion de need_invoice
                     $this->need_invoice = true;
                 }
             }
 
-            if ($this->checkNeedInvoiceByProductTypeInCart()){
+            if ($this->checkNeedInvoiceByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedDNIByProductTypeInCart()){
+            if ($this->checkNeedDNIByProductTypeInCart()) {
                 $this->need_invoice = true;
             }
-            if ($this->checkNeedDNIByCategoryInCart()){
-                $this->need_invoice = true;
-            }
-
-            if ($this->checkNeedDNIByCountry()){
+            if ($this->checkNeedDNIByCategoryInCart()) {
                 $this->need_invoice = true;
             }
 
-            if ($this->checkNeedInvoiceByOrderTotal()){
+            if ($this->checkNeedDNIByCountry()) {
+                $this->need_invoice = true;
+            }
+
+            if ($this->checkNeedInvoiceByOrderTotal()) {
                 $this->need_invoice = true;
             }
 
             $need_invoice_mandatory = false;
-            if ($this->checkNeedInvoiceByProductTypeInCart() || $this->checkNeedInvoiceByOrderTotal()|| $this->checkNeedDNIByProductTypeInCart()|| $this->checkNeedDNIByCountry()||$this->checkNeedDNIByCategoryInCart()) {
+            if ($this->checkNeedInvoiceByProductTypeInCart() || $this->checkNeedInvoiceByOrderTotal() || $this->checkNeedDNIByProductTypeInCart() || $this->checkNeedDNIByCountry() || $this->checkNeedDNIByCategoryInCart()) {
                 $need_invoice_mandatory = true;
             }
 
@@ -850,10 +844,10 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                     'use_same_address' => $this->use_same_address,
                     'need_invoice_option' => $this->need_invoice_option,
                     'need_invoice' => $this->need_invoice,
-                    'productsblocked' => $this->getProductsBlocked(),  //pedro bloqueos
-                    'modal_need_invoice' => !$this->checkVatNumberIfNeedInvoice() ,  /* Jordi - DNI obligatorio en dir_facturacion si solicita factura */
+                    'productsblocked' => $this->getProductsBlocked(),  // pedro bloqueos
+                    'modal_need_invoice' => ! $this->checkVatNumberIfNeedInvoice(),  /* Jordi - DNI obligatorio en dir_facturacion si solicita factura */
                     'need_invoice_mandatory' => $need_invoice_mandatory,  /* Jordi - necesita factura obligatorio si en carrito hay productos tipo arma o armero // o si el pedido es superior a 3000e */
-                    'need_dni' => $this->checkNeedDNIByProductTypeInCart() || $this->checkNeedDNIByCategoryInCart() ||  $this->checkNeedDNIByProductGunCart(),
+                    'need_dni' => $this->checkNeedDNIByProductTypeInCart() || $this->checkNeedDNIByCategoryInCart() || $this->checkNeedDNIByProductGunCart(),
                 ],
                 $errors
             );
@@ -862,14 +856,15 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
         return $params;
     }
 
-    private function  getProductsBlocked(){
+    private function getProductsBlocked()
+    {
 
-        if (count($this->productsblocked)>0){
+        if (count($this->productsblocked) > 0) {
 
             $sql = 'SELECT * FROM `'._DB_PREFIX_.'product` WHERE id_product in ('.implode(',', $this->productsblocked).')';
 
             $products = Db::getInstance()->executeS($sql);
-            //var_dump($inventaries);
+            // var_dump($inventaries);
             $assembler = new ProductAssembler($this->context);
 
             $presenterFactory = new ProductPresenterFactory($this->context);
@@ -879,8 +874,8 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
                     $this->context->link
                 ),
                 $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
+                new PriceFormatter,
+                new ProductColorsRetriever,
                 $this->context->getTranslator()
             );
 
@@ -895,23 +890,23 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
             }
 
             return $products_for_template;
-        }
-        else{
+        } else {
             $products_for_template = [];
+
             return $products_for_template;
         }
     }
 
-
-    protected function checkVatNumberIfNeedInvoice() {
-        if (!Tools::getIsset('editAddress')) {
-            if ($this->need_invoice || $this->checkNeedInvoiceByProductTypeInCart() || $this->checkNeedInvoiceByOrderTotal()|| $this->checkNeedDNIByCountry() || $this->checkNeedDNIByProductTypeInCart() || $this->checkNeedDNIByCategoryInCart()) {
+    protected function checkVatNumberIfNeedInvoice()
+    {
+        if (! Tools::getIsset('editAddress')) {
+            if ($this->need_invoice || $this->checkNeedInvoiceByProductTypeInCart() || $this->checkNeedInvoiceByOrderTotal() || $this->checkNeedDNIByCountry() || $this->checkNeedDNIByProductTypeInCart() || $this->checkNeedDNIByCategoryInCart()) {
                 $this->need_invoice = true;
 
                 $id_invoice_address = (int) $this->getCheckoutSession()->getIdAddressInvoice();
                 if ($id_invoice_address) {
                     $invoice_address = new Address($id_invoice_address);
-                    if (!$invoice_address->vat_number || empty(trim($invoice_address->vat_number)) || trim($invoice_address->vat_number) == '') {
+                    if (! $invoice_address->vat_number || empty(trim($invoice_address->vat_number)) || trim($invoice_address->vat_number) == '') {
                         return false;
                     }
                 }
@@ -929,5 +924,4 @@ class CheckoutAddressesStep extends CheckoutAddressesStepCore
             $this->getTemplateParameters()
         );
     }
-
 }

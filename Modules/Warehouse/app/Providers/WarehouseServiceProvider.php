@@ -60,10 +60,38 @@ class WarehouseServiceProvider extends ServiceProvider
             );
         }
 
+        if (class_exists(\Modules\Warehouse\Entities\WarehouseFloor::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\WarehouseFloor::class,
+                \Modules\Warehouse\Policies\WarehouseFloorPolicy::class
+            );
+        }
+
         if (class_exists(\Modules\Warehouse\Entities\WarehouseLocation::class)) {
             Gate::policy(
                 \Modules\Warehouse\Entities\WarehouseLocation::class,
                 \Modules\Warehouse\Policies\WarehouseLocationPolicy::class
+            );
+        }
+
+        if (class_exists(\Modules\Warehouse\Entities\WarehouseInventorySlot::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\WarehouseInventorySlot::class,
+                \Modules\Warehouse\Policies\WarehouseInventorySlotPolicy::class
+            );
+        }
+
+        if (class_exists(\Modules\Warehouse\Entities\WarehouseInventoryOperation::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\WarehouseInventoryOperation::class,
+                \Modules\Warehouse\Policies\WarehouseInventoryOperationPolicy::class
+            );
+        }
+
+        if (class_exists(\Modules\Warehouse\Entities\WarehouseLocationStyle::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\WarehouseLocationStyle::class,
+                \Modules\Warehouse\Policies\WarehouseLocationStylePolicy::class
             );
         }
     }

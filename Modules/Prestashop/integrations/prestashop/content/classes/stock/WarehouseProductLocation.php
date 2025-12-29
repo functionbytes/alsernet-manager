@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -78,22 +79,21 @@ class WarehouseProductLocationCore extends ObjectModel
     /**
      * For a given product and warehouse, gets the location.
      *
-     * @param int $id_product product ID
-     * @param int $id_product_attribute product attribute ID
-     * @param int $id_warehouse warehouse ID
-     *
+     * @param  int  $id_product  product ID
+     * @param  int  $id_product_attribute  product attribute ID
+     * @param  int  $id_warehouse  warehouse ID
      * @return string $location Location of the product
      */
     public static function getProductLocation($id_product, $id_product_attribute, $id_warehouse)
     {
         // build query
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('wpl.location');
         $query->from('warehouse_product_location', 'wpl');
         $query->where(
-            'wpl.id_product = ' . (int) $id_product . '
-			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
-			AND wpl.id_warehouse = ' . (int) $id_warehouse
+            'wpl.id_product = '.(int) $id_product.'
+			AND wpl.id_product_attribute = '.(int) $id_product_attribute.'
+			AND wpl.id_warehouse = '.(int) $id_warehouse
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -102,22 +102,21 @@ class WarehouseProductLocationCore extends ObjectModel
     /**
      * For a given product and warehouse, gets the WarehouseProductLocation corresponding ID.
      *
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param int $id_supplier
-     *
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute
+     * @param  int  $id_supplier
      * @return int $id_warehouse_product_location ID of the WarehouseProductLocation
      */
     public static function getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse)
     {
         // build query
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('wpl.id_warehouse_product_location');
         $query->from('warehouse_product_location', 'wpl');
         $query->where(
-            'wpl.id_product = ' . (int) $id_product . '
-			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
-			AND wpl.id_warehouse = ' . (int) $id_warehouse
+            'wpl.id_product = '.(int) $id_product.'
+			AND wpl.id_product_attribute = '.(int) $id_product_attribute.'
+			AND wpl.id_warehouse = '.(int) $id_warehouse
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -126,8 +125,7 @@ class WarehouseProductLocationCore extends ObjectModel
     /**
      * For a given product, gets its warehouses.
      *
-     * @param int $id_product
-     *
+     * @param  int  $id_product
      * @return PrestaShopCollection The type of the collection is WarehouseProductLocation
      */
     public static function getCollection($id_product)
@@ -140,6 +138,6 @@ class WarehouseProductLocationCore extends ObjectModel
 
     public static function getProducts($id_warehouse)
     {
-        return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM ' . _DB_PREFIX_ . 'warehouse_product_location WHERE id_warehouse=' . (int) $id_warehouse);
+        return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int) $id_warehouse);
     }
 }

@@ -97,6 +97,8 @@ class WarehouseLocationsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', WarehouseLocation::class);
+
         $warehouse = Warehouse::uid($request->warehouse_uid);
         $floor = WarehouseFloor::uid($request->floor_uid);
 
@@ -201,6 +203,8 @@ class WarehouseLocationsController extends Controller
         $warehouse = Warehouse::uid($request->warehouse_uid);
         $floor = WarehouseFloor::where('uid', $request->floor_uid)->where('warehouse_id', $warehouse->id)->firstOrFail();
         $location = WarehouseLocation::where('uid', $request->location_uid)->where('floor_id', $floor->id)->firstOrFail();
+
+        $this->authorize('update', $location);
 
         $validated = $request->validate([
             'warehouse_uid' => 'required|exists:warehouses,uid',
@@ -311,6 +315,8 @@ class WarehouseLocationsController extends Controller
         $warehouse = Warehouse::uid($warehouse_uid);
         $floor = WarehouseFloor::uid($floor_uid);
         $location = WarehouseLocation::where('uid', $location_uid)->where('floor_id', $floor->id)->firstOrFail();
+
+        $this->authorize('delete', $location);
 
         // Eliminar todos los slots asociados
         $location->slots()->delete();

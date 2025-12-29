@@ -3,7 +3,7 @@
 namespace Modules\Campaign\Entities;
 
 use app\Library\StringHelper;
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;

@@ -1,10 +1,10 @@
 <?php
-/**
-*  @author    Amazzing <mail@amazzing.ru>
-*  @copyright Amazzing
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*/
 
+/**
+ *  @author    Amazzing <mail@amazzing.ru>
+ *  @copyright Amazzing
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
 class AmazzingFilterOverride extends AmazzingFilter
 {
     /**
@@ -25,19 +25,18 @@ class AmazzingFilterOverride extends AmazzingFilter
 
     public function getProductSales($id)
     {
-        //SUBIR EN PRIORIDAD CIERTOS PRODUCTOS/
-        $productos_prioritarios = [55,58,60,61,62,63,64,14518,14520,61293,65732];
+        // SUBIR EN PRIORIDAD CIERTOS PRODUCTOS/
+        $productos_prioritarios = [55, 58, 60, 61, 62, 63, 64, 14518, 14520, 61293, 65732];
 
-        if (in_array((int)$id, $productos_prioritarios)) {
+        if (in_array((int) $id, $productos_prioritarios)) {
             $this->sales_data[$id] = 999999999;
-        }
-        else {
-            if (!isset($this->sales_data)) {
-                $this->sales_data = array();
+        } else {
+            if (! isset($this->sales_data)) {
+                $this->sales_data = [];
 
                 $raw_data = $this->db->executeS('
-                SELECT ps.id_product, ps.quantity FROM ' . _DB_PREFIX_ . 'product_sale ps
-                ' . Shop::addSqlAssociation('product', 'ps') . '
+                SELECT ps.id_product, ps.quantity FROM '._DB_PREFIX_.'product_sale ps
+                '.Shop::addSqlAssociation('product', 'ps').'
                 WHERE product_shop.active = 1 AND product_shop.visibility <> "none"
             ');
 
@@ -46,6 +45,7 @@ class AmazzingFilterOverride extends AmazzingFilter
                 }
             }
         }
+
         return isset($this->sales_data[$id]) ? $this->sales_data[$id] : 0;
     }
 }

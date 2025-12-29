@@ -6,14 +6,12 @@ use App\Jobs\ImportBlacklistJob;
 use App\Library\AutoBillingData;
 use App\Library\Facades\Billing;
 use App\Library\Facades\SubscriptionFacade;
-use app\Library\Traits\HasCache;
-use app\Library\Traits\HasUid;
-use app\Library\Traits\TrackJobs;
+use App\Library\Traits\TrackJobs;
 use App\Models\Role\RoleMapping;
-use App\Models\Subscriber\Subscriber;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionLog;
 use App\Models\Template\Template;
+use App\Models\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,13 +21,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Subscriber\Models\Subscriber;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasCache, HasFactory , HasRoles , HasUid , LogsActivity , TrackJobs;
+    use HasApiTokens,HasFactory , HasRoles , HasUid , LogsActivity;
     use Notifiable {
         routeNotificationFor as protected routeNotificationForNotifiable;
     }
@@ -477,7 +476,7 @@ class User extends Authenticatable
 
     public function mailLists()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignMaillist');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignMaillist');
     }
 
     public function user()
@@ -502,12 +501,12 @@ class User extends Authenticatable
 
     public function campaigns()
     {
-        return $this->hasMany('App\Models\Campaign');
+        return $this->hasMany('Modules\Campaign\Entities\Campaign');
     }
 
     public function sentCampaigns()
     {
-        return $this->hasMany('App\Models\Campaign')->where('status', '=', 'done')->orderBy('created_at', 'desc');
+        return $this->hasMany('Modules\Campaign\Entities\Campaign')->where('status', '=', 'done')->orderBy('created_at', 'desc');
     }
 
     public function subscribers()

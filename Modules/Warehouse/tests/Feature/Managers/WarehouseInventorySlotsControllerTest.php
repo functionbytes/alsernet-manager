@@ -79,7 +79,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index filters by occupied status
      */
-    public function testIndexFiltersById StatusOccupiedOrAvailable(): void
+    public function testIndexFiltersByIdStatusOccupiedOrAvailable(): void
     {
         WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -107,7 +107,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index filters by product
      */
-    public function testIndexFiltersById Product(): void
+    public function testIndexFiltersByIdProduct(): void
     {
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
@@ -190,7 +190,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test addQuantity increments properly
      */
-    public function testAddQuantityIncrementsProper ly(): void
+    public function testAddQuantityIncrementsProperly(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -223,7 +223,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test subtractQuantity decrements properly
      */
-    public function testSubtractQuantityDecrementsProper ly(): void
+    public function testSubtractQuantityDecrementsProperly(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)

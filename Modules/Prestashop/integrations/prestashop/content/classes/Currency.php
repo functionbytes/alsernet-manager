@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -192,6 +193,7 @@ class CurrencyCore extends ObjectModel
 
     /** @var array Currency cache */
     protected static $currencies = [];
+
     protected static $countActiveCurrencies = [];
 
     protected $webserviceParameters = [
@@ -237,9 +239,9 @@ class CurrencyCore extends ObjectModel
     /**
      * CurrencyCore constructor.
      *
-     * @param int|null $id
-     * @param int|false|null $idLang if null or false, default language will be used
-     * @param int|null $idShop
+     * @param  int|null  $id
+     * @param  int|false|null  $idLang  if null or false, default language will be used
+     * @param  int|null  $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -288,14 +290,13 @@ class CurrencyCore extends ObjectModel
             $this->decimals = 1;
         }
 
-        if (!$this->conversion_rate) {
+        if (! $this->conversion_rate) {
             $this->conversion_rate = 1;
         }
     }
 
     /**
-     * @param string|null $ws_params_attribute_name
-     *
+     * @param  string|null  $ws_params_attribute_name
      * @return array
      */
     public function getWebserviceParameters($ws_params_attribute_name = null)
@@ -316,7 +317,7 @@ class CurrencyCore extends ObjectModel
      */
     public function setNameForWebservice()
     {
-        if (!empty($this->names)) {
+        if (! empty($this->names)) {
             $this->name = $this->names;
             if (is_array($this->names)) {
                 $this->localizedNames = $this->names;
@@ -348,7 +349,7 @@ class CurrencyCore extends ObjectModel
         $defaultLanguage = new Language($configuration->get('PS_LANG_DEFAULT'));
         $locale = $localeCldr->getLocale($defaultLanguage->getLocale());
         $currency = $locale->getCurrency($this->iso_code);
-        if (!empty($currency)) {
+        if (! empty($currency)) {
             if (empty($this->numeric_iso_code)) {
                 $this->numeric_iso_code = $currency->getNumericIsoCode();
                 $this->iso_code_num = $this->numeric_iso_code;
@@ -384,9 +385,8 @@ class CurrencyCore extends ObjectModel
      * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
      * If it's true, currency is not added.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
-     *
+     * @param  bool  $autoDate  Automatically set `date_upd` and `date_add` columns
+     * @param  bool  $nullValues  Whether we want to use NULL values instead of empty quotes values
      * @return bool Indicates whether the Currency has been successfully added
      */
     public function add($autoDate = true, $nullValues = false)
@@ -401,8 +401,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Updates the current object in the database.
      *
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
-     *
+     * @param  bool  $nullValues  Whether we want to use NULL values instead of empty quotes values
      * @return bool Indicates whether the CartRule has been successfully updated
      *
      * @throws PrestaShopDatabaseException
@@ -420,9 +419,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Check if a Currency already exists.
      *
-     * @param int|string $isoCode int for iso code number string for iso code
-     * @param int $idShop Shop ID
-     *
+     * @param  int|string  $isoCode  int for iso code number string for iso code
+     * @param  int  $idShop  Shop ID
      * @return bool Indicates whether the Currency already exists
      */
     public static function exists($isoCode, $idShop = 0)
@@ -435,13 +433,12 @@ class CurrencyCore extends ObjectModel
     /**
      * Delete given Currencies.
      *
-     * @param array $selection Currencies
-     *
+     * @param  array  $selection  Currencies
      * @return bool Indicates whether the selected Currencies have been succesfully deleted
      */
     public function deleteSelection($selection)
     {
-        if (!is_array($selection)) {
+        if (! is_array($selection)) {
             return false;
         }
 
@@ -452,7 +449,7 @@ class CurrencyCore extends ObjectModel
         }
 
         foreach ($res as $value) {
-            if (!$value) {
+            if (! $value) {
                 return false;
             }
         }
@@ -470,7 +467,7 @@ class CurrencyCore extends ObjectModel
     public function delete()
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
-            $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
+            $result = Db::getInstance()->getRow('SELECT `id_currency` FROM '._DB_PREFIX_.'currency WHERE `id_currency` != '.(int) $this->id.' AND `deleted` = 0');
             if (empty($result['id_currency'])) {
                 return false;
             }
@@ -481,7 +478,7 @@ class CurrencyCore extends ObjectModel
         $this->deleted = true;
 
         // Remove currency restrictions
-        $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
+        $res = Db::getInstance()->delete('module_currency', 'id_currency = '.(int) $this->id);
 
         return $res && $this->update();
     }
@@ -489,8 +486,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Return formatted sign.
      *
-     * @param string $side left or right
-     *
+     * @param  string  $side  left or right
      * @return string formated sign
      */
     public function getSign($side = null)
@@ -502,11 +498,10 @@ class CurrencyCore extends ObjectModel
      * Is this currency installed for a given shop ?
      * (current shop by default).
      *
-     * @param int|null $currencyId
-     *                             The currency to look for (
-     * @param int|null $shopId
-     *                         The given shop's id
-     *
+     * @param  int|null  $currencyId
+     *                                The currency to look for (
+     * @param  int|null  $shopId
+     *                            The given shop's id
      * @return bool
      *              True if this currency is installed for the given shop
      */
@@ -514,12 +509,12 @@ class CurrencyCore extends ObjectModel
     {
         $currencyId = $currencyId ?: $this->id;
         $shopId = $shopId ?: Context::getContext()->shop->id;
-        $sql = (new DbQuery())
+        $sql = (new DbQuery)
             ->select('1')
             ->from('currency', 'c')
             ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
-            ->where('c.`id_currency` = ' . (int) $currencyId)
-            ->where('cs.`id_shop` = ' . (int) $shopId)
+            ->where('c.`id_currency` = '.(int) $currencyId)
+            ->where('cs.`id_shop` = '.(int) $shopId)
             ->where('c.`deleted` = 0')
             ->where('c.`active` = 1');
 
@@ -557,11 +552,11 @@ class CurrencyCore extends ObjectModel
         }
 
         $id_lang = $this->id_lang;
-        if (null === $id_lang) {
+        if ($id_lang === null) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
         }
 
-        if (!isset($this->symbol[$id_lang])) {
+        if (! isset($this->symbol[$id_lang])) {
             return '';
         }
 
@@ -583,8 +578,7 @@ class CurrencyCore extends ObjectModel
      * the database (legacy core feature). But to be consistent the names field also
      * needs to be updated.
      *
-     * @param string[] $localizedNames list of currency names, the array needs to be indexed by language id
-     *
+     * @param  string[]  $localizedNames  list of currency names, the array needs to be indexed by language id
      * @return $this
      */
     public function setLocalizedNames(array $localizedNames)
@@ -609,8 +603,7 @@ class CurrencyCore extends ObjectModel
      * the database (legacy core feature). But to be consistent the symbols field also
      * needs to be updated.
      *
-     * @param string[] $localizedSymbols list of currency symbols, the array needs to be indexed by language id
-     *
+     * @param  string[]  $localizedSymbols  list of currency symbols, the array needs to be indexed by language id
      * @return CurrencyCore
      */
     public function setLocalizedSymbols(array $localizedSymbols)
@@ -643,8 +636,7 @@ class CurrencyCore extends ObjectModel
      * the database (legacy core feature). But to be consistent the patterns field also
      * needs to be updated.
      *
-     * @param string[] $localizedPatterns list of currency patterns, the array needs to be indexed by language id
-     *
+     * @param  string[]  $localizedPatterns  list of currency patterns, the array needs to be indexed by language id
      * @return CurrencyCore
      */
     public function setLocalizedPatterns(array $localizedPatterns)
@@ -657,10 +649,9 @@ class CurrencyCore extends ObjectModel
     /**
      * Return available currencies.
      *
-     * @param bool $object
-     * @param bool $active
-     * @param bool $groupBy
-     *
+     * @param  bool  $object
+     * @param  bool  $active
+     * @param  bool  $groupBy
      * @return array Currencies
      */
     public static function getCurrencies($object = false, $active = true, $groupBy = false)
@@ -674,10 +665,9 @@ class CurrencyCore extends ObjectModel
     /**
      * Retrieve all currencies data from the database.
      *
-     * @param bool $active If true only active are returned
-     * @param bool $groupBy Group by id_currency
-     * @param bool $currentShopOnly If true returns only currencies associated to current shop
-     *
+     * @param  bool  $active  If true only active are returned
+     * @param  bool  $groupBy  Group by id_currency
+     * @param  bool  $currentShopOnly  If true returns only currencies associated to current shop
      * @return array Currency data from database
      *
      * @throws PrestaShopDatabaseException
@@ -686,11 +676,11 @@ class CurrencyCore extends ObjectModel
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
-                WHERE c.`deleted` = 0' .
-                ($active ? ' AND c.`active` = 1' : '') .
-                ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
+            FROM `'._DB_PREFIX_.'currency` c
+            '.($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '').'
+                WHERE c.`deleted` = 0'.
+                ($active ? ' AND c.`active` = 1' : '').
+                ($groupBy ? ' GROUP BY c.`id_currency`' : '').
                 ' ORDER BY `iso_code` ASC');
 
         return $currencies;
@@ -706,26 +696,25 @@ class CurrencyCore extends ObjectModel
     public static function findAllInstalled()
     {
         $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
+            'SELECT * FROM `'._DB_PREFIX_.'currency` c ORDER BY `iso_code` ASC'
         );
 
         return $currencies;
     }
 
     /**
-     * @param int|null $shopId
-     *
+     * @param  int|null  $shopId
      * @return array
      */
     public function getInstalledCurrencies($shopId = null)
     {
         $shopId = $shopId ?: Context::getContext()->shop->id;
-        $sql = (new DbQuery())
+        $sql = (new DbQuery)
             ->select('c.*, cl.*')
             ->from('currency', 'c')
             ->innerJoin('currency_lang', 'cl', 'c.`id_currency` = cl.`id_currency`')
             ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
-            ->where('cs.`id_shop` = ' . (int) $shopId)
+            ->where('cs.`id_shop` = '.(int) $shopId)
             ->where('c.`deleted` = 0')
             ->where('c.`active` = 1');
 
@@ -735,17 +724,16 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currencies by Shop ID.
      *
-     * @param int $idShop Shop ID
-     *
+     * @param  int  $idShop  Shop ID
      * @return array|Currency
      */
     public static function getCurrenciesByIdShop($idShop = 0)
     {
         $currencies = Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'currency` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-        ' . ($idShop ? ' WHERE cs.`id_shop` = ' . (int) $idShop : '') . '
+		FROM `'._DB_PREFIX_.'currency` c
+		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
+        '.($idShop ? ' WHERE cs.`id_shop` = '.(int) $idShop : '').'
 		ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($currencies);
@@ -754,9 +742,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Add Cldr datas to result query or signe object/array.
      *
-     * @param $currencies mixed object|array
-     * @param $isObject bool
-     *
+     * @param  $currencies  mixed object|array
+     * @param  $isObject  bool
      * @return mixed object|array
      */
     protected static function addCldrDatasToCurrency($currencies, $isObject = false)
@@ -764,14 +751,14 @@ class CurrencyCore extends ObjectModel
         if (is_array($currencies)) {
             foreach ($currencies as $k => $c) {
                 $currencies[$k] = Currency::getCurrencyInstance($c['id_currency']);
-                if (!$isObject) {
+                if (! $isObject) {
                     $currencies[$k] = (array) $currencies[$k];
                     $currencies[$k]['id_currency'] = $currencies[$k]['id'];
                 }
             }
         } else {
             $currencies = Currency::getCurrencyInstance($currencies['id_currency']);
-            if (!$isObject) {
+            if (! $isObject) {
                 $currencies = (array) $currencies;
                 $currencies['id_currency'] = $currencies['id'];
             }
@@ -781,21 +768,20 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * @param int $idModule
-     * @param int|null $idShop
-     *
+     * @param  int  $idModule
+     * @param  int|null  $idShop
      * @return array
      */
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
-        if (null === $idShop) {
+        if ($idShop === null) {
             $idShop = Context::getContext()->shop->id;
         }
 
         $sql = 'SELECT *
-				FROM ' . _DB_PREFIX_ . 'module_currency
-				WHERE id_module = ' . (int) $idModule . '
-					AND id_shop =' . (int) $idShop;
+				FROM '._DB_PREFIX_.'module_currency
+				WHERE id_module = '.(int) $idModule.'
+					AND id_shop ='.(int) $idShop;
 
         return Db::getInstance()->getRow($sql);
     }
@@ -803,24 +789,23 @@ class CurrencyCore extends ObjectModel
     /**
      * Get payment Currencies.
      *
-     * @param int $idModule Module ID
-     * @param int|null $idShop Shop ID
-     *
+     * @param  int  $idModule  Module ID
+     * @param  int|null  $idShop  Shop ID
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {
-        if (null === $idShop) {
+        if ($idShop === null) {
             $idShop = Context::getContext()->shop->id;
         }
 
         $sql = 'SELECT c.*
-				FROM `' . _DB_PREFIX_ . 'module_currency` mc
-				LEFT JOIN `' . _DB_PREFIX_ . 'currency` c ON c.`id_currency` = mc.`id_currency`
+				FROM `'._DB_PREFIX_.'module_currency` mc
+				LEFT JOIN `'._DB_PREFIX_.'currency` c ON c.`id_currency` = mc.`id_currency`
 				WHERE c.`deleted` = 0
-					AND mc.`id_module` = ' . (int) $idModule . '
+					AND mc.`id_module` = '.(int) $idModule.'
 					AND c.`active` = 1
-					AND mc.id_shop = ' . (int) $idShop . '
+					AND mc.id_shop = '.(int) $idShop.'
 				ORDER BY c.`iso_code` ASC';
 
         return Db::getInstance()->executeS($sql);
@@ -829,9 +814,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Check payment Currencies.
      *
-     * @param int $idModule Module ID
-     * @param int|null $idShop Shop ID
-     *
+     * @param  int  $idModule  Module ID
+     * @param  int|null  $idShop  Shop ID
      * @return array|PDOStatement|resource|null
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
@@ -840,15 +824,15 @@ class CurrencyCore extends ObjectModel
             return [];
         }
 
-        if (null === $idShop) {
+        if ($idShop === null) {
             $idShop = Context::getContext()->shop->id;
         }
 
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('mc.*');
         $sql->from('module_currency', 'mc');
-        $sql->where('mc.`id_module` = ' . (int) $idModule);
-        $sql->where('mc.`id_shop` = ' . (int) $idShop);
+        $sql->where('mc.`id_module` = '.(int) $idModule);
+        $sql->where('mc.`id_shop` = '.(int) $idShop);
 
         $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -858,17 +842,16 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency.
      *
-     * @param int $idCurrency Currency ID
-     *
+     * @param  int  $idCurrency  Currency ID
      * @return array|bool|object|null
      */
     public static function getCurrency($idCurrency)
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('c.*');
         $sql->from('currency', 'c');
         $sql->where('`deleted` = 0');
-        $sql->where('`id_currency` = ' . (int) $idCurrency);
+        $sql->where('`id_currency` = '.(int) $idCurrency);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
     }
@@ -876,19 +859,18 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency ID by ISO code.
      *
-     * @param string $isoCode ISO code
-     * @param int $idShop Shop ID
-     * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
-     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
-     *
+     * @param  string  $isoCode  ISO code
+     * @param  int  $idShop  Shop ID
+     * @param  bool  $forceRefreshCache  [default=false] Set to TRUE to forcefully refresh any currently cached results
+     * @param  bool  $includeDeleted  [default=false] Set to TRUE to get result even for soft deleted currency
      * @return int Currency ID
      */
     public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false, $includeDeleted = false)
     {
-        $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop . ($includeDeleted ? '-deleted' : '');
-        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+        $cacheId = 'Currency::getIdByIsoCode_'.pSQL($isoCode).'-'.(int) $idShop.($includeDeleted ? '-deleted' : '');
+        if ($forceRefreshCache || ! Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
-            $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+            $query->where('iso_code = \''.pSQL($isoCode).'\'');
 
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
             if (empty($result)) {
@@ -906,16 +888,14 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency ISO Code by ID
      *
-     * @param int $id
-     * @param bool $forceRefreshCache
      *
      * @return string
      */
     public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
     {
-        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
-        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
-            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
+        $cacheId = 'Currency::getIsoCodeById'.pSQL($id);
+        if ($forceRefreshCache || ! Cache::isStored($cacheId)) {
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM '._DB_PREFIX_.'currency WHERE `id_currency` = '.(int) $id);
             Cache::store($cacheId, $resultIsoCode);
 
             return $resultIsoCode;
@@ -927,17 +907,16 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency ID by numeric ISO code.
      *
-     * @param int $numericIsoCode ISO code
-     * @param int $idShop Shop ID
-     *
+     * @param  int  $numericIsoCode  ISO code
+     * @param  int  $idShop  Shop ID
      * @return int Currency ID
      */
     public static function getIdByNumericIsoCode($numericIsoCode, $idShop = 0)
     {
-        $cacheId = 'Currency::getIdByNumericIsoCode_' . pSQL($numericIsoCode) . '-' . (int) $idShop;
-        if (!Cache::isStored($cacheId)) {
+        $cacheId = 'Currency::getIdByNumericIsoCode_'.pSQL($numericIsoCode).'-'.(int) $idShop;
+        if (! Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
-            $query->where('numeric_iso_code = \'' . pSQL($numericIsoCode) . '\'');
+            $query->where('numeric_iso_code = \''.pSQL($numericIsoCode).'\'');
 
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
             Cache::store($cacheId, $result);
@@ -951,23 +930,22 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency ID query.
      *
-     * @param int $idShop Shop ID
-     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
-     *
+     * @param  int  $idShop  Shop ID
+     * @param  bool  $includeDeleted  [default=false] Set to TRUE to get result even for soft deleted currency
      * @return DbQuery
      */
     public static function getIdByQuery($idShop = 0, $includeDeleted = false)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('c.id_currency');
         $query->from('currency', 'c');
-        if (!$includeDeleted) {
+        if (! $includeDeleted) {
             $query->where('deleted = 0');
         }
 
         if (Shop::isFeatureActive() && $idShop > 0) {
             $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
-            $query->where('id_shop = ' . (int) $idShop);
+            $query->where('id_shop = '.(int) $idShop);
         }
 
         return $query;
@@ -977,9 +955,9 @@ class CurrencyCore extends ObjectModel
      * Refresh the currency exchange rate
      * The XML file define exchange rate for each from a default currency ($isoCodeSource).
      *
-     * @param SimpleXMLElement $data XML content which contains all the exchange rates
-     * @param string $isoCodeSource The default currency used in the XML file
-     * @param Currency $defaultCurrency The default currency object
+     * @param  SimpleXMLElement  $data  XML content which contains all the exchange rates
+     * @param  string  $isoCodeSource  The default currency used in the XML file
+     * @param  Currency  $defaultCurrency  The default currency object
      */
     public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
     {
@@ -1044,14 +1022,14 @@ class CurrencyCore extends ObjectModel
     public static function refreshCurrencies()
     {
         // Parse
-        if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
+        if (! $feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
             return Context::getContext()->getTranslator()->trans('Cannot parse feed.', [], 'Admin.Notifications.Error');
         }
 
         // Default feed currency (EUR)
         $isoCodeSource = (string) ($feed->source['iso_code']);
 
-        if (!$defaultCurrency = Currency::getDefaultCurrency()) {
+        if (! $defaultCurrency = Currency::getDefaultCurrency()) {
             return Context::getContext()->getTranslator()->trans('No default currency', [], 'Admin.Notifications.Error');
         }
 
@@ -1069,13 +1047,12 @@ class CurrencyCore extends ObjectModel
     /**
      * Get Currency instance.
      *
-     * @param int $id Currency ID
-     *
+     * @param  int  $id  Currency ID
      * @return Currency
      */
     public static function getCurrencyInstance($id)
     {
-        if (!isset(self::$currencies[$id])) {
+        if (! isset(self::$currencies[$id])) {
             self::$currencies[(int) ($id)] = new Currency($id);
         }
 
@@ -1109,8 +1086,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Count active Currencies.
      *
-     * @param int|null $idShop Shop ID
-     *
+     * @param  int|null  $idShop  Shop ID
      * @return mixed Amount of active Currencies
      *               `false` if none found
      */
@@ -1120,10 +1096,10 @@ class CurrencyCore extends ObjectModel
             $idShop = (int) Context::getContext()->shop->id;
         }
 
-        if (!isset(self::$countActiveCurrencies[$idShop])) {
+        if (! isset(self::$countActiveCurrencies[$idShop])) {
             self::$countActiveCurrencies[$idShop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT c.id_currency) FROM `' . _DB_PREFIX_ . 'currency` c
-				LEFT JOIN ' . _DB_PREFIX_ . 'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = ' . (int) $idShop . ')
+				SELECT COUNT(DISTINCT c.id_currency) FROM `'._DB_PREFIX_.'currency` c
+				LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = '.(int) $idShop.')
 				WHERE c.`active` = 1
 			');
         }
@@ -1134,8 +1110,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Is multi Currency activated?
      *
-     * @param int|null $idShop Shop ID
-     *
+     * @param  int|null  $idShop  Shop ID
      * @return bool Indicates whether multi Currency is actived
      */
     public static function isMultiCurrencyActivated($idShop = null)
@@ -1146,8 +1121,6 @@ class CurrencyCore extends ObjectModel
     /**
      * This method aims to update localized data in currency from CLDR reference.
      *
-     * @param array $languages
-     * @param LocaleRepository $localeRepoCLDR
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -1170,15 +1143,16 @@ class CurrencyCore extends ObjectModel
             if (empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with unofficial iso code
                 // Check if data is present in case it's not available for all languages
-                $namesByLang[$language->id] = !empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
-                $symbolsByLang[$language->id] = !empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
+                $namesByLang[$language->id] = ! empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
+                $symbolsByLang[$language->id] = ! empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
                 $this->modified = true;
+
                 continue;
             }
 
             // Symbol is localized, we check if it was manually modified
             $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
-            if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
+            if (! empty($symbol) && ! empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
                 $this->modified = true;
             }
@@ -1186,7 +1160,7 @@ class CurrencyCore extends ObjectModel
 
             // Name is localized, we check if it was manually modified
             $name = $cldrCurrency->getDisplayName();
-            if (!empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
+            if (! empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
                 $name = $originalNames[$language->id];
                 $this->modified = true;
             }

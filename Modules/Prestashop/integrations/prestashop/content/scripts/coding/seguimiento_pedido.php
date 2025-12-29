@@ -1,32 +1,33 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../../config/config.inc.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
 
 // Traemos todos los pedidos del ultimo mes
-$datos = Db::getInstance()->ExecuteS("select id_order from aalv_orders WHERE id_order not in (783136,781727) and date_add >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) order by id_order DESC");
+$datos = Db::getInstance()->ExecuteS('select id_order from aalv_orders WHERE id_order not in (783136,781727) and date_add >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) order by id_order DESC');
 // $datos = Db::getInstance()->ExecuteS("select id_order from aalv_orders WHERE id_order = 785579 order by id_order DESC");
 
 $options = [
-    "http" => [
-        "method" => "GET",
-        "header" => "Content-Type: application/x-www-form-urlencoded\r\n"
-    ]
+    'http' => [
+        'method' => 'GET',
+        'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+    ],
 ];
 
 $context = stream_context_create($options);
 
 foreach ($datos as $value) {
     // Buscamos los datos de Gestion
-    $contentconfirm = @file_get_contents("http://127.0.0.1:58002/api-gestion/pedido-cliente-hist/?identificadororigen=".$value['id_order'], false, $context);
+    $contentconfirm = @file_get_contents('http://127.0.0.1:58002/api-gestion/pedido-cliente-hist/?identificadororigen='.$value['id_order'], false, $context);
 
-    if($contentconfirm === FALSE){
+    if ($contentconfirm === false) {
         continue;
     }
 
@@ -34,15 +35,15 @@ foreach ($datos as $value) {
     $datos = json_encode($jsonconfirmData);
     $array = json_decode($datos, true);
     // dump($array);die();
-    if(isset($array['resource']) && count($array['resource']) == 0){
+    if (isset($array['resource']) && count($array['resource']) == 0) {
         continue;
     }
 
-    if (!isset($array['resource'][0])) {
-        $array['resource'] = array(0 => $array['resource']);
+    if (! isset($array['resource'][0])) {
+        $array['resource'] = [0 => $array['resource']];
     }
 
-    foreach ($array['resource'] as $key => $val){
+    foreach ($array['resource'] as $key => $val) {
 
         $ps_estado = 'NN';
         switch ($val['estado']) {
@@ -73,7 +74,7 @@ foreach ($datos as $value) {
                 break;
         }
 
-        if($ps_estado == 'NN'){
+        if ($ps_estado == 'NN') {
             // $data = ['{message}' => "El estado nuevo es => ".$estado];
             // Mail::Send(
             //     1,
@@ -90,9 +91,10 @@ foreach ($datos as $value) {
             //     false,
             //     1
             // );
-            dump('aaaa');die();
+            dump('aaaa');
+            exit();
             // continue;
-        }else if($ps_estado == 27){
+        } elseif ($ps_estado == 27) {
             // No registramos los estado 27 en PS porque ya estan cargados.
             continue;
         }
@@ -104,27 +106,26 @@ foreach ($datos as $value) {
         $fecha2->modify('+5 minutes');
 
         // Buscamos si el estado ya esta guardado
-        $id_history = Db::getInstance()->ExecuteS("SELECT id_order_state FROM aalv_order_history WHERE id_order = ".$value['id_order']." and date_add = '".$fecha2->format('Y-m-d H:i:s')."' and id_order_state = ".$ps_estado);
+        $id_history = Db::getInstance()->ExecuteS('SELECT id_order_state FROM aalv_order_history WHERE id_order = '.$value['id_order']." and date_add = '".$fecha2->format('Y-m-d H:i:s')."' and id_order_state = ".$ps_estado);
 
         // Verificamos que el estado no existe.
         if (count($id_history) == 0) {
-            $id_historyv2 = Db::getInstance()->ExecuteS("select id_order_state,date_add from aalv_order_history where id_order = ".$value['id_order']." order by date_add DESC limit 1");
+            $id_historyv2 = Db::getInstance()->ExecuteS('select id_order_state,date_add from aalv_order_history where id_order = '.$value['id_order'].' order by date_add DESC limit 1');
 
-            if((int) $id_historyv2[0]['id_order_state'] == $ps_estado){
+            if ((int) $id_historyv2[0]['id_order_state'] == $ps_estado) {
                 // Puede ocurrir que el estado "Sirviéndose" este mas de 1 vez consecutiva, se agrega este parametro para no agregar repetidos
                 continue;
-            }
-            elseif(($ps_estado != 4 && $ps_estado != 60) && $id_historyv2[0]['date_add'] > $fecha2->format('Y-m-d H:i:s')) {
+            } elseif (($ps_estado != 4 && $ps_estado != 60) && $id_historyv2[0]['date_add'] > $fecha2->format('Y-m-d H:i:s')) {
                 continue;
             }
 
             // Buscamos los que tienen esta de seguimiento
-            if($ps_estado == 4 || $ps_estado == 60){
+            if ($ps_estado == 4 || $ps_estado == 60) {
 
                 // Buscamos los datos de Gestion
-                $conte = @file_get_contents("http://127.0.0.1:58002/api-gestion/pedido-cliente-tracking/?identificadororigen=".$value['id_order'], false, $context);
+                $conte = @file_get_contents('http://127.0.0.1:58002/api-gestion/pedido-cliente-tracking/?identificadororigen='.$value['id_order'], false, $context);
 
-                if($conte === FALSE){
+                if ($conte === false) {
                     // echo $value['id_order'];
                     // echo "\n\n";
                     // dump('Revisar porque no existe en tracking ');
@@ -137,8 +138,8 @@ foreach ($datos as $value) {
                 $arr = json_decode($info, true);
 
                 if (isset($arr['resource'][0])) {
-                    foreach ($arr['resource'] as $vall){
-                        if(date("Y-m-d", strtotime($val['fecha'])) == date("Y-m-d", strtotime($vall['fenvio']))){
+                    foreach ($arr['resource'] as $vall) {
+                        if (date('Y-m-d', strtotime($val['fecha'])) == date('Y-m-d', strtotime($vall['fenvio']))) {
                             $arr['resource'] = $vall;
                         }
                     }
@@ -184,10 +185,10 @@ foreach ($datos as $value) {
                         $url = '#';
                         break;
 
-                    // case 100000223: // DBSCHENKER
-                    //     $url = '#';
-                    //     continue;
-                    //     break;
+                        // case 100000223: // DBSCHENKER
+                        //     $url = '#';
+                        //     continue;
+                        //     break;
 
                     default:
                         dump($val);
@@ -197,32 +198,32 @@ foreach ($datos as $value) {
                         break;
                 }
 
-                if($nuevo_transportista){
+                if ($nuevo_transportista) {
                     continue;
                 }
 
-                //Buscamos si ya existe el registro
+                // Buscamos si ya existe el registro
                 // Insertamos los datos en la tabla
-                $resultado = Db::getInstance()->execute("INSERT INTO aalv_alsernet_orders_tracking VALUES (null, ".$value['id_order'].",'".$url."','".$arr['resource']['codtracking']."','".$arr['resource']['fenvio']."','".$arr['resource']['idtransportista']."')");
+                $resultado = Db::getInstance()->execute('INSERT INTO aalv_alsernet_orders_tracking VALUES (null, '.$value['id_order'].",'".$url."','".$arr['resource']['codtracking']."','".$arr['resource']['fenvio']."','".$arr['resource']['idtransportista']."')");
 
                 if ($resultado) {
                     // Si sale todo bien, recien agregamos el estado
                     // Si existe numero de Tracking agregamos el estado
-                    $order = new Order((int)$value['id_order']);
+                    $order = new Order((int) $value['id_order']);
 
                     // Solo si aún no hay albarán
-                    if ((int)$order->delivery_number === 0) {
+                    if ((int) $order->delivery_number === 0) {
                         // Genera número de albarán y fecha y los guarda en ps_orders
                         $order->setDelivery();
 
                     }
-                    $order->current_state = (int)$ps_estado;
+                    $order->current_state = (int) $ps_estado;
                     $order->save();
 
-                    $history = new OrderHistory();
-                    $history->id_order = (int)$order->id;
+                    $history = new OrderHistory;
+                    $history->id_order = (int) $order->id;
                     $history->id_employee = 24;
-                    $history->id_order_state = (int)$ps_estado;
+                    $history->id_order_state = (int) $ps_estado;
                     $history->save();
                     // Db::getInstance()->executeS("UPDATE aalv_orders SET current_state = " . $ps_estado . ", delivery_date = NOW() WHERE id_order = " . $value['id_order'] . ";");
                     // Db::getInstance()->execute("INSERT INTO aalv_order_history (id_employee, id_order, id_order_state, date_add) VALUES (24, " . $value['id_order'] . ", " . $ps_estado . ", '".$fecha2->format('Y-m-d H:i:s')."');");
@@ -239,8 +240,8 @@ foreach ($datos as $value) {
                 // $history->id_employee = 24;
                 // $history->id_order_state = (int)$ps_estado;
                 // $history->save();
-                Db::getInstance()->executeS("UPDATE aalv_orders SET current_state = " . $ps_estado . " WHERE id_order = " . $value['id_order'] . ";");
-                Db::getInstance()->execute("INSERT INTO aalv_order_history (id_employee, id_order, id_order_state, date_add) VALUES (24, " . $value['id_order'] . ", " . $ps_estado . ", '" . $fecha2->format('Y-m-d H:i:s') . "');");
+                Db::getInstance()->executeS('UPDATE aalv_orders SET current_state = '.$ps_estado.' WHERE id_order = '.$value['id_order'].';');
+                Db::getInstance()->execute('INSERT INTO aalv_order_history (id_employee, id_order, id_order_state, date_add) VALUES (24, '.$value['id_order'].', '.$ps_estado.", '".$fecha2->format('Y-m-d H:i:s')."');");
             }
         }
     }

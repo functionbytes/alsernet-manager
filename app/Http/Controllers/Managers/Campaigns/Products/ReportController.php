@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Managers\Campaigns\Products;
 
-use App\Exports\Managers\ProductExport;
-use App\Exports\Managers\ProductKardexExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Warehouse\Exports\Managers\ProductExport;
+use Modules\Warehouse\Exports\Managers\ProductKardexExport;
 
 class ReportController extends Controller
 {

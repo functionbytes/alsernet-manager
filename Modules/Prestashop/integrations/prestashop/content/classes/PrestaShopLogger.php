@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -33,8 +34,11 @@ class PrestaShopLoggerCore extends ObjectModel
      * List of log level types.
      */
     const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
+
     const LOG_SEVERITY_LEVEL_WARNING = 2;
+
     const LOG_SEVERITY_LEVEL_ERROR = 3;
+
     const LOG_SEVERITY_LEVEL_MAJOR = 4;
 
     /** @var int Log id */
@@ -104,12 +108,12 @@ class PrestaShopLoggerCore extends ObjectModel
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
      *
      * @param Logger
-     * @param PrestaShopLogger $log
+     * @param  PrestaShopLogger  $log
      */
     public static function sendByMail($log)
     {
         $config_severity = (int) Configuration::get('PS_LOGS_BY_EMAIL');
-        if (!empty($config_severity) && $config_severity <= (int) $log->severity) {
+        if (! empty($config_severity) && $config_severity <= (int) $log->severity) {
             $to = array_map('trim', explode(',', Configuration::get('PS_LOGS_EMAIL_RECEIVERS')));
             $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
             Mail::Send(
@@ -130,18 +134,17 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * add a log item to the database and send a mail if configured for this $severity.
      *
-     * @param string $message the log message
-     * @param int $severity
-     * @param int $errorCode
-     * @param string $objectType
-     * @param int $objectId
-     * @param bool $allowDuplicate if set to true, can log several time the same information (not recommended)
-     *
+     * @param  string  $message  the log message
+     * @param  int  $severity
+     * @param  int  $errorCode
+     * @param  string  $objectType
+     * @param  int  $objectId
+     * @param  bool  $allowDuplicate  if set to true, can log several time the same information (not recommended)
      * @return bool true if succeed
      */
     public static function addLog($message, $severity = 1, $errorCode = null, $objectType = null, $objectId = null, $allowDuplicate = false, $idEmployee = null)
     {
-        $log = new PrestaShopLogger();
+        $log = new PrestaShopLogger;
         $log->severity = (int) $severity;
         $log->error_code = (int) $errorCode;
         $log->message = pSQL($message);
@@ -158,7 +161,7 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->id_employee = (int) $idEmployee;
         }
 
-        if (!empty($objectType) && !empty($objectId)) {
+        if (! empty($objectType) && ! empty($objectId)) {
             $log->object_type = pSQL($objectType);
             $log->object_id = (int) $objectId;
         }
@@ -172,7 +175,7 @@ class PrestaShopLoggerCore extends ObjectModel
             PrestaShopLogger::sendByMail($log);
         }
 
-        if ($allowDuplicate || !$log->_isPresent()) {
+        if ($allowDuplicate || ! $log->_isPresent()) {
             $res = $log->add();
             if ($res) {
                 self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()]) ? self::$is_present[$log->getHash()] + 1 : 1;
@@ -191,14 +194,14 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (empty($this->hash)) {
             $this->hash = md5(
-                $this->message .
-                $this->severity .
-                $this->error_code .
-                $this->object_type .
-                $this->object_id .
-                $this->id_shop .
-                $this->id_shop_group .
-                $this->id_lang .
+                $this->message.
+                $this->severity.
+                $this->error_code.
+                $this->object_type.
+                $this->object_id.
+                $this->id_shop.
+                $this->id_shop_group.
+                $this->id_lang.
                 $this->in_all_shops
             );
         }
@@ -208,7 +211,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
+        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
     }
 
     /**
@@ -228,20 +231,20 @@ class PrestaShopLoggerCore extends ObjectModel
      */
     protected function isPresent()
     {
-        if (!isset(self::$is_present[md5($this->message)])) {
+        if (! isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue(
-                (new DbQuery())
+                (new DbQuery)
                     ->select('COUNT(*)')
                     ->from('log', 'l')
-                    ->where('message = "' . pSQL($this->message) . '"')
-                    ->where('severity = ' . (int) $this->severity)
-                    ->where('error_code = ' . (int) $this->error_code)
-                    ->where('object_type = "' . pSQL($this->object_type) . '"')
-                    ->where('object_id = ' . (int) $this->object_id)
-                    ->where('id_shop = ' . (int) $this->id_shop)
-                    ->where('id_shop_group = ' . (int) $this->id_shop_group)
-                    ->where('id_lang = ' . (int) $this->id_lang)
-                    ->where('in_all_shops = ' . (int) $this->in_all_shops)
+                    ->where('message = "'.pSQL($this->message).'"')
+                    ->where('severity = '.(int) $this->severity)
+                    ->where('error_code = '.(int) $this->error_code)
+                    ->where('object_type = "'.pSQL($this->object_type).'"')
+                    ->where('object_id = '.(int) $this->object_id)
+                    ->where('id_shop = '.(int) $this->id_shop)
+                    ->where('id_shop_group = '.(int) $this->id_shop_group)
+                    ->where('id_lang = '.(int) $this->id_lang)
+                    ->where('in_all_shops = '.(int) $this->in_all_shops)
             );
         }
 

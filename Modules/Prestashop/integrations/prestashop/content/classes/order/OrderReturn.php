@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -87,8 +88,8 @@ class OrderReturnCore extends ObjectModel
     public function checkEnoughProduct($order_detail_list, $product_qty_list, $customization_ids, $customization_qty_input)
     {
         $order = new Order((int) $this->id_order);
-        if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+        if (! Validate::isLoadedObject($order)) {
+            exit(Tools::displayError());
         }
         $products = $order->getProducts();
         /* Products already returned */
@@ -102,7 +103,7 @@ class OrderReturnCore extends ObjectModel
         /* Quantity check */
         if ($order_detail_list) {
             foreach (array_keys($order_detail_list) as $key) {
-                if (!isset($product_qty_list[$key])) {
+                if (! isset($product_qty_list[$key])) {
                     return false;
                 }
                 if ($qty = (int) $product_qty_list[$key]) {
@@ -118,7 +119,7 @@ class OrderReturnCore extends ObjectModel
             foreach ($customization_ids as $customizations) {
                 foreach ($customizations as $customization_id) {
                     $customization_id = (int) $customization_id;
-                    if (!isset($ordered_customizations[$customization_id])) {
+                    if (! isset($ordered_customizations[$customization_id])) {
                         return false;
                     }
                     $quantity = (isset($customization_qty_input[$customization_id]) ? (int) $customization_qty_input[$customization_id] : 0);
@@ -134,27 +135,27 @@ class OrderReturnCore extends ObjectModel
 
     public function countProduct()
     {
-        if (!$data = Db::getInstance()->getRow('
+        if (! $data = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order_return`) AS total
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $this->id)) {
+		FROM `'._DB_PREFIX_.'order_return_detail`
+		WHERE `id_order_return` = '.(int) $this->id)) {
             return false;
         }
 
         return (int) ($data['total']);
     }
 
-    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null)
+    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, ?Context $context = null)
     {
-        if (!$context) {
+        if (! $context) {
             $context = Context::getContext();
         }
         $data = Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return`
-		WHERE `id_customer` = ' . (int) $customer_id .
-        ($order_id ? ' AND `id_order` = ' . (int) $order_id : '') .
-        ($no_denied ? ' AND `state` != 4' : '') . '
+		FROM `'._DB_PREFIX_.'order_return`
+		WHERE `id_customer` = '.(int) $customer_id.
+        ($order_id ? ' AND `id_order` = '.(int) $order_id : '').
+        ($no_denied ? ' AND `state` != 4' : '').'
 		ORDER BY `date_add` DESC');
         foreach ($data as $k => $or) {
             $state = new OrderReturnState($or['state']);
@@ -172,14 +173,13 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $id_order_return);
+		FROM `'._DB_PREFIX_.'order_return_detail`
+		WHERE `id_order_return` = '.(int) $id_order_return);
     }
 
     /**
-     * @param int $order_return_id
-     * @param Order $order
-     *
+     * @param  int  $order_return_id
+     * @param  Order  $order
      * @return array
      */
     public static function getOrdersReturnProducts($order_return_id, $order)
@@ -207,8 +207,8 @@ class OrderReturnCore extends ObjectModel
     {
         $returns = Customization::getReturnedCustomizations($id_order);
         $order = new Order((int) $id_order);
-        if (!Validate::isLoadedObject($order)) {
-            die(Tools::displayError());
+        if (! Validate::isLoadedObject($order)) {
+            exit(Tools::displayError());
         }
         $products = $order->getProducts();
 
@@ -225,43 +225,41 @@ class OrderReturnCore extends ObjectModel
 
     public static function deleteOrderReturnDetail($id_order_return, $id_order_detail, $id_customization = 0)
     {
-        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_return_detail` WHERE `id_order_detail` = ' . (int) $id_order_detail . ' AND `id_order_return` = ' . (int) $id_order_return . ' AND `id_customization` = ' . (int) $id_customization);
+        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int) $id_order_detail.' AND `id_order_return` = '.(int) $id_order_return.' AND `id_customization` = '.(int) $id_customization);
     }
 
     /**
      * Get return details for one product line.
-     *
-     * @param $id_order_detail
      */
     public static function getProductReturnDetail($id_order_detail)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT product_quantity, date_add, orsl.name as state
-			FROM `' . _DB_PREFIX_ . 'order_return_detail` ord
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return` o
+			FROM `'._DB_PREFIX_.'order_return_detail` ord
+			LEFT JOIN `'._DB_PREFIX_.'order_return` o
 			ON o.id_order_return = ord.id_order_return
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl
-			ON orsl.id_order_return_state = o.state AND orsl.id_lang = ' . (int) Context::getContext()->language->id . '
-			WHERE ord.`id_order_detail` = ' . (int) $id_order_detail);
+			LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl
+			ON orsl.id_order_return_state = o.state AND orsl.id_lang = '.(int) Context::getContext()->language->id.'
+			WHERE ord.`id_order_detail` = '.(int) $id_order_detail);
     }
 
     /**
      * Add returned quantity to inventaries list.
      *
-     * @param array $products
-     * @param int $id_order
+     * @param  array  $products
+     * @param  int  $id_order
      */
     public static function addReturnedQuantity(&$products, $id_order)
     {
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
-			FROM ' . _DB_PREFIX_ . 'order_detail od
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord
+			FROM '._DB_PREFIX_.'order_detail od
+			LEFT JOIN '._DB_PREFIX_.'order_return_detail ord
 			ON ord.id_order_detail = od.id_order_detail
-			WHERE od.id_order = ' . (int) $id_order . '
+			WHERE od.id_order = '.(int) $id_order.'
 			GROUP BY od.id_order_detail'
         );
-        if (!$details) {
+        if (! $details) {
             return;
         }
 

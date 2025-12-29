@@ -33,10 +33,15 @@
 class TemplateFinderCore
 {
     private $directories;
+
     private $extension;
+
     private $productListEntities = ['category', 'manufacturer', 'supplier'];
+
     private $productListSearchEntities = ['search', 'price-drop', 'best-sale', 'prices-drop', 'best-sales', 'new-inventaries'];
+
     private $productEntities = ['product'];
+
     private $brandListEntities = ['manufacturers', 'suppliers'];
 
     public function __construct(array $directories, $extension)
@@ -53,19 +58,19 @@ class TemplateFinderCore
 
         foreach ($this->directories as $dir) {
             foreach ($templates as $tpl) {
-                if (!empty($locale) && is_file($dir . $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension)) {
-                    return $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension;
+                if (! empty($locale) && is_file($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
+                    return $locale.DIRECTORY_SEPARATOR.$tpl.$this->extension;
                 }
-                if (is_file($dir . $tpl . $this->extension)) {
-                    return $tpl . $this->extension;
+                if (is_file($dir.$tpl.$this->extension)) {
+                    return $tpl.$this->extension;
                 }
-                if (is_file($dir . $tpl) && false !== strpos($tpl, $this->extension)) {
+                if (is_file($dir.$tpl) && strpos($tpl, $this->extension) !== false) {
                     return $tpl;
                 }
             }
         }
 
-        throw new PrestaShopException('No template found for ' . $template);
+        throw new PrestaShopException('No template found for '.$template);
     }
 
     private function getTemplateHierarchy($template, $entity, $id)
@@ -75,20 +80,20 @@ class TemplateFinderCore
 
         if (in_array($entity, $this->getProductListEntities())) {
             $templates = [
-                'catalog/listing/' . $entity . '-' . $id,
-                'catalog/listing/' . $entity,
+                'catalog/listing/'.$entity.'-'.$id,
+                'catalog/listing/'.$entity,
                 $template,
                 'catalog/listing/product-list',
             ];
         } elseif (in_array($entity, $this->getProductListSearchEntities())) {
             $templates = [
-                'catalog/listing/' . $entity,
+                'catalog/listing/'.$entity,
                 $template,
                 'catalog/listing/product-list',
             ];
         } elseif (in_array($entity, $this->getProductEntities())) {
             $templates = [
-                'catalog/' . $entity . '-' . $id,
+                'catalog/'.$entity.'-'.$id,
                 $template,
                 'catalog/product',
             ];
@@ -97,9 +102,9 @@ class TemplateFinderCore
                 $template,
                 'catalog/brands',
             ];
-        } elseif ('cms' === $entity) {
+        } elseif ($entity === 'cms') {
             $templates = [
-                'cms/page-' . $id,
+                'cms/page-'.$id,
                 $template,
                 'cms/page',
             ];
@@ -123,8 +128,7 @@ class TemplateFinderCore
     /**
      * Set productListEntities.
      *
-     * @param array $productListEntities
-     *
+     * @param  array  $productListEntities
      * @return TemplateFinderCore
      */
     public function setProductListEntities($productListEntities)
@@ -147,8 +151,7 @@ class TemplateFinderCore
     /**
      * Set productListSearch.
      *
-     * @param array $productListSearch
-     *
+     * @param  array  $productListSearch
      * @return TemplateFinderCore
      */
     public function setProductListSearchEntities($productListSearchEntities)
@@ -171,8 +174,7 @@ class TemplateFinderCore
     /**
      * Set productEntities.
      *
-     * @param array $productEntities
-     *
+     * @param  array  $productEntities
      * @return TemplateFinderCore
      */
     public function setProductEntities($productEntities)
@@ -195,8 +197,7 @@ class TemplateFinderCore
     /**
      * Set brandListEntities.
      *
-     * @param array $brandListEntities
-     *
+     * @param  array  $brandListEntities
      * @return TemplateFinderCore
      */
     public function setBrandListEntities($brandListEntities)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,7 +38,7 @@ class HelperImageUploaderCore extends HelperUploader
 
     public function getFilePath($file_name = null)
     {
-        //Force file path
+        // Force file path
         return tempnam($this->getSavePath(), $this->getUniqueFileName());
     }
 

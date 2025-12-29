@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,9 @@
 class OrderInvoiceCore extends ObjectModel
 {
     const TAX_EXCL = 0;
+
     const TAX_INCL = 1;
+
     const DETAIL = 2;
 
     /** @var int */
@@ -130,12 +133,12 @@ class OrderInvoiceCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *, od.ecotax as od_ecotax, od.ecotax_tax_rate as od_ecotax_tax_rate
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product` p
+        FROM `'._DB_PREFIX_.'order_detail` od
+        LEFT JOIN `'._DB_PREFIX_.'product` p
         ON p.id_product = od.product_id
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-        WHERE od.`id_order` = ' . (int) $this->id_order . '
-        ' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int) $this->id : '') . ' ORDER BY od.`product_name`');
+        LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+        WHERE od.`id_order` = '.(int) $this->id_order.'
+        '.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int) $this->id : '').' ORDER BY od.`product_name`');
     }
 
     public static function getInvoiceByNumber($id_invoice)
@@ -144,18 +147,18 @@ class OrderInvoiceCore extends ObjectModel
             $id_invoice = (int) $id_invoice;
         } elseif (is_string($id_invoice)) {
             $matches = [];
-            if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
+            if (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id_invoice, $matches)) {
                 $id_invoice = $matches[1];
             }
         }
-        if (!$id_invoice) {
+        if (! $id_invoice) {
             return false;
         }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT `id_order_invoice`
-            FROM `' . _DB_PREFIX_ . 'order_invoice`
-            WHERE number = ' . (int) $id_invoice
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE number = '.(int) $id_invoice
         );
 
         return $id_order_invoice ? new OrderInvoice($id_order_invoice) : false;
@@ -168,7 +171,7 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getProducts($products = false, $selected_products = false, $selected_qty = false)
     {
-        if (!$products) {
+        if (! $products) {
             $products = $this->getProductsDetail();
         }
 
@@ -184,7 +187,7 @@ class OrderInvoiceCore extends ObjectModel
                         $row['product_quantity'] = (int) $selected_qty[$key];
                     }
                 }
-                if (!$row['product_quantity']) {
+                if (! $row['product_quantity']) {
                     continue;
                 }
             }
@@ -196,7 +199,7 @@ class OrderInvoiceCore extends ObjectModel
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
-            if ($row['download_hash'] && !empty($row['download_hash'])) {
+            if ($row['download_hash'] && ! empty($row['download_hash'])) {
                 $row['filename'] = ProductDownload::getFilenameFromIdProduct((int) $row['product_id']);
                 // Get the display filename
                 $row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
@@ -265,7 +268,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * @param array &$product
+     * @param  array  &$product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -281,24 +284,24 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param  array  &$product
      */
     protected function setProductImageInformations(&$product)
     {
         if (isset($product['product_attribute_id']) && $product['product_attribute_id']) {
             $id_image = Db::getInstance()->getValue('
                 SELECT image_shop.id_image
-                FROM ' . _DB_PREFIX_ . 'product_attribute_image pai' .
-                Shop::addSqlAssociation('image', 'pai', true) . '
-                WHERE id_product_attribute = ' . (int) $product['product_attribute_id']);
+                FROM '._DB_PREFIX_.'product_attribute_image pai'.
+                Shop::addSqlAssociation('image', 'pai', true).'
+                WHERE id_product_attribute = '.(int) $product['product_attribute_id']);
         }
 
-        if (!isset($id_image) || !$id_image) {
+        if (! isset($id_image) || ! $id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT image_shop.id_image
-                FROM ' . _DB_PREFIX_ . 'image i' .
-                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
-                WHERE i.id_product = ' . (int) $product['product_id']);
+                FROM '._DB_PREFIX_.'image i'.
+                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE i.id_product = '.(int) $product['product_id']);
         }
 
         $product['image'] = null;
@@ -322,24 +325,24 @@ class OrderInvoiceCore extends ObjectModel
         // if one of the order details use the tax computation method the display will be different
         return Db::getInstance()->getValue('
     		SELECT od.`tax_computation_method`
-    		FROM `' . _DB_PREFIX_ . 'order_detail_tax` odt
-    		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-    		WHERE od.`id_order` = ' . (int) $this->id_order . '
-    		AND od.`id_order_invoice` = ' . (int) $this->id . '
-    		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
+    		FROM `'._DB_PREFIX_.'order_detail_tax` odt
+    		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+    		WHERE od.`id_order` = '.(int) $this->id_order.'
+    		AND od.`id_order_invoice` = '.(int) $this->id.'
+    		AND od.`tax_computation_method` = '.(int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
             || Configuration::get(
                 'PS_INVOICE_TAXES_BREAKDOWN'
-        );
+            );
     }
 
     public function displayTaxBasesInProductTaxesBreakdown()
     {
-        return !$this->useOneAfterAnotherTaxComputationMethod();
+        return ! $this->useOneAfterAnotherTaxComputationMethod();
     }
 
     public function getOrder()
     {
-        if (!$this->order) {
+        if (! $this->order) {
             $this->order = new Order($this->id_order);
         }
 
@@ -348,11 +351,11 @@ class OrderInvoiceCore extends ObjectModel
 
     public function getProductTaxesBreakdown($order = null)
     {
-        if (!$order) {
+        if (! $order) {
             $order = $this->getOrder();
         }
 
-        $sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
+        $sum_composite_taxes = ! $this->useOneAfterAnotherTaxComputationMethod();
 
         // $breakdown will be an array with tax rates as keys and at least the columns:
         // 	- 'total_price_tax_excl'
@@ -367,7 +370,7 @@ class OrderInvoiceCore extends ObjectModel
                 if ($this->id !== (int) $row['id_order_invoice']) {
                     continue;
                 }
-                if (!isset($grouped_details[$row['id_order_detail']])) {
+                if (! isset($grouped_details[$row['id_order_detail']])) {
                     $grouped_details[$row['id_order_detail']] = [
                         'tax_rate' => 0,
                         'total_tax_base' => 0,
@@ -386,7 +389,7 @@ class OrderInvoiceCore extends ObjectModel
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
-            if (!isset($breakdown[$rate])) {
+            if (! isset($breakdown[$rate])) {
                 $breakdown[$rate] = [
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
@@ -414,8 +417,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param Order $order
-     *
+     * @param  Order  $order
      * @return array
      */
     public function getShippingTaxesBreakdown($order)
@@ -437,9 +439,9 @@ class OrderInvoiceCore extends ObjectModel
         if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') || Configuration::get('PS_ATCP_SHIPWRAP')) {
             $shipping_breakdown = Db::getInstance()->executeS(
                 'SELECT t.id_tax, t.rate, oit.amount as total_amount
-                 FROM `' . _DB_PREFIX_ . 'tax` t
-                 INNER JOIN `' . _DB_PREFIX_ . 'order_invoice_tax` oit ON oit.id_tax = t.id_tax
-                 WHERE oit.type = "shipping" AND oit.id_order_invoice = ' . (int) $this->id
+                 FROM `'._DB_PREFIX_.'tax` t
+                 INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+                 WHERE oit.type = "shipping" AND oit.id_order_invoice = '.(int) $this->id
             );
 
             $sum_of_split_taxes = 0;
@@ -497,9 +499,9 @@ class OrderInvoiceCore extends ObjectModel
 
         $wrapping_breakdown = Db::getInstance()->executeS(
             'SELECT t.id_tax, t.rate, oit.amount as total_amount
-            FROM `' . _DB_PREFIX_ . 'tax` t
-            INNER JOIN `' . _DB_PREFIX_ . 'order_invoice_tax` oit ON oit.id_tax = t.id_tax
-            WHERE oit.type = "wrapping" AND oit.id_order_invoice = ' . (int) $this->id
+            FROM `'._DB_PREFIX_.'tax` t
+            INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+            WHERE oit.type = "wrapping" AND oit.id_order_invoice = '.(int) $this->id
         );
 
         $sum_of_split_taxes = 0;
@@ -531,7 +533,7 @@ class OrderInvoiceCore extends ObjectModel
             Tools::spreadAmount($delta_base, Context::getContext()->getComputingPrecision(), $wrapping_breakdown, 'total_tax_excl');
         }
 
-        if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP')) {
+        if (! Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && ! Configuration::get('PS_ATCP_SHIPWRAP')) {
             $wrapping_breakdown = [
                 [
                     'total_tax_excl' => $this->total_wrapping_tax_excl,
@@ -555,9 +557,9 @@ class OrderInvoiceCore extends ObjectModel
     {
         $result = Db::getInstance()->executeS('
         SELECT `ecotax_tax_rate` as `rate`, SUM(`ecotax` * `product_quantity`) as `ecotax_tax_excl`, SUM(`ecotax` * `product_quantity`) as `ecotax_tax_incl`
-        FROM `' . _DB_PREFIX_ . 'order_detail`
-        WHERE `id_order` = ' . (int) $this->id_order . '
-        AND `id_order_invoice` = ' . (int) $this->id . '
+        FROM `'._DB_PREFIX_.'order_detail`
+        WHERE `id_order` = '.(int) $this->id_order.'
+        AND `id_order_invoice` = '.(int) $this->id.'
         GROUP BY `ecotax_tax_rate`');
 
         $priceDisplayPrecision = Context::getContext()->getComputingPrecision();
@@ -578,20 +580,17 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param $date_from
-     * @param $date_to
-     *
      * @return array collection of OrderInvoice
      */
     public static function getByDateInterval($date_from, $date_to)
     {
         $order_invoice_list = Db::getInstance()->executeS('
             SELECT oi.*
-            FROM `' . _DB_PREFIX_ . 'order_invoice` oi
-            LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = oi.`id_order`)
-            WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \'' . pSQL($date_to) . '\'
-            AND oi.date_add >= \'' . pSQL($date_from) . '\'
-            ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o') . '
+            FROM `'._DB_PREFIX_.'order_invoice` oi
+            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+            WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
+            AND oi.date_add >= \''.pSQL($date_from).'\'
+            '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
             AND oi.number > 0
             ORDER BY oi.date_add ASC
         ');
@@ -602,18 +601,16 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $id_order_state
-     *
      * @return array collection of OrderInvoice
      */
     public static function getByStatus($id_order_state)
     {
         $order_invoice_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT oi.*
-            FROM `' . _DB_PREFIX_ . 'order_invoice` oi
-            LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = oi.`id_order`)
-            WHERE ' . (int) $id_order_state . ' = o.current_state
-            ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o') . '
+            FROM `'._DB_PREFIX_.'order_invoice` oi
+            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+            WHERE '.(int) $id_order_state.' = o.current_state
+            '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
             AND oi.number > 0
             ORDER BY oi.`date_add` ASC
         ');
@@ -624,20 +621,17 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $date_from
-     * @param $date_to
-     *
      * @return array collection of invoice
      */
     public static function getByDeliveryDateInterval($date_from, $date_to)
     {
         $order_invoice_list = Db::getInstance()->executeS('
             SELECT oi.*
-            FROM `' . _DB_PREFIX_ . 'order_invoice` oi
-            LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = oi.`id_order`)
-            WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \'' . pSQL($date_to) . '\'
-            AND oi.delivery_date >= \'' . pSQL($date_from) . '\'
-            ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o') . '
+            FROM `'._DB_PREFIX_.'order_invoice` oi
+            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+            WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
+            AND oi.delivery_date >= \''.pSQL($date_from).'\'
+            '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
             ORDER BY oi.delivery_date ASC
         ');
 
@@ -646,8 +640,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * @since 1.5
-     *
-     * @param $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
     {
@@ -661,21 +653,18 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * @since 1.5
-     *
-     * @param $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
     {
         $sql = 'SELECT `id_carrier`
-                FROM `' . _DB_PREFIX_ . 'order_carrier`
-                WHERE `id_order_invoice` = ' . (int) $id_order_invoice;
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order_invoice` = '.(int) $id_order_invoice;
 
         return Db::getInstance()->getValue($sql);
     }
 
     /**
-     * @param int $id
-     *
+     * @param  int  $id
      * @return OrderInvoice
      *
      * @throws PrestaShopException
@@ -683,8 +672,8 @@ class OrderInvoiceCore extends ObjectModel
     public static function retrieveOneById($id)
     {
         $order_invoice = new OrderInvoice($id);
-        if (!Validate::isLoadedObject($order_invoice)) {
-            throw new PrestaShopException('Can\'t load Order Invoice object for id: ' . $id);
+        if (! Validate::isLoadedObject($order_invoice)) {
+            throw new PrestaShopException('Can\'t load Order Invoice object for id: '.$id);
         }
 
         return $order_invoice;
@@ -699,8 +688,8 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getTotalPaid()
     {
-        $cache_id = 'order_invoice_paid_' . (int) $this->id;
-        if (!Cache::isStored($cache_id)) {
+        $cache_id = 'order_invoice_paid_'.(int) $this->id;
+        if (! Cache::isStored($cache_id)) {
             $amount = 0;
             $payments = OrderPayment::getByInvoiceId($this->id);
             foreach ($payments as $payment) {
@@ -724,7 +713,7 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getRestPaid()
     {
-        if (!$this->number) {
+        if (! $this->number) {
             return 0;
         }
 
@@ -740,7 +729,7 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getSibling()
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('oip2.id_order_invoice');
         $query->from('order_invoice_payment', 'oip1');
         $query->innerJoin(
@@ -750,10 +739,10 @@ class OrderInvoiceCore extends ObjectModel
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
-        $query->where('oip1.id_order_invoice = ' . (int) $this->id);
+        $query->where('oip1.id_order_invoice = '.(int) $this->id);
 
         $invoices = Db::getInstance()->executeS($query);
-        if (!$invoices) {
+        if (! $invoices) {
             return [];
         }
 
@@ -771,13 +760,13 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Return total to paid of sibling invoices.
      *
-     * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
+     * @param  int  $mod  TAX_EXCL, TAX_INCL, DETAIL
      *
      * @since 1.5.0.14
      */
     public function getSiblingTotal($mod = OrderInvoice::TAX_INCL)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('SUM(oi.total_paid_tax_incl) as total_paid_tax_incl, SUM(oi.total_paid_tax_excl) as total_paid_tax_excl');
         $query->from('order_invoice_payment', 'oip1');
         $query->innerJoin(
@@ -792,7 +781,7 @@ class OrderInvoiceCore extends ObjectModel
             'oi',
             'oi.id_order_invoice = oip2.id_order_invoice'
         );
-        $query->where('oip1.id_order_invoice = ' . (int) $this->id);
+        $query->where('oip1.id_order_invoice = '.(int) $this->id);
 
         $row = Db::getInstance()->getRow($query);
 
@@ -817,20 +806,20 @@ class OrderInvoiceCore extends ObjectModel
     {
         static $cache;
 
-        if (!isset($cache[$this->id])) {
+        if (! isset($cache[$this->id])) {
             $res = Db::getInstance()->getRow('
             SELECT SUM(sub.paid) paid, SUM(sub.to_paid) to_paid
             FROM (
                 SELECT
                     op.amount as paid, SUM(oi.total_paid_tax_incl) to_paid
-                FROM `' . _DB_PREFIX_ . 'order_invoice_payment` oip1
-                INNER JOIN `' . _DB_PREFIX_ . 'order_invoice_payment` oip2
+                FROM `'._DB_PREFIX_.'order_invoice_payment` oip1
+                INNER JOIN `'._DB_PREFIX_.'order_invoice_payment` oip2
                     ON oip2.id_order_payment = oip1.id_order_payment
-                INNER JOIN `' . _DB_PREFIX_ . 'order_invoice` oi
+                INNER JOIN `'._DB_PREFIX_.'order_invoice` oi
                     ON oi.id_order_invoice = oip2.id_order_invoice
-                INNER JOIN `' . _DB_PREFIX_ . 'order_payment` op
+                INNER JOIN `'._DB_PREFIX_.'order_payment` op
                     ON op.id_order_payment = oip2.id_order_payment
-                WHERE oip1.id_order_invoice = ' . (int) $this->id . '
+                WHERE oip1.id_order_invoice = '.(int) $this->id.'
                 GROUP BY op.id_order_payment
             ) sub');
             $cache[$this->id] = round($res['to_paid'] - $res['paid'], 2);
@@ -864,8 +853,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5.0.2
      *
-     * @param int $id_lang for invoice_prefix
-     *
+     * @param  int  $id_lang  for invoice_prefix
      * @return string
      */
     public function getInvoiceNumberFormatted($id_lang, $id_shop = null)
@@ -877,7 +865,7 @@ class OrderInvoiceCore extends ObjectModel
             'number' => (int) $this->number,
         ]);
 
-        if (!empty($invoice_formatted_number)) {
+        if (! empty($invoice_formatted_number)) {
             return $invoice_formatted_number;
         }
 
@@ -894,8 +882,8 @@ class OrderInvoiceCore extends ObjectModel
     {
         $is_correct = true;
         foreach ($taxes_amount as $id_tax => $amount) {
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
-                    VALUES (' . (int) $this->id . ', \'shipping\', ' . (int) $id_tax . ', ' . (float) $amount . ')';
+            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
+                    VALUES ('.(int) $this->id.', \'shipping\', '.(int) $id_tax.', '.(float) $amount.')';
 
             $is_correct &= Db::getInstance()->execute($sql);
         }
@@ -907,8 +895,8 @@ class OrderInvoiceCore extends ObjectModel
     {
         $is_correct = true;
         foreach ($taxes_amount as $id_tax => $amount) {
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
-                    VALUES (' . (int) $this->id . ', \'wrapping\', ' . (int) $id_tax . ', ' . (float) $amount . ')';
+            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
+                    VALUES ('.(int) $this->id.', \'wrapping\', '.(int) $id_tax.', '.(float) $amount.')';
 
             $is_correct &= Db::getInstance()->execute($sql);
         }
@@ -918,7 +906,7 @@ class OrderInvoiceCore extends ObjectModel
 
     public static function getCurrentFormattedShopAddress($id_shop = null)
     {
-        $address = new Address();
+        $address = new Address;
         $address->company = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
         $address->address1 = Configuration::get('PS_SHOP_ADDR1', null, null, $id_shop);
         $address->address2 = Configuration::get('PS_SHOP_ADDR2', null, null, $id_shop);
@@ -946,8 +934,8 @@ class OrderInvoiceCore extends ObjectModel
             $address = OrderInvoice::getCurrentFormattedShopAddress($id_shop);
             $escaped_address = $db->escape($address, true, true);
 
-            $db->execute('UPDATE `' . _DB_PREFIX_ . 'order_invoice` INNER JOIN `' . _DB_PREFIX_ . 'orders` USING (`id_order`)
-                SET `shop_address` = \'' . $escaped_address . '\' WHERE `shop_address` IS NULL AND `id_shop` = ' . $id_shop);
+            $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)
+                SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL AND `id_shop` = '.$id_shop);
         }
     }
 }

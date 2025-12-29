@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,8 +29,11 @@ abstract class TreeToolbarButtonCore
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
     protected $_attributes;
+
     private $_context;
+
     protected $_template;
+
     protected $_template_directory;
 
     public function __construct($label, $id = null, $name = null, $class = null)
@@ -47,7 +51,7 @@ abstract class TreeToolbarButtonCore
 
     public function setAttribute($name, $value)
     {
-        if (!isset($this->_attributes)) {
+        if (! isset($this->_attributes)) {
             $this->_attributes = [];
         }
 
@@ -63,7 +67,7 @@ abstract class TreeToolbarButtonCore
 
     public function setAttributes($value)
     {
-        if (!is_array($value) && !$value instanceof Traversable) {
+        if (! is_array($value) && ! $value instanceof Traversable) {
             throw new PrestaShopException('Data value must be an traversable array');
         }
 
@@ -74,7 +78,7 @@ abstract class TreeToolbarButtonCore
 
     public function getAttributes()
     {
-        if (!isset($this->_attributes)) {
+        if (! isset($this->_attributes)) {
             $this->_attributes = [];
         }
 
@@ -100,7 +104,7 @@ abstract class TreeToolbarButtonCore
 
     public function getContext()
     {
-        if (!isset($this->_context)) {
+        if (! isset($this->_context)) {
             $this->_context = Context::getContext();
         }
 
@@ -158,7 +162,7 @@ abstract class TreeToolbarButtonCore
 
     public function getTemplateDirectory()
     {
-        if (!isset($this->_template_directory)) {
+        if (! isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(self::DEFAULT_TEMPLATE_DIRECTORY);
         }
 
@@ -172,25 +176,25 @@ abstract class TreeToolbarButtonCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
-        ) . $this->getTemplateDirectory() . $template)) {
+            $this->getContext()->controller->getTemplatePath()
+        ).$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                . $this->getTemplateDirectory() . $template;
+                .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    . $this->getTemplateDirectory() . $template;
+                    .$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template;
+                .$this->getTemplateDirectory().$template;
         } else {
-            return $this->getTemplateDirectory() . $template;
+            return $this->getTemplateDirectory().$template;
         }
     }
 

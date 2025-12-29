@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,7 +25,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-require_once _PS_MODULE_DIR_ . 'alsernetshopping/controllers/front/GtmController.php';
+require_once _PS_MODULE_DIR_.'alsernetshopping/controllers/front/GtmController.php';
 
 class OrderConfirmationController extends OrderConfirmationControllerCore
 {
@@ -37,13 +38,12 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
 
         $document = '';
 
-        if($order->isPaid()) {
+        if ($order->isPaid()) {
             $document = $order->generateDocumentHtml();
         }
 
-
         // Asegurar que el contexto tenga el cart correcto para productos customizados
-        if ($order->id_cart && (!$this->context->cart || !$this->context->cart->id)) {
+        if ($order->id_cart && (! $this->context->cart || ! $this->context->cart->id)) {
             $this->context->cart = new Cart($order->id_cart);
         }
 
@@ -63,16 +63,16 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                 FROM `'._DB_PREFIX_.'product` p
                 '.Shop::addSqlAssociation('product', 'p').'
                 LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-                    ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
+                    ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int) $this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
                 LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
-                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$this->context->shop->id.')
+                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int) $this->context->shop->id.')
                 LEFT JOIN `'._DB_PREFIX_.'image_lang` il
-                    ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->context->language->id.')
+                    ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int) $this->context->language->id.')
                 LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
                     ON m.`id_manufacturer` = p.`id_manufacturer`
                 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-                    ON (product_shop.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
-                WHERE p.`id_product` = '.(int)$product['id_product'];
+                    ON (product_shop.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int) $this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
+                WHERE p.`id_product` = '.(int) $product['id_product'];
 
             $productData = Db::getInstance()->getRow($sql);
 
@@ -100,8 +100,8 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                         $processedProduct['id_image'] = $productData['id_image'];
                         $processedProduct['cover'] = [
                             'id_image' => $productData['id_image'],
-                            'legend' => !empty($productData['legend']) ? $productData['legend'] : $processedProduct['name'],
-                            'bySize' => []
+                            'legend' => ! empty($productData['legend']) ? $productData['legend'] : $processedProduct['name'],
+                            'bySize' => [],
                         ];
 
                         // Generar URLs para diferentes tamaños de imagen
@@ -119,13 +119,13 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                                 'height' => $imageType['height'],
                                 'sources' => [
                                     'avif' => str_replace('.jpg', '.avif', $imageUrl),
-                                    'webp' => str_replace('.jpg', '.webp', $imageUrl)
-                                ]
+                                    'webp' => str_replace('.jpg', '.webp', $imageUrl),
+                                ],
                             ];
                         }
 
                         // Asegurar que exista home_default
-                        if (!isset($processedProduct['cover']['bySize']['home_default'])) {
+                        if (! isset($processedProduct['cover']['bySize']['home_default'])) {
                             $processedProduct['cover']['bySize']['home_default'] = [
                                 'url' => $this->context->link->getImageLink(
                                     $processedProduct['link_rewrite'],
@@ -144,8 +144,8 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                                         $processedProduct['link_rewrite'],
                                         $productData['id_image'],
                                         'home_default'
-                                    )
-                                ]
+                                    ),
+                                ],
                             ];
                             // Reemplazar extensión .jpg por .avif y .webp
                             $processedProduct['cover']['bySize']['home_default']['sources']['avif'] =
@@ -155,13 +155,13 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                         }
 
                         // Asegurar que exista large
-                        if (!isset($processedProduct['cover']['large'])) {
+                        if (! isset($processedProduct['cover']['large'])) {
                             $processedProduct['cover']['large'] = [
                                 'url' => $this->context->link->getImageLink(
                                     $processedProduct['link_rewrite'],
                                     $productData['id_image'],
                                     'large_default'
-                                )
+                                ),
                             ];
                         }
                     }
@@ -172,15 +172,14 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         }
 
         // Prepare GTM purchase data using GtmController
-        $gtmController = new GtmController();
+        $gtmController = new GtmController;
         $gtmController->context = $this->context;
         $gtmData = $gtmController->prepareOrderPurchaseData($order);
 
         $query = 'SELECT `address1` as `delivery_address`
-            FROM `' . _DB_PREFIX_ . 'address`
-            WHERE id_address = ' . (int) $order->id_address_delivery;
+            FROM `'._DB_PREFIX_.'address`
+            WHERE id_address = '.(int) $order->id_address_delivery;
         $deliveryAddress = Db::getInstance()->getValue($query);
-
 
         $this->context->smarty->assign([
             'order_obj' => $order,
@@ -188,8 +187,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
             'tradedoublerpixels' => $tradedoublerpixels,
             'gtm_purchase_data' => $gtmData,
             'delivery_address_text' => $deliveryAddress,
-            'processed_products' => $processedProducts  // Productos procesados con descripciones corregidas
+            'processed_products' => $processedProducts,  // Productos procesados con descripciones corregidas
         ]);
     }
-
 }

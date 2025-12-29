@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,10 +35,13 @@ class AttributeCore extends ObjectModel
 
     /** @var string Name */
     public $name;
+
     /** @var string */
     public $color;
+
     /** @var int */
     public $position;
+
     /** @todo Find type */
     public $default;
 
@@ -73,9 +77,9 @@ class AttributeCore extends ObjectModel
     /**
      * AttributeCore constructor.
      *
-     * @param int|null $id Attribute ID
-     * @param int|null $idLang Language ID
-     * @param int|null $idShop Shop ID
+     * @param  int|null  $id  Attribute ID
+     * @param  int|null  $idLang  Language ID
+     * @param  int|null  $idShop  Shop ID
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -88,13 +92,13 @@ class AttributeCore extends ObjectModel
      */
     public function delete()
     {
-        if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL) {
-            $result = Db::getInstance()->executeS('SELECT id_product_attribute FROM ' . _DB_PREFIX_ . 'product_attribute_combination WHERE id_attribute = ' . (int) $this->id);
+        if (! $this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL) {
+            $result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute_combination WHERE id_attribute = '.(int) $this->id);
             $products = [];
 
             foreach ($result as $row) {
                 $combination = new Combination($row['id_product_attribute']);
-                $newRequest = Db::getInstance()->executeS('SELECT id_product, default_on FROM ' . _DB_PREFIX_ . 'product_attribute WHERE id_product_attribute = ' . (int) $row['id_product_attribute']);
+                $newRequest = Db::getInstance()->executeS('SELECT id_product, default_on FROM '._DB_PREFIX_.'product_attribute WHERE id_product_attribute = '.(int) $row['id_product_attribute']);
                 foreach ($newRequest as $value) {
                     if ($value['default_on'] == 1) {
                         $products[] = $value['id_product'];
@@ -104,7 +108,7 @@ class AttributeCore extends ObjectModel
             }
 
             foreach ($products as $product) {
-                $result = Db::getInstance()->executeS('SELECT id_product_attribute FROM ' . _DB_PREFIX_ . 'product_attribute WHERE id_product = ' . (int) $product . ' LIMIT 1');
+                $result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int) $product.' LIMIT 1');
                 foreach ($result as $row) {
                     if (Validate::isLoadedObject($product = new Product((int) $product))) {
                         $product->deleteDefaultAttributes();
@@ -144,9 +148,8 @@ class AttributeCore extends ObjectModel
     /**
      * Adds current Attribute as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` column
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
-     *
+     * @param  bool  $autoDate  Automatically set `date_upd` and `date_add` column
+     * @param  bool  $nullValues  Whether we want to use NULL values instead of empty quotes values
      * @return bool Whether the Attribute has been successfully added
      *
      * @throws PrestaShopDatabaseException
@@ -170,29 +173,28 @@ class AttributeCore extends ObjectModel
     /**
      * Get all attributes for a given language.
      *
-     * @param int $idLang Language ID
-     * @param bool $notNull Get only not null fields if true
-     *
+     * @param  int  $idLang  Language ID
+     * @param  bool  $notNull  Get only not null fields if true
      * @return array Attributes
      */
     public static function getAttributes($idLang, $notNull = false)
     {
-        if (!Combination::isFeatureActive()) {
+        if (! Combination::isFeatureActive()) {
             return [];
         }
 
         return Db::getInstance()->executeS('
 			SELECT DISTINCT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int) $idLang.')
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
-			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
-			' . Shop::addSqlAssociation('attribute', 'a') . '
-			' . ($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '') . '
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int) $idLang.')
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			'.($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '').'
 			ORDER BY agl.`name` ASC, a.`position` ASC
 		');
     }
@@ -200,30 +202,29 @@ class AttributeCore extends ObjectModel
     /**
      * Check if the given name is an Attribute within the given AttributeGroup.
      *
-     * @param int $idAttributeGroup AttributeGroup
-     * @param string $name Attribute name
-     * @param int $idLang Language ID
-     *
+     * @param  int  $idAttributeGroup  AttributeGroup
+     * @param  string  $name  Attribute name
+     * @param  int  $idLang  Language ID
      * @return array|bool
      */
     public static function isAttribute($idAttributeGroup, $name, $idLang)
     {
-        if (!Combination::isFeatureActive()) {
+        if (! Combination::isFeatureActive()) {
             return [];
         }
 
         $result = Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int) $idLang.')
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
-			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
-			' . Shop::addSqlAssociation('attribute', 'a') . '
-			WHERE al.`name` = \'' . pSQL($name) . '\' AND ag.`id_attribute_group` = ' . (int) $idAttributeGroup . '
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int) $idLang.')
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE al.`name` = \''.pSQL($name).'\' AND ag.`id_attribute_group` = '.(int) $idAttributeGroup.'
 			ORDER BY agl.`name` ASC, a.`position` ASC
 		');
 
@@ -234,15 +235,14 @@ class AttributeCore extends ObjectModel
      * Get quantity for a given attribute combination
      * Check if quantity is enough to serve the customer.
      *
-     * @param int $idProductAttribute Product attribute combination id
-     * @param int $qty Quantity needed
-     * @param Shop $shop Shop
-     *
+     * @param  int  $idProductAttribute  Product attribute combination id
+     * @param  int  $qty  Quantity needed
+     * @param  Shop  $shop  Shop
      * @return bool Quantity is available or not
      */
-    public static function checkAttributeQty($idProductAttribute, $qty, Shop $shop = null)
+    public static function checkAttributeQty($idProductAttribute, $qty, ?Shop $shop = null)
     {
-        if (!$shop) {
+        if (! $shop) {
             $shop = Context::getContext()->shop;
         }
 
@@ -258,13 +258,13 @@ class AttributeCore extends ObjectModel
      */
     public function isColorAttribute()
     {
-        if (!Db::getInstance()->getRow('
+        if (! Db::getInstance()->getRow('
 			SELECT `group_type`
-			FROM `' . _DB_PREFIX_ . 'attribute_group`
+			FROM `'._DB_PREFIX_.'attribute_group`
 			WHERE `id_attribute_group` = (
 				SELECT `id_attribute_group`
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE `id_attribute` = ' . (int) $this->id . ')
+				FROM `'._DB_PREFIX_.'attribute`
+				WHERE `id_attribute` = '.(int) $this->id.')
 			AND group_type = \'color\'')) {
             return false;
         }
@@ -275,8 +275,7 @@ class AttributeCore extends ObjectModel
     /**
      * Get minimal quantity for product with attributes quantity.
      *
-     * @param int $idProductAttribute Product Attribute ID
-     *
+     * @param  int  $idProductAttribute  Product Attribute ID
      * @return mixed Minimal quantity or false if no result
      */
     public static function getAttributeMinimalQty($idProductAttribute)
@@ -284,9 +283,9 @@ class AttributeCore extends ObjectModel
         $minimalQuantity = Db::getInstance()->getValue(
             '
 			SELECT `minimal_quantity`
-			FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
-			WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
-			AND `id_product_attribute` = ' . (int) $idProductAttribute
+			FROM `'._DB_PREFIX_.'product_attribute_shop` pas
+			WHERE `id_shop` = '.(int) Context::getContext()->shop->id.'
+			AND `id_product_attribute` = '.(int) $idProductAttribute
         );
 
         if ($minimalQuantity > 1) {
@@ -299,24 +298,23 @@ class AttributeCore extends ObjectModel
     /**
      * Move an attribute inside its group.
      *
-     * @param bool $direction Up (1) or Down (0)
-     * @param int $position Current position of the attribute
-     *
+     * @param  bool  $direction  Up (1) or Down (0)
+     * @param  int  $position  Current position of the attribute
      * @return bool Update result
      */
     public function updatePosition($direction, $position)
     {
-        if (!$idAttributeGroup = (int) Tools::getValue('id_attribute_group')) {
+        if (! $idAttributeGroup = (int) Tools::getValue('id_attribute_group')) {
             $idAttributeGroup = (int) $this->id_attribute_group;
         }
 
         $sql = '
 			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute` a
-			WHERE a.`id_attribute_group` = ' . (int) $idAttributeGroup . '
+			FROM `'._DB_PREFIX_.'attribute` a
+			WHERE a.`id_attribute_group` = '.(int) $idAttributeGroup.'
 			ORDER BY a.`position` ASC';
 
-        if (!$res = Db::getInstance()->executeS($sql)) {
+        if (! $res = Db::getInstance()->executeS($sql)) {
             return false;
         }
 
@@ -326,7 +324,7 @@ class AttributeCore extends ObjectModel
             }
         }
 
-        if (!isset($movedAttribute) || !isset($position)) {
+        if (! isset($movedAttribute) || ! isset($position)) {
             return false;
         }
 
@@ -335,21 +333,21 @@ class AttributeCore extends ObjectModel
 
         $res1 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position`= `position` '.($direction ? '- 1' : '+ 1').'
 			WHERE `position`
-			' . ($direction
-                ? '> ' . (int) $movedAttribute['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $movedAttribute['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+			'.($direction
+                ? '> '.(int) $movedAttribute['position'].' AND `position` <= '.(int) $position
+                : '< '.(int) $movedAttribute['position'].' AND `position` >= '.(int) $position).'
+			AND `id_attribute_group`='.(int) $movedAttribute['id_attribute_group']
         );
 
         $res2 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position` = '.(int) $position.'
+			WHERE `id_attribute` = '.(int) $movedAttribute['id_attribute'].'
+			AND `id_attribute_group`='.(int) $movedAttribute['id_attribute_group']
         );
 
         return $res1 && $res2;
@@ -359,21 +357,20 @@ class AttributeCore extends ObjectModel
      * Reorder the attribute position within the Attribute group.
      * Call this method after deleting an attribute from a group.
      *
-     * @param int $idAttributeGroup Attribute group ID
-     * @param bool $useLastAttribute
-     *
+     * @param  int  $idAttributeGroup  Attribute group ID
+     * @param  bool  $useLastAttribute
      * @return bool Whether the result was successfully updated
      */
     public function cleanPositions($idAttributeGroup, $useLastAttribute = true)
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'attribute` SET `position` = @i:=@i+1 WHERE';
+        $sql = 'UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
 
         if ($useLastAttribute) {
-            $sql .= ' `id_attribute` != ' . (int) $this->id . ' AND';
+            $sql .= ' `id_attribute` != '.(int) $this->id.' AND';
         }
 
-        $sql .= ' `id_attribute_group` = ' . (int) $idAttributeGroup . ' ORDER BY `position` ASC';
+        $sql .= ' `id_attribute_group` = '.(int) $idAttributeGroup.' ORDER BY `position` ASC';
 
         return Db::getInstance()->execute($sql);
     }
@@ -383,16 +380,16 @@ class AttributeCore extends ObjectModel
      *
      * Get the highest attribute position from a group attribute
      *
-     * @param int $idAttributeGroup AttributeGroup ID
-     *
+     * @param  int  $idAttributeGroup  AttributeGroup ID
      * @return int $position Position
+     *
      * @todo: Shouldn't this be called getHighestPosition instead?
      */
     public static function getHigherPosition($idAttributeGroup)
     {
         $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE id_attribute_group = ' . (int) $idAttributeGroup;
+				FROM `'._DB_PREFIX_.'attribute`
+				WHERE id_attribute_group = '.(int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);
 

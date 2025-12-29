@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -42,12 +43,12 @@ abstract class ModuleAdminControllerCore extends AdminController
         $this->controller_type = 'moduleadmin';
 
         $tab = new Tab($this->id);
-        if (!$tab->module) {
-            throw new PrestaShopException('Admin tab ' . get_class($this) . ' is not a module tab');
+        if (! $tab->module) {
+            throw new PrestaShopException('Admin tab '.get_class($this).' is not a module tab');
         }
 
         $this->module = Module::getInstanceByName($tab->module);
-        if (!$this->module->id) {
+        if (! $this->module->id) {
             throw new PrestaShopException("Module {$tab->module} not found");
         }
     }
@@ -55,16 +56,15 @@ abstract class ModuleAdminControllerCore extends AdminController
     /**
      * Creates a template object.
      *
-     * @param string $tpl_name Template filename
-     *
+     * @param  string  $tpl_name  Template filename
      * @return Smarty_Internal_Template
      */
     public function createTemplate($tpl_name)
     {
         if ($this->viewAccess()) {
             foreach ($this->getTemplateLookupPaths() as $path) {
-                if (file_exists($path . $tpl_name)) {
-                    return $this->context->smarty->createTemplate($path . $tpl_name);
+                if (file_exists($path.$tpl_name)) {
+                    return $this->context->smarty->createTemplate($path.$tpl_name);
                 }
             }
         }
@@ -79,7 +79,7 @@ abstract class ModuleAdminControllerCore extends AdminController
      */
     public function getTemplatePath()
     {
-        return _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/';
+        return _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/';
     }
 
     /**
@@ -90,8 +90,8 @@ abstract class ModuleAdminControllerCore extends AdminController
         $templatePath = $this->getTemplatePath();
 
         return [
-            _PS_THEME_DIR_ . 'modules/' . $this->module->name . '/views/templates/admin/',
-            $templatePath . $this->override_folder,
+            _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/',
+            $templatePath.$this->override_folder,
             $templatePath,
         ];
     }

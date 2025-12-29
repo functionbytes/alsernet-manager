@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,7 @@
 
 use Symfony\Component\VarDumper\VarDumper;
 
-if (!function_exists('dump')) {
+if (! function_exists('dump')) {
     function dump($var)
     {
         foreach (func_get_args() as $var) {
@@ -38,8 +39,8 @@ if (!function_exists('dump')) {
 /**
  * Sanitize data which will be injected into SQL query
  *
- * @param string $string SQL data which will be injected into SQL query
- * @param bool $htmlOK Does data contain HTML code ? (optional)
+ * @param  string  $string  SQL data which will be injected into SQL query
+ * @param  bool  $htmlOK  Does data contain HTML code ? (optional)
  * @return string Sanitized data
  */
 function pSQL($string, $htmlOK = false)
@@ -58,7 +59,7 @@ function displayFatalError()
     if (function_exists('error_get_last')) {
         $error = error_get_last();
     }
-    if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR))) {
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR])) {
         echo '[PrestaShop] Fatal error in module file: '.$error['file'].':'.$error['line'].'<br />'.$error['message'];
     }
 }

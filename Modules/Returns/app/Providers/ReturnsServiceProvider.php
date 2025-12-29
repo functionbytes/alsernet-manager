@@ -69,13 +69,15 @@ class ReturnsServiceProvider extends ServiceProvider
 
     /**
      * Register commands in the format of Command::class
+     *
+     * Note: Commands are auto-discovered by Laravel 12 from:
+     * - Modules/Returns/app/Console/Commands/
+     * Manual registration is no longer needed.
      */
     protected function registerCommands(): void
     {
-        $this->commands([
-            \Modules\Returns\Commands\SendReturnReminders::class,
-            \Modules\Returns\Commands\AuditReturnRules::class,
-        ]);
+        // Commands are auto-discovered by Laravel 12
+        // No manual registration needed
     }
 
     /**

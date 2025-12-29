@@ -1,7 +1,5 @@
 <?php
 
-
-
 class CookiesController extends FrontController
 {
     public $php_self = 'cookies';
@@ -21,6 +19,4 @@ class CookiesController extends FrontController
         }
 
     }
-
-
 }

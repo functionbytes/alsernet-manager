@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -79,8 +80,7 @@ class OrderCarrierCore extends ObjectModel
     ];
 
     /**
-     * @param Order $order Required
-     *
+     * @param  Order  $order  Required
      * @return bool
      */
     public function sendInTransitEmail($order)
@@ -90,13 +90,13 @@ class OrderCarrierCore extends ObjectModel
         $carrier = new Carrier((int) $order->id_carrier, $orderLanguageId);
         $address = new Address((int) $order->id_address_delivery);
 
-        if (!Validate::isLoadedObject($customer)) {
+        if (! Validate::isLoadedObject($customer)) {
             throw new PrestaShopException('Can\'t load Customer object');
         }
-        if (!Validate::isLoadedObject($carrier)) {
+        if (! Validate::isLoadedObject($carrier)) {
             throw new PrestaShopException('Can\'t load Carrier object');
         }
-        if (!Validate::isLoadedObject($address)) {
+        if (! Validate::isLoadedObject($address)) {
             throw new PrestaShopException('Can\'t load Address object');
         }
 
@@ -107,24 +107,24 @@ class OrderCarrierCore extends ObjectModel
         foreach ($products as $product) {
             $prod_obj = new Product((int) $product['product_id']);
 
-            //try to get the first image for the purchased combination
+            // try to get the first image for the purchased combination
             $img = $prod_obj->getCombinationImages($orderLanguageId);
             $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'] ?? null;
             if ($combination_img != null) {
                 $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
             } else {
-                //if there is no combination image, then get the product cover instead
+                // if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
+                $img_url = ! empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
             }
             $prod_url = $prod_obj->getLink();
 
-            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="https://schema.org/Product">';
-            $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';
-            $metadata .= "\n" . '   <link itemprop="image" href="' . $img_url . '"/>';
-            $metadata .= "\n" . '   <link itemprop="url" href="' . $prod_url . '"/>';
-            $metadata .= "\n" . '</div>';
+            $metadata .= "\n".'<div itemprop="itemShipped" itemscope itemtype="https://schema.org/Product">';
+            $metadata .= "\n".'   <meta itemprop="name" content="'.htmlspecialchars($product['product_name']).'"/>';
+            $metadata .= "\n".'   <link itemprop="image" href="'.$img_url.'"/>';
+            $metadata .= "\n".'   <link itemprop="url" href="'.$prod_url.'"/>';
+            $metadata .= "\n".'</div>';
         }
 
         $orderLanguage = new Language((int) $orderLanguageId);
@@ -154,7 +154,7 @@ class OrderCarrierCore extends ObjectModel
             ),
             $templateVars,
             $customer->email,
-            $customer->firstname . ' ' . $customer->lastname,
+            $customer->firstname.' '.$customer->lastname,
             null,
             null,
             null,
@@ -171,7 +171,7 @@ class OrderCarrierCore extends ObjectModel
 
     public function updateWs()
     {
-        if (!parent::update()) {
+        if (! parent::update()) {
             return false;
         }
 
@@ -179,11 +179,11 @@ class OrderCarrierCore extends ObjectModel
 
         if ($sendemail) {
             $order = new Order((int) $this->id_order);
-            if (!Validate::isLoadedObject($order)) {
+            if (! Validate::isLoadedObject($order)) {
                 throw new PrestaShopException('Can\'t load Order object');
             }
 
-            if (!$this->sendInTransitEmail($order)) {
+            if (! $this->sendInTransitEmail($order)) {
                 return false;
             }
         }

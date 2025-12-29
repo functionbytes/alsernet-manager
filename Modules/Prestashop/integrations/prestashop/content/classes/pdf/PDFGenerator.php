@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -93,8 +94,8 @@ class PDFGeneratorCore extends TCPDF
     ];
 
     /**
-     * @param bool $use_cache
-     * @param string $orientation
+     * @param  bool  $use_cache
+     * @param  string  $orientation
      */
     public function __construct($use_cache = false, $orientation = 'P')
     {
@@ -105,7 +106,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * set the PDF encoding.
      *
-     * @param string $encoding
+     * @param  string  $encoding
      */
     public function setEncoding($encoding)
     {
@@ -115,7 +116,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * set the PDF header.
      *
-     * @param string $header HTML
+     * @param  string  $header  HTML
      */
     public function createHeader($header)
     {
@@ -125,7 +126,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * set the PDF footer.
      *
-     * @param string $footer HTML
+     * @param  string  $footer  HTML
      */
     public function createFooter($footer)
     {
@@ -135,7 +136,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * create the PDF content.
      *
-     * @param string $content HTML
+     * @param  string  $content  HTML
      */
     public function createContent($content)
     {
@@ -145,7 +146,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * create the PDF pagination.
      *
-     * @param string $pagination HTML
+     * @param  string  $pagination  HTML
      */
     public function createPagination($pagination)
     {
@@ -155,7 +156,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * Change the font.
      *
-     * @param string $iso_lang
+     * @param  string  $iso_lang
      */
     public function setFontForLang($iso_lang)
     {
@@ -192,12 +193,11 @@ class PDFGeneratorCore extends TCPDF
     /**
      * Render HTML template.
      *
-     * @param string $filename
-     * @param bool $display true:display to user, false:save, 'I','D','S' as fpdf display
+     * @param  string  $filename
+     * @param  bool  $display  true:display to user, false:save, 'I','D','S' as fpdf display
+     * @return string HTML rendered
      *
      * @throws PrestaShopException
-     *
-     * @return string HTML rendered
      */
     public function render($filename, $display = true)
     {
@@ -239,8 +239,7 @@ class PDFGeneratorCore extends TCPDF
     /**
      * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting.
      *
-     * @param string $seed
-     *
+     * @param  string  $seed
      * @return string
      */
     protected function getRandomSeed($seed = '')
@@ -251,7 +250,7 @@ class PDFGeneratorCore extends TCPDF
             // this is not used on windows systems because it is very slow for a know bug
             $seed .= openssl_random_pseudo_bytes(512);
         } else {
-            for ($i = 0; $i < 23; ++$i) {
+            for ($i = 0; $i < 23; $i++) {
                 $seed .= uniqid('', true);
             }
         }

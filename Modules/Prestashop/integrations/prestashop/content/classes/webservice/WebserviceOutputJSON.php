@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,8 +27,11 @@
 class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
+
     public $languages = [];
+
     protected $wsUrl;
+
     protected $schemaToDisplay;
 
     /**
@@ -104,7 +108,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             }
         }
         // Case 1 : fields of the current entity (not an association)
-        if (!$is_association) {
+        if (! $is_association) {
             $this->currentEntity[$field['sqlId']] = $field['value'];
         } else { // Case 2 : fields of an associated entity to the current one
             $this->currentAssociatedEntity[] = ['name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']];
@@ -120,7 +124,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if ($node_name == 'api' && ($isAPICall == false)) {
             $isAPICall = true;
         }
-        if ($isAPICall && !in_array($node_name, ['description', 'schema', 'api'])) {
+        if ($isAPICall && ! in_array($node_name, ['description', 'schema', 'api'])) {
             $this->content[] = $node_name;
         }
         if (isset($more_attr, $more_attr['id'])) {
@@ -155,7 +159,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             foreach ($this->currentAssociatedEntity as $element) {
                 $current[$element['key']] = $element['value'];
             }
-            //$this->currentEntity['associations'][$element['name']][][$element['key']] = $element['value'];
+            // $this->currentEntity['associations'][$element['name']][][$element['key']] = $element['value'];
             $this->currentEntity['associations'][$element['name']][] = $current;
             $this->currentAssociatedEntity = [];
         }
@@ -165,7 +169,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     {
         $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
 
-        return (false !== $content) ? $content : '';
+        return ($content !== false) ? $content : '';
     }
 
     public function setLanguages($languages)
@@ -190,9 +194,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         return '';
     }
 
-    public function renderAssociationFooter($obj, $params, $assoc_name)
-    {
-    }
+    public function renderAssociationFooter($obj, $params, $assoc_name) {}
 
     public function renderErrorsHeader()
     {

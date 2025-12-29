@@ -3,9 +3,9 @@
 namespace App\Models\Campaign;
 
 use App;
-use App\Events\Campaigns\MailListImported;
-use App\Events\Campaigns\MailListSubscription;
-use App\Events\Campaigns\MailListUpdated;
+use Modules\Campaign\Events\MailListImported;
+use Modules\Campaign\Events\MailListSubscription;
+use Modules\Campaign\Events\MailListUpdated;
 use App\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
@@ -15,13 +15,13 @@ use app\Library\ExtendedSwiftMessage;
 use app\Library\MailListFieldMapping;
 use app\Library\RouletteWheel;
 use app\Library\StringHelper;
-use app\Library\Traits\HasCache;
-use app\Library\Traits\HasUid;
-use app\Library\Traits\QueryHelper;
-use app\Library\Traits\TrackJobs;
+use Modules\Campaign\Library\Traits\HasCache;
+use App\Library\Traits\QueryHelper;
+use App\Library\Traits\TrackJobs;
 use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;
+use App\Models\Traits\HasUid;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -546,7 +546,7 @@ class CampaignMaillist extends Model
     {
         $count = $this->subscribersCount($cache);
 
-        return $this->name.' - '.$count.' '.trans('messages.'. \app\Library\Tool::getPluralPrase('subscriber', $count)).'';
+        return $this->name.' - '.$count.' '.trans('messages.'.\app\Library\Tool::getPluralPrase('subscriber', $count)).'';
     }
 
     public function copy($name, $customer = null)

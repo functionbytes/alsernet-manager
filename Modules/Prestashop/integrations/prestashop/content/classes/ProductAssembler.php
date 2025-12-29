@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,12 +32,11 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 class ProductAssemblerCore
 {
     private $context;
+
     private $searchContext;
 
     /**
      * ProductAssemblerCore constructor.
-     *
-     * @param \Context $context
      */
     public function __construct(Context $context)
     {
@@ -47,7 +47,6 @@ class ProductAssemblerCore
     /**
      * Add missing product fields.
      *
-     * @param array $rawProduct
      *
      * @return array
      */
@@ -59,11 +58,11 @@ class ProductAssemblerCore
         $prefix = _DB_PREFIX_;
 
         $nbDaysNewProduct = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
-        if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
+        if (! Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d') . ' 00:00:00';
+        $now = date('Y-m-d').' 00:00:00';
 
         $sql = "SELECT
                     p.*,
@@ -103,7 +102,6 @@ class ProductAssemblerCore
     /**
      * Assemble Product.
      *
-     * @param array $rawProduct
      *
      * @return mixed
      */

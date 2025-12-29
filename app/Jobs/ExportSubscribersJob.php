@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use app\Library\Traits\Trackable;
+use Modules\Campaign\Library\Traits\Trackable;
 
 class ExportSubscribersJob extends Base
 {

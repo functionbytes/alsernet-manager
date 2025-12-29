@@ -1,5 +1,7 @@
 <?php
+
 use PrestaShop\PrestaShop\Adapter\StockManager;
+
 abstract class PaymentModule extends PaymentModuleCore
 {
     public function validateOrder(
@@ -12,12 +14,12 @@ abstract class PaymentModule extends PaymentModuleCore
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        ?Shop $shop = null
     ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
-        if (!isset($this->context)) {
+        if (! isset($this->context)) {
             $this->context = Context::getContext();
         }
         $this->context->cart = new Cart((int) $id_cart);
@@ -32,26 +34,26 @@ abstract class PaymentModule extends PaymentModuleCore
             $context_country = $this->context->country;
         }
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
-        if (!Validate::isLoadedObject($order_status)) {
+        if (! Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
             throw new PrestaShopException('Can\'t load Order status');
         }
-        if (!$this->active) {
+        if (! $this->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int) $id_cart, true);
-            die(Tools::displayError());
+            exit(Tools::displayError());
         }
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false) {
             if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
-                die(Tools::displayError());
+                exit(Tools::displayError());
             }
             $delivery_option_list = $this->context->cart->getDeliveryOptionList();
             $package_list = $this->context->cart->getPackageList();
             $cart_delivery_option = $this->context->cart->getDeliveryOption();
             foreach ($delivery_option_list as $id_address => $package) {
                 if (
-                    !isset($cart_delivery_option[$id_address])
-                    || !array_key_exists($cart_delivery_option[$id_address], $package)
+                    ! isset($cart_delivery_option[$id_address])
+                    || ! array_key_exists($cart_delivery_option[$id_address], $package)
                 ) {
                     foreach ($package as $key => $val) {
                         $cart_delivery_option[$id_address] = $key;
@@ -59,8 +61,8 @@ abstract class PaymentModule extends PaymentModuleCore
                     }
                 }
             }
-            $order_list = array();
-            $order_detail_list = array();
+            $order_list = [];
+            $order_detail_list = [];
             do {
                 $reference = Order::generateReference();
             } while (Order::getByReference($reference)->count());
@@ -87,8 +89,8 @@ abstract class PaymentModule extends PaymentModuleCore
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
-                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
-                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
+                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && ! empty($rule->code)) {
+                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                             $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [$rule_name, (int) $rule->id], 'Admin.Payment.Notification');
@@ -129,7 +131,7 @@ abstract class PaymentModule extends PaymentModuleCore
             if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
                 $this->context->country = $context_country;
             }
-            if (!$this->context->country->active) {
+            if (! $this->context->country->active) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
                 throw new PrestaShopException('The order address country is not active.');
             }
@@ -142,7 +144,7 @@ abstract class PaymentModule extends PaymentModuleCore
                 } else {
                     $transaction_id = null;
                 }
-                if (!isset($order) || !$order->addOrderPayment($amount_paid, null, $transaction_id)) {
+                if (! isset($order) || ! $order->addOrderPayment($amount_paid, null, $transaction_id)) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int) $id_cart, true);
                     throw new PrestaShopException('Can\'t save Order Payment');
                 }
@@ -153,11 +155,11 @@ abstract class PaymentModule extends PaymentModuleCore
             foreach ($order_detail_list as $key => $order_detail) {
                 $order = $order_list[$key];
                 if (isset($order->id)) {
-                    if (!$secure_key) {
-                        $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
+                    if (! $secure_key) {
+                        $message .= '<br />'.$this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
                     }
-                    if (!empty($message)) {
-                        $msg = new Message();
+                    if (! empty($message)) {
+                        $msg = new Message;
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
                             if (self::DEBUG_MODE) {
@@ -182,7 +184,7 @@ abstract class PaymentModule extends PaymentModuleCore
                             'id_product' => $product['id_product'],
                             'id_product_attribute' => $product['id_product_attribute'],
                             'reference' => $product['reference'],
-                            'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                            'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                             'quantity' => $product['quantity'],
                             'customization' => [],
@@ -190,7 +192,7 @@ abstract class PaymentModule extends PaymentModuleCore
                         if (isset($product['price']) && $product['price']) {
                             $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code);
                             $product_var_tpl['unit_price_full'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code)
-                                . ' ' . $product['unity'];
+                                .' '.$product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
                         }
@@ -201,11 +203,11 @@ abstract class PaymentModule extends PaymentModuleCore
                                 $customization_text = '';
                                 if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                                     foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                        $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
+                                        $customization_text .= '<strong>'.$text['name'].'</strong>: '.$text['value'].'<br />';
                                     }
                                 }
                                 if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                                    $customization_text .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
+                                    $customization_text .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification').'<br />';
                                 }
                                 $customization_quantity = (int) $customization['quantity'];
                                 $product_var_tpl['customization'][] = [
@@ -216,7 +218,7 @@ abstract class PaymentModule extends PaymentModuleCore
                             }
                         }
                         $product_var_tpl_list[] = $product_var_tpl;
-                        if (!$product['is_virtual']) {
+                        if (! $product['is_virtual']) {
                             $virtual_product &= false;
                         }
                     } // end foreach ($inventaries)
@@ -243,11 +245,11 @@ abstract class PaymentModule extends PaymentModuleCore
                         $cart_rules_list_html = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list);
                     }
                     $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
-                    if ($old_message && !$old_message['private']) {
+                    if ($old_message && ! $old_message['private']) {
                         $update_message = new Message((int) $old_message['id_message']);
                         $update_message->id_order = (int) $order->id;
                         $update_message->update();
-                        $customer_thread = new CustomerThread();
+                        $customer_thread = new CustomerThread;
                         $customer_thread->id_contact = 0;
                         $customer_thread->id_customer = (int) $order->id_customer;
                         $customer_thread->id_shop = (int) $this->context->shop->id;
@@ -257,12 +259,12 @@ abstract class PaymentModule extends PaymentModuleCore
                         $customer_thread->status = 'open';
                         $customer_thread->token = Tools::passwdGen(12);
                         $customer_thread->add();
-                        $customer_message = new CustomerMessage();
+                        $customer_message = new CustomerMessage;
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
                         $customer_message->private = 0;
-                        if (!$customer_message->add()) {
+                        if (! $customer_message->add()) {
                             $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
                         }
                     }
@@ -284,14 +286,14 @@ abstract class PaymentModule extends PaymentModuleCore
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
-                    $new_history = new OrderHistory();
+                    $new_history = new OrderHistory;
                     $new_history->id_order = (int) $order->id;
                     $new_history->changeIdOrderState((int) $id_order_state, $order, true);
                     $new_history->addWithemail(true, $extra_vars);
                     if (Configuration::get('PS_STOCK_MANAGEMENT') &&
                         ($order_detail->getStockState() ||
                             $order_detail->product_quantity_in_stock < 0)) {
-                        $history = new OrderHistory();
+                        $history = new OrderHistory;
                         $history->id_order = (int) $order->id;
                         $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
                         $history->addWithemail();
@@ -313,7 +315,7 @@ abstract class PaymentModule extends PaymentModuleCore
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
-                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
+                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
                             $file_attachement['mime'] = 'application/pdf';
                             $this->context->language = $currentLanguage;
                             $this->context->getTranslator()->setLocale($currentLanguage->locale);
@@ -328,11 +330,11 @@ abstract class PaymentModule extends PaymentModuleCore
                             $multiple_product_types_message_txt = '';
                             $products_in_cart_pickup_gc = Cart::haveMultipleProductTypes($this->context->cart->id);
                             if ($products_in_cart_pickup_gc) {
-                                $multiple_product_types_message_txt = $this->trans('Weapon-type inventaries will be collected at the intervention of the selected Civil Guard, the rest of the inventaries will be sent to the specified billing address.', [], 'Shop.Theme.Checkout') . PHP_EOL . PHP_EOL . $this->trans('The weapon-type inventaries that you must collect in the intervention of the selected Civil Guard are the following:', [], 'Shop.Theme.Checkout') . PHP_EOL . PHP_EOL;
-                                $multiple_product_types_message_html = '<p>' . $this->trans('[b]Weapon-type inventaries will be collected at the intervention of the selected Civil Guard, the rest of the inventaries will be sent to the specified billing address.[/b]', ['[b]' => '<strong>', '[/b]' => '</strong>'], 'Shop.Theme.Checkout') . '</p><p>' . $this->trans('[b]The weapon-type inventaries that you must collect in the intervention of the selected Civil Guard are the following:[/b]', ['[b]' => '<strong>', '[/b]' => '</strong>'], 'Shop.Theme.Checkout') . '</p><ul>';
+                                $multiple_product_types_message_txt = $this->trans('Weapon-type inventaries will be collected at the intervention of the selected Civil Guard, the rest of the inventaries will be sent to the specified billing address.', [], 'Shop.Theme.Checkout').PHP_EOL.PHP_EOL.$this->trans('The weapon-type inventaries that you must collect in the intervention of the selected Civil Guard are the following:', [], 'Shop.Theme.Checkout').PHP_EOL.PHP_EOL;
+                                $multiple_product_types_message_html = '<p>'.$this->trans('[b]Weapon-type inventaries will be collected at the intervention of the selected Civil Guard, the rest of the inventaries will be sent to the specified billing address.[/b]', ['[b]' => '<strong>', '[/b]' => '</strong>'], 'Shop.Theme.Checkout').'</p><p>'.$this->trans('[b]The weapon-type inventaries that you must collect in the intervention of the selected Civil Guard are the following:[/b]', ['[b]' => '<strong>', '[/b]' => '</strong>'], 'Shop.Theme.Checkout').'</p><ul>';
                                 foreach ($products_in_cart_pickup_gc as $product_cart) {
-                                    $multiple_product_types_message_txt .= $product_cart['name'] . PHP_EOL;
-                                    $multiple_product_types_message_html .= '<li>' . $product_cart['name'] . '</li>';
+                                    $multiple_product_types_message_txt .= $product_cart['name'].PHP_EOL;
+                                    $multiple_product_types_message_html .= '<li>'.$product_cart['name'].'</li>';
                                 }
                                 $multiple_product_types_message_html .= '</ul>';
                             }
@@ -379,8 +381,8 @@ abstract class PaymentModule extends PaymentModuleCore
                                 '{order_name}' => $order->getUniqReference(),
                                 '{order_id}' => $order->id,
                                 '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-                                '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
-                                '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
+                                '{carrier}' => ($virtual_product || ! isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
+                                '{payment}' => Tools::substr($order->payment, 0, 255).($order->hasBeenPaid() ? '' : '&nbsp;'.$this->trans('(waiting for validation)', [], 'Emails.Body')),
                                 '{inventaries}' => $product_list_html,
                                 '{products_txt}' => $product_list_txt,
                                 '{discounts}' => $cart_rules_list_html,
@@ -396,10 +398,10 @@ abstract class PaymentModule extends PaymentModuleCore
                                 '{delivery_message}' => $order->getFirstMessage(),
                                 '{product_pickup_gc_message}' => $multiple_product_types_message_html,
                                 '{product_pickup_gc_message_txt}' => $multiple_product_types_message_txt,
-                             ];
-                                $data['{document}'] = $document;
-                                $data['{tracking}'] = $tracking;
-                                $data['{lottery}'] = $lottery;
+                            ];
+                            $data['{document}'] = $document;
+                            $data['{tracking}'] = $tracking;
+                            $data['{lottery}'] = $lottery;
                             Mail::Send(
                                 (int) $order->id_lang,
                                 'order_conf',
@@ -411,7 +413,7 @@ abstract class PaymentModule extends PaymentModuleCore
                                 ),
                                 $data,
                                 $this->context->customer->email,
-                                $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
+                                $this->context->customer->firstname.' '.$this->context->customer->lastname,
                                 null,
                                 null,
                                 $file_attachement,
@@ -431,7 +433,7 @@ abstract class PaymentModule extends PaymentModuleCore
                         }
                     }
                     $order->updateOrderDetailTax();
-                    (new StockManager())->updatePhysicalProductQuantity(
+                    (new StockManager)->updatePhysicalProductQuantity(
                         (int) $order->id_shop,
                         (int) Configuration::get('PS_OS_ERROR'),
                         (int) Configuration::get('PS_OS_CANCELED'),
@@ -441,7 +443,7 @@ abstract class PaymentModule extends PaymentModuleCore
                 } else {
                     $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
-                    die(Tools::displayError($error));
+                    exit(Tools::displayError($error));
                 }
             } // End foreach $order_detail_list
             if (isset($order) && $order->id) {
@@ -450,13 +452,15 @@ abstract class PaymentModule extends PaymentModuleCore
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
+
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
-            die(Tools::displayError($error));
+            exit(Tools::displayError($error));
         }
     }
+
     /*
     * module: idxrcustomproduct
     * date: 2025-10-07 10:54:09
@@ -468,17 +472,18 @@ abstract class PaymentModule extends PaymentModuleCore
         $amount_paid,
         $payment_method = 'Unknown',
         $message = null,
-        $extra_vars = array(),
+        $extra_vars = [],
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null,
+        ?Shop $shop = null,
         ?string $order_reference = null
     ) {
         if ((bool) Module::isEnabled('idxrcustomproduct')) {
             $module = Module::getInstanceByName('idxrcustomproduct');
             $module->adjustStock($id_cart);
         }
+
         return parent::validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method, $message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop, $order_reference);
     }
 }

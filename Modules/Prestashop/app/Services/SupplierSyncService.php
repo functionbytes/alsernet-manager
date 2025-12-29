@@ -3,9 +3,9 @@
 namespace Modules\Prestashop\Services;
 
 use Modules\Prestashop\Entities\Product;
-use App\Models\Supplier\Supplier;
-use App\Models\Supplier\SupplierAiContent;
-use App\Models\Supplier\SupplierProductImage;
+use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Entities\SupplierAiContent;
+use Modules\Supplier\Entities\SupplierProductImage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;

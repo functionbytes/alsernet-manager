@@ -1,8 +1,7 @@
 <?php
 
-
-require_once(_PS_MODULE_DIR_.'alsernetcustomer/classes/Wishlist/Wishlist.php');
-require_once(_PS_MODULE_DIR_.'alsernetcustomer/classes/Wishlist/FeatureProduct.php');
+require_once _PS_MODULE_DIR_.'alsernetcustomer/classes/Wishlist/Wishlist.php';
+require_once _PS_MODULE_DIR_.'alsernetcustomer/classes/Wishlist/FeatureProduct.php';
 
 class WishlistController extends FrontController
 {
@@ -14,17 +13,17 @@ class WishlistController extends FrontController
 
         if ($this->context->customer->isLogged()) {
 
-            $products = array();
+            $products = [];
 
             $wishlist = WishList::existsLang($this->context->customer->id, 1);
 
             if ($wishlist) {
 
-                $wishlist_product = WishList::getProductByIdWishlist((int)$wishlist['id_wishlist'], $this->context->customer->id, 1);
+                $wishlist_product = WishList::getProductByIdWishlist((int) $wishlist['id_wishlist'], $this->context->customer->id, 1);
 
-                $product_object = new FeatureProduct();
+                $product_object = new FeatureProduct;
 
-                if (!empty($wishlist_product)) {
+                if (! empty($wishlist_product)) {
 
                     foreach ($wishlist_product as $wishlist_product_item) {
                         $list_product_tmp['product'] = $product_object->getTemplateVarProductTemplate($wishlist_product_item['id_product'], $wishlist_product_item['id_product_attribute']);
@@ -35,21 +34,18 @@ class WishlistController extends FrontController
 
             }
 
-
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'wishlist' => $wishlist,
                 'id_wishlist' => $wishlist['id_wishlist'],
                 'inventaries' => $products,
-            ));
+            ]);
 
             $this->setTemplate('customer/wishlist.tpl');
 
-        }else{
+        } else {
             Tools::redirectLink($this->context->link->getPageLink('authentication', true));
 
         }
 
     }
-
-
 }

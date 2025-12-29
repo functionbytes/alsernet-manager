@@ -3,7 +3,7 @@
 namespace Modules\Returns\Models;
 
 use App\Models\Product;
-use App\Models\Supplier;
+use Modules\Supplier\Entities\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,8 +27,7 @@
 interface ChecksumInterface
 {
     /**
-     * @param $object checksum target
-     *
+     * @param  $object  checksum target
      * @return string
      */
     public function generateChecksum($object);

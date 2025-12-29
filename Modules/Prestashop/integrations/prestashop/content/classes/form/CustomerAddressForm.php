@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -71,7 +72,7 @@ class CustomerAddressFormCore extends AbstractForm
             return Tools::redirect('pagenotfound');
         }
 
-        if (!$context->customer->isLogged() && !$context->customer->isGuest()) {
+        if (! $context->customer->isLogged() && ! $context->customer->isGuest()) {
             return Tools::redirect('/index.php?controller=authentication');
         }
 
@@ -115,7 +116,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function submit()
     {
-        if (!$this->validate()) {
+        if (! $this->validate()) {
             return false;
         }
 
@@ -128,7 +129,7 @@ class CustomerAddressFormCore extends AbstractForm
             $address->{$formField->getName()} = $formField->getValue();
         }
 
-        if (!isset($this->formFields['id_state'])) {
+        if (! isset($this->formFields['id_state'])) {
             $address->id_state = 0;
         }
 
@@ -177,7 +178,7 @@ class CustomerAddressFormCore extends AbstractForm
     {
         $context = Context::getContext();
 
-        if (!$this->formFields) {
+        if (! $this->formFields) {
             // This is usually done by fillWith but the form may be
             // rendered before fillWith is called.
             // I don't want to assign formFields in the constructor
@@ -213,8 +214,6 @@ class CustomerAddressFormCore extends AbstractForm
     /**
      * Performs validation on field values.
      * Returns true if all field values are correct, false otherwise.
-     *
-     * @return bool
      */
     private function validateFieldsValues(): bool
     {
@@ -240,15 +239,12 @@ class CustomerAddressFormCore extends AbstractForm
         return (bool) $isValid;
     }
 
-    /**
-     * @return bool
-     */
     private function validatePostcode(): bool
     {
         $postcode = $this->getField('postcode');
         if ($postcode && $postcode->isRequired()) {
             $country = $this->formatter->getCountry();
-            if (!$country->checkZipCode($postcode->getValue())) {
+            if (! $country->checkZipCode($postcode->getValue())) {
                 $postcode->addError($this->translator->trans(
                     'Invalid postcode - should look like "%zipcode%"',
                     ['%zipcode%' => $country->zip_code_format],
@@ -262,24 +258,17 @@ class CustomerAddressFormCore extends AbstractForm
         return true;
     }
 
-    /**
-     * @param string $fieldName
-     * @param string $validationFunction
-     * @param string $validationFailMessage
-     *
-     * @return bool
-     */
     private function validateField(string $fieldName, string $validationFunction, string $validationFailMessage): bool
     {
         $field = $this->getField($fieldName);
-        if (null === $field) {
+        if ($field === null) {
             return true;
         }
         $value = $field->getValue();
         if ($field->isRequired() && empty($value)) {
             return false;
         }
-        if (!empty($value) && false === (bool) Validate::$validationFunction($value)) {
+        if (! empty($value) && (bool) Validate::$validationFunction($value) === false) {
             $field->addError($validationFailMessage);
 
             return false;

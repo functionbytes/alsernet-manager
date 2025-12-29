@@ -1,27 +1,28 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../../config/config.inc.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
 
-require_once(dirname(__DIR__) . '/integration/auxiliares.php');
-$auxiliares = new auxiliares();
+require_once dirname(__DIR__).'/integration/auxiliares.php';
+$auxiliares = new auxiliares;
 
 // Detiene la ejecución durante 2 segundos
 echo "Inicio => Se espera 2 segundos\n";
 sleep(2);
 
-$procesando = Db::getInstance()->getRow("SELECT * FROM aalv_bandera_integracion WHERE id = 2");
+$procesando = Db::getInstance()->getRow('SELECT * FROM aalv_bandera_integracion WHERE id = 2');
 $nn = 0;
-if($procesando['activo'] == 0){
-    Db::getInstance()->Execute("UPDATE aalv_bandera_integracion set activo=1, fecha = NOW() WHERE id = 2");
+if ($procesando['activo'] == 0) {
+    Db::getInstance()->Execute('UPDATE aalv_bandera_integracion set activo=1, fecha = NOW() WHERE id = 2');
 
-    $sql = Db::getInstance()->executeS("SELECT id_product FROM aalv_alsernet_cache_producto group by id_product ");
+    $sql = Db::getInstance()->executeS('SELECT id_product FROM aalv_alsernet_cache_producto group by id_product ');
 
     foreach ($sql as $value) {
 
@@ -41,12 +42,12 @@ if($procesando['activo'] == 0){
 
         // Verificamos si el código de estado es 200 (OK)
         if ($http_code == 200) {
-            echo "(".$nn.") La solicitud fue exitosa. Código de estado: 200\n";
-            Db::getInstance()->Execute("DELETE FROM aalv_alsernet_cache_producto WHERE id_product =".$value['id_product']);
+            echo '('.$nn.") La solicitud fue exitosa. Código de estado: 200\n";
+            Db::getInstance()->Execute('DELETE FROM aalv_alsernet_cache_producto WHERE id_product ='.$value['id_product']);
             // echo "DELETE FROM aalv_alsernet_cache_producto WHERE id_product =".$value['id_product']."\n";
         } else {
             echo "La solicitud a falló. Código de estado: $http_code\n";
-            echo "id producto => ".$value['id_product']."\n";
+            echo 'id producto => '.$value['id_product']."\n";
         }
 
         // Cerrar la conexión cURL
@@ -57,13 +58,13 @@ if($procesando['activo'] == 0){
 
         sleep(3);
         $nn++;
-        if($nn == 150){
+        if ($nn == 150) {
             break;
         }
     }
 
-    Db::getInstance()->Execute("UPDATE aalv_bandera_integracion set activo=0, fecha=NOW() WHERE id=2");
-}else{
+    Db::getInstance()->Execute('UPDATE aalv_bandera_integracion set activo=0, fecha=NOW() WHERE id=2');
+} else {
     echo "\nSe esta procesando.\n";
 }
 echo "\n\n\n";

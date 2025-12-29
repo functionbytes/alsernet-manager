@@ -11,7 +11,7 @@ use app\Library\HtmlHandler\InjectTrackingPixel;
 use app\Library\HtmlHandler\TransformUrl;
 use app\Library\RouletteWheel;
 use app\Library\StringHelper;
-use app\Library\Traits\HasTemplate;
+use Modules\Campaign\Library\Traits\HasTemplate;
 use App\Models\SendingServer;
 use App\Models\Setting;
 use Carbon\Carbon;

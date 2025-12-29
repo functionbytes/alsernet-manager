@@ -1,53 +1,65 @@
 <?php
-/**
-* 2007-2017 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author ADDIS Network <info@addis.es>
-*  @copyright  2021-2021 ADDIS Network
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
 
-if (!defined('_PS_VERSION_')) {
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author ADDIS Network <info@addis.es>
+ *  @copyright  2021-2021 ADDIS Network
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
-class Marcarbono extends ObjectModel {
-
+class Marcarbono extends ObjectModel
+{
     /**
      * public properties
      */
     public $id;
-    public $id_cart;
-    public $id_order;
-    public $id_cart_rule;
-    public $bono;
-    public $codigo_verificacion;
-    public $operacion;
-    public $importe_venta;
-    public $importe_inicial_tarjeta_regalo;
-    public $origen;
-    public $erp_response;
-    public $deleted;
-    public $date_add;
-    public $date_upd;
 
+    public $id_cart;
+
+    public $id_order;
+
+    public $id_cart_rule;
+
+    public $bono;
+
+    public $codigo_verificacion;
+
+    public $operacion;
+
+    public $importe_venta;
+
+    public $importe_inicial_tarjeta_regalo;
+
+    public $origen;
+
+    public $erp_response;
+
+    public $deleted;
+
+    public $date_add;
+
+    public $date_upd;
 
     public static $definition = [
         'table' => 'marcarbono',
@@ -71,8 +83,9 @@ class Marcarbono extends ObjectModel {
         ],
     ];
 
-    public function add($auto_date = true, $null_values = false) {
-        parent:: add($auto_date, $null_values);
+    public function add($auto_date = true, $null_values = false)
+    {
+        parent::add($auto_date, $null_values);
 
         if (strtolower(trim($this->erp_response)) != 'ok') {
             // enviar email al webmaster para indicar que ha fallado el marcar bono del ERP
@@ -105,9 +118,10 @@ class Marcarbono extends ObjectModel {
         }
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->deleted = 1;
+
         return parent::save();
     }
-
 }

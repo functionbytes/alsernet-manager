@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,16 +27,27 @@
 class SpecificPriceRuleCore extends ObjectModel
 {
     public $name;
+
     public $id_shop;
+
     public $id_currency;
+
     public $id_country;
+
     public $id_group;
+
     public $from_quantity;
+
     public $price;
+
     public $reduction;
+
     public $reduction_tax;
+
     public $reduction_type;
+
     public $from;
+
     public $to;
 
     protected static $rules_application_enable = true;
@@ -81,7 +93,7 @@ class SpecificPriceRuleCore extends ObjectModel
     public function delete()
     {
         $this->deleteConditions();
-        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id);
+        Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int) $this->id);
 
         return (bool) parent::delete();
     }
@@ -89,12 +101,12 @@ class SpecificPriceRuleCore extends ObjectModel
     public function deleteConditions()
     {
         $ids_condition_group = Db::getInstance()->executeS('SELECT id_specific_price_rule_condition_group
-																		 FROM ' . _DB_PREFIX_ . 'specific_price_rule_condition_group
-																		 WHERE id_specific_price_rule=' . (int) $this->id);
+																		 FROM '._DB_PREFIX_.'specific_price_rule_condition_group
+																		 WHERE id_specific_price_rule='.(int) $this->id);
         if ($ids_condition_group) {
             foreach ($ids_condition_group as $row) {
-                Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule_condition_group=' . (int) $row['id_specific_price_rule_condition_group']);
-                Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group=' . (int) $row['id_specific_price_rule_condition_group']);
+                Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule_condition_group='.(int) $row['id_specific_price_rule_condition_group']);
+                Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int) $row['id_specific_price_rule_condition_group']);
             }
         }
     }
@@ -111,14 +123,14 @@ class SpecificPriceRuleCore extends ObjectModel
 
     public function addConditions($conditions)
     {
-        if (!is_array($conditions)) {
+        if (! is_array($conditions)) {
             return;
         }
 
         $result = Db::getInstance()->insert('specific_price_rule_condition_group', [
             'id_specific_price_rule' => (int) $this->id,
         ]);
-        if (!$result) {
+        if (! $result) {
             return false;
         }
         $id_specific_price_rule_condition_group = (int) Db::getInstance()->Insert_ID();
@@ -128,7 +140,7 @@ class SpecificPriceRuleCore extends ObjectModel
                 'type' => pSQL($condition['type']),
                 'value' => (float) $condition['value'],
             ]);
-            if (!$result) {
+            if (! $result) {
                 return false;
             }
         }
@@ -138,7 +150,7 @@ class SpecificPriceRuleCore extends ObjectModel
 
     public function apply($products = false)
     {
-        if (!SpecificPriceRule::$rules_application_enable) {
+        if (! SpecificPriceRule::$rules_application_enable) {
             return;
         }
 
@@ -153,18 +165,18 @@ class SpecificPriceRuleCore extends ObjectModel
     {
         $where = '';
         if ($products && count($products)) {
-            $where .= ' AND id_product IN (' . implode(', ', array_map('intval', $products)) . ')';
+            $where .= ' AND id_product IN ('.implode(', ', array_map('intval', $products)).')';
         }
 
-        return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_specific_price_rule=' . (int) $this->id . $where);
+        return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int) $this->id.$where);
     }
 
     /**
-     * @param array|bool $products
+     * @param  array|bool  $products
      */
     public static function applyAllRules($products = false)
     {
-        if (!SpecificPriceRule::$rules_application_enable) {
+        if (! SpecificPriceRule::$rules_application_enable) {
             return;
         }
 
@@ -180,22 +192,22 @@ class SpecificPriceRuleCore extends ObjectModel
         $conditions = Db::getInstance()->executeS(
             '
 			SELECT g.*, c.*
-			FROM ' . _DB_PREFIX_ . 'specific_price_rule_condition_group g
-			LEFT JOIN ' . _DB_PREFIX_ . 'specific_price_rule_condition c
+			FROM '._DB_PREFIX_.'specific_price_rule_condition_group g
+			LEFT JOIN '._DB_PREFIX_.'specific_price_rule_condition c
 				ON (c.id_specific_price_rule_condition_group = g.id_specific_price_rule_condition_group)
-			WHERE g.id_specific_price_rule=' . (int) $this->id
+			WHERE g.id_specific_price_rule='.(int) $this->id
         );
         $conditions_group = [];
         if ($conditions) {
             foreach ($conditions as &$condition) {
                 if ($condition['type'] == 'attribute') {
                     $condition['id_attribute_group'] = Db::getInstance()->getValue('SELECT id_attribute_group
-																										FROM ' . _DB_PREFIX_ . 'attribute
-																										WHERE id_attribute=' . (int) $condition['value']);
+																										FROM '._DB_PREFIX_.'attribute
+																										WHERE id_attribute='.(int) $condition['value']);
                 } elseif ($condition['type'] == 'feature') {
                     $condition['id_feature'] = Db::getInstance()->getValue('SELECT id_feature
-																								FROM ' . _DB_PREFIX_ . 'feature_value
-																								WHERE id_feature_value=' . (int) $condition['value']);
+																								FROM '._DB_PREFIX_.'feature_value
+																								WHERE id_feature_value='.(int) $condition['value']);
                 }
                 $conditions_group[(int) $condition['id_specific_price_rule_condition_group']][] = $condition;
             }
@@ -207,8 +219,7 @@ class SpecificPriceRuleCore extends ObjectModel
     /**
      * Return the product list affected by this specific rule.
      *
-     * @param bool|array $products inventaries list limitation
-     *
+     * @param  bool|array  $products  inventaries list limitation
      * @return array affected inventaries list IDs
      *
      * @throws PrestaShopDatabaseException
@@ -223,18 +234,18 @@ class SpecificPriceRuleCore extends ObjectModel
         if ($conditions_group) {
             foreach ($conditions_group as $id_condition_group => $condition_group) {
                 // Base request
-                $query = new DbQuery();
+                $query = new DbQuery;
                 $query->select('p.`id_product`')
                     ->from('product', 'p')
                     ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = ' . (int) $current_shop_id);
+                    ->where('ps.id_shop = '.(int) $current_shop_id);
 
                 $attributes_join_added = false;
 
                 // Add the conditions
                 foreach ($condition_group as $id_condition => $condition) {
                     if ($condition['type'] == 'attribute') {
-                        if (!$attributes_join_added) {
+                        if (! $attributes_join_added) {
                             $query->select('pa.`id_product_attribute`')
                                 ->leftJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`')
                                 ->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
@@ -242,36 +253,36 @@ class SpecificPriceRuleCore extends ObjectModel
                             $attributes_join_added = true;
                         }
 
-                        $query->leftJoin('product_attribute_combination', 'pac' . (int) $id_condition, 'pa.`id_product_attribute` = pac' . (int) $id_condition . '.`id_product_attribute`')
-                            ->where('pac' . (int) $id_condition . '.`id_attribute` = ' . (int) $condition['value']);
+                        $query->leftJoin('product_attribute_combination', 'pac'.(int) $id_condition, 'pa.`id_product_attribute` = pac'.(int) $id_condition.'.`id_product_attribute`')
+                            ->where('pac'.(int) $id_condition.'.`id_attribute` = '.(int) $condition['value']);
                     } elseif ($condition['type'] == 'manufacturer') {
-                        $query->where('p.id_manufacturer = ' . (int) $condition['value']);
+                        $query->where('p.id_manufacturer = '.(int) $condition['value']);
                     } elseif ($condition['type'] == 'category') {
-                        $query->leftJoin('category_product', 'cp' . (int) $id_condition, 'p.`id_product` = cp' . (int) $id_condition . '.`id_product`')
-                            ->where('cp' . (int) $id_condition . '.id_category = ' . (int) $condition['value']);
+                        $query->leftJoin('category_product', 'cp'.(int) $id_condition, 'p.`id_product` = cp'.(int) $id_condition.'.`id_product`')
+                            ->where('cp'.(int) $id_condition.'.id_category = '.(int) $condition['value']);
                     } elseif ($condition['type'] == 'supplier') {
                         $query->where('EXISTS(
 							SELECT
-								`ps' . (int) $id_condition . '`.`id_product`
+								`ps'.(int) $id_condition.'`.`id_product`
 							FROM
-								`' . _DB_PREFIX_ . 'product_supplier` `ps' . (int) $id_condition . '`
+								`'._DB_PREFIX_.'product_supplier` `ps'.(int) $id_condition.'`
 							WHERE
-								`p`.`id_product` = `ps' . (int) $id_condition . '`.`id_product`
-								AND `ps' . (int) $id_condition . '`.`id_supplier` = ' . (int) $condition['value'] . '
+								`p`.`id_product` = `ps'.(int) $id_condition.'`.`id_product`
+								AND `ps'.(int) $id_condition.'`.`id_supplier` = '.(int) $condition['value'].'
 						)');
                     } elseif ($condition['type'] == 'feature') {
-                        $query->leftJoin('feature_product', 'fp' . (int) $id_condition, 'p.`id_product` = fp' . (int) $id_condition . '.`id_product`')
-                            ->where('fp' . (int) $id_condition . '.`id_feature_value` = ' . (int) $condition['value']);
+                        $query->leftJoin('feature_product', 'fp'.(int) $id_condition, 'p.`id_product` = fp'.(int) $id_condition.'.`id_product`')
+                            ->where('fp'.(int) $id_condition.'.`id_feature_value` = '.(int) $condition['value']);
                     }
                 }
 
                 // Products limitation
                 if ($products && count($products)) {
-                    $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
+                    $query->where('p.`id_product` IN ('.implode(', ', array_map('intval', $products)).')');
                 }
 
                 // Force the column id_product_attribute if not requested
-                if (!$attributes_join_added) {
+                if (! $attributes_join_added) {
                     $query->select('NULL as `id_product_attribute`');
                 }
 
@@ -280,14 +291,14 @@ class SpecificPriceRuleCore extends ObjectModel
         } else {
             // All inventaries without conditions
             if ($products && count($products)) {
-                if (!SpecificPrice::getByProductId(0, false, false, (int) $this->id)) {
-                    $query = new DbQuery();
+                if (! SpecificPrice::getByProductId(0, false, false, (int) $this->id)) {
+                    $query = new DbQuery;
                     $query->select('p.`id_product`')
                         ->select('NULL as `id_product_attribute`')
                         ->from('product', 'p')
                         ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                        ->where('ps.id_shop = ' . (int) $current_shop_id);
-                    $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
+                        ->where('ps.id_shop = '.(int) $current_shop_id);
+                    $query->where('p.`id_product` IN ('.implode(', ', array_map('intval', $products)).')');
                     $result = Db::getInstance()->executeS($query);
                 }
             } else {
@@ -301,11 +312,11 @@ class SpecificPriceRuleCore extends ObjectModel
     public static function applyRuleToProduct($id_rule, $id_product, $id_product_attribute = null)
     {
         $rule = new SpecificPriceRule((int) $id_rule);
-        if (!Validate::isLoadedObject($rule) || !Validate::isUnsignedInt($id_product)) {
+        if (! Validate::isLoadedObject($rule) || ! Validate::isUnsignedInt($id_product)) {
             return false;
         }
 
-        $specific_price = new SpecificPrice();
+        $specific_price = new SpecificPrice;
         $specific_price->id_specific_price_rule = (int) $rule->id;
         $specific_price->id_product = (int) $id_product;
         $specific_price->id_product_attribute = (int) $id_product_attribute;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -154,7 +155,7 @@ class ContextCore
     public function getMobileDetect()
     {
         if ($this->mobile_detect === null) {
-            $this->mobile_detect = new Mobile_Detect();
+            $this->mobile_detect = new Mobile_Detect;
         }
 
         return $this->mobile_detect;
@@ -205,13 +206,13 @@ class ContextCore
                 } else {
                     switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
                         case 1: // Only for mobile device
-                            if ($this->isMobile() && !$this->isTablet()) {
+                            if ($this->isMobile() && ! $this->isTablet()) {
                                 $this->mobile_device = true;
                             }
 
                             break;
                         case 2: // Only for touchpads
-                            if ($this->isTablet() && !$this->isMobile()) {
+                            if ($this->isTablet() && ! $this->isMobile()) {
                                 $this->mobile_device = true;
                             }
 
@@ -289,7 +290,7 @@ class ContextCore
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
-            && !Context::getContext()->cookie->no_mobile;
+            && ! Context::getContext()->cookie->no_mobile;
     }
 
     /**
@@ -299,16 +300,16 @@ class ContextCore
      */
     public static function getContext()
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new Context();
+        if (! isset(self::$instance)) {
+            self::$instance = new Context;
         }
 
         return self::$instance;
     }
 
     /**
-     * @param $testInstance Context
-     * Unit testing purpose only
+     * @param  $testInstance  Context
+     *                       Unit testing purpose only
      */
     public static function setInstanceForTesting($testInstance)
     {
@@ -336,7 +337,7 @@ class ContextCore
     /**
      * Update context after customer login.
      *
-     * @param Customer $customer Created customer
+     * @param  Customer  $customer  Created customer
      */
     public function updateCustomer(Customer $customer)
     {
@@ -365,7 +366,7 @@ class ContextCore
         $this->cart->id_customer = (int) $customer->id;
 
         if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
+            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier.','];
             $this->cart->setDeliveryOption($deliveryOption);
         }
 
@@ -374,26 +375,25 @@ class ContextCore
         $this->cookie->write();
         $this->cart->autosetProductAddress();
 
-        $this->cookie->registerSession(new CustomerSession());
+        $this->cookie->registerSession(new CustomerSession);
     }
 
     /**
      * Returns a translator depending on service container availability and if the method
      * is called by the installer or not.
      *
-     * @param bool $isInstaller Set to true if the method is called by the installer
-     *
+     * @param  bool  $isInstaller  Set to true if the method is called by the installer
      * @return Translator
      */
     public function getTranslator($isInstaller = false)
     {
-        if (null !== $this->translator && $this->language->locale === $this->translator->getLocale()) {
+        if ($this->translator !== null && $this->language->locale === $this->translator->getLocale()) {
             return $this->translator;
         }
 
         $sfContainer = SymfonyContainer::getInstance();
 
-        if ($isInstaller || null === $sfContainer) {
+        if ($isInstaller || $sfContainer === null) {
             // symfony's container isn't available in front office, so we load and configure the translator component
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
@@ -409,18 +409,17 @@ class ContextCore
     /**
      * Returns a new instance of Translator for the provided locale code.
      *
-     * @param string $locale IETF language tag (eg. "en-US")
-     *
+     * @param  string  $locale  IETF language tag (eg. "en-US")
      * @return Translator
      */
     public function getTranslatorFromLocale($locale)
     {
-        $cacheDir = _PS_CACHE_DIR_ . 'translations';
+        $cacheDir = _PS_CACHE_DIR_.'translations';
         $translator = new Translator($locale, null, $cacheDir, false);
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if ($locale === '' || null === $locale || count($translator->getCatalogue($locale)->all())) {
+        if ($locale === '' || $locale === null || count($translator->getCatalogue($locale)->all())) {
             return $translator;
         }
 
@@ -431,8 +430,8 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.' . $locale . '.*');
-            (new Filesystem())->remove($cache_file);
+                ->name('*.'.$locale.'.*');
+            (new Filesystem)->remove($cache_file);
         }
 
         $translator->clearLanguage($locale);
@@ -440,7 +439,7 @@ class ContextCore
         $adminContext = defined('_PS_ADMIN_DIR_');
         // Do not load DB translations when $this->language is InstallLanguage
         // because it means that we're looking for the installer translations, so we're not yet connected to the DB
-        $withDB = !$this->language instanceof InstallLanguage;
+        $withDB = ! $this->language instanceof InstallLanguage;
         $theme = $this->shop !== null ? $this->shop->theme : null;
 
         try {
@@ -452,7 +451,7 @@ class ContextCore
             // If a container is still not found, instantiate manually the translator loader
             // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
             // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-            (new TranslatorLanguageLoader(new ModuleRepository()))
+            (new TranslatorLanguageLoader(new ModuleRepository))
                 ->setIsAdminContext($adminContext)
                 ->loadLanguage($translator, $locale, $withDB, $theme);
         }
@@ -465,10 +464,10 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
+        $locations = [_PS_ROOT_DIR_.'/app/Resources/translations'];
 
-        if (null !== $this->shop) {
-            $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
+        if ($this->shop !== null) {
+            $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;
             }
@@ -485,7 +484,7 @@ class ContextCore
     public function getComputingPrecision()
     {
         if ($this->priceComputingPrecision === null) {
-            $computingPrecision = new ComputingPrecision();
+            $computingPrecision = new ComputingPrecision;
             $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
         }
 

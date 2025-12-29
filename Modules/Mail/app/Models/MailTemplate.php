@@ -2,7 +2,7 @@
 
 namespace Modules\Mail\Models;
 
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,9 @@
 class CustomerAddressPersisterCore
 {
     private $customer;
+
     private $token;
+
     private $cart;
 
     public function __construct(Customer $customer, Cart $cart, $token)
@@ -58,7 +61,7 @@ class CustomerAddressPersisterCore
 
     public function save(Address $address, $token)
     {
-        if (!$this->authorizeChange($address, $token)) {
+        if (! $this->authorizeChange($address, $token)) {
             return false;
         }
 
@@ -73,7 +76,7 @@ class CustomerAddressPersisterCore
 
     public function delete(Address $address, $token)
     {
-        if (!$this->authorizeChange($address, $token)) {
+        if (! $this->authorizeChange($address, $token)) {
             return false;
         }
 
@@ -101,7 +104,6 @@ class CustomerAddressPersisterCore
      * instead it is set to "deleted" (but kept in database) and a new address
      * is created.
      *
-     * @param Address $address
      *
      * @return bool
      */

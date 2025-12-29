@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,7 +30,6 @@
  */
 class Meta extends MetaCore
 {
-  
     /**
      * Get meta tags.
      *
@@ -38,9 +38,8 @@ class Meta extends MetaCore
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
 
-        //if (Configuration::get('PS_SHOP_ENABLE')
-          //  || IpUtils::checkIp(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
-
+        // if (Configuration::get('PS_SHOP_ENABLE')
+        //  || IpUtils::checkIp(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
 
         if (Configuration::get('PS_SHOP_ENABLE')) {
             if ($pageName == 'product' && ($idProduct = Tools::getValue('id_product'))) {
@@ -67,35 +66,36 @@ class Meta extends MetaCore
         return Meta::getHomeMetas($idLang, $pageName);
     }
 
-	public static function getMejoresMetas($deporte, $idLang, $pageName)
+    public static function getMejoresMetas($deporte, $idLang, $pageName)
     {
-        $id_deporte = Db::getInstance()->getValue("SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
+        $id_deporte = Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
         $category = new Category($id_deporte, $idLang);
         $row = Meta::getPresentedObject($category);
         $row['meta_title'] = Context::getContext()->getTranslator()->trans('Ofertas de %d% y descuentos - Álvarez Deporte y tiempo libre', ['%d%' => $deporte], 'Admin.Meta');
         $row['meta_description'] = Context::getContext()->getTranslator()->trans('Encuentra todas las ofertas de %d% disponibles en la sección de %d%  de Álvarez. Entra y descubre increibles descuentos en tus productos favoritos de %d%.', ['%d%' => $deporte], 'Admin.Meta');
+
         return Meta::completeMetaTags($row, $row['meta_title']);
     }
 
     public static function getOfertasMetas($deporte, $idLang, $pageName)
     {
-        $id_deporte = Db::getInstance()->getValue("SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
+        $id_deporte = Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
         $category = new Category($id_deporte, $idLang);
         $row = Meta::getPresentedObject($category);
         $row['meta_title'] = Context::getContext()->getTranslator()->trans('Ofertas de %d% y descuentos - Álvarez Deporte y tiempo libre', ['%d%' => $deporte], 'Admin.Meta');
         $row['meta_description'] = Context::getContext()->getTranslator()->trans('Encuentra todas las ofertas de %d% disponibles en la sección de %d%  de Álvarez. Entra y descubre increibles descuentos en tus productos favoritos de %d%.', ['%d%' => $deporte], 'Admin.Meta');
+
         return Meta::completeMetaTags($row, $row['meta_title']);
     }
 
     public static function getNovedadesMetas($deporte, $idLang, $pageName)
     {
-        $id_deporte = Db::getInstance()->getValue("SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
+        $id_deporte = Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$deporte."' || name = '".strtoupper($deporte)."' || link_rewrite = '".$deporte."' || link_rewrite = '".str_replace(' ', '-', $deporte)."') AND id_lang = ".Context::getContext()->language->id);
         $category = new Category($id_deporte, $idLang);
         $row = Meta::getPresentedObject($category);
         $row['meta_title'] = Context::getContext()->getTranslator()->trans('Álvarez - Novedades - Tu tienda de deportes online y tiempo libre', ['%d%' => $deporte], 'Admin.Meta');
         $row['meta_description'] = Context::getContext()->getTranslator()->trans('Todos los productos en deporte y tiempo libre: caza, pesca, golf, buceo, esquí y mucho más', ['%d%' => $deporte], 'Admin.Meta');
+
         return Meta::completeMetaTags($row, $row['meta_title']);
     }
-	
-   
 }

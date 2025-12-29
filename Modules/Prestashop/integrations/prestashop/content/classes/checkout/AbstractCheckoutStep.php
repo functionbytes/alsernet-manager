@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,6 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 {
     private $smarty;
+
     private $translator;
 
     /**
@@ -38,17 +40,17 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     private $title;
 
     protected $step_is_reachable = false;
+
     protected $step_is_complete = false;
+
     protected $step_is_current = false;
+
     protected $context;
 
     protected $template;
+
     protected $unreachableStepTemplate = 'checkout/_partials/steps/unreachable.tpl';
 
-    /**
-     * @param Context $context
-     * @param TranslatorInterface $translator
-     */
     public function __construct(Context $context, TranslatorInterface $translator)
     {
         $this->context = $context;

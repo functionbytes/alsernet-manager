@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,6 +27,7 @@
 abstract class AbstractLoggerCore
 {
     public $level;
+
     protected $level_value = [
         0 => 'DEBUG',
         1 => 'INFO',
@@ -34,8 +36,11 @@ abstract class AbstractLoggerCore
     ];
 
     const DEBUG = 0;
+
     const INFO = 1;
+
     const WARNING = 2;
+
     const ERROR = 3;
 
     public function __construct($level = self::INFO)

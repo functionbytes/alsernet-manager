@@ -26,10 +26,8 @@
 */
 class Carrier extends CarrierCore
 {
-
     /** @var string Name to be shown in checkout with translations */
     public $show_name;
-
 
     /**
      * @see ObjectModel::$definition
@@ -70,28 +68,28 @@ class Carrier extends CarrierCore
     public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
     {
         // Filter by groups and no groups => return empty array
-        if ($ids_group && (!is_array($ids_group) || !count($ids_group))) {
+        if ($ids_group && (! is_array($ids_group) || ! count($ids_group))) {
             return [];
         }
 
         $sql = '
 		SELECT c.*, cl.delay,cl.show_name
-		FROM `' . _DB_PREFIX_ . 'carrier` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('cl') . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)' .
-            ($id_zone ? 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = ' . (int)$id_zone . ')' : '') . '
-		' . Shop::addSqlAssociation('carrier', 'c') . '
-		WHERE c.`deleted` = ' . ($delete ? '1' : '0');
+		FROM `'._DB_PREFIX_.'carrier` c
+		LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int) $id_lang.Shop::addSqlRestrictionOnLang('cl').')
+		LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)'.
+            ($id_zone ? 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = '.(int) $id_zone.')' : '').'
+		'.Shop::addSqlAssociation('carrier', 'c').'
+		WHERE c.`deleted` = '.($delete ? '1' : '0');
         if ($active) {
             $sql .= ' AND c.`active` = 1 ';
         }
         if ($id_zone) {
-            $sql .= ' AND cz.`id_zone` = ' . (int)$id_zone . ' AND z.`active` = 1 ';
+            $sql .= ' AND cz.`id_zone` = '.(int) $id_zone.' AND z.`active` = 1 ';
         }
         if ($ids_group) {
-            $sql .= ' AND EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'carrier_group
-									WHERE ' . _DB_PREFIX_ . 'carrier_group.id_carrier = c.id_carrier
-									AND id_group IN (' . implode(',', array_map('intval', $ids_group)) . ')) ';
+            $sql .= ' AND EXISTS (SELECT 1 FROM '._DB_PREFIX_.'carrier_group
+									WHERE '._DB_PREFIX_.'carrier_group.id_carrier = c.id_carrier
+									AND id_group IN ('.implode(',', array_map('intval', $ids_group)).')) ';
         }
 
         switch ($modules_filters) {
@@ -114,8 +112,8 @@ class Carrier extends CarrierCore
         }
         $sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
 
-        $cache_id = 'Carrier::getCarriers_' . md5($sql);
-        if (!Cache::isStored($cache_id)) {
+        $cache_id = 'Carrier::getCarriers_'.md5($sql);
+        if (! Cache::isStored($cache_id)) {
             $carriers = Db::getInstance()->executeS($sql);
             Cache::store($cache_id, $carriers);
         } else {
@@ -140,12 +138,12 @@ class Carrier extends CarrierCore
     {
         $carrier_list = parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
         if (Module::isEnabled('alvarezcarrierandpaymentlock')) {
-            require_once _PS_MODULE_DIR_ . 'alvarezcarrierandpaymentlock/classes/CarrierPaymentLock.php';
+            require_once _PS_MODULE_DIR_.'alvarezcarrierandpaymentlock/classes/CarrierPaymentLock.php';
             $carriers = [];
             foreach ($carrier_list as $carrier) {
                 $sql = 'SELECT c.`id_carrier`, c.`id_reference` 
-                        FROM `' . _DB_PREFIX_ . 'carrier` c 
-                        WHERE c.id_carrier=' . (int)$carrier;
+                        FROM `'._DB_PREFIX_.'carrier` c 
+                        WHERE c.id_carrier='.(int) $carrier;
                 $carrier_data = DB::getInstance()->getRow($sql);
                 if ($carrier_data) {
                     $carriers[] = $carrier_data;
@@ -164,45 +162,45 @@ class Carrier extends CarrierCore
                                 $familia = false;
                                 $subfamilia = false;
                                 $grupo = false;
-                                if (!empty($restriction['id_model_erp']) && $restriction['id_model_erp'] != '0' && is_numeric($restriction['id_model_erp'])) {
+                                if (! empty($restriction['id_model_erp']) && $restriction['id_model_erp'] != '0' && is_numeric($restriction['id_model_erp'])) {
                                     $sql = 'SELECT pi.* 
-                                            FROM `' . _DB_PREFIX_ . 'product_import` pi 
-                                            WHERE pi.`id_product`=' . (int)$product['id_product'] . ' AND pi.`id_modelo`=' . (int)$restriction['id_model_erp'];
+                                            FROM `'._DB_PREFIX_.'product_import` pi 
+                                            WHERE pi.`id_product`='.(int) $product['id_product'].' AND pi.`id_modelo`='.(int) $restriction['id_model_erp'];
                                     if (DB::getInstance()->getRow($sql)) {
                                         $modelo_erp = true;
                                     }
                                 } else {
                                     $modelo_erp = true;
                                 }
-                                if (!empty($restriction['id_category']) && $restriction['id_category'] != '0' && is_numeric($restriction['id_category'])) {
+                                if (! empty($restriction['id_category']) && $restriction['id_category'] != '0' && is_numeric($restriction['id_category'])) {
                                     $sql = 'SELECT cp.* 
-                                            FROM `' . _DB_PREFIX_ . 'category_product` cp 
-                                            WHERE cp.`id_product`=' . (int)$product['id_product'] . ' AND cp.`id_category`=' . (int)$restriction['id_category'];
+                                            FROM `'._DB_PREFIX_.'category_product` cp 
+                                            WHERE cp.`id_product`='.(int) $product['id_product'].' AND cp.`id_category`='.(int) $restriction['id_category'];
                                     if (DB::getInstance()->getRow($sql)) {
                                         $category = true;
                                     }
                                 } else {
                                     $category = true;
                                 }
-                                if (!empty($restriction['id_feature_value']) && $restriction['id_feature_value'] != '0' && is_numeric($restriction['id_feature_value'])) {
+                                if (! empty($restriction['id_feature_value']) && $restriction['id_feature_value'] != '0' && is_numeric($restriction['id_feature_value'])) {
                                     $sql = 'SELECT fp.*
-                                            FROM `' . _DB_PREFIX_ . 'feature_product` fp 
-                                            WHERE fp.`id_product`=' . (int)$product['id_product'] . ' AND fp.`id_feature_value`=' . (int)$restriction['id_feature_value'];
+                                            FROM `'._DB_PREFIX_.'feature_product` fp 
+                                            WHERE fp.`id_product`='.(int) $product['id_product'].' AND fp.`id_feature_value`='.(int) $restriction['id_feature_value'];
                                     if (DB::getInstance()->getRow($sql)) {
                                         $feature_value = true;
                                     }
                                 } else {
                                     $feature_value = true;
                                 }
-                                if (!empty($restriction['id_familia']) && $restriction['id_familia'] != '0' && is_numeric($restriction['id_familia'])) {
+                                if (! empty($restriction['id_familia']) && $restriction['id_familia'] != '0' && is_numeric($restriction['id_familia'])) {
                                     $sql = 'SELECT ci.*
-                                            FROM `' . _DB_PREFIX_ . 'combinacionunica_import` ci 
-                                            WHERE ci.`id_product`=' . (int)$product['id_product'] . ' AND ci.`familia`=' . (int)$restriction['id_familia'];
+                                            FROM `'._DB_PREFIX_.'combinacionunica_import` ci 
+                                            WHERE ci.`id_product`='.(int) $product['id_product'].' AND ci.`familia`='.(int) $restriction['id_familia'];
 
-                                    if ((int)$product['id_product_attribute']) {
+                                    if ((int) $product['id_product_attribute']) {
                                         $sql = 'SELECT ci.*
-                                                FROM `' . _DB_PREFIX_ . 'combinaciones_import` ci 
-                                                WHERE ci.`id_product_attribute`=' . (int)$product['id_product_attribute'] . ' AND ci.`familia`=' . (int)$restriction['id_familia'];
+                                                FROM `'._DB_PREFIX_.'combinaciones_import` ci 
+                                                WHERE ci.`id_product_attribute`='.(int) $product['id_product_attribute'].' AND ci.`familia`='.(int) $restriction['id_familia'];
                                     }
 
                                     if (DB::getInstance()->getRow($sql)) {
@@ -211,15 +209,15 @@ class Carrier extends CarrierCore
                                 } else {
                                     $familia = true;
                                 }
-                                if (!empty($restriction['id_subfamilia']) && $restriction['id_subfamilia'] != '0' && is_numeric($restriction['id_subfamilia'])) {
+                                if (! empty($restriction['id_subfamilia']) && $restriction['id_subfamilia'] != '0' && is_numeric($restriction['id_subfamilia'])) {
                                     $sql = 'SELECT ci.*
-                                            FROM `' . _DB_PREFIX_ . 'combinacionunica_import` ci 
-                                            WHERE ci.`id_product`=' . (int)$product['id_product'] . ' AND ci.`subfamilia`=' . (int)$restriction['id_subfamilia'];
+                                            FROM `'._DB_PREFIX_.'combinacionunica_import` ci 
+                                            WHERE ci.`id_product`='.(int) $product['id_product'].' AND ci.`subfamilia`='.(int) $restriction['id_subfamilia'];
 
-                                    if ((int)$product['id_product_attribute']) {
+                                    if ((int) $product['id_product_attribute']) {
                                         $sql = 'SELECT ci.*
-                                                FROM `' . _DB_PREFIX_ . 'combinaciones_import` ci 
-                                                WHERE ci.`id_product_attribute`=' . (int)$product['id_product_attribute'] . ' AND ci.`subfamilia`=' . (int)$restriction['id_subfamilia'];
+                                                FROM `'._DB_PREFIX_.'combinaciones_import` ci 
+                                                WHERE ci.`id_product_attribute`='.(int) $product['id_product_attribute'].' AND ci.`subfamilia`='.(int) $restriction['id_subfamilia'];
                                     }
 
                                     if (DB::getInstance()->getRow($sql)) {
@@ -228,15 +226,15 @@ class Carrier extends CarrierCore
                                 } else {
                                     $subfamilia = true;
                                 }
-                                if (!empty($restriction['id_grupo']) && $restriction['id_grupo'] != '0' && is_numeric($restriction['id_grupo'])) {
+                                if (! empty($restriction['id_grupo']) && $restriction['id_grupo'] != '0' && is_numeric($restriction['id_grupo'])) {
                                     $sql = 'SELECT ci.*
-                                            FROM `' . _DB_PREFIX_ . 'combinacionunica_import` ci 
-                                            WHERE ci.`id_product`=' . (int)$product['id_product'] . ' AND ci.`grupo`=' . (int)$restriction['id_grupo'];
+                                            FROM `'._DB_PREFIX_.'combinacionunica_import` ci 
+                                            WHERE ci.`id_product`='.(int) $product['id_product'].' AND ci.`grupo`='.(int) $restriction['id_grupo'];
 
-                                    if ((int)$product['id_product_attribute']) {
+                                    if ((int) $product['id_product_attribute']) {
                                         $sql = 'SELECT ci.*
-                                                FROM `' . _DB_PREFIX_ . 'combinaciones_import` ci 
-                                                WHERE ci.`id_product_attribute`=' . (int)$product['id_product_attribute'] . ' AND ci.`grupo`=' . (int)$restriction['id_grupo'];
+                                                FROM `'._DB_PREFIX_.'combinaciones_import` ci 
+                                                WHERE ci.`id_product_attribute`='.(int) $product['id_product_attribute'].' AND ci.`grupo`='.(int) $restriction['id_grupo'];
                                     }
 
                                     if (DB::getInstance()->getRow($sql)) {
@@ -264,22 +262,22 @@ class Carrier extends CarrierCore
                     }
                 }
 
-                if (!$is_enabled) {
+                if (! $is_enabled) {
                     unset($carrier_list[$key]);
                 }
             }
         }
 
-        /* JLP - no mostrar "recogida en tienda" ni "recogida en correos" si hay productos con envío especial*/
-        if (Configuration::get('BAN_CARRIER_REFERENCES_NO_SPECIAL_SHIPPING') && !empty(Configuration::get('BAN_CARRIER_REFERENCES_NO_SPECIAL_SHIPPING'))) {
+        /* JLP - no mostrar "recogida en tienda" ni "recogida en correos" si hay productos con envío especial */
+        if (Configuration::get('BAN_CARRIER_REFERENCES_NO_SPECIAL_SHIPPING') && ! empty(Configuration::get('BAN_CARRIER_REFERENCES_NO_SPECIAL_SHIPPING'))) {
             $carrier_references_no_special_shipping = Configuration::get('BAN_CARRIER_REFERENCES_NO_SPECIAL_SHIPPING');
             $carrier_references_no_special_shipping = explode(',', $carrier_references_no_special_shipping);
 
-            if ($carrier_references_no_special_shipping && !empty($carrier_references_no_special_shipping)) {
+            if ($carrier_references_no_special_shipping && ! empty($carrier_references_no_special_shipping)) {
                 $special_shipping_in_cart = false;
                 $products = Context::getContext()->cart->getProducts();
                 foreach ($products as $key => $value) {
-                    $sql = 'SELECT pp.`id` FROM `' . _DB_PREFIX_ . 'portes_producto` pp WHERE pp.`id_product`=' . (int)$value['id_product'] . ' AND pp.`id_product_attribute`=' . (int)$value['id_product_attribute'];
+                    $sql = 'SELECT pp.`id` FROM `'._DB_PREFIX_.'portes_producto` pp WHERE pp.`id_product`='.(int) $value['id_product'].' AND pp.`id_product_attribute`='.(int) $value['id_product_attribute'];
                     $id_portes_product = DB::getInstance()->getValue($sql);
                     if ($id_portes_product) {
                         $special_shipping_in_cart = true;
@@ -291,8 +289,8 @@ class Carrier extends CarrierCore
                     $carriers = [];
                     foreach ($carrier_list as $carrier) {
                         $sql = 'SELECT c.`id_carrier`, c.`id_reference` 
-                                FROM `' . _DB_PREFIX_ . 'carrier` c 
-                                WHERE c.id_carrier=' . (int)$carrier;
+                                FROM `'._DB_PREFIX_.'carrier` c 
+                                WHERE c.id_carrier='.(int) $carrier;
                         $carrier_data = DB::getInstance()->getRow($sql);
                         if ($carrier_data) {
                             $carriers[] = $carrier_data;
@@ -312,7 +310,7 @@ class Carrier extends CarrierCore
                                 $is_enabled = true;
                             }
                         }
-                        if (!$is_enabled) {
+                        if (! $is_enabled) {
                             unset($carrier_list[$key]);
                         }
                     }

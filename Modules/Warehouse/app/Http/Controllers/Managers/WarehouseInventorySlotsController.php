@@ -230,6 +230,8 @@ class WarehouseInventorySlotsController extends Controller
         $section = WarehouseLocationSection::where('uid', $section_uid)->where('location_id', $location->id)->firstOrFail();
         $slot = WarehouseInventorySlot::where('uid', $slot_uid)->where('section_id', $section->id)->firstOrFail();
 
+        $this->authorize('canAddQuantity', $slot);
+
         $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
             'reason' => 'nullable|string|max:255',
@@ -260,6 +262,8 @@ class WarehouseInventorySlotsController extends Controller
         $section = WarehouseLocationSection::where('uid', $section_uid)->where('location_id', $location->id)->firstOrFail();
         $slot = WarehouseInventorySlot::where('uid', $slot_uid)->where('section_id', $section->id)->firstOrFail();
 
+        $this->authorize('canSubtractQuantity', $slot);
+
         $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
             'reason' => 'nullable|string|max:255',
@@ -289,6 +293,8 @@ class WarehouseInventorySlotsController extends Controller
         $location = WarehouseLocation::where('uid', $location_uid)->where('floor_id', $floor->id)->firstOrFail();
         $section = WarehouseLocationSection::where('uid', $section_uid)->where('location_id', $location->id)->firstOrFail();
         $slot = WarehouseInventorySlot::where('uid', $slot_uid)->where('section_id', $section->id)->firstOrFail();
+
+        $this->authorize('canClear', $slot);
 
         $validated = $request->validate([
             'reason' => 'nullable|string|max:255',
@@ -324,6 +330,8 @@ class WarehouseInventorySlotsController extends Controller
         ]);
 
         $newSection = WarehouseLocationSection::findOrFail($validated['new_section_id']);
+
+        $this->authorize('canTransfer', [$slot, $newSection]);
 
         if (! $slot->moveTo(
             $newSection,

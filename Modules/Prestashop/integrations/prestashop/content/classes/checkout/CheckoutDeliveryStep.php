@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,9 +31,13 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/shipping.tpl';
 
     private $recyclablePackAllowed = false;
+
     private $giftAllowed = false;
+
     private $giftCost = 0;
+
     private $includeTaxes = false;
+
     private $displayTaxesLabel = false;
 
     public function setRecyclablePackAllowed($recyclablePackAllowed)
@@ -99,7 +104,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         if ($this->getGiftCost() != 0) {
             $taxLabel = '';
-            $priceFormatter = new PriceFormatter();
+            $priceFormatter = new PriceFormatter;
 
             if ($this->getIncludeTaxes() && $this->getDisplayTaxesLabel()) {
                 $taxLabel .= $this->getTranslator()->trans('tax incl.', [], 'Shop.Theme.Checkout');
@@ -152,7 +157,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->setNextStepAsCurrent();
             $this->setComplete(
-                !empty($deliveryOptions)
+                ! empty($deliveryOptions)
                 && $this->getCheckoutSession()->getSelectedDeliveryOption()
                 && $this->isModuleComplete($requestParams)
             );
@@ -195,7 +200,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $currentDeliveryOption = $deliveryOptions[$this->getCheckoutSession()->getSelectedDeliveryOption()];
-        if (!$currentDeliveryOption['is_module']) {
+        if (! $currentDeliveryOption['is_module']) {
             return true;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,10 +30,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerLoginForm extends CustomerLoginFormCore
 {
     private $context;
+
     private $urls;
 
     protected $template = 'customer/_partials/login-form.tpl';
-
 
     private $IDNConverter;
 
@@ -58,7 +59,7 @@ class CustomerLoginForm extends CustomerLoginFormCore
         $this->constraintTranslator = new ValidateConstraintTranslator(
             $this->translator
         );
-        $this->IDNConverter = new InternationalizedDomainNameConverter();
+        $this->IDNConverter = new InternationalizedDomainNameConverter;
     }
 
     public function submit($request = null)
@@ -66,15 +67,15 @@ class CustomerLoginForm extends CustomerLoginFormCore
 
         Hook::exec('actionAuthenticationBefore');
 
-        $customer = new Customer();
+        $customer = new Customer;
         $authentication = $customer->getByEmail(
             $this->getValue('email'),
             $this->getValue('password')
         );
 
-        if (isset($authentication->active) && !$authentication->active) {
+        if (isset($authentication->active) && ! $authentication->active) {
             $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Shop.Notifications.Error');
-        } elseif (!$authentication || !$customer->id || $customer->is_guest) {
+        } elseif (! $authentication || ! $customer->id || $customer->is_guest) {
             $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
         } else {
             $this->context->updateCustomer($customer);
@@ -83,15 +84,13 @@ class CustomerLoginForm extends CustomerLoginFormCore
             CartRule::autoAddToCart($this->context);
         }
 
-
-        return !$this->hasErrors();
-
+        return ! $this->hasErrors();
 
     }
 
     public function fillWith(array $params = [])
     {
-        if (!empty($params['email'])) {
+        if (! empty($params['email'])) {
             // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
             // we need to convert it back
             $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
@@ -102,7 +101,7 @@ class CustomerLoginForm extends CustomerLoginFormCore
 
     public function getTemplateVariables()
     {
-        if (!$this->formFields) {
+        if (! $this->formFields) {
             $this->formFields = $this->formatter->getFormat();
         }
 
@@ -119,6 +118,3 @@ class CustomerLoginForm extends CustomerLoginFormCore
         ];
     }
 }
-
-
-

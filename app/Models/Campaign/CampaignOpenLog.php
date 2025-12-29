@@ -2,7 +2,7 @@
 
 namespace App\Models\Campaign;
 
-use App\Events\Campaigns\CampaignUpdated;
+use Modules\Campaign\Events\CampaignUpdated;
 use app\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;
@@ -36,7 +36,7 @@ class CampaignOpenLog extends Model
 
     public function trackingLog()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignTrackingLog', 'message_id', 'message_id');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignTrackingLog', 'message_id', 'message_id');
     }
 
     public function ipLocation()

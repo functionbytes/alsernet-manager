@@ -24,6 +24,9 @@ class TransferController extends Controller
      */
     public function index()
     {
+        // Check if user has warehouse.transfer permission
+        abort_unless(auth()->user()->can('warehouse.transfer'), 403, 'No tiene permisos para realizar transferencias');
+
         $warehouses = \Modules\Warehouse\Entities\Warehouse::with('floors.locations.sections')->get();
 
         return view('warehouse::warehouse.transfers.index', [
@@ -179,6 +182,20 @@ class TransferController extends Controller
         $fromSection = WarehouseLocationSection::findOrFail($fromSectionId);
         $toSection = WarehouseLocationSection::findOrFail($toSectionId);
 
+        // Get slot for authorization check
+        $slot = WarehouseInventorySlot::where('section_id', $fromSectionId)
+            ->where('product_id', $productId)
+            ->first();
+
+        if (! $slot) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El producto no existe en la sección origen',
+            ], 404);
+        }
+
+        $this->authorize('canTransfer', [$slot, $toSection]);
+
         // Validar que pertenezcan a la misma ubicación
         if ($fromSection->location_id !== $toSection->location_id) {
             return response()->json([
@@ -187,23 +204,11 @@ class TransferController extends Controller
             ], 422);
         }
 
-        // Obtener slot origen
-        $fromSlot = WarehouseInventorySlot::where('section_id', $fromSectionId)
-            ->where('product_id', $productId)
-            ->first();
-
-        if (! $fromSlot) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El producto no existe en la sección origen',
-            ], 404);
-        }
-
         // Validar cantidad
-        if ($fromSlot->quantity < $quantity) {
+        if ($slot->quantity < $quantity) {
             return response()->json([
                 'success' => false,
-                'message' => "No hay suficiente cantidad. Disponible: {$fromSlot->quantity}",
+                'message' => "No hay suficiente cantidad. Disponible: {$slot->quantity}",
             ], 422);
         }
 
@@ -221,7 +226,7 @@ class TransferController extends Controller
             }
 
             // Realizar transferencia
-            $fromSlot->moveTo(
+            $slot->moveTo(
                 $toSection,
                 $quantity,
                 'Transferencia de sección',

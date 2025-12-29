@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop.
  *
@@ -46,7 +47,7 @@ class Ps_EmailsubscriptionVerificationModuleFrontControllerOverride extends Ps_E
      */
     public function initContent()
     {
-        
+
         parent::initContent();
 
         $this->context->smarty->assign('message', $this->message);

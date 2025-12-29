@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,16 +35,15 @@ class SmartyCustomCore extends Smarty
     /**
      * Delete compiled template file (lazy delete if resource_name is not specified).
      *
-     * @param string $resource_name template name
-     * @param string $compile_id compile id
-     * @param int $exp_time expiration time
-     *
+     * @param  string  $resource_name  template name
+     * @param  string  $compile_id  compile id
+     * @param  int  $exp_time  expiration time
      * @return int number of template files deleted
      */
     public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
     {
         if ($resource_name == null) {
-            Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', FROM_UNIXTIME(' . time() . '))');
+            Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', FROM_UNIXTIME('.time().'))');
 
             return 0;
         }
@@ -54,14 +54,13 @@ class SmartyCustomCore extends Smarty
     /**
      * Mark all template files to be regenerated.
      *
-     * @param int $exp_time expiration time
-     * @param string $type resource type
-     *
+     * @param  int  $exp_time  expiration time
+     * @param  string  $type  resource type
      * @return int number of cache files which needs to be updated
      */
     public function clearAllCache($exp_time = null, $type = null)
     {
-        Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME(' . time() . '))');
+        Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME('.time().'))');
 
         return $this->delete_from_lazy_cache(null, null, null);
     }
@@ -69,12 +68,11 @@ class SmartyCustomCore extends Smarty
     /**
      * Mark file to be regenerated for a specific template.
      *
-     * @param string $template_name template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
-     * @param int $exp_time expiration time
-     * @param string $type resource type
-     *
+     * @param  string  $template_name  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
+     * @param  int  $exp_time  expiration time
+     * @param  string  $type  resource type
      * @return int number of cache files which needs to be updated
      */
     public function clearCache($template_name, $cache_id = null, $compile_id = null, $exp_time = null, $type = null)
@@ -88,15 +86,15 @@ class SmartyCustomCore extends Smarty
     public function check_compile_cache_invalidation()
     {
         static $last_flush = null;
-        if (!file_exists($this->getCompileDir() . 'last_flush')) {
-            @touch($this->getCompileDir() . 'last_flush', time());
+        if (! file_exists($this->getCompileDir().'last_flush')) {
+            @touch($this->getCompileDir().'last_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `' . _DB_PREFIX_ . 'smarty_last_flush` WHERE type=\'compile\'';
+                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
             }
-            if ((int) $last_flush && @filemtime($this->getCompileDir() . 'last_flush') < $last_flush) {
-                @touch($this->getCompileDir() . 'last_flush', time());
+            if ((int) $last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush) {
+                @touch($this->getCompileDir().'last_flush', time());
                 parent::clearCompiledTemplate();
             }
         }
@@ -128,23 +126,23 @@ class SmartyCustomCore extends Smarty
     /**
      * Handle the lazy template cache invalidation.
      *
-     * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
+     * @param  string  $template  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)
     {
         static $last_flush = null;
-        if (!file_exists($this->getCacheDir() . 'last_template_flush')) {
-            @touch($this->getCacheDir() . 'last_template_flush', time());
+        if (! file_exists($this->getCacheDir().'last_template_flush')) {
+            @touch($this->getCacheDir().'last_template_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `' . _DB_PREFIX_ . 'smarty_last_flush` WHERE type=\'template\'';
+                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
             }
 
-            if ((int) $last_flush && @filemtime($this->getCacheDir() . 'last_template_flush') < $last_flush) {
-                @touch($this->getCacheDir() . 'last_template_flush', time());
+            if ((int) $last_flush && @filemtime($this->getCacheDir().'last_template_flush') < $last_flush) {
+                @touch($this->getCacheDir().'last_template_flush', time());
                 parent::clearAllCache();
             } else {
                 if ($cache_id !== null && (is_object($cache_id) || is_array($cache_id))) {
@@ -163,24 +161,24 @@ class SmartyCustomCore extends Smarty
     /**
      * Store the cache file path.
      *
-     * @param string $filepath cache file path
-     * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
+     * @param  string  $filepath  cache file path
+     * @param  string  $template  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
      */
     public function update_filepath($filepath, $template, $cache_id, $compile_id)
     {
         $template_md5 = md5($template);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							SET filepath=\'' . pSQL($filepath) . '\'
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
+        $sql = 'UPDATE `'._DB_PREFIX_.'smarty_lazy_cache`
+							SET filepath=\''.pSQL($filepath).'\'
+							WHERE `template_hash`=\''.pSQL($template_md5).'\'';
 
-        $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
+        $sql .= ' AND cache_id="'.pSQL((string) $cache_id).'"';
 
         if (strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
-        $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+        $sql .= ' AND compile_id="'.pSQL((string) $compile_id).'"';
         Db::getInstance()->execute($sql, false);
     }
 
@@ -188,10 +186,9 @@ class SmartyCustomCore extends Smarty
      * Check if the current template is stored in the lazy cache
      * Entry in the lazy cache = no need to regenerate the template.
      *
-     * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
-     *
+     * @param  string  $template  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
      * @return bool
      */
     public function is_in_lazy_cache($template, $cache_id, $compile_id)
@@ -203,15 +200,15 @@ class SmartyCustomCore extends Smarty
             $compile_id = md5($compile_id);
         }
 
-        $key = md5($template_md5 . '-' . $cache_id . '-' . $compile_id);
+        $key = md5($template_md5.'-'.$cache_id.'-'.$compile_id);
 
         if (isset($is_in_lazy_cache[$key])) {
             return $is_in_lazy_cache[$key];
         } else {
-            $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
-            $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
-            $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+            $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `'._DB_PREFIX_.'smarty_lazy_cache`
+							WHERE `template_hash`=\''.pSQL($template_md5).'\'';
+            $sql .= ' AND cache_id="'.pSQL((string) $cache_id).'"';
+            $sql .= ' AND compile_id="'.pSQL((string) $compile_id).'"';
 
             $result = Db::getInstance()->getRow($sql, false);
             // If the filepath is not yet set, it means the cache update is in progress in another process.
@@ -226,7 +223,7 @@ class SmartyCustomCore extends Smarty
                 $return = true;
             } else {
                 if ($result === false
-                    || @filemtime($this->getCacheDir() . $result['filepath']) < $result['last_update']) {
+                    || @filemtime($this->getCacheDir().$result['filepath']) < $result['last_update']) {
                     $return = false;
                 } else {
                     $return = $result['filepath'];
@@ -241,26 +238,25 @@ class SmartyCustomCore extends Smarty
     /**
      * Insert the current template in the lazy cache.
      *
-     * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
-     *
+     * @param  string  $template  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
      * @return bool
      */
     public function insert_in_lazy_cache($template, $cache_id, $compile_id)
     {
         $template_md5 = md5($template);
-        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'smarty_lazy_cache`
+        $sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.'smarty_lazy_cache`
 							(`template_hash`, `cache_id`, `compile_id`, `last_update`)
-							VALUES (\'' . pSQL($template_md5) . '\'';
+							VALUES (\''.pSQL($template_md5).'\'';
 
-        $sql .= ',"' . pSQL((string) $cache_id) . '"';
+        $sql .= ',"'.pSQL((string) $cache_id).'"';
 
         if (strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
-        $sql .= ',"' . pSQL((string) $compile_id) . '"';
-        $sql .= ', FROM_UNIXTIME(' . time() . '))';
+        $sql .= ',"'.pSQL((string) $compile_id).'"';
+        $sql .= ', FROM_UNIXTIME('.time().'))';
 
         return Db::getInstance()->execute($sql, false);
     }
@@ -268,31 +264,30 @@ class SmartyCustomCore extends Smarty
     /**
      * Delete the current template from the lazy cache or the whole cache if no template name is given.
      *
-     * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
-     *
+     * @param  string  $template  template name
+     * @param  string  $cache_id  cache id
+     * @param  string  $compile_id  compile id
      * @return bool
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {
-        if (!$template) {
-            return Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'smarty_lazy_cache`', false);
+        if (! $template) {
+            return Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'smarty_lazy_cache`', false);
         }
 
         $template_md5 = md5($template);
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+        $sql = 'DELETE FROM `'._DB_PREFIX_.'smarty_lazy_cache`
+							WHERE template_hash=\''.pSQL($template_md5).'\'';
 
         if ($cache_id != null) {
-            $sql .= ' AND cache_id LIKE "' . pSQL((string) $cache_id) . '%"';
+            $sql .= ' AND cache_id LIKE "'.pSQL((string) $cache_id).'%"';
         }
 
         if ($compile_id != null) {
             if (strlen($compile_id) > 32) {
                 $compile_id = md5($compile_id);
             }
-            $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+            $sql .= ' AND compile_id="'.pSQL((string) $compile_id).'"';
         }
         Db::getInstance()->execute($sql, false);
 

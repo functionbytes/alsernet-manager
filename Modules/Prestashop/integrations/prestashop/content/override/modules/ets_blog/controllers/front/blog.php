@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page Cache Ultimate, Page Cache standard and Speed pack are powered by Jpresta (jpresta . com)
  *
@@ -6,8 +7,7 @@
  * @copyright Jpresta
  * @license   See the license of this module in file LICENSE.txt, thank you.
  */
-
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -30,10 +30,11 @@ class Ets_blogBlogModuleFrontControllerOverride extends Ets_blogBlogModuleFrontC
      */
     public function getJprestaModelObjectId()
     {
-        $id_post = (int)Tools::getValue('id_post');
+        $id_post = (int) Tools::getValue('id_post');
         if ($id_post && ($postObj = new Ets_blog_post($id_post)) && Validate::isLoadedObject($postObj)) {
             return $id_post;
         }
+
         return null;
     }
 }

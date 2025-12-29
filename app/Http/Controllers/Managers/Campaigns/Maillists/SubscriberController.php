@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Managers\Campaigns\Maillists;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Maillists\MailList;
 use app\Library\Facades\Hook;
-use App\Models\Campaign\CampaignMaillist;
 use App\Models\EmailVerificationServer;
 use App\Models\Jobs\JobMonitor;
 use App\Models\Segment;
 use App\Models\Setting;
-use App\Models\Subscriber\Subscriber;
-use App\Models\Subscriber\SubscriberList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Modules\Campaign\Entities\CampaignMaillist;
+use Modules\Subscriber\Models\Subscriber;
+use Modules\Subscriber\Models\SubscriberList;
+
 use function App\Http\Controllers\Managers\Maillists\dispatch_now;
 
 class SubscriberController extends Controller
@@ -778,7 +779,7 @@ class SubscriberController extends Controller
         if ($request->uid != '0') {
             $subscriber = Subscriber::findByUid($request->uid);
         } else {
-            $subscriber = new Modules\Subscriber\Models\Subscriber();
+            $subscriber = new Modules\Subscriber\Models\Subscriber;
         }
 
         if (is_file($subscriber->getImagePath())) {

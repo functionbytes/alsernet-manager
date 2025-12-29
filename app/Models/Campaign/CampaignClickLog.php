@@ -22,7 +22,7 @@
 
 namespace App\Models\Campaign;
 
-use App\Events\Campaigns\CampaignUpdated;
+use Modules\Campaign\Events\CampaignUpdated;
 use app\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;
@@ -60,7 +60,7 @@ class CampaignClickLog extends Model
             return [$url, null];
         }
 
-        if (! CampaignTrackingLog::where('message_id', $messageId)->exists()) {
+        if (! \Modules\Campaign\Entities\CampaignTrackingLog::where('message_id', $messageId)->exists()) {
             return [$url, null];
         }
 
@@ -96,7 +96,7 @@ class CampaignClickLog extends Model
 
     public function createRelatedOpenLogIfNotExist()
     {
-        $openLog = CampaignOpenLog::firstOrNew(['message_id' => $this->message_id]);
+        $openLog = \Modules\Campaign\Entities\CampaignOpenLog::firstOrNew(['message_id' => $this->message_id]);
 
         if (is_null($openLog->id)) {
             $openLog->save();
@@ -116,7 +116,7 @@ class CampaignClickLog extends Model
 
     public function trackingLog()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignTrackingLog', 'message_id', 'message_id');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignTrackingLog', 'message_id', 'message_id');
     }
 
     public static function getAll()

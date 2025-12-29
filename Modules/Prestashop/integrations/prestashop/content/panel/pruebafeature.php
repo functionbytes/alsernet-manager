@@ -1,15 +1,14 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
-include (dirname(__FILE__).'/../init.php');
-
-
+include dirname(__FILE__).'/../config/config.inc.php';
+include dirname(__FILE__).'/../init.php';
 
 // /*
 //  * Esta es la forma OO "oficial" de hacerlo,

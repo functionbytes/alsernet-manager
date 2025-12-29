@@ -4,8 +4,9 @@ class FrontController extends FrontControllerCore
 {
     public function getIdDeporteByName($name_deporte)
     {
-        return Db::getInstance()->getValue("SELECT `id_category` FROM " . _DB_PREFIX_ . "category_lang WHERE (name = '" . $name_deporte . "' || name = '" . strtoupper($name_deporte) . "' || link_rewrite = '" . $name_deporte . "' || link_rewrite = '" . str_replace(' ', '-', $name_deporte) . "') AND id_lang = " . $this->context->language->id);
+        return Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$name_deporte."' || name = '".strtoupper($name_deporte)."' || link_rewrite = '".$name_deporte."' || link_rewrite = '".str_replace(' ', '-', $name_deporte)."') AND id_lang = ".$this->context->language->id);
     }
+
     protected function smartyOutputContent($content)
     {
         $this->context->cookie->write();
@@ -13,19 +14,19 @@ class FrontController extends FrontControllerCore
         $theme = $this->context->shop->theme->getName();
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $theme . '/templates/' . $this->getLayout());
+                $html .= $this->context->smarty->fetch($tpl, null, $theme.'/templates/'.$this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content, null, $theme . '/templates/' . $this->getLayout());
+            $html = $this->context->smarty->fetch($content, null, $theme.'/templates/'.$this->getLayout());
         }
         Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         echo trim($html);
     }
+
     /**
      * Sanitize / Clean params of an URL
      *
-     * @param string $url URL to clean
-     *
+     * @param  string  $url  URL to clean
      * @return string cleaned URL
      */
     protected function sanitizeUrl(string $url): string
@@ -33,7 +34,7 @@ class FrontController extends FrontControllerCore
         $params = [];
         $url_details = parse_url($url);
 
-        if (!empty($url_details['query'])) {
+        if (! empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
             $params = $this->sanitizeQueryOutput($query);
         }
@@ -42,8 +43,8 @@ class FrontController extends FrontControllerCore
         $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
         foreach ($_GET as $key => $value) {
             if (in_array($key, $excluded_key)
-                || !Validate::isUrl($key)
-                || !$this->validateInputAsUrl($value)
+                || ! Validate::isUrl($key)
+                || ! $this->validateInputAsUrl($value)
             ) {
                 continue;
             }
@@ -52,7 +53,7 @@ class FrontController extends FrontControllerCore
         }
 
         $str_params = http_build_query($params, '', '&');
-        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
+        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url).(! empty($str_params) ? '?'.$str_params : '');
 
         if (isset($params['deporte'])) {
             $_POST['deporte'] = $params['deporte'];
@@ -61,7 +62,6 @@ class FrontController extends FrontControllerCore
         return $sanitizedUrl;
     }
 
-
     /*
     * module: pagecache
     * date: 2024-05-21 08:49:56
@@ -69,7 +69,7 @@ class FrontController extends FrontControllerCore
     */
     protected function displayAjax()
     {
-        if (!Tools::getIsset('page_cache_dynamics_mods')) {
+        if (! Tools::getIsset('page_cache_dynamics_mods')) {
             if (is_callable('parent::displayAjax')) {
                 return parent::displayAjax();
             } else {
@@ -78,13 +78,13 @@ class FrontController extends FrontControllerCore
         }
         $this->initHeader();
         $this->assignGeneralPurposeVariables();
-        require_once _PS_MODULE_DIR_ . 'pagecache/pagecache.php';
+        require_once _PS_MODULE_DIR_.'pagecache/pagecache.php';
         $result = PageCache::execDynamicHooks($this);
         if (Tools::version_compare(_PS_VERSION_, '1.6', '>')) {
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'js_def' => PageCache::getJsDef($this),
-            ));
-            $result['js'] = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_ . 'javascript.tpl');
+            ]);
+            $result['js'] = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
         }
         $this->context->cookie->write();
         header('Content-Type: text/html');
@@ -92,11 +92,12 @@ class FrontController extends FrontControllerCore
         header('X-Robots-Tag: noindex');
         $json = json_encode($result);
         if ($json === false) {
-            header("HTTP/1.1 500 Internal Server Error");
-            die(json_last_error_msg());
+            header('HTTP/1.1 500 Internal Server Error');
+            exit(json_last_error_msg());
         }
-        die($json);
+        exit($json);
     }
+
     /*
     * module: pagecache
     * date: 2024-05-21 08:49:56
@@ -106,6 +107,7 @@ class FrontController extends FrontControllerCore
     {
         return $this->restrictedCountry;
     }
+
     /*
     * module: pagecache
     * date: 2024-05-21 08:49:56
@@ -114,13 +116,14 @@ class FrontController extends FrontControllerCore
     public function geolocationManagementPublic($default_country)
     {
         $ret = $this->geolocationManagement($default_country);
-        if (!$ret) {
+        if (! $ret) {
             return $default_country;
         }
+
         return $ret;
     }
 
-    ////////////////////// LOCALIZACION ADDIS ////////////////////////
+    // //////////////////// LOCALIZACION ADDIS ////////////////////////
 
     public function init()
     {
@@ -141,10 +144,10 @@ class FrontController extends FrontControllerCore
 
             $sports = $this->getSportsByIdsAndTranslate();
 
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'sports' => $sports,
                 'iso_code' => $context->language->iso_code,
-            ));
+            ]);
 
             if (isset($this->context->customer) && $this->context->customer->isLogged()) {
                 $this->context->smarty->assign('customerauth', [
@@ -152,25 +155,35 @@ class FrontController extends FrontControllerCore
                     'lastname' => (string) $this->context->customer->lastname,
                     'email' => (string) $this->context->customer->email,
                 ]);
-            }else {
+            } else {
                 $this->context->smarty->assign('customerauth', null);
             }
 
-
             // Verifica que el contexto y el cliente estén inicializados
 
-                $id_country = 6; //default España
-                if ($context->language->id == 1) $id_country = 6;
-                if ($context->language->id == 2) $id_country = 17;
-                if ($context->language->id == 3) $id_country = 8;
-                if ($context->language->id == 4) $id_country = 15;
-                if ($context->language->id == 5) $id_country = 1;
-                if ($context->language->id == 6) $id_country = 10;
+            $id_country = 6; // default España
+            if ($context->language->id == 1) {
+                $id_country = 6;
+            }
+            if ($context->language->id == 2) {
+                $id_country = 17;
+            }
+            if ($context->language->id == 3) {
+                $id_country = 8;
+            }
+            if ($context->language->id == 4) {
+                $id_country = 15;
+            }
+            if ($context->language->id == 5) {
+                $id_country = 1;
+            }
+            if ($context->language->id == 6) {
+                $id_country = 10;
+            }
 
-                $country = new Country($id_country, (int)$context->language->id);
-                $context->country = $country;
-                $context->cookie->iso_code_country = strtoupper($context->country->iso_code);
-
+            $country = new Country($id_country, (int) $context->language->id);
+            $context->country = $country;
+            $context->cookie->iso_code_country = strtoupper($context->country->iso_code);
 
             // Obtén el módulo por su nombre (en este ejemplo, 'mimodulo')
             $module = Module::getInstanceByName('alserneteventmanager');
@@ -189,7 +202,7 @@ class FrontController extends FrontControllerCore
                     $eventClasses[] = 'event';
                     foreach ($events as $event) {
                         // Generamos una clase específica para cada evento, por ejemplo usando el id_event
-                        $eventClasses[] = 'event-' . $event['event_title'];
+                        $eventClasses[] = 'event-'.$event['event_title'];
                         // $module->flagProducts($event);
                     }
 
@@ -206,7 +219,6 @@ class FrontController extends FrontControllerCore
                 $this->context->smarty->assign('error', 'El módulo no se encuentra disponible.');
             }
 
-
         } catch (Exception $e) {
             $country = $context->country ?? null; // Usa el operador de fusión nula para evitar errores
         }
@@ -218,7 +230,8 @@ class FrontController extends FrontControllerCore
 
     }
 
-    public function getSportsByIdsAndTranslate() {
+    public function getSportsByIdsAndTranslate()
+    {
 
         $lang = $this->context->language->id;
 
@@ -303,19 +316,17 @@ class FrontController extends FrontControllerCore
             ],
         ];
 
-        $ids = [1, 5, 6, 3, 4, 2,  9 , 1395, 10];
+        $ids = [1, 5, 6, 3, 4, 2,  9, 1395, 10];
 
         $sports_in_language = array_map(function ($id) use ($sports_map, $sports_translation_map, $lang) {
             $sport_name = $sports_map[$id];
+
             return [
                 'id' => $id,
                 'name' => $sports_translation_map[$lang][$sport_name] ?? $sport_name,
             ];
         }, $ids);
 
-
         return $sports_in_language;
     }
-
-
 }

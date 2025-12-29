@@ -1,26 +1,36 @@
 <?php
 
-require dirname(__FILE__) . '/../../traduccion/DeepL/vendor/autoload.php';
-define("_DEF_authKey", "a7c95f82-c7ba-456a-83e6-46a40d46c56b"); // Replace with your key
+require dirname(__FILE__).'/../../traduccion/DeepL/vendor/autoload.php';
+define('_DEF_authKey', 'a7c95f82-c7ba-456a-83e6-46a40d46c56b'); // Replace with your key
 
-
-class Traduccion {
-
+class Traduccion
+{
     private $url;
+
     private $id_categoria;
+
     private $id_lang;
+
     private $id_attribute_group;
+
     private $idioma;
+
     private $paginacion;
+
     private $texto_filtro;
+
     private $texto_filtro_traduccion;
+
     private $estado_traduccion;
+
     private $campo_evaluacion;
+
     private $total_registros;
+
     private $tipo_traduccion;
 
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->url = $_SERVER['PHP_SELF'].'?';
         $this->id_categoria = 0;
         $this->id_lang = 0;
@@ -35,19 +45,22 @@ class Traduccion {
         $this->tipo_traduccion = '';
     }
 
-    public function __get($property) {
+    public function __get($property)
+    {
         if (property_exists($this, $property)) {
             return $this->$property;
         }
     }
 
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
     }
 
-    public function getJavascript() {
+    public function getJavascript()
+    {
         $javascript = "
         document.addEventListener('DOMContentLoaded', function() {
             var inputs = document.querySelectorAll('.traduccion');
@@ -110,7 +123,8 @@ class Traduccion {
         return $javascript;
     }
 
-    public function getCSS() {
+    public function getCSS()
+    {
         $css = '
             body {
                 font-family: Arial, sans-serif;
@@ -192,17 +206,19 @@ class Traduccion {
         return $css;
     }
 
-    private function getSQLWhereEstadoTraduccion() {
-        if ($this->estado_traduccion == 1) { //Sin traducir
-            return " AND es=".$this->idioma['iso_code'];
-        }elseif($this->estado_traduccion == 2) { //Traducido
-            return " AND es!=".$this->idioma['iso_code'];
+    private function getSQLWhereEstadoTraduccion()
+    {
+        if ($this->estado_traduccion == 1) { // Sin traducir
+            return ' AND es='.$this->idioma['iso_code'];
+        } elseif ($this->estado_traduccion == 2) { // Traducido
+            return ' AND es!='.$this->idioma['iso_code'];
         }
 
         return '';
     }
 
-    private function getSQLWhereFiltroTexto() {
+    private function getSQLWhereFiltroTexto()
+    {
         if ($this->texto_filtro) {
             return " AND es like '%".$this->texto_filtro."%'";
         }
@@ -210,18 +226,19 @@ class Traduccion {
         return '';
     }
 
-    private function getSQLWhereFiltroTextoTraduccion() {
+    private function getSQLWhereFiltroTextoTraduccion()
+    {
         if ($this->texto_filtro_traduccion) {
-            return " AND ".$this->idioma['iso_code']." like '%".$this->texto_filtro_traduccion."%'";
+            return ' AND '.$this->idioma['iso_code']." like '%".$this->texto_filtro_traduccion."%'";
         }
 
         return '';
     }
 
-    public function getFormularioCategorias() {
+    public function getFormularioCategorias()
+    {
 
-
-        $url = $this->url."accion=traducciones&id_lang=".$this->id_lang."&estado_traduccion=".$this->estado_traduccion."&tipo_traduccion=".$this->tipo_traduccion;
+        $url = $this->url.'accion=traducciones&id_lang='.$this->id_lang.'&estado_traduccion='.$this->estado_traduccion.'&tipo_traduccion='.$this->tipo_traduccion;
 
         $where_sin_traducir = $this->getSQLWhereEstadoTraduccion();
 
@@ -249,7 +266,7 @@ class Traduccion {
             <tbody>';
 
         if ($this->id_lang > 1) {
-                $sql = "select count(*) as total_registros from (SELECT
+            $sql = 'select count(*) as total_registros from (SELECT
                 p.id_attribute_group, (select l1.name
                                     from aalv_attribute_group_lang l1
                                     where l1.id_attribute_group=p.id_attribute_group
@@ -257,14 +274,14 @@ class Traduccion {
                                 (select l2.name
                                     from aalv_attribute_group_lang l2
                                     where l2.id_attribute_group=p.id_attribute_group
-                                        AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                        AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
                 FROM aalv_attribute_group p) as traducciones
-                WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion."
-                ORDER by id_attribute_group DESC";
+                WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.'
+                ORDER by id_attribute_group DESC';
 
             $total_registros = Db::getInstance()->ExecuteS($sql)[0]['total_registros'];
 
-            $sql = "select traducciones.* from (SELECT
+            $sql = 'select traducciones.* from (SELECT
             p.id_attribute_group, (select l1.name
                                 from aalv_attribute_group_lang l1
                                 where l1.id_attribute_group=p.id_attribute_group
@@ -272,19 +289,19 @@ class Traduccion {
                             (select l2.name
                                 from aalv_attribute_group_lang l2
                                 where l2.id_attribute_group=p.id_attribute_group
-                                    AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                    AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
             FROM aalv_attribute_group p) as traducciones
-            WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion."
+            WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.'
             ORDER by id_attribute_group DESC
-            LIMIT 10 OFFSET ".$this->paginacion;
+            LIMIT 10 OFFSET '.$this->paginacion;
 
             $elementos = Db::getInstance()->ExecuteS($sql);
             foreach ($elementos as $elemento) {
-                if ($_POST['accion']=="traducciones" && $_POST[$elemento['id_attribute_group']]) {
+                if ($_POST['accion'] == 'traducciones' && $_POST[$elemento['id_attribute_group']]) {
                     $texto = $_POST[$elemento['id_attribute_group']];
                     if ($elemento[$this->idioma['iso_code']] != $texto) {
                         $elemento[$this->idioma['iso_code']] = $texto;
-                        Db::getInstance()->execute("UPDATE aalv_attribute_group_lang SET name = '" . pSQL($texto) . "' where id_lang = ".$this->id_lang." AND id_attribute_group = ".$elemento['id_attribute_group']);
+                        Db::getInstance()->execute("UPDATE aalv_attribute_group_lang SET name = '".pSQL($texto)."' where id_lang = ".$this->id_lang.' AND id_attribute_group = '.$elemento['id_attribute_group']);
                     }
                 }
 
@@ -297,7 +314,7 @@ class Traduccion {
                             <td style="width: 1%; text-align: center;"><input type="checkbox" data-id_attribute_group="'.$elemento['id_attribute_group'].'" data-id_lang="'.$this->id_lang.'" data-campo_evaluacion="name" id="deepl_traducir_'.$elemento['id_attribute_group'].'" name="deepl_traducir_'.$elemento['id_attribute_group'].'"  class="deepl_traducir" /></td>
                         </tr>';
             }
-            if ($_POST['accion']=="traducciones") {
+            if ($_POST['accion'] == 'traducciones') {
                 $formulario .= '<div class="mensaje">Actualizadas las características enviadas.</div>';
             }
         }
@@ -305,8 +322,8 @@ class Traduccion {
         if ($this->paginacion !== null) {
             $siguiente_pagina = $this->paginacion + 10;
             $anterior_pagina = $this->paginacion > 0 ? $this->paginacion - 10 : 0;
-            $url_siguiente= "&paginacion=".$siguiente_pagina;
-            $url_anterior= "&paginacion=".$anterior_pagina;
+            $url_siguiente = '&paginacion='.$siguiente_pagina;
+            $url_anterior = '&paginacion='.$anterior_pagina;
         }
 
         $formulario .= '<div style="text-align: right; margin: 10px;"><a href="'.$url.$url_anterior.'"><</a> '.$this->paginacion.'/'.$total_registros.' <a href="'.$url.$url_siguiente.'">></a></div>';
@@ -316,9 +333,10 @@ class Traduccion {
 
     }
 
-    public function getFormularioAtributos() {
+    public function getFormularioAtributos()
+    {
 
-        $url = $this->url."accion=traducciones&id_lang=".$this->id_lang."&id_attribute_group=".$this->id_attribute_group."&estado_traduccion=".$this->estado_traduccion."&tipo_traduccion=".$this->tipo_traduccion;
+        $url = $this->url.'accion=traducciones&id_lang='.$this->id_lang.'&id_attribute_group='.$this->id_attribute_group.'&estado_traduccion='.$this->estado_traduccion.'&tipo_traduccion='.$this->tipo_traduccion;
 
         $where_sin_traducir = $this->getSQLWhereEstadoTraduccion();
 
@@ -327,7 +345,7 @@ class Traduccion {
         $where_texto_filtro_traduccion = $this->getSQLWhereFiltroTextoTraduccion();
 
         if ($this->id_attribute_group) {
-            $where_caracteristica = " AND id_attribute_group = ".$this->id_attribute_group;
+            $where_caracteristica = ' AND id_attribute_group = '.$this->id_attribute_group;
         }
 
         $formulario = '<h2>TRADUCIR ATRIBUTOS</h2>
@@ -352,7 +370,7 @@ class Traduccion {
             <tbody>';
 
         if ($this->id_lang > 1) {
-                $sql = "select count(*) as total_registros from (SELECT
+            $sql = 'select count(*) as total_registros from (SELECT
                 p.id_attribute, p.id_attribute_group, (select l1.name
                                     from aalv_attribute_lang l1
                                     where l1.id_attribute=p.id_attribute
@@ -360,14 +378,14 @@ class Traduccion {
                                 (select l2.name
                                     from aalv_attribute_lang l2
                                     where l2.id_attribute=p.id_attribute
-                                        AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                        AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
                 FROM aalv_attribute p) as traducciones
-                WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_caracteristica."
-                ORDER by id_attribute DESC";
+                WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_caracteristica.'
+                ORDER by id_attribute DESC';
 
             $total_registros = Db::getInstance()->ExecuteS($sql)[0]['total_registros'];
 
-            $sql = "select traducciones.* from (SELECT
+            $sql = 'select traducciones.* from (SELECT
             p.id_attribute, p.id_attribute_group, (select l1.name
                                 from aalv_attribute_lang l1
                                 where l1.id_attribute=p.id_attribute
@@ -375,23 +393,23 @@ class Traduccion {
                             (select l2.name
                                 from aalv_attribute_lang l2
                                 where l2.id_attribute=p.id_attribute
-                                    AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                    AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
             FROM aalv_attribute p) as traducciones
-            WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_caracteristica."
+            WHERE es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_caracteristica.'
             ORDER by id_attribute DESC
-            LIMIT 10 OFFSET ".$this->paginacion;
+            LIMIT 10 OFFSET '.$this->paginacion;
 
             $elementos = Db::getInstance()->ExecuteS($sql);
             foreach ($elementos as $elemento) {
-                if ($_POST['accion']=="traducciones" && $_POST[$elemento['id_attribute']]) {
+                if ($_POST['accion'] == 'traducciones' && $_POST[$elemento['id_attribute']]) {
                     $texto = $_POST[$elemento['id_attribute']];
                     if ($elemento[$this->idioma['iso_code']] != $texto) {
                         $elemento[$this->idioma['iso_code']] = $texto;
-                        Db::getInstance()->execute("UPDATE aalv_attribute_lang SET name = '" . pSQL($texto) . "' where id_lang = ".$this->id_lang." AND id_attribute = ".$elemento['id_attribute']);
+                        Db::getInstance()->execute("UPDATE aalv_attribute_lang SET name = '".pSQL($texto)."' where id_lang = ".$this->id_lang.' AND id_attribute = '.$elemento['id_attribute']);
                     }
                 }
 
-                $caracteristica_nombre = Db::getInstance()->ExecuteS("SELECT name FROM aalv_attribute_group_lang WHERE id_lang=1 AND id_attribute_group=".$elemento['id_attribute_group'])[0];
+                $caracteristica_nombre = Db::getInstance()->ExecuteS('SELECT name FROM aalv_attribute_group_lang WHERE id_lang=1 AND id_attribute_group='.$elemento['id_attribute_group'])[0];
                 $formulario .= '<tr>
                             <td style="width: 7%;">'.htmlspecialchars($this->getProductoReferencia(null, $elemento['id_attribute'])).'</td>
                             <td style="width: 7%;">'.htmlspecialchars($caracteristica_nombre['name']).'</td>
@@ -402,7 +420,7 @@ class Traduccion {
                             <td style="width: 1%; text-align: center;"><input type="checkbox" data-id_attribute="'.$elemento['id_attribute'].'" data-id_lang="'.$this->id_lang.'" data-campo_evaluacion="name" id="deepl_traducir_'.$elemento['id_attribute'].'" name="deepl_traducir_'.$elemento['id_attribute'].'"  class="deepl_traducir" /></td>
                         </tr>';
             }
-            if ($_POST['accion']=="traducciones") {
+            if ($_POST['accion'] == 'traducciones') {
                 $formulario .= '<div class="mensaje">Actualizadas las características enviadas.</div>';
             }
         }
@@ -410,8 +428,8 @@ class Traduccion {
         if ($this->paginacion !== null) {
             $siguiente_pagina = $this->paginacion + 10;
             $anterior_pagina = $this->paginacion > 0 ? $this->paginacion - 10 : 0;
-            $url_siguiente= "&paginacion=".$siguiente_pagina;
-            $url_anterior= "&paginacion=".$anterior_pagina;
+            $url_siguiente = '&paginacion='.$siguiente_pagina;
+            $url_anterior = '&paginacion='.$anterior_pagina;
         }
 
         $formulario .= '<div style="text-align: right; margin: 10px;"><a href="'.$url.$url_anterior.'"><</a> '.$this->paginacion.'/'.$total_registros.' <a href="'.$url.$url_siguiente.'">></a></div>';
@@ -421,9 +439,10 @@ class Traduccion {
 
     }
 
-    public function getFormularioProductos() {
+    public function getFormularioProductos()
+    {
 
-        $url = $this->url."accion=traducciones&id_lang=".$this->id_lang."&id_categoria=".$this->id_categoria."&estado_traduccion=".$this->estado_traduccion."&campo_evaluacion=".$this->campo_evaluacion."&tipo_traduccion=".$this->tipo_traduccion."&texto=".urlencode($this->texto_filtro)."&texto_traduccion=".urlencode($this->texto_filtro_traduccion);
+        $url = $this->url.'accion=traducciones&id_lang='.$this->id_lang.'&id_categoria='.$this->id_categoria.'&estado_traduccion='.$this->estado_traduccion.'&campo_evaluacion='.$this->campo_evaluacion.'&tipo_traduccion='.$this->tipo_traduccion.'&texto='.urlencode($this->texto_filtro).'&texto_traduccion='.urlencode($this->texto_filtro_traduccion);
 
         $where_sin_traducir = $this->getSQLWhereEstadoTraduccion();
 
@@ -435,7 +454,7 @@ class Traduccion {
             $productos = $this->obtenerProductosPorCategoria($this->id_categoria);
             $productos = array_unique($productos);
             $productos_string = implode(',', $productos);
-            $where_productos = " AND id_product IN (".$productos_string.")";
+            $where_productos = ' AND id_product IN ('.$productos_string.')';
         }
 
         $formulario_productos = '<h2>TRADUCIR PRODUCTOS</h2>
@@ -462,63 +481,63 @@ class Traduccion {
             <tbody>';
 
         if ($this->id_lang > 1) {
-            $sql = "select count(*) as total_registros from (SELECT
-            p.id_product,   (select l1.".$this->campo_evaluacion."
+            $sql = 'select count(*) as total_registros from (SELECT
+            p.id_product,   (select l1.'.$this->campo_evaluacion.'
                                 from aalv_product_lang l1
                                 where l1.id_product=p.id_product
                                     AND l1.id_lang=1) as es,
-                            (select l2.".$this->campo_evaluacion."
+                            (select l2.'.$this->campo_evaluacion.'
                                 from aalv_product_lang l2
                                 where l2.id_product=p.id_product
-                                    AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                    AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
             FROM aalv_product p
-            WHERE p.active = 1) as traducciones where es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_productos."
-            ORDER by id_product DESC";
+            WHERE p.active = 1) as traducciones where es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_productos.'
+            ORDER by id_product DESC';
 
             $total_registros = Db::getInstance()->ExecuteS($sql)[0]['total_registros'];
 
-            $sql = "select (SELECT id_modelo FROM aalv_product_import i WHERE i.id_product=traducciones.id_product) id_modelo, traducciones.* from (SELECT
-            p.id_product,   (select l1.".$this->campo_evaluacion."
+            $sql = 'select (SELECT id_modelo FROM aalv_product_import i WHERE i.id_product=traducciones.id_product) id_modelo, traducciones.* from (SELECT
+            p.id_product,   (select l1.'.$this->campo_evaluacion.'
                                 from aalv_product_lang l1
                                 where l1.id_product=p.id_product
                                     AND l1.id_lang=1) as es,
-                            (select l2.".$this->campo_evaluacion."
+                            (select l2.'.$this->campo_evaluacion.'
                                 from aalv_product_lang l2
                                 where l2.id_product=p.id_product
-                                    AND l2.id_lang=".$this->idioma['id_lang'].") as ".$this->idioma['iso_code']."
+                                    AND l2.id_lang='.$this->idioma['id_lang'].') as '.$this->idioma['iso_code']."
             FROM aalv_product p
-            WHERE p.active = 1) as traducciones where es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_productos."
+            WHERE p.active = 1) as traducciones where es!=''".$where_sin_traducir.$where_texto_filtro.$where_texto_filtro_traduccion.$where_productos.'
             ORDER by id_product DESC
-            LIMIT 10 OFFSET ".$this->paginacion;
+            LIMIT 10 OFFSET '.$this->paginacion;
 
             $productos = Db::getInstance()->ExecuteS($sql);
             foreach ($productos as $producto) {
-                if ($_POST['accion']=="traducciones" && $_POST[$producto['id_product']]) {
+                if ($_POST['accion'] == 'traducciones' && $_POST[$producto['id_product']]) {
                     $texto = $_POST[$producto['id_product']];
                     if ($producto[$this->idioma['iso_code']] != $texto) {
                         $producto[$this->idioma['iso_code']] = $texto;
-                        Db::getInstance()->execute("UPDATE aalv_product_lang SET ".$this->campo_evaluacion." = '" . pSQL($texto) . "' where id_lang = ".$this->id_lang." AND id_product = ".$producto['id_product']);
+                        Db::getInstance()->execute('UPDATE aalv_product_lang SET '.$this->campo_evaluacion." = '".pSQL($texto)."' where id_lang = ".$this->id_lang.' AND id_product = '.$producto['id_product']);
                     }
                     if ($_POST['no_traducir_'.$producto['id_product']]) {
-                        Db::getInstance()->execute("REPLACE aalv_alsernet_traducciones SET no_traducir=1, id_product = " . $producto['id_product']);
-                    }else{
-                        Db::getInstance()->execute("REPLACE aalv_alsernet_traducciones SET no_traducir=0, id_product = " . $producto['id_product']);
+                        Db::getInstance()->execute('REPLACE aalv_alsernet_traducciones SET no_traducir=1, id_product = '.$producto['id_product']);
+                    } else {
+                        Db::getInstance()->execute('REPLACE aalv_alsernet_traducciones SET no_traducir=0, id_product = '.$producto['id_product']);
                     }
                 }
-                $control_traduccion = Db::getInstance()->ExecuteS("SELECT no_traducir FROM aalv_alsernet_traducciones WHERE id_product=".$producto['id_product'])[0];
+                $control_traduccion = Db::getInstance()->ExecuteS('SELECT no_traducir FROM aalv_alsernet_traducciones WHERE id_product='.$producto['id_product'])[0];
                 if ($control_traduccion['no_traducir'] == 1) {
-                    $checked = " checked";
-                    $disabled = " disabled";
-                }else{
-                    $checked = "";
-                    $disabled = "";
+                    $checked = ' checked';
+                    $disabled = ' disabled';
+                } else {
+                    $checked = '';
+                    $disabled = '';
                 }
                 $formulario_productos .= '<tr>
                             <td style="width: 7%;">'.htmlspecialchars($producto['id_product']).'</td>
                             <td style="width: 45%;">'.htmlspecialchars($producto['es']).'</td>';
-                if ($this->campo_evaluacion == "description") {
+                if ($this->campo_evaluacion == 'description') {
                     $formulario_productos .= '<td><textarea style="width: 97%;" class="traduccion" rows="10" id="traducir_'.$producto['id_product'].'" name="'.$producto['id_product'].'" required>'.htmlspecialchars($producto[$this->idioma['iso_code']]).'</textarea>';
-                }else{
+                } else {
                     $formulario_productos .= '<td><input type="text" style="width: 97%;" class="traduccion" name="'.$producto['id_product'].'" value="'.htmlspecialchars($producto[$this->idioma['iso_code']]).'" id="traducir_'.$producto['id_product'].'" required></td>';
                 }
 
@@ -527,7 +546,7 @@ class Traduccion {
                             <td style="width: 1%; text-align: center;"><input type="checkbox" '.$disabled.' data-id_product="'.$producto['id_product'].'" data-id_lang="'.$this->id_lang.'" data-campo_evaluacion="'.$this->campo_evaluacion.'" id="deepl_traducir_'.$producto['id_product'].'" name="deepl_traducir_'.$producto['id_product'].'"  class="deepl_traducir" /></td>
                         </tr>';
             }
-            if ($_POST['accion']=="traducciones") {
+            if ($_POST['accion'] == 'traducciones') {
                 $formulario_productos .= '<div class="mensaje">Actualizados los productos enviados.</div>';
             }
         }
@@ -535,8 +554,8 @@ class Traduccion {
         if ($this->paginacion !== null) {
             $siguiente_pagina = $this->paginacion + 10;
             $anterior_pagina = $this->paginacion > 0 ? $this->paginacion - 10 : 0;
-            $url_siguiente= "&paginacion=".$siguiente_pagina;
-            $url_anterior= "&paginacion=".$anterior_pagina;
+            $url_siguiente = '&paginacion='.$siguiente_pagina;
+            $url_anterior = '&paginacion='.$anterior_pagina;
         }
 
         $formulario_productos .= '<div style="text-align: right; margin: 10px;"><a href="'.$url.$url_anterior.'"><</a> '.$this->paginacion.'/'.$total_registros.' <a href="'.$url.$url_siguiente.'">></a></div>';
@@ -546,30 +565,30 @@ class Traduccion {
 
     }
 
-    public function getFormularioTextos() {
+    public function getFormularioTextos()
+    {
 
         if ($_POST['texto_origen'] && $_POST['idioma_origen'] && $_POST['idioma_destino']) {
             $texto_traduccion = $this->traducirTexto($_POST['texto_origen'], $_POST['idioma_origen'], $_POST['idioma_destino'], $_POST['contexto']);
-        }else{
-            $texto_traduccion = "";
+        } else {
+            $texto_traduccion = '';
         }
 
         $selector_idioma_origen = '<select name="idioma_origen">';
         $selector_idioma_destino = '<select name="idioma_destino">';
         foreach ($this->getIdiomas() as $i) {
-            $selected = "";
+            $selected = '';
             if ($i['id_lang'] == $_POST['idioma_origen']) {
-                $selected = " selected";
+                $selected = ' selected';
             }
             $selector_idioma_origen .= '<option value="'.$i['id_lang'].'"'.$selected.'>'.$i['name'].'</option>';
             if ($i['id_lang'] == $_POST['idioma_destino']) {
-                $selected = " selected";
+                $selected = ' selected';
             }
             $selector_idioma_destino .= '<option value="'.$i['id_lang'].'"'.$selected.'>'.$i['name'].'</option>';
         }
         $selector_idioma_origen .= '</select>';
         $selector_idioma_destino .= '</select>';
-
 
         $formulario_textos = '<h2>TRADUCIR TEXTOS</h2>
         <form method="post" action="#">
@@ -598,24 +617,27 @@ class Traduccion {
 
     }
 
-    public function getIdiomas() {
-        return Db::getInstance()->ExecuteS("SELECT id_lang, name, iso_code FROM aalv_lang");
+    public function getIdiomas()
+    {
+        return Db::getInstance()->ExecuteS('SELECT id_lang, name, iso_code FROM aalv_lang');
     }
 
-    public function getCaracteristicas($id_lang = '') {
+    public function getCaracteristicas($id_lang = '')
+    {
         if ($id_lang) {
             $where_lang = ' WHERE agl.id_lang='.$id_lang;
-        }else{
+        } else {
             $where_lang = '';
         }
 
-        return Db::getInstance()->ExecuteS("SELECT ag.id_attribute_group, agl.id_lang, agl.name
+        return Db::getInstance()->ExecuteS('SELECT ag.id_attribute_group, agl.id_lang, agl.name
                                             FROM aalv_attribute_group ag
                                             LEFT JOIN aalv_attribute_group_lang as agl
-                                                ON ag.id_attribute_group = agl.id_attribute_group".$where_lang." ORDER BY agl.name ASC");
+                                                ON ag.id_attribute_group = agl.id_attribute_group'.$where_lang.' ORDER BY agl.name ASC');
     }
 
-    public function traducirProducto($id_product, $id_lang, $campo_evaluacion) {
+    public function traducirProducto($id_product, $id_lang, $campo_evaluacion)
+    {
 
         $target_lang = $this->getIdiomaCode($id_lang);
 
@@ -623,23 +645,22 @@ class Traduccion {
         $glosaries = $translator->listGlossaries();
         $glosary_id = '';
         foreach ($glosaries as $glosario) {
-            if($glosario->targetLang == $target_lang)
-            {
+            if ($glosario->targetLang == $target_lang) {
                 $glosary_id = $glosario->glossaryId;
                 break;
             }
         }
 
-        $query = "SELECT name, description FROM " . _DB_PREFIX_ . "product_lang WHERE id_lang=".$id_lang." AND id_product=".$id_product;
+        $query = 'SELECT name, description FROM '._DB_PREFIX_.'product_lang WHERE id_lang='.$id_lang.' AND id_product='.$id_product;
         $producto = Db::getInstance()->executeS($query)[0];
         $options = [
             'context' => strip_tags($producto['description']),
             'formality' => 'prefer_more',
-            'tag_handling' => 'xml'
+            'tag_handling' => 'xml',
         ];
 
         if ($glosary_id != '') {
-            $options['glossary'] =  $glosary_id;
+            $options['glossary'] = $glosary_id;
         }
 
         $traduccion = $translator->translateText($producto[$campo_evaluacion], 'es', $target_lang, $options);
@@ -648,12 +669,13 @@ class Traduccion {
 
     }
 
-    public function traducirCaracteristica($id_attribute_group, $id_lang) {
+    public function traducirCaracteristica($id_attribute_group, $id_lang)
+    {
 
         $target_lang = $this->getIdiomaCode($id_lang);
 
         $translator = new \DeepL\Translator(_DEF_authKey);
-        $query = "SELECT name FROM " . _DB_PREFIX_ . "attribute_group_lang WHERE id_lang=".$id_lang." AND id_attribute_group=".$id_attribute_group;
+        $query = 'SELECT name FROM '._DB_PREFIX_.'attribute_group_lang WHERE id_lang='.$id_lang.' AND id_attribute_group='.$id_attribute_group;
         $caracteristica = Db::getInstance()->executeS($query)[0];
         $options = ['formality' => 'prefer_more'];
 
@@ -663,12 +685,13 @@ class Traduccion {
 
     }
 
-    public function traducirAtributo($id_attribute, $id_lang) {
+    public function traducirAtributo($id_attribute, $id_lang)
+    {
 
         $target_lang = $this->getIdiomaCode($id_lang);
 
         $translator = new \DeepL\Translator(_DEF_authKey);
-        $query = "SELECT name FROM " . _DB_PREFIX_ . "attribute_lang WHERE id_lang=".$id_lang." AND id_attribute=".$id_attribute;
+        $query = 'SELECT name FROM '._DB_PREFIX_.'attribute_lang WHERE id_lang='.$id_lang.' AND id_attribute='.$id_attribute;
         $atributo = Db::getInstance()->executeS($query)[0];
         $options = ['formality' => 'prefer_more'];
 
@@ -678,7 +701,8 @@ class Traduccion {
 
     }
 
-    public function traducirTexto($texto, $id_lang_origen, $id_lang_destino, $contexto = '') {
+    public function traducirTexto($texto, $id_lang_origen, $id_lang_destino, $contexto = '')
+    {
 
         $idioma_origen = $this->getIdiomaCode($id_lang_origen, 'iso_code');
         $idioma_destino = $this->getIdiomaCode($id_lang_destino);
@@ -687,8 +711,7 @@ class Traduccion {
         $glosaries = $translator->listGlossaries();
         $glosary_id = '';
         foreach ($glosaries as $glosario) {
-            if($glosario->targetLang == $idioma_destino)
-            {
+            if ($glosario->targetLang == $idioma_destino) {
                 $glosary_id = $glosario->glossaryId;
                 break;
             }
@@ -704,18 +727,18 @@ class Traduccion {
 
         try {
             $traduccion = $translator->translateText($texto, $idioma_origen, $idioma_destino, $options);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             dump($e->getMessage());
             // dump($texto, $idioma_origen, $idioma_destino, $options);
         }
-
 
         return $traduccion->text;
 
     }
 
-    private function getIdiomaCode($id_lang, $tipo = '') {
-        $query = "SELECT * FROM aalv_lang WHERE id_lang = ". $id_lang;
+    private function getIdiomaCode($id_lang, $tipo = '')
+    {
+        $query = 'SELECT * FROM aalv_lang WHERE id_lang = '.$id_lang;
         $idioma = Db::getInstance()->executeS($query)[0];
 
         if ($tipo) {
@@ -725,30 +748,30 @@ class Traduccion {
         switch ($idioma['iso_code']) {
             case 'pt':
             case 'en':
-              return $idioma['locale'];
+                return $idioma['locale'];
             case 'es':
             case 'fr':
             case 'de':
             case 'it':
             default:
-              return $idioma['iso_code'];
-          }
+                return $idioma['iso_code'];
+        }
 
     }
 
-    private function obtenerProductosPorCategoria($ids_categoria = false) {
+    private function obtenerProductosPorCategoria($ids_categoria = false)
+    {
         $productos = [];
         if (is_array($ids_categoria)) {
-            $categorias = implode(",",$ids_categoria);
-        }elseif ($ids_categoria>0) {
+            $categorias = implode(',', $ids_categoria);
+        } elseif ($ids_categoria > 0) {
             $categorias = $ids_categoria;
-        }else{
+        } else {
             $categorias = '3,4,5,6,7,8,9,10,11';
         }
 
-
         // Obtener los productos de la categoría actual
-        $query = "SELECT p.id_product FROM " . _DB_PREFIX_ . "category_product c LEFT JOIN " . _DB_PREFIX_ . "product p ON p.id_product=c.id_product WHERE p.active = 1 AND c.id_category IN (".$categorias.")";
+        $query = 'SELECT p.id_product FROM '._DB_PREFIX_.'category_product c LEFT JOIN '._DB_PREFIX_.'product p ON p.id_product=c.id_product WHERE p.active = 1 AND c.id_category IN ('.$categorias.')';
         $result = Db::getInstance()->executeS($query);
 
         foreach ($result as $row) {
@@ -756,7 +779,7 @@ class Traduccion {
         }
 
         // Obtener las subcategorías de la categoría actual
-        $query = "SELECT id_category FROM " . _DB_PREFIX_ . "category WHERE id_parent = $ids_categoria";
+        $query = 'SELECT id_category FROM '._DB_PREFIX_."category WHERE id_parent = $ids_categoria";
         $result = Db::getInstance()->executeS($query);
 
         foreach ($result as $row) {
@@ -767,17 +790,18 @@ class Traduccion {
         return $productos;
     }
 
-    private function getProductoReferencia($id_attribute_group=null, $id_attribute=null) {
+    private function getProductoReferencia($id_attribute_group = null, $id_attribute = null)
+    {
 
         $where_atributos = '';
 
         if ($id_attribute_group) {
-            $where_atributos .= " AND aag.id_attribute_group=".$id_attribute_group;
+            $where_atributos .= ' AND aag.id_attribute_group='.$id_attribute_group;
         }
         if ($id_attribute) {
-            $where_atributos .= " AND a.id_attribute=".$id_attribute;
+            $where_atributos .= ' AND a.id_attribute='.$id_attribute;
         }
-        $sql = "select
+        $sql = 'select
                                                 pl.name producto,
                                                 aagl.name caracteristica,
                                                 al.name propiedad
@@ -800,11 +824,11 @@ class Traduccion {
                                             WHERE pl.id_lang=1
                                             AND al.id_lang = 1
                                             AND aagl.id_lang = 1
-                                            ".$where_atributos."
-                                            LIMIT 1";
+                                            '.$where_atributos.'
+                                            LIMIT 1';
 
         $data = Db::getInstance()->executeS($sql)[0];
 
-        return $data['producto']." => ".$data['caracteristica']." => ".$data['propiedad'];
+        return $data['producto'].' => '.$data['caracteristica'].' => '.$data['propiedad'];
     }
 }

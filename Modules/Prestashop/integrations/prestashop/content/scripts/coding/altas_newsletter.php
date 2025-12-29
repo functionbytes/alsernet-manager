@@ -5,45 +5,43 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../../config/config.inc.php');
-setlocale(LC_CTYPE, "es.UTF16");
+include dirname(__FILE__).'/../../config/config.inc.php';
+setlocale(LC_CTYPE, 'es.UTF16');
 
+// Registro de altas confirmadas y no confirmadas
 
-//Registro de altas confirmadas y no confirmadas
+$ruta_altas = '/var/www/clients/client1/web1/home/alvarezadmin/VOLCADO_DIARIO_NO_DOUBLE_CHECK/ALTAS.txt';
+$ruta_bajas = '/var/www/clients/client1/web1/home/alvarezadmin/VOLCADO_DIARIO_NO_DOUBLE_CHECK/BAJAS.txt';
 
-$ruta_altas = "/var/www/clients/client1/web1/home/alvarezadmin/VOLCADO_DIARIO_NO_DOUBLE_CHECK/ALTAS.txt";
-$ruta_bajas = "/var/www/clients/client1/web1/home/alvarezadmin/VOLCADO_DIARIO_NO_DOUBLE_CHECK/BAJAS.txt";
+$altas = '';
+$bajas = '';
 
-$altas = "";
-$bajas = "";
-
-$query = "SELECT * FROM aalv_susc_newsletter WHERE fecha >= '".date("Y-m-d H:i:s", strtotime("-1 day"))."'";
+$query = "SELECT * FROM aalv_susc_newsletter WHERE fecha >= '".date('Y-m-d H:i:s', strtotime('-1 day'))."'";
 // $query = "SELECT * FROM aalv_susc_newsletter WHERE fecha >= '2025-05-26 00:00:00'";
 $correos = Db::getInstance()->ExecuteS($query);
 
 foreach ($correos as $r) {
     if ($r['lopd'] == 0) {
-        echo "No confirmado: ".$r['email']." => ".$r['lopd']."\n";
-        $altas .= $r['email'].";".$r['ids_alta_baja'].";".$r['id_lang']."\n";
-    }else{
-        echo "BAJA: ".$r['email']." => ".$r['baja']."\n";
-        $bajas .= $r['email'].";".$r['ids_alta_baja'].";".$r['id_lang']."\n";
+        echo 'No confirmado: '.$r['email'].' => '.$r['lopd']."\n";
+        $altas .= $r['email'].';'.$r['ids_alta_baja'].';'.$r['id_lang']."\n";
+    } else {
+        echo 'BAJA: '.$r['email'].' => '.$r['baja']."\n";
+        $bajas .= $r['email'].';'.$r['ids_alta_baja'].';'.$r['id_lang']."\n";
     }
 }
 file_put_contents($ruta_altas, $altas);
 file_put_contents($ruta_bajas, $bajas);
 
-die;
+exit;
 
+// ---------------------------------
+// RECUPERAR BAJAS POR ERROR
+// ---------------------------------
 
-//---------------------------------
-//RECUPERAR BAJAS POR ERROR
-//---------------------------------
-
-//Consulta newsletter alsernet
+// Consulta newsletter alsernet
 /*
 $query = "select id_susc_newsletter, trim(email) email, cliente_no_info_comercial, cliente_no_datos_a_terceros from aalv_susc_newsletter where email in (select
 correos.email
@@ -78,7 +76,7 @@ correos.contador <3
 and correos.contador >1) group by trim(email), cliente_no_info_comercial order by trim(email), id_susc_newsletter DESC";
 */
 
-//Consulta newsletter Addis
+// Consulta newsletter Addis
 /*
 $query = "select id_datos_rgpd, trim(email) email, check_rgpd, check_terceros from aalv_datos_rgpd where email in (select
 correos.email

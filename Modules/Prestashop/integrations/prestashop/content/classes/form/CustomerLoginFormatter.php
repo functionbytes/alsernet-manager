@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,10 +38,10 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
     public function getFormat()
     {
         return [
-            'back' => (new FormField())
+            'back' => (new FormField)
                 ->setName('back')
                 ->setType('hidden'),
-            'email' => (new FormField())
+            'email' => (new FormField)
                 ->setName('email')
                 ->setType('email')
                 ->setAutocompleteAttribute('email')
@@ -51,7 +52,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                     'Shop.Forms.Labels'
                 ))
                 ->addConstraint('isEmail'),
-            'password' => (new FormField())
+            'password' => (new FormField)
                 ->setName('password')
                 ->setType('password')
                 ->setAutocompleteAttribute('current-password')

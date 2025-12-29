@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,10 +30,12 @@
  *
  * @since 1.5.0
  */
-class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
+class PrestaShopCollectionCore implements ArrayAccess, Countable, Iterator
 {
     const LEFT_JOIN = 1;
+
     const INNER_JOIN = 2;
+
     const LEFT_OUTER_JOIN = 3;
 
     /**
@@ -86,16 +89,20 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     protected $page_size = 0;
 
     protected $fields = [];
+
     protected $alias = [];
+
     protected $alias_iterator = 0;
+
     protected $join_list = [];
+
     protected $association_definition = [];
 
     const LANG_ALIAS = 'l';
 
     /**
-     * @param string $classname
-     * @param int $id_lang
+     * @param  string  $classname
+     * @param  int  $id_lang
      */
     public function __construct($classname, $id_lang = null)
     {
@@ -103,36 +110,35 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->id_lang = $id_lang;
 
         $this->definition = ObjectModel::getDefinition($this->classname);
-        if (!isset($this->definition['table'])) {
-            throw new PrestaShopException('Miss table in definition for class ' . $this->classname);
-        } elseif (!isset($this->definition['primary'])) {
-            throw new PrestaShopException('Miss primary in definition for class ' . $this->classname);
+        if (! isset($this->definition['table'])) {
+            throw new PrestaShopException('Miss table in definition for class '.$this->classname);
+        } elseif (! isset($this->definition['primary'])) {
+            throw new PrestaShopException('Miss primary in definition for class '.$this->classname);
         }
 
-        $this->query = new DbQuery();
+        $this->query = new DbQuery;
     }
 
     /**
      * Join current entity to an associated entity.
      *
-     * @param string $association Association name
-     * @param string $on
-     * @param int $type
-     *
+     * @param  string  $association  Association name
+     * @param  string  $on
+     * @param  int  $type
      * @return PrestaShopCollection
      */
     public function join($association, $on = '', $type = null)
     {
-        if (!$association) {
+        if (! $association) {
             return;
         }
 
-        if (!isset($this->join_list[$association])) {
+        if (! isset($this->join_list[$association])) {
             $definition = $this->getDefinition($association);
-            $on = '{' . $definition['asso']['complete_field'] . '} = {' . $definition['asso']['complete_foreign_field'] . '}';
+            $on = '{'.$definition['asso']['complete_field'].'} = {'.$definition['asso']['complete_foreign_field'].'}';
             $type = self::LEFT_JOIN;
             $this->join_list[$association] = [
-                'table' => ($definition['is_lang']) ? $definition['table'] . '_lang' : $definition['table'],
+                'table' => ($definition['is_lang']) ? $definition['table'].'_lang' : $definition['table'],
                 'alias' => $this->generateAlias($association),
                 'on' => [],
             ];
@@ -152,11 +158,10 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add WHERE restriction on query.
      *
-     * @param string $field Field name
-     * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
-     * @param mixed $value
-     * @param string $type where|having
-     *
+     * @param  string  $field  Field name
+     * @param  string  $operator  List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
+     * @param  mixed  $value
+     * @param  string  $type  where|having
      * @return PrestaShopCollection
      */
     public function where($field, $operator, $value, $method = 'where')
@@ -170,14 +175,14 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             switch (strtolower($operator)) {
                 case '=':
                 case 'in':
-                    $this->query->$method($this->parseField($field) . ' IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+                    $this->query->$method($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)).')');
 
                     break;
 
                 case '!=':
                 case '<>':
                 case 'notin':
-                    $this->query->$method($this->parseField($field) . ' NOT IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+                    $this->query->$method($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)).')');
 
                     break;
 
@@ -196,17 +201,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 case '<=':
                 case 'like':
                 case 'regexp':
-                    $this->query->$method($this->parseField($field) . ' ' . $operator . ' ' . $this->formatValue($value, $field));
+                    $this->query->$method($this->parseField($field).' '.$operator.' '.$this->formatValue($value, $field));
 
                     break;
 
                 case 'notlike':
-                    $this->query->$method($this->parseField($field) . ' NOT LIKE ' . $this->formatValue($value, $field));
+                    $this->query->$method($this->parseField($field).' NOT LIKE '.$this->formatValue($value, $field));
 
                     break;
 
                 case 'notregexp':
-                    $this->query->$method($this->parseField($field) . ' NOT REGEXP ' . $this->formatValue($value, $field));
+                    $this->query->$method($this->parseField($field).' NOT REGEXP '.$this->formatValue($value, $field));
 
                     break;
 
@@ -221,8 +226,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add WHERE restriction on query using real SQL syntax.
      *
-     * @param string $sql
-     *
+     * @param  string  $sql
      * @return PrestaShopCollection
      */
     public function sqlWhere($sql)
@@ -235,10 +239,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add HAVING restriction on query.
      *
-     * @param string $field Field name
-     * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
-     * @param mixed $value
-     *
+     * @param  string  $field  Field name
+     * @param  string  $operator  List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
+     * @param  mixed  $value
      * @return PrestaShopCollection
      */
     public function having($field, $operator, $value)
@@ -249,8 +252,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add HAVING restriction on query using real SQL syntax.
      *
-     * @param string $sql
-     *
+     * @param  string  $sql
      * @return PrestaShopCollection
      */
     public function sqlHaving($sql)
@@ -263,9 +265,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add ORDER BY restriction on query.
      *
-     * @param string $field Field name
-     * @param string $order asc|desc
-     *
+     * @param  string  $field  Field name
+     * @param  string  $order  asc|desc
      * @return PrestaShopCollection
      */
     public function orderBy($field, $order = 'asc')
@@ -274,7 +275,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         if ($order != 'asc' && $order != 'desc') {
             throw new PrestaShopException('Order must be asc or desc');
         }
-        $this->query->orderBy($this->parseField($field) . ' ' . $order);
+        $this->query->orderBy($this->parseField($field).' '.$order);
 
         return $this;
     }
@@ -282,8 +283,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add ORDER BY restriction on query using real SQL syntax.
      *
-     * @param string $sql
-     *
+     * @param  string  $sql
      * @return PrestaShopCollection
      */
     public function sqlOrderBy($sql)
@@ -296,8 +296,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add GROUP BY restriction on query.
      *
-     * @param string $field Field name
-     *
+     * @param  string  $field  Field name
      * @return PrestaShopCollection
      */
     public function groupBy($field)
@@ -310,8 +309,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Add GROUP BY restriction on query using real SQL syntax.
      *
-     * @param string $sql
-     *
+     * @param  string  $sql
      * @return PrestaShopCollection
      */
     public function sqlGroupBy($sql)
@@ -324,8 +322,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Launch sql query to create collection of objects.
      *
-     * @param bool $display_query If true, query will be displayed (for debug purpose)
-     *
+     * @param  bool  $display_query  If true, query will be displayed (for debug purpose)
      * @return PrestaShopCollection
      */
     public function getAll($display_query = false)
@@ -336,20 +333,20 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->is_hydrated = true;
 
         $alias = $this->generateAlias();
-        //$this->query->select($alias.'.*');
+        // $this->query->select($alias.'.*');
         $this->query->from($this->definition['table'], $alias);
 
         // If multilang, create association to lang table
-        if (!empty($this->definition['multilang'])) {
+        if (! empty($this->definition['multilang'])) {
             $this->join(self::LANG_ALIAS);
             if ($this->id_lang) {
-                $this->where(self::LANG_ALIAS . '.id_lang', '=', $this->id_lang);
+                $this->where(self::LANG_ALIAS.'.id_lang', '=', $this->id_lang);
             }
         }
 
         // Add join clause
         foreach ($this->join_list as $data) {
-            $on = '(' . implode(') AND (', $data['on']) . ')';
+            $on = '('.implode(') AND (', $data['on']).')';
             switch ($data['type']) {
                 case self::LEFT_JOIN:
                     $this->query->leftJoin($data['table'], $data['alias'], $on);
@@ -375,7 +372,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 
         // Shall we display query for debug ?
         if ($display_query) {
-            echo $this->query . '<br />';
+            echo $this->query.'<br />';
         }
 
         $this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
@@ -394,7 +391,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     public function getFirst()
     {
         $this->getAll();
-        if (!count($this)) {
+        if (! count($this)) {
             return false;
         }
 
@@ -409,7 +406,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     public function getLast()
     {
         $this->getAll();
-        if (!count($this)) {
+        if (! count($this)) {
             return false;
         }
 
@@ -484,7 +481,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      */
     public function next()
     {
-        ++$this->iterator;
+        $this->iterator++;
     }
 
     /**
@@ -506,8 +503,6 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetExists()
      *
-     * @param $offset
-     *
      * @return bool
      */
     public function offsetExists($offset)
@@ -522,15 +517,13 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetGet()
      *
-     * @param $offset
-     *
      * @return ObjectModel
      */
     public function offsetGet($offset)
     {
         $this->getAll();
-        if (!isset($this->results[$offset])) {
-            throw new PrestaShopException('Unknown offset ' . $offset . ' for collection ' . $this->classname);
+        if (! isset($this->results[$offset])) {
+            throw new PrestaShopException('Unknown offset '.$offset.' for collection '.$this->classname);
         }
 
         return $this->results[$offset];
@@ -540,18 +533,15 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * Add an element in the collection.
      *
      * @see ArrayAccess::offsetSet()
-     *
-     * @param $offset
-     * @param $value
      */
     public function offsetSet($offset, $value)
     {
-        if (!$value instanceof $this->classname) {
-            throw new PrestaShopException('You cannot add an element which is not an instance of ' . $this->classname);
+        if (! $value instanceof $this->classname) {
+            throw new PrestaShopException('You cannot add an element which is not an instance of '.$this->classname);
         }
 
         $this->getAll();
-        if (null === $offset) {
+        if ($offset === null) {
             $this->results[] = $value;
         } else {
             $this->results[$offset] = $value;
@@ -562,8 +552,6 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * Delete an element from the collection.
      *
      * @see ArrayAccess::offsetUnset()
-     *
-     * @param $offset
      */
     public function offsetUnset($offset)
     {
@@ -574,26 +562,25 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Get definition of an association.
      *
-     * @param string $association
-     *
+     * @param  string  $association
      * @return array
      */
     protected function getDefinition($association)
     {
-        if (!$association) {
+        if (! $association) {
             return $this->definition;
         }
 
-        if (!isset($this->association_definition[$association])) {
+        if (! isset($this->association_definition[$association])) {
             $definition = $this->definition;
             $split = explode('.', $association);
             $is_lang = false;
-            for ($i = 0, $total_association = count($split); $i < $total_association; ++$i) {
+            for ($i = 0, $total_association = count($split); $i < $total_association; $i++) {
                 $asso = $split[$i];
 
                 // Check is current association exists in current definition
-                if (!isset($definition['associations'][$asso])) {
-                    throw new PrestaShopException('Association ' . $asso . ' not found for class ' . $this->definition['classname']);
+                if (! isset($definition['associations'][$asso])) {
+                    throw new PrestaShopException('Association '.$asso.' not found for class '.$this->definition['classname']);
                 }
                 $current_def = $definition['associations'][$asso];
 
@@ -610,22 +597,22 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 
             // Get definition of associated entity and add information on current association
             $current_def['name'] = $asso;
-            if (!isset($current_def['object'])) {
+            if (! isset($current_def['object'])) {
                 $current_def['object'] = Tools::toCamelCase($asso, true);
             }
-            if (!isset($current_def['field'])) {
-                $current_def['field'] = 'id_' . $asso;
+            if (! isset($current_def['field'])) {
+                $current_def['field'] = 'id_'.$asso;
             }
-            if (!isset($current_def['foreign_field'])) {
-                $current_def['foreign_field'] = 'id_' . $asso;
+            if (! isset($current_def['foreign_field'])) {
+                $current_def['foreign_field'] = 'id_'.$asso;
             }
             if ($total_association > 1) {
                 unset($split[$total_association - 1]);
-                $current_def['complete_field'] = implode('.', $split) . '.' . $current_def['field'];
+                $current_def['complete_field'] = implode('.', $split).'.'.$current_def['field'];
             } else {
                 $current_def['complete_field'] = $current_def['field'];
             }
-            $current_def['complete_foreign_field'] = $association . '.' . $current_def['foreign_field'];
+            $current_def['complete_foreign_field'] = $association.'.'.$current_def['foreign_field'];
 
             $definition['is_lang'] = $is_lang;
             $definition['asso'] = $current_def;
@@ -640,14 +627,13 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Parse all fields with {field} syntax in a string.
      *
-     * @param string $str
-     *
+     * @param  string  $str
      * @return string
      */
     protected function parseFields($str)
     {
         preg_match_all('#\{(([a-z0-9_]+\.)*[a-z0-9_]+)\}#i', $str, $m);
-        for ($i = 0, $total = count($m[0]); $i < $total; ++$i) {
+        for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
             $str = str_replace($m[0][$i], $this->parseField($m[1][$i]), $str);
         }
 
@@ -657,23 +643,21 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Replace a field with its SQL version (E.g. manufacturer.name with a2.name).
      *
-     * @param string $field Field name
-     *
+     * @param  string  $field  Field name
      * @return string
      */
     protected function parseField($field)
     {
         $info = $this->getFieldInfo($field);
 
-        return $info['alias'] . '.`' . $info['name'] . '`';
+        return $info['alias'].'.`'.$info['name'].'`';
     }
 
     /**
      * Format a value with the type of the given field.
      *
-     * @param mixed $value
-     * @param string $field Field name
-     *
+     * @param  mixed  $value
+     * @param  string  $field  Field name
      * @return mixed
      */
     protected function formatValue($value, $field)
@@ -694,13 +678,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Obtain some information on a field (alias, name, type, etc.).
      *
-     * @param string $field Field name
-     *
+     * @param  string  $field  Field name
      * @return array
      */
     protected function getFieldInfo($field)
     {
-        if (!isset($this->fields[$field])) {
+        if (! isset($this->fields[$field])) {
             $split = explode('.', $field);
             $total = count($split);
             if ($total > 1) {
@@ -713,23 +696,23 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             }
 
             $definition = $this->getDefinition($association);
-            if ($association && !isset($this->join_list[$association])) {
+            if ($association && ! isset($this->join_list[$association])) {
                 $this->join($association);
             }
 
-            if ($fieldname == $definition['primary'] || (!empty($definition['is_lang']) && $fieldname == 'id_lang')) {
+            if ($fieldname == $definition['primary'] || (! empty($definition['is_lang']) && $fieldname == 'id_lang')) {
                 $type = ObjectModel::TYPE_INT;
             } else {
                 // Test if field exists
-                if (!isset($definition['fields'][$fieldname])) {
-                    throw new PrestaShopException('Field ' . $fieldname . ' not found in class ' . $definition['classname']);
+                if (! isset($definition['fields'][$fieldname])) {
+                    throw new PrestaShopException('Field '.$fieldname.' not found in class '.$definition['classname']);
                 }
 
                 // Test field validity for language fields
-                if (empty($definition['is_lang']) && !empty($definition['fields'][$fieldname]['lang'])) {
-                    throw new PrestaShopException('Field ' . $fieldname . ' is declared as lang field but is used in non multilang context');
-                } elseif (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang'])) {
-                    throw new PrestaShopException('Field ' . $fieldname . ' is not declared as lang field but is used in multilang context');
+                if (empty($definition['is_lang']) && ! empty($definition['fields'][$fieldname]['lang'])) {
+                    throw new PrestaShopException('Field '.$fieldname.' is declared as lang field but is used in non multilang context');
+                } elseif (! empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang'])) {
+                    throw new PrestaShopException('Field '.$fieldname.' is not declared as lang field but is used in multilang context');
                 }
 
                 $type = $definition['fields'][$fieldname]['type'];
@@ -749,15 +732,14 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Set the page number.
      *
-     * @param int $page_number
-     *
+     * @param  int  $page_number
      * @return PrestaShopCollection
      */
     public function setPageNumber($page_number)
     {
         $page_number = (int) $page_number;
         if ($page_number > 0) {
-            --$page_number;
+            $page_number--;
         }
 
         $this->page_number = $page_number;
@@ -768,8 +750,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Set the nuber of item per page.
      *
-     * @param int $page_size
-     *
+     * @param  int  $page_size
      * @return PrestaShopCollection
      */
     public function setPageSize($page_size)
@@ -782,14 +763,13 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Generate uniq alias from association name.
      *
-     * @param string $association Use empty association for alias on current table
-     *
+     * @param  string  $association  Use empty association for alias on current table
      * @return string
      */
     protected function generateAlias($association = '')
     {
-        if (!isset($this->alias[$association])) {
-            $this->alias[$association] = 'a' . $this->alias_iterator++;
+        if (! isset($this->alias[$association])) {
+            $this->alias[$association] = 'a'.$this->alias_iterator++;
         }
 
         return $this->alias[$association];

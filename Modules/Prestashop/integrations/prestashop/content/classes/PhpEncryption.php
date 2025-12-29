@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,6 +32,7 @@ use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 class PhpEncryptionCore
 {
     const ENGINE = 'PhpEncryptionEngine';
+
     const LEGACY_ENGINE = 'PhpEncryptionLegacyEngine';
 
     private static $engine;
@@ -38,8 +40,8 @@ class PhpEncryptionCore
     /**
      * PhpEncryptionCore constructor.
      *
-     * @param string $hexString A string that only contains hexadecimal characters
-     *                          Bother upper and lower case are allowed
+     * @param  string  $hexString  A string that only contains hexadecimal characters
+     *                             Bother upper and lower case are allowed
      */
     public function __construct($hexString)
     {
@@ -50,8 +52,7 @@ class PhpEncryptionCore
     /**
      * Encrypt the plaintext.
      *
-     * @param string $plaintext Plaintext
-     *
+     * @param  string  $plaintext  Plaintext
      * @return string Cipher text
      */
     public function encrypt($plaintext)
@@ -62,8 +63,7 @@ class PhpEncryptionCore
     /**
      * Decrypt the cipher text.
      *
-     * @param string $cipherText Cipher text
-     *
+     * @param  string  $cipherText  Cipher text
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      *
@@ -75,9 +75,6 @@ class PhpEncryptionCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
-     *
      * @return string
      *
      * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
@@ -113,7 +110,7 @@ class PhpEncryptionCore
      */
     public static function resolveEngineToUse()
     {
-        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods())) {
+        if (in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods()) === false) {
             return self::LEGACY_ENGINE;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -133,8 +134,7 @@ class HookCore extends ObjectModel
     /**
      * Returns the canonical name for a given hook.
      *
-     * @param string $hookName
-     *
+     * @param  string  $hookName
      * @return string
      */
     public static function normalizeHookName($hookName)
@@ -166,16 +166,15 @@ class HookCore extends ObjectModel
     /**
      * Return Hooks List.
      *
-     * @param bool $position
-     *
+     * @param  bool  $position
      * @return array Hooks List
      */
     public static function getHooks($position = false, $only_display_hooks = false)
     {
         $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT * FROM `' . _DB_PREFIX_ . 'hook` h
-			' . ($position ? 'WHERE h.`position` = 1' : '') . '
+			SELECT * FROM `'._DB_PREFIX_.'hook` h
+			'.($position ? 'WHERE h.`position` = 1' : '').'
 			ORDER BY `name`'
         );
 
@@ -194,10 +193,9 @@ class HookCore extends ObjectModel
      * By default, if the provided hook name is an alias, this method will return the id of their canonical hook.
      * Otherwise, it will treat the alias as a normal hook and will return false if it's not registered in the hooks table.
      *
-     * @param string $hookName Hook name
-     * @param bool $withAliases [default=true] Set to FALSE to ignore hook aliases
-     * @param bool $refreshCache [default=false] Set to TRUE to force cache refresh
-     *
+     * @param  string  $hookName  Hook name
+     * @param  bool  $withAliases  [default=true] Set to FALSE to ignore hook aliases
+     * @param  bool  $refreshCache  [default=false] Set to TRUE to force cache refresh
      * @return int|false Hook ID, or false if it doesn't exist
      *
      * @throws PrestaShopDatabaseException
@@ -205,7 +203,7 @@ class HookCore extends ObjectModel
     public static function getIdByName($hookName, bool $withAliases = true, bool $refreshCache = false)
     {
         $hookName = strtolower($hookName);
-        if (!Validate::isHookName($hookName)) {
+        if (! Validate::isHookName($hookName)) {
             return false;
         }
 
@@ -221,14 +219,14 @@ class HookCore extends ObjectModel
      */
     public static function getNameById($hook_id)
     {
-        $cache_id = 'hook_namebyid_' . $hook_id;
-        if (!Cache::isStored($cache_id)) {
+        $cache_id = 'hook_namebyid_'.$hook_id;
+        if (! Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
 							SELECT `name`
-							FROM `' . _DB_PREFIX_ . 'hook`
-							WHERE `id_hook` = ' . (int) $hook_id);
+							FROM `'._DB_PREFIX_.'hook`
+							WHERE `id_hook` = '.(int) $hook_id);
 
-            if (false === $result) {
+            if ($result === false) {
                 throw new PrestaShopObjectNotFoundException(
                     sprintf('The hook id #%d does not exist in database', $hook_id)
                 );
@@ -254,7 +252,7 @@ class HookCore extends ObjectModel
     public static function getHookAliasList()
     {
         @trigger_error(
-            __FUNCTION__ . ' is deprecated since version 1.7.1.0.',
+            __FUNCTION__.' is deprecated since version 1.7.1.0.',
             E_USER_DEPRECATED
         );
 
@@ -264,8 +262,7 @@ class HookCore extends ObjectModel
     /**
      * Indicates whether the provided hook is an alias of another one
      *
-     * @param string $hookName Hook name to test
-     *
+     * @param  string  $hookName  Hook name to test
      * @return bool TRUE if the hook is an alias, false otherwise
      *
      * @throws PrestaShopDatabaseException
@@ -287,8 +284,8 @@ class HookCore extends ObjectModel
     private static function getAllHookAliases(): array
     {
         $cacheId = 'hook_aliases';
-        if (!Cache::isStored($cacheId)) {
-            $hookAliasList = Db::getInstance()->executeS('SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
+        if (! Cache::isStored($cacheId)) {
+            $hookAliasList = Db::getInstance()->executeS('SELECT `name`, `alias` FROM `'._DB_PREFIX_.'hook_alias`');
             $hookAliases = [];
             if ($hookAliasList) {
                 foreach ($hookAliasList as $ha) {
@@ -306,15 +303,14 @@ class HookCore extends ObjectModel
     /**
      * Returns all backward compatibility hook names for a given canonical hook name.
      *
-     * @param string $canonicalHookName Canonical hook name
-     *
+     * @param  string  $canonicalHookName  Canonical hook name
      * @return string[] List of aliases
      *
      * @since 1.7.1.0
      */
     private static function getHookAliasesFor(string $canonicalHookName): array
     {
-        $cacheId = 'hook_aliases_' . $canonicalHookName;
+        $cacheId = 'hook_aliases_'.$canonicalHookName;
         if (Cache::isStored($cacheId)) {
             return Cache::retrieve($cacheId);
         }
@@ -339,8 +335,8 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_canonical_names';
 
-        if (!Cache::isStored($cacheId)) {
-            $databaseResults = Db::getInstance()->executeS('SELECT name, alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
+        if (! Cache::isStored($cacheId)) {
+            $databaseResults = Db::getInstance()->executeS('SELECT name, alias FROM `'._DB_PREFIX_.'hook_alias`');
             $hooksByAlias = [];
             if ($databaseResults) {
                 foreach ($databaseResults as $record) {
@@ -357,10 +353,6 @@ class HookCore extends ObjectModel
 
     /**
      * Returns a list containing the canonical name for the provided hook name followed by all its aliases.
-     *
-     * @param string $hookName
-     *
-     * @return array
      */
     public static function getAllKnownNames(string $hookName): array
     {
@@ -377,17 +369,15 @@ class HookCore extends ObjectModel
     /**
      * Check if a hook is callable on a module.
      *
-     * @param Module $module Module instance
-     * @param string $hookName Hook name
-     * @param bool $strict [default=false] Set to TRUE to avoid checking if aliases are callable as well
-     *
-     * @return bool
+     * @param  Module  $module  Module instance
+     * @param  string  $hookName  Hook name
+     * @param  bool  $strict  [default=false] Set to TRUE to avoid checking if aliases are callable as well
      *
      * @since 1.7.1.0
      */
     public static function isHookCallableOn(Module $module, string $hookName, $strict = false): bool
     {
-        $hooksToCheck = (!$strict) ? static::getAllKnownNames($hookName) : [$hookName];
+        $hooksToCheck = (! $strict) ? static::getAllKnownNames($hookName) : [$hookName];
 
         foreach ($hooksToCheck as $currentHookName) {
             if (is_callable([$module, static::getMethodName($currentHookName)])) {
@@ -402,10 +392,6 @@ class HookCore extends ObjectModel
      * Call a hook (or one of its alternative names) on a module.
      *
      * @since 1.7.1.0
-     *
-     * @param Module $module
-     * @param string $hookName
-     * @param array $hookArgs
      *
      * @return mixed
      */
@@ -441,8 +427,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param string $hookName Hook name
-     *
+     * @param  string  $hookName  Hook name
      * @return int Hook ID
      *
      * @deprecated 1.7.1.0
@@ -489,14 +474,14 @@ class HookCore extends ObjectModel
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
-            FROM `' . _DB_PREFIX_ . 'hook_module` hm
-            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
-            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
+            FROM `'._DB_PREFIX_.'hook_module` hm
+            STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int) Context::getContext()->shop->id.')
+            STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
             ORDER BY hm.position'
         );
         $list = [];
         foreach ($results as $result) {
-            if (!isset($list[$result['id_hook']])) {
+            if (! isset($list[$result['id_hook']])) {
                 $list[$result['id_hook']] = [];
             }
 
@@ -524,9 +509,8 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $id_hook
-     * @param int|null $id_module
-     *
+     * @param  int  $id_hook
+     * @param  int|null  $id_module
      * @return array Modules List
      */
     public static function getModulesFromHook($id_hook, $id_module = null)
@@ -555,16 +539,15 @@ class HookCore extends ObjectModel
 
         $rows = Db::getInstance()->executeS($sql);
 
-        return !empty($rows);
+        return ! empty($rows);
     }
 
     /**
      * Registers a module to a given hook
      *
-     * @param Module $module_instance The affected module
-     * @param string|string[] $hook_name Hook name(s) to register this module to
-     * @param int[]|null $shop_list List of shop ids
-     *
+     * @param  Module  $module_instance  The affected module
+     * @param  string|string[]  $hook_name  Hook name(s) to register this module to
+     * @param  int[]|null  $shop_list  List of shop ids
      * @return bool
      *
      * @throws PrestaShopDatabaseException
@@ -577,10 +560,10 @@ class HookCore extends ObjectModel
 
         foreach ($hook_names as $hook_name) {
             // Check hook name validation and if module is installed
-            if (!Validate::isHookName($hook_name)) {
+            if (! Validate::isHookName($hook_name)) {
                 throw new PrestaShopException('Invalid hook name');
             }
-            if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
+            if (! isset($module_instance->id) || ! is_numeric($module_instance->id)) {
                 return false;
             }
 
@@ -596,20 +579,20 @@ class HookCore extends ObjectModel
             $id_hook = Hook::getIdByName($hook_name, false);
 
             // If hook does not exist, we create it
-            if (!$id_hook) {
-                $new_hook = new Hook();
+            if (! $id_hook) {
+                $new_hook = new Hook;
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
                 $new_hook->position = 1;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
-                if (!$id_hook) {
+                if (! $id_hook) {
                     return false;
                 }
             }
 
             // If shop lists is null, we fill it with all shops
-            if (null === $shop_list) {
+            if ($shop_list === null) {
                 $shop_list = Shop::getCompleteListOfShopsID();
             }
 
@@ -618,18 +601,18 @@ class HookCore extends ObjectModel
             foreach ($shop_list as $shop_id) {
                 // Check if already registered
                 $sql = 'SELECT hm.`id_module`
-                    FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
-                    WHERE hm.`id_module` = ' . (int) $module_instance->id . ' AND h.`id_hook` = ' . $id_hook . '
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = ' . (int) $shop_id;
+                    FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+                    WHERE hm.`id_module` = '.(int) $module_instance->id.' AND h.`id_hook` = '.$id_hook.'
+                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int) $shop_id;
                 if (Db::getInstance()->getRow($sql)) {
                     continue;
                 }
 
                 // Get module position in hook
                 $sql = 'SELECT MAX(`position`) AS position
-                    FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int) $id_hook . ' AND `id_shop` = ' . (int) $shop_id;
-                if (!$position = Db::getInstance()->getValue($sql)) {
+                    FROM `'._DB_PREFIX_.'hook_module`
+                    WHERE `id_hook` = '.(int) $id_hook.' AND `id_shop` = '.(int) $shop_id;
+                if (! $position = Db::getInstance()->getValue($sql)) {
                     $position = 0;
                 }
 
@@ -641,8 +624,8 @@ class HookCore extends ObjectModel
                     'position' => (int) ($position + 1),
                 ]);
 
-                if (!in_array($shop_id, $shop_list_employee)) {
-                    $where = '`id_module` = ' . (int) $module_instance->id . ' AND `id_shop` = ' . (int) $shop_id;
+                if (! in_array($shop_id, $shop_list_employee)) {
+                    $where = '`id_module` = '.(int) $module_instance->id.' AND `id_shop` = '.(int) $shop_id;
                     $return = $return && Db::getInstance()->delete('module_shop', $where);
                 }
             }
@@ -669,16 +652,16 @@ class HookCore extends ObjectModel
             $hook_id = Hook::getIdByName($hook_name, false);
         }
 
-        if (!$hook_id) {
+        if (! $hook_id) {
             return false;
         }
 
         Hook::exec('actionModuleUnRegisterHookBefore', ['object' => $module_instance, 'hook_name' => $hook_name]);
 
         // Unregister module on hook by id
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'hook_module`
-            WHERE `id_module` = ' . (int) $module_instance->id . ' AND `id_hook` = ' . (int) $hook_id
-            . (($shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '');
+        $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
+            WHERE `id_module` = '.(int) $module_instance->id.' AND `id_hook` = '.(int) $hook_id
+            .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
         $result = Db::getInstance()->execute($sql);
 
         // Clean modules position
@@ -708,8 +691,7 @@ class HookCore extends ObjectModel
      *
      * If no hook name is given, it returns all the hook registrations, indexed by lower cased hook name.
      *
-     * @param string|null $hookName Hook name (null to return all hooks)
-     *
+     * @param  string|null  $hookName  Hook name (null to return all hooks)
      * @return array[]|false returns an array of hook registrations, or false if the provided hook name is not registered
      *
      * @throws PrestaShopDatabaseException
@@ -721,7 +703,7 @@ class HookCore extends ObjectModel
         $allHookRegistrations = static::getAllHookRegistrations(Context::getContext(), $hookName);
 
         // If no hook_name is given, return all registered hooks
-        if (null === $hookName) {
+        if ($hookName === null) {
             return $allHookRegistrations;
         }
 
@@ -730,13 +712,13 @@ class HookCore extends ObjectModel
 
         // add modules that are registered to aliases of this hook
         $aliases = Hook::getHookAliasesFor($hookName);
-        if (!empty($aliases)) {
+        if (! empty($aliases)) {
             $alreadyIncludedModuleIds = array_column($modulesToInvoke, 'id_module');
             foreach ($aliases as $alias) {
                 $hookAlias = strtolower($alias);
                 if (isset($allHookRegistrations[$hookAlias])) {
                     foreach ($allHookRegistrations[$hookAlias] as $registeredAlias) {
-                        if (!in_array($registeredAlias['id_module'], $alreadyIncludedModuleIds)) {
+                        if (! in_array($registeredAlias['id_module'], $alreadyIncludedModuleIds)) {
                             $modulesToInvoke[] = $registeredAlias;
                         }
                     }
@@ -744,24 +726,23 @@ class HookCore extends ObjectModel
             }
         }
 
-        return !empty($modulesToInvoke) ? $modulesToInvoke : false;
+        return ! empty($modulesToInvoke) ? $modulesToInvoke : false;
     }
 
     /**
      * Execute modules for specified hook.
      *
-     * @param string $hook_name Hook Name
-     * @param array $hook_args Parameters for the functions
-     * @param int|null $id_module Execute hook for this module only
-     * @param bool $array_return If specified, module output will be set by name in an array
-     * @param bool $check_exceptions Check permission exceptions
-     * @param bool $use_push Force change to be refreshed on Dashboard widgets
-     * @param int|null $id_shop If specified, hook will be execute the shop with this ID
-     * @param bool $chain If specified, hook will chain the return of hook module
+     * @param  string  $hook_name  Hook Name
+     * @param  array  $hook_args  Parameters for the functions
+     * @param  int|null  $id_module  Execute hook for this module only
+     * @param  bool  $array_return  If specified, module output will be set by name in an array
+     * @param  bool  $check_exceptions  Check permission exceptions
+     * @param  bool  $use_push  Force change to be refreshed on Dashboard widgets
+     * @param  int|null  $id_shop  If specified, hook will be execute the shop with this ID
+     * @param  bool  $chain  If specified, hook will chain the return of hook module
+     * @return mixed Module's output
      *
      * @throws PrestaShopException
-     *
-     * @return mixed Module's output
      */
     public static function exec(
         $hook_name,
@@ -773,12 +754,12 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-        if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || ! self::getHookStatusByName($hook_name)) {
             return $array_return ? [] : null;
         }
 
         $hookRegistry = static::getHookRegistry();
-        $isRegistryEnabled = null !== $hookRegistry;
+        $isRegistryEnabled = $hookRegistry !== null;
 
         if ($isRegistryEnabled) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
@@ -786,7 +767,7 @@ class HookCore extends ObjectModel
         }
 
         // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
-        if (true === $chain) {
+        if ($chain === true) {
             $array_return = false;
         }
 
@@ -796,13 +777,13 @@ class HookCore extends ObjectModel
         }
 
         // Check arguments validity
-        if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name)) {
+        if (($id_module && ! is_numeric($id_module)) || ! Validate::isHookName($hook_name)) {
             throw new PrestaShopException('Invalid id_module or hook_name');
         }
 
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
-        if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
+        if (! $module_list = Hook::getHookModuleExecList($hook_name)) {
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
@@ -811,7 +792,7 @@ class HookCore extends ObjectModel
         }
 
         // Check if hook exists
-        if (!$id_hook = Hook::getIdByName($hook_name, false)) {
+        if (! $id_hook = Hook::getIdByName($hook_name, false)) {
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
@@ -821,17 +802,17 @@ class HookCore extends ObjectModel
 
         if (array_key_exists($hook_name, static::$deprecated_hooks)) {
             $deprecVersion = static::$deprecated_hooks[$hook_name]['from'] ?? _PS_VERSION_;
-            Tools::displayAsDeprecated('The hook ' . $hook_name . ' is deprecated in PrestaShop v.' . $deprecVersion);
+            Tools::displayAsDeprecated('The hook '.$hook_name.' is deprecated in PrestaShop v.'.$deprecVersion);
         }
 
         // Store list of executed hooks on this page
         Hook::$executed_hooks[$id_hook] = $hook_name;
 
         $context = Context::getContext();
-        if (!isset($hook_args['cookie']) || !$hook_args['cookie']) {
+        if (! isset($hook_args['cookie']) || ! $hook_args['cookie']) {
             $hook_args['cookie'] = $context->cookie;
         }
-        if (!isset($hook_args['cart']) || !$hook_args['cart']) {
+        if (! isset($hook_args['cart']) || ! $hook_args['cart']) {
             $hook_args['cart'] = $context->cart;
         }
 
@@ -839,7 +820,7 @@ class HookCore extends ObjectModel
         $altern = 0;
         $output = ($array_return) ? [] : '';
 
-        if ($disable_non_native_modules && !isset(Hook::$native_module)) {
+        if ($disable_non_native_modules && ! isset(Hook::$native_module)) {
             Hook::$native_module = Module::getNativeModuleList();
         }
 
@@ -861,7 +842,7 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($hookRegistration['module'], Hook::$native_module)) {
+            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && ! in_array($hookRegistration['module'], Hook::$native_module)) {
                 continue;
             }
 
@@ -887,32 +868,32 @@ class HookCore extends ObjectModel
                         : $controller_obj->php_self;
                 }
 
-                //check if current controller is a module controller
+                // check if current controller is a module controller
                 if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module)) {
-                    $controller = 'module-' . $controller_obj->module->name . '-' . $controller;
+                    $controller = 'module-'.$controller_obj->module->name.'-'.$controller;
                 }
 
                 if (in_array($controller, $exceptions)) {
                     continue;
                 }
 
-                //Backward compatibility of controller names
+                // Backward compatibility of controller names
                 $matching_name = [
                     'authentication' => 'auth',
                 ];
                 if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
                     continue;
                 }
-                if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($hookRegistration['id_module'], 'view', $context->employee)) {
+                if (Validate::isLoadedObject($context->employee) && ! Module::getPermissionStatic($hookRegistration['id_module'], 'view', $context->employee)) {
                     continue;
                 }
             }
 
-            if (!($moduleInstance = Module::getInstanceByName($hookRegistration['module']))) {
+            if (! ($moduleInstance = Module::getInstanceByName($hookRegistration['module']))) {
                 continue;
             }
 
-            if ($use_push && !$moduleInstance->allow_push) {
+            if ($use_push && ! $moduleInstance->allow_push) {
                 continue;
             }
 
@@ -927,7 +908,7 @@ class HookCore extends ObjectModel
                     Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
                 }
 
-                if (0 !== $key && true === $chain) {
+                if ($key !== 0 && $chain === true) {
                     $hook_args = $output;
                 }
 
@@ -936,7 +917,7 @@ class HookCore extends ObjectModel
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
-                    if (true === $chain) {
+                    if ($chain === true) {
                         $output = $display;
                     } else {
                         $output .= $display;
@@ -947,7 +928,7 @@ class HookCore extends ObjectModel
                 }
             } elseif (Hook::isDisplayHookName($registeredHookName)) {
                 if ($moduleInstance instanceof WidgetInterface) {
-                    if (0 !== $key && true === $chain) {
+                    if ($key !== 0 && $chain === true) {
                         $hook_args = $output;
                     }
 
@@ -956,7 +937,7 @@ class HookCore extends ObjectModel
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
                     } else {
-                        if (true === $chain) {
+                        if ($chain === true) {
                             $output = $display;
                         } else {
                             $output .= $display;
@@ -975,7 +956,7 @@ class HookCore extends ObjectModel
             $context->shop->setContext($old_context, $shop->id);
         }
 
-        if (true === $chain) {
+        if ($chain === true) {
             if (isset($output['cookie'])) {
                 unset($output['cookie']);
             }
@@ -1000,7 +981,7 @@ class HookCore extends ObjectModel
     public static function coreRenderWidget($module, $hook_name, $params)
     {
         $context = Context::getContext();
-        if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
+        if (! Module::isEnabled($module->name) || $context->isMobile() && ! Module::isEnabledForMobileDevices($module->name)) {
             return null;
         }
 
@@ -1013,7 +994,7 @@ class HookCore extends ObjectModel
     private static function getHookRegistry()
     {
         $sfContainer = SymfonyContainer::getInstance();
-        if (null !== $sfContainer && 'dev' === $sfContainer->getParameter('kernel.environment')) {
+        if ($sfContainer !== null && $sfContainer->getParameter('kernel.environment') === 'dev') {
             return $sfContainer->get('prestashop.hooks_registry');
         }
 
@@ -1033,9 +1014,7 @@ class HookCore extends ObjectModel
      *     ]
      * ```
      *
-     * @param Context $context
-     * @param string|null $hookName Hook name (to be used when the hook registration is dynamic and context sensitive)
-     *
+     * @param  string|null  $hookName  Hook name (to be used when the hook registration is dynamic and context sensitive)
      * @return array[][]
      *
      * @throws PrestaShopDatabaseException
@@ -1046,11 +1025,11 @@ class HookCore extends ObjectModel
         $customer = $context->customer;
 
         $cache_id = self::MODULE_LIST_BY_HOOK_KEY
-            . (isset($shop->id) ? '_' . $shop->id : '')
-            . (isset($customer->id) ? '_' . $customer->id : '');
+            .(isset($shop->id) ? '_'.$shop->id : '')
+            .(isset($customer->id) ? '_'.$customer->id : '');
 
         $useCache = (
-            !in_array(
+            ! in_array(
                 $hookName,
                 [
                     'displayPayment',
@@ -1068,7 +1047,7 @@ class HookCore extends ObjectModel
 
         $groups = [];
         $use_groups = Group::isFeatureActive();
-        $frontend = !$context->employee instanceof Employee;
+        $frontend = ! $context->employee instanceof Employee;
         if ($frontend) {
             // Get groups list
             if ($use_groups) {
@@ -1083,16 +1062,16 @@ class HookCore extends ObjectModel
         }
 
         // SQL Request
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
         $sql->from('module', 'm');
-        if (!in_array($hookName, ['displayBackOfficeHeader', 'displayAdminLogin'])) {
+        if (! in_array($hookName, ['displayBackOfficeHeader', 'displayAdminLogin'])) {
             $sql->join(
                 Shop::addSqlAssociation(
                     'module',
                     'm',
                     true,
-                    'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()
+                    'module_shop.enable_device & '.(int) Context::getContext()->getDevice()
                 )
             );
             $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
@@ -1109,12 +1088,12 @@ class HookCore extends ObjectModel
                         h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
                         AND (
                             SELECT `id_country`
-                            FROM `' . _DB_PREFIX_ . 'module_country` mc
+                            FROM `'._DB_PREFIX_.'module_country` mc
                             WHERE mc.`id_module` = m.`id_module`
-                            AND `id_country` = ' . (int) $context->country->id . '
-                            AND `id_shop` = ' . (int) $shop->id . '
+                            AND `id_country` = '.(int) $context->country->id.'
+                            AND `id_shop` = '.(int) $shop->id.'
                             LIMIT 1
-                        ) = ' . (int) $context->country->id . ')'
+                        ) = '.(int) $context->country->id.')'
                 );
             }
             if (Validate::isLoadedObject($context->currency)) {
@@ -1123,11 +1102,11 @@ class HookCore extends ObjectModel
                         h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
                         AND (
                             SELECT `id_currency`
-                            FROM `' . _DB_PREFIX_ . 'module_currency` mcr
+                            FROM `'._DB_PREFIX_.'module_currency` mcr
                             WHERE mcr.`id_module` = m.`id_module`
-                            AND `id_currency` IN (' . (int) $context->currency->id . ', -1, -2)
+                            AND `id_currency` IN ('.(int) $context->currency->id.', -1, -2)
                             LIMIT 1
-                        ) IN (' . (int) $context->currency->id . ', -1, -2))'
+                        ) IN ('.(int) $context->currency->id.', -1, -2))'
                 );
             }
             if (Validate::isLoadedObject($context->cart)) {
@@ -1138,18 +1117,18 @@ class HookCore extends ObjectModel
                             h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
                             AND (
                                 SELECT `id_reference`
-                                FROM `' . _DB_PREFIX_ . 'module_carrier` mcar
+                                FROM `'._DB_PREFIX_.'module_carrier` mcar
                                 WHERE mcar.`id_module` = m.`id_module`
-                                AND `id_reference` = ' . (int) $carrier->id_reference . '
-                                AND `id_shop` = ' . (int) $shop->id . '
+                                AND `id_reference` = '.(int) $carrier->id_reference.'
+                                AND `id_shop` = '.(int) $shop->id.'
                                 LIMIT 1
-                            ) = ' . (int) $carrier->id_reference . ')'
+                            ) = '.(int) $carrier->id_reference.')'
                     );
                 }
             }
         }
         if (Validate::isLoadedObject($shop) && $hookName !== 'displayAdminLogin') {
-            $sql->where('hm.`id_shop` = ' . (int) $shop->id);
+            $sql->where('hm.`id_shop` = '.(int) $shop->id);
         }
 
         if ($frontend) {
@@ -1157,11 +1136,11 @@ class HookCore extends ObjectModel
                 $sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
                 if (Validate::isLoadedObject($shop)) {
                     $sql->where(
-                        'mg.id_shop = ' . ((int) $shop->id)
-                        . (count($groups) ? ' AND  mg.`id_group` IN (' . implode(', ', $groups) . ')' : '')
+                        'mg.id_shop = '.((int) $shop->id)
+                        .(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : '')
                     );
                 } elseif (count($groups)) {
-                    $sql->where('mg.`id_group` IN (' . implode(', ', $groups) . ')');
+                    $sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
                 }
             }
         }
@@ -1173,7 +1152,7 @@ class HookCore extends ObjectModel
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             foreach ($result as $row) {
                 $row['hook'] = strtolower($row['hook']);
-                if (!isset($allHookRegistrations[$row['hook']])) {
+                if (! isset($allHookRegistrations[$row['hook']])) {
                     $allHookRegistrations[$row['hook']] = [];
                 }
 
@@ -1197,9 +1176,8 @@ class HookCore extends ObjectModel
     /**
      * Returns all hook IDs, indexed by hook name.
      *
-     * @param bool $withAliases [default=false] If true, includes hook aliases along their canonical hook id
-     * @param bool $refreshCache [default=false] Force cache refresh
-     *
+     * @param  bool  $withAliases  [default=false] If true, includes hook aliases along their canonical hook id
+     * @param  bool  $refreshCache  [default=false] Force cache refresh
      * @return int[]
      *
      * @throws PrestaShopDatabaseException
@@ -1211,7 +1189,7 @@ class HookCore extends ObjectModel
             $cacheId .= 'hook_idsbyname_withalias';
         }
 
-        if (!$refreshCache && Cache::isStored($cacheId)) {
+        if (! $refreshCache && Cache::isStored($cacheId)) {
             return Cache::retrieve($cacheId);
         }
 
@@ -1221,13 +1199,13 @@ class HookCore extends ObjectModel
 
         if ($withAliases) {
             $sql = 'SELECT `id_hook`, `name`
-                FROM `' . _DB_PREFIX_ . 'hook`
+                FROM `'._DB_PREFIX_.'hook`
                 UNION
                 SELECT `id_hook`, ha.`alias` as name
-                FROM `' . _DB_PREFIX_ . 'hook_alias` ha
-                INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name';
+                FROM `'._DB_PREFIX_.'hook_alias` ha
+                INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name';
         } else {
-            $sql = 'SELECT `id_hook`, `name` FROM `' . _DB_PREFIX_ . 'hook`';
+            $sql = 'SELECT `id_hook`, `name` FROM `'._DB_PREFIX_.'hook`';
         }
 
         $result = $db->executeS($sql, false);
@@ -1244,28 +1222,25 @@ class HookCore extends ObjectModel
     /**
      * Returns the name of the method to invoke in a module for a given hook name
      *
-     * @param string $hookName Hook name
-     *
+     * @param  string  $hookName  Hook name
      * @return string Method name
      */
     private static function getMethodName(string $hookName): string
     {
-        return 'hook' . ucfirst($hookName);
+        return 'hook'.ucfirst($hookName);
     }
 
     /**
      * Return status from a given hook name.
      *
-     * @param string $hook_name Hook name
-     *
-     * @return bool
+     * @param  string  $hook_name  Hook name
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('active');
         $sql->from('hook', 'h');
-        $sql->where('h.name = "' . pSQL($hook_name) . '"');
+        $sql->where('h.name = "'.pSQL($hook_name).'"');
 
         return (bool) Db::getInstance()->getValue($sql);
     }

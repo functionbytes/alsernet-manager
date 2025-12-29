@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -55,9 +56,6 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     public $context;
 
     /**
-     * @param SupplyOrder $supply_order
-     * @param Smarty $smarty
-     *
      * @throws PrestaShopException
      */
     public function __construct(SupplyOrder $supply_order, Smarty $smarty)
@@ -121,10 +119,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $logo = '';
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID());
-        } elseif (Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID());
+        if (Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID()))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int) Shop::getContextShopID());
+        } elseif (Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID()))) {
+            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int) Shop::getContextShopID());
         }
 
         return $logo;
@@ -143,7 +141,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return 'supply-order-form-' . sprintf('%06d', $this->supply_order->reference) . '.pdf';
+        return 'supply-order-form-'.sprintf('%06d', $this->supply_order->reference).'.pdf';
     }
 
     /**
@@ -155,14 +153,14 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     protected function getTaxOrderSummary()
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('
             SUM(price_with_order_discount_te) as base_te,
             tax_rate,
             SUM(tax_value_with_order_discount) as total_tax_value
         ');
         $query->from('supply_order_detail');
-        $query->where('id_supply_order = ' . (int) $this->supply_order->id);
+        $query->where('id_supply_order = '.(int) $this->supply_order->id);
         $query->groupBy('tax_rate');
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -186,13 +184,13 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         $path_logo = $this->getLogo();
         $width = $height = 0;
 
-        if (!empty($path_logo)) {
-            list($width, $height) = getimagesize($path_logo);
+        if (! empty($path_logo)) {
+            [$width, $height] = getimagesize($path_logo);
         }
 
         $this->smarty->assign([
             'logo_path' => $path_logo,
-            'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+            'img_ps_dir' => Tools::getShopProtocol().Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'title' => $this->title,
             'reference' => $this->supply_order->reference,
@@ -229,7 +227,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     /**
      * Rounds values of a SupplyOrderDetail object.
      *
-     * @param array|PrestaShopCollection $collection
+     * @param  array|PrestaShopCollection  $collection
      */
     protected function roundSupplyOrderDetails(&$collection)
     {
@@ -246,8 +244,6 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
     /**
      * Rounds values of a SupplyOrder object.
-     *
-     * @param SupplyOrder $supply_order
      */
     protected function roundSupplyOrder(SupplyOrder &$supply_order)
     {

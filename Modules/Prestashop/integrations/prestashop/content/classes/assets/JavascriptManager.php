@@ -29,6 +29,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $list;
 
     protected $valid_position = ['head', 'bottom'];
+
     protected $valid_attribute = ['async', 'defer'];
 
     /**
@@ -48,13 +49,12 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
-     * @param string $relativePath
-     * @param string $position
-     * @param int $priority
-     * @param bool $inline
-     * @param string $attribute
-     * @param string $server
+     * @param  string  $relativePath
+     * @param  string  $position
+     * @param  int  $priority
+     * @param  bool  $inline
+     * @param  string  $attribute
+     * @param  string  $server
      */
     public function register(
         $id,
@@ -65,7 +65,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         $attribute = null,
         $server = 'local'
     ) {
-        if ('remote' === $server) {
+        if ($server === 'remote') {
             $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server);
         } elseif ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
@@ -86,13 +86,12 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
-     * @param string $fullPath
-     * @param string $position
-     * @param int $priority
-     * @param bool $inline
-     * @param string $attribute
-     * @param string $server
+     * @param  string  $fullPath
+     * @param  string  $position
+     * @param  int  $priority
+     * @param  bool  $inline
+     * @param  string  $attribute
+     * @param  string  $server
      */
     protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
@@ -100,11 +99,11 @@ class JavascriptManagerCore extends AbstractAssetManager
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
 
-        if ('remote' === $server) {
+        if ($server === 'remote') {
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -135,7 +134,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         foreach ($this->valid_position as $position) {
             foreach ($this->list[$position]['inline'] as &$item) {
                 $item['content'] =
-                    '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
+                    '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
                     file_get_contents($item['path']);
             }
         }

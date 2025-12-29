@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -40,9 +41,6 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     public $order;
 
     /**
-     * @param OrderReturn $order_return
-     * @param Smarty $smarty
-     *
      * @throws PrestaShopException
      */
     public function __construct(OrderReturn $order_return, Smarty $smarty)
@@ -103,7 +101,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_return->id) . '.pdf';
+        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_return->id).'.pdf';
     }
 
     /**

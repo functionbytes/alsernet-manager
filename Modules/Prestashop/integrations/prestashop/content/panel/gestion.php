@@ -3,11 +3,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-require _PS_ADMIN_DIR_ . '/../config/config.panel.inc.php';
-include(dirname(__FILE__) . '/init.php');
+require _PS_ADMIN_DIR_.'/../config/config.panel.inc.php';
+include dirname(__FILE__).'/init.php';
 require '../vendor/autoload.php'; // Para trabajar con archivos XLSX, usa la librería PhpSpreadsheet.
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             showError("Extensión de archivo no permitida: $fileExtension");
         }
     } else {
-        showError("Error al subir el archivo.");
+        showError('Error al subir el archivo.');
     }
 }
 
@@ -56,39 +56,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  */
 function normalizeIncomingPrice($price)
 {
-    if ($price === null) return null;
+    if ($price === null) {
+        return null;
+    }
 
     // 1) quitar moneda, espacios (incl. NBSP) y cualquier char que no sea dígito, coma o punto
-    $s = trim((string)$price);
+    $s = trim((string) $price);
     $s = preg_replace('/[^\d,.\-]+/u', '', $s);
-    if ($s === '' || $s === '-') return null;
+    if ($s === '' || $s === '-') {
+        return null;
+    }
 
     // 2) localizar el separador decimal real: el último '.' o ','
     $lastComma = strrpos($s, ',');
-    $lastDot   = strrpos($s, '.');
+    $lastDot = strrpos($s, '.');
 
     // helper para reconstruir con '.' decimal conservando nº de decimales detectado
     $rebuild = function (string $orig, int $decLen) {
         $digits = preg_replace('/\D+/', '', $orig); // solo dígitos
-        if ($digits === '') return null;
-        if ($decLen <= 0)   return ltrim($digits, '0') === '' ? '0' : $digits;
+        if ($digits === '') {
+            return null;
+        }
+        if ($decLen <= 0) {
+            return ltrim($digits, '0') === '' ? '0' : $digits;
+        }
         if (strlen($digits) <= $decLen) {
             // 0.xxx
             $intPart = '0';
             $decPart = str_pad($digits, $decLen, '0', STR_PAD_LEFT);
-            return $intPart . '.' . $decPart;
+
+            return $intPart.'.'.$decPart;
         }
         $intPart = substr($digits, 0, -$decLen);
         $decPart = substr($digits, -$decLen);
         $intPart = ltrim($intPart, '0'); // evitar "000123"
-        if ($intPart === '') $intPart = '0';
-        return $intPart . '.' . $decPart;
+        if ($intPart === '') {
+            $intPart = '0';
+        }
+
+        return $intPart.'.'.$decPart;
     };
 
     if ($lastComma !== false && $lastDot !== false) {
         // Ambos existen: el decimal es el que esté más a la derecha
         $decPos = max($lastComma, $lastDot);
         $decLen = strlen($s) - $decPos - 1;
+
         return $rebuild($s, $decLen);
     }
 
@@ -97,6 +110,7 @@ function normalizeIncomingPrice($price)
     if ($sep === null) {
         // sin separadores -> número entero
         $digits = preg_replace('/\D+/', '', $s);
+
         return $digits === '' ? null : ltrim($digits, '0') === '' ? '0' : $digits;
     }
 
@@ -110,6 +124,7 @@ function normalizeIncomingPrice($price)
 
     // Probablemente separadores de miles → quitar todo y sin decimales
     $digits = preg_replace('/\D+/', '', $s);
+
     return $digits === '' ? null : ltrim($digits, '0') === '' ? '0' : $digits;
 }
 
@@ -118,18 +133,21 @@ function getAttributesNameByIdProductAttribute($idProductAttribute, $idLang = 1)
 {
     $query = '
         SELECT agl.name AS group_name, al.name AS attribute_name
-        FROM ' . _DB_PREFIX_ . 'product_attribute_combination pac
-        INNER JOIN ' . _DB_PREFIX_ . 'attribute a ON pac.id_attribute = a.id_attribute
-        INNER JOIN ' . _DB_PREFIX_ . 'attribute_lang al ON a.id_attribute = al.id_attribute AND al.id_lang = ' . (int)$idLang . '
-        INNER JOIN ' . _DB_PREFIX_ . 'attribute_group_lang agl ON a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int)$idLang . '
-        WHERE pac.id_product_attribute = ' . (int)$idProductAttribute;
+        FROM '._DB_PREFIX_.'product_attribute_combination pac
+        INNER JOIN '._DB_PREFIX_.'attribute a ON pac.id_attribute = a.id_attribute
+        INNER JOIN '._DB_PREFIX_.'attribute_lang al ON a.id_attribute = al.id_attribute AND al.id_lang = '.(int) $idLang.'
+        INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl ON a.id_attribute_group = agl.id_attribute_group AND agl.id_lang = '.(int) $idLang.'
+        WHERE pac.id_product_attribute = '.(int) $idProductAttribute;
 
     $rows = Db::getInstance()->executeS($query);
-    if (!$rows) return '';
+    if (! $rows) {
+        return '';
+    }
     $parts = [];
     foreach ($rows as $r) {
-        $parts[] = $r['group_name'] . ' - ' . $r['attribute_name'];
+        $parts[] = $r['group_name'].' - '.$r['attribute_name'];
     }
+
     return implode(', ', $parts);
 }
 
@@ -137,10 +155,11 @@ function getAttributesNameByIdProductAttribute($idProductAttribute, $idLang = 1)
 function getSisterCombinations($idProduct)
 {
     $sql = 'SELECT pa.id_product_attribute, pa.reference
-            FROM ' . _DB_PREFIX_ . 'product_attribute pa
-            INNER JOIN ' . _DB_PREFIX_ . 'product_attribute_shop pas
+            FROM '._DB_PREFIX_.'product_attribute pa
+            INNER JOIN '._DB_PREFIX_.'product_attribute_shop pas
                 ON pas.id_product_attribute = pa.id_product_attribute AND pas.id_shop = 1
-            WHERE pa.id_product = ' . (int)$idProduct;
+            WHERE pa.id_product = '.(int) $idProduct;
+
     return Db::getInstance()->executeS($sql) ?: [];
 }
 
@@ -148,11 +167,12 @@ function getSisterCombinations($idProduct)
 function calcPsPriceWithTax($idProduct, $idProductAttribute, $idCountry)
 {
     $specific_price = null;
+
     return Product::priceCalculation(
         1,                 // id_shop
-        (int)$idProduct,   // id_product
-        (int)$idProductAttribute,
-        (int)$idCountry,   // id_country
+        (int) $idProduct,   // id_product
+        (int) $idProductAttribute,
+        (int) $idCountry,   // id_country
         0,                 // id_state
         '',                // zipcode
         1,                 // id_currency
@@ -183,6 +203,7 @@ function processCSV($filePath)
             if (empty(trim($row[0])) || empty(trim($row[1]))) {
                 fclose($handle);
                 showError("El archivo CSV contiene una línea vacía en la columna 0 o 1 (Fila $rowNumber).");
+
                 return null;
             }
             $data[] = [$row[0], $row[1]];
@@ -190,9 +211,11 @@ function processCSV($filePath)
         }
         fclose($handle);
     } else {
-        showError("No se pudo abrir el archivo CSV.");
+        showError('No se pudo abrir el archivo CSV.');
+
         return null;
     }
+
     return $data;
 }
 
@@ -211,6 +234,7 @@ function processXLS($filePath)
             $col1 = isset($row[1]) ? trim($row[1]) : '';
             if (empty($col0) || empty($col1)) {
                 showError("El archivo XLS contiene una línea vacía en la columna 0 o 1 (Fila $rowNumber).");
+
                 return null;
             }
             $data[] = [$col0, $col1];
@@ -218,8 +242,10 @@ function processXLS($filePath)
         }
     } catch (Exception $e) {
         showError("Error al procesar el archivo XLS: {$e->getMessage()}");
+
         return null;
     }
+
     return $data;
 }
 
@@ -244,11 +270,12 @@ function processXLSX($filePath)
         }
     } catch (Exception $e) {
         showError("Error al procesar el archivo XLSX: {$e->getMessage()}");
+
         return null;
     }
+
     return $data;
 }
-
 
 // Función para mostrar un mensaje de error
 function showError($message)
@@ -260,20 +287,22 @@ function showError($message)
 
 function displayData($data)
 {
-    $id_country = (int)$_POST['country'];
-    $idLang     = 1;
+    $id_country = (int) $_POST['country'];
+    $idLang = 1;
 
     // 1) Parse del CSV (ref, price normalizado) preservando orden
     $rows = [];
     foreach ($data as $row) {
         $ref = trim($row[0]);
         $price = normalizeIncomingPrice($row[1]);
-        if ($ref === '' || $price === null || $price === '') continue;
+        if ($ref === '' || $price === null || $price === '') {
+            continue;
+        }
         $rows[] = ['ref' => $ref, 'price' => $price];
     }
 
-    if (!$rows) {
-        showError("El archivo no contiene referencias válidas.");
+    if (! $rows) {
+        showError('El archivo no contiene referencias válidas.');
     }
 
     // 2) Agrupar por producto
@@ -281,7 +310,7 @@ function displayData($data)
     $ref2product = []; // ref (de combinación) => id_product
 
     foreach ($rows as $item) {
-        $ref   = $item['ref'];
+        $ref = $item['ref'];
         $price = $item['price'];
 
         // Buscar como combinación
@@ -292,9 +321,10 @@ function displayData($data)
             LIMIT 1
         ");
         if (count($comb) != 0) {
-            $idProduct = (int)$comb[0]['id_product'];
+            $idProduct = (int) $comb[0]['id_product'];
             $productRefs[$idProduct]['refs_in_file'][$ref] = $price;
             $ref2product[$ref] = $idProduct;
+
             continue;
         }
 
@@ -306,7 +336,7 @@ function displayData($data)
             LIMIT 1
         ");
         if (count($prod) != 0) {
-            $idProduct = (int)$prod[0]['id_product'];
+            $idProduct = (int) $prod[0]['id_product'];
             $productRefs[$idProduct]['refs_in_file'][$ref] = $price;
         }
     }
@@ -316,32 +346,35 @@ function displayData($data)
     // 3) Construcción de salida
     foreach ($productRefs as $idProduct => $info) {
         $refsInFile = $info['refs_in_file'];
-        $product    = new Product($idProduct);
+        $product = new Product($idProduct);
 
         // ¿Tiene combinaciones?
         $sisters = getSisterCombinations($idProduct);
 
         if (empty($sisters)) {
             // Producto simple
-            $extinto = Db::getInstance()->executeS("
+            $extinto = Db::getInstance()->executeS('
                 SELECT 1 FROM aalv_combinacionunica_import
-                WHERE estado_gestion = 0 AND id_product = ".$idProduct."
+                WHERE estado_gestion = 0 AND id_product = '.$idProduct.'
                 LIMIT 1
-            ");
-            if ($extinto) continue;
+            ');
+            if ($extinto) {
+                continue;
+            }
 
             // tomar la primera ref del archivo (debería ser la del padre)
             foreach ($refsInFile as $ref => $price) {
                 $psPrice = calcPsPriceWithTax($idProduct, 0, $id_country);
                 $precio_combinaciones[$ref] = [
-                    'reference'   => $ref,
-                    'price'       => $price,
+                    'reference' => $ref,
+                    'price' => $price,
                     'combinacion' => '',
-                    'nombre'      => isset($product->name[$idLang]) ? $product->name[$idLang] : '',
-                    'precio_ps'   => $psPrice
+                    'nombre' => isset($product->name[$idLang]) ? $product->name[$idLang] : '',
+                    'precio_ps' => $psPrice,
                 ];
                 break;
             }
+
             continue;
         }
 
@@ -359,37 +392,39 @@ function displayData($data)
 
         foreach ($sisters as $sis) {
             $sisRef = $sis['reference'];
-            $sisIdA = (int)$sis['id_product_attribute'];
+            $sisIdA = (int) $sis['id_product_attribute'];
 
             // Extinto por combinación
-            $extinto = Db::getInstance()->executeS("
+            $extinto = Db::getInstance()->executeS('
                 SELECT 1 FROM aalv_combinaciones_import
-                WHERE estado_gestion = 0 AND id_product_attribute = ".$sisIdA."
+                WHERE estado_gestion = 0 AND id_product_attribute = '.$sisIdA.'
                 LIMIT 1
-            ");
-            if ($extinto) continue;
+            ');
+            if ($extinto) {
+                continue;
+            }
 
             $psPrice = calcPsPriceWithTax($idProduct, $sisIdA, $id_country);
-            $attrs   = getAttributesNameByIdProductAttribute($sisIdA, $idLang);
+            $attrs = getAttributesNameByIdProductAttribute($sisIdA, $idLang);
 
             $outPrice = isset($fileRefPrices[$sisRef]) ? $fileRefPrices[$sisRef] : ''; // vacío si no vino en archivo
 
             $precio_combinaciones[$sisRef] = [
-                'reference'   => $sisRef,
-                'price'       => $outPrice,
+                'reference' => $sisRef,
+                'price' => $outPrice,
                 'combinacion' => $attrs,
-                'nombre'      => isset($product->name[$idLang]) ? $product->name[$idLang] : '',
-                'precio_ps'   => $psPrice
+                'nombre' => isset($product->name[$idLang]) ? $product->name[$idLang] : '',
+                'precio_ps' => $psPrice,
             ];
         }
     }
 
     // 4) CSV
     $columnas = ['Insertar', 'Código', 'Descripción', 'PVP', 'Precio PS'];
-    $nombreArchivo = 'mi_archivo_' . date('Y-m-d_H-i-s') . '.csv';
+    $nombreArchivo = 'mi_archivo_'.date('Y-m-d_H-i-s').'.csv';
 
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="' . $nombreArchivo . '"');
+    header('Content-Disposition: attachment; filename="'.$nombreArchivo.'"');
 
     $archivo = fopen('php://output', 'w');
     if ($archivo !== false) {
@@ -398,8 +433,12 @@ function displayData($data)
 
         foreach ($precio_combinaciones as $fila) {
             $nombre = '';
-            if (!empty($fila['nombre']))      $nombre .= $fila['nombre'];
-            if (!empty($fila['combinacion'])) $nombre .= ' (' . $fila['combinacion'] . ')';
+            if (! empty($fila['nombre'])) {
+                $nombre .= $fila['nombre'];
+            }
+            if (! empty($fila['combinacion'])) {
+                $nombre .= ' ('.$fila['combinacion'].')';
+            }
 
             // PVP puede estar vacío ('') si la hermana no vino en el archivo
             $priceOut = $fila['price'];
@@ -409,7 +448,7 @@ function displayData($data)
                 $fila['reference'],
                 $nombre,
                 $priceOut,
-                $fila['precio_ps']
+                $fila['precio_ps'],
             ];
             fputcsv($archivo, $nuevaFila, ';');
         }
@@ -417,10 +456,9 @@ function displayData($data)
         fclose($archivo);
         exit;
     } else {
-        header("Location: gestion.php?status=no");
+        header('Location: gestion.php?status=no');
     }
 }
-
 
 if (isset($_GET['status']) && $_GET['status'] == 'si') {
     echo "<div class='alert alert-success'>Datos procesados correctamente</div>";
@@ -486,12 +524,12 @@ if (isset($_GET['status']) && $_GET['status'] == 'si') {
                 <select class="form-control" id="country" name="country">
                     <option value="" disabled selected>Selecciona una opción</option>
                     <?php
-                    $country = Db::getInstance()->executeS("select ac.id_country, al.name from aalv_country ac
-                        inner join aalv_lang al on al.iso_code = ac.iso_code COLLATE utf8mb4_unicode_ci");
-                    foreach ($country as $value) {
-                        echo '<option value="' . $value['id_country'] . '">' . $value['name'] . '</option>';
-                    }
-                    ?>
+                    $country = Db::getInstance()->executeS('select ac.id_country, al.name from aalv_country ac
+                        inner join aalv_lang al on al.iso_code = ac.iso_code COLLATE utf8mb4_unicode_ci');
+foreach ($country as $value) {
+    echo '<option value="'.$value['id_country'].'">'.$value['name'].'</option>';
+}
+?>
                 </select>
             </div>
             <!-- File Upload -->

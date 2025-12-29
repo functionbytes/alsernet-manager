@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -42,7 +43,7 @@ class TabLangCore extends DataLangCore
     {
         $domain = '';
         if (is_array($value)) {
-            list($message, $domain) = $value;
+            [$message, $domain] = $value;
         } else {
             $message = $value;
         }
@@ -50,7 +51,7 @@ class TabLangCore extends DataLangCore
         return $this->translator->trans(
             $message,
             [],
-            (!empty($domain)) ? $domain : $this->domain,
+            (! empty($domain)) ? $domain : $this->domain,
             $this->locale
         );
     }

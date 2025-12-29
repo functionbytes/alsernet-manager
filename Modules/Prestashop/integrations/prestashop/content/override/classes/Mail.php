@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -32,24 +33,23 @@ class Mail extends MailCore
     /**
      * Send Email.
      *
-     * @param int $idLang Language ID of the email (to translate the template)
-     * @param string $template Template: the name of template not be a var but a string !
-     * @param string $subject Subject of the email
-     * @param array $templateVars Template variables for the email
-     * @param string|array<string> $to To email
-     * @param string|array<string> $toName To name
-     * @param string $from From email
-     * @param string $fromName To email
-     * @param array $fileAttachment array with three parameters (content, mime and name).
-     *                              You can use an array of array to attach multiple files
-     * @param bool $mode_smtp SMTP mode (deprecated)
-     * @param string $templatePath Template path
-     * @param bool $die Die after error
-     * @param int $idShop Shop ID
-     * @param string $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
-     * @param string $replyTo Reply-To recipient address
-     * @param string $replyToName Reply-To recipient name
-     *
+     * @param  int  $idLang  Language ID of the email (to translate the template)
+     * @param  string  $template  Template: the name of template not be a var but a string !
+     * @param  string  $subject  Subject of the email
+     * @param  array  $templateVars  Template variables for the email
+     * @param  string|array<string>  $to  To email
+     * @param  string|array<string>  $toName  To name
+     * @param  string  $from  From email
+     * @param  string  $fromName  To email
+     * @param  array  $fileAttachment  array with three parameters (content, mime and name).
+     *                                 You can use an array of array to attach multiple files
+     * @param  bool  $mode_smtp  SMTP mode (deprecated)
+     * @param  string  $templatePath  Template path
+     * @param  bool  $die  Die after error
+     * @param  int  $idShop  Shop ID
+     * @param  string  $bcc  Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param  string  $replyTo  Reply-To recipient address
+     * @param  string  $replyToName  Reply-To recipient name
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
     public static function send(
@@ -70,16 +70,15 @@ class Mail extends MailCore
         $replyTo = null,
         $replyToName = null
     ) {
-        if (!$idShop) {
+        if (! $idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
-        if (!is_array($templateVars)) {
+        if (! is_array($templateVars)) {
             $templateVars = [];
         }
-        
-        $subject = $subject;
 
+        $subject = $subject;
 
         $templateVars['{shop_domain}'] = Tools::getShopDomain(true).'/';
         if (Configuration::get('PS_SSL_ENABLED')) {

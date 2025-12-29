@@ -29,14 +29,13 @@ use MatthiasMullie\Minify\CSS;
 class CssMinifierCore
 {
     /**
-     * @param string[] $files
-     * @param string $destination
-     *
+     * @param  string[]  $files
+     * @param  string  $destination
      * @return string Minified data
      */
     public static function minify(array $files, $destination)
     {
-        $minifier = new CSS();
+        $minifier = new CSS;
 
         foreach ($files as $file) {
             $minifier->add($file);

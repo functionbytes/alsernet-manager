@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,18 +27,18 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
-ini_set('memory_limit','256M');
+ini_set('memory_limit', '256M');
 
 $currentDir = dirname(__FILE__);
 
 /* Custom defines made by users */
-if (is_file($currentDir . '/defines_custom.inc.php')) {
-    include_once $currentDir . '/defines_custom.inc.php';
+if (is_file($currentDir.'/defines_custom.inc.php')) {
+    include_once $currentDir.'/defines_custom.inc.php';
 }
 
-require_once $currentDir . '/defines.inc.php';
+require_once $currentDir.'/defines.inc.php';
 
-require_once _PS_CONFIG_DIR_ . 'autoload.php';
+require_once _PS_CONFIG_DIR_.'autoload.php';
 
 $start_time = microtime(true);
 
@@ -48,24 +49,24 @@ define('_PS_SSL_PORT_', 443);
 ini_set('default_charset', 'utf-8');
 
 /* in dev mode - check if composer was executed */
-if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
-        !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (! is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
+        ! file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+    exit('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
-if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
+if (! file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && ! file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
     Tools::redirectToInstall();
 }
 
-require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require_once $currentDir.DIRECTORY_SEPARATOR.'bootstrap.php';
 
 /*
  * Improve PHP configuration on Windows
  *
  * @deprecated since 1.7.8.0
  */
-if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     Windows::improveFilesytemPerformances();
 }
 
@@ -84,13 +85,13 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
 }
 
 if (_PS_DEBUG_PROFILING_) {
-    include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
-    include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
+    include_once _PS_TOOL_DIR_.'profiling/Profiler.php';
+    include_once _PS_TOOL_DIR_.'profiling/Controller.php';
+    include_once _PS_TOOL_DIR_.'profiling/ObjectModel.php';
+    include_once _PS_TOOL_DIR_.'profiling/Db.php';
+    include_once _PS_TOOL_DIR_.'profiling/Hook.php';
+    include_once _PS_TOOL_DIR_.'profiling/Module.php';
+    include_once _PS_TOOL_DIR_.'profiling/Tools.php';
 }
 
 if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M')) {
@@ -102,24 +103,24 @@ if (Tools::isPHPCLI() && isset($argc, $argv)) {
 }
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
-if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
-    if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
+if (! isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
+    if (! isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
         $_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
     }
     if (isset($_SERVER['SCRIPT_NAME'])) {
         if (basename($_SERVER['SCRIPT_NAME']) == 'index.php' && empty($_SERVER['QUERY_STRING'])) {
-            $_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']) . '/';
+            $_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']).'/';
         } else {
             $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
-            if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
-                $_SERVER['REQUEST_URI'] .= '?' . $_SERVER['QUERY_STRING'];
+            if (isset($_SERVER['QUERY_STRING']) && ! empty($_SERVER['QUERY_STRING'])) {
+                $_SERVER['REQUEST_URI'] .= '?'.$_SERVER['QUERY_STRING'];
             }
         }
     }
 }
 
 /* Trying to redefine HTTP_HOST if empty (on some webservers...) */
-if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST'])) {
+if (! isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST'])) {
     $_SERVER['HTTP_HOST'] = @getenv('HTTP_HOST');
 }
 
@@ -137,10 +138,10 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once $currentDir . '/defines_uri.inc.php';
+require_once $currentDir.'/defines_uri.inc.php';
 
 global $_MODULES;
-$_MODULES = array();
+$_MODULES = [];
 
 /**
  * @deprecated since 1.7.7
@@ -163,11 +164,11 @@ $context->country = $default_country;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */
-$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')) . '_' . strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
 /* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
-setlocale(LC_COLLATE, $locale . '.UTF-8', $locale . '.utf8');
-setlocale(LC_CTYPE, $locale . '.UTF-8', $locale . '.utf8');
-setlocale(LC_TIME, $locale . '.UTF-8', $locale . '.utf8');
+setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
@@ -182,13 +183,13 @@ if (defined('_PS_ADMIN_DIR_')) {
 } else {
     $domains = null;
     if ($context->shop->getGroup()->share_order) {
-        $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
+        $cookie = new Cookie('ps-sg'.$context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
         if ($context->shop->domain != $context->shop->domain_ssl) {
-            $domains = array($context->shop->domain_ssl, $context->shop->domain);
+            $domains = [$context->shop->domain_ssl, $context->shop->domain];
         }
 
-        $cookie = new Cookie('ps-s' . $context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
+        $cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
     }
 }
 
@@ -223,20 +224,20 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
+if (! isset($language) || ! Validate::isLoadedObject($language) || ! $language->isAssociatedToShop()) {
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
 
 $context->language = $language;
 
 /* Get smarty */
-require_once $currentDir . '/smarty.config.inc.php';
+require_once $currentDir.'/smarty.config.inc.php';
 $context->smarty = $smarty;
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
         $customer = new Customer($cookie->id_customer);
-        if (!Validate::isLoadedObject($customer)) {
+        if (! Validate::isLoadedObject($customer)) {
             $context->cookie->logout();
         } else {
             $customer->logged = true;
@@ -247,8 +248,8 @@ if (!defined('_PS_ADMIN_DIR_')) {
         }
     }
 
-    if (!isset($customer) || !Validate::isLoadedObject($customer)) {
-        $customer = new Customer();
+    if (! isset($customer) || ! Validate::isLoadedObject($customer)) {
+        $customer = new Customer;
 
         /* Change the default group */
         if (Group::isFeatureActive()) {
@@ -284,12 +285,12 @@ define('_PS_OS_PAYPAL_', Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 define('_PS_OS_COD_VALIDATION_', Configuration::get('PS_OS_COD_VALIDATION'));
 
-if (!defined('_MEDIA_SERVER_1_')) {
+if (! defined('_MEDIA_SERVER_1_')) {
     define('_MEDIA_SERVER_1_', Configuration::get('PS_MEDIA_SERVER_1'));
 }
-if (!defined('_MEDIA_SERVER_2_')) {
+if (! defined('_MEDIA_SERVER_2_')) {
     define('_MEDIA_SERVER_2_', Configuration::get('PS_MEDIA_SERVER_2'));
 }
-if (!defined('_MEDIA_SERVER_3_')) {
+if (! defined('_MEDIA_SERVER_3_')) {
     define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 }

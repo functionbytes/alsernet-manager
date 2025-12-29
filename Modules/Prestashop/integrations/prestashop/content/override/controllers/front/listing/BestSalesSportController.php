@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,28 +24,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-//use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
+// use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
-require_once _PS_MODULE_DIR_ . 'alvareznewsbestsales/classes/SportBestsalesConfig.php';
+require_once _PS_MODULE_DIR_.'alvareznewsbestsales/classes/SportBestsalesConfig.php';
 
 class BestSalesSportControllerCore extends ProductListingFrontController
 {
     public $php_self = 'bestsalessport';
+
     public $config_data;
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        //dump($_GET);
+        // dump($_GET);
         if ($_GET['deporte']) {
             parent::canonicalRedirection($this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName($_GET['deporte'])));
-            if($this->getCurrentURL() != $this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName($_GET['deporte'])) && !Tools::getValue('page') && !Tools::getValue('order')){
+            if ($this->getCurrentURL() != $this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName($_GET['deporte'])) && ! Tools::getValue('page') && ! Tools::getValue('order')) {
                 Tools::redirectLink($this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName($_GET['deporte'])));
             }
-        }else{
+        } else {
             parent::canonicalRedirection($this->context->link->getBestSalesDeporteLink(Tools::getValue('id_category')));
-            if($this->getCurrentURL() != $this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName(Tools::getValue('id_category'))) && !Tools::getValue('page') && !Tools::getValue('order')) {
+            if ($this->getCurrentURL() != $this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName(Tools::getValue('id_category'))) && ! Tools::getValue('page') && ! Tools::getValue('order')) {
                 Tools::redirectLink($this->context->link->getBestSalesDeporteLink($this->getIdDeporteByName(Tools::getValue('id_category'))));
             }
         }
@@ -54,17 +56,17 @@ class BestSalesSportControllerCore extends ProductListingFrontController
     {
         $alternativeLangs = parent::getAlternativeLangsUrl();
 
-            $languages = Language::getLanguages(true, $this->context->shop->id);
-            foreach ($languages as $lang) {
-                $alternativeLangs[$lang['language_code']] = $this->context->link->getBestSalesDeporteLink(Tools::getValue('id_category'),null,$lang['id_lang']);
-            }
+        $languages = Language::getLanguages(true, $this->context->shop->id);
+        foreach ($languages as $lang) {
+            $alternativeLangs[$lang['language_code']] = $this->context->link->getBestSalesDeporteLink(Tools::getValue('id_category'), null, $lang['id_lang']);
+        }
 
         return $alternativeLangs;
     }
 
     public function getIdDeporteByName($name_deporte)
     {
-        return Db::getInstance()->getValue("SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE (name = '".$name_deporte."' || name = '".strtoupper($name_deporte)."' || link_rewrite = '".$name_deporte."' || link_rewrite = '".str_replace(' ', '-', $name_deporte)."') AND id_lang = ".$this->context->language->id);
+        return Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$name_deporte."' || name = '".strtoupper($name_deporte)."' || link_rewrite = '".$name_deporte."' || link_rewrite = '".str_replace(' ', '-', $name_deporte)."') AND id_lang = ".$this->context->language->id);
     }
 
     /**
@@ -76,7 +78,7 @@ class BestSalesSportControllerCore extends ProductListingFrontController
      */
     public function init()
     {
-            parent::init();
+        parent::init();
     }
 
     /**
@@ -86,11 +88,11 @@ class BestSalesSportControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $id_config = SportBestsalesConfig::getConfigByIdCategory((int) Tools::getValue("id_category"));
+        $id_config = SportBestsalesConfig::getConfigByIdCategory((int) Tools::getValue('id_category'));
         if ($id_config) {
             $this->config_data = new SportBestsalesConfig((int) $id_config['id_sport_bestsales_config']);
         } else {
-            $this->config_data = new SportBestsalesConfig();
+            $this->config_data = new SportBestsalesConfig;
         }
 
         $variables = $this->getProductSearchVariables();
@@ -107,15 +109,14 @@ class BestSalesSportControllerCore extends ProductListingFrontController
             'listing' => $variables,
         ]);
 
-
     }
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery();
+        $query = new ProductSearchQuery;
         $query
             ->setQueryType('best-sales-sport')
-            ->setIdCategory(Tools::getValue("id_category"))
+            ->setIdCategory(Tools::getValue('id_category'))
             ->setSortOrder(new SortOrder('config_data', 'order', 'asc'));
 
         return $query;
@@ -124,7 +125,7 @@ class BestSalesSportControllerCore extends ProductListingFrontController
     protected function getDefaultProductSearchProvider()
     {
 
-        $aux= new BestSalesSportProductSearchProvider(
+        $aux = new BestSalesSportProductSearchProvider(
             $this->getTranslator()
         );
 
@@ -141,24 +142,21 @@ class BestSalesSportControllerCore extends ProductListingFrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $category = new Category(Tools::getValue("id_category"));
-
+        $category = new Category(Tools::getValue('id_category'));
 
         $breadcrumb['links'][] = [
             'title' => $category->name[$this->context->language->id],
-            'url' => $this->context->link->getCategoryLink(Tools::getValue("id_category")),
+            'url' => $this->context->link->getCategoryLink(Tools::getValue('id_category')),
         ];
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
-            //'url' => $this->context->link->getPageLink('best-sales-sport&id_category='.Tools::getValue("id_category"), true, ),
-            'url' => $this->context->link->getBestSalesDeporteLink(Tools::getValue("id_category")),
+            // 'url' => $this->context->link->getPageLink('best-sales-sport&id_category='.Tools::getValue("id_category"), true, ),
+            'url' => $this->context->link->getBestSalesDeporteLink(Tools::getValue('id_category')),
         ];
 
         return $breadcrumb;
     }
-
-
 
     protected function getProductSearchVariables()
     {
@@ -174,15 +172,14 @@ class BestSalesSportControllerCore extends ProductListingFrontController
         $query = $this->getProductSearchQuery();
 
         // ...modules decide if they can handle it (first one that can is used)
-        //$provider = $this->getProductSearchProviderFromModules($query);
+        // $provider = $this->getProductSearchProviderFromModules($query);
 
         // if no module wants to do the query, then the core feature is used
-        //if (null === $provider) {
+        // if (null === $provider) {
         $provider = $this->getDefaultProductSearchProvider();
         $provider->list_type = BestSalesSportProductSearchProvider::TYPE_LIST;
         $provider->id_category_sport = $this->config_data->id_category_sport;
-        //}
-
+        // }
 
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
         if ($resultsPerPage <= 0) {
@@ -192,8 +189,7 @@ class BestSalesSportControllerCore extends ProductListingFrontController
         // we need to set a few parameters from back-end preferences
         $query
             ->setResultsPerPage($resultsPerPage)
-            ->setPage(max((int) Tools::getValue('page'), 1))
-        ;
+            ->setPage(max((int) Tools::getValue('page'), 1));
 
         // set the sort order if provided in the URL
         if (($encodedSortOrder = Tools::getValue('order'))) {
@@ -232,14 +228,14 @@ class BestSalesSportControllerCore extends ProductListingFrontController
             'result' => $result,
         ]);
 
-        if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
+        if (Configuration::get('PS_CATALOG_MODE') && ! Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
             $this->disablePriceControls($result);
         }
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
         // as for the query anyway
-        if (!$result->getCurrentSortOrder()) {
+        if (! $result->getCurrentSortOrder()) {
             $result->setCurrentSortOrder($query->getSortOrder());
         }
 
@@ -285,9 +281,9 @@ class BestSalesSportControllerCore extends ProductListingFrontController
         );
 
         $sort_selected = false;
-        if (!empty($sort_orders)) {
+        if (! empty($sort_orders)) {
             foreach ($sort_orders as $order) {
-                if (isset($order['current']) && true === $order['current']) {
+                if (isset($order['current']) && $order['current'] === true) {
                     $sort_selected = $order['label'];
 
                     break;
@@ -316,16 +312,15 @@ class BestSalesSportControllerCore extends ProductListingFrontController
         return $searchVariables;
     }
 
+    public function getCategory()
+    {
+        // para que el categorytree coja la categoria
+        $category = new Category(Tools::getValue('id_category'));
 
+        return $category;
+    }
 
-public function getCategory(){
-    //para que el categorytree coja la categoria
-    $category = new Category(Tools::getValue("id_category"));
-    return $category;
-}
-
-
-public function getLayout()
+    public function getLayout()
     {
         /*$entity = $this->php_self;
 
@@ -347,7 +342,6 @@ public function getLayout()
             $layout = 'layouts/layout-content-only.tpl';
         }
 */
-        return "layouts/layout-left-column.tpl";
+        return 'layouts/layout-left-column.tpl';
     }
-
 }

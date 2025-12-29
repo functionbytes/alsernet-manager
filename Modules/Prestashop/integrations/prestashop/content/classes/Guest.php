@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,19 +31,33 @@
 class GuestCore extends ObjectModel
 {
     public $id_operating_system;
+
     public $id_web_browser;
+
     public $id_customer;
+
     public $javascript;
+
     public $screen_resolution_x;
+
     public $screen_resolution_y;
+
     public $screen_color;
+
     public $sun_java;
+
     public $adobe_flash;
+
     public $adobe_director;
+
     public $apple_quicktime;
+
     public $real_player;
+
     public $windows_media;
+
     public $accept_language;
+
     public $mobile_theme;
 
     /**
@@ -92,7 +107,6 @@ class GuestCore extends ObjectModel
     /**
      * Get Guest Language.
      *
-     * @param $acceptLanguage
      *
      * @return mixed|string
      */
@@ -118,7 +132,7 @@ class GuestCore extends ObjectModel
     /**
      * Get browser.
      *
-     * @param string $userAgent
+     * @param  string  $userAgent
      */
     protected function getBrowser($userAgent)
     {
@@ -139,8 +153,8 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_web_browser`
-				FROM `' . _DB_PREFIX_ . 'web_browser` wb
-				WHERE wb.`name` = \'' . pSQL($k) . '\'');
+				FROM `'._DB_PREFIX_.'web_browser` wb
+				WHERE wb.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_web_browser'];
             }
@@ -152,7 +166,7 @@ class GuestCore extends ObjectModel
     /**
      * Get OS.
      *
-     * @param string $userAgent
+     * @param  string  $userAgent
      */
     protected function getOs($userAgent)
     {
@@ -172,8 +186,8 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_operating_system`
-				FROM `' . _DB_PREFIX_ . 'operating_system` os
-				WHERE os.`name` = \'' . pSQL($k) . '\'');
+				FROM `'._DB_PREFIX_.'operating_system` os
+				WHERE os.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_operating_system'];
             }
@@ -185,19 +199,18 @@ class GuestCore extends ObjectModel
     /**
      * Get Guest ID from Customer ID.
      *
-     * @param int $idCustomer Customer ID
-     *
+     * @param  int  $idCustomer  Customer ID
      * @return bool
      */
     public static function getFromCustomer($idCustomer)
     {
-        if (!Validate::isUnsignedId($idCustomer)) {
+        if (! Validate::isUnsignedId($idCustomer)) {
             return false;
         }
         $result = Db::getInstance()->getRow('
 		SELECT `id_guest`
-		FROM `' . _DB_PREFIX_ . 'guest`
-		WHERE `id_customer` = ' . (int) ($idCustomer));
+		FROM `'._DB_PREFIX_.'guest`
+		WHERE `id_customer` = '.(int) ($idCustomer));
 
         return $result['id_guest'];
     }
@@ -205,9 +218,8 @@ class GuestCore extends ObjectModel
     /**
      * Merge with Customer.
      *
-     * @param int $idGuest Guest ID
-     * @param int $idCustomer Customer ID
-     *
+     * @param  int  $idGuest  Guest ID
+     * @param  int  $idCustomer  Customer ID
      * @return bool
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
@@ -215,7 +227,7 @@ class GuestCore extends ObjectModel
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->update('connections', [
             'id_guest' => (int) $idGuest,
-        ], 'id_guest = ' . (int) $this->id);
+        ], 'id_guest = '.(int) $this->id);
 
         // The existing guest is removed from the database
         $existingGuest = new Guest((int) $idGuest);
@@ -237,7 +249,7 @@ class GuestCore extends ObjectModel
     /**
      * Set new guest.
      *
-     * @param Cookie $cookie
+     * @param  Cookie  $cookie
      */
     public static function setNewGuest($cookie)
     {

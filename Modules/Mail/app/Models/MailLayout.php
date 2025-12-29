@@ -3,7 +3,7 @@
 namespace Modules\Mail\Models;
 
 use app\Library\ExtendedSwiftMessage;
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

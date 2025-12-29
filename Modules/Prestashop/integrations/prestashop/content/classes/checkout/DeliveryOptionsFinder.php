@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,8 +31,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class DeliveryOptionsFinderCore
 {
     private $context;
+
     private $objectPresenter;
+
     private $translator;
+
     private $priceFormatter;
 
     public function __construct(
@@ -54,7 +58,7 @@ class DeliveryOptionsFinderCore
             $free_shipping = true;
         } else {
             foreach ($cart->getCartRules() as $rule) {
-                if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                if ($rule['free_shipping'] && ! $rule['carrier_restriction']) {
                     $free_shipping = true;
 
                     break;
@@ -73,8 +77,8 @@ class DeliveryOptionsFinderCore
     public function getDeliveryOptions()
     {
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
-        $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
-        $display_taxes_label = (Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
+        $include_taxes = ! Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
+        $display_taxes_label = (Configuration::get('PS_TAX') && ! Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
         $carriers_available = [];
 
@@ -118,13 +122,10 @@ class DeliveryOptionsFinderCore
                             if (count($carriers) > 1) {
                                 $carrier['label'] = $carrier['price'];
                             } else {
-                                $carrier['label'] = $carrier['name'] . ' - ' . $carrier['delay'] . ' - ' . $carrier['price'];
+                                $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
                             }
 
-
-
                             $carrier['name'] = $carrier['show_name'][$this->context->language->id];
-
 
                             // If carrier related to a module, check for additionnal data to display
                             $carrier['extraContent'] = '';

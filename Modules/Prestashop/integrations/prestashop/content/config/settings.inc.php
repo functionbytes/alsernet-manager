@@ -1,2 +1,3 @@
 <?php
-//@deprecated 1.7
+
+// @deprecated 1.7

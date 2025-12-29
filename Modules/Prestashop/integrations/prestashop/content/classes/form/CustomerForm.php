@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,10 +35,13 @@ class CustomerFormCore extends AbstractForm
     protected $template = 'customer/_partials/customer-form.tpl';
 
     private $context;
+
     private $urls;
 
     private $customerPersister;
+
     private $guest_allowed;
+
     private $passwordRequired = true;
 
     private $IDNConverter;
@@ -59,13 +63,13 @@ class CustomerFormCore extends AbstractForm
         $this->context = $context;
         $this->urls = $urls;
         $this->customerPersister = $customerPersister;
-        $this->IDNConverter = new InternationalizedDomainNameConverter();
+        $this->IDNConverter = new InternationalizedDomainNameConverter;
     }
 
     public function setGuestAllowed($guest_allowed = true)
     {
-        $this->formatter->setPasswordRequired(!$guest_allowed);
-        $this->setPasswordRequired(!$guest_allowed);
+        $this->formatter->setPasswordRequired(! $guest_allowed);
+        $this->setPasswordRequired(! $guest_allowed);
         $this->guest_allowed = $guest_allowed;
 
         return $this;
@@ -80,7 +84,7 @@ class CustomerFormCore extends AbstractForm
 
     public function fillWith(array $params = [])
     {
-        if (!empty($params['email'])) {
+        if (! empty($params['email'])) {
             // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
             // we need to convert it back
             $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
@@ -129,8 +133,8 @@ class CustomerFormCore extends AbstractForm
 
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            !empty($birthdayField->getValue()) &&
+        if (! empty($birthdayField) &&
+            ! empty($birthdayField->getValue()) &&
             Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
@@ -141,7 +145,7 @@ class CustomerFormCore extends AbstractForm
         }
 
         $passwordField = $this->getField('password');
-        if ((!empty($passwordField->getValue()) || $this->passwordRequired)
+        if ((! empty($passwordField->getValue()) || $this->passwordRequired)
             && Validate::isPasswd($passwordField->getValue()) === false) {
             $passwordField->addError($this->translator->trans(
                 'Password must be between 5 and 72 characters long',
@@ -164,11 +168,6 @@ class CustomerFormCore extends AbstractForm
         $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
     }
 
-    /**
-     * @param $fieldName
-     * @param $maximumLength
-     * @param $violationMessage
-     */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
         $emailField = $this->getField($fieldName);
@@ -225,7 +224,7 @@ class CustomerFormCore extends AbstractForm
                 $ok = false;
             }
 
-            if (!$ok) {
+            if (! $ok) {
                 foreach ($this->customerPersister->getErrors() as $field => $errors) {
                     $this->formFields[$field]->setErrors($errors);
                 }
@@ -265,7 +264,7 @@ class CustomerFormCore extends AbstractForm
         $formFieldsAssociated = [];
         // Group FormField instances by module name
         foreach ($this->formFields as $formField) {
-            if (!empty($formField->moduleName)) {
+            if (! empty($formField->moduleName)) {
                 $formFieldsAssociated[$formField->moduleName][] = $formField;
             }
         }
@@ -295,17 +294,15 @@ class CustomerFormCore extends AbstractForm
 
     /**
      * Checks whether a field's value is a valid customer(person) name.
-     *
-     * @param string $fieldName
      */
     private function validateFieldIsCustomerName(string $fieldName): void
     {
         $field = $this->getField($fieldName);
-        if (null === $field) {
+        if ($field === null) {
             return;
         }
         $value = $field->getValue();
-        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
+        if (! empty($value) && (bool) Validate::isCustomerName($value) === false) {
             $field->addError($this->translator->trans(
                 'Invalid format.',
                 [],

@@ -2,7 +2,7 @@
 
 namespace Modules\Mail\Jobs;
 
-use app\Library\Traits\Trackable;
+use Modules\Campaign\Library\Traits\Trackable;
 use Exception;
 use Illuminate\Bus\Batchable;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -47,13 +48,12 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
-     * @param string $relativePath
-     * @param string $media
-     * @param int $priority
-     * @param bool $inline
-     * @param string $server
-     * @param bool $needRtl
+     * @param  string  $relativePath
+     * @param  string  $media
+     * @param  int  $priority
+     * @param  bool  $inline
+     * @param  string  $server
+     * @param  bool  $needRtl
      */
     public function register(
         $id,
@@ -68,7 +68,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
         $context = Context::getContext();
         $isRTL = is_object($context->language) && $context->language->is_rtl;
-        if ('remote' === $server) {
+        if ($server === 'remote') {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
         } elseif ($needRtl && $isRTL && $rtlFullPath) {
             $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
@@ -100,23 +100,22 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param $id
-     * @param string $fullPath
-     * @param string $media
-     * @param int $priority
-     * @param bool $inline
-     * @param string $server
+     * @param  string  $fullPath
+     * @param  string  $media
+     * @param  int  $priority
+     * @param  bool  $inline
+     * @param  string  $server
      */
     protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
 
-        if ('remote' === $server) {
+        if ($server === 'remote') {
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -156,7 +155,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     {
         foreach ($this->list['inline'] as &$item) {
             $item['content'] =
-                '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
+                '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
                 file_get_contents($item['path']);
         }
     }

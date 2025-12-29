@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -69,8 +70,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
 
     /**
-     * @param WebserviceOutputBuilder $obj
-     *
+     * @param  WebserviceOutputBuilder  $obj
      * @return WebserviceSpecificManagementInterface
      */
     public function setObjectOutput(WebserviceOutputBuilderCore $obj)
@@ -90,8 +90,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
     /**
      * Set Webservice Object
-     *
-     * @param WebserviceRequestCore $obj
      */
     public function setWsObject(WebserviceRequestCore $obj)
     {
@@ -119,7 +117,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             // if displayFile is set, present the file (download)
             $this->getObjectOutput()->setHeaderParams('Content-Type', $this->displayFile['mime']);
             $this->getObjectOutput()->setHeaderParams('Content-Length', $this->displayFile['file_size']);
-            $this->getObjectOutput()->setHeaderParams('Content-Disposition', 'attachment; filename="' . utf8_decode($this->displayFile['file_name']) . '"');
+            $this->getObjectOutput()->setHeaderParams('Content-Disposition', 'attachment; filename="'.utf8_decode($this->displayFile['file_name']).'"');
 
             return file_get_contents($this->displayFile['file']);
         }
@@ -164,7 +162,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public function manageAttachments()
     {
         if (isset($this->getWsObject()->urlSegment)) {
-            for ($i = 1; $i < 6; ++$i) {
+            for ($i = 1; $i < 6; $i++) {
                 if (count($this->getWsObject()->urlSegment) == $i) {
                     $this->getWsObject()->urlSegment[$i] = '';
                 }
@@ -173,7 +171,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
         if ($this->getWsObject()->urlSegment[0] != '') {
             /** @var ObjectModel */
-            $object = new Attachment();
+            $object = new Attachment;
             $this->getWsObject()->resourceConfiguration = $object->getWebserviceParameters();
         }
 
@@ -246,9 +244,10 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     /**
      * Handles attachment file download
      *
-     * @throws WebserviceException if attachment is not existing or file not available
      *
      * @return array<string, string> File details
+     *
+     * @throws WebserviceException if attachment is not existing or file not available
      */
     public function executeFileGetAndHead(): array
     {
@@ -268,9 +267,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         // Physical file location
-        $file = _PS_DOWNLOAD_DIR_ . $attachment->file;
+        $file = _PS_DOWNLOAD_DIR_.$attachment->file;
         // Check if file exists
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             throw new WebserviceException(
                 sprintf(
                     'Unable to load the attachment file for attachment %d',
@@ -326,8 +325,8 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
         try {
             $file = $uploader->upload($fileToUpload);
-            if (!empty($attachment->id)) {
-                unlink(PS_DOWNLOAD_DIR . $attachment->file);
+            if (! empty($attachment->id)) {
+                unlink(PS_DOWNLOAD_DIR.$attachment->file);
             }
 
             $attachment->file = $file['id'];
@@ -335,7 +334,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             $attachment->mime = $file['mime_type'];
             $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'] ?? $file['file_name'];
 
-            if (!empty($attachment->id)) {
+            if (! empty($attachment->id)) {
                 $attachment->update();
             } else {
                 $attachment->add();
@@ -357,13 +356,6 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
     }
 
-    /**
-     * @param string $message
-     * @param array $params
-     * @param string $domain
-     *
-     * @return string
-     */
     protected function trans(string $message, array $params, string $domain): string
     {
         return Context::getContext()->getTranslator()->trans($message, $params, $domain);

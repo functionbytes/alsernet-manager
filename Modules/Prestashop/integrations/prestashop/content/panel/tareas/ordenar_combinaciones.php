@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
@@ -30,11 +30,11 @@ foreach ($atributte_groups as $attribute_group) {
             ORDER BY a.`position`, a.`id_attribute`';
     $attributes = DB::getInstance()->executeS($sql);
     $attribute_group['attributes'] = $attributes;
-    //dump($attribute_group);
+    // dump($attribute_group);
 
     // ordenar combinaciones
     usort($attribute_group['attributes'], 'sortAttributes');
-    //dump($attribute_group);
+    // dump($attribute_group);
 
     // actualizar posición
     $count = 1;
@@ -46,10 +46,11 @@ foreach ($atributte_groups as $attribute_group) {
         $count += 1;
     }
 
-    //break;
+    // break;
 }
 
-function sortAttributes($a, $b) {
+function sortAttributes($a, $b)
+{
     $tallas_pattern = [
         '10XS',
         '9XS',
@@ -113,10 +114,10 @@ function sortAttributes($a, $b) {
     }*/
 
     if (in_array(trim($a['name']), $tallas_pattern) && in_array(trim($b['name']), $tallas_pattern)) {
-        return (getOrderValue(trim($a['name'])) > getOrderValue(trim($b['name'])) ? 1 : -1);
-    } elseif (in_array(trim($a['name']), $tallas_pattern) && !in_array(trim($b['name']), $tallas_pattern)) {
+        return getOrderValue(trim($a['name'])) > getOrderValue(trim($b['name'])) ? 1 : -1;
+    } elseif (in_array(trim($a['name']), $tallas_pattern) && ! in_array(trim($b['name']), $tallas_pattern)) {
         return -1;
-    } elseif (!in_array(trim($a['name']), $tallas_pattern) && in_array(trim($b['name']), $tallas_pattern)) {
+    } elseif (! in_array(trim($a['name']), $tallas_pattern) && in_array(trim($b['name']), $tallas_pattern)) {
         return 1;
     } else {
         if (intval(trim($a['name'])) > intval(trim($b['name']))) {
@@ -124,12 +125,13 @@ function sortAttributes($a, $b) {
         } elseif (intval(trim($a['name'])) < intval(trim($b['name']))) {
             return -1;
         } else {
-            return (trim($a['name']) > trim($b['name']) ? 1 : -1);
+            return trim($a['name']) > trim($b['name']) ? 1 : -1;
         }
     }
 }
 
-function getOrderValue($nombre) {
+function getOrderValue($nombre)
+{
     /*$xtr = null;
     if (strlen($nombre)!=1) {
         $xtr = substr($nombre, 0, strlen($nombre)-1);
@@ -137,7 +139,6 @@ function getOrderValue($nombre) {
     }
     $val = 0;*/
 
-    $aux;
     switch ($nombre) {
         case '10XS':
         case 'XXXXXXXXXXS':

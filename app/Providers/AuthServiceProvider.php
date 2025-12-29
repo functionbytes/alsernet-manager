@@ -7,12 +7,13 @@ use App\Models\Helpdesk\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Modules\Campaign\Policies\CampaignPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
         User::class => \App\Policies\V1\UserPolicy::class,
-        Campaign::class => \App\Policies\CampaignPolicy::class,
+        Campaign::class => CampaignPolicy::class,
         Ticket::class => \App\Policies\TicketPolicy::class,
     ];
 

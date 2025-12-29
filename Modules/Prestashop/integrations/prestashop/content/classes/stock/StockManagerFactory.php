@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -42,10 +43,10 @@ class StockManagerFactoryCore
      */
     public static function getManager()
     {
-        if (!isset(StockManagerFactory::$stock_manager)) {
+        if (! isset(StockManagerFactory::$stock_manager)) {
             $stock_manager = StockManagerFactory::execHookStockManagerFactory();
-            if (!($stock_manager instanceof StockManagerInterface)) {
-                $stock_manager = new StockManager();
+            if (! ($stock_manager instanceof StockManagerInterface)) {
+                $stock_manager = new StockManager;
             }
             StockManagerFactory::$stock_manager = $stock_manager;
         }
@@ -56,7 +57,7 @@ class StockManagerFactoryCore
     /**
      *  Looks for a StockManager in the modules list.
      *
-     *  @return StockManagerInterface
+     * @return StockManagerInterface
      */
     public static function execHookStockManagerFactory()
     {

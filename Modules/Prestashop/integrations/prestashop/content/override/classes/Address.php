@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -110,6 +111,7 @@ class Address extends AddressCore
 
     /** @var array Zone IDs cache */
     protected static $_idZones = [];
+
     /** @var array Country IDs cache */
     protected static $_idCountries = [];
 
@@ -144,7 +146,7 @@ class Address extends AddressCore
         ],
     ];
 
-    CONST ADDRESS_ALIAS_DEMODAYS = 'Dirección Demo Day';
+    const ADDRESS_ALIAS_DEMODAYS = 'Dirección Demo Day';
 
     /**
      * Get the first address id of the customer.
@@ -153,9 +155,8 @@ class Address extends AddressCore
      * al eliminar una dirección. Ahora retorna false para que el sistema no
      * asigne automáticamente la primera dirección disponible.
      *
-     * @param int $id_customer Customer id
-     * @param bool $active Active addresses only
-     *
+     * @param  int  $id_customer  Customer id
+     * @param  bool  $active  Active addresses only
      * @return bool|int|null
      */
     public static function getFirstCustomerAddressId($id_customer, $active = true)
@@ -172,9 +173,9 @@ class Address extends AddressCore
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-				SELECT `id_address`
-				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . ' AND `alias` != \''.self::ADDRESS_ALIAS_DEMODAYS.'\''
+                SELECT `id_address`
+                FROM `' . _DB_PREFIX_ . 'address`
+                WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . ' AND `alias` != \''.self::ADDRESS_ALIAS_DEMODAYS.'\''
             );
             Cache::store($cache_id, $result);
 

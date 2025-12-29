@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,7 +24,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
  * @since 1.5.0
@@ -31,6 +32,7 @@
 class HelperFormCore extends Helper
 {
     public $id;
+
     public $first_call = true;
 
     /** @var array of forms fields */
@@ -38,6 +40,7 @@ class HelperFormCore extends Helper
 
     /** @var array values of form fields */
     public $fields_value = [];
+
     public $name_controller = '';
 
     /** @var string if not null, a title will be added on that list */
@@ -47,10 +50,15 @@ class HelperFormCore extends Helper
     public $submit_action;
 
     public $token;
+
     public $languages = null;
+
     public $default_form_language = null;
+
     public $allow_employee_form_lang = null;
+
     public $show_cancel_button = false;
+
     public $back_url = '#';
 
     public function __construct()
@@ -70,8 +78,8 @@ class HelperFormCore extends Helper
     public function generate()
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
-        if (null === $this->submit_action) {
-            $this->submit_action = 'submitAdd' . $this->table;
+        if ($this->submit_action === null) {
+            $this->submit_action = 'submitAdd'.$this->table;
         }
 
         $categories = true;
@@ -108,15 +116,15 @@ class HelperFormCore extends Helper
             if (isset($fieldset['form']['input'])) {
                 foreach ($fieldset['form']['input'] as $key => &$params) {
                     // If the condition is not met, the field will not be displayed
-                    if (isset($params['condition']) && !$params['condition']) {
+                    if (isset($params['condition']) && ! $params['condition']) {
                         unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                     }
                     switch ($params['type']) {
                         case 'switch':
                             $switch_values = $params['values'];
-                            if (!empty($params['values'])) {
+                            if (! empty($params['values'])) {
                                 foreach ($switch_values as $k => $value) {
-                                    if (!isset($value['label'])) {
+                                    if (! isset($value['label'])) {
                                         $default_key = (int) $value['value'] ? 1 : 0;
                                         $defautl_label = $default_switch_labels[$value['id']] ?? $default_switch_values[$default_key]['label'];
                                         $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
@@ -138,7 +146,7 @@ class HelperFormCore extends Helper
 
                         case 'categories':
                             if ($categories) {
-                                if (!isset($params['tree']['id'])) {
+                                if (! isset($params['tree']['id'])) {
                                     throw new PrestaShopException('Id must be filled for categories tree');
                                 }
 
@@ -179,7 +187,7 @@ class HelperFormCore extends Helper
                             break;
 
                         case 'file':
-                            $uploader = new HelperUploader();
+                            $uploader = new HelperUploader;
                             $uploader->setId(isset($params['id']) ? $params['id'] : null);
                             $uploader->setName($params['name']);
                             $uploader->setUrl(isset($params['url']) ? $params['url'] : null);
@@ -215,7 +223,7 @@ class HelperFormCore extends Helper
                                 $uploader->setFiles([
                                     0 => [
                                         'type' => HelperUploader::TYPE_IMAGE,
-                                        'image' => isset($params['thumb']) ? '<img src="' . $params['thumb'] . '" alt="' . (isset($params['title']) ? $params['title'] : '') . '" title="' . (isset($params['title']) ? $params['title'] : '') . '" />' : null,
+                                        'image' => isset($params['thumb']) ? '<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />' : null,
                                     ],
                                 ]);
                             }
@@ -246,13 +254,13 @@ class HelperFormCore extends Helper
                         case 'textarea':
                             if ($tinymce) {
                                 $iso = $this->context->language->iso_code;
-                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
+                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
                                 $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
-                                $this->tpl_vars['ad'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
+                                $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
                                 $this->tpl_vars['tinymce'] = true;
 
-                                $this->context->controller->addJS(_PS_JS_DIR_ . 'tiny_mce/tiny_mce.js');
-                                $this->context->controller->addJS(_PS_JS_DIR_ . 'admin/tinymce.inc.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
                                 $tinymce = false;
                             }
 
@@ -267,7 +275,7 @@ class HelperFormCore extends Helper
                             $disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
                             $params['html'] = $this->renderAssoShop($disable_shops);
                             if (Shop::getTotalShops(false) == 1) {
-                                if ((isset($this->fields_form[$fieldset_key]['form']['force']) && !$this->fields_form[$fieldset_key]['form']['force']) || !isset($this->fields_form[$fieldset_key]['form']['force'])) {
+                                if ((isset($this->fields_form[$fieldset_key]['form']['force']) && ! $this->fields_form[$fieldset_key]['form']['force']) || ! isset($this->fields_form[$fieldset_key]['form']['force'])) {
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                                 }
                             }
@@ -302,7 +310,7 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_ . 'vatnumber/ajax.php'),
+            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
@@ -322,7 +330,7 @@ class HelperFormCore extends Helper
         foreach ($this->fields_form as $fieldset) {
             if (isset($fieldset['form']['input'])) {
                 foreach ($fieldset['form']['input'] as $input) {
-                    if (!empty($input['required']) && $input['type'] != 'radio') {
+                    if (! empty($input['required']) && $input['type'] != 'radio') {
                         return true;
                     }
                 }
@@ -339,15 +347,15 @@ class HelperFormCore extends Helper
      */
     public function renderAssoShop($disable_shared = false, $template_directory = null)
     {
-        if (!Shop::isFeatureActive()) {
+        if (! Shop::isFeatureActive()) {
             return;
         }
 
         $assos = [];
         if ((int) $this->id) {
-            $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
-					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
-					WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
+            $sql = 'SELECT `id_shop`, `'.bqSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`
+					WHERE `'.bqSQL($this->identifier).'` = '.(int) $this->id;
 
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];
@@ -355,7 +363,7 @@ class HelperFormCore extends Helper
         } else {
             switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP:
-                        $assos[Shop::getContextShopID()] = Shop::getContextShopID();
+                    $assos[Shop::getContextShopID()] = Shop::getContextShopID();
 
                     break;
 

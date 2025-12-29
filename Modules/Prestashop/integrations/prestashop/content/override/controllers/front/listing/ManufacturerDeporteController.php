@@ -33,15 +33,16 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
     public $php_self = 'manufacturerdeporte';
 
     protected $manufacturer;
-    protected $label;
-    protected $deporte;
 
+    protected $label;
+
+    protected $deporte;
 
     public function canonicalRedirection($canonicalURL = '')
     {
         if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
-            //parent::canonicalRedirection($this->context->link->getMarcasDeporteLink($this->manufacturer));
+            // parent::canonicalRedirection($this->context->link->getMarcasDeporteLink($this->manufacturer));
         } elseif ($canonicalURL) {
             if ($_GET['deporte']) {
                 parent::canonicalRedirection($this->context->link->getMarcasDeporteLink($this->getIdDeporteByName($_GET['deporte'])));
@@ -78,17 +79,17 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
     {
         parent::init();
 
-        $this->deporte = "" . Tools::getValue('id_deporte');
+        $this->deporte = ''.Tools::getValue('id_deporte');
 
-        if (!$this->deporte || $this->deporte == "") {
+        if (! $this->deporte || $this->deporte == '') {
             $this->deporte = $this->getIdDeporteByName(Tools::getValue('deporte'));
         }
 
         // compruebo que el deporte existe
         if ($this->deporte && is_numeric($this->deporte)) {
             $sql = 'SELECT `id_category`
-                    FROM `' . _DB_PREFIX_ . 'deportes`
-                    WHERE `id_category`=' . (int) $this->deporte;
+                    FROM `'._DB_PREFIX_.'deportes`
+                    WHERE `id_category`='.(int) $this->deporte;
             $this->deporte = DB::getInstance()->getValue($sql);
             if ($this->deporte && is_numeric($this->deporte)) {
                 $this->deporte = (int) $this->deporte;
@@ -102,7 +103,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
         if ($id_manufacturer = Tools::getValue('id_manufacturer')) {
             $this->manufacturer = new Manufacturer((int) $id_manufacturer, $this->context->language->id);
 
-            if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToShop()) {
+            if (! Validate::isLoadedObject($this->manufacturer) || ! $this->manufacturer->active || ! $this->manufacturer->isAssociatedToShop()) {
                 $this->redirect_after = '404';
                 $this->redirect();
             } else {
@@ -113,8 +114,8 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
 
     public function getIdDeporteByName($name_deporte)
     {
-        //echo "SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE name = '".$name_deporte."' AND id_lang = ".$this->context->language->id;
-        return Db::getInstance()->getValue("SELECT `id_category` FROM " . _DB_PREFIX_ . "category_lang WHERE (name = '" . $name_deporte . "' || name = '" . strtoupper($name_deporte) . "' || link_rewrite = '" . $name_deporte . "' || link_rewrite = '" . str_replace(' ', '-', $name_deporte) . "') AND id_lang = " . $this->context->language->id);
+        // echo "SELECT `id_category` FROM "._DB_PREFIX_."category_lang WHERE name = '".$name_deporte."' AND id_lang = ".$this->context->language->id;
+        return Db::getInstance()->getValue('SELECT `id_category` FROM '._DB_PREFIX_."category_lang WHERE (name = '".$name_deporte."' || name = '".strtoupper($name_deporte)."' || link_rewrite = '".$name_deporte."' || link_rewrite = '".str_replace(' ', '-', $name_deporte)."') AND id_lang = ".$this->context->language->id);
     }
 
     /**
@@ -157,7 +158,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery();
+        $query = new ProductSearchQuery;
         $query
             ->setIdManufacturer($this->manufacturer->id)
             ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')));
@@ -189,14 +190,14 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             $id_shop = null,
             $chain = true
         );
-        if (!empty($filteredManufacturer)) {
+        if (! empty($filteredManufacturer)) {
             $manufacturerVar['description'] = $filteredManufacturer;
         }
 
-        $myid = Db::getInstance()->getValue("SELECT id FROM " . _DB_PREFIX_ . "manufacturer_deporte WHERE id_category_deporte=" . $this->deporte . " and id_manufacturer=" . $this->manufacturer->id);
+        $myid = Db::getInstance()->getValue('SELECT id FROM '._DB_PREFIX_.'manufacturer_deporte WHERE id_category_deporte='.$this->deporte.' and id_manufacturer='.$this->manufacturer->id);
 
-        $manufacturerVar['texto_superior'] = Db::getInstance()->getValue("SELECT texto_superior FROM " . _DB_PREFIX_ . "manufacturer_deporte_lang WHERE id=" . $myid . " and id_lang=" . $this->context->language->id);
-        $manufacturerVar['texto_inferior'] = Db::getInstance()->getValue("SELECT texto_inferior FROM " . _DB_PREFIX_ . "manufacturer_deporte_lang WHERE id=" . $myid . " and id_lang=" . $this->context->language->id);
+        $manufacturerVar['texto_superior'] = Db::getInstance()->getValue('SELECT texto_superior FROM '._DB_PREFIX_.'manufacturer_deporte_lang WHERE id='.$myid.' and id_lang='.$this->context->language->id);
+        $manufacturerVar['texto_inferior'] = Db::getInstance()->getValue('SELECT texto_inferior FROM '._DB_PREFIX_.'manufacturer_deporte_lang WHERE id='.$myid.' and id_lang='.$this->context->language->id);
 
         $this->context->smarty->assign([
             'manufacturer' => $manufacturerVar,
@@ -228,7 +229,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
         //         }
         //     }
         // }
-        $result = Db::getInstance()->executeS("SELECT
+        $result = Db::getInstance()->executeS('SELECT
                                     GROUP_CONCAT(am.id_manufacturer ) as id_manufacturer,
                                     aabc.id_category,
                                     LOWER(acl.name) as name
@@ -237,19 +238,19 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
                                     left join aalv_manufacturer am on am.id_manufacturer = aabc.id_manufacturer
                                     left join aalv_category_lang acl on acl.id_category = aabc.id_category
                                 WHERE
-                                    acl.id_lang = " . Context::getContext()->language->id . "
-                                GROUP BY aabc.id_category");
+                                    acl.id_lang = '.Context::getContext()->language->id.'
+                                GROUP BY aabc.id_category');
         $datos = [];
 
         foreach ($result as $value) {
-            if (!isset($value['name']) || empty($value['name'])) {
+            if (! isset($value['name']) || empty($value['name'])) {
                 continue; // Saltar si no tiene 'name'
             }
 
             $valores = explode(',', $value['id_manufacturer']);
 
             foreach ($valores as $val) {
-                $name = "" . Db::getInstance()->getValue("SELECT am.name FROM aalv_manufacturer am WHERE am.active = 1 AND am.id_manufacturer = " . (int)$val);
+                $name = ''.Db::getInstance()->getValue('SELECT am.name FROM aalv_manufacturer am WHERE am.active = 1 AND am.id_manufacturer = '.(int) $val);
 
                 if ($name != '') {
                     $expectedUrl = Context::getContext()->link->getManufacturerLink(
@@ -263,13 +264,12 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
                     // Reemplazar espacios u otros símbolos si querés
                     $cleanKey = preg_replace('/[^A-Za-z0-9_]/', '', $cleanKey);
                     $datos[$cleanKey][] = [
-                        "name" => $name,
-                        "url" => $expectedUrl
+                        'name' => $name,
+                        'url' => $expectedUrl,
                     ];
                 }
             }
         }
-
 
         // 🔽 Ordenar los elementos internos por 'name' en orden alfabético descendente
         foreach ($datos as &$grupo) {
@@ -319,10 +319,10 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             3 => [104762, 2821, 2820],
             4 => [104762, 2821, 2820],
             5 => [104762, 2821, 2820],
-            6 => [104762, 2821, 2820]
+            6 => [104762, 2821, 2820],
         ];
 
-        $id_lang = (int)$this->context->language->id;
+        $id_lang = (int) $this->context->language->id;
 
         $deportes = Category::getHomeCategories($id_lang);
 
@@ -330,7 +330,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             $exclusiones = $exclusiones_por_idioma[$id_lang];
 
             $deportes = array_filter($deportes, function ($categoria) use ($exclusiones) {
-                return !in_array((int)$categoria['id_category'], $exclusiones);
+                return ! in_array((int) $categoria['id_category'], $exclusiones);
             });
 
             // Opcionalmente, reindexar el array para evitar huecos en los índices
@@ -340,44 +340,42 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
         $i = 0;
         foreach ($deportes as $deporte) {
 
-            $nummarcas = Db::getInstance()->getValue("  select
+            $nummarcas = Db::getInstance()->getValue('  select
                                                             count(aabc.id) AS count_manufacturer
                                                         from
-                                                            `" . _DB_PREFIX_ . "alsernet_brand_category` aabc
-                                                            left join `" . _DB_PREFIX_ . "manufacturer` am on am.id_manufacturer = aabc.id_manufacturer
+                                                            `'._DB_PREFIX_.'alsernet_brand_category` aabc
+                                                            left join `'._DB_PREFIX_.'manufacturer` am on am.id_manufacturer = aabc.id_manufacturer
                                                         where
                                                             am.active = 1
-                                                            and aabc.id_category = " . $deporte['id_category']);
+                                                            and aabc.id_category = '.$deporte['id_category']);
 
             $deportes[$i]['subcats'] = $nummarcas;
             $i = $i + 1;
         }
+
         return $deportes;
     }
-
 
     public function getTemplateVarManufacturersDeporte()
     {
 
-
-        $cache_id = 'getTemplateVarManufacturersDeporte_' . $this->deporte . '_' . $this->context->language->id;
+        $cache_id = 'getTemplateVarManufacturersDeporte_'.$this->deporte.'_'.$this->context->language->id;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
 
-
         $manufacturers_for_display = [];
-        //$manufacturers = Db::getInstance()->ExecuteS("SELECT a.id_manufacturer, b.name FROM "._DB_PREFIX_."manufacturer_deporte a inner join "._DB_PREFIX_."manufacturer b on a.id_manufacturer=b.id_manufacturer WHERE id_category_deporte=".$this->deporte. " and tiene_productos=1 order by b.name");
+        // $manufacturers = Db::getInstance()->ExecuteS("SELECT a.id_manufacturer, b.name FROM "._DB_PREFIX_."manufacturer_deporte a inner join "._DB_PREFIX_."manufacturer b on a.id_manufacturer=b.id_manufacturer WHERE id_category_deporte=".$this->deporte. " and tiene_productos=1 order by b.name");
         $cat = $this->deporte;
         $catdep = new Category($cat);
         $categories = $catdep->getAllChildren();
         $listids = [];
-        $listids[] = (int)$cat;
+        $listids[] = (int) $cat;
         foreach ($categories as $category) {
-            $listids[] = (int)$category->id;
+            $listids[] = (int) $category->id;
         }
 
-        $sql = "select id_manufacturer, (select b.name from aalv_manufacturer b where b.id_manufacturer=a.id_manufacturer) 'name' from aalv_product a where a.id_product in (SELECT id_product FROM aalv_category_product WHERE id_category in (" . implode(",", $listids) . ")) and a.id_product in (SELECT id_product FROM aalv_combinacionunica_import union select id_product from aalv_product_attribute where id_product_attribute in (SELECT id_product_attribute FROM aalv_combinaciones_import)) and a.active=1 and a.visibility='both' and a.id_manufacturer<>0 order by name";
+        $sql = "select id_manufacturer, (select b.name from aalv_manufacturer b where b.id_manufacturer=a.id_manufacturer) 'name' from aalv_product a where a.id_product in (SELECT id_product FROM aalv_category_product WHERE id_category in (".implode(',', $listids).")) and a.id_product in (SELECT id_product FROM aalv_combinacionunica_import union select id_product from aalv_product_attribute where id_product_attribute in (SELECT id_product_attribute FROM aalv_combinaciones_import)) and a.active=1 and a.visibility='both' and a.id_manufacturer<>0 order by name";
         $manufacturers = Db::getInstance()->ExecuteS($sql);
 
         foreach ($manufacturers as $manufacturer) {
@@ -385,29 +383,30 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$id_manu]['id_manufacturer'] = $id_manu;
             $manufacturers_for_display[$id_manu]['name'] = $manufacturer['name'];
             $manufacturers_for_display[$id_manu]['image'] = $this->context->link->getManufacturerImageLink($id_manu, 'small_default');
-            $manufacturers_for_display[$id_manu]['url'] = '?id_deporte=' . $this->deporte . '&id_manufacturer=' . $id_manu;
-            //$manufacturers_for_display[$id_manu]['url'] = $this->context->link->getManufacturerLink($id_manu);
-            //$numprod=Db::getInstance()->getValue('SELECT COUNT(DISTINCT p.id_product) as nb_products FROM ' . _DB_PREFIX_ . 'product p USE INDEX (product_manufacturer)' . Shop::addSqlAssociation('product', 'p') . ' WHERE p.id_manufacturer != 0 AND product_shop.visibility NOT IN ("none") AND product_shop.active = 1 ');
+            $manufacturers_for_display[$id_manu]['url'] = '?id_deporte='.$this->deporte.'&id_manufacturer='.$id_manu;
+            // $manufacturers_for_display[$id_manu]['url'] = $this->context->link->getManufacturerLink($id_manu);
+            // $numprod=Db::getInstance()->getValue('SELECT COUNT(DISTINCT p.id_product) as nb_products FROM ' . _DB_PREFIX_ . 'product p USE INDEX (product_manufacturer)' . Shop::addSqlAssociation('product', 'p') . ' WHERE p.id_manufacturer != 0 AND product_shop.visibility NOT IN ("none") AND product_shop.active = 1 ');
             // $manufacturers_for_display[$id_manu]['nb_products'] = $numprod > 1 ? ($this->trans('%number% inventaries', ['%number%' => $numprod], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $numprod], 'Shop.Theme.Catalog');
         }
 
-        if (!Cache::isStored($cache_id)) {
+        if (! Cache::isStored($cache_id)) {
             Cache::store($cache_id, $manufacturers_for_display);
         } else {
             $manufacturers_for_display = Cache::retrieve($cache_id);
         }
+
         return $manufacturers_for_display;
     }
 
     public function getTemplateVarManufacturersMainDeporte()
     {
-        $cache_id = 'getTemplateVarManufacturersMainDeporte_' . $this->deporte . '_' . $this->context->language->id;
+        $cache_id = 'getTemplateVarManufacturersMainDeporte_'.$this->deporte.'_'.$this->context->language->id;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
 
         $manufacturers_for_display = [];
-        $manufacturers = Db::getInstance()->ExecuteS("SELECT a.id_manufacturer, b.name FROM " . _DB_PREFIX_ . "manufacturer_deporte a inner join " . _DB_PREFIX_ . "manufacturer b on a.id_manufacturer=b.id_manufacturer WHERE id_category_deporte=" . $this->deporte . " and destacado=1 and tiene_productos=1 order by orden");
+        $manufacturers = Db::getInstance()->ExecuteS('SELECT a.id_manufacturer, b.name FROM '._DB_PREFIX_.'manufacturer_deporte a inner join '._DB_PREFIX_.'manufacturer b on a.id_manufacturer=b.id_manufacturer WHERE id_category_deporte='.$this->deporte.' and destacado=1 and tiene_productos=1 order by orden');
 
         foreach ($manufacturers as $manufacturer) {
             $id_manu = $manufacturer['id_manufacturer'];
@@ -415,27 +414,27 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$id_manu]['name'] = $manufacturer['name'];
 
             $manufacturers_for_display[$id_manu]['image'] = $this->context->link->getManufacturerImageLink($id_manu, 'small_default');
-            $manufacturers_for_display[$id_manu]['url'] = '?id_deporte=' . $this->deporte . '&id_manufacturer=' . $id_manu;
-            //$manufacturers_for_display[$id_manu]['url'] = $this->context->link->getManufacturerLink($id_manu);
+            $manufacturers_for_display[$id_manu]['url'] = '?id_deporte='.$this->deporte.'&id_manufacturer='.$id_manu;
+            // $manufacturers_for_display[$id_manu]['url'] = $this->context->link->getManufacturerLink($id_manu);
 
-            //$numprod=Db::getInstance()->getValue('SELECT COUNT(DISTINCT p.id_product) as nb_products FROM ' . _DB_PREFIX_ . 'product p USE INDEX (product_manufacturer)' . Shop::addSqlAssociation('product', 'p') . ' WHERE p.id_manufacturer != 0 AND product_shop.visibility NOT IN ("none") AND product_shop.active = 1 ');
+            // $numprod=Db::getInstance()->getValue('SELECT COUNT(DISTINCT p.id_product) as nb_products FROM ' . _DB_PREFIX_ . 'product p USE INDEX (product_manufacturer)' . Shop::addSqlAssociation('product', 'p') . ' WHERE p.id_manufacturer != 0 AND product_shop.visibility NOT IN ("none") AND product_shop.active = 1 ');
 
-            //$manufacturers_for_display[$id_manu]['nb_products'] = $numprod > 1 ? ($this->trans('%number% inventaries', ['%number%' => $numprod], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $numprod], 'Shop.Theme.Catalog');
+            // $manufacturers_for_display[$id_manu]['nb_products'] = $numprod > 1 ? ($this->trans('%number% inventaries', ['%number%' => $numprod], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $numprod], 'Shop.Theme.Catalog');
 
         }
 
-        if (!Cache::isStored($cache_id)) {
+        if (! Cache::isStored($cache_id)) {
             Cache::store($cache_id, $manufacturers_for_display);
         } else {
             $manufacturers_for_display = Cache::retrieve($cache_id);
         }
+
         return $manufacturers_for_display;
     }
 
-
     public function getTemplateVarManufacturers()
     {
-        $cache_id = 'getTemplateVarManufacturers_' . $this->context->language->id;
+        $cache_id = 'getTemplateVarManufacturers_'.$this->context->language->id;
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
@@ -446,16 +445,17 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$manufacturer['id_manufacturer']] = $manufacturer;
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = $this->context->link->getManufacturerImageLink($manufacturer['id_manufacturer'], 'small_default');
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = '?id_deporte=' . $this->deporte . '&id_manufacturer=' . $manufacturer['id_manufacturer'];
-            //$manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getManufacturerLink($manufacturer['id_manufacturer']);
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = '?id_deporte='.$this->deporte.'&id_manufacturer='.$manufacturer['id_manufacturer'];
+            // $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getManufacturerLink($manufacturer['id_manufacturer']);
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% inventaries', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog');
         }
 
-        if (!Cache::isStored($cache_id)) {
+        if (! Cache::isStored($cache_id)) {
             Cache::store($cache_id, $manufacturers_for_display);
         } else {
             $manufacturers_for_display = Cache::retrieve($cache_id);
         }
+
         return $manufacturers_for_display;
     }
 
@@ -467,7 +467,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-        if ($this->deporte != "") {
+        if ($this->deporte != '') {
             $catdep = new Category($this->deporte);
             $breadcrumb['links'][] = [
                 'title' => $catdep->name[$this->context->language->id],
@@ -477,8 +477,8 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Brands', [], 'Shop.Theme.Global'),
-            //'url' => $this->context->link->getPageLink('manufacturer', true),
-            'url' => '?id_deporte=' . $this->deporte,
+            // 'url' => $this->context->link->getPageLink('manufacturer', true),
+            'url' => '?id_deporte='.$this->deporte,
 
         ];
 
@@ -518,7 +518,7 @@ class ManufacturerDeporteControllerCore extends ProductListingFrontController
         } else {
             $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
         }
-        //$layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
+        // $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
         $content_only = (int) Tools::getValue('content_only');
 

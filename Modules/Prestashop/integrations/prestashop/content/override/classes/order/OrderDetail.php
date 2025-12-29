@@ -1,6 +1,5 @@
 <?php
 
-
 class OrderDetail extends OrderDetailCore
 {
     /** @var int */
@@ -158,7 +157,6 @@ class OrderDetail extends OrderDetailCore
     /** @var float */
     public $total_refunded_tax_incl;
 
-
     public function createListDemoday(Order $order, Cart $cart, $id_order_state, $product, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {
         $this->vat_address = new Address((int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -167,24 +165,23 @@ class OrderDetail extends OrderDetailCore
         $this->id_order = $order->id;
         $this->outOfStock = false;
 
-        $this->createDemoday($order, $cart, (array)$product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse);
+        $this->createDemoday($order, $cart, (array) $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse);
     }
-
 
     protected function createDemoday(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
     {
         if ($use_taxes) {
-            $this->tax_calculator = new TaxCalculator();
+            $this->tax_calculator = new TaxCalculator;
         }
 
         $this->id = null;
 
         $this->product_id = (int) $product['id_product'];
         $this->product_attribute_id = $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : 0;
-        //$this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
-        $this->product_name = $product['name'] .
+        // $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
+        $this->product_name = $product['name'].
             ((isset($product['attributes']) && $product['attributes'] != null) ?
-                ' (' . $product['attributes'] . ')' : '');
+                ' ('.$product['attributes'].')' : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_price = $product['price'];
@@ -194,7 +191,7 @@ class OrderDetail extends OrderDetailCore
         $this->product_mpn = empty($product['mpn']) ? null : pSQL($product['mpn']);
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-        //$this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
+        // $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
         $this->id_warehouse = $id_warehouse;
 
         $product_quantity = (int) Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
@@ -215,6 +212,4 @@ class OrderDetail extends OrderDetailCore
         }
         unset($this->tax_calculator);
     }
-
-
 }

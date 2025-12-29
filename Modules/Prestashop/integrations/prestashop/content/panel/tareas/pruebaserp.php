@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,24 +24,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 
-if (!defined('PS_ADMIN_DIR')) {
+if (! defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
 require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require _PS_ADMIN_DIR_.'/../init.php';
 
-//dump(AlvarezERP::recuperarclienteerp(403728));
+// dump(AlvarezERP::recuperarclienteerp(403728));
 
 $content = '';
 $idweb = 403728; // ID cliente jordilopez@addis.es
-$url = "http://127.0.0.1:58002/api-gestion/cliente/?idclienteweb=".$idweb;
+$url = 'http://127.0.0.1:58002/api-gestion/cliente/?idclienteweb='.$idweb;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

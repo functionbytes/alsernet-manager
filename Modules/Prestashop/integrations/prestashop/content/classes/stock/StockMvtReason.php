@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -74,21 +75,20 @@ class StockMvtReasonCore extends ObjectModel
     /**
      * Gets Stock Mvt Reasons.
      *
-     * @param int $id_lang
-     * @param int $sign Optionnal
-     *
+     * @param  int  $id_lang
+     * @param  int  $sign  Optionnal
      * @return array
      */
     public static function getStockMvtReasons($id_lang, $sign = null)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
         $query->from('stock_mvt_reason', 'smr');
-        $query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang=' . (int) $id_lang);
+        $query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int) $id_lang);
         $query->where('smr.deleted = 0');
 
         if ($sign != null) {
-            $query->where('smr.sign = ' . (int) $sign);
+            $query->where('smr.sign = '.(int) $sign);
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -99,25 +99,25 @@ class StockMvtReasonCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $id_lang
-     * @param array $ids_ignore
-     * @param int $sign optional
+     * @param  int  $id_lang
+     * @param  array  $ids_ignore
+     * @param  int  $sign  optional
      */
     public static function getStockMvtReasonsWithFilter($id_lang, $ids_ignore, $sign = null)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
         $query->from('stock_mvt_reason', 'smr');
-        $query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang=' . (int) $id_lang);
+        $query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int) $id_lang);
         $query->where('smr.deleted = 0');
 
         if ($sign != null) {
-            $query->where('smr.sign = ' . (int) $sign);
+            $query->where('smr.sign = '.(int) $sign);
         }
 
         if (count($ids_ignore)) {
             $ids_ignore = array_map('intval', $ids_ignore);
-            $query->where('smr.id_stock_mvt_reason NOT IN(' . implode(', ', $ids_ignore) . ')');
+            $query->where('smr.id_stock_mvt_reason NOT IN('.implode(', ', $ids_ignore).')');
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -128,16 +128,15 @@ class StockMvtReasonCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $id_stock_mvt_reason
-     *
+     * @param  int  $id_stock_mvt_reason
      * @return bool
      */
     public static function exists($id_stock_mvt_reason)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('smr.id_stock_mvt_reason');
         $query->from('stock_mvt_reason', 'smr');
-        $query->where('smr.id_stock_mvt_reason = ' . (int) $id_stock_mvt_reason);
+        $query->where('smr.id_stock_mvt_reason = '.(int) $id_stock_mvt_reason);
         $query->where('smr.deleted = 0');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

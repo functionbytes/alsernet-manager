@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -254,7 +255,7 @@ class SupplyOrderDetailCore extends ObjectModel
      * Applies a global order discount rate, for the current product (i.e detail)
      * Calls ObjectModel::update().
      *
-     * @param float|int $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
+     * @param  float|int  $discount_rate  The discount rate in percent (Ex. 5 for 5 percents)
      */
     public function applyGlobalDiscount($discount_rate)
     {
@@ -274,8 +275,7 @@ class SupplyOrderDetailCore extends ObjectModel
     /**
      * @see ObjectModel::validateController()
      *
-     * @param bool $htmlentities Optional
-     *
+     * @param  bool  $htmlentities  Optional
      * @return array Errors, if any..
      */
     public function validateController($htmlentities = true)
@@ -295,11 +295,11 @@ class SupplyOrderDetailCore extends ObjectModel
 
         foreach ($fields_required as $field) {
             if (($value = $this->{$field}) == false && (string) $value != '0') {
-                if (!$this->id || $field != 'passwd') {
+                if (! $this->id || $field != 'passwd') {
                     $errors[] = $this->trans(
                         '%s is required.',
                         [
-                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
+                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>',
                         ],
                         'Shop.Notifications.Error'
                     );
@@ -321,8 +321,8 @@ class SupplyOrderDetailCore extends ObjectModel
         /* Checks fields validity */
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
-                if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
+                if (! Validate::$function($value) && (! empty($value) || in_array($field, $this->fieldsRequired))) {
+                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is invalid.', [], 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
@@ -334,15 +334,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.$this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.$this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.$this->trans('is invalid.', [], 'Shop.Notifications.Error');
         }
 
         return $errors;

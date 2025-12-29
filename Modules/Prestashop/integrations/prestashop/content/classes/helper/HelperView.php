@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,8 +27,11 @@
 class HelperViewCore extends Helper
 {
     public $id;
+
     public $toolbar = true;
+
     public $table;
+
     public $token;
 
     /** @var string|null If not null, a title will be added on that list */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -32,9 +33,13 @@
 class RiskCore extends ObjectModel
 {
     public $id;
+
     public $id_risk;
+
     public $name;
+
     public $color;
+
     public $percent;
 
     public static $definition = [
@@ -66,13 +71,12 @@ class RiskCore extends ObjectModel
     /**
      * Get Risks.
      *
-     * @param int|null $idLang Language ID
-     *
+     * @param  int|null  $idLang  Language ID
      * @return PrestaShopCollection
      */
     public static function getRisks($idLang = null)
     {
-        if (null === $idLang) {
+        if ($idLang === null) {
             $idLang = Context::getContext()->language->id;
         }
 

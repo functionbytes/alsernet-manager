@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,9 +30,13 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerPersisterCore
 {
     private $errors = [];
+
     private $context;
+
     private $crypto;
+
     private $translator;
+
     private $guest_allowed;
 
     public function __construct(
@@ -62,7 +67,7 @@ class CustomerPersisterCore
 
     private function update(Customer $customer, $clearTextPassword, $newPassword, $passwordRequired = true)
     {
-        if (!$customer->is_guest && $passwordRequired && !$this->crypto->checkHash(
+        if (! $customer->is_guest && $passwordRequired && ! $this->crypto->checkHash(
             $clearTextPassword,
             $customer->passwd,
             _COOKIE_KEY_
@@ -78,14 +83,14 @@ class CustomerPersisterCore
             return false;
         }
 
-        if (!$customer->is_guest) {
+        if (! $customer->is_guest) {
             $customer->passwd = $this->crypto->hash(
                 $newPassword ? $newPassword : $clearTextPassword,
                 _COOKIE_KEY_
             );
         }
 
-        if ($customer->is_guest || !$passwordRequired) {
+        if ($customer->is_guest || ! $passwordRequired) {
             // TODO SECURITY: Audit requested
             if ($customer->id != $this->context->customer->id) {
                 // Since we're updating a customer without
@@ -144,7 +149,7 @@ class CustomerPersisterCore
                 'customer' => $customer,
             ]);
             if ($guest_to_customer) {
-                //$this->sendConfirmationMail($customer);
+                // $this->sendConfirmationMail($customer);
             }
         }
 
@@ -153,8 +158,8 @@ class CustomerPersisterCore
 
     private function create(Customer $customer, $clearTextPassword)
     {
-        if (!$clearTextPassword) {
-            if (!$this->guest_allowed) {
+        if (! $clearTextPassword) {
+            if (! $this->guest_allowed) {
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
                     [],
@@ -197,7 +202,7 @@ class CustomerPersisterCore
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
-            //$this->sendConfirmationMail($customer);
+            // $this->sendConfirmationMail($customer);
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
             ]);
@@ -208,25 +213,25 @@ class CustomerPersisterCore
 
     private function sendConfirmationMail(Customer $customer)
     {
-     //   if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-      //      return true;
-      //  }
+        //   if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+        //      return true;
+        //  }
 
-       // return Mail::Send(
-           // $this->context->language->id,
-          //  'account',
-          //  $this->translator->trans(
-           //     'Welcome!',
-          //      [],
-          //      'Emails.Subject'
-          //  ),
-          //  [
-         //       '{firstname}' => $customer->firstname,
-         //       '{lastname}' => $customer->lastname,
+        // return Mail::Send(
+        // $this->context->language->id,
+        //  'account',
+        //  $this->translator->trans(
+        //     'Welcome!',
+        //      [],
+        //      'Emails.Subject'
+        //  ),
+        //  [
+        //       '{firstname}' => $customer->firstname,
+        //       '{lastname}' => $customer->lastname,
         //        '{email}' => $customer->email,
-         //   ],
+        //   ],
         //    $customer->email,
-         //   $customer->firstname . ' ' . $customer->lastname
-        //);
+        //   $customer->firstname . ' ' . $customer->lastname
+        // );
     }
 }

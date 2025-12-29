@@ -1,13 +1,14 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include _PS_ADMIN_DIR_ . '/../../config/config.inc.php';
+include _PS_ADMIN_DIR_.'/../../config/config.inc.php';
 
 $sql_blog_query = 'SELECT url_alias, id_post FROM '._DB_PREFIX_.'ybc_blog_post_lang aybpl WHERE id_lang = 1 ORDER BY id_post DESC';
 $blogs = Db::getInstance()->executeS($sql_blog_query);
@@ -19,22 +20,22 @@ foreach ($blogs as $blog) {
     /**
      * BUSCAR SI LA URL NO ESTÁ ALMACENADA EN LA TABLA lgseoredirect Y AÑADIRLA
      */
-    $sql_url_not_present = $sql = "SELECT * FROM " . _DB_PREFIX_ . "lgseoredirect WHERE url_old = '/blog/post/" . $blog['url_alias']."'";
+    $sql_url_not_present = $sql = 'SELECT * FROM '._DB_PREFIX_."lgseoredirect WHERE url_old = '/blog/post/".$blog['url_alias']."'";
     $url_not_present = DB::getInstance()->executeS($sql_url_not_present);
-    if (!count($url_not_present)) {
+    if (! count($url_not_present)) {
         $categorias_url = getCategoriasUrl($blog['id_post']);
 
-        if (getRequestStatus("https://" . $_SERVER['SERVER_NAME'] . "/blog/post/" . $blog['url_alias']) &&
-            getRequestStatus("https://" . $_SERVER['SERVER_NAME'] . "/blog/" . $categorias_url . $blog['url_alias'])) {
-            $datos_correctos .= "/blog/post/" . $blog['url_alias'] . " ==> /blog/" . $categorias_url . $blog['url_alias'] . "<br><br>";
-            $old_url = "/blog/post/" . $blog['url_alias'];
-            $new_url = "https://" . $_SERVER['SERVER_NAME'] . "/blog/" . $categorias_url . $blog['url_alias'];
-            $insert_sql = "INSERT INTO " . _DB_PREFIX_ . "lgseoredirect VALUES (NULL, '$old_url', '$new_url' , 301, NOW(), 1, 0);";
+        if (getRequestStatus('https://'.$_SERVER['SERVER_NAME'].'/blog/post/'.$blog['url_alias']) &&
+            getRequestStatus('https://'.$_SERVER['SERVER_NAME'].'/blog/'.$categorias_url.$blog['url_alias'])) {
+            $datos_correctos .= '/blog/post/'.$blog['url_alias'].' ==> /blog/'.$categorias_url.$blog['url_alias'].'<br><br>';
+            $old_url = '/blog/post/'.$blog['url_alias'];
+            $new_url = 'https://'.$_SERVER['SERVER_NAME'].'/blog/'.$categorias_url.$blog['url_alias'];
+            $insert_sql = 'INSERT INTO '._DB_PREFIX_."lgseoredirect VALUES (NULL, '$old_url', '$new_url' , 301, NOW(), 1, 0);";
             Db::getInstance()->execute($insert_sql);
-            echo "AÑADIDO ----- $old_url ==> $new_url\n" ;
+            echo "AÑADIDO ----- $old_url ==> $new_url\n";
         } else {
-            $datos_incorrectos .= "/blog/post/" . $blog['url_alias'] . " ==> /blog/" . $categorias_url . $blog['url_alias'] . "<br><br>";
-            echo "ERROR ----- /blog/post/" . $blog['url_alias'] . " ==> /blog/" . $categorias_url . $blog['url_alias'] . "\n" ;
+            $datos_incorrectos .= '/blog/post/'.$blog['url_alias'].' ==> /blog/'.$categorias_url.$blog['url_alias'].'<br><br>';
+            echo 'ERROR ----- /blog/post/'.$blog['url_alias'].' ==> /blog/'.$categorias_url.$blog['url_alias']."\n";
         }
         $total_procesados++;
     }
@@ -63,23 +64,19 @@ echo "TOTAL URLS PROCESADAS ----- $total_procesados";
 // echo $datos_correctos;
 if ($datos_correctos != '' ||
     $datos_incorrectos != '') {
-    $html = 'INCORRECTOS<br>' . $datos_incorrectos . '<hr>CORRECTOS<br>' . $datos_correctos;
+    $html = 'INCORRECTOS<br>'.$datos_incorrectos.'<hr>CORRECTOS<br>'.$datos_correctos;
     sendmailPruebas($html);
-    echo "enviado";
+    echo 'enviado';
 }
-die();
+exit();
 
-/**
- * @param $value
- * @return bool
- */
-function getRequestStatus($value):bool
+function getRequestStatus($value): bool
 {
     // Obtener los encabezados de la URL
     $headers = get_headers($value);
 
     // Verificar si los encabezados se obtuvieron correctamente
-    if ($headers !== FALSE) {
+    if ($headers !== false) {
         // Obtener el primer encabezado (que contiene el código de estado HTTP)
         $http_status = $headers[0];
 
@@ -95,20 +92,18 @@ function getRequestStatus($value):bool
 }
 
 /**
- * @param $mensaje
  * @return void
  */
 function sendmailPruebas($mensaje)
 {
     $dest = [];
-    $dest[] = "alvarez@alsernet.es";
-
+    $dest[] = 'alvarez@alsernet.es';
 
     $data = ['{message}' => $mensaje];
     Mail::Send(
         1,
         'integracionV2',
-        "Blog redireccion",
+        'Blog redireccion',
         $data,
         $dest,
         Configuration::get('PS_SHOP_NAME'),
@@ -123,26 +118,25 @@ function sendmailPruebas($mensaje)
 }
 
 /**
- * @param $id_post
- * @return string
  * @throws PrestaShopDatabaseException
  */
 function getCategoriasUrl($id_post): string
 {
 
     $url = '';
-    $categorias = Db::getInstance()->executeS(" SELECT
+    $categorias = Db::getInstance()->executeS(' SELECT
                                                         aybcl.url_alias
                                                     FROM
-                                                        " . _DB_PREFIX_ . "ybc_blog_post_category aybpc
-                                                        LEFT JOIN " . _DB_PREFIX_ . "ybc_blog_category_lang aybcl ON aybcl.id_category = aybpc.id_category
+                                                        '._DB_PREFIX_.'ybc_blog_post_category aybpc
+                                                        LEFT JOIN '._DB_PREFIX_.'ybc_blog_category_lang aybcl ON aybcl.id_category = aybpc.id_category
                                                     WHERE
-                                                        aybpc.id_post = " . $id_post . "
+                                                        aybpc.id_post = '.$id_post.'
                                                         AND aybcl.id_lang = 1
-                                                    ORDER BY aybpc.`position`, aybpc.id_category ASC");
+                                                    ORDER BY aybpc.`position`, aybpc.id_category ASC');
 
     foreach ($categorias as $val) {
-        $url .= $val['url_alias'] . '/';
+        $url .= $val['url_alias'].'/';
     }
+
     return $url;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,12 +27,19 @@
 class TaxRuleCore extends ObjectModel
 {
     public $id_tax_rules_group;
+
     public $id_country;
+
     public $id_state;
+
     public $zipcode_from;
+
     public $zipcode_to;
+
     public $id_tax;
+
     public $behavior;
+
     public $description;
 
     /**
@@ -63,21 +71,21 @@ class TaxRuleCore extends ObjectModel
     public static function deleteByGroupId($id_group)
     {
         if (empty($id_group)) {
-            die(Tools::displayError());
+            exit(Tools::displayError());
         }
 
         return Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
-			WHERE `id_tax_rules_group` = ' . (int) $id_group
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rules_group` = '.(int) $id_group
         );
     }
 
     public static function retrieveById($id_tax_rule)
     {
         return Db::getInstance()->getRow('
-			SELECT * FROM `' . _DB_PREFIX_ . 'tax_rule`
-			WHERE `id_tax_rule` = ' . (int) $id_tax_rule);
+			SELECT * FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rule` = '.(int) $id_tax_rule);
     }
 
     public static function getTaxRulesByGroupId($id_lang, $id_group)
@@ -93,11 +101,11 @@ class TaxRuleCore extends ObjectModel
 				 g.`behavior`,
 				 g.`id_country`,
 				 g.`id_state`
-		FROM `' . _DB_PREFIX_ . 'tax_rule` g
-		LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = ' . (int) $id_lang . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON (g.`id_state` = s.`id_state`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (g.`id_tax` = t.`id_tax`)
-		WHERE `id_tax_rules_group` = ' . (int) $id_group . '
+		FROM `'._DB_PREFIX_.'tax_rule` g
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int) $id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
+		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
+		WHERE `id_tax_rules_group` = '.(int) $id_group.'
 		ORDER BY `country_name` ASC, `state_name` ASC, `zipcode_from` ASC, `zipcode_to` ASC'
         );
     }
@@ -106,8 +114,8 @@ class TaxRuleCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
-			WHERE `id_tax` = ' . (int) $id_tax
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax` = '.(int) $id_tax
         );
     }
 
@@ -122,15 +130,14 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
-     * @param int $id_tax
-     *
+     * @param  int  $id_tax
      * @return bool
      */
     public static function isTaxInUse($id_tax)
     {
-        $cache_id = 'TaxRule::isTaxInUse_' . (int) $id_tax;
-        if (!Cache::isStored($cache_id)) {
-            $result = (int) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'tax_rule` WHERE `id_tax` = ' . (int) $id_tax);
+        $cache_id = 'TaxRule::isTaxInUse_'.(int) $id_tax;
+        if (! Cache::isStored($cache_id)) {
+            $result = (int) Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int) $id_tax);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -140,8 +147,7 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
-     * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
-     *
+     * @param  string  $zipcode  a range of zipcode (eg: 75000 / 75000-75015)
      * @return array an array containing two zipcode ordered by zipcode
      */
     public function breakDownZipCode($zip_codes)
@@ -171,16 +177,16 @@ class TaxRuleCore extends ObjectModel
     /**
      * Replace a tax_rule id by an other one in the tax_rule table.
      *
-     * @param int $old_id
-     * @param int $new_id
+     * @param  int  $old_id
+     * @param  int  $new_id
      */
     public static function swapTaxId($old_id, $new_id)
     {
         return Db::getInstance()->execute(
             '
-		UPDATE `' . _DB_PREFIX_ . 'tax_rule`
-		SET `id_tax` = ' . (int) $new_id . '
-		WHERE `id_tax` = ' . (int) $old_id
+		UPDATE `'._DB_PREFIX_.'tax_rule`
+		SET `id_tax` = '.(int) $new_id.'
+		WHERE `id_tax` = '.(int) $old_id
         );
     }
 }

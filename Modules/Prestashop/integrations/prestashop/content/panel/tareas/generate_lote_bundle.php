@@ -1,10 +1,10 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 
-if (!defined('PS_ADMIN_DIR')) {
+if (! defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
@@ -28,7 +28,7 @@ foreach ($products as $product_item) {
     $sql = 'SELECT `id_customization_field` FROM `'._DB_PREFIX_.'customization_field` WHERE `id_product`='.$product->id;
     $id_customization_field = DB::getInstance()->getValue($sql);
 
-    if (!$id_customization_field) {
+    if (! $id_customization_field) {
         $sql = 'INSERT INTO `'._DB_PREFIX_.'customization_field`(`id_product`, `type`, `required`, `is_module`, `is_deleted`) VALUES ('.$product->id.', 1, 0, 0, 0)';
         if (DB::getInstance()->execute($sql)) {
             echo 'Producto '.$product->id.'; customization guardada ...<br>';

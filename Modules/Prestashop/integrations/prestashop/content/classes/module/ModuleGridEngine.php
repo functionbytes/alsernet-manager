@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +35,7 @@ abstract class ModuleGridEngineCore extends Module
 
     public function install()
     {
-        if (!parent::install()) {
+        if (! parent::install()) {
             return false;
         }
 
@@ -45,16 +46,16 @@ abstract class ModuleGridEngineCore extends Module
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT m.`name`
-            FROM `' . _DB_PREFIX_ . 'module` m
-            LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-            LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
+            FROM `'._DB_PREFIX_.'module` m
+            LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+            LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
             WHERE h.`name` = \'displayAdminStatsGridEngine\'
         ');
 
         $array_engines = [];
         foreach ($result as $module) {
             $instance = Module::getInstanceByName($module['name']);
-            if (!$instance) {
+            if (! $instance) {
                 continue;
             }
             $array_engines[$module['name']] = [$instance->displayName, $instance->description];

@@ -3,9 +3,9 @@
 namespace Modules\Campaign\Entities;
 
 use App;
-use App\Events\Campaigns\MailListImported;
-use App\Events\Campaigns\MailListSubscription;
-use App\Events\Campaigns\MailListUpdated;
+use Modules\Campaign\Events\MailListImported;
+use Modules\Campaign\Events\MailListSubscription;
+use Modules\Campaign\Events\MailListUpdated;
 use App\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
@@ -15,10 +15,10 @@ use app\Library\ExtendedSwiftMessage;
 use app\Library\MailListFieldMapping;
 use app\Library\RouletteWheel;
 use app\Library\StringHelper;
-use app\Library\Traits\HasCache;
-use app\Library\Traits\HasUid;
-use app\Library\Traits\QueryHelper;
-use app\Library\Traits\TrackJobs;
+use Modules\Campaign\Library\Traits\HasCache;
+use App\Models\Traits\HasUid;
+use App\Library\Traits\QueryHelper;
+use App\Library\Traits\TrackJobs;
 use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;

@@ -34,9 +34,9 @@ class HICallMeBackOverride extends HICallMeBack
 
     private function proceedDb()
     {
-        $tables = array(
+        $tables = [
             'hicallmebackagente',
-        );
+        ];
         foreach ($tables as $table) {
             DB::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.pSQL($table));
         }
@@ -46,53 +46,54 @@ class HICallMeBackOverride extends HICallMeBack
 
     public function renderMenuTabs()
     {
-        $tabs = array(
-            'requests' => array(
+        $tabs = [
+            'requests' => [
                 'title' => $this->l('Requests'),
-                'icon' => 'icon-phone'
-            ),
-            'design_settings' => array(
+                'icon' => 'icon-phone',
+            ],
+            'design_settings' => [
                 'title' => $this->l('Design Settings'),
-                'icon' => 'icon-paint-brush'
-            ),
-            'general_settings' => array(
+                'icon' => 'icon-paint-brush',
+            ],
+            'general_settings' => [
                 'title' => $this->l('General settings'),
-                'icon' => 'icon-cog'
-            ),
-            'agents' => array(
+                'icon' => 'icon-cog',
+            ],
+            'agents' => [
                 'title' => $this->l('Agentes'),
-                'icon' => 'icon-user'
-            ),
-            'export' => array(
+                'icon' => 'icon-user',
+            ],
+            'export' => [
                 'title' => $this->l('Export'),
-                'icon' => 'icon-download'
-            ),
-            'gdpr' => array(
+                'icon' => 'icon-download',
+            ],
+            'gdpr' => [
                 'title' => $this->l('GDPR'),
-                'icon' => 'icon-user'
-            ),
-            'version' => array(
+                'icon' => 'icon-user',
+            ],
+            'version' => [
                 'title' => $this->l('Version'),
-                'icon' => 'icon-info'
-            )
-        );
+                'icon' => 'icon-info',
+            ],
+        ];
         $more_module = $this->hiPrestaClass->getModuleContent('A_CMB');
         if ($more_module) {
-            $tabs['more_module'] = array(
+            $tabs['more_module'] = [
                 'title' => $this->l('More Modules'),
-                'icon' => 'icon-plus-square'
-            );
+                'icon' => 'icon-plus-square',
+            ];
         }
         $this->context->smarty->assign(
-            array(
+            [
                 'psv' => $this->psv,
                 'tabs' => $tabs,
                 'module_version' => $this->version,
                 'module_url' => $this->hiPrestaClass->getModuleUrl(),
                 'module_tab_key' => $this->name,
                 'active_tab' => Tools::getValue($this->name),
-            )
+            ]
         );
+
         return $this->display(__FILE__, 'views/templates/admin/menu_tabs.tpl');
     }
 
@@ -121,7 +122,7 @@ class HICallMeBackOverride extends HICallMeBack
         }
 
         if (Tools::getIsset('deletehicallmebackagente') && Tools::getvalue('id_hicallmebackagente')) {
-            $agente = New Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
+            $agente = new Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
             if (Validate::isLoadedObject($agente)) {
                 if ($agente->delete()) {
                     $this->success[] = $this->l('Agente eliminado');
@@ -132,7 +133,7 @@ class HICallMeBackOverride extends HICallMeBack
         }
 
         if (Tools::getIsset('statushicallmebackagente') && Tools::getvalue('id_hicallmebackagente')) {
-            $agente = New Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
+            $agente = new Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
             if (Validate::isLoadedObject($agente)) {
                 $agente->active = $agente->active ? 0 : 1;
                 $agente->save();
@@ -152,21 +153,22 @@ class HICallMeBackOverride extends HICallMeBack
             if (Tools::getValue('email') == '') {
                 $this->errors[] = $this->l('Email obligatorio');
             } else {
-                if (!Validate::isEmail(Tools::getValue('email'))) {
+                if (! Validate::isEmail(Tools::getValue('email'))) {
                     $this->errors[] = $this->l('Email no válido');
                 }
             }
 
             if (empty($this->errors)) {
                 if (Tools::getIsset('updatehicallmebackagente') && Tools::getvalue('id_hicallmebackagente')) {
-                    $agente = New Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
-                    if (!Validate::isLoadedObject($agente)) {
+                    $agente = new Hicallmebackagente((int) Tools::getValue('id_hicallmebackagente'));
+                    if (! Validate::isLoadedObject($agente)) {
                         $this->errors[] = $this->l('Error al guardar los datos del agente');
                         parent::postProcess();
+
                         return;
                     }
                 } else {
-                    $agente = New Hicallmebackagente();
+                    $agente = new Hicallmebackagente;
                 }
 
                 $agente->name = Tools::getValue('name');
@@ -184,7 +186,8 @@ class HICallMeBackOverride extends HICallMeBack
         parent::postProcess();
     }
 
-    public function hasEmailInNotificationList($email) {
+    public function hasEmailInNotificationList($email)
+    {
         $email_address = trim(Configuration::get('HI_CMB_EMAIL_ADDRESS'));
         $emails = explode(',', $email_address);
         foreach ($emails as $email_item) {
@@ -196,7 +199,8 @@ class HICallMeBackOverride extends HICallMeBack
         return false;
     }
 
-    public function changeEmailNotificationList($email, $mode, $email_old = '') {
+    public function changeEmailNotificationList($email, $mode, $email_old = '')
+    {
         $email_address = trim(Configuration::get('HI_CMB_EMAIL_ADDRESS'));
 
         switch ($mode) {
@@ -275,7 +279,7 @@ class HICallMeBackOverride extends HICallMeBack
             $this->context->cookie->{$this->name.'FilterAgent_id'} = Tools::getValue('filter_id');
             $this->context->cookie->{$this->name.'FilterAgent_name'} = Tools::getValue('filter_name');
             $this->context->cookie->{$this->name.'FilterAgent_email'} = Tools::getValue('filter_email');
-            $this->context->cookie->{$this->name.'FilterAgent_active'} = (int)Tools::getValue('filter_active');
+            $this->context->cookie->{$this->name.'FilterAgent_active'} = (int) Tools::getValue('filter_active');
             $this->context->cookie->write();
         }
 
@@ -303,14 +307,14 @@ class HICallMeBackOverride extends HICallMeBack
             Configuration::get('PS_LANG_DEFAULT'),
             'callmeback',
             Mail::l('Call Back Request'),
-            array(
+            [
                 '{first_name}' => $firstname,
                 '{last_name}' => $lastname,
                 '{phone}' => $phone,
                 '{start_time}' => $start_time,
                 '{end_time}' => $end_time,
                 '{message}' => $message,
-            ),
+            ],
             $email,
             $firstname.' '.$lastname,
             null,
@@ -320,6 +324,4 @@ class HICallMeBackOverride extends HICallMeBack
             _PS_MODULE_DIR_.$this->name.'/mails/'
         );
     }
-
-    
 }

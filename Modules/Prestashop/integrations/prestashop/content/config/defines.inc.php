@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,21 +26,21 @@
  */
 // ini_set('max_execution_time', '300');
 
-if (isset($_SERVER["REMOTE_ADDR"]))
-if ($_SERVER["REMOTE_ADDR"] == '91.242.153.161') {
-    define('_PS_MODE_DEV_', false);
-	define('_PS_DEBUG_PROFILING_', false);
-} else {
-    define('_PS_MODE_DEV_', false);
-	define('_PS_DEBUG_PROFILING_', false);
+if (isset($_SERVER['REMOTE_ADDR'])) {
+    if ($_SERVER['REMOTE_ADDR'] == '91.242.153.161') {
+        define('_PS_MODE_DEV_', false);
+        define('_PS_DEBUG_PROFILING_', false);
+    } else {
+        define('_PS_MODE_DEV_', false);
+        define('_PS_DEBUG_PROFILING_', false);
+    }
 }
 
 // define('_PS_DEBUG_PROFILING_', $_SERVER['REMOTE_ADDR'] == '80.28.253.212');
 
-
 /* Debug only */
-if (!defined('_PS_MODE_DEV_')) {
-define('_PS_MODE_DEV_', false);
+if (! defined('_PS_MODE_DEV_')) {
+    define('_PS_MODE_DEV_', false);
 }
 /* Compatibility warning */
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', false);
@@ -56,29 +57,29 @@ if (_PS_MODE_DEV_ === true) {
     define('_PS_DEBUG_SQL_', false);
 }
 
-if (!defined('_PS_DEBUG_PROFILING_')) {
+if (! defined('_PS_DEBUG_PROFILING_')) {
     define('_PS_DEBUG_PROFILING_', false);
 }
-if (!defined('_PS_MODE_DEMO_')) {
+if (! defined('_PS_MODE_DEMO_')) {
     define('_PS_MODE_DEMO_', false);
 }
 
 $currentDir = dirname(__FILE__);
 
-if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
+if (! defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
     define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
 }
 
-if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
+if (! defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
     define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
 }
 
 /* Directories */
-if (!defined('_PS_ROOT_DIR_')) {
+if (! defined('_PS_ROOT_DIR_')) {
     define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
 }
 
-if (!defined('_PS_CORE_DIR_')) {
+if (! defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 }
 
@@ -103,30 +104,30 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
 ) {
     define('_PS_ENV_', 'test');
 } else {
-    define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev': 'prod');
+    define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev' : 'prod');
 }
 
-if (!defined('_PS_CACHE_DIR_')) {
-    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
+if (! defined('_PS_CACHE_DIR_')) {
+    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/'._PS_ENV_.DIRECTORY_SEPARATOR);
 }
 
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
 define('_PS_CLASS_DIR_', _PS_CORE_DIR_.'/classes/');
-if (!defined('_PS_DOWNLOAD_DIR_')) {
+if (! defined('_PS_DOWNLOAD_DIR_')) {
     $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/download/' : '/download/';
     define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.$dir);
 }
 define('_PS_MAIL_DIR_', _PS_CORE_DIR_.'/mails/');
-if (!defined('_PS_MODULE_DIR_')) {
+if (! defined('_PS_MODULE_DIR_')) {
     define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
 }
-if (!defined('_PS_OVERRIDE_DIR_')) {
+if (! defined('_PS_OVERRIDE_DIR_')) {
     define('_PS_OVERRIDE_DIR_', _PS_ROOT_DIR_.'/override/');
 }
 define('_PS_PDF_DIR_', _PS_CORE_DIR_.'/pdf/');
 define('_PS_langs_DIR_', _PS_ROOT_DIR_.'/translations/');
-if (!defined('_PS_UPLOAD_DIR_')) {
+if (! defined('_PS_UPLOAD_DIR_')) {
     define('_PS_UPLOAD_DIR_', _PS_ROOT_DIR_.'/upload/');
 }
 define('_PS_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/');
@@ -134,10 +135,10 @@ define('_PS_ADMIN_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/admin/');
 define('_PS_FRONT_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/front/');
 
 define('_PS_TOOL_DIR_', _PS_CORE_DIR_.'/tools/');
-if (!defined('_PS_GEOIP_DIR_')) {
+if (! defined('_PS_GEOIP_DIR_')) {
     define('_PS_GEOIP_DIR_', _PS_CORE_DIR_.'/app/Resources/geoip/');
 }
-if (!defined('_PS_GEOIP_CITY_FILE_')) {
+if (! defined('_PS_GEOIP_CITY_FILE_')) {
     define('_PS_GEOIP_CITY_FILE_', 'GeoLite2-City.mmdb');
 }
 
@@ -148,12 +149,12 @@ define('_PS_TAASC_PATH_', _PS_TOOL_DIR_.'taasc/');
 define('_PS_TCPDF_PATH_', _PS_TOOL_DIR_.'tcpdf/');
 
 define('_PS_IMG_SOURCE_DIR_', _PS_ROOT_DIR_.'/img/');
-if (!defined('_PS_IMG_DIR_')) {
+if (! defined('_PS_IMG_DIR_')) {
     $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/img/' : '/img/';
     define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
 }
 
-if (!defined('_PS_HOST_MODE_')) {
+if (! defined('_PS_HOST_MODE_')) {
     define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
 } else {
     define('_PS_CORE_IMG_DIR_', _PS_ROOT_DIR_.'/img/');
@@ -177,7 +178,7 @@ define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
 define('_PS_MIN_TIME_GENERATE_PASSWD_', '360');
 
-if (!defined('_PS_MAGIC_QUOTES_GPC_')) {
+if (! defined('_PS_MAGIC_QUOTES_GPC_')) {
     define('_PS_MAGIC_QUOTES_GPC_', false);
 }
 
@@ -238,7 +239,7 @@ define('_PS_SMARTY_CONSOLE_CLOSE_', 0);
 define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
-if (!defined('_PS_JQUERY_VERSION_')) {
+if (! defined('_PS_JQUERY_VERSION_')) {
     define('_PS_JQUERY_VERSION_', '3.4.1');
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -59,9 +60,9 @@ class ConfigurationTestCore
             'log_dir' => 'var/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
-            'theme_lang_dir' => 'themes/' . _THEME_NAME_ . '/lang/',
-            'theme_pdf_lang_dir' => 'themes/' . _THEME_NAME_ . '/pdf/lang/',
-            'theme_cache_dir' => 'themes/' . _THEME_NAME_ . '/cache/',
+            'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
+            'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
+            'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
@@ -69,7 +70,7 @@ class ConfigurationTestCore
             'translations_sf2' => 'app/Resources/translations',
         ];
 
-        if (!defined('_PS_HOST_MODE_')) {
+        if (! defined('_PS_HOST_MODE_')) {
             $tests = array_merge($tests, [
                 'system' => [
                     'fopen', 'fclose', 'fread', 'fwrite',
@@ -121,8 +122,7 @@ class ConfigurationTestCore
     /**
      * run all test defined in $tests.
      *
-     * @param array $tests
-     *
+     * @param  array  $tests
      * @return array results of tests
      */
     public static function check($tests)
@@ -137,7 +137,7 @@ class ConfigurationTestCore
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(['ConfigurationTest', 'test_' . $ptr], $arg)) {
+        if (call_user_func(['ConfigurationTest', 'test_'.$ptr], $arg)) {
             return 'ok';
         }
 
@@ -152,7 +152,7 @@ class ConfigurationTestCore
     public static function test_apache_mod_rewrite()
     {
         if (isset($_SERVER['SERVER_SOFTWARE'])
-            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
+            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || ! function_exists('apache_get_modules')) {
             return true;
         }
 
@@ -199,7 +199,7 @@ class ConfigurationTestCore
     public static function test_system($funcs)
     {
         foreach ($funcs as $func) {
-            if (!function_exists($func)) {
+            if (! function_exists($func)) {
                 return false;
             }
         }
@@ -248,20 +248,20 @@ class ConfigurationTestCore
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
     {
-        $dir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($relative_dir, '\\/');
-        if (!file_exists($dir) || !$dh = @opendir($dir)) {
+        $dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
+        if (! file_exists($dir) || ! $dh = @opendir($dir)) {
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
 
             return false;
         }
         closedir($dh);
-        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
+        $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
         if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
-            if (!$recursive) {
+            if (! $recursive) {
                 return true;
             }
-        } elseif (!is_writable($dir)) {
+        } elseif (! is_writable($dir)) {
             $full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
 
             return false;
@@ -269,7 +269,7 @@ class ConfigurationTestCore
 
         if ($recursive) {
             foreach (Tools::getDirectories($dir) as $file) {
-                if (!ConfigurationTest::test_dir($relative_dir . DIRECTORY_SEPARATOR . $file, $recursive, $full_report)) {
+                if (! ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, $recursive, $full_report)) {
                     return false;
                 }
             }
@@ -280,7 +280,7 @@ class ConfigurationTestCore
 
     public static function test_file($file_relative)
     {
-        $file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $file_relative;
+        $file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
 
         return file_exists($file) && is_writable($file);
     }
@@ -357,8 +357,8 @@ class ConfigurationTestCore
 
     public static function test_theme_lang_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        if (! file_exists($absoluteDir)) {
             return true;
         }
 
@@ -367,8 +367,8 @@ class ConfigurationTestCore
 
     public static function test_theme_pdf_lang_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        if (! file_exists($absoluteDir)) {
             return true;
         }
 
@@ -377,8 +377,8 @@ class ConfigurationTestCore
 
     public static function test_theme_cache_dir($dir)
     {
-        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
+        $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
+        if (! file_exists($absoluteDir)) {
             return true;
         }
 
@@ -407,7 +407,7 @@ class ConfigurationTestCore
 
     public static function test_sessions()
     {
-        if (!$path = @ini_get('session.save_path')) {
+        if (! $path = @ini_get('session.save_path')) {
             return true;
         }
 
@@ -423,7 +423,7 @@ class ConfigurationTestCore
     {
         $return = [];
         foreach (ConfigurationTest::$test_files as $file) {
-            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR) . str_replace('/', DIRECTORY_SEPARATOR, $file))) {
+            if (! file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {
                     $return[] = $file;
                 } else {

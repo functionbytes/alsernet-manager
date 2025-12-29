@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,11 +27,15 @@
 class WebserviceExceptionCore extends Exception
 {
     protected $status;
+
     protected $wrong_value;
+
     protected $available_values;
+
     protected $type;
 
     const SIMPLE = 0;
+
     const DID_YOU_MEAN = 1;
 
     public function __construct($message, $code)

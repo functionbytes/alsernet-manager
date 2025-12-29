@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,8 +31,11 @@ abstract class PaymentModuleCore extends Module
 {
     /** @var int Current order's id */
     public $currentOrder;
+
     public $currentOrderReference;
+
     public $currencies = true;
+
     public $currencies_mode = 'checkbox';
 
     const DEBUG_MODE = false;
@@ -41,17 +45,17 @@ abstract class PaymentModuleCore extends Module
 
     public function install()
     {
-        if (!parent::install()) {
+        if (! parent::install()) {
             return false;
         }
 
         // Insert currencies availability
         if ($this->currencies_mode == 'checkbox') {
-            if (!$this->addCheckboxCurrencyRestrictionsForModule()) {
+            if (! $this->addCheckboxCurrencyRestrictionsForModule()) {
                 return false;
             }
         } elseif ($this->currencies_mode == 'radio') {
-            if (!$this->addRadioCurrencyRestrictionsForModule()) {
+            if (! $this->addRadioCurrencyRestrictionsForModule()) {
                 return false;
             }
         } else {
@@ -64,17 +68,17 @@ abstract class PaymentModuleCore extends Module
         // Insert carrier availability
         $return &= $this->addCheckboxCarrierRestrictionsForModule();
 
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_FIXED')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_FIXED', '0.2');
+        if (! Configuration::get('CONF_'.strtoupper($this->name).'_FIXED')) {
+            Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_VAR')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_VAR', '2');
+        if (! Configuration::get('CONF_'.strtoupper($this->name).'_VAR')) {
+            Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR', '2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_FIXED_FOREIGN')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_FIXED_FOREIGN', '0.2');
+        if (! Configuration::get('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN')) {
+            Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_VAR_FOREIGN')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_VAR_FOREIGN', '2');
+        if (! Configuration::get('CONF_'.strtoupper($this->name).'_VAR_FOREIGN')) {
+            Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR_FOREIGN', '2');
         }
 
         return $return;
@@ -82,10 +86,10 @@ abstract class PaymentModuleCore extends Module
 
     public function uninstall()
     {
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_country` WHERE id_module = ' . (int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_currency` WHERE id_module = ' . (int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_group` WHERE id_module = ' . (int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE id_module = ' . (int) $this->id)) {
+        if (! Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int) $this->id)
+            || ! Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int) $this->id)
+            || ! Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int) $this->id)
+            || ! Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_carrier` WHERE id_module = '.(int) $this->id)) {
             return false;
         }
 
@@ -95,20 +99,19 @@ abstract class PaymentModuleCore extends Module
     /**
      * Add checkbox currency restrictions for a new module.
      *
-     * @param array $shops
      *
      * @return bool
      */
     public function addCheckboxCurrencyRestrictionsForModule(array $shops = [])
     {
-        if (!$shops) {
+        if (! $shops) {
             $shops = Shop::getShops(true, null, true);
         }
 
         foreach ($shops as $s) {
-            if (!Db::getInstance()->execute('
-                    INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`)
-                    SELECT ' . (int) $this->id . ', "' . (int) $s . '", `id_currency` FROM `' . _DB_PREFIX_ . 'currency` WHERE deleted = 0')) {
+            if (! Db::getInstance()->execute('
+                    INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
+                    SELECT '.(int) $this->id.', "'.(int) $s.'", `id_currency` FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0')) {
                 return false;
             }
         }
@@ -119,19 +122,18 @@ abstract class PaymentModuleCore extends Module
     /**
      * Add radio currency restrictions for a new module.
      *
-     * @param array $shops
      *
      * @return bool
      */
     public function addRadioCurrencyRestrictionsForModule(array $shops = [])
     {
-        if (!$shops) {
+        if (! $shops) {
             $shops = Shop::getShops(true, null, true);
         }
 
         foreach ($shops as $s) {
-            if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`)
-                VALUES (' . (int) $this->id . ', "' . (int) $s . '", -2)')) {
+            if (! Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
+                VALUES ('.(int) $this->id.', "'.(int) $s.'", -2)')) {
                 return false;
             }
         }
@@ -142,13 +144,12 @@ abstract class PaymentModuleCore extends Module
     /**
      * Add checkbox country restrictions for a new module.
      *
-     * @param array $shops
      *
      * @return bool
      */
     public function addCheckboxCountryRestrictionsForModule(array $shops = [])
     {
-        $countries = Country::getCountries((int) Context::getContext()->language->id, true); //get only active country
+        $countries = Country::getCountries((int) Context::getContext()->language->id, true); // get only active country
         $country_ids = [];
         foreach ($countries as $country) {
             $country_ids[] = $country['id_country'];
@@ -160,13 +161,12 @@ abstract class PaymentModuleCore extends Module
     /**
      * Add checkbox carrier restrictions for a new module.
      *
-     * @param array $shops
      *
      * @return bool
      */
     public function addCheckboxCarrierRestrictionsForModule(array $shops = [])
     {
-        if (!$shops) {
+        if (! $shops) {
             $shops = Shop::getShops(true, null, true);
         }
 
@@ -178,8 +178,8 @@ abstract class PaymentModuleCore extends Module
 
         foreach ($shops as $s) {
             foreach ($carrier_ids as $id_carrier) {
-                if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_carrier` (`id_module`, `id_shop`, `id_reference`)
-				VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
+                if (! Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_carrier` (`id_module`, `id_shop`, `id_reference`)
+				VALUES ('.(int) $this->id.', "'.(int) $s.'", '.(int) $id_carrier.')')) {
                     return false;
                 }
             }
@@ -192,17 +192,15 @@ abstract class PaymentModuleCore extends Module
      * Validate an order in database
      * Function called from a payment module.
      *
-     * @param int $id_cart
-     * @param int $id_order_state
-     * @param float $amount_paid Amount really paid by customer (in the default currency)
-     * @param string $payment_method Payment method (eg. 'Credit card')
-     * @param string|null $message Message to attach to order
-     * @param array $extra_vars
-     * @param int|null $currency_special
-     * @param bool $dont_touch_amount
-     * @param string|bool $secure_key
-     * @param Shop $shop
-     *
+     * @param  int  $id_cart
+     * @param  int  $id_order_state
+     * @param  float  $amount_paid  Amount really paid by customer (in the default currency)
+     * @param  string  $payment_method  Payment method (eg. 'Credit card')
+     * @param  string|null  $message  Message to attach to order
+     * @param  array  $extra_vars
+     * @param  int|null  $currency_special
+     * @param  bool  $dont_touch_amount
+     * @param  string|bool  $secure_key
      * @return bool
      *
      * @throws PrestaShopException
@@ -217,13 +215,13 @@ abstract class PaymentModuleCore extends Module
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        ?Shop $shop = null
     ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
 
-        if (!isset($this->context)) {
+        if (! isset($this->context)) {
             $this->context = Context::getContext();
         }
 
@@ -242,22 +240,22 @@ abstract class PaymentModuleCore extends Module
         }
 
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
-        if (!Validate::isLoadedObject($order_status)) {
+        if (! Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
 
             throw new PrestaShopException('Can\'t load Order status');
         }
 
-        if (!$this->active) {
+        if (! $this->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int) $id_cart, true);
-            die(Tools::displayError());
+            exit(Tools::displayError());
         }
 
         // Does order already exists ?
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false) {
             if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
-                die(Tools::displayError());
+                exit(Tools::displayError());
             }
 
             // For each package, generate an order
@@ -267,7 +265,7 @@ abstract class PaymentModuleCore extends Module
 
             // If some delivery options are not defined, or not valid, use the first valid option
             foreach ($delivery_option_list as $id_address => $package) {
-                if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package)) {
+                if (! isset($cart_delivery_option[$id_address]) || ! array_key_exists($cart_delivery_option[$id_address], $package)) {
                     foreach ($package as $key => $val) {
                         $cart_delivery_option[$id_address] = $key;
 
@@ -306,8 +304,8 @@ abstract class PaymentModuleCore extends Module
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
-                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
-                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
+                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && ! empty($rule->code)) {
+                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                             $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [$rule_name, (int) $rule->id], 'Admin.Payment.Notification');
@@ -357,7 +355,7 @@ abstract class PaymentModuleCore extends Module
                 $this->context->country = $context_country;
             }
 
-            if (!$this->context->country->active) {
+            if (! $this->context->country->active) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
 
                 throw new PrestaShopException('The order address country is not active.');
@@ -378,7 +376,7 @@ abstract class PaymentModuleCore extends Module
                     $transaction_id = null;
                 }
 
-                if (!isset($order) || !$order->addOrderPayment($amount_paid, null, $transaction_id)) {
+                if (! isset($order) || ! $order->addOrderPayment($amount_paid, null, $transaction_id)) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int) $id_cart, true);
 
                     throw new PrestaShopException('Can\'t save Order Payment');
@@ -395,12 +393,12 @@ abstract class PaymentModuleCore extends Module
                 /** @var OrderDetail $order_detail */
                 $order = $order_list[$key];
                 if (isset($order->id)) {
-                    if (!$secure_key) {
-                        $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
+                    if (! $secure_key) {
+                        $message .= '<br />'.$this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
                     }
                     // Optional message to attach to this order
-                    if (!empty($message)) {
-                        $msg = new Message();
+                    if (! empty($message)) {
+                        $msg = new Message;
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
                             if (self::DEBUG_MODE) {
@@ -416,8 +414,8 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     // Insert new Order detail list using cart for the current order
-                    //$orderDetail = new OrderDetail(null, null, $this->context);
-                    //$orderDetail->createList($order, $this->context->cart, $id_order_state);
+                    // $orderDetail = new OrderDetail(null, null, $this->context);
+                    // $orderDetail->createList($order, $this->context->cart, $id_order_state);
 
                     // Construct order detail table for the email
                     $products_list = '';
@@ -434,7 +432,7 @@ abstract class PaymentModuleCore extends Module
                             'id_product' => $product['id_product'],
                             'id_product_attribute' => $product['id_product_attribute'],
                             'reference' => $product['reference'],
-                            'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                            'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                             'quantity' => $product['quantity'],
                             'customization' => [],
@@ -443,7 +441,7 @@ abstract class PaymentModuleCore extends Module
                         if (isset($product['price']) && $product['price']) {
                             $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code);
                             $product_var_tpl['unit_price_full'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code)
-                                . ' ' . $product['unity'];
+                                .' '.$product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
                         }
@@ -455,12 +453,12 @@ abstract class PaymentModuleCore extends Module
                                 $customization_text = '';
                                 if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                                     foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                        $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
+                                        $customization_text .= '<strong>'.$text['name'].'</strong>: '.$text['value'].'<br />';
                                     }
                                 }
 
                                 if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                                    $customization_text .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
+                                    $customization_text .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification').'<br />';
                                 }
 
                                 $customization_quantity = (int) $customization['quantity'];
@@ -475,7 +473,7 @@ abstract class PaymentModuleCore extends Module
 
                         $product_var_tpl_list[] = $product_var_tpl;
                         // Check if is not a virtual product for the displaying of shipping
-                        if (!$product['is_virtual']) {
+                        if (! $product['is_virtual']) {
                             $virtual_product &= false;
                         }
                     } // end foreach ($inventaries)
@@ -508,13 +506,13 @@ abstract class PaymentModuleCore extends Module
 
                     // Specify order id for message
                     $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
-                    if ($old_message && !$old_message['private']) {
+                    if ($old_message && ! $old_message['private']) {
                         $update_message = new Message((int) $old_message['id_message']);
                         $update_message->id_order = (int) $order->id;
                         $update_message->update();
 
                         // Add this message in the customer thread
-                        $customer_thread = new CustomerThread();
+                        $customer_thread = new CustomerThread;
                         $customer_thread->id_contact = 0;
                         $customer_thread->id_customer = (int) $order->id_customer;
                         $customer_thread->id_shop = (int) $this->context->shop->id;
@@ -525,13 +523,13 @@ abstract class PaymentModuleCore extends Module
                         $customer_thread->token = Tools::passwdGen(12);
                         $customer_thread->add();
 
-                        $customer_message = new CustomerMessage();
+                        $customer_message = new CustomerMessage;
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
                         $customer_message->private = 0;
 
-                        if (!$customer_message->add()) {
+                        if (! $customer_message->add()) {
                             $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
                         }
                     }
@@ -560,7 +558,7 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     // Set the order status
-                    $new_history = new OrderHistory();
+                    $new_history = new OrderHistory;
                     $new_history->id_order = (int) $order->id;
                     $new_history->changeIdOrderState((int) $id_order_state, $order, true);
                     $new_history->addWithemail(true, $extra_vars);
@@ -569,7 +567,7 @@ abstract class PaymentModuleCore extends Module
                     if (Configuration::get('PS_STOCK_MANAGEMENT') &&
                             ($order_detail->getStockState() ||
                             $order_detail->product_quantity_in_stock < 0)) {
-                        $history = new OrderHistory();
+                        $history = new OrderHistory;
                         $history->id_order = (int) $order->id;
                         $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
                         $history->addWithemail();
@@ -598,7 +596,7 @@ abstract class PaymentModuleCore extends Module
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
-                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
+                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
                             $file_attachement['mime'] = 'application/pdf';
                             $this->context->language = $currentLanguage;
                             $this->context->getTranslator()->setLocale($currentLanguage->locale);
@@ -651,8 +649,8 @@ abstract class PaymentModuleCore extends Module
                                 '{order_name}' => $order->getUniqReference(),
                                 '{id_order}' => $order->id,
                                 '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-                                '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
-                                '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
+                                '{carrier}' => ($virtual_product || ! isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
+                                '{payment}' => Tools::substr($order->payment, 0, 255).($order->hasBeenPaid() ? '' : '&nbsp;'.$this->trans('(waiting for validation)', [], 'Emails.Body')),
                                 '{inventaries}' => $product_list_html,
                                 '{products_txt}' => $product_list_txt,
                                 '{discounts}' => $cart_rules_list_html,
@@ -682,7 +680,7 @@ abstract class PaymentModuleCore extends Module
                                 ),
                                 $data,
                                 $this->context->customer->email,
-                                $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
+                                $this->context->customer->firstname.' '.$this->context->customer->lastname,
                                 null,
                                 null,
                                 $file_attachement,
@@ -709,7 +707,7 @@ abstract class PaymentModuleCore extends Module
                     $order->updateOrderDetailTax();
 
                     // sync all stock
-                    (new StockManager())->updatePhysicalProductQuantity(
+                    (new StockManager)->updatePhysicalProductQuantity(
                         (int) $order->id_shop,
                         (int) Configuration::get('PS_OS_ERROR'),
                         (int) Configuration::get('PS_OS_CANCELED'),
@@ -719,7 +717,7 @@ abstract class PaymentModuleCore extends Module
                 } else {
                     $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
-                    die(Tools::displayError($error));
+                    exit(Tools::displayError($error));
                 }
             } // End foreach $order_detail_list
 
@@ -736,15 +734,14 @@ abstract class PaymentModuleCore extends Module
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
-            die(Tools::displayError($error));
+            exit(Tools::displayError($error));
         }
     }
 
     /**
      * @deprecated 1.6.0.7
      *
-     * @param mixed $content
-     *
+     * @param  mixed  $content
      * @return mixed
      */
     public function formatProductAndVoucherForEmail($content)
@@ -755,8 +752,7 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param Address $the_address that needs to be txt formatted
-     *
+     * @param  Address  $the_address  that needs to be txt formatted
      * @return string the txt formatted address block
      */
     protected function _getTxtFormatedAddress($the_address)
@@ -779,9 +775,8 @@ abstract class PaymentModuleCore extends Module
 
     /**
      * @param Address Address $the_address that needs to be txt formatted
-     * @param string $line_sep
-     * @param array $fields_style
-     *
+     * @param  string  $line_sep
+     * @param  array  $fields_style
      * @return string the txt formated address block
      */
     protected function _getFormatedAddress(Address $the_address, $line_sep, $fields_style = [])
@@ -790,17 +785,16 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param int $current_id_currency
-     *
+     * @param  int  $current_id_currency
      * @return Currency|array|false
      */
     public function getCurrency($current_id_currency = null)
     {
-        if (!(int) $current_id_currency) {
+        if (! (int) $current_id_currency) {
             $current_id_currency = Context::getContext()->currency->id;
         }
 
-        if (!$this->currencies) {
+        if (! $this->currencies) {
             return false;
         }
         if ($this->currencies_mode == 'checkbox') {
@@ -818,7 +812,7 @@ abstract class PaymentModuleCore extends Module
                 $id_currency = $currency;
             }
         }
-        if (!isset($id_currency) || empty($id_currency)) {
+        if (! isset($id_currency) || empty($id_currency)) {
             return false;
         }
 
@@ -830,9 +824,7 @@ abstract class PaymentModuleCore extends Module
      *
      * @since 1.4.5
      *
-     * @param int $id_currency
-     * @param array $id_module_list
-     *
+     * @param  int  $id_currency
      * @return bool
      */
     public static function addCurrencyPermissions($id_currency, array $id_module_list = [])
@@ -847,13 +839,13 @@ abstract class PaymentModuleCore extends Module
         }
 
         foreach ($id_module_list as $id_module) {
-            $values .= '(' . (int) $id_module . ',' . (int) $id_currency . '),';
+            $values .= '('.(int) $id_module.','.(int) $id_currency.'),';
         }
 
-        if (!empty($values)) {
+        if (! empty($values)) {
             return Db::getInstance()->execute('
-            INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_currency`)
-            VALUES ' . rtrim($values, ','));
+            INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
+            VALUES '.rtrim($values, ','));
         }
 
         return true;
@@ -870,29 +862,29 @@ abstract class PaymentModuleCore extends Module
     public static function getInstalledPaymentModules()
     {
         $hook_payment = 'Payment';
-        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `' . _DB_PREFIX_ . 'hook` WHERE `name` = \'paymentOptions\'')) {
+        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'paymentOptions\'')) {
             $hook_payment = 'paymentOptions';
         }
 
         return Db::getInstance()->executeS('
         SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-        FROM `' . _DB_PREFIX_ . 'module` m
-        LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`'
-        . Shop::addSqlRestriction(false, 'hm') . '
-        LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
-        INNER JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop=' . (int) Context::getContext()->shop->id . ')
-        WHERE h.`name` = \'' . pSQL($hook_payment) . '\'');
+        FROM `'._DB_PREFIX_.'module` m
+        LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
+        .Shop::addSqlRestriction(false, 'hm').'
+        LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+        INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int) Context::getContext()->shop->id.')
+        WHERE h.`name` = \''.pSQL($hook_payment).'\'');
     }
 
     public static function preCall($module_name)
     {
-        if (!parent::preCall($module_name)) {
+        if (! parent::preCall($module_name)) {
             return false;
         }
 
         if (($module_instance = Module::getInstanceByName($module_name))) {
             /** @var PaymentModule $module_instance */
-            if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {
+            if (! $module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {
                 return true;
             }
         }
@@ -905,7 +897,7 @@ abstract class PaymentModuleCore extends Module
      */
     protected function getPartialRenderer()
     {
-        if (!$this->partialRenderer) {
+        if (! $this->partialRenderer) {
             $this->partialRenderer = new MailPartialTemplateRenderer($this->context->smarty);
         }
 
@@ -917,10 +909,9 @@ abstract class PaymentModuleCore extends Module
      * current_theme/mails/current_iso_lang/ if found, otherwise in
      * mails/current_iso_lang.
      *
-     * @param string $template_name template name with extension
-     * @param int $mail_type Mail::TYPE_HTML or Mail::TYPE_TEXT
-     * @param array $var sent to smarty as 'list'
-     *
+     * @param  string  $template_name  template name with extension
+     * @param  int  $mail_type  Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param  array  $var  sent to smarty as 'list'
      * @return string
      */
     protected function getEmailTemplateContent($template_name, $mail_type, $var)
@@ -952,7 +943,7 @@ abstract class PaymentModuleCore extends Module
         $id_order_state,
         $carrierId = null
     ) {
-        $order = new Order();
+        $order = new Order;
         $order->product_list = $productList;
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
@@ -960,13 +951,13 @@ abstract class PaymentModuleCore extends Module
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
             $address = new Address((int) $addressId);
             $context->country = new Country((int) $address->id_country, (int) $cart->id_lang);
-            if (!$context->country->active) {
+            if (! $context->country->active) {
                 throw new PrestaShopException('The delivery address country is not active.');
             }
         }
 
         $carrier = null;
-        if (!$cart->isVirtualCart() && isset($carrierId)) {
+        if (! $cart->isVirtualCart() && isset($carrierId)) {
             $carrier = new Carrier((int) $carrierId, (int) $cart->id_lang);
             $order->id_carrier = (int) $carrier->id;
             $carrierId = (int) $carrier->id;
@@ -995,7 +986,7 @@ abstract class PaymentModuleCore extends Module
         $order->gift_message = $cart->gift_message;
         $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
-        $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, $computingPrecision) : $amount_paid;
+        $amount_paid = ! $dont_touch_amount ? Tools::ps_round((float) $amount_paid, $computingPrecision) : $amount_paid;
         $order->total_paid_real = 0;
 
         $order->total_products = Tools::ps_round(
@@ -1026,7 +1017,7 @@ abstract class PaymentModuleCore extends Module
         );
         $order->total_shipping = $order->total_shipping_tax_incl;
 
-        if (null !== $carrier && Validate::isLoadedObject($carrier)) {
+        if ($carrier !== null && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }
 
@@ -1062,7 +1053,7 @@ abstract class PaymentModuleCore extends Module
         // Creating order
         $result = $order->add();
 
-        if (!$result) {
+        if (! $result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
             throw new PrestaShopException('Can\'t save Order');
         }
@@ -1096,8 +1087,8 @@ abstract class PaymentModuleCore extends Module
         }
 
         // Adding an entry in order_carrier table
-        if (null !== $carrier) {
-            $order_carrier = new OrderCarrier();
+        if ($carrier !== null) {
+            $order_carrier = new OrderCarrier;
             $order_carrier->id_order = (int) $order->id;
             $order_carrier->id_carrier = $carrierId;
             $order_carrier->weight = (float) $order->getTotalWeight();
@@ -1135,7 +1126,7 @@ abstract class PaymentModuleCore extends Module
             ];
 
             // If the reduction is not applicable to this order, then continue with the next one
-            if (!$values['tax_excl']) {
+            if (! $values['tax_excl']) {
                 continue;
             }
 
@@ -1162,9 +1153,9 @@ abstract class PaymentModuleCore extends Module
                 unset($voucher->id);
 
                 // Set a new voucher code
-                $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cartRule->id), 0, 16) : $voucher->code . '-2';
+                $voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cartRule->id), 0, 16) : $voucher->code.'-2';
                 if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                    $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
+                    $voucher->code = preg_replace('/'.$matches[0].'$/', '-'.(intval($matches[1]) + 1), $voucher->code);
                 }
 
                 // Set the new voucher value
@@ -1217,14 +1208,14 @@ abstract class PaymentModuleCore extends Module
                         ),
                         $params,
                         $this->context->customer->email,
-                        $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
+                        $this->context->customer->firstname.' '.$this->context->customer->lastname,
                         null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
                     );
                 }
 
                 $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
                 $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
-                if (1 == $voucher->free_shipping) {
+                if ($voucher->free_shipping == 1) {
                     $values['tax_incl'] += $order->total_shipping_tax_incl;
                     $values['tax_excl'] += $order->total_shipping_tax_excl;
                 }
@@ -1234,7 +1225,7 @@ abstract class PaymentModuleCore extends Module
 
             $order->addCartRule($cartRule->id, $cartRule->name, $values, 0, $cartRule->free_shipping);
 
-            if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cartRule->id, $cart_rule_used)) {
+            if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && ! in_array($cartRule->id, $cart_rule_used)) {
                 $cart_rule_used[] = $cartRule->id;
 
                 // Create a new instance of Cart Rule without id_lang, in order to update its quantity
@@ -1245,7 +1236,7 @@ abstract class PaymentModuleCore extends Module
 
             $cart_rules_list[] = [
                 'voucher_name' => $cartRule->name,
-                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code),
+                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '').Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code),
             ];
         }
 

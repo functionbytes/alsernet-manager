@@ -27,6 +27,7 @@
 class PrestashopAssetsLibraries
 {
     const css = 'registerStylesheet';
+
     const js = 'registerJavascript';
 
     /**
@@ -50,8 +51,7 @@ class PrestashopAssetsLibraries
     /**
      * Get Library files from name.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return bool|mixed
      */
     public static function getAssetsLibraries($name)

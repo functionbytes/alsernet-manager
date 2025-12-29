@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers\Campaigns\Maillists;
 
 use App\Http\Controllers\Controller;
-use App\Models\Campaign\CampaignMaillist;
 use Illuminate\Http\Request;
+use Modules\Campaign\Entities\CampaignMaillist;
 
 class SegmentController extends Controller
 {

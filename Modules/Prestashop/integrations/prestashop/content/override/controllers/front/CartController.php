@@ -4,7 +4,6 @@ use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 
 class CartController extends CartControllerCore
 {
-
     // public function init()
     // {
     //     parent::init();
@@ -49,7 +48,6 @@ class CartController extends CartControllerCore
     //     }
     // }
 
-
     public function displayAjaxRefresh()
     {
         if (Configuration::isCatalogMode()) {
@@ -72,7 +70,6 @@ class CartController extends CartControllerCore
         ]));
     }
 
-
     public function initContent()
     {
 
@@ -82,9 +79,8 @@ class CartController extends CartControllerCore
             Tools::redirect('index.php');
         }
 
-        $presenter = new CartPresenter();
-        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true,$this->context->language->id);
-
+        $presenter = new CartPresenter;
+        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true, $this->context->language->id);
 
         $this->context->smarty->assign([
             'PS_CONDITIONS_CMS_ID' => Configuration::get('PS_CONDITIONS_CMS_ID'),
@@ -95,22 +91,22 @@ class CartController extends CartControllerCore
 
         $suma_descuentos = 0;
         foreach ($presented_cart['inventaries'] as $producto) {
-            $suma_descuentos += $producto['quantity_wanted']*(float)$producto['reduction'];
+            $suma_descuentos += $producto['quantity_wanted'] * (float) $producto['reduction'];
         }
         $this->context->smarty->assign([
             'suma_descuentos' => $suma_descuentos,
         ]);
-        if (!Context::getContext()->cookie->id_cart || !$this->context->cart->id) {
+        if (! Context::getContext()->cookie->id_cart || ! $this->context->cart->id) {
             AddisLogger::log(__FILE__, __FUNCTION__, null, 'No tengo ID de carrito en la cookie');
             if (Context::getContext()->customer->logged) {
-                $sql = "SELECT id_cart FROM "._DB_PREFIX_."cart WHERE id_customer = ".Context::getContext()->customer->id." ORDER BY id_cart DESC";
+                $sql = 'SELECT id_cart FROM '._DB_PREFIX_.'cart WHERE id_customer = '.Context::getContext()->customer->id.' ORDER BY id_cart DESC';
                 AddisLogger::log(__FILE__, __FUNCTION__, null, 'SQL: '.$sql);
                 $id_carrito_recu = Db::getInstance()->getValue($sql);
             } else {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest(Context::getContext()->cookie->id_guest);
                     $this->context->cart->mobile_theme = $guest->mobile_theme;
-                    $sql = "SELECT id_cart FROM "._DB_PREFIX_."cart WHERE id_guest = ".Context::getContext()->cookie->id_guest." ORDER BY id_cart DESC";
+                    $sql = 'SELECT id_cart FROM '._DB_PREFIX_.'cart WHERE id_guest = '.Context::getContext()->cookie->id_guest.' ORDER BY id_cart DESC';
                     $id_carrito_recu = Db::getInstance()->getValue($sql);
                 }
             }
@@ -135,7 +131,6 @@ class CartController extends CartControllerCore
             $this->setTemplate('checkout/cart-empty');
         }
     }
-
 
     public function postProcess()
     {
@@ -168,11 +163,12 @@ class CartController extends CartControllerCore
         }
         parent::postProcess();
     }
+
     protected function customShouldAvailabilityErrorBeRaised($product, $id_product_attribute, $customization_id, $qtyToCheck)
     {
         if (($id_product_attribute)) {
-            return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
-                && !Attribute::checkAttributeQty($id_product_attribute, $qtyToCheck);
+            return ! Product::isAvailableWhenOutOfStock($product->out_of_stock)
+                && ! Attribute::checkAttributeQty($id_product_attribute, $qtyToCheck);
         } elseif (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
             return false;
         }
@@ -190,17 +186,19 @@ class CartController extends CartControllerCore
             $this->context->cart,
             $customization_id
         );
+
         return $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock < 0;
     }
+
     protected function processChangeProductInCart()
     {
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
-        $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
+        $ErrorKey = ($mode === 'update') ? 'updateOperationError' : 'errors';
         $logger = new FileLogger(0);
-        $logger->setFilename(_PS_ROOT_DIR_."/log/debug.log");
-        if(Tools::getValue('tr') == 1 || Tools::getValue('tipo_tr') == 1){
-            if (!isset($this->context->cart->id) || !$this->context->cart->id) {
-                $this->context->cart = new Cart();
+        $logger->setFilename(_PS_ROOT_DIR_.'/log/debug.log');
+        if (Tools::getValue('tr') == 1 || Tools::getValue('tipo_tr') == 1) {
+            if (! isset($this->context->cart->id) || ! $this->context->cart->id) {
+                $this->context->cart = new Cart;
                 $this->context->cart->id_lang = $this->context->cookie->id_lang;
                 $this->context->cart->id_currency = $this->context->cookie->id_currency;
                 $this->context->cart->id_customer = $this->context->cookie->id_customer;
@@ -209,7 +207,7 @@ class CartController extends CartControllerCore
                 $this->context->cookie->__set('id_cart', $this->context->cart->id);
                 $this->context->cookie->write();
                 $this->customization_id = ProductController::textRecordTr(new Product($this->id_product), $this->context->cart);
-            }else{
+            } else {
                 $this->customization_id = ProductController::textRecordTr(new Product($this->id_product), $this->context->cart);
             }
             if ($this->customization_id['9'] == 'nombre_incorrecto') {
@@ -243,7 +241,7 @@ class CartController extends CartControllerCore
                 [],
                 'Shop.Notifications.Error'
             );
-        } elseif (!$this->id_product) {
+        } elseif (! $this->id_product) {
             $this->{$ErrorKey}[] = $this->trans(
                 'Product not found',
                 [],
@@ -251,20 +249,21 @@ class CartController extends CartControllerCore
             );
         }
         $product = new Product($this->id_product, true, $this->context->language->id);
-        if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
+        if (! $product->id || ! $product->active || ! $product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'This product (%product%) is no longer available.',
                 ['%product%' => $product->name],
                 'Shop.Notifications.Error'
             );
+
             return;
         }
-        if (!$this->id_product_attribute && $product->hasAttributes()) {
+        if (! $this->id_product_attribute && $product->hasAttributes()) {
             $minimum_quantity = ($product->out_of_stock == 2)
-                ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
-                : !$product->out_of_stock;
+                ? ! Configuration::get('PS_ORDER_OUT_OF_STOCK')
+                : ! $product->out_of_stock;
             $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
-            if (!$this->id_product_attribute) {
+            if (! $this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             }
         }
@@ -284,21 +283,21 @@ class CartController extends CartControllerCore
             }
         }
 
-
-        if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+        if ($mode !== 'update' && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'The product is no longer available in this quantity. Prod: %product%',
                 ['%product%' => $product->name],
                 'Shop.Notifications.Error'
             );
         }
-        if (!$this->id_product_attribute) {
+        if (! $this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->trans(
                     'The minimum purchase order quantity for the product %product% is %quantity%.',
                     ['%product%' => $product->name, '%quantity%' => $product->minimal_quantity],
                     'Shop.Notifications.Error'
                 );
+
                 return;
             }
         } else {
@@ -309,11 +308,12 @@ class CartController extends CartControllerCore
                     ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
                     'Shop.Notifications.Error'
                 );
+
                 return;
             }
         }
-        if (!$this->errors) {
-            if (!$this->context->cart->id) {
+        if (! $this->errors) {
+            if (! $this->context->cart->id) {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest(Context::getContext()->cookie->id_guest);
                     $this->context->cart->mobile_theme = $guest->mobile_theme;
@@ -323,7 +323,7 @@ class CartController extends CartControllerCore
                     $this->context->cookie->id_cart = (int) $this->context->cart->id;
                 }
             }
-            if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
+            if (! $product->hasAllRequiredCustomizableFields() && ! $this->customization_id) {
                 $this->{$ErrorKey}[] = $this->trans(
                     'Please fill in all of the required fields, and then save your customizations.',
                     [],
@@ -339,9 +339,7 @@ class CartController extends CartControllerCore
                 );
                 $this->context->cart->deleteProduct($product->id, $this->id_product_attribute, $this->customization_id);
             }
-            if (!$this->errors) {
-
-
+            if (! $this->errors) {
 
                 $precio = 0;
                 if (Tools::getValue('current-price-value') > 0) {
@@ -360,8 +358,6 @@ class CartController extends CartControllerCore
                     $precio
                 );
 
-
-
                 if ($update_quantity < 0) {
                     $minimal_quantity = ($this->id_product_attribute)
                         ? Attribute::getAttributeMinimalQty($this->id_product_attribute)
@@ -371,7 +367,7 @@ class CartController extends CartControllerCore
                         ['%quantity%' => $minimal_quantity],
                         'Shop.Notifications.Error'
                     );
-                } elseif (!$update_quantity) {
+                } elseif (! $update_quantity) {
                     $this->errors[] = $this->trans(
                         'You already have the maximum quantity available for this product. Prod: %product%',
                         ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
@@ -393,16 +389,16 @@ class CartController extends CartControllerCore
             }
         }
 
-
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
+
     protected function updateCart()
     {
 
         if ($this->context->cookie->exists()
-            && !$this->errors
-            && !($this->context->customer->isLogged() && !$this->isTokenValid())
+            && ! $this->errors
+            && ! ($this->context->customer->isLogged() && ! $this->isTokenValid())
         ) {
             if (Tools::getIsset('add') || Tools::getIsset('update')) {
                 $this->processChangeProductInCart();
@@ -410,7 +406,7 @@ class CartController extends CartControllerCore
                 $this->processDeleteProductInCart();
             } elseif (CartRule::isFeatureActive()) {
                 if (Tools::getIsset('addDiscount') || Tools::getIsset('searchcoupon')) {
-                    if (!($code = trim((Tools::getValue('discount_name') ? Tools::getValue('discount_name') : Tools::getValue('coupon'))))) {
+                    if (! ($code = trim((Tools::getValue('discount_name') ? Tools::getValue('discount_name') : Tools::getValue('coupon'))))) {
                         $this->errors[] = $this->trans(
                             'You must enter a voucher code.',
                             [],
@@ -418,8 +414,8 @@ class CartController extends CartControllerCore
                         );
                     }
                     if ($this->context->cart->canApplyCartRule()) {
-                        if (!($verifcode = trim(Tools::getValue('verif_name')))) {
-                            if (!Validate::isCleanHtml($code)) {
+                        if (! ($verifcode = trim(Tools::getValue('verif_name')))) {
+                            if (! Validate::isCleanHtml($code)) {
                                 $this->errors[] = $this->trans(
                                     'The voucher code is invalid.',
                                     [],
@@ -427,22 +423,22 @@ class CartController extends CartControllerCore
                                 );
                             } else {
                                 if (Module::isEnabled('quantitydiscountpro')) {
-                                    include_once(_PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php');
-                                    $quantityDiscount = new QuantityDiscountRule();
+                                    include_once _PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php';
+                                    $quantityDiscount = new QuantityDiscountRule;
                                     if (($quantityDiscount = new quantityDiscountRule(QuantityDiscountRule::getQuantityDiscountRuleByCode($code))) && Validate::isLoadedObject($quantityDiscount)) {
                                         if ($quantityDiscount->createAndRemoveRules($code) !== true) {
-                                            $this->errors[] = $this->trans('The voucher code is invalid.', array(), 'Shop.Notifications.Error');
+                                            $this->errors[] = $this->trans('The voucher code is invalid.', [], 'Shop.Notifications.Error');
                                         }
                                     } elseif (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule)) {
                                         if ($quantityDiscount->cartRuleGeneratedByAQuantityDiscountRuleCode($code)) {
-                                            $this->errors[] = $this->trans('The voucher code is invalid.', array(), 'Shop.Notifications.Error');
+                                            $this->errors[] = $this->trans('The voucher code is invalid.', [], 'Shop.Notifications.Error');
                                         } elseif ($error = $cartRule->checkValidity($this->context, false, true)) {
                                             $this->errors[] = $error;
                                         } else {
                                             $this->context->cart->addCartRule($cartRule->id);
                                         }
                                     } else {
-                                        $this->errors[] = $this->trans('This voucher does not exist.', array(), 'Shop.Notifications.Error');
+                                        $this->errors[] = $this->trans('This voucher does not exist.', [], 'Shop.Notifications.Error');
                                     }
                                 } else {
                                     if (($cartRule = new CartRule(CartRule::getIdByCode($code)))
@@ -476,7 +472,7 @@ class CartController extends CartControllerCore
                                         if (isset($bono['data']['estado_extendido']) && is_numeric($bono['data']['estado_extendido'])) {
                                             $estado_extendido = (int) $bono['data']['estado_extendido'];
                                             switch ($estado_extendido) {
-                                                case 0: //cupon anulado
+                                                case 0: // cupon anulado
                                                     $this->errors[] = $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
                                                     break;
                                                 case 1: // OK
@@ -513,16 +509,16 @@ class CartController extends CartControllerCore
                                                         }
                                                     }
                                                     $canUse = true;
-                                                    if (!empty($productsCart = $this->context->cart->getProducts())) {
+                                                    if (! empty($productsCart = $this->context->cart->getProducts())) {
                                                         foreach ($productsCart as $prod) {
-                                                            if (!empty($prod['is_virtual'])) {
+                                                            if (! empty($prod['is_virtual'])) {
                                                                 $canUse = false;
                                                                 break;
                                                             }
                                                         }
                                                     }
-                                                    if (!$canUse) {
-                                                        $this->errors[] = $this->trans('La Lotería no permite descuentos' , [], 'Shop.Notifications.Error');
+                                                    if (! $canUse) {
+                                                        $this->errors[] = $this->trans('La Lotería no permite descuentos', [], 'Shop.Notifications.Error');
                                                     } elseif (isset($bono['data']['importe']) && is_numeric($bono['data']['importe'])) {
                                                         $importe_cupon = (float) $bono['data']['importe'];
                                                         $cartRule = CartRule::createCartRuleAlvarez($code, $verifcode, $importe_cupon, $cart_total, $importe_minimo, $bono['data'], $this->context);
@@ -544,10 +540,10 @@ class CartController extends CartControllerCore
                                                         $general_error = true;
                                                     }
                                                     break;
-                                                case 2: //cupon consumido
+                                                case 2: // cupon consumido
                                                     $this->errors[] = $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
                                                     break;
-                                                case 3: //cupon caducado
+                                                case 3: // cupon caducado
                                                     $this->errors[] = $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
                                                     break;
                                             }
@@ -605,7 +601,7 @@ class CartController extends CartControllerCore
                     CartRule::autoAddToCart($this->context);
                 }
             }
-        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
+        } elseif (! $this->isTokenValid() && Tools::getValue('action') !== 'show' && ! Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
     }
@@ -713,18 +709,18 @@ class CartController extends CartControllerCore
         // }
 
         foreach ($products as $product) {
-            $currentProduct = new Product();
+            $currentProduct = new Product;
             $currentProduct->hydrate($product);
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->trans(
-                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     ['%product%' => $product['name']],
                     'Shop.Notifications.Error'
                 );
             }
         }
         $product = $this->context->cart->checkQuantities(true);
-        if (true === $product || !is_array($product)) {
+        if ($product === true || ! is_array($product)) {
             return true;
         }
         if ($product['active']) {
@@ -734,6 +730,7 @@ class CartController extends CartControllerCore
                 'Shop.Notifications.Error'
             );
         }
+
         return $this->trans(
             'This product (%product%) is no longer available.',
             ['%product%' => $product['name']],
@@ -860,8 +857,5 @@ class CartController extends CartControllerCore
     //         }
     //     }
     // }
-
-
-
 
 }

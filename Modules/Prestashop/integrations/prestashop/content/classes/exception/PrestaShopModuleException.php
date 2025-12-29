@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,6 +28,4 @@
 /**
  * @since 1.5.0
  */
-class PrestaShopModuleExceptionCore extends PrestaShopException
-{
-}
+class PrestaShopModuleExceptionCore extends PrestaShopException {}

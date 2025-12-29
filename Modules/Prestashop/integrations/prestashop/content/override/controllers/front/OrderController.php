@@ -139,8 +139,7 @@ class OrderController extends OrderControllerCore
 
     }
 
-
-    function getSportsByIdsAndTranslate()
+    public function getSportsByIdsAndTranslate()
     {
 
         $lang = $this->context->language->id;
@@ -230,16 +229,16 @@ class OrderController extends OrderControllerCore
 
         $sports_in_language = array_map(function ($id) use ($sports_map, $sports_translation_map, $lang) {
             $sport_name = $sports_map[$id];
+
             return [
                 'id' => $id,
                 'name' => $sports_translation_map[$lang][$sport_name] ?? $sport_name,
             ];
         }, $ids);
 
-
         return $sports_in_language;
     }
-    //public function initContent() {
+    // public function initContent() {
     //     parent::initContent();
 
     // $checkMinimumQtyMunition = $this->checkMinimumQtyMunition(null);
@@ -317,8 +316,8 @@ class OrderController extends OrderControllerCore
     {
         parent::bootstrap();
         if (Module::isEnabled('quantitydiscountpro') && Tools::getValue('action') == 'updateCarrier') {
-            include_once(_PS_MODULE_DIR_ . 'quantitydiscountpro/quantitydiscountpro.php');
-            $quantityDiscount = new QuantityDiscountRule();
+            include_once _PS_MODULE_DIR_.'quantitydiscountpro/quantitydiscountpro.php';
+            $quantityDiscount = new QuantityDiscountRule;
             $quantityDiscount->createAndRemoveRules();
         }
     }
@@ -334,7 +333,6 @@ class OrderController extends OrderControllerCore
      * JLP - 29/12/2022 - Por petición de Alvarez se modifica la forma de comprobar si un producto es cartucho/balin
      * cartucho: Subfamilia 100001670
      * balines: Grupo 100005302
-     *
      */
     // protected function checkMinimumQtyMunition($inventaries = null) {
     //     if (!$inventaries) {

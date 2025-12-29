@@ -22,7 +22,7 @@
 
 namespace Modules\Campaign\Entities;
 
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 /**

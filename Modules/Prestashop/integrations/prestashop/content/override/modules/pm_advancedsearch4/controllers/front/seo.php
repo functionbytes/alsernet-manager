@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page Cache Ultimate, Page Cache standard and Speed pack are powered by Jpresta (jpresta . com)
  *
@@ -6,8 +7,7 @@
  * @copyright Jpresta
  * @license   See the license of this module in file LICENSE.txt, thank you.
  */
-
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -32,10 +32,11 @@ class pm_advancedsearch4seoModuleFrontControllerOverride extends pm_advancedsear
      */
     public function getJprestaModelObjectId()
     {
-        $id_seo = (int)Tools::getValue('id_seo');
+        $id_seo = (int) Tools::getValue('id_seo');
         if ($id_seo && ($seoObj = new Seo($id_seo)) && Validate::isLoadedObject($seoObj)) {
             return $id_seo;
         }
+
         return null;
     }
 }

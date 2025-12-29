@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,10 +27,13 @@
 class HelperTreeShopsCore extends TreeCore
 {
     const DEFAULT_TEMPLATE = 'tree_shops.tpl';
+
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_checkbox_shops.tpl';
+
     const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_checkbox_shops.tpl';
 
     private $_lang;
+
     private $_selected_shops;
 
     public function __construct($id, $title = null, $lang = null)
@@ -45,7 +49,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getData()
     {
-        if (!isset($this->_data)) {
+        if (! isset($this->_data)) {
             $this->setData(Shop::getTree());
         }
 
@@ -61,7 +65,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getLang()
     {
-        if (!isset($this->_lang)) {
+        if (! isset($this->_lang)) {
             $this->setLang($this->getContext()->employee->id_lang);
         }
 
@@ -70,7 +74,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getNodeFolderTemplate()
     {
-        if (!isset($this->_node_folder_template)) {
+        if (! isset($this->_node_folder_template)) {
             $this->setNodeFolderTemplate(self::DEFAULT_NODE_FOLDER_TEMPLATE);
         }
 
@@ -79,7 +83,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getNodeItemTemplate()
     {
-        if (!isset($this->_node_item_template)) {
+        if (! isset($this->_node_item_template)) {
             $this->setNodeItemTemplate(self::DEFAULT_NODE_ITEM_TEMPLATE);
         }
 
@@ -88,7 +92,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function setSelectedShops($value)
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             throw new PrestaShopException('Selected shops value must be an array');
         }
 
@@ -99,7 +103,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getSelectedShops()
     {
-        if (!isset($this->_selected_shops)) {
+        if (! isset($this->_selected_shops)) {
             $this->_selected_shops = [];
         }
 
@@ -108,7 +112,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getTemplate()
     {
-        if (!isset($this->_template)) {
+        if (! isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_TEMPLATE);
         }
 
@@ -117,7 +121,7 @@ class HelperTreeShopsCore extends TreeCore
 
     public function render($data = null, $use_default_actions = true, $use_selected_shop = true)
     {
-        if (!isset($data)) {
+        if (! isset($data)) {
             $data = $this->getData();
         }
 
@@ -126,25 +130,25 @@ class HelperTreeShopsCore extends TreeCore
                 new TreeToolbarLink(
                     $this->translator->trans('Collapse all', [], 'Admin.Actions'),
                     '#',
-                    '$(\'#' . $this->getId() . '\').tree(\'collapseAll\'); return false;',
+                    '$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
                     $this->translator->trans('Expand all', [], 'Admin.Actions'),
                     '#',
-                    '$(\'#' . $this->getId() . '\').tree(\'expandAll\'); return false;',
+                    '$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
                 ),
                 new TreeToolbarLink(
                     $this->translator->trans('Check all', [], 'Admin.Actions'),
                     '#',
-                    'checkAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
+                    'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
                     'icon-check-sign'
                 ),
                 new TreeToolbarLink(
                     $this->translator->trans('Uncheck all', [], 'Admin.Actions'),
                     '#',
-                    'uncheckAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
+                    'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
                     'icon-check-empty'
                 ),
             ]);
@@ -159,11 +163,11 @@ class HelperTreeShopsCore extends TreeCore
 
     public function renderNodes($data = null)
     {
-        if (!isset($data)) {
+        if (! isset($data)) {
             $data = $this->getData();
         }
 
-        if (!is_array($data) && !$data instanceof Traversable) {
+        if (! is_array($data) && ! $data instanceof Traversable) {
             throw new PrestaShopException('Data value must be an traversable array');
         }
 
@@ -171,7 +175,7 @@ class HelperTreeShopsCore extends TreeCore
 
         foreach ($data as $item) {
             if (array_key_exists('shops', $item)
-                && !empty($item['shops'])) {
+                && ! empty($item['shops'])) {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty

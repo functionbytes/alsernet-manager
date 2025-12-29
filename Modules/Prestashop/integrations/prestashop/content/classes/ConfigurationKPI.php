@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -52,10 +53,9 @@ class ConfigurationKPICore extends Configuration
     /**
      * Get ID by name.
      *
-     * @param string $key Configuration key
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
-     *
+     * @param  string  $key  Configuration key
+     * @param  int|null  $idShopGroup  ShopGroup ID
+     * @param  int|null  $idShop  Shop ID
      * @return int ConfigurationKPI ID
      */
     public static function getIdByName($key, $idShopGroup = null, $idShop = null)
@@ -80,12 +80,11 @@ class ConfigurationKPICore extends Configuration
     /**
      * Get value.
      *
-     * @param string $key Configuration key
-     * @param null $idLang Language ID
-     * @param null $idShopGroup ShopGroup ID
-     * @param null $idShop Shop ID
-     * @param bool $default Default value
-     *
+     * @param  string  $key  Configuration key
+     * @param  null  $idLang  Language ID
+     * @param  null  $idShopGroup  ShopGroup ID
+     * @param  null  $idShop  Shop ID
+     * @param  bool  $default  Default value
      * @return string
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
@@ -100,9 +99,8 @@ class ConfigurationKPICore extends Configuration
     /**
      * Get global vlaue.
      *
-     * @param string $key Configuration key
-     * @param int|null $idLang Language ID
-     *
+     * @param  string  $key  Configuration key
+     * @param  int|null  $idLang  Language ID
      * @return string Global value
      */
     public static function getGlobalValue($key, $idLang = null)
@@ -117,10 +115,9 @@ class ConfigurationKPICore extends Configuration
     /**
      * Get value independent from language.
      *
-     * @param string $key Configuration key
-     * @param null $idShopGroup ShopGroup ID
-     * @param null $idShop Shop ID
-     *
+     * @param  string  $key  Configuration key
+     * @param  null  $idShopGroup  ShopGroup ID
+     * @param  null  $idShop  Shop ID
      * @return array Values for key for all available languages
      */
     public static function getInt($key, $idShopGroup = null, $idShop = null)
@@ -135,11 +132,10 @@ class ConfigurationKPICore extends Configuration
     /**
      * Get multiple keys.
      *
-     * @param array $keys Configuation keys
-     * @param int|null $idLang Language ID
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
-     *
+     * @param  array  $keys  Configuation keys
+     * @param  int|null  $idLang  Language ID
+     * @param  int|null  $idShopGroup  ShopGroup ID
+     * @param  int|null  $idShop  Shop ID
      * @return array Configuration values
      */
     public static function getMultiple($keys, $idLang = null, $idShopGroup = null, $idShop = null)
@@ -154,11 +150,10 @@ class ConfigurationKPICore extends Configuration
     /**
      * Has key.
      *
-     * @param string $key
-     * @param int|null $idLang Language ID
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
-     *
+     * @param  string  $key
+     * @param  int|null  $idLang  Language ID
+     * @param  int|null  $idShopGroup  ShopGroup ID
+     * @param  int|null  $idShop  Shop ID
      * @return bool
      */
     public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
@@ -173,10 +168,10 @@ class ConfigurationKPICore extends Configuration
     /**
      * Set key.
      *
-     * @param string $key Configuration key
-     * @param mixed $values Values
-     * @param null $idShopGroup ShopGroup ID
-     * @param null $idShop Shop ID
+     * @param  string  $key  Configuration key
+     * @param  mixed  $values  Values
+     * @param  null  $idShopGroup  ShopGroup ID
+     * @param  null  $idShop  Shop ID
      */
     public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
@@ -188,10 +183,9 @@ class ConfigurationKPICore extends Configuration
     /**
      * Update global value.
      *
-     * @param string $key Configuration key
-     * @param mixed $values Values
-     * @param bool $html Do the values contain HTML?
-     *
+     * @param  string  $key  Configuration key
+     * @param  mixed  $values  Values
+     * @param  bool  $html  Do the values contain HTML?
      * @return bool Indicates whether the key was successfully updated
      */
     public static function updateGlobalValue($key, $values, $html = false)
@@ -206,12 +200,11 @@ class ConfigurationKPICore extends Configuration
     /**
      * Update value.
      *
-     * @param string $key Configuration key
-     * @param mixed $values Values
-     * @param bool $html Do the values contain HTML?
-     * @param null $idShopGroup ShopGroup ID
-     * @param null $idShop Shop ID
-     *
+     * @param  string  $key  Configuration key
+     * @param  mixed  $values  Values
+     * @param  bool  $html  Do the values contain HTML?
+     * @param  null  $idShopGroup  ShopGroup ID
+     * @param  null  $idShop  Shop ID
      * @return bool Indicates whether the key was successfully updated
      */
     public static function updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null)
@@ -224,8 +217,7 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
-     *
+     * @param  string  $key
      * @return bool
      */
     public static function deleteByName($key)
@@ -238,13 +230,9 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param $key
-     * @param int|null $idShopGroup
-     * @param int|null $idShop
-     *
      * @return bool
      */
-    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
+    public static function deleteFromContext($key, ?int $idShopGroup = null, ?int $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
         $deleteSuccess = parent::deleteFromContext($key, $idShopGroup, $idShop);
@@ -254,10 +242,9 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
-     * @param int $idLang
-     * @param int $context
-     *
+     * @param  string  $key
+     * @param  int  $idLang
+     * @param  int  $context
      * @return bool
      */
     public static function hasContext($key, $idLang, $context)
@@ -270,8 +257,7 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
-     *
+     * @param  string  $key
      * @return bool
      */
     public static function isOverridenByCurrentContext($key)
@@ -284,8 +270,7 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param string $key
-     *
+     * @param  string  $key
      * @return bool
      */
     public static function isLangKey($key)
@@ -298,9 +283,8 @@ class ConfigurationKPICore extends Configuration
     }
 
     /**
-     * @param int $idShopGroup
-     * @param int $idShop
-     *
+     * @param  int  $idShopGroup
+     * @param  int  $idShop
      * @return string
      */
     protected static function sqlRestriction($idShopGroup, $idShop)

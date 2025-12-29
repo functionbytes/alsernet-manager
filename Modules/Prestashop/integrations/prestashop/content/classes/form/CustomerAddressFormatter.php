@@ -29,8 +29,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerAddressFormatterCore implements FormFormatterInterface
 {
     private $country;
+
     private $translator;
+
     private $availableCountries;
+
     private $definition;
 
     public function __construct(
@@ -66,13 +69,13 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'back' => (new FormField())
+            'back' => (new FormField)
                 ->setName('back')
                 ->setType('hidden'),
-            'token' => (new FormField())
+            'token' => (new FormField)
                 ->setName('token')
                 ->setType('hidden'),
-            'alias' => (new FormField())
+            'alias' => (new FormField)
                 ->setName('alias')
                 ->setLabel(
                     $this->getFieldLabel('alias')
@@ -80,7 +83,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         ];
 
         foreach ($fields as $field) {
-            $formField = new FormField();
+            $formField = new FormField;
             $formField->setName($field);
 
             $fieldParts = explode(':', $field, 2);
@@ -92,13 +95,13 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
-                } elseif ($field === 'dni' && null !== $this->country) {
+                } elseif ($field === 'dni' && $this->country !== null) {
                     if ($this->country->need_identification_number) {
                         $formField->setRequired(true);
                     }
                 }
             } elseif (count($fieldParts) === 2) {
-                list($entity, $entityField) = $fieldParts;
+                [$entity, $entityField] = $fieldParts;
 
                 // Fields specified using the Entity:field
                 // notation are actually references to other
@@ -106,7 +109,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $formField->setName('id_' . strtolower($entity));
+                $formField->setName('id_'.strtolower($entity));
 
                 if ($entity === 'Country') {
                     $formField->setType('countrySelect');
@@ -132,7 +135,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             }
 
             $formField->setLabel($this->getFieldLabel($field));
-            if (!$formField->isRequired()) {
+            if (! $formField->isRequired()) {
                 // Only trust the $required array for fields
                 // that are not marked as required.
                 // $required doesn't have all the info, and fields
@@ -146,32 +149,32 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             $format[$formField->getName()] = $formField;
         }
 
-        //To add the extra fields in address form
+        // To add the extra fields in address form
         $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', ['fields' => &$format], null, true);
         if (is_array($additionalAddressFormFields)) {
             foreach ($additionalAddressFormFields as $moduleName => $additionnalFormFields) {
-                if (!is_array($additionnalFormFields)) {
+                if (! is_array($additionnalFormFields)) {
                     continue;
                 }
 
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
-                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
                 }
             }
         }
 
         return $this->addConstraints(
-                $this->addMaxLength(
-                    $format
-                )
+            $this->addMaxLength(
+                $format
+            )
         );
     }
 
     private function addConstraints(array $format)
     {
         foreach ($format as $field) {
-            if (!empty($this->definition[$field->getName()]['validate'])) {
+            if (! empty($this->definition[$field->getName()]['validate'])) {
                 $field->addConstraint(
                     $this->definition[$field->getName()]['validate']
                 );
@@ -184,7 +187,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
     private function addMaxLength(array $format)
     {
         foreach ($format as $field) {
-            if (!empty($this->definition[$field->getName()]['size'])) {
+            if (! empty($this->definition[$field->getName()]['size'])) {
                 $field->setMaxLength(
                     $this->definition[$field->getName()]['size']
                 );

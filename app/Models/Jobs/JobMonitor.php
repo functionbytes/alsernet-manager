@@ -3,7 +3,7 @@
 namespace App\Models\Jobs;
 
 use app\Library\Lockable;
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Bus;

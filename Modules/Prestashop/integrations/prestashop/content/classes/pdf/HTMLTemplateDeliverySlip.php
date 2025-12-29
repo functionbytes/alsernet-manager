@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -38,9 +39,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public $order_invoice;
 
     /**
-     * @param OrderInvoice $order_invoice
-     * @param Smarty $smarty
-     * @param bool $bulk_mode
+     * @param  bool  $bulk_mode
      *
      * @throws PrestaShopException
      */
@@ -53,9 +52,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
-        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+        if (! isset($this->order_invoice->shop_address) || ! $this->order_invoice->shop_address) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
-            if (!$bulk_mode) {
+            if (! $bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
             }
         }
@@ -105,18 +104,18 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $name = 'product_mini_'.(int) $order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int) $order_detail['product_attribute_id'] : '').'.jpg';
+                    $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                        '/\.*'.preg_quote(__PS_BASE_URI__, '/').'/',
+                        _PS_ROOT_DIR_.DIRECTORY_SEPARATOR,
                         ImageManager::thumbnail($path, $name, 45, 'jpg', false),
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
                     } else {
                         $order_detail['image_size'] = false;
                     }
@@ -163,6 +162,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_invoice->delivery_number) . '.pdf';
+        return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->delivery_number).'.pdf';
     }
 }

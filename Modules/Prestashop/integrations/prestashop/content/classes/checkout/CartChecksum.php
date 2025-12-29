@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,9 @@
 class CartChecksumCore implements ChecksumInterface
 {
     public $addressChecksum = null;
+
     private $separator = '_';
+
     private $subseparator = '-';
 
     public function __construct(AddressChecksum $addressChecksum)
@@ -35,8 +38,6 @@ class CartChecksumCore implements ChecksumInterface
     }
 
     /**
-     * @param $cart
-     *
      * @return string cart SHA1
      */
     public function generateChecksum($cart)
@@ -61,14 +62,14 @@ class CartChecksumCore implements ChecksumInterface
         $products = $cart->getProducts($refresh = true);
         foreach ($products as $product) {
             $uniq_id .= $product['id_shop']
-                . $this->subseparator
-                . $product['id_product']
-                . $this->subseparator
-                . $product['id_product_attribute']
-                . $this->subseparator
-                . $product['cart_quantity']
-                . $this->subseparator
-                . $product['total_wt'];
+                .$this->subseparator
+                .$product['id_product']
+                .$this->subseparator
+                .$product['id_product_attribute']
+                .$this->subseparator
+                .$product['cart_quantity']
+                .$this->subseparator
+                .$product['total_wt'];
             $uniq_id .= $this->separator;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,17 +35,15 @@ class TaxManagerFactoryCore
     /**
      * Returns a tax manager able to handle this address.
      *
-     * @param Address $address
-     * @param string $type
-     *
+     * @param  string  $type
      * @return TaxManagerInterface
      */
     public static function getManager(Address $address, $type)
     {
-        $cache_id = TaxManagerFactory::getCacheKey($address) . '-' . $type;
-        if (!isset(TaxManagerFactory::$cache_tax_manager[$cache_id])) {
+        $cache_id = TaxManagerFactory::getCacheKey($address).'-'.$type;
+        if (! isset(TaxManagerFactory::$cache_tax_manager[$cache_id])) {
             $tax_manager = TaxManagerFactory::execHookTaxManagerFactory($address, $type);
-            if (!($tax_manager instanceof TaxManagerInterface)) {
+            if (! ($tax_manager instanceof TaxManagerInterface)) {
                 $tax_manager = new TaxRulesTaxManager($address, $type);
             }
 
@@ -57,9 +56,7 @@ class TaxManagerFactoryCore
     /**
      * Check for a tax manager able to handle this type of address in the module list.
      *
-     * @param Address $address
-     * @param string $type
-     *
+     * @param  string  $type
      * @return TaxManagerInterface|false
      */
     public static function execHookTaxManagerFactory(Address $address, $type)
@@ -99,10 +96,10 @@ class TaxManagerFactoryCore
      */
     protected static function getCacheKey(Address $address)
     {
-        return $address->id_country . '-'
-                . (int) $address->id_state . '-'
-                . $address->postcode . '-'
-                . $address->vat_number . '-'
-                . $address->dni;
+        return $address->id_country.'-'
+                .(int) $address->id_state.'-'
+                .$address->postcode.'-'
+                .$address->vat_number.'-'
+                .$address->dni;
     }
 }

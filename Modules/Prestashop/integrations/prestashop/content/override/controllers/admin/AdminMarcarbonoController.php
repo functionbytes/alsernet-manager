@@ -1,39 +1,40 @@
 <?php
+
 /**
-* 2007-2017 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author ADDIS Network <info@addis.es>
-*  @copyright  2021-2021 ADDIS Network
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
-
-class AdminMarcarbonoController extends AdminController {
-
-    public function __construct() {
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author ADDIS Network <info@addis.es>
+ *  @copyright  2021-2021 ADDIS Network
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
+class AdminMarcarbonoController extends AdminController
+{
+    public function __construct()
+    {
         $this->bootstrap = true;
         $this->table = 'marcarbono';
         $this->className = 'Marcarbono';
         $this->lang = false;
         $this->deleted = true;
 
-        $this->_defaultOrderBy = 'id_marcarbono'; 
+        $this->_defaultOrderBy = 'id_marcarbono';
         $this->_defaultOrderWay = 'DESC';
 
         parent::__construct();
@@ -105,7 +106,8 @@ class AdminMarcarbonoController extends AdminController {
         $this->allow_export = true;
     }
 
-    public function viewCart($id_cart) {
+    public function viewCart($id_cart)
+    {
         if ($id_cart) {
             return '<a target="_blank" href="'.$this->context->link->getAdminLink('AdminCarts', true, [], ['id_cart' => $id_cart, 'viewcart' => 1]).'">#'.$id_cart.'</a>';
         } else {
@@ -113,7 +115,8 @@ class AdminMarcarbonoController extends AdminController {
         }
     }
 
-    public function viewOrder($id_order) {
+    public function viewOrder($id_order)
+    {
         if ($id_order) {
             return '<a target="_blank" href="'.$this->context->link->getAdminLink('AdminOrders', true, [], ['id_order' => $id_order, 'vieworder' => 1]).'">#'.$id_order.'</a>';
         } else {
@@ -121,7 +124,8 @@ class AdminMarcarbonoController extends AdminController {
         }
     }
 
-    public function viewCartRule($id_cart_rule) {
+    public function viewCartRule($id_cart_rule)
+    {
         if ($id_cart_rule) {
             return '<a target="_blank" href="'.$this->context->link->getAdminLink('AdminCartRules', true, [], ['id_cart_rule' => $id_cart_rule, 'updatecart_rule' => 1]).'">#'.$id_cart_rule.'</a>';
         } else {
@@ -129,7 +133,8 @@ class AdminMarcarbonoController extends AdminController {
         }
     }
 
-    public function displayOperacion($operacion) {
+    public function displayOperacion($operacion)
+    {
         switch ($operacion) {
             case AlvarezERP::MARCAR_BONO_ANULAR:
                 return 'Anular';
@@ -145,20 +150,22 @@ class AdminMarcarbonoController extends AdminController {
         }
     }
 
-    public function displayPrice($amount) {
+    public function displayPrice($amount)
+    {
         return Tools::displayPrice($amount);
     }
 
     public function renderList()
     {
         $this->addRowAction('edit');
+
         return parent::renderList();
     }
 
     public function renderForm()
     {
         $obj = $this->loadObject(true);
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
@@ -270,5 +277,4 @@ class AdminMarcarbonoController extends AdminController {
 
         return parent::renderForm();
     }
-
 }

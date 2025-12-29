@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Managers\Campaigns;
 
-use App\Events\Campaigns\CampaignUpdated;
 use App\Http\Controllers\Controller;
-use App\Jobs\ExportCampaignLog;
 use app\Library\StringHelper;
-use App\Models\Campaign\Campaign;
 use App\Models\ClickLog;
 use App\Models\IpLocation;
 use App\Models\Jobs\JobMonitor;
 use App\Models\OpenLog;
 use App\Models\Setting;
-use Modules\Subscriber\Models\Subscriber;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use App\Models\TrackingLog;
@@ -20,6 +16,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log as LaravelLog;
+use Modules\Campaign\Entities\Campaign;
+use Modules\Campaign\Events\CampaignUpdated;
+use Modules\Campaign\Jobs\ExportCampaignLog;
+use Modules\Subscriber\Models\Subscriber;
 use Validator;
 
 class CampaignsController extends Controller
@@ -68,7 +68,7 @@ class CampaignsController extends Controller
     {
         $campaign = Campaign::findByUid($id);
 
-        \App\Events\Campaigns\CampaignUpdated::dispatch($campaign);
+        Modules\Campaign\Events\CampaignUpdated::dispatch($campaign);
 
         if ($campaign->status == 'new') {
             return redirect()->route('CampaignController@edit', ['uid' => $campaign->uid]);
@@ -501,7 +501,7 @@ class CampaignsController extends Controller
 
         // Trigger the CampaignUpdate event to update the campaign cache information
         // The second parameter of the constructor function is false, meanining immediate update
-        \App\Events\Campaigns\CampaignUpdated::dispatch($campaign);
+        Modules\Campaign\Events\CampaignUpdated::dispatch($campaign);
 
         return view('managers.views.campaigns.campaigns.overview', [
             'campaign' => $campaign,
@@ -1667,7 +1667,7 @@ class CampaignsController extends Controller
 
     public function webhooksEdit(Request $request)
     {
-        $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         if ($request->isMethod('post')) {
             [$webhook, $validator] = $webhook->updateFromArray($request->all());
@@ -1692,7 +1692,7 @@ class CampaignsController extends Controller
 
     public function webhooksDelete(Request $request)
     {
-        $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         $webhook->delete();
 
@@ -1703,7 +1703,7 @@ class CampaignsController extends Controller
 
     public function webhooksSampleRequest(Request $request)
     {
-        $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         return view('managers.views.campaigns.campaigns.webhooksSampleRequest', [
             'webhook' => $webhook,
@@ -1712,7 +1712,7 @@ class CampaignsController extends Controller
 
     public function webhooksTest(Request $request)
     {
-        $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         if ($request->isMethod('post')) {
@@ -1748,7 +1748,7 @@ class CampaignsController extends Controller
 
     public function webhooksTestMessage(Request $request, $webhook_uid, $message_id)
     {
-        $webhook = \App\Models\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         $client = new \GuzzleHttp\Client;

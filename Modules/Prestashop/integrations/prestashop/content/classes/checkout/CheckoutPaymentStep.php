@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,6 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CheckoutPaymentStepCore extends AbstractCheckoutStep
 {
     protected $template = 'checkout/_partials/steps/payment.tpl';
+
     private $selected_payment_option;
 
     public function __construct(
@@ -77,13 +79,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     }
 
     /**
-     * @param array $extraParams
-     *
      * @return string
      */
     public function render(array $extraParams = [])
     {
-        $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
+        $isFree = (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH) == 0;
         $paymentOptions = $this->paymentOptionsFinder->present($isFree);
         $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();

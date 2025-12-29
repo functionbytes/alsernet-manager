@@ -1,13 +1,14 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
+include dirname(__FILE__).'/../config/config.inc.php';
 // include (dirname(__FILE__).'/../init.php');
 
 /*
@@ -76,7 +77,6 @@ include (dirname(__FILE__).'/../config/config.inc.php');
 //          'productos' => array()
 //      );
 
-
 //     // $productosCategoria = $categoria->getProducts(Context::getContext()->language->id, 1,1);
 //     // var_dump($productosCategoria); die();
 //     $productosCategoria = Db::getInstance()->ExecuteS('
@@ -87,7 +87,6 @@ include (dirname(__FILE__).'/../config/config.inc.php');
 //                                              WHERE
 //                                                  cp.`id_category` = ' . $idCategoria . '
 //                                              ORDER BY `position` ASC');
-
 
 //     // Agregar los productos al resultado
 //     foreach ($productosCategoria as $producto) {
@@ -203,7 +202,7 @@ include (dirname(__FILE__).'/../config/config.inc.php');
 // }
 
 // ID de la categoría que deseas desactivar (cambia esto por el ID de la categoría que desees)
-//desactivarCategoriasRecursivamente(366);
+// desactivarCategoriasRecursivamente(366);
 // echo "Proceso completado";
 
 // $dbcon = connectBD();
@@ -229,76 +228,70 @@ function ProcesarPerfilesNav($data, $fila, $tipo)
 
     if ($tipo <= 2) {
 
-        if (!$data) {
-            //sendmail(__FUNCTION__.": Dato nulo en data para fila ".$fila." tipo ".$tipo);
+        if (! $data) {
+            // sendmail(__FUNCTION__.": Dato nulo en data para fila ".$fila." tipo ".$tipo);
             return 1;
         }
 
+        $idmodelo = $data['id_modelo'];
+        $idvalor = $data['id_valor'];
+        $principal = $data['principal'];
 
-        $idmodelo = $data["id_modelo"];
-        $idvalor = $data["id_valor"];
-        $principal = $data["principal"];
+        $idprodps = ''.Db::getInstance()->getValue('SELECT id_product FROM aalv_product_import WHERE id_modelo='.$idmodelo);
 
-        $idprodps = "" . Db::getInstance()->getValue("SELECT id_product FROM aalv_product_import WHERE id_modelo=" . $idmodelo);
+        if ($idprodps != '') {
 
-
-        if ($idprodps != "") {
-
-
-            $catimport = Db::getInstance()->ExecuteS("SELECT * FROM aalv_category_import WHERE id_origen=" . $data['id_valor']);
-
+            $catimport = Db::getInstance()->ExecuteS('SELECT * FROM aalv_category_import WHERE id_origen='.$data['id_valor']);
 
             foreach ($catimport as $catim) {
-                $idcatps = $catim["id_cat"];
-                $idnav = $catim["id_nav"];
+                $idcatps = $catim['id_cat'];
+                $idnav = $catim['id_nav'];
 
+                $existe = ''.Db::getInstance()->getValue('SELECT id_category FROM aalv_category_product WHERE id_category = '.$idcatps.' and id_product='.$idprodps);
 
-                $existe = "" . Db::getInstance()->getValue("SELECT id_category FROM aalv_category_product WHERE id_category = " . $idcatps . " and id_product=" . $idprodps);
-
-                if ($existe != "") {
-                    //update, no hacer nada ya que está, pero mirar si cambia principal
+                if ($existe != '') {
+                    // update, no hacer nada ya que está, pero mirar si cambia principal
 
                     if (ExistePathCategory($idprodps, $idnav)) {
                         if ($principal) {
-                            //Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
-                            //Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
+                            // Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
+                            // Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
                             if (escomunrec($idcatps)) {
 
                                 $cat = new Category($idcatps);
                                 if ($cat->sport == 5) {
 
-                                    Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
-                                    Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
+                                    Db::getInstance()->Execute('UPDATE aalv_product SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
+                                    Db::getInstance()->Execute('UPDATE aalv_product_shop SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
                                 }
                             } else {
-                                Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
-                                Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
+                                Db::getInstance()->Execute('UPDATE aalv_product SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
+                                Db::getInstance()->Execute('UPDATE aalv_product_shop SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
                             }
                         }
                     }
                 } else {
 
-                    Db::getInstance()->Execute("INSERT INTO aalv_category_product(id_category, id_product, position) VALUES (" . $idcatps . "," . $idprodps . ",0)");
+                    Db::getInstance()->Execute('INSERT INTO aalv_category_product(id_category, id_product, position) VALUES ('.$idcatps.','.$idprodps.',0)');
 
                     if (ExistePathCategory($idprodps, $idnav)) {
 
-
                         if ($principal) {
 
-                            //Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
-                            //Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
+                            // Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
+                            // Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=".$idcatps." WHERE id_product=".$idprodps);
 
                             if (escomunrec($idcatps)) {
 
                                 $cat = new Category($idcatps);
                                 if ($cat->sport == 5) {
 
-                                    Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
-                                    Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
+                                    Db::getInstance()->Execute('UPDATE aalv_product SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
+                                    Db::getInstance()->Execute('UPDATE aalv_product_shop SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
                                 }
                             } else {
-                                Db::getInstance()->Execute("UPDATE aalv_product SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
-                                Db::getInstance()->Execute("UPDATE aalv_product_shop SET id_category_default=" . $idcatps . " WHERE id_product=" . $idprodps);
+                                Db::getInstance()->Execute('UPDATE aalv_product SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
+                                Db::getInstance()->Execute('UPDATE aalv_product_shop SET id_category_default='.$idcatps.' WHERE id_product='.$idprodps);
                             }
                         }
                     }
@@ -306,11 +299,10 @@ function ProcesarPerfilesNav($data, $fila, $tipo)
 
                 $product = new Product($idprodps);
 
-                $product->id_category_default = Db::getInstance()->getValue("select id_category_default from aalv_product WHERE id_product=" . $idprodps);
+                $product->id_category_default = Db::getInstance()->getValue('select id_category_default from aalv_product WHERE id_product='.$idprodps);
                 $product->update();
 
-
-                Db::getInstance()->Execute("REPLACE INTO aalv_category_product_import(id_category, id_product, fila) VALUES (" . $idcatps . "," . $idprodps . "," . $data['id'] . ")");
+                Db::getInstance()->Execute('REPLACE INTO aalv_category_product_import(id_category, id_product, fila) VALUES ('.$idcatps.','.$idprodps.','.$data['id'].')');
             }
 
             return 1;
@@ -318,14 +310,13 @@ function ProcesarPerfilesNav($data, $fila, $tipo)
     }
 }
 
-
 function escomunrec($id)
 {
 
-    $padre = Db::getInstance()->getValue("SELECT id_parent FROM " . _DB_PREFIX_ . "category WHERE id_category=" . $id);
-    $escomun = "" . Db::getInstance()->getValue("SELECT id_cat FROM aalv_categorias_comunes_import WHERE id_cat= " . $id);
+    $padre = Db::getInstance()->getValue('SELECT id_parent FROM '._DB_PREFIX_.'category WHERE id_category='.$id);
+    $escomun = ''.Db::getInstance()->getValue('SELECT id_cat FROM aalv_categorias_comunes_import WHERE id_cat= '.$id);
 
-    if ($escomun == "") {
+    if ($escomun == '') {
 
         if ($padre <= 2) {
             return false;
@@ -337,25 +328,22 @@ function escomunrec($id)
     }
 }
 
-function ExistePathCategory($producto,  $id_nav)
+function ExistePathCategory($producto, $id_nav)
 {
 
+    if (! escomun($id_nav) && ($id_nav != 0)) {
 
-    if (!escomun($id_nav) && ($id_nav != 0)) {
+        $elemento = Db::getInstance()->getValue('SELECT id_origen FROM aalv_category_import WHERE id_nav='.$id_nav);
+        $id_padre = Db::getInstance()->getValue('SELECT id_padre FROM aalv_category_import WHERE id_nav='.$id_nav);
+        $id_cat = Db::getInstance()->getValue('SELECT id_cat FROM aalv_category_import WHERE id_nav='.$id_nav);
 
+        // ver si existe id_cat  y producto en  category_import
 
-        $elemento = Db::getInstance()->getValue("SELECT id_origen FROM aalv_category_import WHERE id_nav=" . $id_nav);
-        $id_padre = Db::getInstance()->getValue("SELECT id_padre FROM aalv_category_import WHERE id_nav=" . $id_nav);
-        $id_cat = Db::getInstance()->getValue("SELECT id_cat FROM aalv_category_import WHERE id_nav=" . $id_nav);
+        if (''.$id_cat != '') {
+            $existe = ''.Db::getInstance()->getValue('select id_category from aalv_category_product where id_category='.$id_cat.' and id_product='.$producto);
 
-
-        //ver si existe id_cat  y producto en  category_import
-
-        if ("" . $id_cat != "") {
-            $existe = "" . Db::getInstance()->getValue("select id_category from aalv_category_product where id_category=" . $id_cat . " and id_product=" . $producto);
-
-            if ($existe != "") {
-                return ExistePathCategory($producto, (int)$id_padre);
+            if ($existe != '') {
+                return ExistePathCategory($producto, (int) $id_padre);
             } else {
                 return false;
             }
@@ -367,23 +355,25 @@ function ExistePathCategory($producto,  $id_nav)
     }
 }
 
-
-function connectBD() {
+function connectBD()
+{
 
     return $dbcon;
 }
 
-function closeBD($dbcon) {
+function closeBD($dbcon)
+{
     mysqli_close($dbcon);
 }
 
-function peticionget($url){
+function peticionget($url)
+{
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-    curl_setopt($ch, CURLOPT_USERPWD, "alsernet:May.8006763");
+    curl_setopt($ch, CURLOPT_USERPWD, 'alsernet:May.8006763');
     $content = curl_exec($ch);
     curl_close($ch);
 
@@ -391,9 +381,10 @@ function peticionget($url){
 
 }
 
-function obtenerIdsCategoriasHijas($id_categoria) {
-    $ids = array($id_categoria); // Incluir el ID de la categoría padre
-    $sql = Db::getInstance()->ExecuteS("SELECT id_category FROM aalv_category WHERE id_parent = ".$id_categoria);
+function obtenerIdsCategoriasHijas($id_categoria)
+{
+    $ids = [$id_categoria]; // Incluir el ID de la categoría padre
+    $sql = Db::getInstance()->ExecuteS('SELECT id_category FROM aalv_category WHERE id_parent = '.$id_categoria);
     foreach ($sql as $re) {
         $ids[] = $re['id_category'];
 
@@ -402,11 +393,11 @@ function obtenerIdsCategoriasHijas($id_categoria) {
         // Fusionar los IDs de las categorías hijas encontradas con los IDs actuales
         $ids = array_merge($ids, $sub_ids);
     }
+
     return $ids;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////////////////////
 
 // // Función recursiva para contar categorías hijas
 // function contarCategoriasHijas($id_padre) {
@@ -432,11 +423,8 @@ function obtenerIdsCategoriasHijas($id_categoria) {
 
 // echo "El ID padre $id_padre tiene un total de $conteo_total categorías hijas.\n";
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////////////////////
 // $datos = Db::getInstance()->executeS("select id_product from aalv_combinacionunica_import where etiqueta LIKE '%HOC24%'");
-
 
 // $datos = Db::getInstance()->executeS("SELECT
 //                                                                 pa.id_product
@@ -475,9 +463,3 @@ function obtenerIdsCategoriasHijas($id_categoria) {
 
 // // ID del producto y de la categoría a asociar
 // $productId = 1;  // Reemplaza con el ID de tu producto
-
-
-
-
-
-

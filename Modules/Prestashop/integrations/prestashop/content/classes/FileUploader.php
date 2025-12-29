@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,6 +30,7 @@ class FileUploaderCore
 
     /** @var QqUploadedFileXhr|QqUploadedFileForm|false */
     protected $file;
+
     protected $sizeLimit;
 
     public function __construct(array $allowedExtensions = [], $sizeLimit = 10485760)
@@ -39,9 +41,9 @@ class FileUploaderCore
         $this->sizeLimit = $sizeLimit;
 
         if (isset($_GET['qqfile'])) {
-            $this->file = new QqUploadedFileXhr();
+            $this->file = new QqUploadedFileXhr;
         } elseif (isset($_FILES['qqfile'])) {
-            $this->file = new QqUploadedFileForm();
+            $this->file = new QqUploadedFileForm;
         } else {
             $this->file = false;
         }
@@ -70,7 +72,7 @@ class FileUploaderCore
      */
     public function handleUpload()
     {
-        if (!$this->file) {
+        if (! $this->file) {
             return ['error' => Context::getContext()->getTranslator()->trans('No files were uploaded.', [], 'Admin.Notifications.Error')];
         }
 
@@ -85,11 +87,11 @@ class FileUploaderCore
 
         $pathinfo = pathinfo($this->file->getName());
         $these = implode(', ', $this->allowedExtensions);
-        if (!isset($pathinfo['extension'])) {
+        if (! isset($pathinfo['extension'])) {
             return ['error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', [$these], 'Admin.Notifications.Error')];
         }
         $ext = $pathinfo['extension'];
-        if ($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)) {
+        if ($this->allowedExtensions && ! in_array(strtolower($ext), $this->allowedExtensions)) {
             return ['error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', [$these], 'Admin.Notifications.Error')];
         }
 

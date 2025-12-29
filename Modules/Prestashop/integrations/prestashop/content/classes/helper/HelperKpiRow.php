@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,9 +27,11 @@
 class HelperKpiRowCore extends Helper
 {
     public $base_folder = 'helpers/kpi/';
+
     public $base_tpl = 'row.tpl';
 
     public $kpis = [];
+
     public $refresh = true;
 
     public function generate()

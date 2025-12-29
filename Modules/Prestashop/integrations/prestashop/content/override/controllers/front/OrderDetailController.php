@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,14 +29,16 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 class OrderDetailController extends OrderDetailControllerCore
 {
     public $php_self = 'order-detail';
+
     public $auth = true;
+
     public $authRedirection = 'history';
+
     public $ssl = true;
 
     protected $order_to_display;
 
     protected $reference;
-
 
     public function initContent()
     {
@@ -46,14 +49,14 @@ class OrderDetailController extends OrderDetailControllerCore
         $id_order = (int) Tools::getValue('id_order');
         $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
 
-        if (!$id_order) {
+        if (! $id_order) {
             $reference = Tools::getValue('reference');
             $reference = $reference && Validate::isReference($reference) ? $reference : false;
             $order = $reference ? Order::getByReference($reference)->getFirst() : false;
             $id_order = $order ? $order->id : false;
         }
 
-        if (!$id_order) {
+        if (! $id_order) {
             $this->redirect_after = '404';
             $this->redirect();
         } else {
@@ -76,17 +79,17 @@ class OrderDetailController extends OrderDetailControllerCore
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
 
                 $lang = $this->context->language->id;
-                $orderData = (new OrderPresenter())->present($order);
+                $orderData = (new OrderPresenter)->present($order);
                 $shipping = $order->getOrderShippingTracking($order, (int) $lang);
 
-                $lang=$this->context->language->id;
+                $lang = $this->context->language->id;
                 $customer = new Customer($order->id_customer);
                 $deliveryAddress = new Address($order->id_address_delivery);
                 $invoiceAddress = new Address($order->id_address_invoice);
-                $deliveryCountry = new Country($deliveryAddress->id_country,$lang);
-                $invoiceCountry = new Country($invoiceAddress->id_country,$lang);
-                $carrier = new Carrier($order->id_carrier,$lang);
-                $currency = new Currency($order->id_currency,$lang);
+                $deliveryCountry = new Country($deliveryAddress->id_country, $lang);
+                $invoiceCountry = new Country($invoiceAddress->id_country, $lang);
+                $carrier = new Carrier($order->id_carrier, $lang);
+                $currency = new Currency($order->id_currency, $lang);
                 $orderState = $order->getCurrentOrderState($lang);
                 $historyRaw = $order->getHistory((int) $lang);
                 $products = $order->getProducts();
@@ -155,8 +158,8 @@ class OrderDetailController extends OrderDetailControllerCore
                     'totals' => [
                         'total' => [
                             'value' => Tools::displayPrice($order->total_paid, $currency),
-                        ]
-                    ]
+                        ],
+                    ],
                 ];
 
                 $this->context->smarty->assign([
@@ -173,5 +176,4 @@ class OrderDetailController extends OrderDetailControllerCore
         parent::initContent();
         $this->setTemplate('customer/order-detail');
     }
-
 }

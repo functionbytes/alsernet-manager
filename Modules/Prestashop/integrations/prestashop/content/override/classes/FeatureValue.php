@@ -2,17 +2,16 @@
 
 class FeatureValue extends FeatureValueCore
 {
+    public static $definition = [
+        'table' => 'feature_value',
+        'primary' => 'id_feature_value',
+        'multilang' => true,
+        'fields' => [
+            'id_feature' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'custom' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
-public static $definition = array(
-    'table' => 'feature_value',
-    'primary' => 'id_feature_value',
-    'multilang' => true,
-    'fields' => array(
-        'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-        'custom' =>     array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-
-        // Lang fields
-        'value' =>      array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 4096),
-    ),
-);
+            // Lang fields
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 4096],
+        ],
+    ];
 }

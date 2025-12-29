@@ -2,8 +2,8 @@
 
 namespace App\Listeners\Subscribers;
 
-use App\Events\Campaigns\MailListSubscription;
-use App\Events\Campaigns\MailListUnsubscription;
+use Modules\Campaign\Events\MailListSubscription;
+use Modules\Campaign\Events\MailListUnsubscription;
 
 class SendListNotificationToSubscriber
 {
@@ -32,12 +32,12 @@ class SendListNotificationToSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\Campaigns\MailListSubscription',
+            MailListSubscription::class,
             [SendListNotificationToSubscriber::class, 'handleMailListSubscription']
         );
 
         $events->listen(
-            'App\Events\Campaigns\MailListUnsubscription',
+            MailListUnsubscription::class,
             [SendListNotificationToSubscriber::class, 'handleMailListUnsubscription']
         );
     }

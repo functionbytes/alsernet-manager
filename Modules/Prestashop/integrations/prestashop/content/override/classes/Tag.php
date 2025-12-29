@@ -1,5 +1,6 @@
 <?php
-if (!defined('_PS_VERSION_')) {
+
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 class Tag extends TagCore
@@ -9,10 +10,10 @@ class Tag extends TagCore
     * date: 2025-10-07 10:54:09
     * version: 1.8.4
     */
-    public function getProducts($associated = true, Context $context = null)
+    public function getProducts($associated = true, ?Context $context = null)
     {
-        $list = parent::getProducts($associated,$context);
-        if (!$list) {
+        $list = parent::getProducts($associated, $context);
+        if (! $list) {
             return $list;
         }
         foreach ($list as $index => $product) {
@@ -20,6 +21,7 @@ class Tag extends TagCore
                 unset($list[$index]);
             }
         }
+
         return $list;
     }
 }

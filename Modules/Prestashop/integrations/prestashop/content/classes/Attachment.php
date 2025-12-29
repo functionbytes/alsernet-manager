@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,10 +31,15 @@
 class AttachmentCore extends ObjectModel
 {
     public $file;
+
     public $file_name;
+
     public $file_size;
+
     public $name;
+
     public $mime;
+
     public $description;
 
     /** @var int position Position */
@@ -86,8 +92,8 @@ class AttachmentCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_.$this->file)) {
+            $this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
         }
 
         return parent::add($autoDate, $nullValues);
@@ -98,8 +104,8 @@ class AttachmentCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            $this->file_size = filesize(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_.$this->file)) {
+            $this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
         }
 
         return parent::update($nullValues);
@@ -110,19 +116,19 @@ class AttachmentCore extends ObjectModel
      */
     public function delete()
     {
-        if (file_exists(_PS_DOWNLOAD_DIR_ . $this->file)) {
-            @unlink(_PS_DOWNLOAD_DIR_ . $this->file);
+        if (file_exists(_PS_DOWNLOAD_DIR_.$this->file)) {
+            @unlink(_PS_DOWNLOAD_DIR_.$this->file);
         }
 
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('pa.`id_product`');
         $sql->from('product_attachment', 'pa');
-        $sql->where('pa.`id_attachment` = ' . (int) $this->id);
+        $sql->where('pa.`id_attachment` = '.(int) $this->id);
         $products = Db::getInstance()->executeS($sql);
 
         Db::getInstance()->delete(
             'product_attachment',
-            '`id_attachment` = ' . (int) $this->id
+            '`id_attachment` = '.(int) $this->id
         );
 
         foreach ($products as $product) {
@@ -135,9 +141,9 @@ class AttachmentCore extends ObjectModel
     /**
      * Delete selection of attachments.
      *
-     * @param array $attachments Attachments
-     *
+     * @param  array  $attachments  Attachments
      * @return bool|int Whether the selection has been successfully deleted
+     *
      * @todo: Find out if $return can be initialized with true. (breaking change)
      */
     public function deleteSelection($attachments)
@@ -154,10 +160,9 @@ class AttachmentCore extends ObjectModel
     /**
      * Get attachments.
      *
-     * @param int $idLang Language ID
-     * @param int $idProduct Product ID
-     * @param bool $include Whether the attachments are included or excluded from the Product ID
-     *
+     * @param  int  $idLang  Language ID
+     * @param  int  $idProduct  Product ID
+     * @param  bool  $include  Whether the attachments are included or excluded from the Product ID
      * @return array|false|mysqli_result|PDOStatement|resource|null Database query result
      */
     public static function getAttachments($idLang, $idProduct, $include = true)
@@ -165,13 +170,13 @@ class AttachmentCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
 			SELECT *
-			FROM ' . _DB_PREFIX_ . 'attachment a
-			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
-				ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $idLang . ')
-			WHERE a.id_attachment ' . ($include ? 'IN' : 'NOT IN') . ' (
+			FROM '._DB_PREFIX_.'attachment a
+			LEFT JOIN '._DB_PREFIX_.'attachment_lang al
+				ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int) $idLang.')
+			WHERE a.id_attachment '.($include ? 'IN' : 'NOT IN').' (
 				SELECT pa.id_attachment
-				FROM ' . _DB_PREFIX_ . 'product_attachment pa
-				WHERE id_product = ' . (int) $idProduct . '
+				FROM '._DB_PREFIX_.'product_attachment pa
+				WHERE id_product = '.(int) $idProduct.'
 			)'
         );
     }
@@ -179,26 +184,25 @@ class AttachmentCore extends ObjectModel
     /**
      * Unassociate all inventaries from the current object
      *
-     * @param bool $updateAttachmentCache [default=true] If set to false attachment cache will not be updated
-     *
+     * @param  bool  $updateAttachmentCache  [default=true] If set to false attachment cache will not be updated
      * @return bool Deletion result
      */
     public function deleteAttachments(bool $updateAttachmentCache = true): bool
     {
-        if (0 >= (int) $this->id) {
+        if ((int) $this->id <= 0) {
             // Can not delete attachement without id
             return false;
         }
 
         $res = Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'product_attachment` ' .
-            'WHERE `id_attachment` = ' . (int) $this->id
+            'DELETE FROM `'._DB_PREFIX_.'product_attachment` '.
+            'WHERE `id_attachment` = '.(int) $this->id
         );
 
         if ($updateAttachmentCache === true) {
             $productIds = Db::getInstance()->executeS(
-                'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_attachment` ' .
-                'WHERE `id_attachment` = ' . (int) $this->id
+                'SELECT `id_product` FROM `'._DB_PREFIX_.'product_attachment` '.
+                'WHERE `id_attachment` = '.(int) $this->id
             );
 
             foreach ($productIds as $productId) {
@@ -212,15 +216,14 @@ class AttachmentCore extends ObjectModel
     /**
      * Delete Product attachments for the given Product ID.
      *
-     * @param int $idProduct Product ID
-     *
+     * @param  int  $idProduct  Product ID
      * @return bool
      */
     public static function deleteProductAttachments($idProduct)
     {
         $res = Db::getInstance()->execute('
-		DELETE FROM ' . _DB_PREFIX_ . 'product_attachment
-		WHERE id_product = ' . (int) $idProduct);
+		DELETE FROM '._DB_PREFIX_.'product_attachment
+		WHERE id_product = '.(int) $idProduct);
 
         Product::updateCacheAttachment((int) $idProduct);
 
@@ -230,8 +233,7 @@ class AttachmentCore extends ObjectModel
     /**
      * Associate $id_product to the current object.
      *
-     * @param int $idProduct id of the product to associate
-     *
+     * @param  int  $idProduct  id of the product to associate
      * @return bool true if success
      */
     public function attachProduct($idProduct)
@@ -240,17 +242,14 @@ class AttachmentCore extends ObjectModel
     }
 
     /**
-     * @param int $productId
-     * @param int $attachmentId
-     *
      * @return bool true if success
      */
     public static function associateProductAttachment(int $productId, int $attachmentId): bool
     {
         $res = Db::getInstance()->execute('
-			INSERT INTO ' . _DB_PREFIX_ . 'product_attachment
+			INSERT INTO '._DB_PREFIX_.'product_attachment
 				(id_attachment, id_product) VALUES
-				(' . $attachmentId . ', ' . $productId . ')');
+				('.$attachmentId.', '.$productId.')');
 
         Product::updateCacheAttachment($productId);
 
@@ -261,9 +260,8 @@ class AttachmentCore extends ObjectModel
      * Associate an array of id_attachment $array to the product $id_product
      * and remove eventual previous association.
      *
-     * @param int $idProduct Product ID
-     * @param array $array Attachment IDs
-     *
+     * @param  int  $idProduct  Product ID
+     * @param  array  $array  Attachment IDs
      * @return bool Whether the attachments have been successfully associated with the Product
      */
     public static function attachToProduct($idProduct, $array)
@@ -278,14 +276,14 @@ class AttachmentCore extends ObjectModel
                 }
             }
 
-            if (!empty($ids)) {
+            if (! empty($ids)) {
                 $result2 = Db::getInstance()->insert('product_attachment', $ids);
             }
         }
 
         Product::updateCacheAttachment((int) $idProduct);
         if (is_array($array)) {
-            return $result1 && (!isset($result2) || $result2);
+            return $result1 && (! isset($result2) || $result2);
         }
 
         return $result1;
@@ -294,23 +292,22 @@ class AttachmentCore extends ObjectModel
     /**
      * Get Attachment IDs for the given Product within the given range of attachment IDs.
      *
-     * @param int $idLang Language ID
-     * @param array $list List of attachment IDs in which to search
-     *
+     * @param  int  $idLang  Language ID
+     * @param  array  $list  List of attachment IDs in which to search
      * @return array|bool List of attachment IDs found. False if nothing found.
      */
     public static function getProductAttached($idLang, $list)
     {
-        if (!is_array($list)) {
+        if (! is_array($list)) {
             return false;
         }
 
         $idsAttachments = array_column($list, 'id_attachment');
 
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'product_attachment` pa ' .
-             'LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pa.`id_product` = pl.`id_product`' . Shop::addSqlRestrictionOnLang('pl') . ') ' .
-             'WHERE `id_attachment` IN (' . implode(',', array_map('intval', $idsAttachments)) . ') ' .
-             'AND pl.`id_lang` = ' . (int) $idLang;
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa '.
+             'LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').') '.
+             'WHERE `id_attachment` IN ('.implode(',', array_map('intval', $idsAttachments)).') '.
+             'AND pl.`id_lang` = '.(int) $idLang;
         $tmp = Db::getInstance()->executeS($sql);
         $productAttachments = [];
         foreach ($tmp as $t) {
@@ -328,26 +325,24 @@ class AttachmentCore extends ObjectModel
     public function getWsProducts(): array
     {
         return Db::getInstance()->executeS(
-            'SELECT p.`id_product` AS id ' .
-            'FROM `' . _DB_PREFIX_ . 'product_attachment` pa ' .
-            'INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = pa.id_product) ' .
-            '' . Shop::addSqlAssociation('product', 'p') . ' ' .
-            'WHERE pa.`id_attachment` = ' . (int) $this->id
+            'SELECT p.`id_product` AS id '.
+            'FROM `'._DB_PREFIX_.'product_attachment` pa '.
+            'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pa.id_product) '.
+            ''.Shop::addSqlAssociation('product', 'p').' '.
+            'WHERE pa.`id_attachment` = '.(int) $this->id
         );
     }
 
     /**
      * Set inventaries ids of current attachment for association.
      *
-     * @param array<int, array{id: int|string }> $products Products ids
-     *
-     * @return bool
+     * @param  array<int, array{id: int|string }>  $products  Products ids
      */
     public function setWsProducts(array $products): bool
     {
         $this->deleteAttachments(true);
         foreach ($products as $product) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment` (`id_product`, `id_attachment`) VALUES (' . (int) $product['id'] . ', ' . (int) $this->id . ')');
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.(int) $product['id'].', '.(int) $this->id.')');
             Product::updateCacheAttachment((int) $product['id']);
         }
 

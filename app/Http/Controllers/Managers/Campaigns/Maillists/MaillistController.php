@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Managers\Campaigns\Maillists;
 
-use App\Events\Campaigns\MailListUpdated;
+use Modules\Campaign\Events\MailListUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Maillists\AppUrl;
 use App\Http\Controllers\Managers\Maillists\Customer;
-use App\Models\Campaign\CampaignMaillist;
 use App\Models\EmailVerificationServer;
 use App\Models\Setting;
-use App\Models\Subscriber\Subscriber;
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Campaign\Entities\CampaignMaillist;
+use Modules\Subscriber\Models\Subscriber;
 
 class MaillistController extends Controller
 {

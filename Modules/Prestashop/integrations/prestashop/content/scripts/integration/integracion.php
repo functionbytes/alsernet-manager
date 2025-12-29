@@ -1,16 +1,17 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../../config/config.inc.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
 
-require_once(dirname(__DIR__) . '/integration/auxiliares.php');
-$auxiliares = new auxiliares();
+require_once dirname(__DIR__).'/integration/auxiliares.php';
+$auxiliares = new auxiliares;
 
 const PORC_IVA_21 = 13;
 const ES_SEGUNDA_MANO_FEATURE = 1;
@@ -55,8 +56,8 @@ const VENTA_ESPANA_PORTUGAL_FEATURE_VALUE = 243754;
 // $hora = (int)date('G'); // Hora 0-23 sin ceros a la izquierda
 
 // if ($hora >= 0 && $hora <= 7) {
-    // Acción si es entre las 00:00 y 08:00
-    $sql_txt = "    SELECT
+// Acción si es entre las 00:00 y 08:00
+$sql_txt = "    SELECT
                         *
                     FROM
                         aalv_integracion_cambios
@@ -77,11 +78,10 @@ $sql = Db::getInstance()->executeS($sql_txt);
 
 // $sql = Db::getInstance()->executeS("SELECT * FROM aalv_integracion_cambios where id in (17555336,17555337,17555338,17555339)");
 
+$procesando = Db::getInstance()->getRow('SELECT * FROM aalv_bandera_integracion WHERE id = 2');
 
-$procesando = Db::getInstance()->getRow("SELECT * FROM aalv_bandera_integracion WHERE id = 2");
-
-if($procesando['activo'] == 0){
-    Db::getInstance()->Execute("UPDATE aalv_bandera_integracion set activo=1, fecha = NOW() WHERE id = 2");
+if ($procesando['activo'] == 0) {
+    Db::getInstance()->Execute('UPDATE aalv_bandera_integracion set activo=1, fecha = NOW() WHERE id = 2');
 
     /* Explicacion de Array_excluidos
     *   v_sinc_w_caracter_orden => PrestaShop no permite ordernar las caracteristicas de las combinacions
@@ -99,7 +99,7 @@ if($procesando['activo'] == 0){
     *   v_sinc_w_modelo_idioma => Idiomas de los modelos
     *   v_sinc_tag_temporal => Etiquetas de un articulo
     */
-    $array_excluidos =  [
+    $array_excluidos = [
         'v_sinc_w_caracter_orden',
         'v_sinc_lote',
         'v_sinc_llote',
@@ -117,34 +117,35 @@ if($procesando['activo'] == 0){
         'v_sinc_w_navegacion',
         'v_sinc_w_perfiles_nav',
         'v_sinc_w_valores_nav_idioma',
-        'v_sinc_w_valores_nav'
+        'v_sinc_w_valores_nav',
     ];
     $update_bandera = true;
     $nn = 0;
     foreach ($sql as $value) {
-        if(in_array($value['tabla'], $array_excluidos)){
-            Db::getInstance()->Execute("UPDATE aalv_integracion_cambios SET processed=2 WHERE id='".$value["id"]."'");
+        if (in_array($value['tabla'], $array_excluidos)) {
+            Db::getInstance()->Execute("UPDATE aalv_integracion_cambios SET processed=2 WHERE id='".$value['id']."'");
+
             continue;
         }
         // dump($value);
         try {
             // Iniciar la transacción manualmente
-            if (!($value["tabla"] == 'v_sinc_w_producto' && $value["tipo"] == 1)) {
-                Db::getInstance()->execute("START TRANSACTION");
+            if (! ($value['tabla'] == 'v_sinc_w_producto' && $value['tipo'] == 1)) {
+                Db::getInstance()->execute('START TRANSACTION');
             }
-            echo "(".$nn.") ". date("H:i:s d/m/Y")." - TABLA [".$value["tabla"]."] INICIADA => ";
+            echo '('.$nn.') '.date('H:i:s d/m/Y').' - TABLA ['.$value['tabla'].'] INICIADA => ';
 
-            $nombreArchivo  = dirname(__DIR__) . '/integration/'.$value['tabla'].'.php';
-            $nombreClase    = $value['tabla']."Class";
-            $procesar       = 'Procesar_'.$value['tabla'];
-            $value['data']  = json_decode($value['data'], true);
+            $nombreArchivo = dirname(__DIR__).'/integration/'.$value['tabla'].'.php';
+            $nombreClase = $value['tabla'].'Class';
+            $procesar = 'Procesar_'.$value['tabla'];
+            $value['data'] = json_decode($value['data'], true);
 
             if (file_exists($nombreArchivo)) {
-                include_once($nombreArchivo);
+                include_once $nombreArchivo;
                 if (class_exists($nombreClase)) {
-                    $objeto = new $nombreClase();
+                    $objeto = new $nombreClase;
                     if (method_exists($objeto, $procesar)) {
-                        call_user_func(array($objeto, $procesar),$value['data'],$value['fila'],$value['tipo']);
+                        call_user_func([$objeto, $procesar], $value['data'], $value['fila'], $value['tipo']);
                     } else {
                         $auxiliares->sendmail("El método $procesar no existe en la clase $nombreClase.");
                         break;
@@ -158,22 +159,22 @@ if($procesando['activo'] == 0){
                 break;
             }
 
-            Db::getInstance()->Execute("UPDATE aalv_integracion_cambios SET processed=1 WHERE id='".$value["id"]."'");
+            Db::getInstance()->Execute("UPDATE aalv_integracion_cambios SET processed=1 WHERE id='".$value['id']."'");
 
-            if (!($value["tabla"] == 'v_sinc_w_producto' && $value["tipo"] == 1)) {
-                echo "TRANSACCION [".$value["transaccion"]."] INSERTADA \n";
+            if (! ($value['tabla'] == 'v_sinc_w_producto' && $value['tipo'] == 1)) {
+                echo 'TRANSACCION ['.$value['transaccion']."] INSERTADA \n";
             }
 
             // Confirmar la transacción manualmente
-            Db::getInstance()->execute("COMMIT");
+            Db::getInstance()->execute('COMMIT');
         } catch (Exception $e) {
             // Revertir la transacción manualmente en caso de error
             $update_bandera = false;
-            if (!($value["tabla"] == 'v_sinc_w_producto' && $value["tipo"] == 1)) {
-                Db::getInstance()->execute("ROLLBACK");
+            if (! ($value['tabla'] == 'v_sinc_w_producto' && $value['tipo'] == 1)) {
+                Db::getInstance()->execute('ROLLBACK');
             }
 
-            $auxiliares->sendmail("Error: " . $e->getMessage());
+            $auxiliares->sendmail('Error: '.$e->getMessage());
             break;
         }
         // if($value['tabla'] == 'v_sinc_tarifa_linea' && $value['tipo'] == 1){
@@ -183,11 +184,10 @@ if($procesando['activo'] == 0){
         $nn++;
     }
 
-    if($update_bandera){
-        Db::getInstance()->Execute("UPDATE aalv_bandera_integracion set activo=0, fecha=NOW() WHERE id=2");
+    if ($update_bandera) {
+        Db::getInstance()->Execute('UPDATE aalv_bandera_integracion set activo=0, fecha=NOW() WHERE id=2');
     }
-}else{
+} else {
     echo "\nSe esta procesando.\n";
 }
 echo "\n\n\n";
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -32,8 +33,6 @@ class LegacyCompilerPass implements CompilerPassInterface
 {
     /**
      * Add legacy services that need to be built using Context::getContext().
-     *
-     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container)
     {

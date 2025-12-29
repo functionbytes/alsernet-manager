@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -122,21 +123,20 @@ class AddressFormatCore extends ObjectModel
      * Check if the the association of the field name and a class name
      * is valid.
      *
-     * @param string $className The name class
-     * @param string $fieldName The property name
-     * @param bool $isIdField Do we have to allow a property name to be started with 'id_'
-     *
+     * @param  string  $className  The name class
+     * @param  string  $fieldName  The property name
+     * @param  bool  $isIdField  Do we have to allow a property name to be started with 'id_'
      * @return bool Association of the field and class name is valid
      */
     protected function _checkValidateClassField($className, $fieldName, $isIdField)
     {
         $isValid = false;
 
-        if (!class_exists($className)) {
-            $this->_errorFormatList[] = $this->trans('This class name does not exist.', [], 'Admin.Notifications.Error') .
-            ': ' . $className;
+        if (! class_exists($className)) {
+            $this->_errorFormatList[] = $this->trans('This class name does not exist.', [], 'Admin.Notifications.Error').
+            ': '.$className;
         } else {
-            $obj = new $className();
+            $obj = new $className;
             $reflect = new ReflectionObject($obj);
 
             // Check if the property is accessible
@@ -144,14 +144,14 @@ class AddressFormatCore extends ObjectModel
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
                 if (($propertyName == $fieldName) && ($isIdField ||
-                        (!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName)))) {
+                        (! preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName)))) {
                     $isValid = true;
                 }
             }
 
-            if (!$isValid) {
-                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', [], 'Admin.Notifications.Error') .
-                ': ' . $className . ': ' . $fieldName;
+            if (! $isValid) {
+                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', [], 'Admin.Notifications.Error').
+                ': '.$className.': '.$fieldName;
             }
 
             unset(
@@ -168,8 +168,9 @@ class AddressFormatCore extends ObjectModel
      * of an association between a field name and a class (ClassName:fieldName)
      * if the separator is overview.
      *
-     * @param string $patternName The composition of the class and field name
-     * @param string $fieldsValidate The list of available field for the Address class
+     * @param  string  $patternName  The composition of the class and field name
+     * @param  string  $fieldsValidate  The list of available field for the Address class
+     *
      * @todo: Why is $fieldsValidate unused?
      */
     protected function _checkLiableAssociation($patternName, $fieldsValidate)
@@ -183,25 +184,25 @@ class AddressFormatCore extends ObjectModel
             } elseif ($totalNameUsed == 1) {
                 $associationName[0] = strtolower($associationName[0]);
                 if (in_array($associationName[0], self::$forbiddenPropertyList) ||
-                    !$this->_checkValidateClassField('Address', $associationName[0], false)) {
-                    $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
+                    ! $this->_checkValidateClassField('Address', $associationName[0], false)) {
+                    $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error').': '.
                     $associationName[0];
                 }
             } elseif ($totalNameUsed == 2) {
                 if (empty($associationName[0]) || empty($associationName[1])) {
-                    $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', [], 'Admin.Notifications.Error') . ': ' . $patternName;
+                    $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', [], 'Admin.Notifications.Error').': '.$patternName;
                 } else {
                     $associationName[0] = ucfirst($associationName[0]);
                     $associationName[1] = strtolower($associationName[1]);
 
                     if (in_array($associationName[0], self::$forbiddenClassList)) {
-                        $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
+                        $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error').': '.
                         $associationName[0];
                     } else {
                         // Check if the id field name exist in the Address class
                         // Don't check this attribute on Address (no sense)
                         if ($associationName[0] != 'Address') {
-                            $this->_checkValidateClassField('Address', 'id_' . strtolower($associationName[0]), true);
+                            $this->_checkValidateClassField('Address', 'id_'.strtolower($associationName[0]), true);
                         }
 
                         // Check if the field name exist in the class write by the user
@@ -227,12 +228,12 @@ class AddressFormatCore extends ObjectModel
                 if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
                     if (is_array($patternsName)) {
                         foreach ($patternsName as $patternName) {
-                            if (!in_array($patternName, $usedKeyList)) {
+                            if (! in_array($patternName, $usedKeyList)) {
                                 $this->_checkLiableAssociation($patternName, $fieldsValidate);
                                 $usedKeyList[] = $patternName;
                             } else {
-                                $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error') .
-                                    ': ' . $patternName;
+                                $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error').
+                                    ': '.$patternName;
                             }
                         }
                     }
@@ -248,12 +249,12 @@ class AddressFormatCore extends ObjectModel
      * Checks that all required fields exist in a given fields list.
      * Fills _errorFormatList array in case of absence of a required field.
      *
-     * @param array $fieldList
+     * @param  array  $fieldList
      */
     protected function checkRequiredFields($fieldList)
     {
         foreach (self::getFieldsRequired() as $requiredField) {
-            if (!in_array($requiredField, $fieldList)) {
+            if (! in_array($requiredField, $fieldList)) {
                 $this->_errorFormatList[] = $this->trans(
                     'The %s field (in tab %s) is required.',
                     [$requiredField, $this->getFieldTabName($requiredField)],
@@ -267,8 +268,7 @@ class AddressFormatCore extends ObjectModel
      * For ex: Country:name => the tab is 'Country'.
      * There should be only one separator in the string, otherwise throw an exception.
      *
-     * @param string $field
-     *
+     * @param  string  $field
      * @return bool|string
      *
      * @throws AddressException
@@ -329,7 +329,7 @@ class AddressFormatCore extends ObjectModel
                             }
                         }
 
-                        if ($formattedValue = preg_replace('/^' . $key . '$/', $formattedValueList[$key], $replacedValue, -1, $count)) {
+                        if ($formattedValue = preg_replace('/^'.$key.'$/', $formattedValueList[$key], $replacedValue, -1, $count)) {
                             if ($count) {
                                 // Allow to check multiple key in the same pattern,
                                 if (empty($mainFormattedKey)) {
@@ -340,7 +340,7 @@ class AddressFormatCore extends ObjectModel
                                     $formattedValueList[$key] = '';
                                 }
                                 // Store the new pattern value
-                                $formattedValueList[$mainFormattedKey] = $start . $formattedValue . $end;
+                                $formattedValueList[$mainFormattedKey] = $start.$formattedValue.$end;
                                 unset($originalFormattedPatternList[$patternNum]);
                             }
                         }
@@ -359,7 +359,7 @@ class AddressFormatCore extends ObjectModel
             $cleanedLine = '';
             if (($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
                 foreach ($keyList as $key) {
-                    $cleanedLine .= $key . ' ';
+                    $cleanedLine .= $key.' ';
                 }
                 $cleanedLine = trim($cleanedLine);
                 $line = $cleanedLine;
@@ -370,14 +370,13 @@ class AddressFormatCore extends ObjectModel
     /**
      * Returns the formatted fields with associated values.
      *
-     * @param Address $address Address object
-     * @param AddressFormat $addressFormat The format
-     *
+     * @param  Address  $address  Address object
+     * @param  AddressFormat  $addressFormat  The format
      * @return array
      */
     public static function getFormattedAddressFieldsValues($address, $addressFormat, $id_lang = null)
     {
-        if (!$id_lang) {
+        if (! $id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
         $tab = [];
@@ -398,10 +397,10 @@ class AddressFormatCore extends ObjectModel
                                 // Check if the property exist in both classes
                                 if (($totalName == 2) && class_exists($associateName[0]) &&
                                     property_exists($associateName[0], $associateName[1]) &&
-                                    property_exists($address, 'id_' . strtolower($associateName[0]))) {
-                                    $idFieldName = 'id_' . strtolower($associateName[0]);
+                                    property_exists($address, 'id_'.strtolower($associateName[0]))) {
+                                    $idFieldName = 'id_'.strtolower($associateName[0]);
 
-                                    if (!isset($temporyObject[$associateName[0]])) {
+                                    if (! isset($temporyObject[$associateName[0]])) {
                                         $temporyObject[$associateName[0]] = new $associateName[0]($address->{$idFieldName});
                                     }
                                     if ($temporyObject[$associateName[0]]) {
@@ -426,12 +425,10 @@ class AddressFormatCore extends ObjectModel
     /**
      * Generates the full address text.
      *
-     * @param Address $address
-     * @param array $patternRules A defined rules array to avoid some pattern
-     * @param string $newLine A string containing the newLine format
-     * @param string $separator A string containing the separator format
-     * @param array $style
-     *
+     * @param  array  $patternRules  A defined rules array to avoid some pattern
+     * @param  string  $newLine  A string containing the newLine format
+     * @param  string  $separator  A string containing the separator format
+     * @param  array  $style
      * @return string
      */
     public static function generateAddress(Address $address, $patternRules = [], $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = [])
@@ -444,20 +441,20 @@ class AddressFormatCore extends ObjectModel
             if (($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
                 $tmpText = '';
                 foreach ($patternsList as $pattern) {
-                    if ((!array_key_exists('avoid', $patternRules)) ||
-                                (is_array($patternRules) && array_key_exists('avoid', $patternRules) && !in_array($pattern, $patternRules['avoid']))) {
-                        $tmpText .= (isset($addressFormatedValues[$pattern]) && !empty($addressFormatedValues[$pattern])) ?
+                    if ((! array_key_exists('avoid', $patternRules)) ||
+                                (is_array($patternRules) && array_key_exists('avoid', $patternRules) && ! in_array($pattern, $patternRules['avoid']))) {
+                        $tmpText .= (isset($addressFormatedValues[$pattern]) && ! empty($addressFormatedValues[$pattern])) ?
                                 (((isset($style[$pattern])) ?
                                     (sprintf($style[$pattern], $addressFormatedValues[$pattern])) :
-                                    $addressFormatedValues[$pattern]) . $separator) : '';
+                                    $addressFormatedValues[$pattern]).$separator) : '';
                     }
                 }
                 $tmpText = trim($tmpText);
-                $addressText .= (!empty($tmpText)) ? $tmpText . $newLine : '';
+                $addressText .= (! empty($tmpText)) ? $tmpText.$newLine : '';
             }
         }
 
-        $addressText = preg_replace('/' . preg_quote($newLine, '/') . '$/i', '', $addressText);
+        $addressText = preg_replace('/'.preg_quote($newLine, '/').'$/i', '', $addressText);
         $addressText = rtrim($addressText, $separator);
 
         return $addressText;
@@ -466,9 +463,8 @@ class AddressFormatCore extends ObjectModel
     /**
      * Generate formatted Address string for display on Smarty templates.
      *
-     * @param array $params Address parameters
-     * @param Smarty $smarty Smarty instance
-     *
+     * @param  array  $params  Address parameters
+     * @param  Smarty  $smarty  Smarty instance
      * @return string Formatted Address string
      */
     public static function generateAddressSmarty($params, &$smarty)
@@ -492,15 +488,15 @@ class AddressFormatCore extends ObjectModel
         $propertyList = [];
 
         if (class_exists($className)) {
-            $object = new $className();
+            $object = new $className;
             $reflect = new ReflectionObject($object);
 
             // Check if the property is accessible
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
-                if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList)) &&
-                        (!preg_match('#id|id_\w#', $propertyName))) {
+                if ((! in_array($propertyName, AddressFormat::$forbiddenPropertyList)) &&
+                        (! preg_match('#id|id_\w#', $propertyName))) {
                     $propertyList[] = $propertyName;
                 }
             }
@@ -516,8 +512,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * Return a list of liable class of the className.
      *
-     * @param string $className
-     *
+     * @param  string  $className
      * @return array
      */
     public static function getLiableClass($className)
@@ -525,7 +520,7 @@ class AddressFormatCore extends ObjectModel
         $objectList = [];
 
         if (class_exists($className)) {
-            $object = new $className();
+            $object = new $className;
             $reflect = new ReflectionObject($object);
 
             // Get all the name object liable to the Address class
@@ -534,9 +529,9 @@ class AddressFormatCore extends ObjectModel
                 $propertyName = $property->getName();
                 if (preg_match('#id_\w#', $propertyName) && strlen($propertyName) > 3) {
                     $nameObject = ucfirst(substr($propertyName, 3));
-                    if (!in_array($nameObject, self::$forbiddenClassList) &&
+                    if (! in_array($nameObject, self::$forbiddenClassList) &&
                             class_exists($nameObject)) {
-                        $objectList[$nameObject] = new $nameObject();
+                        $objectList[$nameObject] = new $nameObject;
                     }
                 }
             }
@@ -552,10 +547,9 @@ class AddressFormatCore extends ObjectModel
     /**
      * Returns address format fields in array by country.
      *
-     * @param int $idCountry If null using PS_COUNTRY_DEFAULT
-     * @param bool $splitAll
-     * @param bool $cleaned
-     *
+     * @param  int  $idCountry  If null using PS_COUNTRY_DEFAULT
+     * @param  bool  $splitAll
+     * @param  bool  $cleaned
      * @return array String field address format
      */
     public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
@@ -607,15 +601,14 @@ class AddressFormatCore extends ObjectModel
     /**
      * Returns address format by country if not defined using default country.
      *
-     * @param int $idCountry Country ID
-     *
+     * @param  int  $idCountry  Country ID
      * @return string field address format
      */
     public static function getAddressCountryFormat($idCountry = 0)
     {
         $idCountry = (int) $idCountry;
 
-        $tmpObj = new AddressFormat();
+        $tmpObj = new AddressFormat;
         $tmpObj->id_country = $idCountry;
         $out = $tmpObj->getFormat($tmpObj->id_country);
         unset($tmpObj);
@@ -626,8 +619,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * Returns address format by Country.
      *
-     * @param int $idCountry Country ID
-     *
+     * @param  int  $idCountry  Country ID
      * @return string field Address format
      */
     public function getFormat($idCountry)
@@ -636,16 +628,15 @@ class AddressFormatCore extends ObjectModel
         if (empty($out)) {
             $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
-        if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
-            $out .= AddressFormat::FORMAT_NEW_LINE . 'dni';
+        if (Country::isNeedDniByCountryId($idCountry) && strpos($out, 'dni') === false) {
+            $out .= AddressFormat::FORMAT_NEW_LINE.'dni';
         }
 
         return $out;
     }
 
     /**
-     * @param int $idCountry
-     *
+     * @param  int  $idCountry
      * @return false|string|null
      *
      * @deprecated 1.7.0
@@ -658,26 +649,25 @@ class AddressFormatCore extends ObjectModel
     /**
      * Get Address format from DB.
      *
-     * @param int $idCountry Country ID
-     *
+     * @param  int  $idCountry  Country ID
      * @return false|string|null Address format
      *
      * @since 1.7.0
      */
     protected function getFormatDB($idCountry)
     {
-        if (!Cache::isStored('AddressFormat::getFormatDB' . $idCountry)) {
+        if (! Cache::isStored('AddressFormat::getFormatDB'.$idCountry)) {
             $format = Db::getInstance()->getValue('
 			SELECT format
-			FROM `' . _DB_PREFIX_ . $this->def['table'] . '`
-			WHERE `id_country` = ' . (int) $idCountry);
+			FROM `'._DB_PREFIX_.$this->def['table'].'`
+			WHERE `id_country` = '.(int) $idCountry);
             $format = trim($format);
-            Cache::store('AddressFormat::getFormatDB' . $idCountry, $format);
+            Cache::store('AddressFormat::getFormatDB'.$idCountry, $format);
 
             return $format;
         }
 
-        return Cache::retrieve('AddressFormat::getFormatDB' . $idCountry);
+        return Cache::retrieve('AddressFormat::getFormatDB'.$idCountry);
     }
 
     /**
@@ -685,7 +675,7 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getFieldsRequired()
     {
-        $address = new CustomerAddress();
+        $address = new CustomerAddress;
 
         return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
     }

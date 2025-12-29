@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -60,16 +61,20 @@ class PDFCore
     private $smarty;
 
     const TEMPLATE_INVOICE = 'Invoice';
+
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
+
     const TEMPLATE_ORDER_SLIP = 'OrderSlip';
+
     const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+
     const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**
-     * @param PrestaShopCollection|ObjectModel|array $objects
-     * @param string $template
-     * @param Smarty $smarty
-     * @param string $orientation
+     * @param  PrestaShopCollection|ObjectModel|array  $objects
+     * @param  string  $template
+     * @param  Smarty  $smarty
+     * @param  string  $orientation
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
     {
@@ -108,7 +113,7 @@ class PDFCore
         smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', ['Image', 'getHeight'], true, $original_lazy_register);
 
         $this->objects = $objects;
-        if (!($objects instanceof Iterator) && !is_array($objects)) {
+        if (! ($objects instanceof Iterator) && ! is_array($objects)) {
             $this->objects = [$objects];
         }
 
@@ -120,8 +125,7 @@ class PDFCore
     /**
      * Render PDF.
      *
-     * @param bool $display
-     *
+     * @param  bool  $display
      * @return string|void
      *
      * @throws PrestaShopException
@@ -133,7 +137,7 @@ class PDFCore
         foreach ($this->objects as $object) {
             $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
-            if (!$template) {
+            if (! $template) {
                 continue;
             }
 
@@ -169,8 +173,7 @@ class PDFCore
     /**
      * Get correct PDF template classes.
      *
-     * @param mixed $object
-     *
+     * @param  mixed  $object
      * @return HTMLTemplate|false
      *
      * @throws PrestaShopException
@@ -178,14 +181,14 @@ class PDFCore
     public function getTemplateObject($object)
     {
         $class = false;
-        $class_name = 'HTMLTemplate' . $this->template;
+        $class_name = 'HTMLTemplate'.$this->template;
 
         if (class_exists($class_name)) {
             // Some HTMLTemplateXYZ implementations won't use the third param but this is not a problem (no warning in PHP),
             // the third param is then ignored if not added to the method signature.
             $class = new $class_name($object, $this->smarty, $this->send_bulk_flag);
 
-            if (!($class instanceof HTMLTemplate)) {
+            if (! ($class instanceof HTMLTemplate)) {
                 throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
             }
         }

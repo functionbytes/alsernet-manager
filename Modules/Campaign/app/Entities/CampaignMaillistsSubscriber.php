@@ -25,7 +25,7 @@ namespace Modules\Campaign\Entities;
 use App\Events\CampaignMaillistSubscription;
 use App\Events\CampaignMaillistUnsubscription;
 use app\Library\StringHelper;
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use App\Models\Blacklist;
 use App\Models\Segment;
 use App\Models\SubscriberField;

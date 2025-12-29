@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,20 +35,19 @@ class AddressChecksumCore implements ChecksumInterface
     /**
      * Generate a checksum.
      *
-     * @param Address $address
-     *
+     * @param  Address  $address
      * @return string SHA1 checksum for the Address
      */
     public function generateChecksum($address)
     {
-        if (!$address->id) {
+        if (! $address->id) {
             return sha1('No address set');
         }
 
         $uniqId = '';
         $fields = $address->getFields();
         foreach ($fields as $name => $value) {
-            $uniqId .= $value . self::SEPARATOR;
+            $uniqId .= $value.self::SEPARATOR;
         }
         $uniqId = rtrim($uniqId, self::SEPARATOR);
 

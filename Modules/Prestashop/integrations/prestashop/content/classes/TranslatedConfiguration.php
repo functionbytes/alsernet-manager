@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -56,8 +57,8 @@ class TranslatedConfigurationCore extends Configuration
     /**
      * TranslatedConfigurationCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param  null  $id
+     * @param  null  $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -65,9 +66,9 @@ class TranslatedConfigurationCore extends Configuration
         // Check if the id configuration is set in the configuration_lang table.
         // Otherwise configuration is not set as translated configuration.
         if ($id !== null) {
-            $idTranslated = Db::getInstance()->executeS('				SELECT `' . bqSQL($this->def['primary']) . '`
-				FROM `' . bqSQL(_DB_PREFIX_ . $this->def['table']) . '_lang`
-				WHERE `' . bqSQL($this->def['primary']) . '`=' . (int) $id . ' LIMIT 0,1
+            $idTranslated = Db::getInstance()->executeS('				SELECT `'.bqSQL($this->def['primary']).'`
+				FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+				WHERE `'.bqSQL($this->def['primary']).'`='.(int) $id.' LIMIT 0,1
 			');
 
             if (empty($idTranslated)) {
@@ -78,9 +79,8 @@ class TranslatedConfigurationCore extends Configuration
     }
 
     /**
-     * @param bool $autoDate
-     * @param bool $nullValues
-     *
+     * @param  bool  $autoDate
+     * @param  bool  $nullValues
      * @return bool
      */
     public function add($autoDate = true, $nullValues = false)
@@ -89,8 +89,7 @@ class TranslatedConfigurationCore extends Configuration
     }
 
     /**
-     * @param bool $nullValues
-     *
+     * @param  bool  $nullValues
      * @return bool
      */
     public function update($nullValues = false)
@@ -107,8 +106,8 @@ class TranslatedConfigurationCore extends Configuration
 
         $lastInsert = Db::getInstance()->getRow('
 			SELECT `id_configuration` AS id
-			FROM `' . _DB_PREFIX_ . 'configuration`
-			WHERE `name` = \'' . pSQL($this->name) . '\'');
+			FROM `'._DB_PREFIX_.'configuration`
+			WHERE `name` = \''.pSQL($this->name).'\'');
         if ($lastInsert) {
             $this->id = $lastInsert['id'];
         }
@@ -117,24 +116,23 @@ class TranslatedConfigurationCore extends Configuration
     }
 
     /**
-     * @param string $sqlJoin
-     * @param string $sqlFilter
-     * @param string $sqlSort
-     * @param string $sqlLimit
-     *
+     * @param  string  $sqlJoin
+     * @param  string  $sqlFilter
+     * @param  string  $sqlSort
+     * @param  string  $sqlLimit
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWebserviceObjectList($sqlJoin, $sqlFilter, $sqlSort, $sqlLimit)
     {
         $query = '
-		SELECT DISTINCT main.`' . $this->def['primary'] . '` FROM `' . _DB_PREFIX_ . $this->def['table'] . '` main
-		' . $sqlJoin . '
+		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
+		'.$sqlJoin.'
 		WHERE id_configuration IN
 		(	SELECT id_configuration
-			FROM ' . _DB_PREFIX_ . $this->def['table'] . '_lang
-		) ' . $sqlFilter . '
-		' . ($sqlSort != '' ? $sqlSort : '') . '
-		' . ($sqlLimit != '' ? $sqlLimit : '') . '
+			FROM '._DB_PREFIX_.$this->def['table'].'_lang
+		) '.$sqlFilter.'
+		'.($sqlSort != '' ? $sqlSort : '').'
+		'.($sqlLimit != '' ? $sqlLimit : '').'
 		';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

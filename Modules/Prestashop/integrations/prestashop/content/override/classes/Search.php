@@ -9,48 +9,50 @@ class Search extends SearchCore
         if ($id_product) {
             $full = false;
         }
-		
-		if ($full){
-			//solicitada reindexación completa ==> log + BLOQUEAR
-			//PrestaShopLogger::addLog("Bloqueo reindexación completa en Search");
-			AddisLogger::log('search.php', 'Bloqueo reindexación completa en Search', null, ''.$_SERVER['HTTP_REFERER']);
-			return true;
-		}
+
+        if ($full) {
+            // solicitada reindexación completa ==> log + BLOQUEAR
+            // PrestaShopLogger::addLog("Bloqueo reindexación completa en Search");
+            AddisLogger::log('search.php', 'Bloqueo reindexación completa en Search', null, ''.$_SERVER['HTTP_REFERER']);
+
+            return true;
+        }
 
         if ($full && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP) {
-            $db->execute('DELETE si, sw FROM `' . _DB_PREFIX_ . 'search_index` si
-				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
-				' . Shop::addSqlAssociation('product', 'p') . '
-				INNER JOIN `' . _DB_PREFIX_ . 'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
+            $db->execute('DELETE si, sw FROM `'._DB_PREFIX_.'search_index` si
+				INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = si.id_product)
+				'.Shop::addSqlAssociation('product', 'p').'
+				INNER JOIN `'._DB_PREFIX_.'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1');
-            $db->execute('UPDATE `' . _DB_PREFIX_ . 'product` p
-				' . Shop::addSqlAssociation('product', 'p') . '
+            $db->execute('UPDATE `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				SET p.`indexed` = 0, product_shop.`indexed` = 0
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1
 				');
         } elseif ($full) {
-            //PrestaShopLogger::addLog("Bloqueo reindexación completa en Search - PART2");
-			AddisLogger::log('search.php', 'Bloqueo reindexación completa en Search - PART2', null, ''.$_SERVER['HTTP_REFERER']);
-			return true;
-            //$db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_index');
-            //$db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
-            //ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
+            // PrestaShopLogger::addLog("Bloqueo reindexación completa en Search - PART2");
+            AddisLogger::log('search.php', 'Bloqueo reindexación completa en Search - PART2', null, ''.$_SERVER['HTTP_REFERER']);
+
+            return true;
+            // $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_index');
+            // $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
+            // ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
-            $db->execute('DELETE si FROM `' . _DB_PREFIX_ . 'search_index` si
-				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
-				' . Shop::addSqlAssociation('product', 'p') . '
+            $db->execute('DELETE si FROM `'._DB_PREFIX_.'search_index` si
+				INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = si.id_product)
+				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1
-				AND ' . ($id_product ? 'p.`id_product` = ' . (int) $id_product : 'product_shop.`indexed` = 0'));
+				AND '.($id_product ? 'p.`id_product` = '.(int) $id_product : 'product_shop.`indexed` = 0'));
 
-            $db->execute('UPDATE `' . _DB_PREFIX_ . 'product` p
-				' . Shop::addSqlAssociation('product', 'p') . '
+            $db->execute('UPDATE `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				SET p.`indexed` = 0, product_shop.`indexed` = 0
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1
-				AND ' . ($id_product ? 'p.`id_product` = ' . (int) $id_product : 'product_shop.`indexed` = 0'));
+				AND '.($id_product ? 'p.`id_product` = '.(int) $id_product : 'product_shop.`indexed` = 0'));
         }
 
         // Every fields are weighted according to the configuration in the backend
@@ -121,49 +123,49 @@ class Search extends SearchCore
                 }
 
                 // If we find words that need to be indexed, they're added to the word table in the database
-                if (is_array($product_array) && !empty($product_array)) {
+                if (is_array($product_array) && ! empty($product_array)) {
                     $query_array = $query_array2 = [];
                     foreach ($product_array as $word => $weight) {
                         if ($weight) {
-                            $query_array[$word] = '(' . (int) $product['id_lang'] . ', ' . (int) $product['id_shop'] . ', \'' . pSQL($word) . '\')';
-                            $query_array2[] = '\'' . pSQL($word) . '\'';
+                            $query_array[$word] = '('.(int) $product['id_lang'].', '.(int) $product['id_shop'].', \''.pSQL($word).'\')';
+                            $query_array2[] = '\''.pSQL($word).'\'';
                         }
                     }
 
-                    if (is_array($query_array) && !empty($query_array)) {
+                    if (is_array($query_array) && ! empty($query_array)) {
                         // The words are inserted...
                         $db->execute('
-						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
-						VALUES ' . implode(',', $query_array), false);
+						INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
+						VALUES '.implode(',', $query_array), false);
                     }
                     $word_ids_by_word = [];
-                    if (is_array($query_array2) && !empty($query_array2)) {
+                    if (is_array($query_array2) && ! empty($query_array2)) {
                         // ...then their IDs are retrieved
                         $added_words = $db->executeS('
 						SELECT sw.id_word, sw.word
-						FROM ' . _DB_PREFIX_ . 'search_word sw
-						WHERE sw.word IN (' . implode(',', $query_array2) . ')
-						AND sw.id_lang = ' . (int) $product['id_lang'] . '
-						AND sw.id_shop = ' . (int) $product['id_shop'], true, false);
+						FROM '._DB_PREFIX_.'search_word sw
+						WHERE sw.word IN ('.implode(',', $query_array2).')
+						AND sw.id_lang = '.(int) $product['id_lang'].'
+						AND sw.id_shop = '.(int) $product['id_shop'], true, false);
                         foreach ($added_words as $word_id) {
-                            $word_ids_by_word['_' . $word_id['word']] = (int) $word_id['id_word'];
+                            $word_ids_by_word['_'.$word_id['word']] = (int) $word_id['id_word'];
                         }
                     }
                 }
 
                 foreach ($product_array as $word => $weight) {
-                    if (!$weight) {
+                    if (! $weight) {
                         continue;
                     }
-                    if (!isset($word_ids_by_word['_' . $word])) {
+                    if (! isset($word_ids_by_word['_'.$word])) {
                         continue;
                     }
-                    $id_word = $word_ids_by_word['_' . $word];
-                    if (!$id_word) {
+                    $id_word = $word_ids_by_word['_'.$word];
+                    if (! $id_word) {
                         continue;
                     }
-                    $query_array3[] = '(' . (int) $product['id_product'] . ',' .
-                        (int) $id_word . ',' . (int) $weight . ')';
+                    $query_array3[] = '('.(int) $product['id_product'].','.
+                        (int) $id_word.','.(int) $weight.')';
                     // Force save every 200 words in order to avoid overloading MySQL
                     if (++$count_words % 200 == 0) {
                         Search::saveIndex($query_array3);
@@ -181,6 +183,4 @@ class Search extends SearchCore
 
         return true;
     }
-
-    
 }

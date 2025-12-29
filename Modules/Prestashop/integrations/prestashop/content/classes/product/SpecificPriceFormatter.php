@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -61,9 +62,7 @@ class SpecificPriceFormatterCore
     /**
      * SpecificPriceFormatter constructor.
      *
-     * @param array $specificPrice
-     * @param bool $isTaxIncluded
-     * @param Context $context
+     * @param  Context  $context
      */
     public function __construct(array $specificPrice, bool $isTaxIncluded, Currency $currency, bool $displayDiscountPrice)
     {
@@ -76,15 +75,14 @@ class SpecificPriceFormatterCore
     /**
      * This is legacy code extracted from ProductController and it should be refactored
      *
-     * @param float $initialPrice
-     * @param float $tax_rate
-     * @param float $ecotax_amount
-     *
+     * @param  float  $initialPrice
+     * @param  float  $tax_rate
+     * @param  float  $ecotax_amount
      * @return array
      */
     public function formatSpecificPrice($initialPrice, $tax_rate, $ecotax_amount)
     {
-        $priceFormatter = new PriceFormatter();
+        $priceFormatter = new PriceFormatter;
 
         $this->specificPrice['quantity'] = &$this->specificPrice['from_quantity'];
         if ($this->specificPrice['price'] >= 0) {
@@ -113,7 +111,7 @@ class SpecificPriceFormatterCore
             $discountPrice = $initialPrice - $this->specificPrice['real_value'];
 
             if ($this->displayDiscountPrice) {
-                if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
+                if ($this->specificPrice['reduction_tax'] == 0 && ! $this->specificPrice['price']) {
                     $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                 } else {
                     $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - $this->specificPrice['real_value']);
@@ -131,7 +129,7 @@ class SpecificPriceFormatterCore
                 $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] + ($this->specificPrice['reduction'] * $tax_rate) / 100;
                 $discountPrice = $initialPrice - $this->specificPrice['real_value'];
                 if ($this->displayDiscountPrice) {
-                    if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
+                    if ($this->specificPrice['reduction_tax'] == 0 && ! $this->specificPrice['price']) {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                     } else {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - $this->specificPrice['real_value']);
@@ -149,7 +147,7 @@ class SpecificPriceFormatterCore
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction']));
                     }
                 } else {
-                    $this->specificPrice['discount'] = $this->specificPrice['real_value'] . '%';
+                    $this->specificPrice['discount'] = $this->specificPrice['real_value'].'%';
                 }
             }
         }
@@ -160,11 +158,10 @@ class SpecificPriceFormatterCore
     }
 
     /**
-     * @param float $specificPriceValue
-     * @param bool $specificPriceReductionTax
-     * @param float $taxRate
-     * @param float $ecoTaxAmount
-     *
+     * @param  float  $specificPriceValue
+     * @param  bool  $specificPriceReductionTax
+     * @param  float  $taxRate
+     * @param  float  $ecoTaxAmount
      * @return mixed
      */
     private function calculateSpecificPrice(

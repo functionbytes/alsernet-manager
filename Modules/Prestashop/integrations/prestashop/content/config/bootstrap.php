@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,23 +32,23 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
 
-$container_builder = new ContainerBuilder();
+$container_builder = new ContainerBuilder;
 $legacyContainer = $container_builder->build();
 ServiceLocator::setServiceContainerInstance($legacyContainer);
 
-if (!file_exists(_PS_CACHE_DIR_)) {
+if (! file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate([
-        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), //@replace hard-coded Lang
+        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), // @replace hard-coded Lang
     ]);
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-$configDirectory = __DIR__. '/../app/config';
-$phpParametersFilepath = $configDirectory . '/parameters.php';
-$yamlParametersFilepath = $configDirectory . '/parameters.yml';
+$configDirectory = __DIR__.'/../app/config';
+$phpParametersFilepath = $configDirectory.'/parameters.php';
+$yamlParametersFilepath = $configDirectory.'/parameters.yml';
 
-$filesystem = new Filesystem();
+$filesystem = new Filesystem;
 
 $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     try {
@@ -60,20 +61,20 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
 };
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
-if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
+if (! file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
     $parameters = Yaml::parseFile($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
-        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
+        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:'."\n");
     }
 }
 
-$lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
+$lastParametersModificationTime = (int) @filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
+    $cachedParameters = _PS_CACHE_DIR_.'appParameters.php';
 
-    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
-    if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
+    $lastParametersCacheModificationTime = (int) @filemtime($cachedParameters);
+    if (! $lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
             $config = require $phpParametersFilepath;
@@ -84,15 +85,15 @@ if ($lastParametersModificationTime) {
         }
     }
 
-    $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
+    $config = require_once _PS_CACHE_DIR_.'appParameters.php';
     array_walk($config['parameters'], function (&$param) {
         $param = str_replace('%%', '%', $param);
     });
 
     $database_host = $config['parameters']['database_host'];
 
-    if (!empty($config['parameters']['database_port'])) {
-        $database_host .= ':'. $config['parameters']['database_port'];
+    if (! empty($config['parameters']['database_port'])) {
+        $database_host .= ':'.$config['parameters']['database_port'];
     }
 
     define('_DB_SERVER_', $database_host);
@@ -104,11 +105,11 @@ if ($lastParametersModificationTime) {
 
     define('_DB_USER_', $config['parameters']['database_user']);
     define('_DB_PASSWD_', $config['parameters']['database_password']);
-    define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
-    define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
-    define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+    define('_DB_PREFIX_', $config['parameters']['database_prefix']);
+    define('_MYSQL_ENGINE_', $config['parameters']['database_engine']);
+    define('_PS_CACHING_SYSTEM_', $config['parameters']['ps_caching']);
 
-    if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
+    if (! defined('PS_IN_UPGRADE') && ! defined('_PS_IN_TEST_')) {
         define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
     } else {
         define('_PS_CACHE_ENABLED_', 0);

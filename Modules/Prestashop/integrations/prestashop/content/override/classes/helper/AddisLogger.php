@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,8 +26,6 @@
  */
 class HelperTreeCategories extends HelperTreeCategoriesCore
 {
-   
-
     private function fillTree(&$categories, $rootCategoryId)
     {
         $tree = [];
@@ -35,7 +34,7 @@ class HelperTreeCategories extends HelperTreeCategoriesCore
         foreach ($categories[$rootCategoryId] as $category) {
             $categoryId = (int) $category['id_category'];
 
-            if ($categoryId != 2821 || ($categoryId == 2821 && isset($_GET['configure']) && $_GET['configure'] == 'retailrocket') ) {
+            if ($categoryId != 2821 || ($categoryId == 2821 && isset($_GET['configure']) && $_GET['configure'] == 'retailrocket')) {
                 $tree[$categoryId] = $category;
 
                 if (Category::hasChildren($categoryId, $this->getLang(), false, $this->getShop()->id)) {
@@ -49,7 +48,7 @@ class HelperTreeCategories extends HelperTreeCategoriesCore
                     foreach ($categoryChildren as $child) {
                         $childId = (int) $child['id_category'];
 
-                        if (!array_key_exists('children', $tree[$categoryId])) {
+                        if (! array_key_exists('children', $tree[$categoryId])) {
                             $tree[$categoryId]['children'] = [$childId => $child];
                         } else {
                             $tree[$categoryId]['children'][$childId] = $child;
@@ -71,5 +70,4 @@ class HelperTreeCategories extends HelperTreeCategoriesCore
 
         return $tree;
     }
-
 }

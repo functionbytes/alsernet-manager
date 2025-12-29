@@ -15,7 +15,7 @@ class CustomerAddressForm extends CustomerAddressFormCore
             6 => 10,
         ];
 
-        if (!isset($params['id_country']) && isset($countryByLang[$idLang])) {
+        if (! isset($params['id_country']) && isset($countryByLang[$idLang])) {
             $params['id_country'] = $countryByLang[$idLang];
         }
 

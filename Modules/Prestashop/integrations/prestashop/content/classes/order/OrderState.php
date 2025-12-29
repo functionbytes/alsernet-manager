@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -105,31 +106,34 @@ class OrderStateCore extends ObjectModel
     ];
 
     const FLAG_NO_HIDDEN = 1;  /* 00001 */
+
     const FLAG_LOGABLE = 2;  /* 00010 */
+
     const FLAG_DELIVERY = 4;  /* 00100 */
+
     const FLAG_SHIPPED = 8;  /* 01000 */
+
     const FLAG_PAID = 16; /* 10000 */
 
     /**
      * Get all available order statuses.
      *
-     * @param int $id_lang Language id for status name
-     * @param bool $getDeletedStates
-     *
+     * @param  int  $id_lang  Language id for status name
+     * @param  bool  $getDeletedStates
      * @return array Order statuses
      */
     public static function getOrderStates($id_lang, $filterDeleted = true)
     {
         $deletedStates = $filterDeleted ? ' WHERE deleted = 0' : '';
-        $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
+        $cache_id = 'OrderState::getOrderStates_'.(int) $id_lang;
         $cache_id .= $filterDeleted ? '_filterDeleted' : '';
 
-        if (!Cache::isStored($cache_id)) {
+        if (! Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'order_state` os
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')'
-            . $deletedStates . ' ORDER BY `name` ASC');
+            FROM `'._DB_PREFIX_.'order_state` os
+            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) $id_lang.')'
+            .$deletedStates.' ORDER BY `name` ASC');
             Cache::store($cache_id, $result);
 
             return $result;
@@ -141,8 +145,7 @@ class OrderStateCore extends ObjectModel
     /**
      * Check if we can make a invoice when order is in this state.
      *
-     * @param int $id_order_state State ID
-     *
+     * @param  int  $id_order_state  State ID
      * @return bool availability
      */
     public static function invoiceAvailable($id_order_state)
@@ -151,8 +154,8 @@ class OrderStateCore extends ObjectModel
         if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `invoice`
-            FROM `' . _DB_PREFIX_ . 'order_state`
-            WHERE `id_order_state` = ' . (int) $id_order_state);
+            FROM `'._DB_PREFIX_.'order_state`
+            WHERE `id_order_state` = '.(int) $id_order_state);
         }
 
         return (bool) $result;
@@ -160,28 +163,24 @@ class OrderStateCore extends ObjectModel
 
     public function isRemovable()
     {
-        return !($this->unremovable);
+        return ! ($this->unremovable);
     }
 
     /**
      * Check if a localized name in database for a specific lang (and excluding some IDs)
      *
-     * @param string $name
-     * @param int $idLang
-     * @param int|null $excludeIdOrderState ID of the order state excluded for the search
-     *
-     * @return bool
+     * @param  int|null  $excludeIdOrderState  ID of the order state excluded for the search
      */
     public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
     {
         return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT COUNT(*) AS count' .
-            ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
-            ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .
-            ' WHERE osl.id_lang = ' . $idLang .
-            ' AND osl.name =  \'' . pSQL($name) . '\'' .
-            ' AND os.deleted = 0' .
-            ($excludeIdOrderState ? ' AND osl.id_order_state != ' . $excludeIdOrderState : '')
+            'SELECT COUNT(*) AS count'.
+            ' FROM '._DB_PREFIX_.'order_state_lang osl'.
+            ' INNER JOIN '._DB_PREFIX_.'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.$idLang.')'.
+            ' WHERE osl.id_lang = '.$idLang.
+            ' AND osl.name =  \''.pSQL($name).'\''.
+            ' AND os.deleted = 0'.
+            ($excludeIdOrderState ? ' AND osl.id_order_state != '.$excludeIdOrderState : '')
         );
     }
 }

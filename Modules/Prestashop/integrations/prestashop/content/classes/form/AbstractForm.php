@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,15 +30,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 abstract class AbstractFormCore implements FormInterface
 {
     private $smarty;
+
     protected $translator;
+
     protected $constraintTranslator;
 
     protected $action;
+
     protected $template;
 
     protected $formatter;
 
     protected $formFields = [];
+
     protected $errors = ['' => []];
 
     public function __construct(
@@ -82,7 +87,7 @@ abstract class AbstractFormCore implements FormInterface
     public function hasErrors()
     {
         foreach ($this->getErrors() as $errors) {
-            if (!empty($errors)) {
+            if (! empty($errors)) {
                 return true;
             }
         }
@@ -134,11 +139,11 @@ abstract class AbstractFormCore implements FormInterface
     {
         foreach ($this->formFields as $field) {
             if ($field->isRequired()) {
-                if (!$field->getValue()) {
+                if (! $field->getValue()) {
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
-                } elseif (!$this->checkFieldLength($field)) {
+                } elseif (! $this->checkFieldLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
@@ -149,10 +154,10 @@ abstract class AbstractFormCore implements FormInterface
                 }
 
                 continue;
-            } elseif (!$field->isRequired()) {
-                if (!$field->getValue()) {
+            } elseif (! $field->isRequired()) {
+                if (! $field->getValue()) {
                     continue;
-                } elseif (!$this->checkFieldLength($field)) {
+                } elseif (! $this->checkFieldLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
@@ -164,7 +169,7 @@ abstract class AbstractFormCore implements FormInterface
             }
 
             foreach ($field->getConstraints() as $constraint) {
-                if (!Validate::$constraint($field->getValue())) {
+                if (! Validate::$constraint($field->getValue())) {
                     $field->addError(
                         $this->constraintTranslator->translate($constraint)
                     );
@@ -172,7 +177,7 @@ abstract class AbstractFormCore implements FormInterface
             }
         }
 
-        return !$this->hasErrors();
+        return ! $this->hasErrors();
     }
 
     public function fillWith(array $params = [])
@@ -230,14 +235,13 @@ abstract class AbstractFormCore implements FormInterface
     /**
      * Validate field length
      *
-     * @param $field the field to check
-     *
+     * @param  $field  the field to check
      * @return bool
      */
     protected function checkFieldLength($field)
     {
         $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
 
-        return !$error;
+        return ! $error;
     }
 }

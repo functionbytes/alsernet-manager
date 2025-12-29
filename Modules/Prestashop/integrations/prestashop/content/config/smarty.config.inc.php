@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,11 +28,11 @@ define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
-    $smarty = new SmartyCustom();
-} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) {
-    $smarty = new SmartyDev();
+    $smarty = new SmartyCustom;
+} elseif (_PS_MODE_DEV_ && ! defined('_PS_ADMIN_DIR_')) {
+    $smarty = new SmartyDev;
 } else {
-    $smarty = new Smarty();
+    $smarty = new Smarty;
 }
 
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
@@ -66,10 +67,10 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
 {
     $escapeModifierFile = implode(
         DIRECTORY_SEPARATOR,
-        array(
+        [
             SMARTY_PLUGINS_DIR,
             'modifier.escape.php',
-        )
+        ]
     );
     require_once $escapeModifierFile;
 
@@ -85,14 +86,14 @@ smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
-smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
-smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', ['Tools', 'jsonEncode']);
+smartyRegisterFunction($smarty, 'modifier', 'json_decode', ['Tools', 'jsonDecode']);
+smartyRegisterFunction($smarty, 'function', 'dateFormat', ['Tools', 'dateFormat']);
+smartyRegisterFunction($smarty, 'modifier', 'boolval', ['Tools', 'boolval']);
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
-smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+smartyRegisterFunction($smarty, 'function', 'url', ['Link', 'getUrlSmarty']);
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
@@ -101,13 +102,13 @@ function smarty_modifier_htmlentitiesUTF8($string)
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
-    if (!in_array($type, array('function', 'modifier', 'block'))) {
+    if (! in_array($type, ['function', 'modifier', 'block'])) {
         return false;
     }
 
     // lazy is better if the function is not called on every page
     if ($lazy) {
-        if (null !== $initial_lazy_register && $initial_lazy_register->isRegistered($params)) {
+        if ($initial_lazy_register !== null && $initial_lazy_register->isRegistered($params)) {
             return;
         }
 
@@ -122,7 +123,7 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
         }
 
         // SmartyLazyRegister allows to only load external class when they are needed
-        $smarty->registerPlugin($type, $function, array($lazy_register, $params));
+        $smarty->registerPlugin($type, $function, [$lazy_register, $params]);
     } else {
         $smarty->registerPlugin($type, $function, $params);
     }
@@ -133,7 +134,7 @@ function smartyHook($params, &$smarty)
     $id_module = null;
     $hook_params = $params;
     $hook_params['smarty'] = $smarty;
-    if (!empty($params['mod'])) {
+    if (! empty($params['mod'])) {
         $module = Module::getInstanceByName($params['mod']);
         unset($hook_params['mod']);
         if ($module && $module->id) {
@@ -144,13 +145,13 @@ function smartyHook($params, &$smarty)
             return '';
         }
     }
-    if (!empty($params['excl'])) {
+    if (! empty($params['excl'])) {
         $result = '';
         $modules = Hook::getHookModuleExecList($hook_params['h']);
 
         $moduleexcl = explode(',', $params['excl']);
         foreach ($modules as $module) {
-            if (!in_array($module['module'], $moduleexcl)) {
+            if (! in_array($module['module'], $moduleexcl)) {
                 $result .= Hook::exec($params['h'], $hook_params, $module['id_module']);
             }
         }
@@ -186,7 +187,7 @@ function smartyClassname($classname)
 
 function smartyClassnames(array $classnames)
 {
-    $enabled_classes = array();
+    $enabled_classes = [];
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
             $enabled_classes[] = smartyClassname($classname);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -89,8 +90,7 @@ class MessageCore extends ObjectModel
     /**
      * Return the last message from cart.
      *
-     * @param int $idCart Cart ID
-     *
+     * @param  int  $idCart  Cart ID
      * @return array Message
      */
     public static function getMessageByCartId($idCart)
@@ -98,40 +98,39 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->getRow(
             '
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'message`
-			WHERE `id_cart` = ' . (int) $idCart
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_cart` = '.(int) $idCart
         );
     }
 
     /**
      * Return messages from Order ID.
      *
-     * @param int $idOrder Order ID
-     * @param bool $private return WITH private messages
-     *
+     * @param  int  $idOrder  Order ID
+     * @param  bool  $private  return WITH private messages
      * @return array Messages
      */
-    public static function getMessagesByOrderId($idOrder, $private = false, Context $context = null)
+    public static function getMessagesByOrderId($idOrder, $private = false, ?Context $context = null)
     {
-        if (!Validate::isBool($private)) {
-            die(Tools::displayError());
+        if (! Validate::isBool($private)) {
+            exit(Tools::displayError());
         }
 
-        if (!$context) {
+        if (! $context) {
             $context = Context::getContext();
         }
 
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `' . _DB_PREFIX_ . 'message` m
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr
+			FROM `'._DB_PREFIX_.'message` m
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr
 				ON mr.`id_message` = m.`id_message`
-				AND mr.`id_employee` = ' . (isset($context->employee) ? (int) $context->employee->id : '\'\'') . '
-			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_order = ' . (int) $idOrder . '
-			' . (!$private ? ' AND m.`private` = 0' : '') . '
+				AND mr.`id_employee` = '.(isset($context->employee) ? (int) $context->employee->id : '\'\'').'
+			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
+			WHERE id_order = '.(int) $idOrder.'
+			'.(! $private ? ' AND m.`private` = 0' : '').'
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
@@ -140,30 +139,29 @@ class MessageCore extends ObjectModel
     /**
      * Return messages from Cart ID.
      *
-     * @param int $id_order Order ID
-     * @param bool $private return WITH private messages
-     *
+     * @param  int  $id_order  Order ID
+     * @param  bool  $private  return WITH private messages
      * @return array Messages
      */
-    public static function getMessagesByCartId($idCart, $private = false, Context $context = null)
+    public static function getMessagesByCartId($idCart, $private = false, ?Context $context = null)
     {
-        if (!Validate::isBool($private)) {
-            die(Tools::displayError());
+        if (! Validate::isBool($private)) {
+            exit(Tools::displayError());
         }
 
-        if (!$context) {
+        if (! $context) {
             $context = Context::getContext();
         }
 
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `' . _DB_PREFIX_ . 'message` m
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = ' . (int) $context->employee->id . ')
-			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_cart = ' . (int) $idCart . '
-			' . (!$private ? ' AND m.`private` = 0' : '') . '
+			FROM `'._DB_PREFIX_.'message` m
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = '.(int) $context->employee->id.')
+			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
+			WHERE id_cart = '.(int) $idCart.'
+			'.(! $private ? ' AND m.`private` = 0' : '').'
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
@@ -172,20 +170,19 @@ class MessageCore extends ObjectModel
     /**
      * Registered a message 'readed'.
      *
-     * @param int $idMessage Message ID
-     * @param int $id_emplyee Employee ID
-     *
+     * @param  int  $idMessage  Message ID
+     * @param  int  $id_emplyee  Employee ID
      * @return bool
      */
     public static function markAsReaded($idMessage, $idEmployee)
     {
-        if (!Validate::isUnsignedId($idMessage) || !Validate::isUnsignedId($idEmployee)) {
-            die(Tools::displayError());
+        if (! Validate::isUnsignedId($idMessage) || ! Validate::isUnsignedId($idEmployee)) {
+            exit(Tools::displayError());
         }
 
         $result = Db::getInstance()->execute('
-			INSERT INTO ' . _DB_PREFIX_ . 'message_readed (id_message , id_employee , date_add) VALUES
-			(' . (int) $idMessage . ', ' . (int) $idEmployee . ', NOW());
+			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
+			('.(int) $idMessage.', '.(int) $idEmployee.', NOW());
 		');
 
         return $result;

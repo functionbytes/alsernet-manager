@@ -31,15 +31,14 @@ class CccReducerCore
 {
     /** @var string */
     private $cacheDir;
+
     /** @var Filesystem */
     protected $filesystem;
 
     use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
 
     /**
-     * @param string $cacheDir
-     * @param ConfigurationInterface $configuration
-     * @param Filesystem $filesystem
+     * @param  string  $cacheDir
      */
     public function __construct($cacheDir, ConfigurationInterface $configuration, Filesystem $filesystem)
     {
@@ -47,38 +46,37 @@ class CccReducerCore
         $this->configuration = $configuration;
         $this->filesystem = $filesystem;
 
-        if (!is_dir($this->cacheDir)) {
+        if (! is_dir($this->cacheDir)) {
             $this->filesystem->mkdir($this->cacheDir);
         }
     }
 
     /**
-     * @param array $cssFileList
-     *
+     * @param  array  $cssFileList
      * @return array Same list, reduced
      */
     public function reduceCss($cssFileList)
     {
         $files = [];
         foreach ($cssFileList['external'] as $key => &$css) {
-            if ('all' === $css['media'] && 'local' === $css['server']) {
+            if ($css['media'] === 'all' && $css['server'] === 'local') {
                 $files[] = $this->getPathFromUri($css['path']);
                 unset($cssFileList['external'][$key]);
             }
         }
 
         $version = Configuration::get('PS_CCCCSS_VERSION');
-        $cccFilename = 'theme-' . $this->getFileNameIdentifierFromList($files) . $version . '.css';
-        $destinationPath = $this->cacheDir . $cccFilename;
+        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).$version.'.css';
+        $destinationPath = $this->cacheDir.$cccFilename;
 
-        if (!$this->filesystem->exists($destinationPath)) {
+        if (! $this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
         }
         if (Tools::hasMediaServer()) {
-            $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
-            $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+            $relativePath = _THEMES_DIR_._THEME_NAME_.'/assets/cache/'.$cccFilename;
+            $destinationUri = Tools::getCurrentUrlProtocolPrefix().Tools::getMediaServer($relativePath).$relativePath;
         } else {
-            $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+            $destinationUri = $this->getFQDN().$this->getUriFromPath($destinationPath);
         }
 
         $cssFileList['external']['theme-ccc'] = [
@@ -94,8 +92,7 @@ class CccReducerCore
     }
 
     /**
-     * @param array $jsFileList
-     *
+     * @param  array  $jsFileList
      * @return array Same list, reduced
      */
     public function reduceJs($jsFileList)
@@ -104,7 +101,7 @@ class CccReducerCore
             $files = [];
             foreach ($list['external'] as $key => $js) {
                 // We only CCC the file without 'refer' or 'async'
-                if ('' === $js['attribute'] && 'local' === $js['server']) {
+                if ($js['attribute'] === '' && $js['server'] === 'local') {
                     $files[] = $this->getPathFromUri($js['path']);
                     unset($list['external'][$key]);
                 }
@@ -116,22 +113,22 @@ class CccReducerCore
             }
 
             $version = Configuration::get('PS_CCCJS_VERSION');
-            $cccFilename = $position . '-' . $this->getFileNameIdentifierFromList($files) . $version . '.js';
-            $destinationPath = $this->cacheDir . $cccFilename;
+            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).$version.'.js';
+            $destinationPath = $this->cacheDir.$cccFilename;
 
-            if (!$this->filesystem->exists($destinationPath)) {
+            if (! $this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
             }
             if (Tools::hasMediaServer()) {
-                $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
-                $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+                $relativePath = _THEMES_DIR_._THEME_NAME_.'/assets/cache/'.$cccFilename;
+                $destinationUri = Tools::getCurrentUrlProtocolPrefix().Tools::getMediaServer($relativePath).$relativePath;
             } else {
-                $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+                $destinationUri = $this->getFQDN().$this->getUriFromPath($destinationPath);
             }
 
             $cccItem = [];
-            $cccItem[$position . '-js-ccc'] = [
-                'id' => $position . '-js-ccc',
+            $cccItem[$position.'-js-ccc'] = [
+                'id' => $position.'-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
                 'uri' => $destinationUri,
@@ -145,8 +142,7 @@ class CccReducerCore
     }
 
     /**
-     * @param string[] $files
-     *
+     * @param  string[]  $files
      * @return string
      */
     private function getFileNameIdentifierFromList(array $files)

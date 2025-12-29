@@ -10,4 +10,5 @@ return [
     Modules\Documents\Providers\DocumentsServiceProvider::class,
     Modules\Returns\Providers\ReturnsServiceProvider::class,
     Modules\Subscriber\Providers\SubscriberServiceProvider::class,
+    Modules\Supplier\Providers\SupplierServiceProvider::class,
 ];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,12 +30,13 @@
 class SmartyLazyRegister
 {
     protected $registry = [];
+
     protected static $instances = [];
 
     /**
      * Register a function or method to be dynamically called later.
      *
-     * @param string|array $params function name or array(object name, method name)
+     * @param  string|array  $params  function name or array(object name, method name)
      */
     public function register($params)
     {
@@ -57,9 +59,8 @@ class SmartyLazyRegister
     /**
      * Dynamically call static function or method.
      *
-     * @param string $name function name
-     * @param mixed $arguments function argument
-     *
+     * @param  string  $name  function name
+     * @param  mixed  $arguments  function argument
      * @return mixed function return
      */
     public function __call($name, $arguments)
@@ -68,7 +69,7 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], [$arguments[0], &$arguments[1]]);
+            return call_user_func_array($item[1].'::'.$item[0], [$arguments[0], &$arguments[1]]);
         } else {
             $args = [];
 
@@ -88,8 +89,8 @@ class SmartyLazyRegister
     {
         $hash = spl_object_hash($smarty);
 
-        if (!isset(self::$instances[$hash])) {
-            self::$instances[$hash] = new self();
+        if (! isset(self::$instances[$hash])) {
+            self::$instances[$hash] = new self;
         }
 
         return self::$instances[$hash];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -66,14 +67,13 @@ class RangePriceCore extends ObjectModel
      *
      * @see classes/ObjectModelCore::add()
      *
-     * @param bool $null_values
-     * @param bool $autodate
-     *
+     * @param  bool  $null_values
+     * @param  bool  $autodate
      * @return bool Insertion result
      */
     public function add($autodate = true, $null_values = false)
     {
-        if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this)) {
+        if (! parent::add($autodate, $null_values) || ! Validate::isLoadedObject($this)) {
             return false;
         }
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
@@ -98,63 +98,60 @@ class RangePriceCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
-     * @param int $id_carrier Carrier identifier
-     *
+     * @param  int  $id_carrier  Carrier identifier
      * @return array|false All ranges for this carrier, or false on error
      */
     public static function getRanges($id_carrier)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'range_price`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
+            FROM `'._DB_PREFIX_.'range_price`
+            WHERE `id_carrier` = '.(int) $id_carrier.'
             ORDER BY `delimiter1` ASC');
     }
 
     /**
      * Check if a range exists for delimiter1 and delimiter2 by id_carrier or id_reference
      *
-     * @param int|null $id_carrier Carrier identifier
-     * @param float $delimiter1
-     * @param float $delimiter2
-     * @param int|null $id_reference Carrier reference is the initial Carrier identifier (optional)
-     *
+     * @param  int|null  $id_carrier  Carrier identifier
+     * @param  float  $delimiter1
+     * @param  float  $delimiter2
+     * @param  int|null  $id_reference  Carrier reference is the initial Carrier identifier (optional)
      * @return int|false Total of matching ranges, or false on error
      */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_price` rp' .
-            (null === $id_carrier && $id_reference ? '
-            INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rp.`id_carrier` = c.`id_carrier`)' : '') . '
-            WHERE' .
-            ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
-            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
-            AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
+            FROM `'._DB_PREFIX_.'range_price` rp'.
+            ($id_carrier === null && $id_reference ? '
+            INNER JOIN `'._DB_PREFIX_.'carrier` c on (rp.`id_carrier` = c.`id_carrier`)' : '').'
+            WHERE'.
+            ($id_carrier ? ' `id_carrier` = '.(int) $id_carrier : '').
+            ($id_carrier === null && $id_reference ? ' c.`id_reference` = '.(int) $id_reference : '').'
+            AND `delimiter1` = '.(float) $delimiter1.' AND `delimiter2` = '.(float) $delimiter2);
     }
 
     /**
      * Check if a range overlaps another range for this carrier
      *
-     * @param int $id_carrier Carrier identifier
-     * @param float $delimiter1
-     * @param float $delimiter2
-     * @param int|null $id_rang RangePrice identifier (optional)
-     *
+     * @param  int  $id_carrier  Carrier identifier
+     * @param  float  $delimiter1
+     * @param  float  $delimiter2
+     * @param  int|null  $id_rang  RangePrice identifier (optional)
      * @return int|false Total of overlapping ranges, or false on error
      */
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `' . _DB_PREFIX_ . 'range_price`
-            WHERE `id_carrier` = ' . (int) $id_carrier . '
-            AND ((`delimiter1` >= ' . (float) $delimiter1 . ' AND `delimiter1` < ' . (float) $delimiter2 . ')
-                OR (`delimiter2` > ' . (float) $delimiter1 . ' AND `delimiter2` < ' . (float) $delimiter2 . ')
-                OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
-                OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
+            FROM `'._DB_PREFIX_.'range_price`
+            WHERE `id_carrier` = '.(int) $id_carrier.'
+            AND ((`delimiter1` >= '.(float) $delimiter1.' AND `delimiter1` < '.(float) $delimiter2.')
+                OR (`delimiter2` > '.(float) $delimiter1.' AND `delimiter2` < '.(float) $delimiter2.')
+                OR ('.(float) $delimiter1.' > `delimiter1` AND '.(float) $delimiter1.' < `delimiter2`)
+                OR ('.(float) $delimiter2.' < `delimiter1` AND '.(float) $delimiter2.' > `delimiter2`)
             )
-            ' . (null !== $id_rang ? ' AND `id_range_price` != ' . (int) $id_rang : ''));
+            '.($id_rang !== null ? ' AND `id_range_price` != '.(int) $id_rang : ''));
     }
 }

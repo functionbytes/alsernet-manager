@@ -27,7 +27,21 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(): void
     {
+        $this->mapApiRoutes();
         $this->mapManagerRoutes();
+    }
+
+    /**
+     * Define the API routes for the application.
+     *
+     * These routes are stateless, use the "api" middleware group, and are protected by Sanctum authentication.
+     */
+    protected function mapApiRoutes(): void
+    {
+        Route::middleware(['api', 'auth:sanctum'])
+            ->prefix('api')
+            ->name('api.')
+            ->group(base_path('Modules/Campaign/routes/api.php'));
     }
 
     /**

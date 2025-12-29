@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -45,9 +46,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public $id_cart;
 
     /**
-     * @param OrderSlip $order_slip
-     * @param Smarty $smarty
-     *
      * @throws PrestaShopException
      */
     public function __construct(OrderSlip $order_slip, Smarty $smarty)
@@ -114,9 +112,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
-                        SELECT * FROM `' . _DB_PREFIX_ . 'order_slip_detail`
-                        WHERE `id_order_slip` = ' . (int) $this->order_slip->id . '
-                        AND `id_order_detail` = ' . (int) $product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int) $this->order_slip->id.'
+                        AND `id_order_detail` = '.(int) $product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -136,7 +134,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
         }
 
-        $tax = new Tax();
+        $tax = new Tax;
         $tax->rate = $this->order->carrier_tax_rate;
         $tax_calculator = new TaxCalculator([$tax]);
         $tax_excluded_display = Group::getPriceDisplayMethod((int) $customer->id_default_group);
@@ -203,7 +201,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_slip->id).'.pdf';
     }
 
     /**
@@ -215,7 +213,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-                            && !empty($address->vat_number)
+                            && ! empty($address->vat_number)
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
         $this->smarty->assign([
@@ -285,7 +283,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
-            if (!isset($breakdown[$rate])) {
+            if (! isset($breakdown[$rate])) {
                 $breakdown[$rate] = [
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
@@ -316,7 +314,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getShippingTaxesBreakdown()
     {
         $taxes_breakdown = [];
-        $tax = new Tax();
+        $tax = new Tax;
         $tax->rate = $this->order->carrier_tax_rate;
         $tax_calculator = new TaxCalculator([$tax]);
         $customer = new Customer((int) $this->order->id_customer);

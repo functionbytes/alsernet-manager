@@ -1,13 +1,14 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include _PS_ADMIN_DIR_ . '/../config/config.inc.php';
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 $datos = [
     // 54626,
@@ -35,12 +36,12 @@ $datos = [
     64566,
     18699,
     23892,
-    52036
+    52036,
 ];
 
 foreach ($datos as $value) {
-    # code...
-// dump($value);die();
+    // code...
+    // dump($value);die();
     $product = new Product($value);
     $product->visibility = 'none';
     $product->update();

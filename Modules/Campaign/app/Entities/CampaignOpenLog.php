@@ -2,7 +2,7 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Events\Campaigns\CampaignUpdated;
+use Modules\Campaign\Events\CampaignUpdated;
 use app\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;

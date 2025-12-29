@@ -2,12 +2,12 @@
 
 namespace app\Library;
 
-use App\Events\Campaigns\CampaignUpdated;
-use App\Jobs\LoadCampaign;
-use App\Jobs\RunCampaign;
-use app\Library\Traits\HasCache;
-use app\Library\Traits\HasUid;
-use app\Library\Traits\TrackJobs;
+use Modules\Campaign\Events\CampaignUpdated;
+use Modules\Campaign\Jobs\LoadCampaign;
+use Modules\Campaign\Jobs\RunCampaign;
+use Modules\Campaign\Library\Traits\HasCache;
+use App\Models\Traits\HasUid;
+use App\Library\Traits\TrackJobs;
 use Carbon\Carbon;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

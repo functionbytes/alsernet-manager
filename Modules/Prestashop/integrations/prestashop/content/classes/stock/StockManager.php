@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -43,16 +44,14 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::addProduct()
      *
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param Warehouse $warehouse
-     * @param int $quantity
-     * @param int $id_stock_mvt_reason
-     * @param float $price_te
-     * @param bool $is_usable
-     * @param int|null $id_supply_order
-     * @param Employee|null $employee
-     *
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute
+     * @param  int  $quantity
+     * @param  int  $id_stock_mvt_reason
+     * @param  float  $price_te
+     * @param  bool  $is_usable
+     * @param  int|null  $id_supply_order
+     * @param  Employee|null  $employee
      * @return bool
      *
      * @throws PrestaShopException
@@ -68,7 +67,7 @@ class StockManagerCore implements StockManagerInterface
         $id_supply_order = null,
         $employee = null
     ) {
-        if (!Validate::isLoadedObject($warehouse) || !$quantity || !$id_product) {
+        if (! Validate::isLoadedObject($warehouse) || ! $quantity || ! $id_product) {
             return false;
         }
 
@@ -77,7 +76,7 @@ class StockManagerCore implements StockManagerInterface
             return false;
         }
 
-        if (!StockMvtReason::exists($id_stock_mvt_reason)) {
+        if (! StockMvtReason::exists($id_stock_mvt_reason)) {
             $id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_INC_REASON_DEFAULT');
         }
 
@@ -140,7 +139,7 @@ class StockManagerCore implements StockManagerInterface
 
                 break;
 
-            // case FIFO / LIFO mode
+                // case FIFO / LIFO mode
             case 'FIFO':
             case 'LIFO':
                 $stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id, $price_te);
@@ -174,8 +173,8 @@ class StockManagerCore implements StockManagerInterface
                 break;
         }
 
-        if (!$stock_exists) {
-            $stock = new Stock();
+        if (! $stock_exists) {
+            $stock = new Stock;
 
             $stock_params = [
                 'id_product_attribute' => $id_product_attribute,
@@ -193,7 +192,7 @@ class StockManagerCore implements StockManagerInterface
         }
 
         // saves stock mvt
-        $stock_mvt = new StockMvt();
+        $stock_mvt = new StockMvt;
         $stock_mvt->hydrate($mvt_params);
         $stock_mvt->add();
 
@@ -203,16 +202,14 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::removeProduct()
      *
-     * @param int $id_product
-     * @param int|null $id_product_attribute
-     * @param Warehouse $warehouse
-     * @param int $quantity
-     * @param int $id_stock_mvt_reason
-     * @param bool $is_usable
-     * @param int|null $id_order
-     * @param int $ignore_pack
-     * @param Employee|null $employee
-     *
+     * @param  int  $id_product
+     * @param  int|null  $id_product_attribute
+     * @param  int  $quantity
+     * @param  int  $id_stock_mvt_reason
+     * @param  bool  $is_usable
+     * @param  int|null  $id_order
+     * @param  int  $ignore_pack
+     * @param  Employee|null  $employee
      * @return array
      *
      * @throws PrestaShopException
@@ -230,18 +227,18 @@ class StockManagerCore implements StockManagerInterface
     ) {
         $return = [];
 
-        if (!Validate::isLoadedObject($warehouse) || !$quantity || !$id_product) {
+        if (! Validate::isLoadedObject($warehouse) || ! $quantity || ! $id_product) {
             return $return;
         }
 
-        if (!StockMvtReason::exists($id_stock_mvt_reason)) {
+        if (! StockMvtReason::exists($id_stock_mvt_reason)) {
             $id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_DEC_REASON_DEFAULT');
         }
 
         $context = Context::getContext();
 
         // Special case of a pack
-        if (Pack::isPack((int) $id_product) && !$ignore_pack) {
+        if (Pack::isPack((int) $id_product) && ! $ignore_pack) {
             if (Validate::isLoadedObject($product = new Product((int) $id_product))) {
                 // Gets items
                 if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
@@ -256,13 +253,13 @@ class StockManagerCore implements StockManagerInterface
                             $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id, $product_pack->id_pack_product_attribute);
                             $warehouse_stock_found = false;
                             foreach ($product_warehouses as $product_warehouse) {
-                                if (!$warehouse_stock_found) {
+                                if (! $warehouse_stock_found) {
                                     if (Warehouse::exists($product_warehouse['id_warehouse'])) {
                                         $current_warehouse = new Warehouse($product_warehouse['id_warehouse']);
                                         $return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $current_warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order, $ignore_pack, $employee);
 
                                         // The product was found on this warehouse. Stop the stock searching.
-                                        $warehouse_stock_found = !empty($return[count($return) - 1]);
+                                        $warehouse_stock_found = ! empty($return[count($return) - 1]);
                                     }
                                 }
                             }
@@ -289,7 +286,7 @@ class StockManagerCore implements StockManagerInterface
             $usable_quantity_in_stock = (int) $this->getProductPhysicalQuantities($id_product, $id_product_attribute, [$warehouse->id], true);
 
             // check quantity if we want to decrement unusable quantity
-            if (!$is_usable) {
+            if (! $is_usable) {
                 $quantity_in_stock = $physical_quantity_in_stock - $usable_quantity_in_stock;
             } else {
                 $quantity_in_stock = $usable_quantity_in_stock;
@@ -345,7 +342,7 @@ class StockManagerCore implements StockManagerInterface
                     $stock->update();
 
                     // saves stock mvt
-                    $stock_mvt = new StockMvt();
+                    $stock_mvt = new StockMvt;
                     $stock_mvt->hydrate($mvt_params);
                     $stock_mvt->save();
 
@@ -369,10 +366,10 @@ class StockManagerCore implements StockManagerInterface
                             '
 							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
 								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
-							FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-							LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
+							FROM `'._DB_PREFIX_.'stock_mvt` sm
+							LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
 							WHERE sm.`sign` = 1
-							AND sm.`id_stock` = ' . (int) $stock->id . '
+							AND sm.`id_stock` = '.(int) $stock->id.'
 							GROUP BY sm.`id_stock_mvt`
 							ORDER BY sm.`date_add` DESC',
                             false
@@ -448,7 +445,7 @@ class StockManagerCore implements StockManagerInterface
                                 ];
 
                                 // saves stock mvt
-                                $stock_mvt = new StockMvt();
+                                $stock_mvt = new StockMvt;
                                 $stock_mvt->hydrate($mvt_params);
                                 $stock_mvt->save();
 
@@ -476,8 +473,8 @@ class StockManagerCore implements StockManagerInterface
                 $packs = Pack::getPacksContainingItem($id_product, $id_product_attribute, (int) Configuration::get('PS_LANG_DEFAULT'));
                 foreach ($packs as $pack) {
                     // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
-                    if (!((int) $pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
-                        && !((int) $pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                    if (! ((int) $pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
+                        && ! ((int) $pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                             && (int) Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                     ) {
                         continue;
@@ -495,12 +492,12 @@ class StockManagerCore implements StockManagerInterface
                         $product_warehouses = Warehouse::getPackWarehouses($pack->id);
                         $warehouse_stock_found = false;
                         foreach ($product_warehouses as $product_warehouse) {
-                            if (!$warehouse_stock_found) {
+                            if (! $warehouse_stock_found) {
                                 if (Warehouse::exists($product_warehouse)) {
                                     $current_warehouse = new Warehouse($product_warehouse);
                                     $return[] = $this->removeProduct($pack->id, null, $current_warehouse, $quantity_delta, $id_stock_mvt_reason, $is_usable, $id_order, 1);
                                     // The product was found on this warehouse. Stop the stock searching.
-                                    $warehouse_stock_found = !empty($return[count($return) - 1]);
+                                    $warehouse_stock_found = ! empty($return[count($return) - 1]);
                                 }
                             }
                         }
@@ -513,11 +510,11 @@ class StockManagerCore implements StockManagerInterface
         if ($is_usable) {
             Hook::exec(
                 'actionProductCoverage',
-                    [
-                        'id_product' => $id_product,
-                        'id_product_attribute' => $id_product_attribute,
-                        'warehouse' => $warehouse,
-                    ]
+                [
+                    'id_product' => $id_product,
+                    'id_product_attribute' => $id_product_attribute,
+                    'warehouse' => $warehouse,
+                ]
             );
         }
 
@@ -529,31 +526,31 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (null !== $ids_warehouse) {
+        if ($ids_warehouse !== null) {
             // in case $ids_warehouse is not an array
-            if (!is_array($ids_warehouse)) {
+            if (! is_array($ids_warehouse)) {
                 $ids_warehouse = [$ids_warehouse];
             }
 
             // casts for security reason
             $ids_warehouse = array_map('intval', $ids_warehouse);
-            if (!count($ids_warehouse)) {
+            if (! count($ids_warehouse)) {
                 return 0;
             }
         } else {
             $ids_warehouse = [];
         }
 
-        $query = new DbQuery();
-        $query->select('SUM(' . ($usable ? 's.usable_quantity' : 's.physical_quantity') . ')');
+        $query = new DbQuery;
+        $query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
         $query->from('stock', 's');
-        $query->where('s.id_product = ' . (int) $id_product);
-        if (0 != $id_product_attribute) {
-            $query->where('s.id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('s.id_product = '.(int) $id_product);
+        if ($id_product_attribute != 0) {
+            $query->where('s.id_product_attribute = '.(int) $id_product_attribute);
         }
 
         if (count($ids_warehouse)) {
-            $query->where('s.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
+            $query->where('s.id_warehouse IN('.implode(', ', $ids_warehouse).')');
         }
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -564,9 +561,9 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (null !== $ids_warehouse) {
+        if ($ids_warehouse !== null) {
             // in case $ids_warehouse is not an array
-            if (!is_array($ids_warehouse)) {
+            if (! is_array($ids_warehouse)) {
                 $ids_warehouse = [$ids_warehouse];
             }
 
@@ -577,28 +574,28 @@ class StockManagerCore implements StockManagerInterface
         $client_orders_qty = 0;
 
         // check if product is present in a pack
-        if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT id_product_pack, quantity FROM ' . _DB_PREFIX_ . 'pack
-			WHERE id_product_item = ' . (int) $id_product . '
-			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
+        if (! Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT id_product_pack, quantity FROM '._DB_PREFIX_.'pack
+			WHERE id_product_item = '.(int) $id_product.'
+			AND id_product_attribute_item = '.($id_product_attribute ? (int) $id_product_attribute : '0')
         )) {
             foreach ($in_pack as $value) {
                 if (Validate::isLoadedObject($product = new Product((int) $value['id_product_pack'])) &&
                     ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
-                    $query = new DbQuery();
+                    $query = new DbQuery;
                     $query->select('od.product_quantity, od.product_quantity_refunded, pk.quantity');
                     $query->from('order_detail', 'od');
                     $query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
-                    $query->where('od.product_id = ' . (int) $value['id_product_pack']);
+                    $query->where('od.product_id = '.(int) $value['id_product_pack']);
                     $query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
                     $query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
-                    $query->leftJoin('pack', 'pk', 'pk.id_product_item = ' . (int) $id_product . ' AND pk.id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0') . ' AND id_product_pack = od.product_id');
+                    $query->leftJoin('pack', 'pk', 'pk.id_product_item = '.(int) $id_product.' AND pk.id_product_attribute_item = '.($id_product_attribute ? (int) $id_product_attribute : '0').' AND id_product_pack = od.product_id');
                     $query->where('os.shipped != 1');
-                    $query->where('o.valid = 1 OR (os.id_order_state != ' . (int) Configuration::get('PS_OS_ERROR') . '
-								   AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
+                    $query->where('o.valid = 1 OR (os.id_order_state != '.(int) Configuration::get('PS_OS_ERROR').'
+								   AND os.id_order_state != '.(int) Configuration::get('PS_OS_CANCELED').')');
                     $query->groupBy('od.id_order_detail');
                     if (count($ids_warehouse)) {
-                        $query->where('od.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
+                        $query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
                     }
                     $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                     if (count($res)) {
@@ -611,26 +608,26 @@ class StockManagerCore implements StockManagerInterface
         }
 
         // skip if product is a pack without
-        if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int) $id_product))
+        if (! Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int) $id_product))
             && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH ||
                     ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
             // Gets client_orders_qty
-            $query = new DbQuery();
+            $query = new DbQuery;
             $query->select('od.product_quantity, od.product_quantity_refunded');
             $query->from('order_detail', 'od');
             $query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
-            $query->where('od.product_id = ' . (int) $id_product);
-            if (0 != $id_product_attribute) {
-                $query->where('od.product_attribute_id = ' . (int) $id_product_attribute);
+            $query->where('od.product_id = '.(int) $id_product);
+            if ($id_product_attribute != 0) {
+                $query->where('od.product_attribute_id = '.(int) $id_product_attribute);
             }
             $query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
             $query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
             $query->where('os.shipped != 1');
-            $query->where('o.valid = 1 OR (os.id_order_state != ' . (int) Configuration::get('PS_OS_ERROR') . '
-						   AND os.id_order_state != ' . (int) Configuration::get('PS_OS_CANCELED') . ')');
+            $query->where('o.valid = 1 OR (os.id_order_state != '.(int) Configuration::get('PS_OS_ERROR').'
+						   AND os.id_order_state != '.(int) Configuration::get('PS_OS_CANCELED').')');
             $query->groupBy('od.id_order_detail');
             if (count($ids_warehouse)) {
-                $query->where('od.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
+                $query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
             }
             $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
             if (count($res)) {
@@ -640,16 +637,16 @@ class StockManagerCore implements StockManagerInterface
             }
         }
         // Gets supply_orders_qty
-        $query = new DbQuery();
+        $query = new DbQuery;
 
         $query->select('sod.quantity_expected, sod.quantity_received');
         $query->from('supply_order', 'so');
         $query->leftjoin('supply_order_detail', 'sod', 'sod.id_supply_order = so.id_supply_order');
         $query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
         $query->where('sos.pending_receipt = 1');
-        $query->where('sod.id_product = ' . (int) $id_product . ' AND sod.id_product_attribute = ' . (int) $id_product_attribute);
-        if (null !== $ids_warehouse && count($ids_warehouse)) {
-            $query->where('so.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
+        $query->where('sod.id_product = '.(int) $id_product.' AND sod.id_product_attribute = '.(int) $id_product_attribute);
+        if ($ids_warehouse !== null && count($ids_warehouse)) {
+            $query->where('so.id_warehouse IN('.implode(', ', $ids_warehouse).')');
         }
 
         $supply_orders_qties = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -664,7 +661,7 @@ class StockManagerCore implements StockManagerInterface
         // Gets {physical OR usable}_qty
         $qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
 
-        //real qty = actual qty in stock - current client orders + current supply orders
+        // real qty = actual qty in stock - current client orders + current supply orders
         return $qty - $client_orders_qty + $supply_orders_qty;
     }
 
@@ -692,21 +689,21 @@ class StockManagerCore implements StockManagerInterface
         // Checks if the given warehouses are available
         $warehouse_from = new Warehouse($id_warehouse_from);
         $warehouse_to = new Warehouse($id_warehouse_to);
-        if (!Validate::isLoadedObject($warehouse_from) ||
-            !Validate::isLoadedObject($warehouse_to)) {
+        if (! Validate::isLoadedObject($warehouse_from) ||
+            ! Validate::isLoadedObject($warehouse_to)) {
             return false;
         }
 
         // Removes from warehouse_from
         $stocks = $this->removeProduct(
             $id_product,
-                                       $id_product_attribute,
-                                       $warehouse_from,
-                                       $quantity,
-                                       Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
-                                       $usable_from
+            $id_product_attribute,
+            $warehouse_from,
+            $quantity,
+            Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
+            $usable_from
         );
-        if (!count($stocks)) {
+        if (! count($stocks)) {
             return false;
         }
 
@@ -723,14 +720,14 @@ class StockManagerCore implements StockManagerInterface
                 $price = Tools::convertPrice($price_converted_to_default_currency, $warehouse_to->id_currency, true);
             }
 
-            if (!$this->addProduct(
+            if (! $this->addProduct(
                 $id_product,
-                                   $id_product_attribute,
-                                   $warehouse_to,
-                                   $stock['quantity'],
-                                   Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
-                                   $price,
-                                   $usable_to
+                $id_product_attribute,
+                $warehouse_to,
+                $stock['quantity'],
+                Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
+                $price,
+                $usable_to
             )) {
                 return false;
             }
@@ -747,11 +744,11 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)
     {
-        if (!$id_product_attribute) {
+        if (! $id_product_attribute) {
             $id_product_attribute = 0;
         }
 
-        if ($coverage == 0 || !$coverage) {
+        if ($coverage == 0 || ! $coverage) {
             $coverage = 7;
         } // Week by default
 
@@ -760,32 +757,32 @@ class StockManagerCore implements StockManagerInterface
 			SELECT SUM(view.quantity) as quantity_out
 			FROM
 			(	SELECT sm.`physical_quantity` as quantity
-				FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
-				LEFT JOIN `' . _DB_PREFIX_ . 'stock` s ON (sm.`id_stock` = s.`id_stock`)
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = s.`id_product`)
-				' . Shop::addSqlAssociation('product', 'p') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
-				' . Shop::addSqlAssociation('product_attribute', 'pa', false) . '
+				FROM `'._DB_PREFIX_.'stock_mvt` sm
+				LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				WHERE sm.`sign` = -1
-				AND sm.`id_stock_mvt_reason` != ' . Configuration::get('PS_STOCK_MVT_TRANSFER_FROM') . '
-				AND TO_DAYS("' . date('Y-m-d') . ' 00:00:00") - TO_DAYS(sm.`date_add`) <= ' . (int) $coverage . '
-				AND s.`id_product` = ' . (int) $id_product . '
-				AND s.`id_product_attribute` = ' . (int) $id_product_attribute .
-                ($id_warehouse ? ' AND s.`id_warehouse` = ' . (int) $id_warehouse : '') . '
+				AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
+				AND TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(sm.`date_add`) <= '.(int) $coverage.'
+				AND s.`id_product` = '.(int) $id_product.'
+				AND s.`id_product_attribute` = '.(int) $id_product_attribute.
+                ($id_warehouse ? ' AND s.`id_warehouse` = '.(int) $id_warehouse : '').'
 				GROUP BY sm.`id_stock_mvt`
 			) as view';
 
         $quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-        if (!$quantity_out) {
+        if (! $quantity_out) {
             return -1;
         }
 
         $quantity_per_day = Tools::ps_round($quantity_out / $coverage);
         $physical_quantity = $this->getProductPhysicalQuantities(
             $id_product,
-                                                                 $id_product_attribute,
-                                                                 ($id_warehouse ? [$id_warehouse] : null),
-                                                                 true
+            $id_product_attribute,
+            ($id_warehouse ? [$id_warehouse] : null),
+            true
         );
         $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
 
@@ -796,10 +793,9 @@ class StockManagerCore implements StockManagerInterface
      * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
      * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd).
      *
-     * @param Stock|PrestaShopCollection $stock
-     * @param int $quantity
-     * @param float $price_te
-     *
+     * @param  Stock|PrestaShopCollection  $stock
+     * @param  int  $quantity
+     * @param  float  $price_te
      * @return int WA
      */
     protected function calculateWA(Stock $stock, $quantity, $price_te)
@@ -810,11 +806,10 @@ class StockManagerCore implements StockManagerInterface
     /**
      * For a given product, retrieves the stock collection.
      *
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param int $id_warehouse Optional
-     * @param int $price_te Optional
-     *
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute
+     * @param  int  $id_warehouse  Optional
+     * @param  int  $price_te  Optional
      * @return PrestaShopCollection Collection of Stock
      */
     protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
@@ -835,15 +830,14 @@ class StockManagerCore implements StockManagerInterface
     /**
      * For a given product, retrieves the stock in function of the delivery option.
      *
-     * @param int $id_product
-     * @param int $id_product_attribute optional
-     * @param array $delivery_option
-     *
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute  optional
+     * @param  array  $delivery_option
      * @return int quantity
      */
     public static function getStockByCarrier($id_product = 0, $id_product_attribute = 0, $delivery_option = null)
     {
-        if (!(int) $id_product || !is_array($delivery_option) || !is_int($id_product_attribute)) {
+        if (! (int) $id_product || ! is_array($delivery_option) || ! is_int($id_product_attribute)) {
             return false;
         }
 
@@ -855,16 +849,16 @@ class StockManagerCore implements StockManagerInterface
                 $ws = new Warehouse((int) $result['id_warehouse']);
                 $carriers = $ws->getWsCarriers();
 
-                if (is_array($carriers) && !empty($carriers)) {
+                if (is_array($carriers) && ! empty($carriers)) {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
-						FROM ' . _DB_PREFIX_ . 'stock s
-						LEFT JOIN ' . _DB_PREFIX_ . 'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
-						LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON wc.`id_carrier` = c.`id_reference`
-						WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' AND c.`id_carrier` IN (' . rtrim($delivery_option[(int) Context::getContext()->cart->id_address_delivery], ',') . ') GROUP BY s.`id_product`');
+						FROM '._DB_PREFIX_.'stock s
+						LEFT JOIN '._DB_PREFIX_.'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
+						LEFT JOIN '._DB_PREFIX_.'carrier c ON wc.`id_carrier` = c.`id_reference`
+						WHERE s.`id_product` = '.(int) $id_product.' AND s.`id_product_attribute` = '.(int) $id_product_attribute.' AND s.`id_warehouse` = '.$result['id_warehouse'].' AND c.`id_carrier` IN ('.rtrim($delivery_option[(int) Context::getContext()->cart->id_address_delivery], ',').') GROUP BY s.`id_product`');
                 } else {
                     $stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
-						FROM ' . _DB_PREFIX_ . 'stock s
-						WHERE s.`id_product` = ' . (int) $id_product . ' AND s.`id_product_attribute` = ' . (int) $id_product_attribute . ' AND s.`id_warehouse` = ' . $result['id_warehouse'] . ' GROUP BY s.`id_product`');
+						FROM '._DB_PREFIX_.'stock s
+						WHERE s.`id_product` = '.(int) $id_product.' AND s.`id_product_attribute` = '.(int) $id_product_attribute.' AND s.`id_warehouse` = '.$result['id_warehouse'].' GROUP BY s.`id_product`');
                 }
             }
         }

@@ -3,7 +3,7 @@
 namespace Modules\Campaign\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\ExportCampaignLog;
+use Modules\Campaign\Jobs\ExportCampaignLog;
 use App\Library\StringHelper;
 use App\Models\BounceLog;
 use App\Models\ClickLog;

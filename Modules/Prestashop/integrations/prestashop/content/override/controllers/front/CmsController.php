@@ -13,9 +13,9 @@ class CmsController extends CmsControllerCore
 
     public function init()
     {
-        if ($id_cms = (int)Tools::getValue('id_cms')) {
+        if ($id_cms = (int) Tools::getValue('id_cms')) {
             $this->cms = new CMS($id_cms, $this->context->language->id, $this->context->shop->id);
-        } elseif ($id_cms_category = (int)Tools::getValue('id_cms_category')) {
+        } elseif ($id_cms_category = (int) Tools::getValue('id_cms_category')) {
             $this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id, $this->context->shop->id);
         }
 
@@ -30,8 +30,8 @@ class CmsController extends CmsControllerCore
 
         // assignCase (1 = CMS page, 2 = CMS category)
         if (Validate::isLoadedObject($this->cms)) {
-            $adtoken = Tools::getAdminToken('AdminCmsContent' . (int)Tab::getIdFromClassName('AdminCmsContent') . (int)Tools::getValue('id_employee'));
-            if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
+            $adtoken = Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) Tools::getValue('id_employee'));
+            if (! $this->cms->isAssociatedToShop() || ! $this->cms->active && Tools::getValue('adtoken') != $adtoken) {
                 $this->redirect_after = '404';
                 $this->redirect();
             } else {
@@ -52,6 +52,7 @@ class CmsController extends CmsControllerCore
         foreach ($languages as $lang) {
             $alternativeLangs[$lang['language_code']] = $this->context->link->getCMSLink($this->cms, null, $lang['id_lang']);
         }
+
         return $alternativeLangs;
     }
 
@@ -78,9 +79,9 @@ class CmsController extends CmsControllerCore
         $id_shop = $this->context->shop->id;
         if ($link_rewrite) {
             $sql = 'SELECT tl.id_cms
-					FROM ' . _DB_PREFIX_ . 'cms_lang tl
-					LEFT OUTER JOIN ' . _DB_PREFIX_ . 'cms_shop t ON (t.id_cms = tl.id_cms)
-					WHERE tl.link_rewrite = \'' . pSQL($link_rewrite) . '\' AND tl.id_lang = ' . (int)$id_lang . ' AND t.id_shop = ' . (int)$id_shop;
+					FROM '._DB_PREFIX_.'cms_lang tl
+					LEFT OUTER JOIN '._DB_PREFIX_.'cms_shop t ON (t.id_cms = tl.id_cms)
+					WHERE tl.link_rewrite = \''.pSQL($link_rewrite).'\' AND tl.id_lang = '.(int) $id_lang.' AND t.id_shop = '.(int) $id_shop;
             $id_cms = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
             if ($id_cms != '') {
                 $_POST['id_cms'] = $id_cms;
@@ -88,19 +89,19 @@ class CmsController extends CmsControllerCore
             }
         } elseif ($cms_category_rewrite) {
             $sql = 'SELECT id_cms_category
-					FROM ' . _DB_PREFIX_ . 'cms_category_lang
-					WHERE link_rewrite = \'' . pSQL($cms_category_rewrite) . '\' AND id_lang = ' . (int)$id_lang;
+					FROM '._DB_PREFIX_.'cms_category_lang
+					WHERE link_rewrite = \''.pSQL($cms_category_rewrite).'\' AND id_lang = '.(int) $id_lang;
             $id_cms_category = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
             if ($id_cms_category != '') {
                 $_GET['cms_category_rewrite'] = '';
                 $_POST['id_cms_category'] = $id_cms_category;
             }
         }
-        $allow_accented_chars = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+        $allow_accented_chars = (int) Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
         if ($allow_accented_chars > 0) {
-            $id_cms = (int)Tools::getValue('id_cms');
+            $id_cms = (int) Tools::getValue('id_cms');
             if ($id_cms <= 0) {
-                $id = (int)$this->crawlDbForId($_GET['cms_rewrite']);
+                $id = (int) $this->crawlDbForId($_GET['cms_rewrite']);
                 if ($id > 0) {
                     $_POST['id_cms'] = $id;
                 }
@@ -118,10 +119,11 @@ class CmsController extends CmsControllerCore
     {
         $id_lang = $this->context->language->id;
         $id_shop = $this->context->shop->id;
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('`id_cms`');
         $sql->from('cms_lang');
-        $sql->where('`id_lang` = ' . (int)$id_lang . ' AND `id_shop` = ' . (int)$id_shop . ' AND `link_rewrite` = "' . pSQL($rew) . '"');
+        $sql->where('`id_lang` = '.(int) $id_lang.' AND `id_shop` = '.(int) $id_shop.' AND `link_rewrite` = "'.pSQL($rew).'"');
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
 
@@ -139,7 +141,7 @@ class CmsController extends CmsControllerCore
                 $referrer_name = Tools::getValue('referrer-name');
                 if (is_numeric($referrer_id)) {
                     $referrer['model'] = $referrer_model;
-                    $referrer['id'] = (int)$referrer_id;
+                    $referrer['id'] = (int) $referrer_id;
                     $referrer['name'] = $referrer_name;
                 }
             }
@@ -164,7 +166,7 @@ class CmsController extends CmsControllerCore
                 $id_shop = null,
                 $chain = true
             );
-            if (!empty($filteredCmsContent['object'])) {
+            if (! empty($filteredCmsContent['object'])) {
                 $cmsVar = $filteredCmsContent['object'];
             }
 
@@ -193,7 +195,7 @@ class CmsController extends CmsControllerCore
                 $id_shop = null,
                 $chain = true
             );
-            if (!empty($filteredCmsCategoryContent['object'])) {
+            if (! empty($filteredCmsCategoryContent['object'])) {
                 $cmsCategoryVar = $filteredCmsCategoryContent['object'];
             }
 
@@ -202,5 +204,4 @@ class CmsController extends CmsControllerCore
         }
         parent::initContent();
     }
-
 }

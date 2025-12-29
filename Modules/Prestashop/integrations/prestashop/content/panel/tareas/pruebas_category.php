@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,15 +24,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-
-
 $timer_start = microtime(true);
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 
-if (!defined('PS_ADMIN_DIR')) {
+if (! defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
@@ -40,24 +38,27 @@ require _PS_ADMIN_DIR_.'/../init.php';
 
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 
-class CategoryTest {
-
+class CategoryTest
+{
     public $objectPresenter;
 
     public $category;
 
-    public function __construct($id_category) {
-        $this->objectPresenter = new ObjectPresenter();
+    public function __construct($id_category)
+    {
+        $this->objectPresenter = new ObjectPresenter;
         $this->category = new Category($id_category, 1);
     }
 
-    public function getTemplateVarCategory() {
+    public function getTemplateVarCategory()
+    {
         $category = $this->objectPresenter->present($this->category);
+
         return $category;
     }
 }
 
-$link = new Link();
+$link = new Link;
 
 echo 'Categoría que funciona #24<br>';
 $prueba_categoria = new CategoryTest(24);

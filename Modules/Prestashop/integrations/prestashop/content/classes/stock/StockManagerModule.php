@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -38,21 +39,21 @@ abstract class StockManagerModuleCore extends Module
 
     public function hookStockManager()
     {
-        $class_file = _PS_MODULE_DIR_ . '/' . $this->name . '/' . $this->stock_manager_class . '.php';
+        $class_file = _PS_MODULE_DIR_.'/'.$this->name.'/'.$this->stock_manager_class.'.php';
 
-        if (!isset($this->stock_manager_class) || !file_exists($class_file)) {
-            die($this->trans('Incorrect Stock Manager class [%s]', [$this->stock_manager_class], 'Admin.Catalog.Notification'));
+        if (! isset($this->stock_manager_class) || ! file_exists($class_file)) {
+            exit($this->trans('Incorrect Stock Manager class [%s]', [$this->stock_manager_class], 'Admin.Catalog.Notification'));
         }
 
         require_once $class_file;
 
-        if (!class_exists($this->stock_manager_class)) {
-            die($this->trans('Stock Manager class not found [%s]', [$this->stock_manager_class], 'Admin.Catalog.Notification'));
+        if (! class_exists($this->stock_manager_class)) {
+            exit($this->trans('Stock Manager class not found [%s]', [$this->stock_manager_class], 'Admin.Catalog.Notification'));
         }
 
         $class = $this->stock_manager_class;
         if (call_user_func([$class, 'isAvailable'])) {
-            return new $class();
+            return new $class;
         }
 
         return false;

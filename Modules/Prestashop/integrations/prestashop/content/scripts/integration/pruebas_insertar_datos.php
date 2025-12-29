@@ -1,16 +1,17 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include(dirname(__FILE__) . '/../../config/config.inc.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
 
-require_once(dirname(__DIR__) . '/integration/auxiliares.php');
-$auxiliares = new auxiliares();
+require_once dirname(__DIR__).'/integration/auxiliares.php';
+$auxiliares = new auxiliares;
 
 $tabla = 'v_sinc_w_valores_prod';
 
@@ -21,22 +22,19 @@ $datos = '{"id":100017556,"nombre":"62º-06 T","id_caracteristica":5}';
 $tipo = 1;
 
 $fila = 100017556;
-die();
+exit();
 
-
-
-
-$nombreArchivo  = dirname(__DIR__) . '/integration/' . $tabla . '.php';
-$nombreClase    = $tabla . "Class";
-$procesar       = 'Procesar_' . $tabla;
-$datos  = json_decode($datos, true);
+$nombreArchivo = dirname(__DIR__).'/integration/'.$tabla.'.php';
+$nombreClase = $tabla.'Class';
+$procesar = 'Procesar_'.$tabla;
+$datos = json_decode($datos, true);
 
 if (file_exists($nombreArchivo)) {
-    include_once($nombreArchivo);
+    include_once $nombreArchivo;
     if (class_exists($nombreClase)) {
-        $objeto = new $nombreClase();
+        $objeto = new $nombreClase;
         if (method_exists($objeto, $procesar)) {
-            call_user_func(array($objeto, $procesar), $datos, $fila, $tipo);
+            call_user_func([$objeto, $procesar], $datos, $fila, $tipo);
         } else {
             $auxiliares->sendmail("El método $procesar no existe en la clase $nombreClase.");
         }

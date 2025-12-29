@@ -2,7 +2,7 @@
 
 namespace app\Library;
 
-use App\Models\Campaign\CampaignMaillist;
+use Modules\Campaign\Entities\CampaignMaillist;
 use Exception;
 use Illuminate\Support\Facades\DB;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,7 +28,7 @@ abstract class ProductPresentingFrontControllerCore extends FrontController
 {
     private function getFactory()
     {
-        return new ProductPresenterFactory($this->context, new TaxConfiguration());
+        return new ProductPresenterFactory($this->context, new TaxConfiguration);
     }
 
     protected function getProductPresentationSettings()

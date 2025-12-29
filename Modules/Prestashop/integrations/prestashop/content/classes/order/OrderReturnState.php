@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -49,16 +50,15 @@ class OrderReturnStateCore extends ObjectModel
     /**
      * Get all available order statuses.
      *
-     * @param int $id_lang Language id for status name
-     *
+     * @param  int  $id_lang  Language id for status name
      * @return array Order statuses
      */
     public static function getOrderReturnStates($id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_return_state` ors
-        LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = ' . (int) $id_lang . ')
+        FROM `'._DB_PREFIX_.'order_return_state` ors
+        LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = '.(int) $id_lang.')
         ORDER BY ors.`id_order_return_state` ASC');
     }
 }

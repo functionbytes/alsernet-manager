@@ -20,12 +20,12 @@
  * @link       http://acellemail.com
  */
 
-namespace App\Models\Campaign;
+namespace Modules\Campaign\Entities;
 
 use App\Events\CampaignMaillistSubscription;
 use App\Events\CampaignMaillistUnsubscription;
 use app\Library\StringHelper;
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use App\Models\Blacklist;
 use App\Models\Segment;
 use App\Models\SubscriberField;
@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\DB;
  * @property string|null $last_verification_result
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Campaign\CampaignMaillist|null $CampaignMaillist
+ * @property-read \Modules\Campaign\Entities\CampaignMaillist|null $CampaignMaillist
  * @property-read \App\Models\Subscriber\Subscriber|null $subscriber
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignMaillistsSubscriber byEmail($email)
@@ -137,7 +137,7 @@ class CampaignMaillistsSubscriber extends Model
 
     public function CampaignMaillist()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignMaillist');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignMaillist');
     }
 
     public function subscriberFields()

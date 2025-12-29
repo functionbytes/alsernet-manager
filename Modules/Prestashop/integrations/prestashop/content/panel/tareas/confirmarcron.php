@@ -1,15 +1,13 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
+function peticionget($url)
+{
 
-
-
-function peticionget($url){
-    
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -20,32 +18,30 @@ function peticionget($url){
 
 }
 
- $urlconfirm="http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/".$transaccion."/";
-            $contentconfirm = peticionget($urlconfirm);
+$urlconfirm = 'http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/'.$transaccion.'/';
+$contentconfirm = peticionget($urlconfirm);
 
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_2/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_2/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_3/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_3/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_4/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_4/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_5/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_5/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_6/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_6/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_7/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_7/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_8/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_8/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_9/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_9/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_10/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_10/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_11/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_11/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_12/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_12/');
 dump($contentitem);
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_13/");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/ConfirmarTransaccion/2/3.29.1169648_13/');
 dump($contentitem);
-
-            

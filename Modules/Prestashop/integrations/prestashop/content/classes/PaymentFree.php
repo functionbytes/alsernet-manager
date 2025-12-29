@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,6 +32,8 @@
 class PaymentFree extends PaymentModule
 {
     public $active = 1;
+
     public $name = 'free_order';
+
     public $displayName = 'Free order';
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -62,12 +63,9 @@ class ProfileCore extends ObjectModel
         $this->image_dir = _PS_PROFILE_IMG_DIR_;
     }
 
-    /**
-     * @return string|null
-     */
     public function getProfileImage(): ?string
     {
-        $path = $this->image_dir . $this->id . '.jpg';
+        $path = $this->image_dir.$this->id.'.jpg';
 
         return file_exists($path)
             ? Context::getContext()->link->getMediaLink(
@@ -85,32 +83,31 @@ class ProfileCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
-		FROM `' . _DB_PREFIX_ . 'profile` p
-		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = ' . (int) $idLang . ')
+		FROM `'._DB_PREFIX_.'profile` p
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int) $idLang.')
 		ORDER BY `id_profile` ASC');
     }
 
     /**
      * Get the current profile name.
      *
-     * @param int $idProfile Profile ID
-     * @param null $idLang Language ID
-     *
+     * @param  int  $idProfile  Profile ID
+     * @param  null  $idLang  Language ID
      * @return string Profile
      */
     public static function getProfile($idProfile, $idLang = null)
     {
-        if (!$idLang) {
+        if (! $idLang) {
             $idLang = Configuration::get('PS_LANG_DEFAULT');
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             '
 			SELECT `name`
-			FROM `' . _DB_PREFIX_ . 'profile` p
-			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
-			WHERE p.`id_profile` = ' . (int) $idProfile . '
-			AND pl.`id_lang` = ' . (int) $idLang
+			FROM `'._DB_PREFIX_.'profile` p
+			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
+			WHERE p.`id_profile` = '.(int) $idProfile.'
+			AND pl.`id_lang` = '.(int) $idLang
         );
     }
 
@@ -123,8 +120,8 @@ class ProfileCore extends ObjectModel
     {
         if (parent::delete()) {
             return
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id);
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int) $this->id)
+                && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int) $this->id);
         }
 
         return false;
@@ -133,9 +130,8 @@ class ProfileCore extends ObjectModel
     /**
      * Get access profile.
      *
-     * @param int $idProfile Profile ID
-     * @param int $idTab Tab ID
-     *
+     * @param  int  $idProfile  Profile ID
+     * @param  int  $idTab  Tab ID
      * @return array|bool
      */
     public static function getProfileAccess($idProfile, $idTab)
@@ -149,22 +145,21 @@ class ProfileCore extends ObjectModel
     /**
      * Get access profiles.
      *
-     * @param int $idProfile Profile ID
-     * @param string $type Type
-     *
+     * @param  int  $idProfile  Profile ID
+     * @param  string  $type  Type
      * @return array|false
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
-        if (!in_array($type, self::ALLOWED_PROFILE_TYPE_CHECK)) {
+        if (! in_array($type, self::ALLOWED_PROFILE_TYPE_CHECK)) {
             return false;
         }
 
-        if (!isset(self::$_cache_accesses[$idProfile])) {
+        if (! isset(self::$_cache_accesses[$idProfile])) {
             self::$_cache_accesses[$idProfile] = [];
         }
 
-        if (!isset(self::$_cache_accesses[$idProfile][$type])) {
+        if (! isset(self::$_cache_accesses[$idProfile][$type])) {
             self::$_cache_accesses[$idProfile][$type] = [];
             // Super admin profile has full auth
             if ($idProfile == _PS_ADMIN_PROFILE_) {
@@ -191,9 +186,9 @@ class ProfileCore extends ObjectModel
                             `slug` LIKE "%READ" as "view",
                             `slug` LIKE "%UPDATE" as "edit",
                             `slug` LIKE "%DELETE" as "delete"
-                        FROM `' . _DB_PREFIX_ . 'authorization_role` a
-                        LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
-                        WHERE j.`id_profile` = ' . (int) $idProfile)
+                        FROM `'._DB_PREFIX_.'authorization_role` a
+                        LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
+                        WHERE j.`id_profile` = '.(int) $idProfile)
                 );
             }
             self::fillCacheAccesses(
@@ -212,9 +207,9 @@ class ProfileCore extends ObjectModel
     }
 
     /**
-     * @param int $idProfile Profile ID
-     * @param array $defaultData Cached data
-     * @param array $accesses Data loaded from the database
+     * @param  int  $idProfile  Profile ID
+     * @param  array  $defaultData  Cached data
+     * @param  array  $accesses  Data loaded from the database
      */
     private static function fillCacheAccesses($idProfile, $defaultData = [], $accesses = [])
     {
@@ -240,8 +235,7 @@ class ProfileCore extends ObjectModel
     /**
      * Creates the array of accesses [role => add / view / edit / delete] from a given list of roles
      *
-     * @param array $rolesGiven
-     *
+     * @param  array  $rolesGiven
      * @return array
      */
     private static function generateAccessesArrayFromPermissions($rolesGiven)

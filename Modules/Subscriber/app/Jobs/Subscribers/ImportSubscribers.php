@@ -4,7 +4,7 @@ namespace App\Jobs\Subscribers\Subscribers;
 
 use App\Jobs\Base;
 use App\Jobs\VerifyAndCreateSubscriber;
-use app\Library\Traits\Trackable;
+use Modules\Campaign\Library\Traits\Trackable;
 use Illuminate\Bus\Batchable;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;

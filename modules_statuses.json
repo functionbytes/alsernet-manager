@@ -3,5 +3,5 @@
     "Mail": false,
     "Prestashop": false,
     "Returns": false,
-    "Warehouse": false
+    "Warehouse": true
 }

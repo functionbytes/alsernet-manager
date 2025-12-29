@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,19 +27,31 @@
 class HelperTreeCategoriesCore extends TreeCore
 {
     const DEFAULT_TEMPLATE = 'tree_categories.tpl';
+
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
+
     const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
 
     private $_disabled_categories;
+
     private $_input_name;
+
     private $_lang;
+
     private $_root_category;
+
     private $_selected_categories;
+
     private $_full_tree = false;
+
     private $_shop;
+
     private $_use_checkbox;
+
     private $_use_search;
+
     private $_use_shop_restriction;
+
     private $_children_only = false;
 
     public function __construct(
@@ -82,7 +95,7 @@ class HelperTreeCategoriesCore extends TreeCore
                 foreach ($categoryChildren as $child) {
                     $childId = (int) $child['id_category'];
 
-                    if (!array_key_exists('children', $tree[$categoryId])) {
+                    if (! array_key_exists('children', $tree[$categoryId])) {
                         $tree[$categoryId]['children'] = [$childId => $child];
                     } else {
                         $tree[$categoryId]['children'][$childId] = $child;
@@ -106,7 +119,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getData()
     {
-        if (!isset($this->_data)) {
+        if (! isset($this->_data)) {
             $shop = $this->getShop();
             $lang = $this->getLang();
             $root_category = (int) $this->getRootCategory();
@@ -138,7 +151,7 @@ class HelperTreeCategoriesCore extends TreeCore
                 $new_selected_categories = array_unique($new_selected_categories);
                 foreach ($new_selected_categories as $selected_category) {
                     $current_category = Category::getChildren($selected_category, $lang, false, $shop->id);
-                    if (!empty($current_category)) {
+                    if (! empty($current_category)) {
                         $categories[$selected_category] = $current_category;
                     }
                 }
@@ -147,7 +160,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
                 $children = $this->fillTree($categories, $root_category);
 
-                if (!empty($children)) {
+                if (! empty($children)) {
                     $tree[$root_category]['children'] = $children;
                 }
 
@@ -199,7 +212,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getInputName()
     {
-        if (!isset($this->_input_name)) {
+        if (! isset($this->_input_name)) {
             $this->setInputName('categoryBox');
         }
 
@@ -215,7 +228,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getLang()
     {
-        if (!isset($this->_lang)) {
+        if (! isset($this->_lang)) {
             $this->setLang($this->getContext()->employee->id_lang);
         }
 
@@ -224,7 +237,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getNodeFolderTemplate()
     {
-        if (!isset($this->_node_folder_template)) {
+        if (! isset($this->_node_folder_template)) {
             $this->setNodeFolderTemplate(self::DEFAULT_NODE_FOLDER_TEMPLATE);
         }
 
@@ -233,7 +246,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getNodeItemTemplate()
     {
-        if (!isset($this->_node_item_template)) {
+        if (! isset($this->_node_item_template)) {
             $this->setNodeItemTemplate(self::DEFAULT_NODE_ITEM_TEMPLATE);
         }
 
@@ -242,7 +255,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function setRootCategory($value)
     {
-        if (!Validate::isInt($value)) {
+        if (! Validate::isInt($value)) {
             throw new PrestaShopException('Root category must be an integer value');
         }
 
@@ -257,15 +270,14 @@ class HelperTreeCategoriesCore extends TreeCore
     }
 
     /**
-     * @param array<int> $value
-     *
+     * @param  array<int>  $value
      * @return self
      *
      * @throws PrestaShopException
      */
     public function setSelectedCategories($value)
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             throw new PrestaShopException('Selected categories value must be an array');
         }
 
@@ -276,7 +288,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getSelectedCategories()
     {
-        if (!isset($this->_selected_categories)) {
+        if (! isset($this->_selected_categories)) {
             $this->_selected_categories = [];
         }
 
@@ -292,12 +304,12 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getShop()
     {
-        if (!isset($this->_shop)) {
+        if (! isset($this->_shop)) {
             if (Tools::isSubmit('id_shop')) {
                 $this->setShop(new Shop(Tools::getValue('id_shop')));
             } elseif ($this->getContext()->shop->id) {
                 $this->setShop(new Shop($this->getContext()->shop->id));
-            } elseif (!Shop::isFeatureActive()) {
+            } elseif (! Shop::isFeatureActive()) {
                 $this->setShop(new Shop(Configuration::get('PS_SHOP_DEFAULT')));
             } else {
                 $this->setShop(new Shop(0));
@@ -309,7 +321,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function getTemplate()
     {
-        if (!isset($this->_template)) {
+        if (! isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_TEMPLATE);
         }
 
@@ -354,25 +366,25 @@ class HelperTreeCategoriesCore extends TreeCore
 
     public function render($data = null)
     {
-        if (!isset($data)) {
+        if (! isset($data)) {
             $data = $this->getData();
         }
 
         if (isset($this->_disabled_categories)
-            && !empty($this->_disabled_categories)) {
+            && ! empty($this->_disabled_categories)) {
             $this->_disableCategories($data, $this->getDisabledCategories());
         }
 
         if (isset($this->_selected_categories)
-            && !empty($this->_selected_categories)) {
+            && ! empty($this->_selected_categories)) {
             $this->_getSelectedChildNumbers($data, $this->getSelectedCategories());
         }
 
-        //Default bootstrap style of search is push-right, so we add this button first
+        // Default bootstrap style of search is push-right, so we add this button first
         if ($this->useSearch()) {
             $this->addAction(new TreeToolbarSearchCategories(
                 'Find a category:',
-                $this->getId() . '-categories-search'
+                $this->getId().'-categories-search'
             ));
             $this->setAttribute('use_search', $this->useSearch());
         }
@@ -380,17 +392,17 @@ class HelperTreeCategoriesCore extends TreeCore
         $collapse_all = new TreeToolbarLink(
             $this->translator->trans('Collapse all', [], 'Admin.Actions'),
             '#',
-            '$(\'#' . $this->getId() . '\').tree(\'collapseAll\');$(\'#collapse-all-' . $this->getId() . '\').hide();$(\'#expand-all-' . $this->getId() . '\').show(); return false;',
+            '$(\'#'.$this->getId().'\').tree(\'collapseAll\');$(\'#collapse-all-'.$this->getId().'\').hide();$(\'#expand-all-'.$this->getId().'\').show(); return false;',
             'icon-collapse-alt'
         );
-        $collapse_all->setAttribute('id', 'collapse-all-' . $this->getId());
+        $collapse_all->setAttribute('id', 'collapse-all-'.$this->getId());
         $expand_all = new TreeToolbarLink(
             $this->translator->trans('Expand all', [], 'Admin.Actions'),
             '#',
-            '$(\'#' . $this->getId() . '\').tree(\'expandAll\');$(\'#collapse-all-' . $this->getId() . '\').show();$(\'#expand-all-' . $this->getId() . '\').hide(); return false;',
+            '$(\'#'.$this->getId().'\').tree(\'expandAll\');$(\'#collapse-all-'.$this->getId().'\').show();$(\'#expand-all-'.$this->getId().'\').hide(); return false;',
             'icon-expand-alt'
         );
-        $expand_all->setAttribute('id', 'expand-all-' . $this->getId());
+        $expand_all->setAttribute('id', 'expand-all-'.$this->getId());
         $this->addAction($collapse_all);
         $this->addAction($expand_all);
 
@@ -398,17 +410,17 @@ class HelperTreeCategoriesCore extends TreeCore
             $check_all = new TreeToolbarLink(
                 $this->translator->trans('Check all', [], 'Admin.Actions'),
                 '#',
-                'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
+                'checkAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
                 'icon-check-sign'
             );
-            $check_all->setAttribute('id', 'check-all-' . $this->getId());
+            $check_all->setAttribute('id', 'check-all-'.$this->getId());
             $uncheck_all = new TreeToolbarLink(
                 $this->translator->trans('Uncheck all', [], 'Admin.Actions'),
                 '#',
-                'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
+                'uncheckAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
                 'icon-check-empty'
             );
-            $uncheck_all->setAttribute('id', 'uncheck-all-' . $this->getId());
+            $uncheck_all->setAttribute('id', 'uncheck-all-'.$this->getId());
             $this->addAction($check_all);
             $this->addAction($uncheck_all);
             $this->setNodeFolderTemplate('tree_node_folder_checkbox.tpl');
@@ -426,18 +438,18 @@ class HelperTreeCategoriesCore extends TreeCore
     /* Override */
     public function renderNodes($data = null)
     {
-        if (!isset($data)) {
+        if (! isset($data)) {
             $data = $this->getData();
         }
 
-        if (!is_array($data) && !$data instanceof Traversable) {
+        if (! is_array($data) && ! $data instanceof Traversable) {
             throw new PrestaShopException('Data value must be an traversable array');
         }
 
         $html = '';
         foreach ($data as $item) {
             if (is_array($item) && array_key_exists('children', $item)
-                && !empty($item['children'])) {
+                && ! empty($item['children'])) {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
@@ -463,7 +475,7 @@ class HelperTreeCategoriesCore extends TreeCore
     private function _disableCategories(&$categories, $disabled_categories = null)
     {
         foreach ($categories as &$category) {
-            if (!isset($disabled_categories) || in_array($category['id_category'], $disabled_categories)) {
+            if (! isset($disabled_categories) || in_array($category['id_category'], $disabled_categories)) {
                 $category['disabled'] = true;
                 if (array_key_exists('children', $category) && is_array($category['children'])) {
                     self::_disableCategories($category['children']);
@@ -480,15 +492,15 @@ class HelperTreeCategoriesCore extends TreeCore
 
         foreach ($categories as $key => &$category) {
             if (isset($parent) && in_array($category['id_category'], $selected)) {
-                ++$selected_childs;
+                $selected_childs++;
             }
 
-            if (isset($category['children']) && !empty($category['children'])) {
+            if (isset($category['children']) && ! empty($category['children'])) {
                 $selected_childs += $this->_getSelectedChildNumbers($category['children'], $selected, $category);
             }
         }
 
-        if (!isset($parent['selected_childs'])) {
+        if (! isset($parent['selected_childs'])) {
             $parent['selected_childs'] = 0;
         }
 

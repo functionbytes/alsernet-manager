@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -189,12 +190,11 @@ class StockMvtCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $id_order
-     * @param int $id_product
-     * @param int $id_product_attribute Use 0 if the product does not have attributes
-     * @param int $quantity
-     * @param int $id_warehouse Optional
-     *
+     * @param  int  $id_order
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute  Use 0 if the product does not have attributes
+     * @param  int  $quantity
+     * @param  int  $id_warehouse  Optional
      * @return array mvts
      */
     public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
@@ -203,17 +203,17 @@ class StockMvtCore extends ObjectModel
         $quantity_total = 0;
 
         // preps query
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('sm.*, s.id_warehouse');
         $query->from('stock_mvt', 'sm');
         $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
         $query->where('sm.sign = -1');
-        $query->where('sm.id_order = ' . (int) $id_order);
-        $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('sm.id_order = '.(int) $id_order);
+        $query->where('s.id_product = '.(int) $id_product.' AND s.id_product_attribute = '.(int) $id_product_attribute);
 
         // if filer by warehouse
-        if (null !== $id_warehouse) {
-            $query->where('s.id_warehouse = ' . (int) $id_warehouse);
+        if ($id_warehouse !== null) {
+            $query->where('s.id_warehouse = '.(int) $id_warehouse);
         }
 
         // orders the movements by date
@@ -239,23 +239,22 @@ class StockMvtCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param int $id_product
-     * @param int $id_product_attribute Use 0 if the product does not have attributes
-     *
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute  Use 0 if the product does not have attributes
      * @return bool|array
      */
     public static function getLastPositiveStockMvt($id_product, $id_product_attribute)
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('sm.*, w.id_currency, (s.usable_quantity = sm.physical_quantity) as is_usable');
         $query->from('stock_mvt', 'sm');
         $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
         $query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
         $query->where('sm.sign = 1');
         if ($id_product_attribute) {
-            $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
+            $query->where('s.id_product = '.(int) $id_product.' AND s.id_product_attribute = '.(int) $id_product_attribute);
         } else {
-            $query->where('s.id_product = ' . (int) $id_product);
+            $query->where('s.id_product = '.(int) $id_product);
         }
         $query->orderBy('date_add DESC');
 

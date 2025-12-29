@@ -2,7 +2,7 @@
 
 namespace Modules\Returns\Models;
 
-use app\Library\Traits\HasUid;
+use App\Models\Traits\HasUid;
 use App\Models\Return\Order\ReturnOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

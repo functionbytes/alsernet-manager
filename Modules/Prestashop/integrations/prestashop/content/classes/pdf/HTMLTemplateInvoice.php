@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -45,9 +46,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public $available_in_your_account = false;
 
     /**
-     * @param OrderInvoice $order_invoice
-     * @param Smarty $smarty
-     * @param bool $bulk_mode
+     * @param  bool  $bulk_mode
      *
      * @throws PrestaShopException
      */
@@ -61,9 +60,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
-        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+        if (! isset($this->order_invoice->shop_address) || ! $this->order_invoice->shop_address) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
-            if (!$bulk_mode) {
+            if (! $bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
             }
         }
@@ -94,8 +93,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Compute layout elements size.
      *
-     * @param array $params Layout elements
-     *
+     * @param  array  $params  Layout elements
      * @return array Layout elements columns size
      */
     protected function computeLayout(array $params)
@@ -131,7 +129,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $free_columns_count = 0;
         foreach ($layout as $data) {
             if ($data['width'] === 0) {
-                ++$free_columns_count;
+                $free_columns_count++;
             }
 
             $total_width += $data['width'];
@@ -218,18 +216,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $name = 'product_mini_'.(int) $order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int) $order_detail['product_attribute_id'] : '').'.jpg';
+                    $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+                        '/\.*'.preg_quote(__PS_BASE_URI__, '/').'/',
+                        _PS_ROOT_DIR_.DIRECTORY_SEPARATOR,
                         ImageManager::thumbnail($path, $name, 45, 'jpg', false),
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
                     } else {
                         $order_detail['image_size'] = false;
                     }
@@ -336,7 +334,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $layout = $this->computeLayout(['has_discount' => $has_discount]);
 
         $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', ['order' => $this->order]);
-        if (!$legal_free_text) {
+        if (! $legal_free_text) {
             $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int) Context::getContext()->language->id, null, (int) $this->order->id_shop);
         }
 
@@ -361,7 +359,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         ];
 
         if (Tools::getValue('debug')) {
-            die(json_encode($data));
+            exit(json_encode($data));
         }
 
         $this->smarty->assign($data);
@@ -393,7 +391,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-                            && !empty($address->vat_number)
+                            && ! empty($address->vat_number)
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
         $carrier = new Carrier($this->order->id_carrier);
 
@@ -463,8 +461,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns the invoice template associated to the country iso_code.
      *
-     * @param string $iso_country
-     *
+     * @param  string  $iso_country
      * @return string
      */
     protected function getTemplateByCountry($iso_country)
@@ -472,10 +469,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $file = Configuration::get('PS_INVOICE_MODEL');
 
         // try to fetch the iso template
-        $template = $this->getTemplate($file . '.' . $iso_country);
+        $template = $this->getTemplate($file.'.'.$iso_country);
 
         // else use the default one
-        if (!$template) {
+        if (! $template) {
             $template = $this->getTemplate($file);
         }
 
@@ -512,6 +509,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
             $this->order_invoice->number,
             date('Y', strtotime($this->order_invoice->date_add))
-        ) . '.pdf';
+        ).'.pdf';
     }
 }

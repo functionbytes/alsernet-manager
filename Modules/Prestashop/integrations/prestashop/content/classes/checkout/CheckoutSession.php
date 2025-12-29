@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,13 +28,10 @@ class CheckoutSessionCore
 {
     /** @var Context */
     protected $context;
+
     /** @var DeliveryOptionsFinder */
     protected $deliveryOptionsFinder;
 
-    /**
-     * @param Context $context
-     * @param DeliveryOptionsFinder $deliveryOptionsFinder
-     */
     public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)
     {
         $this->context = $context;
@@ -126,7 +124,7 @@ class CheckoutSessionCore
                 $message->message = $messageContent;
                 $message->update();
             } else {
-                $message = new Message();
+                $message = new Message;
                 $message->message = $messageContent;
                 $message->id_cart = (int) $this->context->cart->id;
                 $message->id_customer = (int) $this->context->cart->id_customer;

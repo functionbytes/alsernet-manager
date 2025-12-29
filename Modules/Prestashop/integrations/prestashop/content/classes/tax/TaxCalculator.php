@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -54,14 +55,13 @@ class TaxCalculatorCore
     public $computation_method;
 
     /**
-     * @param array $taxes
-     * @param int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
+     * @param  int  $computation_method  (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
      */
     public function __construct(array $taxes = [], $computation_method = TaxCalculator::COMBINE_METHOD)
     {
         // sanity check
         foreach ($taxes as $tax) {
-            if (!($tax instanceof Tax)) {
+            if (! ($tax instanceof Tax)) {
                 throw new Exception('Invalid Tax Object');
             }
         }
@@ -73,8 +73,7 @@ class TaxCalculatorCore
     /**
      * Compute and add the taxes to the specified price.
      *
-     * @param float $price_te price tax excluded
-     *
+     * @param  float  $price_te  price tax excluded
      * @return float price with taxes
      */
     public function addTaxes($price_te)
@@ -85,8 +84,7 @@ class TaxCalculatorCore
     /**
      * Compute and remove the taxes to the specified price.
      *
-     * @param float $price_ti price tax inclusive
-     *
+     * @param  float  $price_ti  price tax inclusive
      * @return float price without taxes
      */
     public function removeTaxes($price_ti)
@@ -123,7 +121,7 @@ class TaxCalculatorCore
         $languageId = (int) Context::getContext()->language->id;
 
         foreach ($this->taxes as $tax) {
-            $name .= ($tax->name[$languageId] ?? '') . ' - ';
+            $name .= ($tax->name[$languageId] ?? '').' - ';
         }
 
         $name = rtrim($name, ' - ');
@@ -134,8 +132,7 @@ class TaxCalculatorCore
     /**
      * Return the tax amount associated to each taxes of the TaxCalculator.
      *
-     * @param float $price_te
-     *
+     * @param  float  $price_te
      * @return array $taxes_amount
      */
     public function getTaxesAmount($price_te)
@@ -157,8 +154,7 @@ class TaxCalculatorCore
     /**
      * Return the total taxes amount.
      *
-     * @param float $price_te
-     *
+     * @param  float  $price_te
      * @return float $amount
      */
     public function getTaxesTotalAmount($price_te)

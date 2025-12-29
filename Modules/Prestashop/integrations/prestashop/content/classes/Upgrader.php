@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,38 +31,52 @@
 class UpgraderCore
 {
     const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
+
     public $rss_version_link;
+
     public $rss_md5file_link_dir;
+
     /**
      * @var bool contains true if last version is not installed
      */
     protected $need_upgrade = false;
+
     protected $changed_files = [];
+
     protected $missing_files = [];
 
     public $version_name;
+
     public $version_num;
+
     public $version_is_modified = null;
+
     /**
      * @var string contains hte url where to download the file
      */
     public $link;
+
     public $autoupgrade;
+
     public $autoupgrade_module;
+
     public $autoupgrade_last_version;
+
     public $autoupgrade_module_link;
+
     public $changelog;
+
     public $md5;
 
     /**
      * UpgraderCore constructor.
      *
-     * @param bool $autoload
+     * @param  bool  $autoload
      */
     public function __construct($autoload = false)
     {
-        $this->rss_version_link = _PS_API_URL_ . '/xml/upgrader.xml';
-        $this->rss_md5file_link_dir = _PS_API_URL_ . '/xml/md5/';
+        $this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
+        $this->rss_md5file_link_dir = _PS_API_URL_.'/xml/md5/';
 
         if ($autoload) {
             $this->loadFromConfig();
@@ -80,9 +95,8 @@ class UpgraderCore
     /**
      * downloadLast download the last version of PrestaShop and save it in $dest/$filename.
      *
-     * @param string $dest directory where to save the file
-     * @param string $filename new filename
-     *
+     * @param  string  $dest  directory where to save the file
+     * @param  string  $filename  new filename
      * @return bool
      *
      * @TODO ftp if copy is not possible (safe_mode for example)
@@ -93,7 +107,7 @@ class UpgraderCore
             $this->checkPSVersion();
         }
 
-        $destPath = realpath($dest) . DIRECTORY_SEPARATOR . $filename;
+        $destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
         if (@copy($this->link, $destPath)) {
             return true;
         } else {
@@ -226,7 +240,7 @@ class UpgraderCore
     {
         if (is_array($this->changed_files) && count($this->changed_files) == 0) {
             libxml_set_streams_context(@stream_context_create(['http' => ['timeout' => 3]]));
-            $checksum = @simplexml_load_file($this->rss_md5file_link_dir . _PS_VERSION_ . '.xml');
+            $checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
             if ($checksum == false) {
                 $this->changed_files = false;
             } else {
@@ -240,7 +254,7 @@ class UpgraderCore
     /** populate $this->changed_files with $path
      * in sub arrays  mail, translation and core items.
      *
-     * @param string $path filepath to add, relative to _PS_ROOT_DIR_
+     * @param  string  $path  filepath to add, relative to _PS_ROOT_DIR_
      */
     protected function addChangedFile($path)
     {
@@ -264,7 +278,7 @@ class UpgraderCore
 
     /** populate $this->missing_files with $path
      *
-     * @param string $path filepath to add, relative to _PS_ROOT_DIR_
+     * @param  string  $path  filepath to add, relative to _PS_ROOT_DIR_
      */
     protected function addMissingFile($path)
     {
@@ -273,9 +287,8 @@ class UpgraderCore
     }
 
     /**
-     * @param $node
-     * @param array $currentPath
-     * @param int $level
+     * @param  array  $currentPath
+     * @param  int  $level
      */
     protected function browseXmlAndCompare($node, &$currentPath = [], $level = 1)
     {
@@ -288,19 +301,19 @@ class UpgraderCore
                 // We will store only relative path.
                 // absolute path is only used for file_exists and compare
                 $relativePath = '';
-                for ($i = 1; $i < $level; ++$i) {
-                    $relativePath .= $currentPath[$i] . '/';
+                for ($i = 1; $i < $level; $i++) {
+                    $relativePath .= $currentPath[$i].'/';
                 }
                 $relativePath .= (string) $child['name'];
-                $fullpath = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $relativePath;
+                $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relativePath;
 
                 $fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
                 // replace default admin dir by current one
-                $fullpath = str_replace(_PS_ROOT_DIR_ . '/admin', _PS_ADMIN_DIR_, $fullpath);
-                if (!file_exists($fullpath)) {
+                $fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
+                if (! file_exists($fullpath)) {
                     $this->addMissingFile($relativePath);
-                } elseif (!$this->compareChecksum($fullpath, (string) $child)) {
+                } elseif (! $this->compareChecksum($fullpath, (string) $child)) {
                     $this->addChangedFile($relativePath);
                 }
                 // else, file is original (and ok)
@@ -311,9 +324,8 @@ class UpgraderCore
     /**
      * Compare checksum.
      *
-     * @param string $path
-     * @param string $originalSum
-     *
+     * @param  string  $path
+     * @param  string  $originalSum
      * @return bool
      */
     protected function compareChecksum($path, $originalSum)
@@ -334,6 +346,6 @@ class UpgraderCore
     {
         $this->getChangedFilesList();
 
-        return !$this->version_is_modified;
+        return ! $this->version_is_modified;
     }
 }

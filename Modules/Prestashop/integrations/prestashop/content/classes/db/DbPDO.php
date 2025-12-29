@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -42,12 +43,11 @@ class DbPDOCore extends Db
      *
      * @deprecated use getPDO
      *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $dbname
-     * @param int $timeout
-     *
+     * @param  string  $host
+     * @param  string  $user
+     * @param  string  $password
+     * @param  string  $dbname
+     * @param  int  $timeout
      * @return PDO
      */
     protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
@@ -58,26 +58,25 @@ class DbPDOCore extends Db
     /**
      * Returns a new PDO object (database link).
      *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $dbname
-     * @param int $timeout
-     *
+     * @param  string  $host
+     * @param  string  $user
+     * @param  string  $password
+     * @param  string  $dbname
+     * @param  int  $timeout
      * @return PDO
      */
     protected static function getPDO($host, $user, $password, $dbname, $timeout = 5)
     {
         $dsn = 'mysql:';
         if ($dbname) {
-            $dsn .= 'dbname=' . $dbname . ';';
+            $dsn .= 'dbname='.$dbname.';';
         }
         if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
-            $dsn .= 'host=' . $matches[1] . ';port=' . $matches[2];
+            $dsn .= 'host='.$matches[1].';port='.$matches[2];
         } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
-            $dsn .= 'unix_socket=' . $matches[1];
+            $dsn .= 'unix_socket='.$matches[1];
         } else {
-            $dsn .= 'host=' . $host;
+            $dsn .= 'host='.$host;
         }
         $dsn .= ';charset=utf8mb4';
 
@@ -96,20 +95,19 @@ class DbPDOCore extends Db
     /**
      * Tries to connect and create a new database.
      *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $dbname
-     * @param bool $dropit if true, drops the created database
-     *
+     * @param  string  $host
+     * @param  string  $user
+     * @param  string  $password
+     * @param  string  $dbname
+     * @param  bool  $dropit  if true, drops the created database
      * @return bool|int
      */
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
         try {
             $link = DbPDO::getPDO($host, $user, $password, false);
-            $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
-            if ($dropit && ($link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`') !== false)) {
+            $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+            if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -133,7 +131,7 @@ class DbPDOCore extends Db
         try {
             $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
         } catch (PDOException $e) {
-            throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
+            throw new PrestaShopException('Link to database cannot be established: '.$e->getMessage());
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
@@ -156,8 +154,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::_query()
      *
-     * @param string $sql
-     *
+     * @param  string  $sql
      * @return PDOStatement
      */
     protected function _query($sql)
@@ -170,17 +167,16 @@ class DbPDOCore extends Db
      *
      * @see DbCore::nextRow()
      *
-     * @param bool $result
-     *
+     * @param  bool  $result
      * @return array|false|null
      */
     public function nextRow($result = false)
     {
-        if (!$result) {
+        if (! $result) {
             $result = $this->result;
         }
 
-        if (!is_object($result)) {
+        if (! is_object($result)) {
             return false;
         }
 
@@ -192,17 +188,16 @@ class DbPDOCore extends Db
      *
      * @see DbCore::getAll()
      *
-     * @param bool $result
-     *
+     * @param  bool  $result
      * @return array|false|null
      */
     protected function getAll($result = false)
     {
-        if (!$result) {
+        if (! $result) {
             $result = $this->result;
         }
 
-        if (!is_object($result)) {
+        if (! is_object($result)) {
             return false;
         }
 
@@ -214,8 +209,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::_numRows()
      *
-     * @param PDOStatement $result
-     *
+     * @param  PDOStatement  $result
      * @return int
      */
     protected function _numRows($result)
@@ -252,8 +246,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::getMsgError()
      *
-     * @param bool $query
-     *
+     * @param  bool  $query
      * @return string
      */
     public function getMsgError($query = false)
@@ -294,8 +287,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::_escape()
      *
-     * @param string $str
-     *
+     * @param  string  $str
      * @return string
      */
     public function _escape($str)
@@ -311,13 +303,12 @@ class DbPDOCore extends Db
      *
      * @see DbCore::set_db()
      *
-     * @param string $db_name
-     *
+     * @param  string  $db_name
      * @return int
      */
     public function set_db($db_name)
     {
-        return $this->link->exec('USE ' . pSQL($db_name));
+        return $this->link->exec('USE '.pSQL($db_name));
     }
 
     /**
@@ -325,12 +316,11 @@ class DbPDOCore extends Db
      *
      * @see Db::hasTableWithSamePrefix()
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param string $prefix Tables prefix
-     *
+     * @param  string  $server  Server address
+     * @param  string  $user  Login for database connection
+     * @param  string  $pwd  Password for database connection
+     * @param  string  $db  Database name
+     * @param  string  $prefix  Tables prefix
      * @return bool
      */
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
@@ -341,7 +331,7 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
+        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch();
@@ -350,13 +340,12 @@ class DbPDOCore extends Db
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     * @param string $db
-     * @param string $prefix
-     * @param string|null $engine Table engine
-     *
+     * @param  string  $server
+     * @param  string  $user
+     * @param  string  $pwd
+     * @param  string  $db
+     * @param  string  $prefix
+     * @param  string|null  $engine  Table engine
      * @return bool|string True, false or error
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
@@ -374,12 +363,12 @@ class DbPDOCore extends Db
 
         foreach ($enginesToTest as $engineToTest) {
             $result = $link->query('
-            CREATE TABLE `' . $prefix . 'test` (
+            CREATE TABLE `'.$prefix.'test` (
                 `test` tinyint(1) unsigned NOT NULL
-            ) ENGINE=' . $engineToTest);
+            ) ENGINE='.$engineToTest);
 
             if ($result) {
-                $link->query('DROP TABLE `' . $prefix . 'test`');
+                $link->query('DROP TABLE `'.$prefix.'test`');
 
                 return true;
             }
@@ -393,13 +382,12 @@ class DbPDOCore extends Db
     /**
      * Tries to connect to the database and select content (checking select privileges).
      *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     * @param string $db
-     * @param string $prefix
-     * @param string|null $engine Table engine
-     *
+     * @param  string  $server
+     * @param  string  $user
+     * @param  string  $pwd
+     * @param  string  $db
+     * @param  string  $prefix
+     * @param  string|null  $engine  Table engine
      * @return bool|string True, false or error
      */
     public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
@@ -416,17 +404,17 @@ class DbPDOCore extends Db
 
         // Create a table
         $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+		) ENGINE='.$engine);
 
         // Select content
-        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+        $result = $link->query('SELECT * FROM `'.$prefix.'test`');
 
         // Drop the table
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+        $link->query('DROP TABLE `'.$prefix.'test`');
 
-        if (!$result) {
+        if (! $result) {
             $error = $link->errorInfo();
 
             return $error[2];
@@ -440,14 +428,13 @@ class DbPDOCore extends Db
      *
      * @see Db::checkConnection()
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param bool $new_db_link
-     * @param string|bool $engine
-     * @param int $timeout
-     *
+     * @param  string  $server  Server address
+     * @param  string  $user  Login for database connection
+     * @param  string  $pwd  Password for database connection
+     * @param  string  $db  Database name
+     * @param  bool  $new_db_link
+     * @param  string|bool  $engine
+     * @param  int  $timeout
      * @return int Error code or 0 if connection was successful
      */
     public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
@@ -475,11 +462,11 @@ class DbPDOCore extends Db
         $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
         $result = $this->link->query($sql);
 
-        if (!$result) {
+        if (! $result) {
             $value = 'MyISAM';
         } else {
             $row = $result->fetch();
-            if (!$row || strtolower($row['Value']) != 'yes') {
+            if (! $row || strtolower($row['Value']) != 'yes') {
                 $value = 'MyISAM';
             }
         }
@@ -505,10 +492,9 @@ class DbPDOCore extends Db
      *
      * @see Db::checkEncoding()
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     *
+     * @param  string  $server  Server address
+     * @param  string  $user  Login for database connection
+     * @param  string  $pwd  Password for database connection
      * @return bool
      */
     public static function tryUTF8($server, $user, $pwd)

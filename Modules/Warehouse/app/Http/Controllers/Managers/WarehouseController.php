@@ -3,9 +3,9 @@
 namespace Modules\Warehouse\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use Modules\Warehouse\Entities\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\Warehouse;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class WarehouseController extends Controller
@@ -52,6 +52,8 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Warehouse::class);
+
         $validated = $request->validate([
             'code' => 'required|string|max:50|unique:warehouses,code',
             'name' => 'required|string|max:100',
@@ -93,6 +95,8 @@ class WarehouseController extends Controller
         if (! $warehouse) {
             abort(404, 'Almacén no encontrado');
         }
+
+        $this->authorize('update', $warehouse);
 
         $validated = $request->validate([
             'code' => 'required|string|max:50|unique:warehouses,code,'.$warehouse->id,
@@ -149,6 +153,8 @@ class WarehouseController extends Controller
         if (! $warehouse) {
             abort(404, 'Almacén no encontrado');
         }
+
+        $this->authorize('delete', $warehouse);
 
         // Validar que no hay floors
         $totalFloors = $warehouse->floors()->count();

@@ -4,21 +4,19 @@ use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 
 class CheckoutPaymentStep extends CheckoutPaymentStepCore
 {
-
     public $selected_payment_option = null;
 
     public function render(array $extraParams = [])
     {
 
-        $presenter = new CartPresenter();
+        $presenter = new CartPresenter;
         $cart = $presenter->present($this->getCheckoutSession()->getCart(), $shouldSeparateGifts = true, $this->context->language->id);
 
-        $isFree = 0 == (float)$this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
+        $isFree = (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH) == 0;
         $paymentOptions = $this->paymentOptionsFinder->present($isFree);
         $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $deliveryOptionKey = $this->getCheckoutSession()->getSelectedDeliveryOption();
-
 
         if (isset($deliveryOptions[$deliveryOptionKey])) {
             $selectedDeliveryOption = $deliveryOptions[$deliveryOptionKey];
@@ -29,16 +27,16 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
         if (isset($this->selected_payment_option)) {
             $selected_payment_option = $this->selected_payment_option;
         } else {
-            $selected_payment_option = NULL;
+            $selected_payment_option = null;
         }
         unset($selectedDeliveryOption['product_list']);
 
         $allPaymentOptions = [];
 
-        if (!empty($paymentOptions)) {
+        if (! empty($paymentOptions)) {
             $flattened = array_values($paymentOptions);
             $flattened = array_filter($flattened, 'is_array');
-            if (!empty($flattened)) {
+            if (! empty($flattened)) {
                 $allPaymentOptions = array_merge(...$flattened);
             }
         }
@@ -54,14 +52,14 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
         $licencia = $cart['licencia'];
 
         $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
-            ['module_name' => 'AddisDemoday']
+            ['module_name' => 'AddisDemoday'],
         ], 'remove');
 
         if ($armas_balines) {
             $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                 ['module_name' => 'credit_card'],
                 ['module_name' => 'local_payment_hipay'],
-                ['module_name' => 'klarnapayment']
+                ['module_name' => 'klarnapayment'],
 
             ], 'remove');
         }
@@ -73,7 +71,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'ps_cashondelivery'],
                 ['module_name' => 'credit_card'],
                 ['module_name' => 'local_payment_hipay'],
-                ['module_name' => 'klarnapayment']
+                ['module_name' => 'klarnapayment'],
             ], 'remove');
         }
 
@@ -82,7 +80,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'paypal'],
                 ['module_name' => 'paypal_bnpl'],
                 ['module_name' => 'credit_card'],
-                ['module_name' => 'local_payment_hipay']
+                ['module_name' => 'local_payment_hipay'],
             ], 'remove');
         }
         if ($cartucho) {
@@ -90,7 +88,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'ps_cashondelivery'],
                 ['module_name' => 'credit_card'],
                 ['module_name' => 'local_payment_hipay'],
-                ['module_name' => 'klarnapayment']
+                ['module_name' => 'klarnapayment'],
             ], 'remove');
         }
         if ($licencia) {
@@ -102,7 +100,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'paypal'],
                 ['module_name' => 'paypal_bnpl'],
                 ['module_name' => 'local_payment_hipay'],
-                ['module_name' => 'klarnapayment']
+                ['module_name' => 'klarnapayment'],
             ], 'remove');
         }
         if ($lottery || $card) {
@@ -114,76 +112,72 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'paypal'],
                 ['module_name' => 'paypal_bnpl'],
                 ['module_name' => 'local_payment_hipay'],
-                ['module_name' => 'klarnapayment']
+                ['module_name' => 'klarnapayment'],
             ], 'remove');
         }
-
 
         if ($iso == 'es') {
 
             if ($totalCart < 300) {
 
                 $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'banlendismart']
+                    ['module_name' => 'banlendismart'],
                 ], 'remove');
-
 
             } elseif ($totalCart > 300) {
 
                 $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'sequra']
+                    ['module_name' => 'sequra'],
                 ], 'remove');
 
             } else {
                 $filteredOptions = $allPaymentOptions;
             }
-        }
-        elseif ($iso == 'pt') {
+        } elseif ($iso == 'pt') {
 
             $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                 ['module_name' => 'banlendismart'],
-                //['module_name' => 'ps_cashondelivery']
+                // ['module_name' => 'ps_cashondelivery']
             ], 'remove');
 
             if ($totalCart > 3000) {
 
                 $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'sequra']
-                ], 'remove');
-
-            } else {
-                $filteredOptions = $allPaymentOptions;
-            }
-
-        }
-        elseif ($iso == 'fr') {
-
-            $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
-                ['module_name' => 'banlendismart'],
-                //['module_name' => 'ps_cashondelivery']
-            ], 'remove');
-
-            if ($totalCart > 3000) {
-
-                $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'sequra']
+                    ['module_name' => 'sequra'],
                 ], 'remove');
 
             } else {
                 $filteredOptions = $allPaymentOptions;
             }
 
-        }elseif ($iso == 'it') {
+        } elseif ($iso == 'fr') {
 
             $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                 ['module_name' => 'banlendismart'],
-                //['module_name' => 'ps_cashondelivery']
+                // ['module_name' => 'ps_cashondelivery']
             ], 'remove');
 
             if ($totalCart > 3000) {
 
                 $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'sequra']
+                    ['module_name' => 'sequra'],
+                ], 'remove');
+
+            } else {
+                $filteredOptions = $allPaymentOptions;
+            }
+
+        } elseif ($iso == 'it') {
+
+            $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
+                ['module_name' => 'banlendismart'],
+                // ['module_name' => 'ps_cashondelivery']
+            ], 'remove');
+
+            if ($totalCart > 3000) {
+
+                $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
+                    ['module_name' => 'sequra'],
                 ], 'remove');
 
             } else {
@@ -196,7 +190,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 ['module_name' => 'banlendismart'],
                 ['module_name' => 'sequra'],
                 ['module_name' => 'ps_cashondelivery'],
-                //['module_name' => 'inespay'],
+                // ['module_name' => 'inespay'],
             ], 'remove');
 
         }
@@ -214,8 +208,7 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);
     }
 
-
-    function filterPaymentOptions(array $options, array $conditions): array
+    public function filterPaymentOptions(array $options, array $conditions): array
     {
         return array_filter($options, function ($option) use ($conditions) {
             foreach ($conditions as $condition) {
@@ -223,13 +216,13 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 foreach ($condition as $key => $value) {
 
                     if (is_array($value)) {
-                        if (!isset($option[$key]) || !in_array($option[$key], $value)) {
+                        if (! isset($option[$key]) || ! in_array($option[$key], $value)) {
                             $isValid = false;
                             break;
                         }
                     } else {
 
-                        if (!isset($option[$key]) || $option[$key] !== $value) {
+                        if (! isset($option[$key]) || $option[$key] !== $value) {
                             $isValid = false;
                             break;
                         }
@@ -240,11 +233,12 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                     return true;
                 }
             }
+
             return false;
         });
     }
 
-    function removePaymentOptions(array $options, array $conditions): array
+    public function removePaymentOptions(array $options, array $conditions): array
     {
         return array_filter($options, function ($option) use ($conditions) {
             foreach ($conditions as $condition) {
@@ -252,13 +246,13 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 foreach ($condition as $key => $value) {
 
                     if (is_array($value)) {
-                        if (!isset($option[$key]) || !in_array($option[$key], $value)) {
+                        if (! isset($option[$key]) || ! in_array($option[$key], $value)) {
                             $isValid = false;
                             break;
                         }
                     } else {
 
-                        if (!isset($option[$key]) || $option[$key] !== $value) {
+                        if (! isset($option[$key]) || $option[$key] !== $value) {
                             $isValid = false;
                             break;
                         }
@@ -269,15 +263,16 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                     return false;
                 }
             }
+
             // Si no cumple con ninguna condición, mantener la opción
             return true;
         });
     }
 
-    function processPaymentOptions(array $options, array $conditions, string $action = 'filter'): array
+    public function processPaymentOptions(array $options, array $conditions, string $action = 'filter'): array
     {
 
-        if (!in_array($action, ['filter', 'remove'])) {
+        if (! in_array($action, ['filter', 'remove'])) {
             throw new InvalidArgumentException('El valor de acción debe ser "filter" o "remove".');
         }
 
@@ -287,13 +282,13 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
                 foreach ($condition as $key => $value) {
 
                     if (is_array($value)) {
-                        if (!isset($option[$key]) || !in_array($option[$key], $value)) {
+                        if (! isset($option[$key]) || ! in_array($option[$key], $value)) {
                             $isValid = false;
                             break;
                         }
                     } else {
                         // Validar si el campo coincide exactamente con el valor
-                        if (!isset($option[$key]) || $option[$key] !== $value) {
+                        if (! isset($option[$key]) || $option[$key] !== $value) {
                             $isValid = false;
                             break;
                         }
@@ -308,6 +303,4 @@ class CheckoutPaymentStep extends CheckoutPaymentStepCore
             return $action === 'remove';
         });
     }
-
-
 }

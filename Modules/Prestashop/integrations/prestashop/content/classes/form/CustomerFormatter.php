@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,13 +29,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerFormatterCore implements FormFormatterInterface
 {
     private $translator;
+
     private $language;
 
     private $ask_for_birthdate = true;
+
     private $ask_for_partner_optin = true;
+
     private $partner_optin_is_required = true;
+
     private $ask_for_password = true;
+
     private $password_is_required = true;
+
     private $ask_for_new_password = false;
 
     public function __construct(
@@ -93,7 +100,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $genders = Gender::getGenders($this->language->id);
         if ($genders->count() > 0) {
-            $genderField = (new FormField())
+            $genderField = (new FormField)
                 ->setName('id_gender')
                 ->setType('radio-buttons')
                 ->setLabel(
@@ -109,7 +116,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             $format[$genderField->getName()] = $genderField;
         }
 
-        $format['firstname'] = (new FormField())
+        $format['firstname'] = (new FormField)
             ->setName('firstname')
             ->setLabel(
                 $this->translator->trans(
@@ -124,7 +131,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 $this->translator->trans('Only letters and the dot (.) character, followed by a space, are allowed.', [], 'Shop.Forms.Help')
             );
 
-        $format['lastname'] = (new FormField())
+        $format['lastname'] = (new FormField)
             ->setName('lastname')
             ->setLabel(
                 $this->translator->trans(
@@ -140,7 +147,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             );
 
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $format['company'] = (new FormField())
+            $format['company'] = (new FormField)
                 ->setName('company')
                 ->setType('text')
                 ->setLabel($this->translator->trans(
@@ -148,7 +155,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     [],
                     'Shop.Forms.Labels'
                 ));
-            $format['siret'] = (new FormField())
+            $format['siret'] = (new FormField)
                 ->setName('siret')
                 ->setType('text')
                 ->setLabel($this->translator->trans(
@@ -159,7 +166,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ));
         }
 
-        $format['email'] = (new FormField())
+        $format['email'] = (new FormField)
             ->setName('email')
             ->setType('email')
             ->setLabel(
@@ -172,7 +179,7 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setRequired(true);
 
         if ($this->ask_for_password) {
-            $format['password'] = (new FormField())
+            $format['password'] = (new FormField)
                 ->setName('password')
                 ->setType('password')
                 ->setLabel(
@@ -186,7 +193,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         }
 
         if ($this->ask_for_new_password) {
-            $format['new_password'] = (new FormField())
+            $format['new_password'] = (new FormField)
                 ->setName('new_password')
                 ->setType('password')
                 ->setLabel(
@@ -199,7 +206,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         }
 
         if ($this->ask_for_birthdate) {
-            $format['birthday'] = (new FormField())
+            $format['birthday'] = (new FormField)
                 ->setName('birthday')
                 ->setType('text')
                 ->setLabel(
@@ -217,7 +224,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         }
 
         if ($this->ask_for_partner_optin) {
-            $format['optin'] = (new FormField())
+            $format['optin'] = (new FormField)
                 ->setName('optin')
                 ->setType('checkbox')
                 ->setLabel(
@@ -235,13 +242,13 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         if (is_array($additionalCustomerFormFields)) {
             foreach ($additionalCustomerFormFields as $moduleName => $additionnalFormFields) {
-                if (!is_array($additionnalFormFields)) {
+                if (! is_array($additionnalFormFields)) {
                     continue;
                 }
 
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
-                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
                 }
             }
         }
@@ -256,7 +263,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         $constraints = Customer::$definition['fields'];
 
         foreach ($format as $field) {
-            if (!empty($constraints[$field->getName()]['validate'])) {
+            if (! empty($constraints[$field->getName()]['validate'])) {
                 $field->addConstraint(
                     $constraints[$field->getName()]['validate']
                 );

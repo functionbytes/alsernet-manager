@@ -2,8 +2,6 @@
 
 namespace Modules\Prestashop\Jobs;
 
-use App\Models\Supplier\SupplierAiContent;
-use Modules\Prestashop\Services\SupplierSyncService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Supplier\Entities\SupplierAiContent;
 use Throwable;
 
 /**

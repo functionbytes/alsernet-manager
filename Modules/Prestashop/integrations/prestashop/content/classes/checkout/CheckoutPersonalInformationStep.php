@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,8 +29,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 {
     protected $template = 'checkout/_partials/steps/personal-information.tpl';
+
     private $loginForm;
+
     private $registerForm;
+
     private $show_login_form = false;
 
     public function __construct(
@@ -85,7 +89,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             ->getCheckoutSession()
             ->customerHasLoggedIn();
 
-        if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
+        if ($this->logged_in && ! $this->getCheckoutSession()->getCustomer()->is_guest) {
             $this->setComplete(true);
         }
 
@@ -108,7 +112,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
-                'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
+                'empty_cart_on_logout' => ! Configuration::get('PS_CART_FOLLOWING'),
             ]
         );
     }

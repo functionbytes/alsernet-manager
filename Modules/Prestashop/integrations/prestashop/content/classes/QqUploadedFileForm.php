@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -33,10 +34,10 @@ class QqUploadedFileFormCore
     public function save()
     {
         $product = new Product($_GET['id_product']);
-        if (!Validate::isLoadedObject($product)) {
+        if (! Validate::isLoadedObject($product)) {
             return ['error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', [], 'Admin.Catalog.Notification')];
         } else {
-            $image = new Image();
+            $image = new Image;
             $image->id_product = (int) $product->id;
             $image->position = Image::getHighestPosition($product->id) + 1;
             $legends = Tools::getValue('legend');
@@ -49,7 +50,7 @@ class QqUploadedFileFormCore
                     }
                 }
             }
-            if (!Image::getCover($image->id_product)) {
+            if (! Image::getCover($image->id_product)) {
                 $image->cover = 1;
             } else {
                 $image->cover = 0;
@@ -58,7 +59,7 @@ class QqUploadedFileFormCore
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                 return ['error' => $validate];
             }
-            if (!$image->add()) {
+            if (! $image->add()) {
                 return ['error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', [], 'Admin.Catalog.Notification')];
             } else {
                 return $this->copyImage($product->id, $image->id);
@@ -69,17 +70,17 @@ class QqUploadedFileFormCore
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
         $image = new Image($id_image);
-        if (!$new_path = $image->getPathForCreation()) {
+        if (! $new_path = $image->getPathForCreation()) {
             return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while attempting to create a new folder.', [], 'Admin.Notifications.Error')];
         }
-        if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName)) {
+        if (! ($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || ! move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName)) {
             return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error')];
-        } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
+        } elseif (! ImageManager::resize($tmpName, $new_path.'.'.$image->image_format)) {
             return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying the image.', [], 'Admin.Notifications.Error')];
         } elseif ($method == 'auto') {
             $imagesTypes = ImageType::getImagesTypes('inventaries');
             foreach ($imagesTypes as $imageType) {
-                if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
+                if (! ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                     return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
                 }
             }
@@ -87,7 +88,7 @@ class QqUploadedFileFormCore
         unlink($tmpName);
         Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_product]);
 
-        if (!$image->update()) {
+        if (! $image->update()) {
             return ['error' => Context::getContext()->getTranslator()->trans('Error while updating the status.', [], 'Admin.Notifications.Error')];
         }
         $img = ['id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend];

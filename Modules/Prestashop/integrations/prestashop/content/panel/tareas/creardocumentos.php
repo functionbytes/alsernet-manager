@@ -1,34 +1,32 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-
-
-
-
-function getfieldvalue($dbh,$sql){
+function getfieldvalue($dbh, $sql)
+{
     $rows = $dbh->query($sql);
-    foreach($rows as $row){
+    foreach ($rows as $row) {
         return $row[0];
     }
 }
 
-
-function getdatarows($dbh,$sql){
-    return  $dbh->query($sql);
+function getdatarows($dbh, $sql)
+{
+    return $dbh->query($sql);
 }
 
-//copyImg($manufacturer->id, null, $img_url, 'manufacturers');
+// copyImg($manufacturer->id, null, $img_url, 'manufacturers');
 
-function get_mime_type($filename) {
-    $idx = explode( '.', $filename );
+function get_mime_type($filename)
+{
+    $idx = explode('.', $filename);
     $count_explode = count($idx);
-    $idx = strtolower($idx[$count_explode-1]);
+    $idx = strtolower($idx[$count_explode - 1]);
 
-    $mimet = array( 
+    $mimet = [
         'txt' => 'text/plain',
         'htm' => 'text/html',
         'html' => 'text/html',
@@ -81,102 +79,74 @@ function get_mime_type($filename) {
         'xlsx' => 'application/vnd.ms-excel',
         'pptx' => 'application/vnd.ms-powerpoint',
 
-
         // open office
         'odt' => 'application/vnd.oasis.opendocument.text',
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-    );
+    ];
 
-    if (isset( $mimet[$idx] )) {
-     return $mimet[$idx];
+    if (isset($mimet[$idx])) {
+        return $mimet[$idx];
     } else {
-     return 'application/octet-stream';
+        return 'application/octet-stream';
     }
- }
+}
 
-function CrearDocumento($doc, $dbh){
+function CrearDocumento($doc, $dbh)
+{
 
+    $id_attachment = ''.Db::getInstance()->getValue('SELECT id_attachment FROM aalv_attachment_import WHERE id_origen='.$doc['id']);
 
-        $id_attachment="".Db::getInstance()->getValue("SELECT id_attachment FROM aalv_attachment_import WHERE id_origen=".$doc["id"]);
+    if ($id_attachment == '') {
 
+        $url = 'http://docs.a-alvarez.com/'.trim($doc['contenido']);
+        Tools::copy($url, _PS_UPLOAD_DIR_.trim($doc['contenido']));
 
-        if ($id_attachment==""){
+        // Db::getInstance()->Execute("INSERT INTO aalv_ayudas(titulo, texto, enlace, activo, idorigen) VALUES ('".$titulo."','".$texto."','".$enlace."',".$activo.",".$ayuda["id"].")");
 
+        $attach = new AttachmentCore;
+        $attach->name[1] = substr($doc['titulo'], 0, 32);
+        $attach->description[1] = $doc['idioma'];
+        $attach->mime = get_mime_type(trim($doc['contenido']));
+        $attach->file_name = trim($doc['contenido']);
+        $attach->file_size = filesize(_PS_UPLOAD_DIR_.trim($doc['contenido']));
+        $uniqid = sha1(microtime());
+        Tools::copy(_PS_UPLOAD_DIR_.trim($doc['contenido']), _PS_DOWNLOAD_DIR_.$uniqid);
+        unlink(_PS_UPLOAD_DIR_.trim($doc['contenido']));
+        $attach->file = $uniqid;
+        $attach->add();
 
-            $url= "http://docs.a-alvarez.com/".trim($doc["contenido"]);
-            Tools::copy($url, _PS_UPLOAD_DIR_.trim($doc["contenido"]));
+        $idproduct = ''.Db::getInstance()->getValue('SELECT id_product FROM aalv_product_import WHERE id_modelo='.$doc['id_modelo']);
+        if ($idproduct == '') {
+            $idproduct = '0';
+        } else {
+            $attach->attachProduct($idproduct);
+        }
 
-            //Db::getInstance()->Execute("INSERT INTO aalv_ayudas(titulo, texto, enlace, activo, idorigen) VALUES ('".$titulo."','".$texto."','".$enlace."',".$activo.",".$ayuda["id"].")");
-            
-            $attach = new AttachmentCore();
-            $attach->name[1]=substr($doc["titulo"],0,32);
-            $attach->description[1]=$doc["idioma"];
-            $attach->mime=get_mime_type(trim($doc["contenido"]));
-            $attach->file_name=trim($doc["contenido"]);
-            $attach->file_size=filesize(_PS_UPLOAD_DIR_.trim($doc["contenido"]));
-            $uniqid=sha1(microtime());
-            Tools::copy(_PS_UPLOAD_DIR_.trim($doc["contenido"]),_PS_DOWNLOAD_DIR_.$uniqid);
-            unlink(_PS_UPLOAD_DIR_.trim($doc["contenido"]));
-            $attach->file=$uniqid;
-            $attach->add();
+        Db::getInstance()->Execute('INSERT INTO aalv_attachment_import(id_attachment, id_origen, id_product) VALUES ('.$attach->id.','.$doc['id'].','.$idproduct.')');
 
-            $idproduct="".Db::getInstance()->getValue("SELECT id_product FROM aalv_product_import WHERE id_modelo=".$doc["id_modelo"]);
-            if ($idproduct==""){
-                $idproduct="0";
-            }
-            else{
-                $attach->attachProduct($idproduct);
-            }
+    }
 
-
-            Db::getInstance()->Execute("INSERT INTO aalv_attachment_import(id_attachment, id_origen, id_product) VALUES (".$attach->id.",".$doc["id"].",".$idproduct.")");
-
-            
-
-        }   
-
-        usleep(250);
+    usleep(250);
 
 }
 
-
-
-
-
-
-
-
-
-
 try {
-   
-	$dsn = "mysql:host=127.0.0.1;dbname=alvarez_migracion_db";
+
+    $dsn = 'mysql:host=127.0.0.1;dbname=alvarez_migracion_db';
     $dbh = new PDO($dsn, 'alvarez_migracion_dbu', 'N4p42#l6d');
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e){
+} catch (PDOException $e) {
     echo $e->getMessage();
 }
 
+Db::getInstance()->Execute('truncate table aalv_attachment_lang');
+Db::getInstance()->Execute('truncate table aalv_attachment');
+Db::getInstance()->Execute('truncate table aalv_product_attachment');
+Db::getInstance()->Execute('truncate table aalv_attachment_import');
 
-
-
-Db::getInstance()->Execute("truncate table aalv_attachment_lang");
-Db::getInstance()->Execute("truncate table aalv_attachment");
-Db::getInstance()->Execute("truncate table aalv_product_attachment");
-Db::getInstance()->Execute("truncate table aalv_attachment_import");
-
-
-
-$rows = getdatarows($dbh, "SELECT id,titulo, contenido, idioma, id_modelo FROM modelo_documentos");
-foreach($rows as $row){
+$rows = getdatarows($dbh, 'SELECT id,titulo, contenido, idioma, id_modelo FROM modelo_documentos');
+foreach ($rows as $row) {
     CrearDocumento($row, $dbh);
-}  
+}
 
-
-
-
-
-
-
-echo "Proceso acabado";
-
+echo 'Proceso acabado';

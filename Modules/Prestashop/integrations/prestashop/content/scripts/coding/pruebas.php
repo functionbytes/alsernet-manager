@@ -1,15 +1,16 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include(dirname(__FILE__) . '/../../config/config.inc.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
 
-//include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
+// include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
 // $http = false;
 //  $entities = true;
 //   $ignore_port = true;
@@ -54,7 +55,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 //                         producto stoc
 //                     WHERE
 //                         stoc.idarticulo = ".$value['id_articulo'];
-
 
 //     $data = mysqli_query($dbcon, $sql_antigua);
 //     $re = mysqli_fetch_array($data);
@@ -329,7 +329,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 
 // }
 
-
 // $tarifas = Db::getInstance()->ExecuteS("SELECT id
 // FROM aalv_integracion_cambios where tabla='v_sinc_tarifa_cabecera' and processed = 1 and tipo <> '3' and data != 'null' and fecha_confirmacion > '2025-03-01'
 // and SUBSTRING_INDEX( SUBSTRING_INDEX(data, '\"idtarifa_cabecera\":', -1), ',', 1 ) not in (select id_tarifa_cabecera from aalv_tarifa_cabecera_import atci) and
@@ -392,7 +391,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 //         }
 //     }
 // }
-
 
 // $datos = Db::getInstance()->ExecuteS("select * from aalv_integracion_cambios aic where tabla = 'v_sinc_tarifa_cabecera' and id > 17806939 and `data` like '%\"finicio\":\"2025-06-02%' and tipo = 1 and processed = 1
 // ORDER BY
@@ -472,7 +470,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 
 // }
 
-
 // $sql = Db::getInstance()->ExecuteS("SELECT sp.id_product, sp.id_product_attribute, p.active
 // FROM aalv_product_attribute sp
 // INNER JOIN (
@@ -496,7 +493,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 //         // die();
 //     }
 // }
-
 
 // $sql = Db::getInstance()->ExecuteS("SELECT p.id_product, p.active AS active_product, ps.active AS active_shop
 // FROM aalv_product p
@@ -529,9 +525,6 @@ include(dirname(__FILE__) . '/../../config/config.inc.php');
 //     $product->update();
 //     // die();
 // }
-
-
-
 
 // $variable = Db::getInstance()->ExecuteS("select aci.id_articulo from aalv_stock_available asa
 // inner join aalv_combinaciones_import aci on aci.id_product_attribute = asa.id_product_attribute

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page Cache Ultimate, Page Cache standard and Speed pack are powered by Jpresta (jpresta . com)
  *
@@ -6,8 +7,7 @@
  * @copyright Jpresta
  * @license   See the license of this module in file LICENSE.txt, thank you.
  */
-
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -35,6 +35,7 @@ class PH_SimpleBlogAuthorModuleFrontControllerOverride extends PH_SimpleBlogAuth
         if (Validate::isLoadedObject($simpleBlogAuthor)) {
             $id = $simpleBlogAuthor->id;
         }
+
         return $id;
     }
 }

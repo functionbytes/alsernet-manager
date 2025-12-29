@@ -18,10 +18,10 @@ class ManufacturerController extends ManufacturerControllerCore
                 );
                 $this->doProductSearch(
                     'catalog/listing/category/list', [
-                    'entity' => 'manufacturer',
-                    'id' => $this->manufacturer->id,
-                    'name' => $this->manufacturer->name,
-                ]);
+                        'entity' => 'manufacturer',
+                        'id' => $this->manufacturer->id,
+                        'name' => $this->manufacturer->name,
+                    ]);
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(

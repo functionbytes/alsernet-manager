@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -17,7 +18,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class Ps_WirepaymentOverride extends Ps_Wirepayment
 {
     const BANK_WIRE_PAYMENT_MIN_AMOUNT = 'BANK_WIRE_PAYMENT_MIN_AMOUNT';
@@ -41,6 +41,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
     public function install()
     {
         Configuration::updateValue(self::BANK_WIRE_PAYMENT_MIN_AMOUNT, $this->$min_amount_default);
+
         return parent::install();
     }
 
@@ -49,7 +50,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
      */
     public function uninstall()
     {
-         return Configuration::deleteByName(self::BANK_WIRE_PAYMENT_MIN_AMOUNT) && parent::uninstall();
+        return Configuration::deleteByName(self::BANK_WIRE_PAYMENT_MIN_AMOUNT) && parent::uninstall();
     }
 
     /**
@@ -59,7 +60,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
     {
         if (Tools::isSubmit('btnSubmit')) {
             if (Tools::getValue(self::BANK_WIRE_PAYMENT_MIN_AMOUNT)) {
-                if (!is_numeric(Tools::getValue(self::BANK_WIRE_PAYMENT_MIN_AMOUNT))) {
+                if (! is_numeric(Tools::getValue(self::BANK_WIRE_PAYMENT_MIN_AMOUNT))) {
                     $this->_postErrors[] = $this->trans('La cantidad mínima permitida en el carrito debe ser un valor numérico', [], 'Modules.Wirepayment.Admin');
                 }
             }
@@ -166,7 +167,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
             ],
         ];
 
-        $helper = new HelperForm();
+        $helper = new HelperForm;
         $helper->show_toolbar = false;
         $helper->table = $this->table;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -175,8 +176,8 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
         $helper->id = (int) Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'btnSubmit';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure='
-            . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='
+            .$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFieldsValues(),
@@ -194,6 +195,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
     {
         $configFieldsValues = parent::getConfigFieldsValues();
         $configFieldsValues[self::BANK_WIRE_PAYMENT_MIN_AMOUNT] = Tools::getValue(self::BANK_WIRE_PAYMENT_MIN_AMOUNT, $this->min_amount);
+
         return $configFieldsValues;
     }
 
@@ -216,5 +218,4 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
             return parent::hookPaymentOptions($params);
         }
     }
-
 }

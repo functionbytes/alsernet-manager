@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,6 +31,4 @@
  * Holds address info of a Customer.
  * This class extends AddressCore to be differentiated from other AddressCore objects in DB.
  */
-class CustomerAddressCore extends Address
-{
-}
+class CustomerAddressCore extends Address {}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -74,7 +75,7 @@ class ConnectionCore extends ObjectModel
      */
     public function getFields()
     {
-        if (!$this->id_shop_group) {
+        if (! $this->id_shop_group) {
             $this->id_shop_group = Context::getContext()->shop->id_shop_group;
         }
 
@@ -84,27 +85,26 @@ class ConnectionCore extends ObjectModel
     }
 
     /**
-     * @param Cookie $cookie
-     * @param bool $full
-     *
+     * @param  Cookie  $cookie
+     * @param  bool  $full
      * @return array
      */
     public static function setPageConnection($cookie, $full = true)
     {
         $idPage = false;
         // The connection is created if it does not exist yet and we get the current page id
-        if (!isset($cookie->id_connections) || !isset($_SERVER['HTTP_REFERER']) || strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false) . '/') === false) {
+        if (! isset($cookie->id_connections) || ! isset($_SERVER['HTTP_REFERER']) || strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false).'/') === false) {
             $idPage = Connection::setNewConnection($cookie);
         }
         // If we do not track the pages, no need to get the page id
-        if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
+        if (! Configuration::get('PS_STATSDATA_PAGESVIEWS') && ! Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
             return [];
         }
-        if (!$idPage) {
+        if (! $idPage) {
             $idPage = Page::getCurrentId();
         }
         // If we do not track the page views by customer, the id_page is the only information needed
-        if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
+        if (! Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
             return ['id_page' => $idPage];
         }
 
@@ -131,8 +131,7 @@ class ConnectionCore extends ObjectModel
     }
 
     /**
-     * @param Cookie $cookie
-     *
+     * @param  Cookie  $cookie
      * @return int|bool Connection ID
      *                  `false` if failure
      */
@@ -146,10 +145,10 @@ class ConnectionCore extends ObjectModel
 
         // A new connection is created if the guest made no actions during 30 minutes
         $sql = 'SELECT SQL_NO_CACHE `id_guest`
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `id_guest` = ' . (int) $cookie->id_guest . '
-					AND `date_add` > \'' . pSQL(date('Y-m-d H:i:00', time() - 1800)) . '\'
-					' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
+				FROM `'._DB_PREFIX_.'connections`
+				WHERE `id_guest` = '.(int) $cookie->id_guest.'
+					AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
+					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `date_add` DESC';
         $result = Db::getInstance()->getRow($sql, false);
         if (empty($result['id_guest']) && (int) $cookie->id_guest) {
@@ -158,10 +157,10 @@ class ConnectionCore extends ObjectModel
 
             $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
             $arrayUrl = parse_url($referer);
-            if (!isset($arrayUrl['host']) || preg_replace('/^www./', '', $arrayUrl['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) {
+            if (! isset($arrayUrl['host']) || preg_replace('/^www./', '', $arrayUrl['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) {
                 $referer = '';
             }
-            $connection = new Connection();
+            $connection = new Connection;
             $connection->id_guest = (int) $cookie->id_guest;
             $connection->id_page = Page::getCurrentId();
             $connection->ip_address = Tools::getRemoteAddr() ? (int) ip2long(Tools::getRemoteAddr()) : '';
@@ -181,16 +180,16 @@ class ConnectionCore extends ObjectModel
     }
 
     /**
-     * @param int $idConnections
-     * @param int $idPage
-     * @param string $timeStart
-     * @param int $time
+     * @param  int  $idConnections
+     * @param  int  $idPage
+     * @param  string  $timeStart
+     * @param  int  $time
      */
     public static function setPageTime($idConnections, $idPage, $timeStart, $time)
     {
-        if (!Validate::isUnsignedId($idConnections)
-            || !Validate::isUnsignedId($idPage)
-            || !Validate::isDate($timeStart)) {
+        if (! Validate::isUnsignedId($idConnections)
+            || ! Validate::isUnsignedId($idPage)
+            || ! Validate::isDate($timeStart)) {
             return;
         }
 
@@ -199,11 +198,11 @@ class ConnectionCore extends ObjectModel
             $time = 300000;
         }
         Db::getInstance()->execute('
-		UPDATE `' . _DB_PREFIX_ . 'connections_page`
-		SET `time_end` = `time_start` + INTERVAL ' . (int) ($time / 1000) . ' SECOND
-		WHERE `id_connections` = ' . (int) $idConnections . '
-		AND `id_page` = ' . (int) $idPage . '
-		AND `time_start` = \'' . pSQL($timeStart) . '\'');
+		UPDATE `'._DB_PREFIX_.'connections_page`
+		SET `time_end` = `time_start` + INTERVAL '.(int) ($time / 1000).' SECOND
+		WHERE `id_connections` = '.(int) $idConnections.'
+		AND `id_page` = '.(int) $idPage.'
+		AND `time_start` = \''.pSQL($timeStart).'\'');
     }
 
     /**
@@ -226,8 +225,8 @@ class ConnectionCore extends ObjectModel
         if ($interval != null) {
             // Records of connections details older than the beginning of the  specified interval are deleted
             Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
-			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
+			DELETE FROM `'._DB_PREFIX_.'connections_page`
+			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL '.$interval.'))');
         }
     }
 }

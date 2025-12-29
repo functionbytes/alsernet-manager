@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -53,8 +54,8 @@ class DataLangCore
     protected $domain;
 
     /**
-     * @param string $locale
-     * @param TranslatorInterface|null $translator If defined, use this translator
+     * @param  string  $locale
+     * @param  TranslatorInterface|null  $translator  If defined, use this translator
      */
     public function __construct($locale, ?TranslatorInterface $translator = null)
     {
@@ -66,7 +67,7 @@ class DataLangCore
 
         $isAdminContext = defined('_PS_ADMIN_DIR_');
 
-        if (!$this->translator->isLanguageLoaded($this->locale)) {
+        if (! $this->translator->isLanguageLoaded($this->locale)) {
             SymfonyContainer::getInstance()->get('prestashop.translation.translator_language_loader')
                 ->setIsAdminContext($isAdminContext)
                 ->loadLanguage($this->translator, $this->locale);
@@ -77,9 +78,8 @@ class DataLangCore
     /**
      * Translates a value to the current locale
      *
-     * @param string $field Name of the database field to translate
-     * @param string $value Value to translate
-     *
+     * @param  string  $field  Name of the database field to translate
+     * @param  string  $value  Value to translate
      * @return string Translated value
      */
     public function getFieldValue($field, $value)
@@ -110,8 +110,7 @@ class DataLangCore
     /**
      * Creates a slug from the provided string
      *
-     * @param string $string
-     *
+     * @param  string  $string
      * @return string
      */
     public function slugify($string)
@@ -131,12 +130,10 @@ class DataLangCore
 
     /**
      * Returns the table name where the translations are to be performed
-     *
-     * @return string
      */
     public function getTableName(): string
     {
-        $shortClassName = substr(strrchr('\\' . get_class($this), '\\'), 1);
+        $shortClassName = substr(strrchr('\\'.get_class($this), '\\'), 1);
 
         return Inflector::tableize($shortClassName);
     }

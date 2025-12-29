@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FMM PrettyURLs
  *
@@ -12,13 +13,11 @@
  * @author    FMM Modules
  * @copyright Copyright 2018 © fmemodules All right reserved
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *
  * @category  FMM Modules
- * @package   PrettyURLs
  */
-
 class CategoryController extends CategoryControllerCore
 {
-
     public function init()
     {
         $id_category = (int) Tools::getValue('id_category');
@@ -30,14 +29,14 @@ class CategoryController extends CategoryControllerCore
 
         parent::init();
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
+        if (! Validate::isLoadedObject($this->category) || ! $this->category->active) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->setTemplate('errors/404');
             $this->notFound = true;
 
             return;
-        } elseif (!$this->category->checkAccess($this->context->customer->id)) {
+        } elseif (! $this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');
@@ -58,7 +57,7 @@ class CategoryController extends CategoryControllerCore
             $id_shop = null,
             $chain = true
         );
-        if (!empty($filteredCategory['object'])) {
+        if (! empty($filteredCategory['object'])) {
             $categoryVar = $filteredCategory['object'];
         }
 
@@ -67,11 +66,12 @@ class CategoryController extends CategoryControllerCore
             'subcategories' => $this->getTemplateVarSubCategories(),
         ]);
     }
+
     public function canonicalRedirection($canonicalURL = '')
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
-            if ($this->getCurrentURL() != $this->context->link->getCategoryLink($this->category->id, null, $this->context->language->id) && !Tools::getValue('categorias') && !Tools::getValue('manufacturers') && !Tools::getValue('page') && !Tools::getValue('order') && !Tools::getValue('diametro') && !Tools::getValue('talla') && !Tools::getValue('size') && !Tools::getValue('precio') && !Tools::getValue('price')) {
+            if ($this->getCurrentURL() != $this->context->link->getCategoryLink($this->category->id, null, $this->context->language->id) && ! Tools::getValue('categorias') && ! Tools::getValue('manufacturers') && ! Tools::getValue('page') && ! Tools::getValue('order') && ! Tools::getValue('diametro') && ! Tools::getValue('talla') && ! Tools::getValue('size') && ! Tools::getValue('precio') && ! Tools::getValue('price')) {
                 Tools::redirectLink($this->context->link->getCategoryLink($this->category));
             }
         }
@@ -88,7 +88,6 @@ class CategoryController extends CategoryControllerCore
 
         return $alternativeLangs;
     }
-
 
     public function initContent()
     {
@@ -126,12 +125,12 @@ class CategoryController extends CategoryControllerCore
 
                 $this->doProductSearch(
                     'catalog/listing/category/list', [
-                    'entity' => 'category',
-                    'id' => $this->category->id,
-                    'name' => $this->category->name,
-                    'category_parent_name' => $this->category->name,
-                    'category_parent_id' => $this->category->id_parent,
-                ]);
+                        'entity' => 'category',
+                        'id' => $this->category->id,
+                        'name' => $this->category->name,
+                        'category_parent_name' => $this->category->name,
+                        'category_parent_id' => $this->category->id_parent,
+                    ]);
             }
         }
     }
@@ -143,10 +142,10 @@ class CategoryController extends CategoryControllerCore
         $breadcrumb = ['links' => []];
 
         foreach ($this->category->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+            if ($category->id_parent != 0 && ! $category->is_root_category && $category->active) {
                 $path = ltrim($category->category_url_path, '/');
                 if ($lang_iso_code !== 'es') {
-                    $path = $lang_iso_code . '/' . $path;
+                    $path = $lang_iso_code.'/'.$path;
                 }
                 $breadcrumb['links'][] = [
                     'title' => $category->name,
@@ -155,10 +154,10 @@ class CategoryController extends CategoryControllerCore
             }
         }
 
-        if ($this->category->id_parent != 0 && !$this->category->is_root_category && $this->category->active) {
+        if ($this->category->id_parent != 0 && ! $this->category->is_root_category && $this->category->active) {
             $path = ltrim($this->category->category_url_path, '/');
             if ($lang_iso_code !== 'es') {
-                $path = $lang_iso_code . '/' . $path;
+                $path = $lang_iso_code.'/'.$path;
             }
             $breadcrumb['links'][] = [
                 'title' => $this->category->name,
@@ -168,8 +167,6 @@ class CategoryController extends CategoryControllerCore
 
         return $breadcrumb;
     }
-
-
 
     public function getTemplateVarPage()
     {
@@ -187,6 +184,4 @@ class CategoryController extends CategoryControllerCore
 
         return $page;
     }
-
-
 }

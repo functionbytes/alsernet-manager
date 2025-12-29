@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,14 +27,23 @@
 class FormFieldCore
 {
     private $name = '';
+
     private $type = 'text';
+
     private $required = false;
+
     private $label = '';
+
     private $value = null;
+
     private $availableValues = [];
+
     private $maxLength = null;
+
     private $errors = [];
+
     private $constraints = [];
+
     /**
      * @var string
      */
@@ -128,7 +138,7 @@ class FormFieldCore
 
     public function addAvailableValue($availableValue, $label = null)
     {
-        if (!$label) {
+        if (! $label) {
             $label = $availableValue;
         }
 
@@ -187,11 +197,6 @@ class FormFieldCore
         return $this->constraints;
     }
 
-    /**
-     * @param string $autocomplete
-     *
-     * @return FormFieldCore
-     */
     public function setAutocompleteAttribute(string $autocomplete): FormFieldCore
     {
         $this->autocomplete = $autocomplete;
@@ -199,9 +204,6 @@ class FormFieldCore
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAutocompleteAttribute(): string
     {
         return $this->autocomplete;

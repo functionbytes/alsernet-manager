@@ -15,14 +15,14 @@ class TrackingController extends FrontController
             $order = new Order($idOrder);
 
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                $lang=$this->context->language->id;
+                $lang = $this->context->language->id;
                 $customer = new Customer($order->id_customer);
                 $deliveryAddress = new Address($order->id_address_delivery);
                 $invoiceAddress = new Address($order->id_address_invoice);
-                $deliveryCountry = new Country($deliveryAddress->id_country,$lang);
-                $invoiceCountry = new Country($invoiceAddress->id_country,$lang);
-                $carrier = new Carrier($order->id_carrier,$lang);
-                $currency = new Currency($order->id_currency,$lang);
+                $deliveryCountry = new Country($deliveryAddress->id_country, $lang);
+                $invoiceCountry = new Country($invoiceAddress->id_country, $lang);
+                $carrier = new Carrier($order->id_carrier, $lang);
+                $currency = new Currency($order->id_currency, $lang);
                 $orderState = $order->getCurrentOrderState($lang);
                 $historyRaw = $order->getHistory((int) $lang);
 
@@ -88,12 +88,11 @@ class TrackingController extends FrontController
                     'totals' => [
                         'total' => [
                             'value' => Tools::displayPrice($order->total_paid, $currency),
-                        ]
-                    ]
+                        ],
+                    ],
                 ];
             }
         }
-
 
         $this->context->smarty->assign([
             'order' => $orderFormatted,

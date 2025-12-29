@@ -3,21 +3,23 @@
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Component\Translation\TranslatorInterface;
 
-require_once _PS_MODULE_DIR_ . 'alsernetforms/controllers/front/NewslettersController.php';
+require_once _PS_MODULE_DIR_.'alsernetforms/controllers/front/NewslettersController.php';
 
 class CustomerForm extends CustomerFormCore
 {
     protected $template = 'customer/_partials/customer-form.tpl';
 
     private $context;
+
     private $urls;
 
     private $customerPersister;
+
     private $guest_allowed;
+
     private $passwordRequired = true;
 
     private $IDNConverter;
-
 
     public function __construct(
         Smarty $smarty,
@@ -28,12 +30,12 @@ class CustomerForm extends CustomerFormCore
         array $urls
     ) {
 
-        parent::__construct($smarty, $context,$translator, $formatter, $customerPersister,$urls);
+        parent::__construct($smarty, $context, $translator, $formatter, $customerPersister, $urls);
 
         $this->context = $context;
         $this->urls = $urls;
         $this->customerPersister = $customerPersister;
-        $this->IDNConverter = new InternationalizedDomainNameConverter();
+        $this->IDNConverter = new InternationalizedDomainNameConverter;
     }
 
     public function setPasswordRequired($passwordRequired)
@@ -45,8 +47,8 @@ class CustomerForm extends CustomerFormCore
 
     public function setGuestAllowed($guest_allowed = true)
     {
-        $this->formatter->setPasswordRequired(!$guest_allowed);
-        $this->setPasswordRequired(!$guest_allowed);
+        $this->formatter->setPasswordRequired(! $guest_allowed);
+        $this->setPasswordRequired(! $guest_allowed);
         $this->guest_allowed = $guest_allowed;
 
         return $this;
@@ -67,8 +69,8 @@ class CustomerForm extends CustomerFormCore
         }
 
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            !empty($birthdayField->getValue()) &&
+        if (! empty($birthdayField) &&
+            ! empty($birthdayField->getValue()) &&
             Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
@@ -79,7 +81,7 @@ class CustomerForm extends CustomerFormCore
         }
 
         $passwordField = $this->getField('password');
-        if ((!empty($passwordField->getValue()) || $this->passwordRequired)
+        if ((! empty($passwordField->getValue()) || $this->passwordRequired)
             && Validate::isPasswd($passwordField->getValue()) === false) {
             $passwordField->addError($this->translator->trans(
                 'Password must be between 5 and 72 characters long',
@@ -91,10 +93,10 @@ class CustomerForm extends CustomerFormCore
         $this->validateFieldsLengths();
         $this->validateFieldsValues();
 
-        //$this->validateByModules();
+        // $this->validateByModules();
 
         return true;
-        //return parent::validate();
+        // return parent::validate();
     }
 
     private function validateFieldsValues(): void
@@ -106,11 +108,11 @@ class CustomerForm extends CustomerFormCore
     private function validateFieldIsCustomerName(string $fieldName): void
     {
         $field = $this->getField($fieldName);
-        if (null === $field) {
+        if ($field === null) {
             return;
         }
         $value = $field->getValue();
-        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
+        if (! empty($value) && (bool) Validate::isCustomerName($value) === false) {
             $field->addError($this->translator->trans(
                 'Invalid format.',
                 [],
@@ -119,44 +121,43 @@ class CustomerForm extends CustomerFormCore
         }
     }
 
-    public function submit($request = null ,$modalitie = null)
+    public function submit($request = null, $modalitie = null)
     {
-
 
         if ($this->validate()) {
 
             $clearTextPassword = $this->getValue('password');
             $newPassword = $this->getValue('new_password');
 
-            if($modalitie  == 'register'){
+            if ($modalitie == 'register') {
 
-               try {
-                   $this->customerPersister->save(
+                try {
+                    $this->customerPersister->save(
                         $this->getCustomer(),
                         $clearTextPassword,
                         $newPassword,
                         $this->passwordRequired
-                         );
-               } catch (PrestaShopException $e) {
-                  $this->errors[''][] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
-               }
+                    );
+                } catch (PrestaShopException $e) {
+                    $this->errors[''][] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+                }
 
-                $controller = new NewslettersController();
+                $controller = new NewslettersController;
 
                 $controller->registersubscribe([
                     'firstname' => Tools::getValue('firstname'),
                     'lastname' => Tools::getValue('lastname'),
                     'email' => Tools::getValue('email'),
-                    'sports' => implode(",", $request['sports']),
+                    'sports' => implode(',', $request['sports']),
                     'iso' => $this->context->language->iso_code,
                     'parties' => Tools::getValue('services'),
                     'birthday' => Tools::getValue('date'),
-                    'condition' => Tools::getValue('condition')
+                    'condition' => Tools::getValue('condition'),
                 ]);
 
-               return true;
+                return true;
 
-            }elseif($modalitie  == 'identify'){
+            } elseif ($modalitie == 'identify') {
 
                 try {
                     $this->customerPersister->save(
@@ -171,12 +172,9 @@ class CustomerForm extends CustomerFormCore
 
             }
 
-            return !$this->hasErrors();
+            return ! $this->hasErrors();
 
         }
 
     }
-
 }
-
-

@@ -3,8 +3,11 @@
 class IdentityController extends IdentityControllerCore
 {
     public $auth = true;
+
     public $php_self = 'identity';
+
     public $ssl = true;
+
     public $passwordRequired = true;
 
     public function initContent()
@@ -14,21 +17,20 @@ class IdentityController extends IdentityControllerCore
         $context = Context::getContext();
         $customer = $context->customer;
 
-        if (!$customer || !$customer->isLogged()) {
+        if (! $customer || ! $customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication');
         }
 
         $fields = [
-            'firstname'     => ['type' => 'text', 'required' => true],
-            'lastname'      => ['type' => 'text', 'required' => true],
-            'birthday'      => ['type' => 'date', 'required' => false],
-            'password'      => ['type' => 'password', 'required' => false],
-            'new_password'  => ['type' => 'password', 'required' => false],
+            'firstname' => ['type' => 'text', 'required' => true],
+            'lastname' => ['type' => 'text', 'required' => true],
+            'birthday' => ['type' => 'date', 'required' => false],
+            'password' => ['type' => 'password', 'required' => false],
+            'new_password' => ['type' => 'password', 'required' => false],
         ];
 
         $customer_form_fields = [];
 
-       
         foreach ($fields as $name => $options) {
 
             $translator = Context::getContext()->getTranslator();
@@ -45,11 +47,11 @@ class IdentityController extends IdentityControllerCore
                     Context::getContext()->language->locale
                 ),
                 'type' => $options['type'],
-                'required' => $options['required'] ,
+                'required' => $options['required'],
                 'errors' => [],
             ];
         }
-       
+
         $customer_sports_fields = array_map('trim', explode(',', $customer->sports ?? ''));
         $customer_sports_fields = array_map('strval', $customer_sports_fields);
 
@@ -61,6 +63,4 @@ class IdentityController extends IdentityControllerCore
 
         $this->setTemplate('customer/identity.tpl');
     }
-
-
 }

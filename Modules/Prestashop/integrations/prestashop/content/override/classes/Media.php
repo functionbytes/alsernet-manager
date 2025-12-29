@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Page Cache Ultimate, Page Cache standard and Speed pack are powered by Jpresta (jpresta . com)
  *
@@ -6,7 +7,9 @@
  *    @copyright Jpresta
  *    @license   See the license of this module in file LICENSE.txt, thank you.
  */
-if (!defined('_PS_VERSION_')) {exit;}
+if (! defined('_PS_VERSION_')) {
+    exit;
+}
 class Media extends MediaCore
 {
     /*
@@ -16,9 +19,9 @@ class Media extends MediaCore
     */
     public static function clearCache()
     {
-        if (Module::isEnabled('pagecache') && file_exists(_PS_MODULE_DIR_ . 'pagecache/pagecache.php')) {
-            foreach (array(_PS_THEME_DIR_ . 'cache', _PS_THEME_DIR_ . 'assets/cache') as $dir) {
-                if (file_exists($dir) && count(array_diff(scandir($dir), array('..', '.', 'index.php'))) > 0) {
+        if (Module::isEnabled('pagecache') && file_exists(_PS_MODULE_DIR_.'pagecache/pagecache.php')) {
+            foreach ([_PS_THEME_DIR_.'cache', _PS_THEME_DIR_.'assets/cache'] as $dir) {
+                if (file_exists($dir) && count(array_diff(scandir($dir), ['..', '.', 'index.php'])) > 0) {
                     PageCache::clearCache('Media::clearCache');
                     break;
                 }

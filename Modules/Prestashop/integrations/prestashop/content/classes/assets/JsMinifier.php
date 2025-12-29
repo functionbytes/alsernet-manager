@@ -29,14 +29,12 @@ use MatthiasMullie\Minify\JS;
 class JsMinifierCore
 {
     /**
-     * @param array $files
-     * @param string $destination
-     *
+     * @param  string  $destination
      * @return string
      */
     public static function minify(array $files, $destination)
     {
-        $minifier = new JS();
+        $minifier = new JS;
 
         foreach ($files as $file) {
             $minifier->add($file);

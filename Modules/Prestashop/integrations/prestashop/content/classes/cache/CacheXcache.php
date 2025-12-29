@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +35,7 @@ class CacheXcacheCore extends Cache
     public function __construct()
     {
         $this->keys = xcache_get(self::KEYS_NAME);
-        if (!is_array($this->keys)) {
+        if (! is_array($this->keys)) {
             $this->keys = [];
         }
     }

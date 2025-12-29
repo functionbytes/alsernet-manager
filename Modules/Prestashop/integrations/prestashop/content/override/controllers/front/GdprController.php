@@ -1,7 +1,6 @@
 <?php
 
-
-require_once(_PS_MODULE_DIR_.'psgdpr/classes/GDPRConsent.php');
+require_once _PS_MODULE_DIR_.'psgdpr/classes/GDPRConsent.php';
 
 class GdprController extends FrontController
 {
@@ -35,10 +34,9 @@ class GdprController extends FrontController
 
             $this->setTemplate('customer/gdpr.tpl');
 
-        }else {
+        } else {
             Tools::redirectLink($this->context->link->getPageLink('authentication', true));
         }
 
     }
-
 }

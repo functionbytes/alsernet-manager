@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,18 +35,22 @@
 class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 {
     protected $key;
+
     protected $hmacIv;
+
     protected $iv;
+
     protected $ivSize;
 
     protected $mode = MCRYPT_MODE_CBC;
+
     protected $cipher = MCRYPT_RIJNDAEL_128;
 
     /**
      * PhpEncryptionCore constructor.
      *
-     * @param string $hexString A string that only contains hexadecimal characters
-     *                          Bother upper and lower case are allowed
+     * @param  string  $hexString  A string that only contains hexadecimal characters
+     *                             Bother upper and lower case are allowed
      */
     public function __construct($hexString)
     {
@@ -58,8 +63,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     /**
      * Encrypt the plaintext.
      *
-     * @param string $plaintext Plaintext
-     *
+     * @param  string  $plaintext  Plaintext
      * @return string Cipher text
      */
     public function encrypt($plaintext)
@@ -70,20 +74,19 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         $cipherText = mcrypt_encrypt(
             $this->cipher,
             $this->key,
-            $plaintext . str_repeat(chr($pad), $pad),
+            $plaintext.str_repeat(chr($pad), $pad),
             $this->mode,
             $this->iv
         );
-        $cipherText = $this->iv . $cipherText;
+        $cipherText = $this->iv.$cipherText;
 
-        return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
+        return $this->generateHmac($cipherText).':'.base64_encode($cipherText);
     }
 
     /**
      * Decrypt the cipher text.
      *
-     * @param string $cipherText Cipher text
-     *
+     * @param  string  $cipherText  Cipher text
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      *
@@ -96,7 +99,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             return false;
         }
 
-        list($hmac, $encrypted) = $data;
+        [$hmac, $encrypted] = $data;
         $encrypted = base64_decode($encrypted);
         $newHmac = $this->generateHmac($encrypted);
         if ($hmac !== $newHmac) {
@@ -122,8 +125,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     /**
      * Generate Hmac.
      *
-     * @param string $encrypted
-     *
+     * @param  string  $encrypted
      * @return string
      */
     protected function generateHmac($encrypted)
@@ -132,7 +134,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 
         return hash_hmac(
             'sha256',
-            $this->hmacIv . $this->cipher . $encrypted,
+            $this->hmacIv.$this->cipher.$encrypted,
             $macKey
         );
     }
@@ -141,11 +143,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      * Alternative to mhash_keygen_s2k for security reason
      * and php compatibilities.
      *
-     * @param string $hash
-     * @param string $password
-     * @param string $salt
-     * @param int $bytes
-     *
+     * @param  string  $hash
+     * @param  string  $password
+     * @param  string  $salt
+     * @param  int  $bytes
      * @return string
      */
     protected function generateKeygenS2k($hash, $password, $salt, $bytes)
@@ -154,7 +155,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         foreach (range(0, ceil($bytes / strlen(hash($hash, null, true))) - 1) as $i) {
             $result .= hash(
                 $hash,
-                str_repeat("\0", $i) . str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT) . $password,
+                str_repeat("\0", $i).str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT).$password,
                 true
             );
         }

@@ -1,23 +1,24 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
+include dirname(__FILE__).'/../config/config.inc.php';
 
 $trasaccion = '2.5.1323370';
 
-$contentitem = peticionget("http://127.0.0.1:59000/integracion/TransaccionPendiente/?destino=2&transaccion=".$trasaccion."&limit=5000");
+$contentitem = peticionget('http://127.0.0.1:59000/integracion/TransaccionPendiente/?destino=2&transaccion='.$trasaccion.'&limit=5000');
 
-$jsonDataitem = trim(stripslashes($contentitem),'"');
-$objitem=json_decode($jsonDataitem, true);
+$jsonDataitem = trim(stripslashes($contentitem), '"');
+$objitem = json_decode($jsonDataitem, true);
 // $nn = 0;
-foreach($objitem["results"] as $valoresitem){
-    if($valoresitem["tabla"]=="v_sinc_tarifa_linea"){
+foreach ($objitem['results'] as $valoresitem) {
+    if ($valoresitem['tabla'] == 'v_sinc_tarifa_linea') {
         // if($valoresitem["data"] != null){
         //     // if($nn == 0){
         //     //     $nn++;
@@ -56,20 +57,13 @@ foreach($objitem["results"] as $valoresitem){
 
 echo getIdIva();
 
-function getIdIva(){
+function getIdIva()
+{
     return Db::getInstance()->getValue("SELECT id_tax_rules_group FROM aalv_tax_rules_group atrg WHERE active = 1 AND deleted = 0 AND `name` LIKE '%21%'");
 }
 
-
-
-
-
-
-
-
-
-
-function peticionget($url){
+function peticionget($url)
+{
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

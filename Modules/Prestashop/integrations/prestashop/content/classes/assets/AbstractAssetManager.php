@@ -29,11 +29,15 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 abstract class AbstractAssetManagerCore
 {
     protected $directories;
+
     protected $configuration;
+
     protected $list = [];
 
     const DEFAULT_MEDIA = 'all';
+
     const DEFAULT_PRIORITY = 50;
+
     const DEFAULT_JS_POSITION = 'bottom';
 
     use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
@@ -51,14 +55,12 @@ abstract class AbstractAssetManagerCore
     abstract protected function getList();
 
     /**
-     * @param string $relativePath
-     *
      * @return bool|string
      */
     public function getFullPath(string $relativePath)
     {
         foreach ($this->getDirectories() as $baseDir) {
-            $fullPath = $baseDir . ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manually
+            $fullPath = $baseDir.ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manually
             if (file_exists($this->getPathFromUri($fullPath))) {
                 return $fullPath;
             }
@@ -71,9 +73,9 @@ abstract class AbstractAssetManagerCore
     {
         static $directories;
 
-        if (null === $directories) {
+        if ($directories === null) {
             foreach ($this->directories as $baseDir) {
-                if (!empty($baseDir)) {
+                if (! empty($baseDir)) {
                     $directories[] = $baseDir;
                 }
             }

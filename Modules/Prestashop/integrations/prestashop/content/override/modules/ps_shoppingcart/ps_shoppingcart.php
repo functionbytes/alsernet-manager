@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -22,8 +23,6 @@ use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 
 class Ps_ShoppingcartOverride extends Ps_Shoppingcart
 {
-
-
     private function getCartSummaryURL()
     {
         return $this->context->link->getPageLink(
@@ -39,12 +38,11 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
         );
     }
 
-
-
     public function renderModal(Cart $cart, $id_product, $id_product_attribute, $id_customization)
     {
-        $data = (new CartPresenter())->present($cart);
-        dump($data);die();
+        $data = (new CartPresenter)->present($cart);
+        dump($data);
+        exit();
         $product = null;
         foreach ($data['inventaries'] as $p) {
             if ((int) $p['id_product'] == $id_product &&
@@ -56,7 +54,7 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
         }
 
         $prod = new Product($id_product);
-	$product->id_category_default = $prod->id_category_default;
+        $product->id_category_default = $prod->id_category_default;
 
         $this->smarty->assign([
             'product' => $product,
@@ -64,18 +62,17 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
             'cart_url' => $this->getCartSummaryURL(),
         ]);
 
-
-        if ($prod->isBlocked()){
+        if ($prod->isBlocked()) {
             return $this->fetch('module:ps_shoppingcart/modalbloqueo.tpl');
         } else {
             if ($prod->isBlockedByProductType()) {
-                $wishlists = array();
+                $wishlists = [];
                 $id_wishlist = false;
                 $url_wishlist = '';
 
                 if (Module::isEnabled('leofeature')) {
-                    require_once(_PS_MODULE_DIR_.'leofeature/classes/WishList.php');
-                    require_once(_PS_MODULE_DIR_.'leofeature/classes/LeofeatureProduct.php');
+                    require_once _PS_MODULE_DIR_.'leofeature/classes/WishList.php';
+                    require_once _PS_MODULE_DIR_.'leofeature/classes/LeofeatureProduct.php';
 
                     if (Configuration::get('LEOFEATURE_ENABLE_PRODUCTWISHLIST')) {
                         $url_wishlist = $this->context->link->getModuleLink('leofeature', 'mywishlist');
@@ -83,7 +80,7 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
                         if ($this->context->customer->isLogged()) {
                             $wishlists = Wishlist::getByIdCustomer($this->context->customer->id);
                             if (empty($this->context->cookie->id_wishlist) === true || WishList::exists($this->context->cookie->id_wishlist, $this->context->customer->id) === false) {
-                                if (!count($wishlists)) {
+                                if (! count($wishlists)) {
                                     $id_wishlist = false;
                                 } else {
                                     $id_wishlist = (int) $wishlists[0]['id_wishlist'];
@@ -96,12 +93,12 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
                     }
                 }
 
-                $this->smarty->assign(array(
+                $this->smarty->assign([
                     'wishlists' => $wishlists,
                     'id_wishlist' => $id_wishlist,
                     'token' => Tools::getToken(false),
                     'url_wishlist' => $url_wishlist,
-                ));
+                ]);
 
                 return $this->fetch('module:ps_shoppingcart/modalbloqueoproducttype.tpl');
             } else {
@@ -109,7 +106,7 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
                 $id_category_target = 0;
                 $category_relation = null;
                 if (Module::isEnabled('alvarezcategoriesrelation')) {
-                    require_once _PS_MODULE_DIR_ . 'alvarezcategoriesrelation/classes/CategoriesRelation.php';
+                    require_once _PS_MODULE_DIR_.'alvarezcategoriesrelation/classes/CategoriesRelation.php';
 
                     /*$id_category_target = CategoriesRelation::getCategoryTargetByIdcategory($prod->id_category_default);
                     if ($id_category_target) {
@@ -123,11 +120,12 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
                 }
 
                 if ($show_modal_categories_relation && $id_category_target && $category_relation) {
-                    $this->smarty->assign(array(
+                    $this->smarty->assign([
                         'category_relation' => $category_relation,
                         'url_category_target' => $this->context->link->getCategoryLink((int) $id_category_target),
                         'url_cart' => $this->context->link->getPageLink('cart'),
-                    ));
+                    ]);
+
                     return $this->fetch('module:ps_shoppingcart/modalcategoriesrelation.tpl');
                 } else {
                     return $this->fetch('module:ps_shoppingcart/modal.tpl');
@@ -135,5 +133,4 @@ class Ps_ShoppingcartOverride extends Ps_Shoppingcart
             }
         }
     }
-
 }

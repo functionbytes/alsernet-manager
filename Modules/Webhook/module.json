@@ -1,0 +1,16 @@
+{
+  "name": "Webhook",
+  "alias": "webhook",
+  "description": "Webhook module for managing webhook integrations and event-driven subscriptions",
+  "keywords": ["webhook", "integration", "events"],
+  "version": "1.0.0",
+  "active": 1,
+  "order": 0,
+  "providers": [
+    "Modules\\Webhook\\app\\Providers\\WebhookServiceProvider",
+    "Modules\\Webhook\\app\\Providers\\RouteServiceProvider"
+  ],
+  "aliases": {},
+  "files": [],
+  "requires": []
+}

@@ -3,7 +3,7 @@
 namespace App\Jobs\Subscribers\Subscribers;
 
 use App\Jobs\Base;
-use app\Library\Traits\Trackable;
+use Modules\Campaign\Library\Traits\Trackable;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

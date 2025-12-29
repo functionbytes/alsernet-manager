@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,8 +29,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCore
 {
     protected $template = 'checkout/_partials/steps/personal-information.tpl';
+
     private $loginForm;
+
     private $registerForm;
+
     private $show_login_form = false;
 
     public function __construct(
@@ -38,7 +42,7 @@ class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCor
         CustomerLoginForm $loginForm,
         CustomerForm $registerForm
     ) {
-        parent::__construct($context, $translator,$loginForm,$registerForm);
+        parent::__construct($context, $translator, $loginForm, $registerForm);
         $this->loginForm = $loginForm;
         $this->registerForm = $registerForm;
     }
@@ -57,7 +61,7 @@ class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCor
 
             $this->registerForm->fillWith($requestParameters);
 
-            if ($this->registerForm->submit($requestParameters,'register')) {
+            if ($this->registerForm->submit($requestParameters, 'register')) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(true);
             } else {
@@ -71,7 +75,7 @@ class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCor
 
             $this->loginForm->fillWith($requestParameters);
 
-            if ($this->loginForm->submit($requestParameters )) {
+            if ($this->loginForm->submit($requestParameters)) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(true);
             } else {
@@ -88,7 +92,7 @@ class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCor
 
         $this->logged_in = $this->getCheckoutProcess()->getCheckoutSession()->customerHasLoggedIn();
 
-        if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
+        if ($this->logged_in && ! $this->getCheckoutSession()->getCustomer()->is_guest) {
             $this->setComplete(true);
         }
 
@@ -112,10 +116,8 @@ class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCor
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
-                'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
+                'empty_cart_on_logout' => ! Configuration::get('PS_CART_FOLLOWING'),
             ]
         );
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,8 +38,8 @@ class PhpEncryptionEngineCore
     /**
      * PhpEncryptionCore constructor.
      *
-     * @param string $hexString A string that only contains hexadecimal characters
-     *                          Bother upper and lower case are allowed
+     * @param  string  $hexString  A string that only contains hexadecimal characters
+     *                             Bother upper and lower case are allowed
      */
     public function __construct($hexString)
     {
@@ -48,8 +49,7 @@ class PhpEncryptionEngineCore
     /**
      * Encrypt the plaintext.
      *
-     * @param string $plaintext Plaintext
-     *
+     * @param  string  $plaintext  Plaintext
      * @return string Cipher text
      */
     public function encrypt($plaintext)
@@ -60,8 +60,7 @@ class PhpEncryptionEngineCore
     /**
      * Decrypt the cipher text.
      *
-     * @param string $cipherText Cipher text
-     *
+     * @param  string  $cipherText  Cipher text
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
      *
@@ -83,9 +82,6 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
-     *
      * @return string
      *
      * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
@@ -106,8 +102,6 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $hexString
-     *
      * @return Key
      */
     public static function loadFromAsciiSafeString($hexString)
@@ -152,8 +146,6 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * @param $buf
-     *
      * @return string
      */
     public static function saveToAsciiSafeString($buf)

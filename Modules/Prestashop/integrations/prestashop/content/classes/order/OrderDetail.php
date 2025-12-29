@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -292,11 +293,11 @@ class OrderDetailCore extends ObjectModel
 
     public function delete()
     {
-        if (!$res = parent::delete()) {
+        if (! $res = parent::delete()) {
             return false;
         }
 
-        Db::getInstance()->delete('order_detail_tax', 'id_order_detail=' . (int) $this->id);
+        Db::getInstance()->delete('order_detail_tax', 'id_order_detail='.(int) $this->id);
 
         return $res;
     }
@@ -314,9 +315,9 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
-        WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
+        FROM `'._DB_PREFIX_.'order_detail` od
+        LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
+        WHERE od.`download_hash` = \''.pSQL((string) $hash).'\'
         AND pd.`active` = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -324,9 +325,9 @@ class OrderDetailCore extends ObjectModel
 
     public static function incrementDownload($id_order_detail, $increment = 1)
     {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail`
-            SET `download_nb` = `download_nb` + ' . (int) $increment . '
-            WHERE `id_order_detail`= ' . (int) $id_order_detail . '
+        $sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
+            SET `download_nb` = `download_nb` + '.(int) $increment.'
+            WHERE `id_order_detail`= '.(int) $id_order_detail.'
             LIMIT 1';
 
         return Db::getInstance()->execute($sql);
@@ -349,16 +350,15 @@ class OrderDetailCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param int $id_order_detail
-     *
+     * @param  int  $id_order_detail
      * @return TaxCalculator
      */
     public static function getTaxCalculatorStatic($id_order_detail)
     {
         $sql = 'SELECT t.*, d.`tax_computation_method`
-                FROM `' . _DB_PREFIX_ . 'order_detail_tax` t
-                LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
-                WHERE d.`id_order_detail` = ' . (int) $id_order_detail;
+                FROM `'._DB_PREFIX_.'order_detail_tax` t
+                LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
+                WHERE d.`id_order_detail` = '.(int) $id_order_detail;
 
         $computation_method = 1;
         $taxes = [];
@@ -392,7 +392,7 @@ class OrderDetailCore extends ObjectModel
             return true;
         }
 
-        if (!($this->tax_calculator instanceof TaxCalculator)) {
+        if (! ($this->tax_calculator instanceof TaxCalculator)) {
             return false;
         }
 
@@ -431,17 +431,17 @@ class OrderDetailCore extends ObjectModel
                     break;
             }
 
-            $values .= '(' . (int) $this->id . ',' . (int) $id_tax . ',' . (float) $unit_amount . ',' . (float) $total_amount . '),';
+            $values .= '('.(int) $this->id.','.(int) $id_tax.','.(float) $unit_amount.','.(float) $total_amount.'),';
         }
 
         if ($replace) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail=' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int) $this->id);
         }
 
-        if (!empty($values)) {
+        if (! empty($values)) {
             $values = rtrim($values, ',');
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
-                VALUES ' . $values;
+            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+                VALUES '.$values;
 
             return Db::getInstance()->execute($sql);
         }
@@ -459,10 +459,6 @@ class OrderDetailCore extends ObjectModel
 
     /**
      * Get a TaxCalculator adapted for the OrderDetail's product and the specified address
-     *
-     * @param Address $address
-     *
-     * @return TaxCalculator
      */
     public function getTaxCalculatorByAddress(Address $address): TaxCalculator
     {
@@ -474,8 +470,6 @@ class OrderDetailCore extends ObjectModel
 
     /**
      * Dynamically get the taxRulesGroupId instead of relying one the one saved in database
-     *
-     * @return int
      */
     public function getTaxRulesGroupId(): int
     {
@@ -485,13 +479,12 @@ class OrderDetailCore extends ObjectModel
     /**
      * Get a detailed order list of an id_order.
      *
-     * @param int $id_order
-     *
+     * @param  int  $id_order
      * @return array
      */
     public static function getList($id_order)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'order_detail` WHERE `id_order` = ' . (int) $id_order);
+        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int) $id_order);
     }
 
     public function getTaxList()
@@ -501,8 +494,8 @@ class OrderDetailCore extends ObjectModel
 
     public static function getTaxListStatic($id_order_detail)
     {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'order_detail_tax`
-                    WHERE `id_order_detail` = ' . (int) $id_order_detail;
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
+                    WHERE `id_order_detail` = '.(int) $id_order_detail;
 
         return Db::getInstance()->executeS($sql);
     }
@@ -510,7 +503,7 @@ class OrderDetailCore extends ObjectModel
     /**
      * Set virtual product information
      *
-     * @param array $product
+     * @param  array  $product
      */
     protected function setVirtualProductInformation($product)
     {
@@ -530,14 +523,14 @@ class OrderDetailCore extends ObjectModel
     /**
      * Check the order status.
      *
-     * @param array $product
-     * @param int $id_order_state
+     * @param  array  $product
+     * @param  int  $id_order_state
      */
     protected function checkProductStock($product, $id_order_state)
     {
         if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR')) {
             $update_quantity = true;
-            if (!StockAvailable::dependsOnStock($product['id_product'])) {
+            if (! StockAvailable::dependsOnStock($product['id_product'])) {
                 $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity'], $product['id_shop'], true);
             }
 
@@ -555,15 +548,15 @@ class OrderDetailCore extends ObjectModel
     /**
      * Apply tax to the product.
      *
-     * @param object $order
-     * @param array $product
+     * @param  object  $order
+     * @param  array  $product
      */
     protected function setProductTax(Order $order, $product)
     {
         $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
 
         // Exclude VAT
-        if (!Tax::excludeTaxeOption()) {
+        if (! Tax::excludeTaxeOption()) {
             $this->setContext((int) $product['id_shop']);
             $this->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct((int) $product['id_product'], $this->context);
 
@@ -575,7 +568,7 @@ class OrderDetailCore extends ObjectModel
         }
 
         $this->ecotax_tax_rate = 0;
-        if (!empty($product['ecotax'])) {
+        if (! empty($product['ecotax'])) {
             $this->ecotax_tax_rate = Tax::getProductEcotaxRate($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         }
     }
@@ -583,7 +576,7 @@ class OrderDetailCore extends ObjectModel
     /**
      * Set specific price of the product.
      *
-     * @param object $order
+     * @param  object  $order
      */
     protected function setSpecificPrice(Order $order, $product = null)
     {
@@ -601,7 +594,7 @@ class OrderDetailCore extends ObjectModel
 
                 case 'amount':
                     $price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
-                    $this->reduction_amount = !$this->specificPrice['id_currency'] ? (float) $price : (float) $this->specificPrice['reduction'];
+                    $this->reduction_amount = ! $this->specificPrice['id_currency'] ? (float) $price : (float) $this->specificPrice['reduction'];
                     if ($product !== null) {
                         $this->setContext((int) $product['id_shop']);
                     }
@@ -625,9 +618,9 @@ class OrderDetailCore extends ObjectModel
     /**
      * Set detailed product price to the order detail.
      *
-     * @param object $order
-     * @param object $cart
-     * @param array $product
+     * @param  object  $order
+     * @param  object  $cart
+     * @param  array  $product
      */
     protected function setDetailProductPrice(Order $order, Cart $cart, $product)
     {
@@ -720,17 +713,17 @@ class OrderDetailCore extends ObjectModel
     /**
      * Create an order detail liable to an id_order.
      *
-     * @param object $order
-     * @param object $cart
-     * @param array $product
-     * @param int $id_order_status
-     * @param int $id_order_invoice
-     * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param  object  $order
+     * @param  object  $cart
+     * @param  array  $product
+     * @param  int  $id_order_status
+     * @param  int  $id_order_invoice
+     * @param  bool  $use_taxes  set to false if you don't want to use taxes
      */
     protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
     {
         if ($use_taxes) {
-            $this->tax_calculator = new TaxCalculator();
+            $this->tax_calculator = new TaxCalculator;
         }
 
         $this->id = null;
@@ -738,9 +731,9 @@ class OrderDetailCore extends ObjectModel
         $this->product_id = (int) $product['id_product'];
         $this->product_attribute_id = $product['id_product_attribute'] ? (int) $product['id_product_attribute'] : 0;
         $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
-        $this->product_name = $product['name'] .
+        $this->product_name = $product['name'].
             ((isset($product['attributes']) && $product['attributes'] != null) ?
-                ' (' . $product['attributes'] . ')' : '');
+                ' ('.$product['attributes'].')' : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
@@ -783,11 +776,11 @@ class OrderDetailCore extends ObjectModel
     /**
      * Create a list of order detail for a specified id_order using cart.
      *
-     * @param object $order
-     * @param object $cart
-     * @param int $id_order_status
-     * @param int $id_order_invoice
-     * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param  object  $order
+     * @param  object  $cart
+     * @param  int  $id_order_status
+     * @param  int  $id_order_invoice
+     * @param  bool  $use_taxes  set to false if you don't want to use taxes
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {
@@ -819,9 +812,6 @@ class OrderDetailCore extends ObjectModel
 
     /**
      * Set the additional shipping information.
-     *
-     * @param Order $order
-     * @param $product
      */
     public function setShippingCost(Order $order, $product)
     {
@@ -839,59 +829,59 @@ class OrderDetailCore extends ObjectModel
 
     public function getWsTaxes()
     {
-        $query = new DbQuery();
+        $query = new DbQuery;
         $query->select('id_tax as id');
         $query->from('order_detail_tax', 'tax');
         $query->leftJoin('order_detail', 'od', 'tax.`id_order_detail` = od.`id_order_detail`');
-        $query->where('od.`id_order_detail` = ' . (int) $this->id_order_detail);
+        $query->where('od.`id_order_detail` = '.(int) $this->id_order_detail);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
 
     public static function getCrossSells($id_product, $id_lang, $limit = 12)
     {
-        if (!$id_product || !$id_lang) {
+        if (! $id_product || ! $id_lang) {
             return;
         }
 
         $front = true;
-        if (!in_array(Context::getContext()->controller->controller_type, ['front', 'modulefront'])) {
+        if (! in_array(Context::getContext()->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
         $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.id_order
-        FROM ' . _DB_PREFIX_ . 'orders o
-        LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON (od.id_order = o.id_order)
-        WHERE o.valid = 1 AND od.product_id = ' . (int) $id_product);
+        FROM '._DB_PREFIX_.'orders o
+        LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
+        WHERE o.valid = 1 AND od.product_id = '.(int) $id_product);
 
         if (count($orders)) {
             $list = '';
             foreach ($orders as $order) {
-                $list .= (int) $order['id_order'] . ',';
+                $list .= (int) $order['id_order'].',';
             }
             $list = rtrim($list, ',');
 
             $order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                 SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default ' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
-                FROM ' . _DB_PREFIX_ . 'order_detail od
-                LEFT JOIN ' . _DB_PREFIX_ . 'product p ON (p.id_product = od.product_id)
-                ' . Shop::addSqlAssociation('product', 'p') .
-                (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) Context::getContext()->shop->id . ')' : '') . '
-                LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl ON (pl.id_product = od.product_id' . Shop::addSqlRestrictionOnLang('pl') . ')
-                LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = product_shop.id_category_default' . Shop::addSqlRestrictionOnLang('cl') . ')
-                LEFT JOIN ' . _DB_PREFIX_ . 'image i ON (i.id_product = od.product_id)
-                ' . Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
-                WHERE od.id_order IN (' . $list . ')
-                    AND pl.id_lang = ' . (int) $id_lang . '
-                    AND cl.id_lang = ' . (int) $id_lang . '
-                    AND od.product_id != ' . (int) $id_product . '
+                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
+                FROM '._DB_PREFIX_.'order_detail od
+                LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
+                '.Shop::addSqlAssociation('product', 'p').
+                (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int) Context::getContext()->shop->id.')' : '').'
+                LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
+                LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+                LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+                '.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE od.id_order IN ('.$list.')
+                    AND pl.id_lang = '.(int) $id_lang.'
+                    AND cl.id_lang = '.(int) $id_lang.'
+                    AND od.product_id != '.(int) $id_product.'
                     AND product_shop.active = 1'
-                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
+                    .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
                 ORDER BY RAND()
-                LIMIT ' . (int) $limit . '
+                LIMIT '.(int) $limit.'
             ', true, false);
 
             $tax_calc = Product::getTaxCalculationMethod();
@@ -899,7 +889,7 @@ class OrderDetailCore extends ObjectModel
                 foreach ($order_products as &$order_product) {
                     $order_product['image'] = Context::getContext()->link->getImageLink(
                         $order_product['link_rewrite'],
-                        (int) $order_product['product_id'] . '-' . (int) $order_product['id_image'],
+                        (int) $order_product['product_id'].'-'.(int) $order_product['id_image'],
                         ImageType::getFormattedName('medium')
                     );
                     $order_product['link'] = Context::getContext()->link->getProductLink(
@@ -923,7 +913,7 @@ class OrderDetailCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         foreach ($this->def['fields'] as $field => $data) {
-            if (!empty($data['required']) || !empty($data['lang'])) {
+            if (! empty($data['required']) || ! empty($data['lang'])) {
                 continue;
             }
             if ($this->validateField($field, $this->$field) !== true) {
@@ -936,7 +926,7 @@ class OrderDetailCore extends ObjectModel
         return parent::add($autodate = true, $null_values = false);
     }
 
-    //return the product OR product attribute whole sale price
+    // return the product OR product attribute whole sale price
     public function getWholeSalePrice()
     {
         $product = new Product($this->product_id);

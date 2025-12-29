@@ -3,8 +3,8 @@
 namespace Modules\Campaign\Entities;
 
 use app\Library\Log;
-use app\Library\Traits\HasCache;
-use app\Library\Traits\HasUid;
+use Modules\Campaign\Library\Traits\HasCache;
+use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 /**

@@ -15,6 +15,7 @@ class CampaignServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/campaign.php',
             'campaign'
         );
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**

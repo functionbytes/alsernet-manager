@@ -10,15 +10,16 @@ use app\Library\HtmlHandler\ParseRss;
 use app\Library\HtmlHandler\TransformWidgets;
 use app\Library\StringHelper;
 use app\Library\Tool;
-use app\Library\Traits\HasUid;
 use App\Models\Product;
 use App\Models\TrackingDomain;
+use App\Models\Traits\HasUid;
 use App\Models\User;
 use DOMDocument;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use KubAT\PhpSimple\HtmlDomParser;
 use League\Pipeline\PipelineBuilder;
+
 use function App\Helpers\is_non_web_link;
 use function App\Helpers\url_get_contents_ssl_safe;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -116,12 +117,12 @@ abstract class HTMLTemplateCore
         $id_shop = (int) $this->shop->id;
 
         $invoiceLogo = Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        if ($invoiceLogo && file_exists(_PS_IMG_DIR_ . $invoiceLogo)) {
+        if ($invoiceLogo && file_exists(_PS_IMG_DIR_.$invoiceLogo)) {
             return $invoiceLogo;
         }
 
         $logo = Configuration::get('PS_LOGO', null, null, $id_shop);
-        if ($logo && file_exists(_PS_IMG_DIR_ . $logo)) {
+        if ($logo && file_exists(_PS_IMG_DIR_.$logo)) {
             return $logo;
         }
 
@@ -141,8 +142,8 @@ abstract class HTMLTemplateCore
 
         $width = 0;
         $height = 0;
-        if (!empty($logo)) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
+        if (! empty($logo)) {
+            [$width, $height] = getimagesize(_PS_IMG_DIR_.$logo);
         }
 
         // Limit the height of the logo for the PDF render
@@ -154,8 +155,8 @@ abstract class HTMLTemplateCore
         }
 
         $this->smarty->assign([
-            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
-            'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+            'logo_path' => Tools::getShopProtocol().Tools::getMediaServer(_PS_IMG_)._PS_IMG_.$logo,
+            'img_ps_dir' => Tools::getShopProtocol().Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
             'title' => $this->title,
@@ -169,12 +170,12 @@ abstract class HTMLTemplateCore
     /**
      * Assign hook data.
      *
-     * @param ObjectModel $object generally the object used in the constructor
+     * @param  ObjectModel  $object  generally the object used in the constructor
      */
     public function assignHookData($object)
     {
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
-        $hook_name = 'displayPDF' . $template;
+        $hook_name = 'displayPDF'.$template;
 
         $this->smarty->assign([
             'HOOK_DISPLAY_PDF' => Hook::exec(
@@ -213,15 +214,14 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param $template_name
      *
      * @return string
      */
     protected function getTemplate($template_name)
     {
         $template = false;
-        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $template_name . '.tpl';
-        $overridden_template = _PS_ALL_THEMES_DIR_ . $this->shop->theme->getName() . DIRECTORY_SEPARATOR . 'pdf' . DIRECTORY_SEPARATOR . $template_name . '.tpl';
+        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
+        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->theme->getName().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
         if (file_exists($overridden_template)) {
             $template = $overridden_template;
         } elseif (file_exists($default_template)) {
@@ -234,8 +234,7 @@ abstract class HTMLTemplateCore
     /**
      * Translation method.
      *
-     * @param string $string
-     *
+     * @param  string  $string
      * @return string translated text
      */
     protected static function l($string)

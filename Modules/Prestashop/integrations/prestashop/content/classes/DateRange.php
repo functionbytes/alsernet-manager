@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -56,12 +57,12 @@ class DateRangeCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
 		SELECT `id_date_range`, `time_end`
-		FROM `' . _DB_PREFIX_ . 'date_range`
-		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `' . _DB_PREFIX_ . 'date_range`)');
-        if (!isset($result['id_date_range']) || strtotime($result['time_end']) < strtotime(date('Y-m-d H:i:s'))) {
+		FROM `'._DB_PREFIX_.'date_range`
+		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `'._DB_PREFIX_.'date_range`)');
+        if (! isset($result['id_date_range']) || strtotime($result['time_end']) < strtotime(date('Y-m-d H:i:s'))) {
             // The default range is set to 1 day less 1 second (in seconds)
             $rangeSize = 86399;
-            $dateRange = new DateRange();
+            $dateRange = new DateRange;
             $dateRange->time_start = date('Y-m-d');
             $dateRange->time_end = strftime('%Y-%m-%d %H:%M:%S', strtotime($dateRange->time_start) + $rangeSize);
             $dateRange->add();

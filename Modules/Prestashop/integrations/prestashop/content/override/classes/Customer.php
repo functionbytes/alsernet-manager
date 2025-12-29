@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,7 +30,7 @@
  */
 class Customer extends CustomerCore
 {
-    CONST ADDRESS_ALIAS_DEMODAYS = 'Dirección Demo Day';
+    const ADDRESS_ALIAS_DEMODAYS = 'Dirección Demo Day';
 
     public $sports;
 
@@ -49,7 +50,7 @@ class Customer extends CustomerCore
     {
         $addresses = parent::getAddresses($idLang);
 
-        foreach($addresses as $key => $address) {
+        foreach ($addresses as $key => $address) {
             if ($address['alias'] == self::ADDRESS_ALIAS_DEMODAYS) {
                 unset($addresses[$key]);
             }
@@ -62,7 +63,7 @@ class Customer extends CustomerCore
     {
         $addresses = parent::getSimpleAddresses($idLang);
 
-        foreach($addresses as $key => $address) {
+        foreach ($addresses as $key => $address) {
             if ($address['alias'] == self::ADDRESS_ALIAS_DEMODAYS) {
                 unset($addresses[$key]);
             }
@@ -70,7 +71,6 @@ class Customer extends CustomerCore
 
         return $addresses;
     }
-
 
     public function getSimpleAddressSql($idAddress = null, $idLang = null)
     {
@@ -86,21 +86,21 @@ class Customer extends CustomerCore
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
             SELECT COUNT(`id_address`)
-            FROM `' . _DB_PREFIX_ . 'address`
-            WHERE `id_customer` = ' . (int) $idCustomer . ' AND `alias` != \''.self::ADDRESS_ALIAS_DEMODAYS.'\'
+            FROM `'._DB_PREFIX_.'address`
+            WHERE `id_customer` = '.(int) $idCustomer.' AND `alias` != \''.self::ADDRESS_ALIAS_DEMODAYS.'\'
             AND `deleted` = 0'
         );
     }
 
     public function delete()
     {
-        if (strpos($this->firstname, "fake-user")) {
-            AddisLogger::log(__FILE__, __FUNCTION__, null, "Intento de borrado | Customer::delete | Fake customer");
-            PrestaShopLogger::addLog("Intento de borrado | Customer::delete | Fake customer", false);
+        if (strpos($this->firstname, 'fake-user')) {
+            AddisLogger::log(__FILE__, __FUNCTION__, null, 'Intento de borrado | Customer::delete | Fake customer');
+            PrestaShopLogger::addLog('Intento de borrado | Customer::delete | Fake customer', false);
+
             return true;
-        }else{
+        } else {
             return parent::delete();
         }
     }
-
 }

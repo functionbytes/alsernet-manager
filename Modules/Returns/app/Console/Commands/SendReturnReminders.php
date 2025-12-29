@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Returns\Console\Commands;
+namespace Modules\Returns\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

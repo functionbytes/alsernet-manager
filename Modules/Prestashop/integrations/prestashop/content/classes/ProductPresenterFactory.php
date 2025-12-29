@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -39,18 +40,16 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 class ProductPresenterFactoryCore
 {
     private $context;
+
     private $taxConfiguration;
 
     /**
      * ProductPresenterFactoryCore constructor.
-     *
-     * @param Context $context
-     * @param \TaxConfiguration|null $taxConfiguration
      */
-    public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
+    public function __construct(Context $context, ?TaxConfiguration $taxConfiguration = null)
     {
         $this->context = $context;
-        $this->taxConfiguration = (null === $taxConfiguration) ? new TaxConfiguration() : $taxConfiguration;
+        $this->taxConfiguration = ($taxConfiguration === null) ? new TaxConfiguration : $taxConfiguration;
     }
 
     /**
@@ -60,7 +59,7 @@ class ProductPresenterFactoryCore
      */
     public function getPresentationSettings()
     {
-        $settings = new ProductPresentationSettings();
+        $settings = new ProductPresentationSettings;
 
         $settings->catalog_mode = Configuration::isCatalogMode();
         $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
@@ -89,8 +88,8 @@ class ProductPresenterFactoryCore
             return new ProductListingPresenter(
                 $imageRetriever,
                 $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
+                new PriceFormatter,
+                new ProductColorsRetriever,
                 $this->context->getTranslator()
             );
         }
@@ -98,11 +97,11 @@ class ProductPresenterFactoryCore
         return new ProductPresenter(
             $imageRetriever,
             $this->context->link,
-            new PriceFormatter(),
-            new ProductColorsRetriever(),
+            new PriceFormatter,
+            new ProductColorsRetriever,
             $this->context->getTranslator(),
-            new HookManager(),
-            new AdapterConfiguration()
+            new HookManager,
+            new AdapterConfiguration
         );
     }
 }

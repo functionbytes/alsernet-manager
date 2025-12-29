@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2012-2021 INNERCODE
  *
@@ -20,30 +21,30 @@
  * @author    Innercode
  * @copyright Copyright (c) 2012 - 2021 INNERCODE, UAB. (https://www.innercode.lt)
  * @license   https://www.innercode.lt/ps-module-eula.txt
- * @package   freeshippingamountdisplay
+ *
  * @site      https://www.innercode.lt
  */
-
 class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
 {
     /**
-     * @param string $position
-     * @param array $data
+     * @param  string  $position
+     * @param  array  $data
+     *
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
-    public function getMessageHTML($position = 'checkout', $data = array())
+    public function getMessageHTML($position = 'checkout', $data = [])
     {
-        //return parent::getMessageHTML($position, $data);
+        // return parent::getMessageHTML($position, $data);
 
         $id_carrito = (int) $this->context->cookie->id_cart;
-        $carrito = new Cart((int)$id_carrito);
+        $carrito = new Cart((int) $id_carrito);
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'id_carrito' => $id_carrito,
             'cart_sumario' => $carrito->getSummaryDetails(),
-        ));
+        ]);
 
-        if (!$this->context->currency) {
+        if (! $this->context->currency) {
             $currencyId = (int) $this->context->cookie->id_currency;
             $this->context->currency = new Currency($currencyId);
         }
@@ -77,7 +78,7 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
                 WHERE `id_product` = '.$product->id
             );
 
-            if (!empty($productCarriers)) {
+            if (! empty($productCarriers)) {
                 $idCarrier = $this->getCarrierId();
                 $carrier = new Carrier($idCarrier);
                 $found = false;
@@ -89,15 +90,15 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
                     }
                 }
 
-                if (!$found) {
+                if (! $found) {
                     return;
                 }
             }
         }
 
-        if (!$this->context->cart) {
+        if (! $this->context->cart) {
             $cartId = (int) $this->context->cookie->id_cart;
-            $this->context->cart = new Cart((int)$cartId);
+            $this->context->cart = new Cart((int) $cartId);
         }
 
         /* comprobar si hay productos con costes de envío especiales en la cesta para distinguir el mensaje */
@@ -105,7 +106,7 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
         $has_standar_products = false;
         $product_list = $this->context->cart->getProducts(false, false, null, true);
         foreach ($product_list as $key => $value) {
-            $sql = 'SELECT pp.`id` FROM `' . _DB_PREFIX_ . 'portes_producto` pp WHERE pp.`id_product`='.(int) $value['id_product'].' AND pp.`id_product_attribute`='.(int) $value['id_product_attribute'];
+            $sql = 'SELECT pp.`id` FROM `'._DB_PREFIX_.'portes_producto` pp WHERE pp.`id_product`='.(int) $value['id_product'].' AND pp.`id_product_attribute`='.(int) $value['id_product_attribute'];
             $id_portes_product = DB::getInstance()->getValue($sql);
 
             if ($id_portes_product) {
@@ -117,14 +118,14 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
         }
 
         /* si solo hay productos especiales no muestro nada */
-        if ($has_special_products && !$has_standar_products) {
+        if ($has_special_products && ! $has_standar_products) {
             return;
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'has_special_products' => $has_special_products,
             'has_standar_products' => $has_standar_products,
-        ));
+        ]);
         /* comprobar si hay productos con costes de envío especiales en la cesta para distinguir el mensaje */
 
         $totalPrice = $this->context->cart->getOrderTotal($this->useTaxes(), Cart::BOTH_WITHOUT_SHIPPING, $product_list);
@@ -148,7 +149,7 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
         }
 
         // Don't show block if cart is empty
-        if (!$totalPrice && !Configuration::get('FSAD_DISPLAY_WHEN_EMPTY')) {
+        if (! $totalPrice && ! Configuration::get('FSAD_DISPLAY_WHEN_EMPTY')) {
             return;
         }
 
@@ -156,24 +157,22 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
         $messageText = Configuration::get('FSAD_TEXT', $this->context->language->id);
 
         if ($messageText) {
-            $messageText = str_replace('{price}', '<span class="price">' . $amountLeftDisplay . '</span>', $messageText);
+            $messageText = str_replace('{price}', '<span class="price">'.$amountLeftDisplay.'</span>', $messageText);
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'amountLeft' => $amountLeft,
             'amountLeftDisplay' => $amountLeftDisplay,
             'percentage' => $totalPrice / $freeShippingFrom * 100,
             'position' => $position,
             'freeShippingText' => $freeShippingText,
-            'messageText' => $messageText
-        ));
+            'messageText' => $messageText,
+        ]);
 
         return $this->display(__FILE__, 'views/templates/front/message.tpl');
     }
 
-
     /**
-     * @param $totalPrice
      * @return float|int
      */
     public function amountUntilFree($totalPrice)
@@ -188,7 +187,7 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
 
         $product_list = $this->context->cart->getProducts(false, false, null, true);
         foreach ($product_list as $key => $value) {
-            $sql = 'SELECT pp.`id` FROM `' . _DB_PREFIX_ . 'portes_producto` pp WHERE pp.`id_product`='.(int) $value['id_product'].' AND pp.`id_product_attribute`='.(int) $value['id_product_attribute'];
+            $sql = 'SELECT pp.`id` FROM `'._DB_PREFIX_.'portes_producto` pp WHERE pp.`id_product`='.(int) $value['id_product'].' AND pp.`id_product_attribute`='.(int) $value['id_product_attribute'];
             $id_portes_product = DB::getInstance()->getValue($sql);
 
             if ($id_portes_product) {

@@ -80,7 +80,14 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\Campaign\\": "Modules/Campaign/app/",
+            "Modules\\Documents\\": "Modules/Documents/app/",
+            "Modules\\Mail\\": "Modules/Mail/app/",
+            "Modules\\Prestashop\\": "Modules/Prestashop/app/",
+            "Modules\\Returns\\": "Modules/Returns/app/",
+            "Modules\\Subscriber\\": "Modules/Subscriber/app/",
+            "Modules\\Warehouse\\": "Modules/Warehouse/app/"
         },
         "files": [
             "app/Helpers/Helper.php",

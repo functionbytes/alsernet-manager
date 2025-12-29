@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -33,10 +34,12 @@ class CurveCore
      * @var float[] indexed by string
      */
     protected $values = [];
+
     /**
      * @var string
      */
     protected $label;
+
     /**
      * Can be: bars, steps
      *
@@ -45,7 +48,7 @@ class CurveCore
     protected $type;
 
     /**
-     * @param array $values
+     * @param  array  $values
      */
     public function setValues($values)
     {
@@ -53,8 +56,7 @@ class CurveCore
     }
 
     /**
-     * @param bool $time_mode
-     *
+     * @param  bool  $time_mode
      * @return string
      */
     public function getValues($time_mode = false)
@@ -62,17 +64,17 @@ class CurveCore
         ksort($this->values);
         $string = '';
         foreach ($this->values as $key => $value) {
-            $string .= '[' . addslashes((string) $key) . ($time_mode ? '000' : '') . ',' . (float) $value . '],';
+            $string .= '['.addslashes((string) $key).($time_mode ? '000' : '').','.(float) $value.'],';
         }
 
-        return '{data:[' . rtrim($string, ',') . ']'
-            . (!empty($this->label) ? ',label:"' . $this->label . '"' : '') . ''
-            . (!empty($this->type) ? ',' . $this->type : '') . '}';
+        return '{data:['.rtrim($string, ',').']'
+            .(! empty($this->label) ? ',label:"'.$this->label.'"' : '').''
+            .(! empty($this->type) ? ','.$this->type : '').'}';
     }
 
     /**
-     * @param string $x
-     * @param float $y
+     * @param  string  $x
+     * @param  float  $y
      */
     public function setPoint($x, $y)
     {
@@ -80,7 +82,7 @@ class CurveCore
     }
 
     /**
-     * @param string $label
+     * @param  string  $label
      */
     public function setLabel($label)
     {
@@ -88,7 +90,7 @@ class CurveCore
     }
 
     /**
-     * @param string $type accepts only 'bars' or 'steps'
+     * @param  string  $type  accepts only 'bars' or 'steps'
      */
     public function setType($type)
     {
@@ -102,8 +104,7 @@ class CurveCore
     }
 
     /**
-     * @param string $x
-     *
+     * @param  string  $x
      * @return float|null return point if found, null else
      */
     public function getPoint($x)

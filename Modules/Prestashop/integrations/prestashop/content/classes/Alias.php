@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,7 +31,9 @@
 class AliasCore extends ObjectModel
 {
     public $alias;
+
     public $search;
+
     public $active = true;
 
     /**
@@ -49,10 +52,10 @@ class AliasCore extends ObjectModel
     /**
      * AliasCore constructor.
      *
-     * @param int|null $id Alias ID
-     * @param string|null $alias Alias
-     * @param string|null $search Search string
-     * @param int|null $idLang Language ID
+     * @param  int|null  $id  Alias ID
+     * @param  string|null  $alias  Alias
+     * @param  string|null  $search  Search string
+     * @param  int|null  $idLang  Language ID
      */
     public function __construct($id = null, $alias = null, $search = null, $idLang = null)
     {
@@ -62,14 +65,14 @@ class AliasCore extends ObjectModel
         if ($id) {
             parent::__construct($id);
         } elseif ($alias && Validate::isValidSearch($alias)) {
-            if (!Alias::isFeatureActive()) {
+            if (! Alias::isFeatureActive()) {
                 $this->alias = trim($alias);
                 $this->search = trim($search);
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
-				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
+				FROM `'._DB_PREFIX_.'alias` a
+				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
                 if ($row) {
                     $this->id = (int) $row['id_alias'];
@@ -123,14 +126,14 @@ class AliasCore extends ObjectModel
      */
     public function getAliases()
     {
-        if (!Alias::isFeatureActive()) {
+        if (! Alias::isFeatureActive()) {
             return '';
         }
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias
-		FROM `' . _DB_PREFIX_ . 'alias` a
-		WHERE `search` = \'' . pSQL($this->search) . '\'');
+		FROM `'._DB_PREFIX_.'alias` a
+		WHERE `search` = \''.pSQL($this->search).'\'');
 
         $aliases = array_map('implode', $aliases);
 
@@ -152,18 +155,17 @@ class AliasCore extends ObjectModel
     /**
      * This method is allow to know if a alias exist for AdminImportController.
      *
-     * @param int $idAlias Alias ID
-     *
+     * @param  int  $idAlias  Alias ID
      * @return bool
      *
      * @since 1.5.6.0
      */
     public static function aliasExists($idAlias)
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('a.`id_alias`');
         $sql->from('alias', 'a');
-        $sql->where('a.`id_alias` = ' . (int) $idAlias);
+        $sql->where('a.`id_alias` = '.(int) $idAlias);
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql, false);
 
         return isset($row['id_alias']);

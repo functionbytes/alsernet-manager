@@ -314,6 +314,8 @@ class WarehouseMapController extends Controller
             ], 404);
         }
 
+        $this->authorize('update', $location);
+
         // Validate input
         $validated = $request->validate([
             'visual_width_m' => 'nullable|numeric|min:0.1|max:20',
@@ -361,6 +363,8 @@ class WarehouseMapController extends Controller
                 'message' => 'Location not found',
             ], 404);
         }
+
+        $this->authorize('update', $location);
 
         // Reset all visual fields to null/defaults
         $location->update([

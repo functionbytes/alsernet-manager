@@ -1,11 +1,11 @@
 <?php
+
 class Country extends CountryCore
 {
     /**
      * Replace letters of zip code format And check this format on the zip code.
      *
-     * @param string $zipCode zip code
-     *
+     * @param  string  $zipCode  zip code
      * @return bool Indicates whether the zip code is correct
      */
     public function checkZipCode($zipCode)
@@ -15,12 +15,12 @@ class Country extends CountryCore
         }
 
         // 20230807 - España Peninsular no puede solapar/validar Baleares, Canarias ni Ceuta y Melilla
-        if (!empty($this->id) && $this->id == _PSALV_COUNTRY_ID_ES_PENINSULA_) {
-            $possibles = ["[1,2,4]NNNN", "0[1-6,8,9]NNN", "3[0-4,6,7,9]NNN", "50NNN"];
+        if (! empty($this->id) && $this->id == _PSALV_COUNTRY_ID_ES_PENINSULA_) {
+            $possibles = ['[1,2,4]NNNN', '0[1-6,8,9]NNN', '3[0-4,6,7,9]NNN', '50NNN'];
             foreach ($possibles as $zipEs) {
-                $zipRegexp = '/^' . $zipEs . '$/ui';
+                $zipRegexp = '/^'.$zipEs.'$/ui';
                 if (preg_match_all('/\[(.*?)\]/', $zipEs, $match) >= 1) {
-                    foreach($match[0] as $accord) {
+                    foreach ($match[0] as $accord) {
                         $zipRegexp = str_replace($accord, $accord, $zipRegexp);
                     }
                 }
@@ -31,14 +31,15 @@ class Country extends CountryCore
                     return true;
                 }
             }
+
             return false;
         }
 
-        $zipRegexp = '/^' . $this->zip_code_format . '$/ui';
+        $zipRegexp = '/^'.$this->zip_code_format.'$/ui';
 
         // 20230807 - Usar RegExpr
         if (preg_match_all('/\[(.*?)\]/', $this->zip_code_format, $match) >= 1) {
-            foreach($match[0] as $accord) {
+            foreach ($match[0] as $accord) {
                 $zipRegexp = str_replace($accord, $accord, $zipRegexp);
             }
         }
@@ -50,4 +51,3 @@ class Country extends CountryCore
         return (bool) preg_match($zipRegexp, $zipCode);
     }
 }
-

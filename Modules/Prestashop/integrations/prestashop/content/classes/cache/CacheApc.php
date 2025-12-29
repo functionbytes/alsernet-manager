@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -39,7 +40,7 @@ class CacheApcCore extends Cache
      */
     public function __construct()
     {
-        if (!extension_loaded('apc') && !extension_loaded('apcu')) {
+        if (! extension_loaded('apc') && ! extension_loaded('apcu')) {
             throw new PrestaShopException('APC cache has been enabled, but the APC or APCu extension is not available');
         }
         $this->apcu = extension_loaded('apcu');
@@ -49,8 +50,7 @@ class CacheApcCore extends Cache
      * Delete one or several data from cache (* joker can be used, but avoid it !)
      * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');.
      *
-     * @param string $key Cache key
-     *
+     * @param  string  $key  Cache key
      * @return bool Whether the key was deleted
      */
     public function delete($key)
@@ -69,7 +69,7 @@ class CacheApcCore extends Cache
                 } else {
                     $key = $entry['info'];
                 }
-                if (preg_match('#^' . $pattern . '$#', $key)) {
+                if (preg_match('#^'.$pattern.'$#', $key)) {
                     $this->_delete($key);
                 }
             }
@@ -104,7 +104,7 @@ class CacheApcCore extends Cache
      */
     protected function _exists($key)
     {
-        if (!function_exists('apc_exists') && !function_exists('apcu_exists')) {
+        if (! function_exists('apc_exists') && ! function_exists('apcu_exists')) {
             // We're dealing with APC < 3.1.4; use this boolean wrapper as a fallback:
             return (bool) apc_fetch($key);
         } else {
@@ -123,9 +123,7 @@ class CacheApcCore extends Cache
     /**
      * @see Cache::_writeKeys()
      */
-    protected function _writeKeys()
-    {
-    }
+    protected function _writeKeys() {}
 
     /**
      * @see Cache::flush()
@@ -138,11 +136,10 @@ class CacheApcCore extends Cache
     /**
      * Store data in the cache.
      *
-     * @param string $key Cache Key
-     * @param mixed $value Value
-     * @param int $ttl Time to live in the cache
-     *                 0 = unlimited
-     *
+     * @param  string  $key  Cache Key
+     * @param  mixed  $value  Value
+     * @param  int  $ttl  Time to live in the cache
+     *                    0 = unlimited
      * @return bool Whether the data was successfully stored
      */
     public function set($key, $value, $ttl = 0)
@@ -153,8 +150,7 @@ class CacheApcCore extends Cache
     /**
      * Retrieve data from the cache.
      *
-     * @param string $key Cache key
-     *
+     * @param  string  $key  Cache key
      * @return mixed Data
      */
     public function get($key)
@@ -165,8 +161,7 @@ class CacheApcCore extends Cache
     /**
      * Check if data has been cached.
      *
-     * @param string $key Cache key
-     *
+     * @param  string  $key  Cache key
      * @return bool Whether the data has been cached
      */
     public function exists($key)

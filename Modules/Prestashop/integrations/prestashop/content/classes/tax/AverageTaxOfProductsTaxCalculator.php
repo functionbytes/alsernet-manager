@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,7 +27,9 @@
 class AverageTaxOfProductsTaxCalculator
 {
     private $id_order;
+
     private $configuration;
+
     private $db;
 
     public $computation_method = 'average_tax_of_products';
@@ -41,11 +44,11 @@ class AverageTaxOfProductsTaxCalculator
     {
         $prefix = $this->configuration->get('_DB_PREFIX_');
 
-        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM ' . $prefix . 'orders o
-                INNER JOIN ' . $prefix . 'order_detail od ON od.id_order = o.id_order
-                INNER JOIN ' . $prefix . 'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
-                INNER JOIN ' . $prefix . 'tax t ON t.id_tax = odt.id_tax
-                WHERE o.id_order = ' . (int) $this->id_order;
+        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM '.$prefix.'orders o
+                INNER JOIN '.$prefix.'order_detail od ON od.id_order = o.id_order
+                INNER JOIN '.$prefix.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
+                INNER JOIN '.$prefix.'tax t ON t.id_tax = odt.id_tax
+                WHERE o.id_order = '.(int) $this->id_order;
 
         return $this->db->select($sql);
     }
@@ -63,7 +66,7 @@ class AverageTaxOfProductsTaxCalculator
         $total_base = 0;
 
         foreach ($this->getProductTaxes() as $row) {
-            if (!array_key_exists($row['id_tax'], $amounts_arr)) {
+            if (! array_key_exists($row['id_tax'], $amounts_arr)) {
                 $amounts_arr[$row['id_tax']] = [
                     'rate' => $row['rate'],
                     'base' => 0,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -35,10 +36,10 @@ class FileLoggerCore extends AbstractLogger
      */
     protected function logMessage($message, $level)
     {
-        if (!is_string($message)) {
+        if (! is_string($message)) {
             $message = print_r($message, true);
         }
-        $formatted_message = '*' . $this->level_value[$level] . '* ' . "\tv" . _PS_VERSION_ . "\t" . date('Y/m/d - H:i:s') . ': ' . $message . "\r\n";
+        $formatted_message = '*'.$this->level_value[$level].'* '."\tv"._PS_VERSION_."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
 
         return (bool) file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
     }
@@ -46,14 +47,14 @@ class FileLoggerCore extends AbstractLogger
     /**
      * Check if the specified filename is writable and set the filename.
      *
-     * @param string $filename
+     * @param  string  $filename
      */
     public function setFilename($filename)
     {
         if (is_writable(dirname($filename))) {
             $this->filename = $filename;
         } else {
-            die('Directory ' . dirname($filename) . ' is not writable');
+            exit('Directory '.dirname($filename).' is not writable');
         }
     }
 
@@ -66,7 +67,7 @@ class FileLoggerCore extends AbstractLogger
     public function getFilename()
     {
         if (empty($this->filename)) {
-            die(Tools::displayError('Filename is empty.'));
+            exit(Tools::displayError('Filename is empty.'));
         }
 
         return $this->filename;

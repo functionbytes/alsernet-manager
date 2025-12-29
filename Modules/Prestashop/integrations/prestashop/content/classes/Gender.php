@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -32,8 +33,11 @@
 class GenderCore extends ObjectModel
 {
     public $id;
+
     public $id_gender;
+
     public $name;
+
     public $type;
 
     /**
@@ -54,9 +58,9 @@ class GenderCore extends ObjectModel
     /**
      * GenderCore constructor.
      *
-     * @param int|null $id
-     * @param int|null $idLang
-     * @param int|null $idShop
+     * @param  int|null  $id
+     * @param  int|null  $idLang
+     * @param  int|null  $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -68,13 +72,12 @@ class GenderCore extends ObjectModel
     /**
      * Get all Genders.
      *
-     * @param int|null $idLang Language ID
-     *
+     * @param  int|null  $idLang  Language ID
      * @return PrestaShopCollection
      */
     public static function getGenders($idLang = null)
     {
-        if (null === $idLang) {
+        if ($idLang === null) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -90,10 +93,10 @@ class GenderCore extends ObjectModel
      */
     public function getImage()
     {
-        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_ . $this->id . '.jpg')) {
-            return _THEME_GENDERS_DIR_ . 'Unknown.jpg';
+        if (! isset($this->id) || empty($this->id) || ! file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg')) {
+            return _THEME_GENDERS_DIR_.'Unknown.jpg';
         }
 
-        return _THEME_GENDERS_DIR_ . $this->id . '.jpg';
+        return _THEME_GENDERS_DIR_.$this->id.'.jpg';
     }
 }

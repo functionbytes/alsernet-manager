@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -52,20 +53,19 @@ class ZoneCore extends ObjectModel
     /**
      * Get all available geographical zones.
      *
-     * @param bool $active
-     * @param bool $activeFirst
-     *
+     * @param  bool  $active
+     * @param  bool  $activeFirst
      * @return array Zones
      */
     public static function getZones($active = false, $activeFirst = false)
     {
-        $cacheId = 'Zone::getZones_' . (bool) $active;
-        if (!Cache::isStored($cacheId)) {
+        $cacheId = 'Zone::getZones_'.(bool) $active;
+        if (! Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT *
-				FROM `' . _DB_PREFIX_ . 'zone`
-				' . ($active ? 'WHERE active = 1' : '') . '
-				ORDER BY ' . ($activeFirst ? '`active` DESC,' : '') . ' `name` ASC
+				FROM `'._DB_PREFIX_.'zone`
+				'.($active ? 'WHERE active = 1' : '').'
+				ORDER BY '.($activeFirst ? '`active` DESC,' : '').' `name` ASC
 			');
             Cache::store($cacheId, $result);
 
@@ -78,16 +78,15 @@ class ZoneCore extends ObjectModel
     /**
      * Get a zone ID from its default language name.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return int id_zone
      */
     public static function getIdByName($name)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`
-			FROM `' . _DB_PREFIX_ . 'zone`
-			WHERE `name` = \'' . pSQL($name) . '\'
+			FROM `'._DB_PREFIX_.'zone`
+			WHERE `name` = \''.pSQL($name).'\'
 		');
     }
 
@@ -100,12 +99,12 @@ class ZoneCore extends ObjectModel
     {
         if (parent::delete()) {
             // Delete regarding delivery preferences
-            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = ' . (int) $this->id);
-            $result &= Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
+            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int) $this->id);
+            $result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int) $this->id);
 
             // Update Country & state zone with 0
-            $result &= Db::getInstance()->update('country', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
-            $result &= Db::getInstance()->update('state', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
+            $result &= Db::getInstance()->update('country', ['id_zone' => 0], 'id_zone = '.(int) $this->id);
+            $result &= Db::getInstance()->update('state', ['id_zone' => 0], 'id_zone = '.(int) $this->id);
 
             return $result;
         }

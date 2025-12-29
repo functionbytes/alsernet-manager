@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -35,9 +36,8 @@ class AddressValidatorCore
      * Validates cart addresses
      * Returns an array of invalid address IDs.
      *
-     * @param Cart $cart
-     *                   The cart holding the addresses to be inspected
-     *
+     * @param  Cart  $cart
+     *                      The cart holding the addresses to be inspected
      * @return array
      *               The invalid address ids. Empty if everything is ok.
      */
@@ -66,11 +66,10 @@ class AddressValidatorCore
      * Validates given customer's addresses
      * Returns an array of invalid address IDs.
      *
-     * @param Customer $customer
-     *                           The customer holding the addresses to be inspected
-     * @param Language $language
-     *                           The language in which addresses should be validated
-     *
+     * @param  Customer  $customer
+     *                              The customer holding the addresses to be inspected
+     * @param  Language  $language
+     *                              The language in which addresses should be validated
      * @return array The invalid address ids. Empty if everything is ok.
      *               The invalid address ids. Empty if everything is ok.
      */

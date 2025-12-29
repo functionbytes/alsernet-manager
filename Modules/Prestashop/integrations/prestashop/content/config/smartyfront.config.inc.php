@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,8 +26,8 @@
  */
 global $smarty;
 
-$template_dirs = array(_PS_THEME_DIR_.'templates');
-$plugin_dirs = array(_PS_THEME_DIR_.'plugins');
+$template_dirs = [_PS_THEME_DIR_.'templates'];
+$plugin_dirs = [_PS_THEME_DIR_.'plugins'];
 if (_PS_PARENT_THEME_DIR_) {
     $template_dirs[] = _PS_PARENT_THEME_DIR_.'templates';
     $plugin_dirs[] = _PS_PARENT_THEME_DIR_.'plugins';
@@ -35,14 +36,14 @@ if (_PS_PARENT_THEME_DIR_) {
 $smarty->setTemplateDir($template_dirs);
 $smarty->addPluginsDir($plugin_dirs);
 
-$module_resources = array('theme' => _PS_THEME_DIR_.'modules/');
+$module_resources = ['theme' => _PS_THEME_DIR_.'modules/'];
 if (_PS_PARENT_THEME_DIR_) {
     $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'modules/';
 }
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
 
-$parent_resources = array();
+$parent_resources = [];
 if (_PS_PARENT_THEME_DIR_) {
     $parent_resources['parent'] = _PS_PARENT_THEME_DIR_.'templates/';
 }
@@ -54,16 +55,16 @@ smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
 smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
 if (Module::isEnabled('pagecache')) {
-	require_once _PS_MODULE_DIR_ . 'pagecache/pagecache.php';
-	smartyRegisterFunction($smarty, 'block', 'widget_block', array('PageCache', 'smartyWidgetBlockPageCache'));
-	$smarty->registerFilter('pre', array('PageCache', 'smartyWidgetBlockPageCachePrefilter'));
+    require_once _PS_MODULE_DIR_.'pagecache/pagecache.php';
+    smartyRegisterFunction($smarty, 'block', 'widget_block', ['PageCache', 'smartyWidgetBlockPageCache']);
+    $smarty->registerFilter('pre', ['PageCache', 'smartyWidgetBlockPageCachePrefilter']);
 } else {
-	smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+    smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 }
 
 function withWidget($params, callable $cb)
 {
-    if (!isset($params['name'])) {
+    if (! isset($params['name'])) {
         throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
     }
 
@@ -72,7 +73,7 @@ function withWidget($params, callable $cb)
 
     $moduleInstance = Module::getInstanceByName($moduleName);
 
-    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
+    if (! $moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
         throw new Exception(sprintf(
             'Module `%1$s` is not a WidgetInterface.',
             $moduleName
@@ -125,9 +126,9 @@ function smartyFormField($params, $smarty)
 
 function smartyWidgetBlock($params, $content, $smarty)
 {
-    static $backedUpVariablesStack = array();
+    static $backedUpVariablesStack = [];
 
-    if (null === $content) {
+    if ($content === null) {
         // Function is called twice: at the opening of the block
         // and when it is closed.
         // This is the first call.
@@ -135,7 +136,7 @@ function smartyWidgetBlock($params, $content, $smarty)
             // Assign widget variables and backup all the variables they override
             $currentVariables = $smarty->getTemplateVars();
             $scopedVariables = $widget->getWidgetVariables(isset($params['hook']) ? $params['hook'] : null, $params);
-            $backedUpVariables = array();
+            $backedUpVariables = [];
             foreach ($scopedVariables as $key => $value) {
                 if (array_key_exists($key, $currentVariables)) {
                     $backedUpVariables[$key] = $currentVariables[$key];
@@ -144,18 +145,20 @@ function smartyWidgetBlock($params, $content, $smarty)
             }
             $backedUpVariablesStack[] = $backedUpVariables;
         });
+
         // We don't display anything since the template is not rendered yet.
         return '';
     } else {
         // Function gets called for the closing tag of the block.
         // We restore the backed up variables in order not to override
         // template variables.
-        if (!empty($backedUpVariablesStack)) {
+        if (! empty($backedUpVariablesStack)) {
             $backedUpVariables = array_pop($backedUpVariablesStack);
             foreach ($backedUpVariables as $key => $value) {
                 $smarty->assign($key, $value);
             }
         }
+
         // This time content is filled with rendered template, so return it.
         return $content;
     }
@@ -165,23 +168,23 @@ function smartyTranslate($params, $smarty)
 {
     global $_LANG;
 
-    if (!isset($params['js'])) {
+    if (! isset($params['js'])) {
         $params['js'] = false;
     }
-    if (!isset($params['pdf'])) {
+    if (! isset($params['pdf'])) {
         $params['pdf'] = false;
     }
-    if (!isset($params['mod'])) {
+    if (! isset($params['mod'])) {
         $params['mod'] = false;
     }
-    if (!isset($params['sprintf'])) {
-        $params['sprintf'] = array();
+    if (! isset($params['sprintf'])) {
+        $params['sprintf'] = [];
     }
-    if (!isset($params['d'])) {
+    if (! isset($params['d'])) {
         $params['d'] = null;
     }
 
-    if (!empty($params['d'])) {
+    if (! empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -198,7 +201,7 @@ function smartyTranslate($params, $smarty)
             }
         }
 
-        if (!is_array($params['sprintf'])) {
+        if (! is_array($params['sprintf'])) {
             $backTrace = debug_backtrace();
 
             $errorMessage = sprintf(
@@ -223,7 +226,7 @@ function smartyTranslate($params, $smarty)
 
     // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
     $filename = $smarty->template_resource;
-    if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
+    if (! isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
         $filename = $smarty->source->name;
     }
 
@@ -263,7 +266,7 @@ function smartyTranslate($params, $smarty)
         $msg = $params['s'];
     }
 
-    if ($msg != $params['s'] && !$params['js']) {
+    if ($msg != $params['s'] && ! $params['js']) {
         $msg = stripslashes($msg);
     } elseif ($params['js']) {
         $msg = addslashes($msg);

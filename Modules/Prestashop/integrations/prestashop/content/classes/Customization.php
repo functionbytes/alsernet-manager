@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -114,17 +115,16 @@ class CustomizationCore extends ObjectModel
     /**
      * Get returned Customizations.
      *
-     * @param int $idOrder Order ID
-     *
+     * @param  int  $idOrder  Order ID
      * @return array|bool
      */
     public static function getReturnedCustomizations($idOrder)
     {
         if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
-			FROM `' . _DB_PREFIX_ . 'order_return` ore
-			INNER JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
-			WHERE ore.`id_order` = ' . (int) ($idOrder) . ' AND ord.`id_customization` != 0')) === false) {
+			FROM `'._DB_PREFIX_.'order_return` ore
+			INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
+			WHERE ore.`id_order` = '.(int) ($idOrder).' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
         $customizations = [];
@@ -138,14 +138,13 @@ class CustomizationCore extends ObjectModel
     /**
      * Get ordered Customizations.
      *
-     * @param int $idCart Cart ID
-     *
+     * @param  int  $idCart  Cart ID
      * @return array|bool Ordered Customizations
      *                    `false` if not found
      */
     public static function getOrderedCustomizations($idCart)
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_cart` = ' . (int) ($idCart))) {
+        if (! $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int) ($idCart))) {
             return false;
         }
         $customizations = [];
@@ -159,55 +158,52 @@ class CustomizationCore extends ObjectModel
     /**
      * Get price of Customization.
      *
-     * @param int $idCustomization Customization ID
-     *
+     * @param  int  $idCustomization  Customization ID
      * @return float|int Price of customization
      */
     public static function getCustomizationPrice($idCustomization)
     {
-        if (!(int) $idCustomization) {
+        if (! (int) $idCustomization) {
             return 0;
         }
 
         return (float) Db::getInstance()->getValue(
             '
-            SELECT SUM(`price`) FROM `' . _DB_PREFIX_ . 'customized_data`
-            WHERE `id_customization` = ' . (int) $idCustomization
+            SELECT SUM(`price`) FROM `'._DB_PREFIX_.'customized_data`
+            WHERE `id_customization` = '.(int) $idCustomization
         );
     }
 
     /**
      * Get weight of Customization.
      *
-     * @param int $idCustomization Customization ID
-     *
+     * @param  int  $idCustomization  Customization ID
      * @return float|int Weight
      */
     public static function getCustomizationWeight($idCustomization)
     {
-        if (!(int) $idCustomization) {
+        if (! (int) $idCustomization) {
             return 0;
         }
 
         return (float) Db::getInstance()->getValue(
             '
-            SELECT SUM(`weight`) FROM `' . _DB_PREFIX_ . 'customized_data`
-            WHERE `id_customization` = ' . (int) $idCustomization
+            SELECT SUM(`weight`) FROM `'._DB_PREFIX_.'customized_data`
+            WHERE `id_customization` = '.(int) $idCustomization
         );
     }
 
     /**
      * Count Customization quantity by Product.
      *
-     * @param array $customizations Customizations
-     *
+     * @param  array  $customizations  Customizations
      * @return array Customization quantities by Product
      */
     public static function countCustomizationQuantityByProduct($customizations)
     {
         $total = [];
         foreach ($customizations as $customization) {
-            $total[(int) $customization['id_order_detail']] = !isset($total[(int) $customization['id_order_detail']]) ? (int) $customization['quantity'] : $total[(int) $customization['id_order_detail']] + (int) $customization['quantity'];
+            $total[(int) $customization['id_order_detail']] = ! isset($total[(int) $customization['id_order_detail']]) ? (int) $customization['quantity'] : $total[(int) $customization['id_order_detail']] + (int) $customization['quantity'];
         }
 
         return $total;
@@ -216,27 +212,26 @@ class CustomizationCore extends ObjectModel
     /**
      * Get label.
      *
-     * @param int $idCustomization Customization ID
-     * @param int $idLang Language IOD
-     * @param int|null $idShop Shop ID
-     *
+     * @param  int  $idCustomization  Customization ID
+     * @param  int  $idLang  Language IOD
+     * @param  int|null  $idShop  Shop ID
      * @return bool|false|string|null
      */
     public static function getLabel($idCustomization, $idLang, $idShop = null)
     {
-        if (!(int) $idCustomization || !(int) $idLang) {
+        if (! (int) $idCustomization || ! (int) $idLang) {
             return false;
         }
-        if (Shop::isFeatureActive() && !(int) $idShop) {
+        if (Shop::isFeatureActive() && ! (int) $idShop) {
             $idShop = (int) Context::getContext()->shop->id;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
 		SELECT `name`
-		FROM `' . _DB_PREFIX_ . 'customization_field_lang`
-		WHERE `id_customization_field` = ' . (int) $idCustomization . ((int) $idShop ? ' AND `id_shop` = ' . (int) $idShop : '') . '
-		AND `id_lang` = ' . (int) $idLang
+		FROM `'._DB_PREFIX_.'customization_field_lang`
+		WHERE `id_customization_field` = '.(int) $idCustomization.((int) $idShop ? ' AND `id_shop` = '.(int) $idShop : '').'
+		AND `id_lang` = '.(int) $idLang
         );
 
         return $result;
@@ -245,8 +240,7 @@ class CustomizationCore extends ObjectModel
     /**
      * Retrieve quantities from IDs.
      *
-     * @param array $idsCustomizations Customization IDs
-     *
+     * @param  array  $idsCustomizations  Customization IDs
      * @return array Quantities
      */
     public static function retrieveQuantitiesFromIds($idsCustomizations)
@@ -261,11 +255,11 @@ class CustomizationCore extends ObjectModel
             $inValues .= (int) $idCustomization;
         }
 
-        if (!empty($inValues)) {
+        if (! empty($inValues)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
-							 FROM `' . _DB_PREFIX_ . 'customization`
-							 WHERE `id_customization` IN (' . $inValues . ')'
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+							 FROM `'._DB_PREFIX_.'customization`
+							 WHERE `id_customization` IN ('.$inValues.')'
             );
 
             foreach ($results as $row) {
@@ -279,8 +273,7 @@ class CustomizationCore extends ObjectModel
     /**
      * Count quantity by Cart.
      *
-     * @param int $idCart Cart ID
-     *
+     * @param  int  $idCart  Cart ID
      * @return array
      */
     public static function countQuantityByCart($idCart)
@@ -289,8 +282,8 @@ class CustomizationCore extends ObjectModel
 
         $results = Db::getInstance()->executeS('
 			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
-			FROM `' . _DB_PREFIX_ . 'customization`
-			WHERE `id_cart` = ' . (int) $idCart . '
+			FROM `'._DB_PREFIX_.'customization`
+			WHERE `id_cart` = '.(int) $idCart.'
 			GROUP BY `id_cart`, `id_product`, `id_product_attribute`
 		');
 
@@ -318,16 +311,13 @@ class CustomizationCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $hasActiveColumn
-     *
      * @return bool
      */
     public static function isCurrentlyUsed($table = null, $hasActiveColumn = false)
     {
         return (bool) Db::getInstance()->getValue('
 			SELECT `id_customization_field`
-			FROM `' . _DB_PREFIX_ . 'customization_field`
+			FROM `'._DB_PREFIX_.'customization_field`
 		');
     }
 
@@ -339,13 +329,13 @@ class CustomizationCore extends ObjectModel
      */
     public function getWsCustomizedDataTextFields()
     {
-        if (!$results = Db::getInstance()->executeS('
+        if (! $results = Db::getInstance()->executeS('
 			SELECT id_customization_field, value
-			FROM `' . _DB_PREFIX_ . 'customization_field` cf
-			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
-			WHERE `id_product` = ' . (int) $this->id_product . '
-			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = ' . (int) Product::CUSTOMIZE_TEXTFIELD)) {
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
+			WHERE `id_product` = '.(int) $this->id_product.'
+			AND id_customization = '.(int) $this->id.'
+			AND cf.type = '.(int) Product::CUSTOMIZE_TEXTFIELD)) {
             return [];
         }
 
@@ -360,13 +350,13 @@ class CustomizationCore extends ObjectModel
      */
     public function getWsCustomizedDataImages()
     {
-        if (!$results = Db::getInstance()->executeS('
+        if (! $results = Db::getInstance()->executeS('
 			SELECT id_customization_field, value
-			FROM `' . _DB_PREFIX_ . 'customization_field` cf
-			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
-			WHERE `id_product` = ' . (int) $this->id_product . '
-			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = ' . (int) Product::CUSTOMIZE_FILE)) {
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
+			WHERE `id_product` = '.(int) $this->id_product.'
+			AND id_customization = '.(int) $this->id.'
+			AND cf.type = '.(int) Product::CUSTOMIZE_FILE)) {
             return [];
         }
 
@@ -377,27 +367,26 @@ class CustomizationCore extends ObjectModel
      * Set customized text fields
      * (for webservice).
      *
-     * @param array $values
-     *
+     * @param  array  $values
      * @return bool
      */
     public function setWsCustomizedDataTextFields($values)
     {
         $cart = new Cart($this->id_cart);
-        if (!Validate::isLoadedObject($cart)) {
+        if (! Validate::isLoadedObject($cart)) {
             WebserviceRequest::getInstance()->setError(500, $this->trans('Could not load cart id=%s', [$this->id_cart], 'Admin.Notifications.Error'), 137);
 
             return false;
         }
         Db::getInstance()->execute('
-		DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
-		WHERE id_customization = ' . (int) $this->id . '
-		AND type = ' . (int) Product::CUSTOMIZE_TEXTFIELD);
+		DELETE FROM `'._DB_PREFIX_.'customized_data`
+		WHERE id_customization = '.(int) $this->id.'
+		AND type = '.(int) Product::CUSTOMIZE_TEXTFIELD);
         foreach ($values as $value) {
-            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-				VALUES (' . (int) $this->id . ', ' . (int) Product::CUSTOMIZE_TEXTFIELD . ', ' . (int) $value['id_customization_field'] . ', \'' . pSQL($value['value']) . '\')';
+            $query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
+				VALUES ('.(int) $this->id.', '.(int) Product::CUSTOMIZE_TEXTFIELD.', '.(int) $value['id_customization_field'].', \''.pSQL($value['value']).'\')';
 
-            if (!Db::getInstance()->execute($query)) {
+            if (! Db::getInstance()->execute($query)) {
                 return false;
             }
         }
@@ -408,20 +397,19 @@ class CustomizationCore extends ObjectModel
     /**
      * Delete the current context shops langs.
      *
-     * @param int $idCustomizationField
-     * @param int[] $shopList
-     *
+     * @param  int  $idCustomizationField
+     * @param  int[]  $shopList
      * @return bool
      *
      * @throws PrestaShopDatabaseException
      */
     public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
     {
-        $return = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang`
-                WHERE `id_customization_field` = ' . (int) $idCustomizationField . '
-                AND `id_shop` IN (' . implode(',', $shopList) . ')');
+        $return = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
+                WHERE `id_customization_field` = '.(int) $idCustomizationField.'
+                AND `id_shop` IN ('.implode(',', $shopList).')');
 
-        if (!$return) {
+        if (! $return) {
             throw new PrestaShopDatabaseException('An error occurred while deletion the customization fields lang');
         }
 

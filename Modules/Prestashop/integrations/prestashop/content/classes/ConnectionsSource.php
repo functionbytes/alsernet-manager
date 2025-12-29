@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,10 +31,15 @@
 class ConnectionsSourceCore extends ObjectModel
 {
     public $id_connections;
+
     public $http_referer;
+
     public $request_uri;
+
     public $keywords;
+
     public $date_add;
+
     public static $uri_max_size = 255;
 
     /**
@@ -54,9 +60,8 @@ class ConnectionsSourceCore extends ObjectModel
     /**
      * Adds current ConnectionsSource as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
-     *
+     * @param  bool  $autoDate  Automatically set `date_upd` and `date_add` columns
+     * @param  bool  $nullValues  Whether we want to use NULL values instead of empty quotes values
      * @return bool Indicates whether the ConnectionsSource has been successfully added
      *
      * @throws PrestaShopDatabaseException
@@ -71,37 +76,37 @@ class ConnectionsSourceCore extends ObjectModel
         return $result;
     }
 
-    public static function logHttpReferer(Cookie $cookie = null)
+    public static function logHttpReferer(?Cookie $cookie = null)
     {
-        if (!$cookie) {
+        if (! $cookie) {
             $cookie = Context::getContext()->cookie;
         }
-        if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections)) {
+        if (! isset($cookie->id_connections) || ! Validate::isUnsignedId($cookie->id_connections)) {
             return false;
         }
 
         // If the referrer is not correct, we drop the connection
-        if (isset($_SERVER['HTTP_REFERER']) && !Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER'])) {
+        if (isset($_SERVER['HTTP_REFERER']) && ! Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER'])) {
             return false;
         }
         // If there is no referrer and we do not want to save direct traffic (as opposed to referral traffic), we drop the connection
-        if (!isset($_SERVER['HTTP_REFERER']) && !Configuration::get('TRACKING_DIRECT_TRAFFIC')) {
+        if (! isset($_SERVER['HTTP_REFERER']) && ! Configuration::get('TRACKING_DIRECT_TRAFFIC')) {
             return false;
         }
 
-        $source = new ConnectionsSource();
+        $source = new ConnectionsSource;
 
         // There are a few more operations if there is a referrer
         if (isset($_SERVER['HTTP_REFERER'])) {
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
-            $parsedHost = parse_url(Tools::getProtocol() . Tools::getHttpHost(false, false) . __PS_BASE_URI__);
+            $parsedHost = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
 
-            if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsedHost['path']))) {
+            if (! isset($parsed['host']) || (! isset($parsed['path']) || ! isset($parsedHost['path']))) {
                 return false;
             }
 
-            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsedHost['path'], strlen(__PS_BASE_URI__))) {
+            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && ! strncmp($parsed['path'], $parsedHost['path'], strlen(__PS_BASE_URI__))) {
                 return false;
             }
 
@@ -118,7 +123,7 @@ class ConnectionsSourceCore extends ObjectModel
             $source->request_uri .= $_SERVER['REDIRECT_URL'];
         }
 
-        if (!Validate::isUrl($source->request_uri)) {
+        if (! Validate::isUrl($source->request_uri)) {
             $source->request_uri = '';
         }
         $source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
@@ -129,19 +134,18 @@ class ConnectionsSourceCore extends ObjectModel
     /**
      * Get Order sources.
      *
-     * @param int $idOrder Order ID
-     *
+     * @param  int  $idOrder  Order ID
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getOrderSources($idOrder)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
-		FROM ' . _DB_PREFIX_ . 'orders o
-		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
-		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
-		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = ' . (int) ($idOrder) . '
+		FROM '._DB_PREFIX_.'orders o
+		INNER JOIN '._DB_PREFIX_.'guest g ON g.id_customer = o.id_customer
+		INNER JOIN '._DB_PREFIX_.'connections co  ON co.id_guest = g.id_guest
+		INNER JOIN '._DB_PREFIX_.'connections_source cos ON cos.id_connections = co.id_connections
+		WHERE id_order = '.(int) ($idOrder).'
 		ORDER BY cos.date_add DESC');
     }
 }

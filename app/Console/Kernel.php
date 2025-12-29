@@ -3,10 +3,10 @@
 namespace App\Console;
 
 use App\Events\CronJobExecuted;
-use App\Models\Campaign\Automation\Automation;
-use App\Models\Campaign\Campaign;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Modules\Campaign\Entities\Automation\Automation;
+use Modules\Campaign\Entities\Campaign;
 
 class Kernel extends ConsoleKernel
 {
