@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('app.settings', fn () => $this->getSettings());
+        $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library\HookManager);
     }
 
     public function boot(): void

@@ -3,7 +3,8 @@
 use App\Http\Controllers\Managers\Users\UsersController;
 use App\Http\Controllers\Shops\DashboardController;
 use App\Http\Controllers\Shops\Settings\SettingsController;
-use App\Http\Controllers\Shops\Subscribers\SubscribersController;
+// @deprecated Subscriber controller moved to Modules/Subscriber
+// use App\Http\Controllers\Shops\Subscribers\SubscribersController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('shop')->middleware(['auth', 'check.roles.permissions:shop'])->group(function () {
@@ -31,6 +32,9 @@ Route::prefix('shop')->middleware(['auth', 'check.roles.permissions:shop'])->gro
         Route::post('/update', [SettingsController::class, 'update'])->name('shop.settings.update');
     });
 
+    // @deprecated Subscriber routes are now handled by Modules\Subscriber
+    // See: Modules/Subscriber/routes/shops.php
+    /*
     Route::group(['prefix' => 'subscribers'], function () {
         Route::get('/', [SubscribersController::class, 'index'])->name('shop.subscribers');
         Route::get('/create', [SubscribersController::class, 'create'])->name('shop.subscribers.create');
@@ -42,5 +46,6 @@ Route::prefix('shop')->middleware(['auth', 'check.roles.permissions:shop'])->gro
         Route::get('/list/{uid}', [SubscribersController::class, 'list'])->name('shop.subscribers.list');
         Route::get('/logs/{slack}', [SubscribersController::class, 'logs'])->name('shop.subscribers.logs');
     });
+    */
 
 });

@@ -42,6 +42,6 @@ class CampaignFieldOption extends Model
 
     public function field()
     {
-        return $this->belongsTo(CampaignField::class);
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignField');
     }
 }

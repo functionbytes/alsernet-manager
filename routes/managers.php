@@ -245,6 +245,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/categories', [LangsController::class, 'getCategories'])->name('manager.langs.categories');
     });
 
+    // @deprecated Subscriber routes are now handled by Modules\Subscriber
+    // See: Modules/Subscriber/routes/managers.php
+    /*
     Route::group(['prefix' => 'subscribers'], function () {
 
         Route::get('/', [SubscribersController::class, 'index'])->name('manager.subscribers');
@@ -289,6 +292,7 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/conditions/destroy/{uid}', [SubscribersConditionsController::class, 'destroy'])->name('manager.subscribers.conditions.destroy');
 
     });
+    */
 
     Route::group(['prefix' => 'settings'], function () {
 
