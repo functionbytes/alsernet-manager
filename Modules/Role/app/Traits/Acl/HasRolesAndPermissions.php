@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Acl;
+namespace Modules\Role\Traits\Acl;
 
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;

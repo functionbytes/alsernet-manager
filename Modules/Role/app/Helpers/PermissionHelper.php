@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace Modules\Role\Helpers;
 
 use Illuminate\Support\Facades\Auth;
 

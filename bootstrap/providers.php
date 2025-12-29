@@ -13,4 +13,5 @@ return [
     Modules\Webhook\Providers\WebhookServiceProvider::class,
     Modules\Supplier\Providers\SupplierServiceProvider::class,
     Modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
+    Modules\Role\Providers\RoleServiceProvider::class,
 ];

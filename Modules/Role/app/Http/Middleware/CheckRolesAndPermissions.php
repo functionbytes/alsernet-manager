@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Modules\Role\Http\Middleware;
 
 use App\Models\Role\RoleMapping;
 use Closure;

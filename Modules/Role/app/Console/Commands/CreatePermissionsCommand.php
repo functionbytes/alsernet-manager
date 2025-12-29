@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Role\Console\Commands;
 
 use App\Models\AppRoute;
 use Illuminate\Console\Command;

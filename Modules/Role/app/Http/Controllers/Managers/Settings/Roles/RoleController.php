@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Settings\Roles;
+namespace Modules\Role\Http\Controllers\Managers\Settings\Roles;
 
 use App\Http\Controllers\Managers\BaseManagerController;
-use App\Http\Requests\Systems\RoleRequest;
-use App\Models\Role\Role;
+use Modules\Role\Http\Requests\Systems\RoleRequest;
+use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
