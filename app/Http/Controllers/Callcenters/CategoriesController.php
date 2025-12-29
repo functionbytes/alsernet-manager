@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
-use App\Mail\mailmailablesend;
+use Modules\Mail\Mail\mailmailablesend;
 use App\Models\Apptitle;
 use App\Models\Footertext;
 use App\Models\Groups;

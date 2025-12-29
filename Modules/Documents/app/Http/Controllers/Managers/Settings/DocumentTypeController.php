@@ -4,13 +4,13 @@ namespace Modules\Documents\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
-use App\Models\Validation\ValidatorGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Documents\Entities\DocumentRequirement;
 use Modules\Documents\Entities\DocumentRequirementTranslation;
 use Modules\Documents\Entities\DocumentType;
 use Modules\Documents\Entities\DocumentValidationCondition;
+use Modules\Documents\Entities\DocumentValidatorGroup;
 
 /**
  * DocumentTypeController
@@ -44,7 +44,7 @@ class DocumentTypeController extends Controller
     public function create()
     {
         $langs = Lang::all();
-        $validatorGroups = ValidatorGroup::active()->orderBy('sort_order')->get();
+        $validatorGroups = DocumentValidatorGroup::active()->orderBy('sort_order')->get();
         $validationConditions = DocumentValidationCondition::active()->ordered()->get();
 
         return view('documents::managers.settings.types.create', compact('langs', 'validatorGroups', 'validationConditions'));

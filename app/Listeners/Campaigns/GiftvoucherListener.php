@@ -3,7 +3,7 @@
 namespace App\Listeners\Campaigns;
 
 use App\Events\Campaigns\GiftvoucherCreated;
-use App\Mail\Campaigns\Giftvoucher\GiftvoucherMail;
+use Modules\Mail\Mail\Campaigns\Giftvoucher\GiftvoucherMail;
 use App\Traits\PreventsDuplicateEventExecution;
 use Illuminate\Support\Facades\Mail;
 

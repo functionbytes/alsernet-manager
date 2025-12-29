@@ -3,8 +3,8 @@
 namespace Modules\Documents\Services;
 
 use App\Models\User;
-use App\Models\Validation\ValidatorGroup;
 use Illuminate\Support\Collection;
+use Modules\Documents\Entities\DocumentValidatorGroup;
 
 /**
  * PermissionService
@@ -84,8 +84,8 @@ class PermissionService
             ];
         }
 
-        // Obtener configuración base de ValidatorGroup
-        $groupConfig = ValidatorGroup::getEmailConfigurationsForUser($user);
+        // Obtener configuración base de DocumentValidatorGroup
+        $groupConfig = DocumentValidatorGroup::getEmailConfigurationsForUser($user);
 
         // Filtrar por permisos Spatie
         $finalConfig = [];
@@ -101,11 +101,11 @@ class PermissionService
     }
 
     /**
-     * Verificar si usuario está en un ValidatorGroup activo
+     * Verificar si usuario está en un DocumentValidatorGroup activo
      */
     public function isInValidatorGroup(User $user): bool
     {
-        return ValidatorGroup::query()
+        return DocumentValidatorGroup::query()
             ->whereHas('users', fn ($q) => $q->where('users.id', $user->id))
             ->where('is_active', true)
             ->exists();
@@ -116,7 +116,7 @@ class PermissionService
      */
     public function getUserValidatorGroups(User $user): Collection
     {
-        return ValidatorGroup::query()
+        return DocumentValidatorGroup::query()
             ->whereHas('users', fn ($q) => $q->where('users.id', $user->id))
             ->where('is_active', true)
             ->get();
@@ -155,11 +155,11 @@ class PermissionService
     }
 
     /**
-     * Verificar acceso a acción de email según ValidatorGroup
+     * Verificar acceso a acción de email según DocumentValidatorGroup
      */
     private function hasEmailActionAccess(User $user, string $action): bool
     {
-        $groupConfig = ValidatorGroup::getEmailConfigurationsForUser($user);
+        $groupConfig = DocumentValidatorGroup::getEmailConfigurationsForUser($user);
 
         // Mapear acción a configuración
         $configKey = match ($action) {

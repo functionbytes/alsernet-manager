@@ -5,22 +5,6 @@ namespace Modules\Documents\Entities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property int $id
- * @property string $document_type
- * @property array $required_documents
- * @property bool $enable_initial_request
- * @property string|null $initial_request_message
- * @property bool $enable_reminder
- * @property int $reminder_days
- * @property string|null $reminder_message
- * @property bool $enable_missing_docs
- * @property string|null $missing_docs_message
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- *
- * @mixin \Eloquent
- */
 class DocumentsConfiguration extends Model
 {
     use HasFactory;

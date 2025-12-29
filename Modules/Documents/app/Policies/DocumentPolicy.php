@@ -211,7 +211,7 @@ class DocumentPolicy
             return false;
         }
 
-        $validatorGroup = \App\Models\Validation\ValidatorGroup::findByKey($currentGroup);
+        $validatorGroup = \Modules\Documents\Validations\\ValidatorGroup::findByKey($currentGroup);
         if (! $validatorGroup) {
             return false;
         }

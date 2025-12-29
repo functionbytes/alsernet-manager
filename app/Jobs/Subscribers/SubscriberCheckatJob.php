@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Subscribers;
 
-use App\Mail\Subscribers\SubscriberCheckMail;
-use App\Models\Mail;
+use Modules\Mail\Mail\Subscribers\SubscriberCheckMail;
+use Modules\Mail\Models;
 use App\Models\Subscriber\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

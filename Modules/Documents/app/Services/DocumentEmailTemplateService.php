@@ -2,7 +2,7 @@
 
 namespace Modules\Documents\Services;
 
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use App\Models\Setting;
 use App\Services\Mails\MailTemplateRendererService;
 use Illuminate\Support\Facades\Mail;

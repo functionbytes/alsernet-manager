@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Shops;
 
 use App\Http\Controllers\Controller;
-use App\Mail\mailmailablesend;
+use Modules\Mail\Mail\mailmailablesend;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketCategorie;
 use App\Models\Ticket\TicketHistory;

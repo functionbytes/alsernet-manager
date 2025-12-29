@@ -5,22 +5,10 @@ namespace Modules\Documents\Entities;
 use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * DocumentValidationCondition
- *
- * Centralized configuration for validation conditions.
- * Supports three types of conditions:
- * - SALE_TYPE_MATCH: Maps to sale_types from document_product_blockades
- * - MODEL_FIELD: Validates against model field values
- * - CUSTOM_EXPRESSION: Custom validation logic/expressions
- *
- * Example:
- * - type: sale_type_match, key: 'is_weapon', sale_types: ['escopeta', 'rifle', 'corta']
- * - type: model_field, key: 'is_national', model_field: 'customer.country_id', expected_value: [1]
- * - type: custom_expression, key: 'is_priority', validation_expression: 'order_total > 1000'
- */
 class DocumentValidationCondition extends Model
 {
+    protected $table = 'document_validation_conditions';
+
     use HasUid;
 
     // Condition Types

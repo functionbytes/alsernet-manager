@@ -3,7 +3,7 @@
 namespace App\Library\Traits;
 
 use App\Models\User;
-use App\Models\Validation\ValidatorGroup;
+use app\Validation\ValidatorGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -474,7 +474,7 @@ trait HasValidationWorkflow
      */
     public function validationHistory()
     {
-        return $this->morphMany(\App\Models\Validation\ValidationHistory::class, 'validatable');
+        return $this->morphMany(\app\Validation\ValidationHistory::class, 'validatable');
     }
 
     /**

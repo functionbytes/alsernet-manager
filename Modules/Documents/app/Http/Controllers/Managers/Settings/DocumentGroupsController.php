@@ -4,11 +4,9 @@ namespace Modules\Documents\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Validation\ValidatorGroup;
-use App\Models\Validation\ValidatorGroupConfiguration;
-use App\Models\Validation\ValidatorGroupConfigurationHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Documents\Entities\DocumentValidatorGroup;
 
 class DocumentGroupsController extends Controller
 {
@@ -17,7 +15,7 @@ class DocumentGroupsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ValidatorGroup::query();
+        $query = DocumentValidatorGroup::query();
 
         // Search filter
         if ($request->filled('search')) {
@@ -32,11 +30,14 @@ class DocumentGroupsController extends Controller
 
         // Calculate statistics
         $stats = [
-            'total' => ValidatorGroup::count(),
-            'active' => ValidatorGroup::where('is_active', true)->count(),
-            'inactive' => ValidatorGroup::where('is_active', false)->count(),
-            'default' => ValidatorGroup::where('is_default', true)->count(),
-            'total_members' => \DB::table('validator_group_user')->distinct('user_id')->count('user_id'),
+            'total' => DocumentValidatorGroup::count(),
+            'active' => DocumentValidatorGroup::where('is_active', true)->count(),
+            'inactive' => DocumentValidatorGroup::where('is_active', false)->count(),
+            'default' => DocumentValidatorGroup::where('is_default', true)->count(),
+            'total_members' => DocumentValidatorGroup::query()
+                ->join('document_validator_group_user', 'document_validator_groups.id', '=', 'document_validator_group_user.validator_group_id')
+                ->distinct('document_validator_group_user.user_id')
+                ->count('document_validator_group_user.user_id'),
         ];
 
         return view('documents::managers.settings.groups.index', [
@@ -84,7 +85,7 @@ class DocumentGroupsController extends Controller
         $validated['is_default'] = $request->boolean('is_default');
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        $group = ValidatorGroup::create($validated);
+        $group = DocumentValidatorGroup::create($validated);
 
         // Attach users with priorities
         if ($request->filled('users')) {
@@ -104,7 +105,7 @@ class DocumentGroupsController extends Controller
     /**
      * Show the form for editing a group.
      */
-    public function edit(ValidatorGroup $group)
+    public function edit(DocumentValidatorGroup $group)
     {
         $group->load('users');
         $users = User::where('available', 1)
@@ -121,7 +122,7 @@ class DocumentGroupsController extends Controller
     /**
      * Update the specified group.
      */
-    public function update(Request $request, ValidatorGroup $group)
+    public function update(Request $request, DocumentValidatorGroup $group)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:191',
@@ -164,7 +165,7 @@ class DocumentGroupsController extends Controller
     /**
      * Toggle the active status of a group.
      */
-    public function toggle(ValidatorGroup $group)
+    public function toggle(DocumentValidatorGroup $group)
     {
         $group->update(['is_active' => ! $group->is_active]);
 
@@ -174,7 +175,7 @@ class DocumentGroupsController extends Controller
     /**
      * Remove the specified group.
      */
-    public function destroy(ValidatorGroup $group)
+    public function destroy(DocumentValidatorGroup $group)
     {
         // Check if group is default
         if ($group->is_default) {
@@ -204,7 +205,7 @@ class DocumentGroupsController extends Controller
             'ids.*' => 'exists:validator_groups,id',
         ]);
 
-        ValidatorGroup::reorder($validated['ids']);
+        DocumentValidatorGroup::reorder($validated['ids']);
 
         return response()->json(['success' => true, 'message' => 'Orden actualizado exitosamente.']);
     }
@@ -212,7 +213,7 @@ class DocumentGroupsController extends Controller
     /**
      * Show the configuration panel for a group.
      */
-    public function configuration(ValidatorGroup $group)
+    public function configuration(DocumentValidatorGroup $group)
     {
         $configurations = $group->configurations()
             ->where('is_active', true)

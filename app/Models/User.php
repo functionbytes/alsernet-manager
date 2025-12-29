@@ -492,7 +492,7 @@ class User extends Authenticatable
 
     public function lists()
     {
-        return $this->hasMany('App\Models\MailList');
+        return $this->hasMany('Modules\Mail\ModelsList');
     }
 
     public function templates()
@@ -512,7 +512,7 @@ class User extends Authenticatable
 
     public function subscribers()
     {
-        return $this->hasManyThrough('App\Models\Subscriber', 'App\Models\MailList');
+        return $this->hasManyThrough('App\Models\Subscriber', 'Modules\Mail\ModelsList');
     }
 
     public function logs()

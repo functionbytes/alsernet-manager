@@ -4,7 +4,7 @@ namespace Modules\Documents\Http\Controllers\Administratives;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use App\Models\Prestashop\Orders\Order as PrestashopOrder;
 use App\Models\Prestashop\Orders\OrderSendErp;
 use App\Models\Setting;
@@ -1322,7 +1322,7 @@ class DocumentsController extends Controller
         // Get email action configurations based on document's current validator group
         $userEmailConfig = [];
         if ($document->current_validator_group) {
-            $currentGroup = \App\Models\Validation\ValidatorGroup::where('key', $document->current_validator_group)
+            $currentGroup = \Modules\Documents\Validations\ValidatorGroup::where('key', $document->current_validator_group)
                 ->where('is_active', true)
                 ->with(['configurations' => function ($q) {
                     $q->where('category', 'email_actions')
@@ -3016,7 +3016,7 @@ class DocumentsController extends Controller
         }
 
         // Obtener todos los grupos de validación que el usuario pertenece
-        $validatorGroups = \App\Models\Validation\ValidatorGroup::whereHas(
+        $validatorGroups = \Modules\Documents\Validations\\ValidatorGroup::whereHas(
             'users',
             fn ($q) => $q->where('users.id', $user->id)
         )->pluck('key')->toArray();

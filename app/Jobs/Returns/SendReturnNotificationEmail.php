@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Returns;
 
-use App\Mail\Return\ReturnConfirmationMail;
-use App\Mail\Return\ReturnStatusUpdateMail;
+use Modules\Mail\Mail\Return\ReturnConfirmationMail;
+use Modules\Mail\Mail\Return\ReturnStatusUpdateMail;
 use App\Models\Return\ReturnRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

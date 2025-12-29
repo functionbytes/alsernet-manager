@@ -174,11 +174,7 @@ ALTER TABLE {entity_table} ADD COLUMN validation_completed_at TIMESTAMP NULL;
 
 namespace App\Traits;
 
-use App\Models\Validation\Validation;
-use App\Models\Validation\ValidationWorkflow;
-use App\Models\Validation\ValidatorGroup;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Validation\Validation;use App\Models\Validation\ValidationWorkflow;use app\Validation\ValidatorGroup;use Illuminate\Database\Eloquent\Relations\BelongsTo;use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasValidationWorkflow
 {

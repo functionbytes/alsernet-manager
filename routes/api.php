@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\EmailEndpointController;
 use App\Http\Controllers\Api\HealthCheckController;
 use App\Http\Controllers\Managers\Helpdesk\ConversationMessagesController;
 use Illuminate\Http\Request;
@@ -14,12 +13,15 @@ Route::prefix('health')->group(function () {
     Route::get('detailed', [HealthCheckController::class, 'detailed']);   // Detallado (solo debug)
 });
 
-// Public Email Endpoint Routes (no authentication required, but token validation in controller)
+// Email Endpoint routes are now handled by Modules\Mail
+// See: Modules/Mail/routes/api.php
+/*
 Route::prefix('email-endpoints')->group(function () {
     Route::post('{slug}/send', [EmailEndpointController::class, 'send']);
     Route::get('{slug}/info', [EmailEndpointController::class, 'info']);
     Route::get('{slug}/status', [EmailEndpointController::class, 'status']);
 });
+*/
 
 // Public Documents Routes (Prestashop integration) - No authentication, only rate limiting
 

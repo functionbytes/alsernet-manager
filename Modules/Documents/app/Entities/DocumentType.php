@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DocumentType extends Model
 {
+    protected $table = 'document_types';
+
     use HasUid;
 
     protected $fillable = [

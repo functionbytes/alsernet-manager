@@ -115,7 +115,7 @@ class AutomationsController extends Controller
             return null;
         }
 
-        $list = \App\Models\MailList::findByUid($request->list_uid);
+        $list = \Modules\Mail\ModelsList::findByUid($request->list_uid);
 
         return view('automation2.wizardListFieldSelect', [
             'list' => $list,

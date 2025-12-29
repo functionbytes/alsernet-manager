@@ -1536,7 +1536,7 @@ class CampaignMaillist extends Model
 
     public function mailListsSendingServers()
     {
-        return $this->hasMany('App\Models\MailListsSendingServer');
+        return $this->hasMany('Modules\Mail\ModelsListsSendingServer');
     }
 
     public function activeMailListsSendingServers()

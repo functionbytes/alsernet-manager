@@ -55,7 +55,7 @@ class CampaignSegment extends Model
 
     public function segmentConditions()
     {
-        return $this->hasMany('App\Models\Maillist\SegmentCondition');
+        return $this->hasMany('Modules\Mail\Modelslist\SegmentCondition');
     }
 
     /**

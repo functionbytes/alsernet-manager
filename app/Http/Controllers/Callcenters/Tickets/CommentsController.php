@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Callcenters\Tickets;
 
 use App\Http\Controllers\Controller;
-use App\Mail\Customers\Tickets\Customer\ReplayMails as CustomerReplayMails;
-use App\Mail\Customers\Tickets\Supports\ReplayMails as ManagerReplayMails;
+use Modules\Mail\Mail\Customers\Tickets\Customer\ReplayMails as CustomerReplayMails;
+use Modules\Mail\Mail\Customers\Tickets\Supports\ReplayMails as ManagerReplayMails;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketComment;
 use App\Models\Ticket\TicketHistory;

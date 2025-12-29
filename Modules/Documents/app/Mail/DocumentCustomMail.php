@@ -2,7 +2,7 @@
 
 namespace Modules\Documents\Mail;
 
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use App\Services\Mails\MailTemplateRendererService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

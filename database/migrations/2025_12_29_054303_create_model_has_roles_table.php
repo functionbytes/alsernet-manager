@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('model_has_roles', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
+            $table->morphs('model');
+            $table->timestamp('created_at')->useCurrent();
+            $table->unique(['role_id', 'model_id', 'model_type'], 'idx_role_model');
+            $table->index('model_id');
+            $table->index('model_type');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('model_has_roles');

@@ -81,7 +81,7 @@ private function getUserValidatorGroups($user = null)
     }
 
     // Obtener todos los grupos de validación que el usuario pertenece
-    $validatorGroups = \App\Models\Validation\ValidatorGroup::whereHas(
+    $validatorGroups = \app\Validation\ValidatorGroup::whereHas(
         'users',
         fn ($q) => $q->where('users.id', $user->id)
     )->pluck('key')->toArray();
@@ -143,7 +143,7 @@ private function getUserValidatorGroups($user = null)
     }
 
     // Obtener todos los grupos de validación que el usuario pertenece
-    $validatorGroups = \App\Models\Validation\ValidatorGroup::whereHas(
+    $validatorGroups = \app\Validation\ValidatorGroup::whereHas(
         'users',
         fn ($q) => $q->where('users.id', $user->id)
     )->pluck('key')->toArray();

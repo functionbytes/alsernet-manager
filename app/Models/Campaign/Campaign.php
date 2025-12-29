@@ -2410,7 +2410,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
 
         // default mail list id
         if (isset($params['mail_list_uid'])) {
-            $this->default_maillist_id = \App\Models\MailList::findByUid($params['mail_list_uid'])->id;
+            $this->default_maillist_id = \Modules\Mail\ModelsList::findByUid($params['mail_list_uid'])->id;
         }
 
         $this->save();

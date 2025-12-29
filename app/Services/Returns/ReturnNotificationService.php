@@ -4,7 +4,7 @@
 
 namespace App\Services\Returns;
 
-use App\Mail\Return\ReturnStatusMail;
+use Modules\Mail\Mail\Return\ReturnStatusMail;
 use App\Models\Return\ReturnCommunication;
 use App\Models\Return\ReturnRequest;
 use Carbon\Carbon;

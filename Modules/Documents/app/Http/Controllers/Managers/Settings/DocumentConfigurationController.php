@@ -3,7 +3,7 @@
 namespace Modules\Documents\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

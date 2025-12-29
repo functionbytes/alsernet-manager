@@ -48,10 +48,11 @@ use App\Http\Controllers\Managers\Settings\HoursSettingsController;
 use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\LangsController;
 use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
-use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
-use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
-use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
-use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
+// Mail controller imports are now handled by Modules\Mail
+// use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
 use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
 use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\PrestashopSettingsController;
@@ -327,64 +328,11 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::post('/conflicts/{mapping}/resolve', [CategoryController::class, 'resolveConflict'])->name('manager.settings.categories.conflicts.resolve');
         });
 
-        Route::group(['prefix' => 'mailers'], function () {
-
-            // Templates
-            Route::group(['prefix' => 'templates'], function () {
-                Route::get('/', [MailTemplateController::class, 'index'])->name('manager.settings.mailers.templates.index');
-                Route::get('/create', [MailTemplateController::class, 'create'])->name('manager.settings.mailers.templates.create');
-                Route::post('/', [MailTemplateController::class, 'store'])->name('manager.settings.mailers.templates.store');
-                Route::get('/edit/{uid}/{translation_uid?}', [MailTemplateController::class, 'edit'])->name('manager.settings.mailers.templates.edit');
-                Route::patch('/{uid}', [MailTemplateController::class, 'update'])->name('manager.settings.mailers.templates.update');
-                Route::get('/preview/{uid}', [MailTemplateController::class, 'preview'])->name('manager.settings.mailers.templates.preview');
-                Route::get('/preview-ajax/{uid}', [MailTemplateController::class, 'previewAjax'])->name('manager.settings.mailers.templates.preview-ajax');
-                Route::get('/variables/{uid}', [MailTemplateController::class, 'getVariables'])->name('manager.settings.mailers.templates.variables');
-                Route::get('/variables-by-module', [MailTemplateController::class, 'variablesByModule'])->name('manager.settings.mailers.variables-by-module');
-                Route::delete('/{uid}', [MailTemplateController::class, 'destroy'])->name('manager.settings.mailers.templates.destroy');
-                Route::post('/toggle-status/{uid}', [MailTemplateController::class, 'toggleStatus'])->name('manager.settings.mailers.templates.toggle-status');
-                Route::post('/send-test/{uid}', [MailTemplateController::class, 'sendTest'])->name('manager.settings.mailers.templates.send-test');
-                Route::post('/format-html', [MailTemplateController::class, 'formatHtml'])->name('manager.settings.mailers.templates.format-html');
-            });
-
-            // Components
-            Route::group(['prefix' => 'components'], function () {
-                Route::get('/', [MailComponentController::class, 'index'])->name('manager.settings.mailers.components.index');
-                Route::get('/create', [MailComponentController::class, 'create'])->name('manager.settings.mailers.components.create');
-                Route::post('/', [MailComponentController::class, 'store'])->name('manager.settings.mailers.components.store');
-                Route::get('/edit/{uid}/{translation_uid?}', [MailComponentController::class, 'edit'])->name('manager.settings.mailers.components.edit');
-                Route::patch('/{uid}', [MailComponentController::class, 'update'])->name('manager.settings.mailers.components.update');
-                Route::get('/preview/{uid}', [MailComponentController::class, 'preview'])->name('manager.settings.mailers.components.preview');
-                Route::get('/preview-ajax/{uid}', [MailComponentController::class, 'previewAjax'])->name('manager.settings.mailers.components.preview-ajax');
-                Route::get('/variables', [MailComponentController::class, 'variables'])->name('manager.settings.mailers.components.variables');
-                Route::delete('/{uid}', [MailComponentController::class, 'destroy'])->name('manager.settings.mailers.components.destroy');
-                Route::post('/duplicate/{uid}', [MailComponentController::class, 'duplicate'])->name('manager.settings.mailers.components.duplicate');
-            });
-
-            // Variables
-            Route::group(['prefix' => 'variables'], function () {
-                Route::get('/', [MailVariableController::class, 'index'])->name('manager.settings.mailers.variables.index');
-                Route::get('/create', [MailVariableController::class, 'create'])->name('manager.settings.mailers.variables.create');
-                Route::post('/', [MailVariableController::class, 'store'])->name('manager.settings.mailers.variables.store');
-                Route::get('/edit/{variable}', [MailVariableController::class, 'edit'])->name('manager.settings.mailers.variables.edit');
-                Route::patch('/{variable}', [MailVariableController::class, 'update'])->name('manager.settings.mailers.variables.update');
-                Route::delete('/{variable}', [MailVariableController::class, 'destroy'])->name('manager.settings.mailers.variables.destroy');
-                Route::post('/toggle-status/{variable}', [MailVariableController::class, 'toggleStatus'])->name('manager.settings.mailers.variables.toggle-status');
-                Route::get('/by-module', [MailVariableController::class, 'getByModule'])->name('manager.settings.mailers.variables.by-module');
-            });
-
-            // Email Endpoints
-            Route::group(['prefix' => 'endpoints'], function () {
-                Route::get('/documentation', [MailEndpointController::class, 'documentation'])->name('manager.settings.mailers.endpoints.documentation');
-                Route::get('/', [MailEndpointController::class, 'index'])->name('manager.settings.mailers.endpoints.index');
-                Route::get('/create', [MailEndpointController::class, 'create'])->name('manager.settings.mailers.endpoints.create');
-                Route::post('/', [MailEndpointController::class, 'store'])->name('manager.settings.mailers.endpoints.store');
-                Route::get('/edit/{emailEndpoint}', [MailEndpointController::class, 'edit'])->name('manager.settings.mailers.endpoints.edit');
-                Route::patch('/{emailEndpoint}', [MailEndpointController::class, 'update'])->name('manager.settings.mailers.endpoints.update');
-                Route::delete('/{emailEndpoint}', [MailEndpointController::class, 'destroy'])->name('manager.settings.mailers.endpoints.destroy');
-                Route::post('/regenerate-token/{emailEndpoint}', [MailEndpointController::class, 'regenerateToken'])->name('manager.settings.mailers.endpoints.regenerate-token');
-                Route::get('/logs/{emailEndpoint}', [MailEndpointController::class, 'logs'])->name('manager.settings.mailers.endpoints.logs');
-            });
-        });
+        // Mailer routes are now handled by Modules\Mail
+        // See: Modules/Mail/routes/managers.php
+        /*
+        Route::group(['prefix' => 'mailers'], function () { ... });
+        */
 
         Route::group(['prefix' => 'erp'], function () {
 
@@ -1173,10 +1121,10 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/api/floors', [WarehouseDashboardController::class, 'getFloors'])->name('manager.warehouse.api.floors');
 
                 // Mapa del warehouse
-                Route::get('/map', [WarehouseMapController::class, 'map'])->name('manager.warehouse.map');
-                Route::get('/api/layout-spec', [WarehouseMapController::class, 'getLayoutSpec'])->name('manager.warehouse.api.layout');
-                Route::get('/api/config', [WarehouseMapController::class, 'getWarehouseConfig'])->name('manager.warehouse.api.config');
-                Route::get('/api/slot/{slot_uid}', [WarehouseMapController::class, 'getSlotDetails'])->name('manager.warehouse.api.slot');
+                Route::get('/map', [WarehouseMapController::class, 'map'])->name('manager.warehouse.detail.map');
+                Route::get('/api/layout-spec', [WarehouseMapController::class, 'getLayoutSpec'])->name('manager.warehouse.detail.api.layout');
+                Route::get('/api/config', [WarehouseMapController::class, 'getWarehouseConfig'])->name('manager.warehouse.detail.api.config');
+                Route::get('/api/slot/{slot_uid}', [WarehouseMapController::class, 'getSlotDetails'])->name('manager.warehouse.detail.api.slot');
 
                 // Old map API endpoints (legacy support for warehouse map views)
                 Route::get('/map/locations', [WarehouseLocationsController::class, 'getByWarehouse'])->name('manager.warehouse.map.locations');
@@ -1188,8 +1136,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::get('/locations/{location_uid}/sections', [WarehouseLocationSectionsController::class, 'index'])->name('manager.warehouse.locations.sections.index');
 
                 // Visual editing endpoints (Opción 2)
-                Route::put('/location/{location_uid}/visual-config', [WarehouseMapController::class, 'updateVisualConfig'])->name('manager.warehouse.location.visual.update');
-                Route::post('/location/{location_uid}/reset-visual', [WarehouseMapController::class, 'resetVisualConfig'])->name('manager.warehouse.location.visual.reset');
+                Route::put('/location/{location_uid}/visual-config', [WarehouseMapController::class, 'updateVisualConfig'])->name('manager.warehouse.detail.location.visual.update');
+                Route::post('/location/{location_uid}/reset-visual', [WarehouseMapController::class, 'resetVisualConfig'])->name('manager.warehouse.detail.location.visual.reset');
 
                 // Historial del warehouse
                 Route::group(['prefix' => 'history'], function () {
@@ -1214,70 +1162,70 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 // Pisos del warehouse
                 Route::group(['prefix' => 'floors'], function () {
 
-                    Route::get('/', [WarehouseFloorsController::class, 'index'])->name('manager.warehouse.floors');
-                    Route::get('/create', [WarehouseFloorsController::class, 'create'])->name('manager.warehouse.floors.create');
-                    Route::post('/store', [WarehouseFloorsController::class, 'store'])->name('manager.warehouse.floors.store');
-                    Route::get('/{floor_uid}', [WarehouseFloorsController::class, 'view'])->name('manager.warehouse.floors.view');
-                    Route::get('/{floor_uid}/edit', [WarehouseFloorsController::class, 'edit'])->name('manager.warehouse.floors.edit');
-                    Route::post('/update', [WarehouseFloorsController::class, 'update'])->name('manager.warehouse.floors.update');
-                    Route::get('/{floor_uid}/destroy', [WarehouseFloorsController::class, 'destroy'])->name('manager.warehouse.floors.destroy');
+                    Route::get('/', [WarehouseFloorsController::class, 'index'])->name('manager.warehouse.detail.floors');
+                    Route::get('/create', [WarehouseFloorsController::class, 'create'])->name('manager.warehouse.detail.floors.create');
+                    Route::post('/store', [WarehouseFloorsController::class, 'store'])->name('manager.warehouse.detail.floors.store');
+                    Route::get('/{floor_uid}', [WarehouseFloorsController::class, 'view'])->name('manager.warehouse.detail.floors.view');
+                    Route::get('/{floor_uid}/edit', [WarehouseFloorsController::class, 'edit'])->name('manager.warehouse.detail.floors.edit');
+                    Route::post('/update', [WarehouseFloorsController::class, 'update'])->name('manager.warehouse.detail.floors.update');
+                    Route::get('/{floor_uid}/destroy', [WarehouseFloorsController::class, 'destroy'])->name('manager.warehouse.detail.floors.destroy');
 
                     // Locaciones dentro del piso
                     Route::group(['prefix' => '{floor_uid}/locations'], function () {
-                        Route::get('/', [WarehouseLocationsController::class, 'index'])->name('manager.warehouse.locations');
-                        Route::get('/create', [WarehouseLocationsController::class, 'create'])->name('manager.warehouse.locations.create');
-                        Route::post('/store', [WarehouseLocationsController::class, 'store'])->name('manager.warehouse.locations.store');
-                        Route::get('/{location_uid}', [WarehouseLocationsController::class, 'view'])->name('manager.warehouse.locations.view');
-                        Route::get('/{location_uid}/edit', [WarehouseLocationsController::class, 'edit'])->name('manager.warehouse.locations.edit');
-                        Route::post('/update', [WarehouseLocationsController::class, 'update'])->name('manager.warehouse.locations.update');
-                        Route::get('/{location_uid}/destroy', [WarehouseLocationsController::class, 'destroy'])->name('manager.warehouse.locations.destroy');
-                        Route::get('/api/warehouse', [WarehouseLocationsController::class, 'getByWarehouse'])->name('manager.warehouse.locations.api.warehouse');
-                        Route::get('/api/barcode/{barcode}', [WarehouseLocationsController::class, 'getByBarcode'])->name('manager.warehouse.locations.api.barcode');
-                        Route::get('/{location_uid}/api/details', [WarehouseLocationsController::class, 'getLocationDetails'])->name('manager.warehouse.locations.api.details');
-                        Route::get('/{location_uid}/sections/{section_uid}/api/details', [WarehouseLocationsController::class, 'getSectionDetails'])->name('manager.warehouse.sections.api.details');
+                        Route::get('/', [WarehouseLocationsController::class, 'index'])->name('manager.warehouse.detail.locations');
+                        Route::get('/create', [WarehouseLocationsController::class, 'create'])->name('manager.warehouse.detail.locations.create');
+                        Route::post('/store', [WarehouseLocationsController::class, 'store'])->name('manager.warehouse.detail.locations.store');
+                        Route::get('/{location_uid}', [WarehouseLocationsController::class, 'view'])->name('manager.warehouse.detail.locations.view');
+                        Route::get('/{location_uid}/edit', [WarehouseLocationsController::class, 'edit'])->name('manager.warehouse.detail.locations.edit');
+                        Route::post('/update', [WarehouseLocationsController::class, 'update'])->name('manager.warehouse.detail.locations.update');
+                        Route::get('/{location_uid}/destroy', [WarehouseLocationsController::class, 'destroy'])->name('manager.warehouse.detail.locations.destroy');
+                        Route::get('/api/warehouse', [WarehouseLocationsController::class, 'getByWarehouse'])->name('manager.warehouse.detail.locations.api.warehouse');
+                        Route::get('/api/barcode/{barcode}', [WarehouseLocationsController::class, 'getByBarcode'])->name('manager.warehouse.detail.locations.api.barcode');
+                        Route::get('/{location_uid}/api/details', [WarehouseLocationsController::class, 'getLocationDetails'])->name('manager.warehouse.detail.locations.api.details');
+                        Route::get('/{location_uid}/sections/{section_uid}/api/details', [WarehouseLocationsController::class, 'getSectionDetails'])->name('manager.warehouse.detail.sections.api.details');
 
                         // Print barcodes routes
-                        Route::get('/print-all-barcodes', [WarehouseLocationsController::class, 'printAllBarcodes'])->name('manager.warehouse.locations.print-all');
-                        Route::get('/{location_uid}/print-barcodes', [WarehouseLocationsController::class, 'printBarcodes'])->name('manager.warehouse.locations.print');
+                        Route::get('/print-all-barcodes', [WarehouseLocationsController::class, 'printAllBarcodes'])->name('manager.warehouse.detail.locations.print-all');
+                        Route::get('/{location_uid}/print-barcodes', [WarehouseLocationsController::class, 'printBarcodes'])->name('manager.warehouse.detail.locations.print');
 
                         // Transferir múltiples ubicaciones (bulk)
-                        Route::get('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkForm'])->name('manager.warehouse.locations.transfer.bulk');
-                        Route::post('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkSubmit'])->name('manager.warehouse.locations.transfer.bulk.store');
+                        Route::get('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkForm'])->name('manager.warehouse.detail.locations.transfer.bulk');
+                        Route::post('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkSubmit'])->name('manager.warehouse.detail.locations.transfer.bulk.store');
 
                         // Transferir ubicación individual
                         Route::group(['prefix' => '{location_uid}/transfer'], function () {
-                            Route::get('/', [WarehouseLocationsController::class, 'transfer'])->name('manager.warehouse.locations.transfer');
-                            Route::post('/store', [WarehouseLocationsController::class, 'transferSubmit'])->name('manager.warehouse.locations.transfer.store');
-                            Route::get('/api/available-floors', [WarehouseLocationsController::class, 'getAvailableFloorsForTransfer'])->name('manager.warehouse.locations.transfer.api.available-floors');
+                            Route::get('/', [WarehouseLocationsController::class, 'transfer'])->name('manager.warehouse.detail.locations.transfer');
+                            Route::post('/store', [WarehouseLocationsController::class, 'transferSubmit'])->name('manager.warehouse.detail.locations.transfer.store');
+                            Route::get('/api/available-floors', [WarehouseLocationsController::class, 'getAvailableFloorsForTransfer'])->name('manager.warehouse.detail.locations.transfer.api.available-floors');
                         });
 
                         // Secciones dentro de la locación
                         Route::group(['prefix' => '{location_uid}/sections'], function () {
-                            Route::get('/', [WarehouseLocationSectionsController::class, 'index'])->name('manager.warehouse.sections');
-                            Route::get('/create', [WarehouseLocationSectionsController::class, 'create'])->name('manager.warehouse.sections.create');
-                            Route::post('/store', [WarehouseLocationSectionsController::class, 'store'])->name('manager.warehouse.sections.store');
-                            Route::get('/{section_uid}', [WarehouseLocationSectionsController::class, 'view'])->name('manager.warehouse.section.view');
-                            Route::get('/{section_uid}/edit', [WarehouseLocationSectionsController::class, 'edit'])->name('manager.warehouse.section.edit');
-                            Route::post('/update', [WarehouseLocationSectionsController::class, 'update'])->name('manager.warehouse.section.update');
-                            Route::get('/{section_uid}/destroy', [WarehouseLocationSectionsController::class, 'destroy'])->name('manager.warehouse.section.destroy');
-                            Route::get('/api/list/{location_id}', [WarehouseLocationSectionsController::class, 'getSectionsList'])->name('manager.warehouse.sections.api.list');
-                            Route::post('/quick-create', [WarehouseLocationSectionsController::class, 'quickCreate'])->name('manager.warehouse.sections.quick-create');
+                            Route::get('/', [WarehouseLocationSectionsController::class, 'index'])->name('manager.warehouse.detail.sections');
+                            Route::get('/create', [WarehouseLocationSectionsController::class, 'create'])->name('manager.warehouse.detail.sections.create');
+                            Route::post('/store', [WarehouseLocationSectionsController::class, 'store'])->name('manager.warehouse.detail.sections.store');
+                            Route::get('/{section_uid}', [WarehouseLocationSectionsController::class, 'view'])->name('manager.warehouse.detail.section.view');
+                            Route::get('/{section_uid}/edit', [WarehouseLocationSectionsController::class, 'edit'])->name('manager.warehouse.detail.section.edit');
+                            Route::post('/update', [WarehouseLocationSectionsController::class, 'update'])->name('manager.warehouse.detail.section.update');
+                            Route::get('/{section_uid}/destroy', [WarehouseLocationSectionsController::class, 'destroy'])->name('manager.warehouse.detail.section.destroy');
+                            Route::get('/api/list/{location_id}', [WarehouseLocationSectionsController::class, 'getSectionsList'])->name('manager.warehouse.detail.sections.api.list');
+                            Route::post('/quick-create', [WarehouseLocationSectionsController::class, 'quickCreate'])->name('manager.warehouse.detail.sections.quick-create');
 
                             // Inventory Slots dentro de la sección
                             Route::group(['prefix' => '{section_uid}/slots'], function () {
-                                Route::get('/', [WarehouseInventorySlotsController::class, 'index'])->name('manager.warehouse.section.slots');
-                                Route::get('/create', [WarehouseInventorySlotsController::class, 'create'])->name('manager.warehouse.section.slots.create');
-                                Route::post('/store', [WarehouseInventorySlotsController::class, 'store'])->name('manager.warehouse.section.slots.store');
-                                Route::get('/{slot_uid}', [WarehouseInventorySlotsController::class, 'view'])->name('manager.warehouse.section.slots.view');
-                                Route::get('/{slot_uid}/edit', [WarehouseInventorySlotsController::class, 'edit'])->name('manager.warehouse.section.slots.edit');
-                                Route::post('/update', [WarehouseInventorySlotsController::class, 'update'])->name('manager.warehouse.section.slots.update');
-                                Route::get('/{slot_uid}/destroy', [WarehouseInventorySlotsController::class, 'destroy'])->name('manager.warehouse.section.slots.destroy');
+                                Route::get('/', [WarehouseInventorySlotsController::class, 'index'])->name('manager.warehouse.detail.section.slots');
+                                Route::get('/create', [WarehouseInventorySlotsController::class, 'create'])->name('manager.warehouse.detail.section.slots.create');
+                                Route::post('/store', [WarehouseInventorySlotsController::class, 'store'])->name('manager.warehouse.detail.section.slots.store');
+                                Route::get('/{slot_uid}', [WarehouseInventorySlotsController::class, 'view'])->name('manager.warehouse.detail.section.slots.view');
+                                Route::get('/{slot_uid}/edit', [WarehouseInventorySlotsController::class, 'edit'])->name('manager.warehouse.detail.section.slots.edit');
+                                Route::post('/update', [WarehouseInventorySlotsController::class, 'update'])->name('manager.warehouse.detail.section.slots.update');
+                                Route::get('/{slot_uid}/destroy', [WarehouseInventorySlotsController::class, 'destroy'])->name('manager.warehouse.detail.section.slots.destroy');
 
                                 // Inventory operations
-                                Route::post('/{slot_uid}/add-quantity', [WarehouseInventorySlotsController::class, 'addQuantity'])->name('manager.warehouse.section.slots.add-quantity');
-                                Route::post('/{slot_uid}/subtract-quantity', [WarehouseInventorySlotsController::class, 'subtractQuantity'])->name('manager.warehouse.section.slots.subtract-quantity');
-                                Route::post('/{slot_uid}/clear', [WarehouseInventorySlotsController::class, 'clear'])->name('manager.warehouse.section.slots.clear');
-                                Route::post('/{slot_uid}/move-to', [WarehouseInventorySlotsController::class, 'moveTo'])->name('manager.warehouse.section.slots.move-to');
+                                Route::post('/{slot_uid}/add-quantity', [WarehouseInventorySlotsController::class, 'addQuantity'])->name('manager.warehouse.detail.section.slots.add-quantity');
+                                Route::post('/{slot_uid}/subtract-quantity', [WarehouseInventorySlotsController::class, 'subtractQuantity'])->name('manager.warehouse.detail.section.slots.subtract-quantity');
+                                Route::post('/{slot_uid}/clear', [WarehouseInventorySlotsController::class, 'clear'])->name('manager.warehouse.detail.section.slots.clear');
+                                Route::post('/{slot_uid}/move-to', [WarehouseInventorySlotsController::class, 'moveTo'])->name('manager.warehouse.detail.section.slots.move-to');
                             });
                         });
                     });

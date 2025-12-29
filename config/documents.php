@@ -29,4 +29,59 @@ return [
             fn ($value) => $value !== ''
         )
     )),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Configuración de Navegación
+    |--------------------------------------------------------------------------
+    |
+    | Elementos de navegación para el menú lateral del módulo de documentos.
+    |
+    */
+    'navigation' => [
+        'sidebar' => [
+            'insert_after' => 'helpdesk',
+            'section' => [
+                'title' => 'Documentos',
+                'permission' => 'documents.manage',
+                'items' => [
+                    [
+                        'label' => 'Configuraciones',
+                        'route' => 'manager.settings.documents.configurations',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Almacenamiento',
+                        'route' => 'manager.settings.documents.configurations.storage',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Grupos de validación',
+                        'route' => 'manager.settings.documents.groups.index',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Tipos de documento',
+                        'route' => 'manager.settings.documents.types',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Condiciones de validación',
+                        'route' => 'manager.settings.documents.conditions',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Políticas SLA',
+                        'route' => 'manager.settings.documents.sla-policies.index',
+                        'permission' => 'documents.manage',
+                    ],
+                    [
+                        'label' => 'Bloqueos de producto',
+                        'route' => 'manager.settings.documents.blockades.index',
+                        'permission' => 'documents.manage',
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

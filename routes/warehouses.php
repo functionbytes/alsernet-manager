@@ -21,7 +21,7 @@ Route::group(['prefix' => 'warehouse', 'middleware' => ['auth', 'check.roles.per
     // These routes are protected by CheckRolesAndPermissions middleware
     Route::group([
         'prefix' => 'users',
-        'name' => 'users.',
+        'name' => 'warehouse.users.',
         'middleware' => ['check.roles.permissions:warehouse'],
     ], function () {
         Route::get('/', [UsersController::class, 'index'])->name('index');

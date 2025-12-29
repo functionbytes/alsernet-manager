@@ -2,8 +2,8 @@
 
 namespace App\Services\Returns;
 
-use App\Mail\Return\ReturnConfirmationMail;
-use App\Mail\Return\ReturnStatusUpdateMail;
+use Modules\Mail\Mail\Return\ReturnConfirmationMail;
+use Modules\Mail\Mail\Return\ReturnStatusUpdateMail;
 use App\Models\Return\ReturnRequest;
 use Illuminate\Support\Facades\Mail;
 

@@ -1,0 +1,11 @@
+{
+    "name": "Mail",
+    "alias": "mail",
+    "description": "Módulo de gestión de plantillas de correos electrónicos, componentes, variables y endpoints de API",
+    "keywords": ["mail", "templates", "components", "variables", "endpoints", "email"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Mail\\Providers\\MailServiceProvider"
+    ],
+    "files": []
+}

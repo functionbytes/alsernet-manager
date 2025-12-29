@@ -3,7 +3,7 @@
 namespace Modules\Documents\Entities;
 
 use App\Library\Traits\HasUid;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

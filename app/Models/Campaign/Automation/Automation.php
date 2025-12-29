@@ -127,7 +127,7 @@ class Automation extends Model
      */
     public function mailList()
     {
-        return $this->belongsTo('App\Models\MailList');
+        return $this->belongsTo('Modules\Mail\ModelsList');
     }
 
     /**
@@ -1418,7 +1418,7 @@ class Automation extends Model
         $this->fill($params);
 
         // pass validation and save
-        $this->mail_list_id = \App\Models\MailList::findByUid($params['mail_list_uid'])->id;
+        $this->mail_list_id = \Modules\Mail\ModelsList::findByUid($params['mail_list_uid'])->id;
 
         $data = [
             $this->createTrigger($params),

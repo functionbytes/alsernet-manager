@@ -18,6 +18,7 @@ use Modules\Documents\Services\DocumentEmailService;
 class DocumentValidationController extends Controller
 {
     protected DocumentActionService $actionService;
+
     protected DocumentEmailService $emailService;
 
     public function __construct(
@@ -440,14 +441,14 @@ class DocumentValidationController extends Controller
         $stages = $document->getValidationWorkflowStages();
         $nextGroupKey = $stages[$nextStage - 1] ?? null;
 
-        if (!$nextGroupKey) {
+        if (! $nextGroupKey) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se pudo determinar el siguiente grupo',
             ], 422);
         }
 
-        $nextGroup = \App\Models\Validation\ValidatorGroup::findByKey($nextGroupKey);
+        $nextGroup = \app\Validation\ValidatorGroup::findByKey($nextGroupKey);
         $users = $nextGroup ? $nextGroup->users->map(function ($user) {
             return [
                 'id' => $user->id,
@@ -470,9 +471,9 @@ class DocumentValidationController extends Controller
      */
     public function getCustomEmailTemplate(): JsonResponse
     {
-        $template = \App\Models\Mail\MailTemplate::where('key', 'custom_document')->first();
+        $template = \Modules\Mail\Models\MailTemplate::where('key', 'custom_document')->first();
 
-        if (!$template) {
+        if (! $template) {
             return response()->json([
                 'success' => false,
                 'message' => 'No hay plantilla configurada',

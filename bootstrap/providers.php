@@ -7,4 +7,5 @@ return [
     App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
     Modules\Documents\Providers\DocumentsServiceProvider::class,
+    Modules\Mail\Providers\MailServiceProvider::class,
 ];

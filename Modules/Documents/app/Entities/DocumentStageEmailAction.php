@@ -5,21 +5,10 @@ namespace Modules\Documents\Entities;
 use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * DocumentStageEmailAction
- *
- * Stores which email actions are enabled/disabled for each validation stage.
- * This allows administrators to configure which email options (approval notifications,
- * rejection notifications, custom emails, etc.) are available at each stage
- * (documentacion, licencias, contabilidad) without modifying code.
- *
- * Example:
- * - validation_stage: 'documentacion', email_action: 'aprobacion', is_enabled: true
- * - validation_stage: 'licencias', email_action: 'confirmacion_archivos', is_enabled: false
- * - validation_stage: 'contabilidad', email_action: 'rechazo', is_enabled: true
- */
 class DocumentStageEmailAction extends Model
 {
+    protected $table = 'document_stage_email_actions';
+
     use HasUid;
 
     // Email action types

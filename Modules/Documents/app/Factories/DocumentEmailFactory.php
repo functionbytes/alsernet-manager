@@ -2,8 +2,8 @@
 
 namespace Modules\Documents\Factories;
 
-use App\Mail\Documents\DocumentCustomMail;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Mail\Documents\DocumentCustomMail;
+use Modules\Mail\Models\MailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Modules\Documents\Entities\Document;
 
