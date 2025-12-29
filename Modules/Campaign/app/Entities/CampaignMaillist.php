@@ -7,7 +7,7 @@ use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;
-use App\Jobs\VerifyMailListJob;
+use Modules\Subscriber\Jobs\VerifyMailListJob;
 use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;

@@ -2,7 +2,7 @@
 
 namespace Modules\Warehouse\Console\Commands;
 
-use App\Services\Carriers\CarrierService;
+use Modules\Returns\Services\CarrierService;
 use Illuminate\Console\Command;
 
 class UpdateTrackingStatuses extends Command

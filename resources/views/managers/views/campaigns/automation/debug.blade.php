@@ -33,7 +33,7 @@
                 </td>
                 <td>
                     <span class="no-margin kq_search">
-                        <a href="{{ route('AutoTrigger@show', [ 'id' => $subscriber->auto_trigger_id ]) }}">{{ is_null($subscriber->trigger_at) ? 'null' : $subscriber->auto_trigger_id  }}</a>
+                        <a href="{{ route('manager.automations.show', [ 'id' => $subscriber->auto_trigger_id ]) }}">{{ is_null($subscriber->trigger_at) ? 'null' : $subscriber->auto_trigger_id  }}</a>
                     </span>
                 </td>
                 <td>

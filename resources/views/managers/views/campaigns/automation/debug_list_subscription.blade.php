@@ -34,9 +34,9 @@
                 <td>
                     <span class="no-margin kq_search">
                         @if (is_null($subscriber->auto_trigger_id))
-                            <a href="{{ route('Automation2Controller@triggerNow', [ 'automation' => $automation->uid, 'subscriber' => $subscriber->uid ]) }}">Trigger Now</a>
+                            <a href="{{ route('manager.automations.triggerNow', [ 'automation' => $automation->uid, 'subscriber' => $subscriber->uid ]) }}">Trigger Now</a>
                         @else
-                            <a href="{{ route('AutoTrigger@show', [ 'id' => $subscriber->auto_trigger_id ]) }}">{{ $subscriber->triggered_at }}</a>
+                            <a href="{{ route('manager.automations.show', [ 'id' => $subscriber->auto_trigger_id ]) }}">{{ $subscriber->triggered_at }}</a>
                         @endif
                     </span>
                 </td>

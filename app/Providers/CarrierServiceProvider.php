@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Carriers\CarrierService;
+use Modules\Returns\Services\CarrierService;
 use Illuminate\Support\ServiceProvider;
 
 class CarrierServiceProvider extends ServiceProvider

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\Integrations\ErpService;
+use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Http\Request;
 
 class ErpController extends Controller

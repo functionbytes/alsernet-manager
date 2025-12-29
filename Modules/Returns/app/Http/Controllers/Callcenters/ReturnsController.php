@@ -9,7 +9,7 @@ use App\Models\Return\Order\ReturnOrder;
 use App\Models\Return\Order\ReturnOrderProduct;
 use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnRequestProduct;
-use App\Services\Integrations\ErpService;
+use Modules\Supplier\Services\Integrations\ErpService;
 use App\Services\Returns\BarcodeService;
 use App\Services\Returns\DocumentService;
 use Illuminate\Http\Request;

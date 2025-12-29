@@ -8,7 +8,7 @@ use Modules\Mail\Models\MailTemplate;
 use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
 use Modules\Prestashop\Entities\Orders\OrderSendErp;
 use App\Models\Setting;
-use App\Services\Integrations\ErpService;
+use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Documents\Entities\Document;

@@ -2,7 +2,7 @@
 
 namespace Modules\Helpdesk\Console\Commands;
 
-use App\Events\Helpdesk\TicketSlaNearBreach;
+use Modules\Helpdesk\Events\SlaWarning;
 use App\Models\Helpdesk\Ticket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
