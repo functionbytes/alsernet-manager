@@ -257,7 +257,8 @@
       "Bash(__NEW_LINE__ echo \"=== RESUMEN FINAL ===\")",
       "Bash(__NEW_LINE__ echo \"MUESTRA DE MIGRACIONES CONSOLIDADAS:\")",
       "Bash(__NEW_LINE__ echo \"=== FINAL VERIFICATION ===\")",
-      "Bash(__NEW_LINE__ echo \"Verificando archivos creados:\" echo \"\" echo \"1. MIGRATIONS_STRUCTURE.md\" ls -lh /Users/functionbytes/Function/Coding/manager/MIGRATIONS_STRUCTURE.md)"
+      "Bash(__NEW_LINE__ echo \"Verificando archivos creados:\" echo \"\" echo \"1. MIGRATIONS_STRUCTURE.md\" ls -lh /Users/functionbytes/Function/Coding/manager/MIGRATIONS_STRUCTURE.md)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []

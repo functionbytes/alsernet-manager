@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Document;
+namespace Modules\Documents\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

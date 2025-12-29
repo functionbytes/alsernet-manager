@@ -6,7 +6,7 @@ use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * StageEmailAction
+ * DocumentStageEmailAction
  *
  * Stores which email actions are enabled/disabled for each validation stage.
  * This allows administrators to configure which email options (approval notifications,
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * - validation_stage: 'licencias', email_action: 'confirmacion_archivos', is_enabled: false
  * - validation_stage: 'contabilidad', email_action: 'rechazo', is_enabled: true
  */
-class StageEmailAction extends Model
+class DocumentStageEmailAction extends Model
 {
     use HasUid;
 

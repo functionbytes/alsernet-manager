@@ -144,7 +144,10 @@ class DocumentsServiceProvider extends ServiceProvider
         $existing = config($key, []);
         $module_config = require $path;
 
-        config([$key => array_replace_recursive($existing, $module_config)]);
+        // Only merge if the config file returned an array
+        if (is_array($module_config)) {
+            config([$key => array_replace_recursive($existing, $module_config)]);
+        }
     }
 
     /**

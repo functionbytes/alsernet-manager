@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Document;
+namespace Modules\Documents\Entities;
 
 use App\Library\Traits\HasUid;
 use App\Library\Traits\HasValidationWorkflow;
@@ -13,73 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-/**
- * @property int $id
- * @property string $uid
- * @property string|null $type
- * @property string|null $proccess
- * @property string|null $source
- * @property int|null $lang_id
- * @property \Illuminate\Support\Carbon|null $confirmed_at When the document upload was confirmed
- * @property \Illuminate\Support\Carbon|null $uploaded_confirmation_sent_at When the upload confirmation event was sent
- * @property \Illuminate\Support\Carbon|null $reminder_at
- * @property int|null $order_id
- * @property int|null $customer_id
- * @property int|null $cart_id
- * @property string|null $order_reference
- * @property \Illuminate\Support\Carbon|null $order_date
- * @property string|null $customer_firstname
- * @property string|null $customer_lastname
- * @property string|null $customer_email
- * @property string|null $customer_dni
- * @property string|null $customer_company
- * @property string|null $customer_cellphone
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Prestashop\Cart\Cart|null $cart
- * @property-read \App\Models\Prestashop\Customer|null $customer
- * @property-read \App\Models\Lang|null $lang
- * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
- * @property-read int|null $media_count
- * @property-read \App\Models\Prestashop\Order\Order|null $order
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Document\DocumentProduct> $products
- * @property-read int|null $products_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document ascending()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document descending()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document filterByDateRange($dateFrom = null, $dateTo = null)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document filterByUploadStatus($hasMedia = null)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document filterListing($search = '', $uploadStatus = null, $dateFrom = null, $dateTo = null)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document id($id)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document order($order)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document orderByUploadPriority()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document searchByCustomerOrOrder($search = '')
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document uid($uid)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCartId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereConfirmedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerCompany($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerDni($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerFirstname($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerLastname($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereOrderDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereOrderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereOrderReference($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereProccess($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereReminderAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereSource($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereUid($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereUpdatedAt($value)
- *
- * @mixin \Eloquent
- */
 class Document extends Model implements HasMedia
 {
     use HasFactory, HasUid, HasValidationWorkflow, InteractsWithMedia;

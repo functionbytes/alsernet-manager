@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Modules\Documents\Entities\StageEmailAction;
+use Modules\Documents\Entities\DocumentStageEmailAction;
 
 class StageEmailActionController extends Controller
 {
@@ -15,12 +15,12 @@ class StageEmailActionController extends Controller
      */
     public function index(): View
     {
-        $configurations = StageEmailAction::ordered()->get()->groupBy('validation_stage');
+        $configurations = DocumentStageEmailAction::ordered()->get()->groupBy('validation_stage');
 
         return view('managers.settings.stage-email-actions.index', [
             'configurations' => $configurations,
-            'availableStages' => StageEmailAction::AVAILABLE_STAGES,
-            'availableActions' => StageEmailAction::AVAILABLE_ACTIONS,
+            'availableStages' => DocumentStageEmailAction::AVAILABLE_STAGES,
+            'availableActions' => DocumentStageEmailAction::AVAILABLE_ACTIONS,
         ]);
     }
 
@@ -29,18 +29,18 @@ class StageEmailActionController extends Controller
      */
     public function edit(string $stage): View
     {
-        if (! array_key_exists($stage, StageEmailAction::AVAILABLE_STAGES)) {
+        if (! array_key_exists($stage, DocumentStageEmailAction::AVAILABLE_STAGES)) {
             abort(404, 'Validation stage not found');
         }
 
-        $configurations = StageEmailAction::forStage($stage)->ordered()->get();
+        $configurations = DocumentStageEmailAction::forStage($stage)->ordered()->get();
 
         // Ensure all actions have a configuration record
         $configuredActions = $configurations->pluck('email_action')->toArray();
-        foreach (array_keys(StageEmailAction::AVAILABLE_ACTIONS) as $action) {
+        foreach (array_keys(DocumentStageEmailAction::AVAILABLE_ACTIONS) as $action) {
             if (! in_array($action, $configuredActions)) {
                 $configurations->push(
-                    new StageEmailAction([
+                    new DocumentStageEmailAction([
                         'validation_stage' => $stage,
                         'email_action' => $action,
                         'is_enabled' => false,
@@ -52,9 +52,9 @@ class StageEmailActionController extends Controller
 
         return view('managers.settings.stage-email-actions.edit', [
             'stage' => $stage,
-            'stageName' => StageEmailAction::AVAILABLE_STAGES[$stage],
+            'stageName' => DocumentStageEmailAction::AVAILABLE_STAGES[$stage],
             'configurations' => $configurations,
-            'availableActions' => StageEmailAction::AVAILABLE_ACTIONS,
+            'availableActions' => DocumentStageEmailAction::AVAILABLE_ACTIONS,
         ]);
     }
 
@@ -63,7 +63,7 @@ class StageEmailActionController extends Controller
      */
     public function update(Request $request, string $stage): RedirectResponse
     {
-        if (! array_key_exists($stage, StageEmailAction::AVAILABLE_STAGES)) {
+        if (! array_key_exists($stage, DocumentStageEmailAction::AVAILABLE_STAGES)) {
             abort(404, 'Validation stage not found');
         }
 
@@ -75,11 +75,11 @@ class StageEmailActionController extends Controller
         ]);
 
         // Update or create configurations
-        foreach (StageEmailAction::AVAILABLE_ACTIONS as $action => $label) {
+        foreach (DocumentStageEmailAction::AVAILABLE_ACTIONS as $action => $label) {
             $isEnabled = $validated['email_actions'][$action] ?? false;
             $sortOrder = $validated['sort_order'][$action] ?? 0;
 
-            StageEmailAction::updateOrCreate(
+            DocumentStageEmailAction::updateOrCreate(
                 [
                     'validation_stage' => $stage,
                     'email_action' => $action,

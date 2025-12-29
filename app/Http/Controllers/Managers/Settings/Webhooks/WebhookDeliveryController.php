@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Managers\Settings\Webhooks;
+
+use App\Http\Controllers\Controller;
+use App\Jobs\Webhook\DeliverWebhookJob;
+use App\Models\Webhook\WebhookDelivery;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class WebhookDeliveryController extends Controller
+{
+    public function index(Request $request): View
+    {
+        $pageTitle = 'Entregas Webhook';
+        $breadcrumb = 'Configuración / Webhooks / Entregas';
+
+        $query = WebhookDelivery::with(['integration', 'subscription', 'event'])
+            ->orderByDesc('created_at');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('subscription_id')) {
+            $query->where('subscription_id', $request->subscription_id);
+        }
+
+        $deliveries = $query->paginate(25);
+
+        return view('managers.views.settings.webhooks.deliveries.index', compact(
+            'deliveries',
+            'pageTitle',
+            'breadcrumb'
+        ));
+    }
+
+    public function show(WebhookDelivery $delivery): View
+    {
+        $pageTitle = 'Detalle de Entrega - '.$delivery->uid;
+        $breadcrumb = 'Configuración / Webhooks / Entregas / Detalle';
+
+        $delivery->load(['integration', 'subscription', 'event', 'logs']);
+
+        return view('managers.views.settings.webhooks.deliveries.show', compact(
+            'delivery',
+            'pageTitle',
+            'breadcrumb'
+        ));
+    }
+
+    public function retry(WebhookDelivery $delivery): JsonResponse
+    {
+        if ($delivery->status !== 'failed' && $delivery->status !== 'dead') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Solo se pueden reintentar entregas fallidas o muertas',
+            ], 400);
+        }
+
+        $delivery->update([
+            'status' => 'pending',
+            'attempt_count' => 0,
+            'next_retry_at' => null,
+        ]);
+
+        DeliverWebhookJob::dispatch($delivery->id, $delivery->event->payload)
+            ->onQueue('deliveries');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reintento programado correctamente',
+        ]);
+    }
+
+    public function bulkRetry(Request $request): JsonResponse
+    {
+        $ids = $request->input('delivery_ids', []);
+
+        $count = WebhookDelivery::whereIn('id', $ids)
+            ->whereIn('status', ['failed', 'dead'])
+            ->update([
+                'status' => 'pending',
+                'attempt_count' => 0,
+                'next_retry_at' => null,
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$count} entregas programadas para reintento",
+        ]);
+    }
+}

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property numeric|null $price Unit price at time of document creation
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Modules\Documents\Entities\Document $document
+ * @property-read \App\Models\Document\Document $document
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|DocumentProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|DocumentProduct newQuery()
