@@ -11,7 +11,7 @@ use App\Models\Ticket\TicketHistory;
 use App\Models\Ticket\TicketNote;
 use App\Models\Ticket\TicketStatus;
 use App\Models\User;
-use App\Notifications\TicketCreateNotifications;
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

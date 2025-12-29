@@ -5,7 +5,7 @@ namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations;
 use App\Http\Controllers\Controller;
 use Modules\Campaign\Entities\Email;
 use Modules\Mail\Entities\MailList;
-use App\Jobs\ForceTriggerAutomation;
+use Modules\Campaign\Jobs\ForceTriggerAutomation;
 use App\Models\Attachment;
 use App\Models\Automation2;
 use App\Models\Segment;

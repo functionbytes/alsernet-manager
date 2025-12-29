@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Notifications;
+namespace Modules\Helpdesk\Notifications;
 
 use App\Models\Ticket\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TicketCreateNotifications extends Notification
+class TicketAssignNotification extends Notification
 {
     use Queueable;
 
@@ -36,7 +36,8 @@ class TicketCreateNotifications extends Notification
             'title' => $this->ticket->subject,
             'category' => $this->ticket->category_id ? $this->ticket->category != null ? $this->ticket->category->name : null : null,
             'status' => $this->ticket->status,
-            'replystatus' => $this->ticket->replystatus,
+            'ticketassign' => $this->ticket->myassignuser_id ? 'yes' : 'no',
+            'ticketassignee_id' => $this->ticket->myassignuser_id,
             'overduestatus' => $this->ticket->overduestatus,
             'link' => route('admin.ticketshow', $this->ticket->ticket_id),
             'clink' => route('loadmore.load_data', $this->ticket->ticket_id),

@@ -3,11 +3,11 @@
 namespace App\Models\Campaign;
 
 use App;
-use App\Jobs\ExportSubscribersJob;
+use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;
-use App\Jobs\VerifyMailListJob;
+use Modules\Subscriber\Jobs\VerifyMailListJob;
 use app\Library\ExtendedSwiftMessage;
 use app\Library\MailListFieldMapping;
 use app\Library\RouletteWheel;

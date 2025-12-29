@@ -8,7 +8,7 @@ use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketCategorie;
 use App\Models\Ticket\TicketHistory;
 use App\Models\Ticket\TicketStatus;
-use App\Notifications\TicketCreateNotifications;
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

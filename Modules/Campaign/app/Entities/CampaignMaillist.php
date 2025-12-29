@@ -3,7 +3,7 @@
 namespace Modules\Campaign\Entities;
 
 use App;
-use App\Jobs\ExportSubscribersJob;
+use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;

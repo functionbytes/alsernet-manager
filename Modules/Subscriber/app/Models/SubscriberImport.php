@@ -3,7 +3,7 @@
 namespace Modules\Subscriber\Models;
 
 use App\Imports\SubscribersImport;
-use App\Jobs\ExportSubscribersJob;
+use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use app\Library\StringHelper;
 use App\Library\Traits\QueryHelper;
 use App\Library\Traits\TrackJobs;

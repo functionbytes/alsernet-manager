@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers\Helpdesk;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Helpdesks\StoreTicketRequest;
-use App\Http\Requests\Helpdesks\UpdateTicketRequest;
+use Modules\Helpdesk\Http\Requests\StoreTicketRequest;
+use Modules\Helpdesk\Http\Requests\UpdateTicketRequest;
 use App\Models\Helpdesk\Customer;
 use App\Models\Helpdesk\Group;
 use App\Models\Helpdesk\Ticket;

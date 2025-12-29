@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers\Helpdesk;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Helpdesks\StoreTicketNoteRequest;
-use App\Http\Requests\Helpdesks\UpdateTicketNoteRequest;
+use Modules\Helpdesk\Http\Requests\StoreTicketNoteRequest;
+use Modules\Helpdesk\Http\Requests\UpdateTicketNoteRequest;
 use App\Models\Helpdesk\Ticket;
 use App\Models\Helpdesk\TicketNote;
 use Illuminate\Http\JsonResponse;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Managers\Helpdesk;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Helpdesks\StoreTicketCommentRequest;
-use App\Http\Requests\Helpdesks\UpdateTicketCommentRequest;
+use Modules\Helpdesk\Http\Requests\StoreTicketCommentRequest;
+use Modules\Helpdesk\Http\Requests\UpdateTicketCommentRequest;
 use Modules\Mail\Mail\Helpdesk\TicketReplyMail;
 use App\Models\Helpdesk\Ticket;
 use App\Models\Helpdesk\TicketComment;

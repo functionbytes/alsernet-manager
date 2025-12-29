@@ -13,7 +13,7 @@ use App\Models\Ticket\TicketField;
 use App\Models\Ticket\TicketHistory;
 use App\Models\Ticket\TicketMail;
 use App\Models\User;
-use App\Notifications\TicketCreateNotifications;
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

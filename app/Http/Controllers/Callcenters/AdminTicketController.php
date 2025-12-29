@@ -22,7 +22,7 @@ use App\Models\TicketCustomfield;
 use App\Models\tickethistory;
 use App\Models\Ticketnote;
 use App\Models\User;
-use App\Notifications\TicketCreateNotifications;
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

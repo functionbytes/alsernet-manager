@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\ImportBlacklistJob;
+use Modules\Subscriber\Jobs\ImportBlacklistJob;
 use App\Library\AutoBillingData;
 use App\Library\Facades\Billing;
 use App\Library\Facades\SubscriptionFacade;

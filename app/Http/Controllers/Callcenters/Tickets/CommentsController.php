@@ -9,7 +9,7 @@ use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketComment;
 use App\Models\Ticket\TicketHistory;
 use App\Models\User;
-use App\Notifications\TicketCreateNotifications;
+use Modules\Helpdesk\Notifications\TicketCreateNotifications;
 use Auth;
 use Illuminate\Http\Request;
 
