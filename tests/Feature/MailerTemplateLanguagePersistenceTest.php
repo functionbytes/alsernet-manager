@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Lang;
-use App\Models\Mail\MailTemplate;
-use App\Models\Mail\MailTemplateTranslation;
+use Modules\Mail\Models\MailTemplate;
+use Modules\Mail\Models\MailTemplateTranslation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

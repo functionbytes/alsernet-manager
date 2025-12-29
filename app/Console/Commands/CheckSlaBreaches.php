@@ -206,7 +206,7 @@ class CheckSlaBreaches extends Command
                 foreach ($recipients as $email) {
                     // Send email notification
                     \Illuminate\Support\Facades\Mail::to($email)->send(
-                        new \App\Mail\Helpdesk\TicketSlaBreachMail($ticket, $breach)
+                        new \Modules\Mail\Mail\Helpdesk\TicketSlaBreachMail($ticket, $breach)
                     );
                 }
             }

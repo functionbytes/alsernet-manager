@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Email;
 
-use App\Models\Mail\MailTemplate;
-use App\Models\Mail\MailTemplateTranslation;
+use Modules\Mail\Models\MailTemplate;
+use Modules\Mail\Models\MailTemplateTranslation;
 use Illuminate\Database\Seeder;
 
 class MigrateEmailTemplateTranslationsSeeder extends Seeder

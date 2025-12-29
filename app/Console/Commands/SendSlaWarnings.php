@@ -204,7 +204,7 @@ class SendSlaWarnings extends Command
                     $recipients = $ticket->slaPolicy->escalation_recipients ?? [];
                     foreach ($recipients as $email) {
                         \Illuminate\Support\Facades\Mail::to($email)->send(
-                            new \App\Mail\Helpdesk\TicketSlaWarningMail($ticket, $type, $remainingMinutes)
+                            new \Modules\Mail\Mail\Helpdesk\TicketSlaWarningMail($ticket, $type, $remainingMinutes)
                         );
                     }
                 }

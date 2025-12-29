@@ -55,7 +55,6 @@ use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
 use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
 use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
-use App\Http\Controllers\Managers\Settings\PrestashopSettingsController;
 use App\Http\Controllers\Managers\Settings\Roles\PermissionController;
 use App\Http\Controllers\Managers\Settings\Roles\RoleController;
 use App\Http\Controllers\Managers\Settings\SearchSettingsController;

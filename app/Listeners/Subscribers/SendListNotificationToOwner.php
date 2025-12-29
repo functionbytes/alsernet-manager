@@ -2,8 +2,8 @@
 
 namespace App\Listeners\Subscribers;
 
-use App\Events\MailListSubscription;
-use App\Events\MailListUnsubscription;
+use App\Events\Campaigns\MailListSubscription;
+use App\Events\Campaigns\MailListUnsubscription;
 use App\Models\Setting;
 
 class SendListNotificationToOwner
@@ -34,12 +34,12 @@ class SendListNotificationToOwner
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\MailListSubscription',
+            'App\Events\Campaigns\MailListSubscription',
             [SendListNotificationToOwner::class, 'handleMailListSubscription']
         );
 
         $events->listen(
-            'App\Events\MailListUnsubscription',
+            'App\Events\Campaigns\MailListUnsubscription',
             [SendListNotificationToOwner::class, 'handleMailListUnsubscription']
         );
     }

@@ -3,7 +3,7 @@
 namespace Database\Seeders\Email;
 
 use App\Models\Lang;
-use App\Models\Mail\MailVariable;
+use Modules\Mail\Models\MailVariable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

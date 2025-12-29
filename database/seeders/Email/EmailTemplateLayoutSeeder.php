@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Email;
 
-use App\Models\Mail\MailLayout;
-use App\Models\Mail\MailLayoutLang;
+use Modules\Mail\Models\MailLayout;
+use Modules\Mail\Models\MailLayoutLang;
 use Illuminate\Database\Seeder;
 
 class EmailTemplateLayoutSeeder extends Seeder
@@ -93,7 +93,7 @@ class EmailTemplateLayoutSeeder extends Seeder
      */
     private function createResetPasswordTemplate($layoutId)
     {
-        $template = \App\Models\Mail\MailTemplate::updateOrCreate(
+        $template = \Modules\Mail\Models\MailTemplate::updateOrCreate(
             ['key' => 'password_reset'],
             [
                 'name' => 'Restablecer Contraseña',

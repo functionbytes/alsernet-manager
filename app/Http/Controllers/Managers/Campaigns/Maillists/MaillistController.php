@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Managers\Campaigns\Maillists;
 
-use App\Events\MailListUpdated;
+use App\Events\Campaigns\MailListUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Maillists\AppUrl;
 use App\Http\Controllers\Managers\Maillists\Customer;

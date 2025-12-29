@@ -3016,7 +3016,7 @@ class DocumentsController extends Controller
         }
 
         // Obtener todos los grupos de validación que el usuario pertenece
-        $validatorGroups = \Modules\Documents\Validations\\ValidatorGroup::whereHas(
+        $validatorGroups = \Modules\Documents\Validation\ValidatorGroup::whereHas(
             'users',
             fn ($q) => $q->where('users.id', $user->id)
         )->pluck('key')->toArray();

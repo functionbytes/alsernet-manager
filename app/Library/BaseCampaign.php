@@ -2,7 +2,7 @@
 
 namespace App\Library;
 
-use App\Events\CampaignUpdated;
+use App\Events\Campaigns\CampaignUpdated;
 use App\Jobs\LoadCampaign;
 use App\Jobs\RunCampaign;
 use App\Library\Traits\HasCache;

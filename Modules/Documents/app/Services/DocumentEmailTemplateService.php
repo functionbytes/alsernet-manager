@@ -4,7 +4,7 @@ namespace Modules\Documents\Services;
 
 use Modules\Mail\Models\MailTemplate;
 use App\Models\Setting;
-use App\Services\Mails\MailTemplateRendererService;
+use Modules\Mail\Services\MailTemplateRendererService;
 use Illuminate\Support\Facades\Mail;
 use Modules\Documents\Entities\Document;
 use Modules\Documents\Entities\DocumentMail;

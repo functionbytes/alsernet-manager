@@ -3,7 +3,7 @@
 namespace Database\Seeders\Email;
 
 use App\Models\Layout\Layout;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use Illuminate\Database\Seeder;
 
 class EmailTemplateSeeder extends Seeder

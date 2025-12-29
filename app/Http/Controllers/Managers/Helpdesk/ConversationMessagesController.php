@@ -73,7 +73,7 @@ class ConversationMessagesController extends Controller
         }
 
         // Broadcast event for real-time
-        broadcast(new \App\Events\ConversationMessageCreated($item))->toOthers();
+        broadcast(new \App\Events\Helpdesk\ConversationMessageCreated($item))->toOthers();
 
         return response()->json([
             'id' => $item->id,
@@ -104,7 +104,7 @@ class ConversationMessagesController extends Controller
         ]);
 
         // Broadcast event
-        broadcast(new \App\Events\ConversationMessageRead($item, auth()->user()))->toOthers();
+        broadcast(new \App\Events\Helpdesk\ConversationMessageRead($item, auth()->user()))->toOthers();
 
         return response()->json(['success' => true]);
     }
@@ -120,7 +120,7 @@ class ConversationMessagesController extends Controller
             'is_typing' => 'boolean',
         ]);
 
-        broadcast(new \App\Events\ConversationUserTyping(
+        broadcast(new \App\Events\Helpdesk\ConversationUserTyping(
             $conversation,
             auth()->user(),
             $validated['is_typing']

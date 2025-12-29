@@ -3,7 +3,7 @@
 namespace App\Jobs\Supplier;
 
 use App\Models\Supplier\SupplierAiContent;
-use App\Services\Supplier\SyncService;
+use Modules\Prestashop\Services\SupplierSyncService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -90,7 +90,7 @@ class SyncContentToPrestashopJob implements ShouldQueue
     /**
      * Execute the job
      */
-    public function handle(SyncService $syncService): void
+    public function handle(SupplierSyncService $syncService): void
     {
         if ($this->content) {
             $this->handleSingleSync($syncService);
@@ -102,7 +102,7 @@ class SyncContentToPrestashopJob implements ShouldQueue
     /**
      * Handle synchronization of a single content item
      */
-    protected function handleSingleSync(SyncService $syncService): void
+    protected function handleSingleSync(SupplierSyncService $syncService): void
     {
         Log::info('Starting PrestaShop sync for single content', [
             'batch_id' => $this->batchId,

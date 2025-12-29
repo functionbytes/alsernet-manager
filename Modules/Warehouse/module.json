@@ -1,0 +1,11 @@
+{
+    "name": "Warehouse",
+    "alias": "warehouse",
+    "description": "Módulo de gestión de almacenes con inventario multi-nivel, control de ubicaciones y transferencias",
+    "keywords": ["warehouse", "inventory", "stock", "locations", "transfers"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Warehouse\\Providers\\WarehouseServiceProvider"
+    ],
+    "files": []
+}

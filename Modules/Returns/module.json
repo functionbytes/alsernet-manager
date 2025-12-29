@@ -1,0 +1,11 @@
+{
+    "name": "Returns",
+    "alias": "returns",
+    "description": "Módulo de gestión de devoluciones con sistema de garantías, inspecciones y comunicación",
+    "keywords": ["returns", "warranty", "inspection", "communication", "refunds"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Returns\\Providers\\ReturnsServiceProvider"
+    ],
+    "files": []
+}

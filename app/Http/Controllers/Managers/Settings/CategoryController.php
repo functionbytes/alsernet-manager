@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Managers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\PrestaShopCategoryMapping;
-use App\Services\Category\PrestaShopCategorySyncService;
+use Modules\Prestashop\Services\CategorySyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
-    protected PrestaShopCategorySyncService $syncService;
+    protected CategorySyncService $syncService;
 
-    public function __construct(PrestaShopCategorySyncService $syncService)
+    public function __construct(CategorySyncService $syncService)
     {
         $this->syncService = $syncService;
     }

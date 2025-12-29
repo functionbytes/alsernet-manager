@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Warehouse;
 
-use App\Models\Warehouse\WarehouseFloor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Entities\WarehouseFloor;
 
 class FloorSeeder extends Seeder
 {

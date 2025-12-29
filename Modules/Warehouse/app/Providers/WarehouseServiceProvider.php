@@ -1,0 +1,202 @@
+<?php
+
+namespace Modules\Warehouse\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
+use Nwidart\Modules\Traits\PathNamespace;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
+class WarehouseServiceProvider extends ServiceProvider
+{
+    use PathNamespace;
+
+    protected string $name = 'Warehouse';
+
+    protected string $nameLower = 'warehouse';
+
+    /**
+     * Boot the application events.
+     */
+    public function boot(): void
+    {
+        $this->registerCommands();
+        $this->registerCommandSchedules();
+        $this->registerTranslations();
+        $this->registerConfig();
+        $this->registerViews();
+        $this->registerViewComposers();
+        $this->loadMigrationsFrom(base_path('database/migrations/warehouses'));
+    }
+
+    /**
+     * Register the service provider.
+     */
+    public function register(): void
+    {
+        $this->app->register(RouteServiceProvider::class);
+
+        // Registrar WarehouseLayoutParser como singleton
+        $this->app->singleton(
+            \Modules\Warehouse\Services\WarehouseLayoutParser::class,
+            fn ($app) => new \Modules\Warehouse\Services\WarehouseLayoutParser
+        );
+
+        // Registrar policies
+        $this->registerPolicies();
+    }
+
+    /**
+     * Register policies for warehouse models
+     */
+    protected function registerPolicies(): void
+    {
+        if (class_exists(\Modules\Warehouse\Entities\Warehouse::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\Warehouse::class,
+                \Modules\Warehouse\Policies\WarehousePolicy::class
+            );
+        }
+
+        if (class_exists(\Modules\Warehouse\Entities\WarehouseLocation::class)) {
+            Gate::policy(
+                \Modules\Warehouse\Entities\WarehouseLocation::class,
+                \Modules\Warehouse\Policies\WarehouseLocationPolicy::class
+            );
+        }
+    }
+
+    /**
+     * Register commands in the format of Command::class
+     */
+    protected function registerCommands(): void
+    {
+        // Commands will be registered here as they are created
+        // $this->commands([
+        //     \Modules\Warehouse\Commands\SyncWarehouseInventory::class,
+        // ]);
+    }
+
+    /**
+     * Register command Schedules.
+     */
+    protected function registerCommandSchedules(): void
+    {
+        // $this->app->booted(function () {
+        //     $schedule = $this->app->make(Schedule::class);
+        //     $schedule->command('warehouse:sync')->hourly();
+        // });
+    }
+
+    /**
+     * Register translations.
+     */
+    public function registerTranslations(): void
+    {
+        $langPath = resource_path('lang/modules/'.$this->nameLower);
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, $this->nameLower);
+            $this->loadJsonTranslationsFrom($langPath);
+        } else {
+            $this->loadTranslationsFrom(module_path($this->name, 'lang'), $this->nameLower);
+            $this->loadJsonTranslationsFrom(module_path($this->name, 'lang'));
+        }
+    }
+
+    /**
+     * Register config.
+     */
+    protected function registerConfig(): void
+    {
+        $configPath = module_path($this->name, config('modules.paths.generator.config.path'));
+
+        if (is_dir($configPath)) {
+            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($configPath));
+
+            foreach ($iterator as $file) {
+                if ($file->isFile() && $file->getExtension() === 'php') {
+                    $config = str_replace($configPath.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $config_key = str_replace([DIRECTORY_SEPARATOR, '.php'], ['.', ''], $config);
+                    $segments = explode('.', $this->nameLower.'.'.$config_key);
+
+                    // Remove duplicated adjacent segments
+                    $normalized = [];
+                    foreach ($segments as $segment) {
+                        if (end($normalized) !== $segment) {
+                            $normalized[] = $segment;
+                        }
+                    }
+
+                    $key = ($config === 'config.php') ? $this->nameLower : implode('.', $normalized);
+
+                    $this->publishes([$file->getPathname() => config_path($config)], 'config');
+                    $this->merge_config_from($file->getPathname(), $key);
+                }
+            }
+        }
+    }
+
+    /**
+     * Merge config from the given path recursively.
+     */
+    protected function merge_config_from(string $path, string $key): void
+    {
+        $existing = config($key, []);
+        $module_config = require $path;
+
+        // Only merge if the config file returned an array
+        if (is_array($module_config)) {
+            config([$key => array_replace_recursive($existing, $module_config)]);
+        }
+    }
+
+    /**
+     * Register views.
+     */
+    public function registerViews(): void
+    {
+        $viewPath = resource_path('views/modules/'.$this->nameLower);
+        $sourcePath = module_path($this->name, 'resources/views');
+
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->nameLower.'-module-views']);
+
+        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
+
+        Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
+    }
+
+    /**
+     * Register view composers.
+     */
+    protected function registerViewComposers(): void
+    {
+        // Register navigation composer for managers layout
+        view()->composer(
+            'managers.includes.nav',
+            \Modules\Warehouse\Http\ViewComposers\NavigationComposer::class
+        );
+    }
+
+    /**
+     * Get the services provided by the provider.
+     */
+    public function provides(): array
+    {
+        return [];
+    }
+
+    private function getPublishableViewPaths(): array
+    {
+        $paths = [];
+        foreach (config('view.paths') as $path) {
+            if (is_dir($path.'/modules/'.$this->nameLower)) {
+                $paths[] = $path.'/modules/'.$this->nameLower;
+            }
+        }
+
+        return $paths;
+    }
+}

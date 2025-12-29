@@ -22,7 +22,7 @@
 
 namespace App\Models\Campaign;
 
-use App\Events\CampaignUpdated;
+use App\Events\Campaigns\CampaignUpdated;
 use App\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;

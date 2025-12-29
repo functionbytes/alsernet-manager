@@ -3,7 +3,7 @@
 namespace Modules\Documents\Mail;
 
 use Modules\Mail\Models\MailTemplate;
-use App\Services\Mails\MailTemplateRendererService;
+use Modules\Mail\Services\MailTemplateRendererService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

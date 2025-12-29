@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Managers\Settings\Orders;
 
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

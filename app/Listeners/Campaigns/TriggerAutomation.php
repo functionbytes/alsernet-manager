@@ -2,8 +2,8 @@
 
 namespace App\Listeners\Campaigns;
 
-use App\Events\MailListSubscription;
-use App\Events\MailListUnsubscription;
+use App\Events\Campaigns\MailListSubscription;
+use App\Events\Campaigns\MailListUnsubscription;
 use App\Models\Campaign\Automation\Automation;
 
 class TriggerAutomation
@@ -64,12 +64,12 @@ class TriggerAutomation
     public function subscribe($events)
     {
         $events->listen(
-            'App\Events\MailListSubscription',
+            'App\Events\Campaigns\MailListSubscription',
             [TriggerAutomation::class, 'handleMailListSubscription']
         );
 
         $events->listen(
-            'App\Events\MailListUnsubscription',
+            'App\Events\Campaigns\MailListUnsubscription',
             [TriggerAutomation::class, 'handleMailListUnsubscription']
         );
     }

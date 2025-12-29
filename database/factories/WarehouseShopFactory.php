@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Warehouse\WarehouseShop;
+use Modules\Warehouse\Entities\WarehouseShop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Warehouse\WarehouseShop>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Warehouse\Entities\WarehouseShop>
  */
 class WarehouseShopFactory extends Factory
 {

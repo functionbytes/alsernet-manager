@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Campaigns;
 
-use App\Events\MailListImported;
+use App\Events\Campaigns\MailListImported;
 use App\Models\Campaign\Automation\Automation;
 use App\Models\Setting;
 

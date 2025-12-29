@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Campaigns;
 
-use App\Events\MailListUpdated;
+use App\Events\Campaigns\MailListUpdated;
 use App\Jobs\UpdateMailListJob;
 
 class MailListUpdatedListener

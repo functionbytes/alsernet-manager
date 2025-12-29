@@ -3,9 +3,9 @@
 namespace App\Models\Campaign;
 
 use App;
-use App\Events\MailListImported;
-use App\Events\MailListSubscription;
-use App\Events\MailListUpdated;
+use App\Events\Campaigns\MailListImported;
+use App\Events\Campaigns\MailListSubscription;
+use App\Events\Campaigns\MailListUpdated;
 use App\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;

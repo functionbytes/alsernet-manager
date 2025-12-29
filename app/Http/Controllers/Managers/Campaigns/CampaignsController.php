@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Managers\Campaigns;
 
-use App\Events\CampaignUpdated;
+use App\Events\Campaigns\CampaignUpdated;
 use App\Http\Controllers\Controller;
 use App\Jobs\ExportCampaignLog;
 use App\Library\StringHelper;
@@ -68,7 +68,7 @@ class CampaignsController extends Controller
     {
         $campaign = Campaign::findByUid($id);
 
-        \App\Events\CampaignUpdated::dispatch($campaign);
+        \App\Events\Campaigns\CampaignUpdated::dispatch($campaign);
 
         if ($campaign->status == 'new') {
             return redirect()->route('CampaignController@edit', ['uid' => $campaign->uid]);
@@ -501,7 +501,7 @@ class CampaignsController extends Controller
 
         // Trigger the CampaignUpdate event to update the campaign cache information
         // The second parameter of the constructor function is false, meanining immediate update
-        \App\Events\CampaignUpdated::dispatch($campaign);
+        \App\Events\Campaigns\CampaignUpdated::dispatch($campaign);
 
         return view('managers.views.campaigns.campaigns.overview', [
             'campaign' => $campaign,

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Category;
-use App\Services\Category\PrestaShopCategorySyncService;
+use Modules\Prestashop\Services\CategorySyncService;
 use Illuminate\Console\Command;
 
 class SyncPrestaShopCategories extends Command
@@ -25,9 +25,9 @@ class SyncPrestaShopCategories extends Command
      */
     protected $description = 'Synchronize categories between Laravel and PrestaShop';
 
-    protected PrestaShopCategorySyncService $syncService;
+    protected CategorySyncService $syncService;
 
-    public function __construct(PrestaShopCategorySyncService $syncService)
+    public function __construct(CategorySyncService $syncService)
     {
         parent::__construct();
         $this->syncService = $syncService;

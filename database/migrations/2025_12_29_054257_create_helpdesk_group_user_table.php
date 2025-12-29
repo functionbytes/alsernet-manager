@@ -6,20 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('helpdesk_group_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('helpdesk_group_id')->constrained('helpdesk_groups')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('role')->default('member');  // member, supervisor, admin
+            $table->timestamp('assigned_at')->useCurrent();
             $table->timestamps();
+            $table->unique(['helpdesk_group_id', 'user_id']);
+            $table->index('user_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('helpdesk_group_user');

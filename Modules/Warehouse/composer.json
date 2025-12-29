@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/warehouse",
+    "description": "Warehouse management module for Alsernet",
+    "authors": [
+        {
+            "name": "Alsernet",
+            "email": "dev@alsernet.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Warehouse\\": "app/",
+            "Modules\\Warehouse\\Database\\Factories\\": "database/factories/",
+            "Modules\\Warehouse\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Warehouse\\Tests\\": "tests/"
+        }
+    }
+}

@@ -4,7 +4,7 @@ namespace Database\Seeders\Documents;
 
 use App\Models\Lang;
 use App\Models\Layout\Layout;
-use App\Models\Mail\MailTemplate;
+use Modules\Mail\Models\MailTemplate;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
