@@ -778,7 +778,7 @@ class SubscriberController extends Controller
         if ($request->uid != '0') {
             $subscriber = Subscriber::findByUid($request->uid);
         } else {
-            $subscriber = new \App\Models\Subscriber;
+            $subscriber = new Modules\Subscriber\Models\Subscriber();
         }
 
         if (is_file($subscriber->getImagePath())) {

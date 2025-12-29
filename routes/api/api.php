@@ -3,27 +3,29 @@
 use App\Http\Controllers\Api\ErpController;
 use App\Http\Controllers\Api\Return\PublicReturnController;
 use App\Http\Controllers\Api\Return\ReturnController;
-use App\Http\Controllers\Api\SubscribersController;
+use Modules\Subscriber\Http\Controllers\Api\SubscribersController;
 use App\Http\Controllers\Api\TicketsController;
 use Illuminate\Support\Facades\Route;
 use Modules\Documents\Http\Controllers\Api\DocumentsController;
 
-Route::group(['prefix' => 'subscribers'], function () {
-    Route::post('/', [SubscribersController::class, 'process']);
-    Route::put('/replace', [SubscribersController::class, 'replace']);
-    Route::patch('patch', [SubscribersController::class, 'update']);
-    Route::post('process', [SubscribersController::class, 'process']);
-    Route::post('campaigns', [SubscribersController::class, 'campaigns']);
-});
+// @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php
+// Route::group(['prefix' => 'subscribers'], function () {
+//     Route::post('/', [SubscribersController::class, 'process']);
+//     Route::put('/replace', [SubscribersController::class, 'replace']);
+//     Route::patch('patch', [SubscribersController::class, 'update']);
+//     Route::post('process', [SubscribersController::class, 'process']);
+//     Route::post('campaigns', [SubscribersController::class, 'campaigns']);
+// });
 
-Route::group(['prefix' => 'subscribers'], function () {
-    Route::post('/', [SubscribersController::class, 'process']);
-    Route::put('/replace', [SubscribersController::class, 'replace']);
-    Route::patch('patch', [SubscribersController::class, 'update']);
-    Route::post('process', [SubscribersController::class, 'process']);
-    Route::post('campaigns', [SubscribersController::class, 'campaigns']);
-    Route::get('synchronization', [SubscribersController::class, 'synchronization']);
-});
+// @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php
+// Route::group(['prefix' => 'subscribers'], function () {
+//     Route::post('/', [SubscribersController::class, 'process']);
+//     Route::put('/replace', [SubscribersController::class, 'replace']);
+//     Route::patch('patch', [SubscribersController::class, 'update']);
+//     Route::post('process', [SubscribersController::class, 'process']);
+//     Route::post('campaigns', [SubscribersController::class, 'campaigns']);
+//     Route::get('synchronization', [SubscribersController::class, 'synchronization']);
+// });
 
 Route::group(['prefix' => 'documents'], function () {
     Route::post('/', [DocumentsController::class, 'process']);

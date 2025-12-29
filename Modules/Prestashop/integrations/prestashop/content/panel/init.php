@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,7 +24,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 ob_start();
 $timerStart = microtime(true);
 
@@ -36,7 +36,7 @@ try {
         $context->employee->logout();
     }
 
-    if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
+    if (! isset($context->employee) || ! $context->employee->isLoggedBack()) {
         Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
     }
 
@@ -56,10 +56,10 @@ try {
     $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);
     $context->link = $link;
-    if (!defined('_PS_BASE_URL_')) {
+    if (! defined('_PS_BASE_URL_')) {
         define('_PS_BASE_URL_', Tools::getShopDomain(true));
     }
-    if (!defined('_PS_BASE_URL_SSL_')) {
+    if (! defined('_PS_BASE_URL_SSL_')) {
         define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
     }
 
@@ -67,7 +67,7 @@ try {
     // if the current employee theme is not valid (check layout.tpl presence),
     // reset to default theme
     if (empty($context->employee->bo_theme) ||
-        !file_exists($path.$context->employee->bo_theme.'/template/layout.tpl')) {
+        ! file_exists($path.$context->employee->bo_theme.'/template/layout.tpl')) {
         // default admin theme is "default".
         $context->employee->bo_theme = '';
         if (file_exists($path.'default/template/layout.tpl')) {
@@ -96,7 +96,7 @@ try {
         $query = (isset($url['query'])) ? $url['query'] : '';
         parse_str($query, $parseQuery);
         unset($parseQuery['setShopContext']);
-        Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
+        Tools::redirectAdmin($url['path'].'?'.http_build_query($parseQuery, '', '&'));
     }
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -125,7 +125,7 @@ try {
         }
 
         // Replace existing shop if necessary
-        if (!$shop_id) {
+        if (! $shop_id) {
             $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
         } elseif ($context->shop->id != $shop_id) {
             $context->shop = new Shop($shop_id);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,33 +24,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-
-
 $timer_start = microtime(true);
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 
-if (!defined('PS_ADMIN_DIR')) {
+if (! defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
 require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require _PS_ADMIN_DIR_.'/../init.php';
 
-function deleteCategory($id_category) {
-    if (!empty($id_category) || !is_numeric($id_category)) {
+function deleteCategory($id_category)
+{
+    if (! empty($id_category) || ! is_numeric($id_category)) {
         // borrar categoria
         $category = new Category((int) $id_category);
         $category->delete();
-        //dump($id_category);
+        // dump($id_category);
     } else {
         dump($id_category);
     }
 }
 
-function deleteCategoriesSameName($id_parent) {
+function deleteCategoriesSameName($id_parent)
+{
     $sql = 'SELECT cl.`name`, COUNT(cl.`name`) AS \'count\', GROUP_CONCAT(CAST(c.`id_category` AS CHAR)) AS \'group_concat\', c.`id_parent` 
             FROM `'._DB_PREFIX_.'category` c 
             INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category`=c.`id_category` AND cl.`id_shop`=1 AND cl.`id_lang`=1 
@@ -61,10 +61,11 @@ function deleteCategoriesSameName($id_parent) {
 
     if ($categories_same_name) {
         dump($categories_same_name);
-        //dump($categories_same_name);
+        // dump($categories_same_name);
         foreach ($categories_same_name as $category_same_name) {
             if ((int) $category_same_name['count'] > 2) {
                 dump($category_same_name);
+
                 continue;
             }
 
@@ -89,4 +90,4 @@ function deleteCategoriesSameName($id_parent) {
 /* Eliminar caetegorias hermanas con mismo nombre que cuelguen de la categoria 59963 (ev. rebajas) */
 deleteCategoriesSameName(59963);
 
-//deleteCategoriesSameName(60161);
+// deleteCategoriesSameName(60161);

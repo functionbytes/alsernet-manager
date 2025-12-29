@@ -1,14 +1,13 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
+function peticionget($url)
+{
 
-
-function peticionget($url){
-    
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -19,14 +18,10 @@ function peticionget($url){
 
 }
 
-
-$URL = "http://127.0.0.1:59000/integracion/CambiosPendientes/?destino=2&limit=1";
+$URL = 'http://127.0.0.1:59000/integracion/CambiosPendientes/?destino=2&limit=1';
 
 $content = peticionget($URL);
-$jsonData = trim(stripslashes($content),'"');
-$obj=json_decode($jsonData, true);
-$results = $obj["results"];
+$jsonData = trim(stripslashes($content), '"');
+$obj = json_decode($jsonData, true);
+$results = $obj['results'];
 dump($content);
-
-
-

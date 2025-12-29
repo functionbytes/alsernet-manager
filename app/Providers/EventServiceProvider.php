@@ -65,10 +65,6 @@ class EventServiceProvider extends ServiceProvider
             BackupEventListener::class.'@handleBackupWasNotSuccessful',
         ],
 
-        // SubscriberCheckatEvent::class => [
-        // SubscriberCheckatListener::class,
-        // ],
-
     ];
 
     public function boot(): void

@@ -10,7 +10,7 @@ use App\Models\Attachment;
 use App\Models\Automation2;
 use App\Models\Segment;
 use App\Models\Setting;
-use App\Models\Subscriber;
+use Modules\Subscriber\Models\Subscriber;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use Exception;

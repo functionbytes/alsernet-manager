@@ -264,7 +264,10 @@
       "Bash(while read folder)",
       "Bash(do echo '📁 $folder' head -3 /Users/functionbytes/Function/Coding/manager/database/seeders/$folder/*.php)",
       "Bash(while read commit)",
-      "Bash(do git show $commit:database/migrations)"
+      "Bash(do git show $commit:database/migrations)",
+      "Bash(git -C /Users/functionbytes/Function/Coding/manager log --all --full-history -- app/Events/Subscribers/* app/Listeners/Subscribers/* --oneline)",
+      "Bash(git -C /Users/functionbytes/Function/Coding/manager show --name-status cd1c355a7ab084e4d9a5b71df15fff95e3b7fb09)",
+      "Bash(git -C /Users/functionbytes/Function/Coding/manager log --all -p -- app/Listeners/Subscribers/SendListNotificationToOwner.php)"
     ],
     "deny": [],
     "ask": []

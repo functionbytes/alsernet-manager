@@ -687,7 +687,7 @@ class User extends Authenticatable
      */
     public static function subscribersCountByTime($begin, $end, $customer_id = null, $list_id = null, $status = null)
     {
-        $query = \App\Models\Subscriber::leftJoin('mail_lists', 'mail_lists.id', '=', 'subscribers.mail_list_id')
+        $query = Modules\Subscriber\Models\Subscriber::leftJoin('mail_lists', 'mail_lists.id', '=', 'subscribers.mail_list_id')
             ->leftJoin('customers', 'customers.id', '=', 'mail_lists.customer_id');
 
         if (isset($list_id)) {
@@ -995,7 +995,7 @@ class User extends Authenticatable
                 return $this->subscribersUsage(true);
             },
             'SubscribedCount' => function () {
-                return $this->getSubscriberCountByStatus(\App\Models\Subscriber::STATUS_SUBSCRIBED);
+                return $this->getSubscriberCountByStatus(Modules\Subscriber\Models\Subscriber::STATUS_SUBSCRIBED);
             },
             'UnsubscribedCount' => function () {
                 return $this->getSubscriberCountByStatus(Subscriber::STATUS_UNSUBSCRIBED);

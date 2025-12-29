@@ -1,46 +1,43 @@
 <?php
 
-include (dirname(__FILE__).'/../../config/config.inc.php');
-include (dirname(__FILE__).'/../../init.php');
+include dirname(__FILE__).'/../../config/config.inc.php';
+include dirname(__FILE__).'/../../init.php';
 
-
-function getfieldvalue($dbh,$sql){
+function getfieldvalue($dbh, $sql)
+{
     $rows = $dbh->query($sql);
-    foreach($rows as $row){
+    foreach ($rows as $row) {
         return $row[0];
     }
 }
 
+function getTotalClientes()
+{
 
-function getTotalClientes(){
+    try {
 
-try {
-   
-    $dsn = "mysql:host=195.55.36.104;dbname=tienda";
-    $dbh = new PDO($dsn, 'tiendalvad', 'Nov.299909');
-    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e){
-    echo $e->getMessage();
+        $dsn = 'mysql:host=195.55.36.104;dbname=tienda';
+        $dbh = new PDO($dsn, 'tiendalvad', 'Nov.299909');
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $totalproductos = getfieldvalue($dbh, "SELECT count(id) FROM usuarios where email<>''");
+
+    return $totalproductos;
+
 }
 
-
-$totalproductos = getfieldvalue($dbh,"SELECT count(id) FROM usuarios where email<>''");
-return $totalproductos;
-
-}
-
-echo "<html>";
-echo "<head><script> var totalp=". getTotalClientes() . ";</script>";
+echo '<html>';
+echo '<head><script> var totalp='.getTotalClientes().';</script>';
 echo '<script type="text/javascript" src="/js/jquery/jquery-1.11.0.min.js"></script>';
 
-
-
-echo "</head>";
+echo '</head>';
 echo "<body style='text-align:center;'>";
 
-echo "<div><h3>No cierres esta ventana hasta que se indique</h3></div>";
+echo '<div><h3>No cierres esta ventana hasta que se indique</h3></div>';
 echo "<div id='refreshdata' style='margin-top:50px; margin-bottom:50px; height:100px;'></div>";
-
 
 echo "<center><table cellpadding='0' cellspacing='0' style='width:200px; border:solid 1px red; border-radius:8px;'>
 <tr style='height:16px;'>
@@ -49,13 +46,9 @@ echo "<center><table cellpadding='0' cellspacing='0' style='width:200px; border:
 </tr>
 </table></center>";
 
-
-
 echo "<h3 id='message'></h3>";
 
-
-
-echo "</body>";
+echo '</body>';
 
 echo "<script>
 		function refresca(data,j){
@@ -112,7 +105,4 @@ echo "<script>
 </script>
 ";
 
-echo "</html>";
-
-
-
+echo '</html>';

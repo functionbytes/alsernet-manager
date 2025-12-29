@@ -4,22 +4,22 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 require _PS_ADMIN_DIR_.'/../config/config.panel.inc.php';
-include (dirname(__FILE__).'/init.php');
-require dirname(__FILE__) . '/../override/classes/Traduccion.php';
+include dirname(__FILE__).'/init.php';
+require dirname(__FILE__).'/../override/classes/Traduccion.php';
 
-$traduccion = new Traduccion();
+$traduccion = new Traduccion;
 
 $javascript = $traduccion->getJavascript();
 $css = $traduccion->getCSS();
 
 if ($_REQUEST) {
-    $traduccion->id_categoria = $_REQUEST['id_categoria']?:0;
-    $traduccion->id_lang = $_REQUEST['id_lang']?:0;
-    $traduccion->id_attribute_group = $_REQUEST['id_attribute_group']?:0;
+    $traduccion->id_categoria = $_REQUEST['id_categoria'] ?: 0;
+    $traduccion->id_lang = $_REQUEST['id_lang'] ?: 0;
+    $traduccion->id_attribute_group = $_REQUEST['id_attribute_group'] ?: 0;
     $traduccion->texto_filtro = $_REQUEST['texto'];
     $traduccion->texto_filtro_traduccion = $_REQUEST['texto_traduccion'];
     $traduccion->estado_traduccion = $_REQUEST['estado_traduccion'];
@@ -36,37 +36,49 @@ if ($_REQUEST) {
 }
 if ($_POST['paginacion']) {
     $traduccion->paginacion = $_POST['paginacion'];
-}elseif ($_GET['paginacion']) {
+} elseif ($_GET['paginacion']) {
     $traduccion->paginacion = $_GET['paginacion'];
-}else{
+} else {
     $traduccion->paginacion = 0;
 }
 
 $idiomas = $traduccion->getIdiomas();
 foreach ($idiomas as $i) {
-    if ($i['id_lang'] == $traduccion->id_lang) $traduccion->idioma = $i;
+    if ($i['id_lang'] == $traduccion->id_lang) {
+        $traduccion->idioma = $i;
+    }
 }
 
-//Retorno petición AJAX
+// Retorno petición AJAX
 if ($_POST) {
-    if ($_POST['traduccion']=='deepl' && $_POST['campo_evaluacion']) {
-        if ($_POST['id_product']>0) {
+    if ($_POST['traduccion'] == 'deepl' && $_POST['campo_evaluacion']) {
+        if ($_POST['id_product'] > 0) {
             echo json_encode($traduccion->traducirProducto($_POST['id_product'], $_POST['id_lang'], $_POST['campo_evaluacion']));
-        }elseif ($_POST['id_attribute_group']>0) {
+        } elseif ($_POST['id_attribute_group'] > 0) {
             echo json_encode($traduccion->traducirCaracteristica($_POST['id_attribute_group'], $_POST['id_lang']));
-        }elseif ($_POST['id_attribute']>0) {
+        } elseif ($_POST['id_attribute'] > 0) {
             echo json_encode($traduccion->traducirAtributo($_POST['id_attribute'], $_POST['id_lang']));
         }
-        die;
+        exit;
     }
 }
 
 $url = $_SERVER['PHP_SELF'].'?';
-if ($traduccion->id_categoria !== null) $url .= "&id_categoria=".$traduccion->id_categoria;
-if ($traduccion->id_lang !== null) $url .= "&id_lang=".$traduccion->id_lang;
-if ($traduccion->estado_traduccion !== null) $url .= "&estado_traduccion=".$traduccion->estado_traduccion;
-if ($traduccion->campo_evaluacion !== null) $url .= "&campo_evaluacion=".$traduccion->campo_evaluacion;
-if ($traduccion->texto_filtro !== null) $url .= "&texto=".$traduccion->texto_filtro;
+if ($traduccion->id_categoria !== null) {
+    $url .= '&id_categoria='.$traduccion->id_categoria;
+}
+if ($traduccion->id_lang !== null) {
+    $url .= '&id_lang='.$traduccion->id_lang;
+}
+if ($traduccion->estado_traduccion !== null) {
+    $url .= '&estado_traduccion='.$traduccion->estado_traduccion;
+}
+if ($traduccion->campo_evaluacion !== null) {
+    $url .= '&campo_evaluacion='.$traduccion->campo_evaluacion;
+}
+if ($traduccion->texto_filtro !== null) {
+    $url .= '&texto='.$traduccion->texto_filtro;
+}
 
 $selector_tipo_traduccion = '<select name="tipo_traduccion">';
 $selector_tipo_traduccion .= '<option value="texto">Traducir textos</option>';
@@ -75,46 +87,68 @@ $selector_tipo_traduccion .= '<option value="caracteristicas">Traducir caracter�
 $selector_tipo_traduccion .= '<option value="atributos">Traducir atributos</option>';
 $selector_tipo_traduccion .= '</select>';
 
-$selected = "";
+$selected = '';
 $selector_categoria = '<select name="id_categoria">';
-if (!$traduccion->id_categoria) $selected = " selected";
+if (! $traduccion->id_categoria) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value=""'.$selected.'></option>';
-$selected = "";
-if ($traduccion->id_categoria==3) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 3) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="3"'.$selected.'>Golf</option>';
-$selected = "";
-if ($traduccion->id_categoria==4) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 4) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="4"'.$selected.'>Caza</option>';
-$selected = "";
-if ($traduccion->id_categoria==5) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 5) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="5"'.$selected.'>Pesca</option>';
-$selected = "";
-if ($traduccion->id_categoria==6) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 6) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="6"'.$selected.'>Hípica</option>';
-$selected = "";
-if ($traduccion->id_categoria==7) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 7) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="7"'.$selected.'>Buceo</option>';
-$selected = "";
-if ($traduccion->id_categoria==8) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 8) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="8"'.$selected.'>Náutica</option>';
-$selected = "";
-if ($traduccion->id_categoria==9) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 9) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="9"'.$selected.'>Esquí</option>';
-$selected = "";
-if ($traduccion->id_categoria==10) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 10) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="10"'.$selected.'>Pádel</option>';
-$selected = "";
-if ($traduccion->id_categoria==11) $selected = " selected";
+$selected = '';
+if ($traduccion->id_categoria == 11) {
+    $selected = ' selected';
+}
 $selector_categoria .= '<option value="11"'.$selected.'>Aventura</option>';
 $selector_categoria .= '</select>';
 
 $selector_idiomas = '<select name="id_lang">';
 foreach ($idiomas as $i) {
-    $selected = "";
+    $selected = '';
     if ($i['id_lang'] == $traduccion->id_lang) {
-        $selected = " selected";
+        $selected = ' selected';
     }
-    if ($i['id_lang']==1) continue;
+    if ($i['id_lang'] == 1) {
+        continue;
+    }
     $selector_idiomas .= '<option value="'.$i['id_lang'].'"'.$selected.'>'.$i['name'].'</option>';
 }
 $selector_idiomas .= '</select>';
@@ -122,42 +156,51 @@ $selector_idiomas .= '</select>';
 $selector_caracteristicas = '<select name="id_attribute_group">';
 $selector_caracteristicas .= '<option value=""></option>';
 foreach ($traduccion->getCaracteristicas(1) as $i) {
-    $selected = "";
+    $selected = '';
     if ($i['id_attribute_group'] == $traduccion->id_attribute_group) {
-        $selected = " selected";
+        $selected = ' selected';
     }
-    if ($i['id_attribute_group']==1) continue;
+    if ($i['id_attribute_group'] == 1) {
+        continue;
+    }
     $selector_caracteristicas .= '<option value="'.$i['id_attribute_group'].'"'.$selected.'>'.$i['name'].'</option>';
 }
 $selector_caracteristicas .= '</select>';
 
-$selected = "";
+$selected = '';
 $selector_estado = '<select name="estado_traduccion">';
-if ($traduccion->estado_traduccion == 1) $selected = " selected";
+if ($traduccion->estado_traduccion == 1) {
+    $selected = ' selected';
+}
 $selector_estado .= '<option value="1"'.$selected.'>Pendientes de traducción</option>';
-$selected = "";
-if ($traduccion->estado_traduccion == 2) $selected = " selected";
+$selected = '';
+if ($traduccion->estado_traduccion == 2) {
+    $selected = ' selected';
+}
 $selector_estado .= '<option value="2"'.$selected.'>Traducidos</option>';
 $selector_estado .= '</select>';
 
-$selected = "";
+$selected = '';
 $selector_campo = '<select name="campo_evaluacion">';
-if ($traduccion->campo_evaluacion == 'name') $selected = " selected";
+if ($traduccion->campo_evaluacion == 'name') {
+    $selected = ' selected';
+}
 $selector_campo .= '<option value="name"'.$selected.'>Nombre</option>';
-$selected = "";
-if ($traduccion->campo_evaluacion == 'description') $selected = " selected";
+$selected = '';
+if ($traduccion->campo_evaluacion == 'description') {
+    $selected = ' selected';
+}
 $selector_campo .= '<option value="description"'.$selected.'>Descripción</option>';
 $selector_campo .= '</select>';
 
 $texto_buscar = '<input type="text" value="'.$traduccion->texto_filtro.'" name="texto" />';
 $texto_buscar_traduccion = '<input type="text" value="'.$traduccion->texto_filtro_traduccion.'" name="texto_traduccion" />';
 
-
 switch ($traduccion->tipo_traduccion) {
-    case "texto":
+    case 'texto':
         $formulario_traduccion = $traduccion->getFormularioTextos();
         break;
-    case "productos":
+    case 'productos':
         $formulario_filtro = '
         <h2>FILTRO</h2>
         <form class="filtro" method="post" action="#">
@@ -178,7 +221,7 @@ switch ($traduccion->tipo_traduccion) {
 
         $formulario_traduccion = $traduccion->getFormularioProductos();
         break;
-    case "caracteristicas":
+    case 'caracteristicas':
         $formulario_filtro = '
         <h2>FILTRO</h2>
         <form class="filtro" method="post" action="#">
@@ -197,7 +240,7 @@ switch ($traduccion->tipo_traduccion) {
 
         $formulario_traduccion = $traduccion->getFormularioCategorias();
         break;
-    case "atributos":
+    case 'atributos':
         $formulario_filtro = '
         <h2>FILTRO</h2>
         <form class="filtro" method="post" action="#">
@@ -225,7 +268,6 @@ switch ($traduccion->tipo_traduccion) {
         <tr><td>'.$selector_tipo_traduccion.'</td></tr>
         <tr><td><button type="submit">Enviar</button></td></tr></table>
         </form>';
-    
 
 }
 
@@ -250,7 +292,6 @@ echo '<!DOCTYPE html>
     </div>
 </body>
 </html>';
-
 
 /*
         <div>

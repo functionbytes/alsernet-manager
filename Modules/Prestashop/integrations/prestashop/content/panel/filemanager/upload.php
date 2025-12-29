@@ -3,7 +3,7 @@
 include 'config/config.php';
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
-    die('Forbidden');
+    exit('Forbidden');
 }
 include 'include/utils.php';
 
@@ -19,7 +19,7 @@ $thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
 if ($path_pos === false || $thumb_pos === false
     || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
     || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0) {
-    die('wrong path');
+    exit('wrong path');
 }
 
 $path = $storeFolder;
@@ -38,7 +38,7 @@ while ($cycle && $i < $max_cycles) {
     $path = fix_dirname($path).'/';
 }
 
-if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
+if (! empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     $info = pathinfo($_FILES['file']['name']);
     if (isset($info['extension'])
             && in_array(fix_strtolower($info['extension']), $ext)
@@ -76,10 +76,10 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
             chmod($targetFile, 0755);
 
             $memory_error = false;
-            if (!create_img_gd($targetFile, $targetFileThumb, 122, 91)) {
+            if (! create_img_gd($targetFile, $targetFileThumb, 122, 91)) {
                 $memory_error = false;
             } else {
-                if (!new_thumbnails_creation($targetPath, $targetFile, $_FILES['file']['name'], $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height)) {
+                if (! new_thumbnails_creation($targetPath, $targetFile, $_FILES['file']['name'], $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height)) {
                     $memory_error = false;
                 } else {
                     $imginfo = getimagesize($targetFile);
@@ -101,7 +101,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                         $srcHeight = $image_resizing_height;
                         create_img_gd($targetFile, $targetFile, $image_resizing_width, $image_resizing_height);
                     }
-                    //max resizing limit control
+                    // max resizing limit control
                     $resize = false;
                     if ($image_max_width != 0 && $srcWidth > $image_max_width) {
                         $resize = true;
@@ -119,7 +119,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                 }
             }
             if ($memory_error) {
-                //error
+                // error
                 unlink($targetFile);
                 header('HTTP/1.1 406 Not enought Memory', true, 406);
                 exit();
@@ -138,13 +138,13 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
 }
 if (isset($_POST['submit'])) {
     $query = http_build_query(
-        array(
+        [
             'type' => $_POST['type'],
             'lang' => $_POST['lang'],
             'popup' => $_POST['popup'],
             'field_id' => $_POST['field_id'],
             'fldr' => $_POST['fldr'],
-        )
+        ]
     );
     header('location: dialog.php?'.$query);
 }

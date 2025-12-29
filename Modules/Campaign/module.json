@@ -2,11 +2,11 @@
   "name": "Campaign",
   "alias": "campaign",
   "description": "Campaign Management Module",
-  "keywords": [],
+  "keywords": ["campaigns", "notifications", "automation", "templates"],
   "priority": 0,
   "providers": [
-    "Modules\\Campaign\\app\\Providers\\CampaignServiceProvider",
-    "Modules\\Campaign\\app\\Providers\\RouteServiceProvider"
+    "Modules\\Campaign\\Providers\\CampaignServiceProvider",
+    "Modules\\Campaign\\Providers\\RouteServiceProvider"
   ],
   "aliases": {},
   "files": [],

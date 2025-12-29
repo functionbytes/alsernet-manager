@@ -1,14 +1,15 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
-include (dirname(__FILE__).'/../init.php');
+include dirname(__FILE__).'/../config/config.inc.php';
+include dirname(__FILE__).'/../init.php';
 
 // $buscar = Db::getInstance()->ExecuteS("SELECT id_product FROM aalv_product_shop WHERE active = 1 ORDER BY id_product DESC LIMIT 50000,10000");
 // // 45.546

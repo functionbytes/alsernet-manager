@@ -3,15 +3,15 @@
 include 'config/config.php';
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
-    die('Forbidden');
+    exit('Forbidden');
 }
 include 'include/utils.php';
 
 $_POST['path'] = isset($_POST['path']) ? str_replace("\0", '', $_POST['path']) : null;
-$_POST['path_thumb'] = isset($_POST['path_thumb']) ? $thumbs_base_path . str_replace("\0", '', $_POST['path_thumb']) : null;
+$_POST['path_thumb'] = isset($_POST['path_thumb']) ? $thumbs_base_path.str_replace("\0", '', $_POST['path_thumb']) : null;
 
 if (trim($_POST['path_thumb']) == '') {
-    die('wrong path');
+    exit('wrong path');
 }
 
 $realPath = realpath($current_path.$_POST['path']);
@@ -22,7 +22,7 @@ if (preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
     || ($realPath && strpos($realPath, realpath($current_path)) !== 0)
     || ($realPathThumb && strpos($realPathThumb, realpath($thumbs_base_path)) !== 0)
 ) {
-    die('wrong path');
+    exit('wrong path');
 }
 
 $language_file = 'lang/en.php';
@@ -35,7 +35,7 @@ if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '')
 require_once $language_file;
 
 $base = $current_path;
-$path = isset($_POST['path']) ? ($current_path . $_POST['path']) : $current_path;
+$path = isset($_POST['path']) ? ($current_path.$_POST['path']) : $current_path;
 
 $cycle = true;
 $max_cycles = 50;
@@ -54,26 +54,26 @@ while ($cycle && $i < $max_cycles) {
     $cycle = false;
 }
 
-$path = $current_path . $_POST['path'];
+$path = $current_path.$_POST['path'];
 $path_thumb = $_POST['path_thumb'];
 
 if (isset($_POST['name'])) {
     $name = $_POST['name'];
     if (preg_match('/\.{1,2}[\/|\\\]/', $name) !== 0) {
-        die('wrong name');
+        exit('wrong name');
     }
 }
 
 $info = pathinfo($path);
-if (isset($info['extension']) && !(isset($_GET['action']) && $_GET['action'] == 'delete_folder') && !in_array(strtolower($info['extension']), $ext)) {
-    die('wrong extension');
+if (isset($info['extension']) && ! (isset($_GET['action']) && $_GET['action'] == 'delete_folder') && ! in_array(strtolower($info['extension']), $ext)) {
+    exit('wrong extension');
 }
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'delete_file':
             if ($delete_files) {
-                stopIfSameDir($current_path, array($path, $path_thumb));
+                stopIfSameDir($current_path, [$path, $path_thumb]);
                 unlink($path);
                 if (file_exists($path_thumb)) {
                     unlink($path_thumb);
@@ -107,7 +107,7 @@ if (isset($_GET['action'])) {
             break;
         case 'delete_folder':
             if ($delete_folders) {
-                stopIfSameDir($current_path, array($path, $path_thumb));
+                stopIfSameDir($current_path, [$path, $path_thumb]);
                 if (is_dir($path_thumb)) {
                     deleteDir($path_thumb);
                 }
@@ -140,10 +140,10 @@ if (isset($_GET['action'])) {
                 $name = fix_filename($name, $transliteration);
                 $name = str_replace('.', '', $name);
 
-                if (!empty($name)) {
-                    stopIfSameDir($current_path, array($path, $path_thumb));
-                    if (!rename_folder($path, $name, $transliteration)) {
-                        die(lang_Rename_existing_folder);
+                if (! empty($name)) {
+                    stopIfSameDir($current_path, [$path, $path_thumb]);
+                    if (! rename_folder($path, $name, $transliteration)) {
+                        exit(lang_Rename_existing_folder);
                     }
                     rename_folder($path_thumb, $name, $transliteration);
                     if ($fixed_image_creation) {
@@ -156,7 +156,7 @@ if (isset($_GET['action'])) {
                         }
                     }
                 } else {
-                    die(lang_Empty_name);
+                    exit(lang_Empty_name);
                 }
             }
 
@@ -164,10 +164,10 @@ if (isset($_GET['action'])) {
         case 'rename_file':
             if ($rename_files) {
                 $name = fix_filename($name, $transliteration);
-                if (!empty($name)) {
-                    stopIfSameDir($current_path, array($path, $path_thumb));
-                    if (!rename_file($path, $name, $transliteration)) {
-                        die(lang_Rename_existing_file);
+                if (! empty($name)) {
+                    stopIfSameDir($current_path, [$path, $path_thumb]);
+                    if (! rename_file($path, $name, $transliteration)) {
+                        exit(lang_Rename_existing_file);
                     }
                     rename_file($path_thumb, $name, $transliteration);
                     if ($fixed_image_creation) {
@@ -183,7 +183,7 @@ if (isset($_GET['action'])) {
                         }
                     }
                 } else {
-                    die(lang_Empty_name);
+                    exit(lang_Empty_name);
                 }
             }
 
@@ -191,9 +191,9 @@ if (isset($_GET['action'])) {
         case 'duplicate_file':
             if ($duplicate_files) {
                 $name = fix_filename($name, $transliteration);
-                if (!empty($name)) {
-                    if (!duplicate_file($path, $name)) {
-                        die(lang_Rename_existing_file);
+                if (! empty($name)) {
+                    if (! duplicate_file($path, $name)) {
+                        exit(lang_Rename_existing_file);
                     }
                     duplicate_file($path_thumb, $name);
                     if ($fixed_image_creation) {
@@ -209,13 +209,13 @@ if (isset($_GET['action'])) {
                         }
                     }
                 } else {
-                    die(lang_Empty_name);
+                    exit(lang_Empty_name);
                 }
             }
 
             break;
         default:
-            die('wrong action');
+            exit('wrong action');
 
             break;
     }

@@ -23,6 +23,7 @@ class CampaignServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishConfig();
+        $this->registerViewComposers();
     }
 
     /**
@@ -33,5 +34,17 @@ class CampaignServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../config/campaign.php' => config_path('campaign.php'),
         ], 'campaign-config');
+    }
+
+    /**
+     * Register view composers.
+     */
+    protected function registerViewComposers(): void
+    {
+        // Register navigation composer for managers layout
+        view()->composer(
+            'managers.includes.nav',
+            \Modules\Campaign\Http\ViewComposers\NavigationComposer::class
+        );
     }
 }

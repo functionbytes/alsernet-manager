@@ -2,8 +2,8 @@
 
 namespace Modules\Documents\Entities;
 
-use app\Library\Traits\HasUid;
-use app\Library\Traits\HasValidationWorkflow;
+use App\Library\Traits\HasUid;
+use App\Library\Traits\HasValidationWorkflow;
 use App\Services\Documents\DocumentMailService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -237,17 +237,17 @@ class Document extends Model implements HasMedia
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Order\Order', 'order_id', 'id_order');
+        return $this->belongsTo('Modules\Prestashop\Entities\Orders\Order', 'order_id', 'id_order');
     }
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Customer', 'customer_id', 'id_customer');
+        return $this->belongsTo('Modules\Prestashop\Entities\Customer', 'customer_id', 'id_customer');
     }
 
     public function cart(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Prestashop\Cart\Cart', 'cart_id', 'id_cart');
+        return $this->belongsTo('Modules\Prestashop\Entities\Cart', 'cart_id', 'id_cart');
     }
 
     public function lang(): BelongsTo

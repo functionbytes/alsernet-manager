@@ -12,7 +12,7 @@ use App\Models\IpLocation;
 use App\Models\Jobs\JobMonitor;
 use App\Models\OpenLog;
 use App\Models\Setting;
-use App\Models\Subscriber;
+use Modules\Subscriber\Models\Subscriber;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use App\Models\TrackingLog;

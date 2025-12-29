@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,13 +32,12 @@
  *
  * -> Duplicated in Symfony (route: admin_backup_download)
  */
-
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-if (!Context::getContext()->employee->isLoggedBack()) {
+if (! Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
 }
 
@@ -47,9 +47,9 @@ $tabAccess = Profile::getProfileAccess(
 );
 
 if ($tabAccess['view'] !== '1') {
-    die(Context::getContext()->getTranslator()->trans(
+    exit(Context::getContext()->getTranslator()->trans(
         'You do not have permission to view this.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
@@ -57,17 +57,17 @@ if ($tabAccess['view'] !== '1') {
 $backupdir = realpath(PrestaShopBackup::getBackupPath());
 
 if ($backupdir === false) {
-    die(Context::getContext()->getTranslator()->trans(
+    exit(Context::getContext()->getTranslator()->trans(
         'There is no "/backup" directory.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
 
-if (!$backupfile = Tools::getValue('filename')) {
-    die(Context::getContext()->getTranslator()->trans(
+if (! $backupfile = Tools::getValue('filename')) {
+    exit(Context::getContext()->getTranslator()->trans(
         'No file has been specified.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
@@ -76,7 +76,7 @@ if (!$backupfile = Tools::getValue('filename')) {
 $backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
 
 if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
-    die(Tools::dieOrLog('The backup file does not exist.'));
+    exit(Tools::dieOrLog('The backup file does not exist.'));
 }
 
 if (substr($backupfile, -4) == '.bz2') {
@@ -89,17 +89,17 @@ if (substr($backupfile, -4) == '.bz2') {
 $fp = @fopen($backupfile, 'rb');
 
 if ($fp === false) {
-    die(Context::getContext()->getTranslator()->trans(
-            'Unable to open backup file(s).',
-            array(),
-            'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
+    exit(Context::getContext()->getTranslator()->trans(
+        'Unable to open backup file(s).',
+        [],
+        'Admin.Advparameters.Notification'
+    ).' "'.addslashes($backupfile).'"'
     );
 }
 
 // Add the correct headers, this forces the file is saved
 header('Content-Type: '.$contentType);
-header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
+header('Content-Disposition: attachment; filename="'.Tools::getValue('filename').'"');
 
 if (ob_get_level() && ob_get_length() > 0) {
     ob_clean();
@@ -109,10 +109,10 @@ $ret = @fpassthru($fp);
 fclose($fp);
 
 if ($ret === false) {
-    die(Context::getContext()->getTranslator()->trans(
-            'Unable to display backup file(s).',
-            array(),
-            'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
+    exit(Context::getContext()->getTranslator()->trans(
+        'Unable to display backup file(s).',
+        [],
+        'Admin.Advparameters.Notification'
+    ).' "'.addslashes($backupfile).'"'
     );
 }

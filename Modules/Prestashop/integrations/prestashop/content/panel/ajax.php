@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -36,7 +37,7 @@ use ToolsCore as Tools;
 
 @trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
-require_once dirname(__FILE__) . '/../classes/Tools.php';
+require_once dirname(__FILE__).'/../classes/Tools.php';
 
 /**
  * Ajax calls to the controller AdminReferrers
@@ -75,16 +76,15 @@ elseif (Tools::isSubmit('getZones')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminZones';
     $_GET['action'] = 'zones';
-}
-
-elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
+} elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminTranslations';
     $_GET['action'] = 'emailHTML';
 }
 
-if (1 === Tools::getValue('ajax')) {
-    require_once __DIR__ . '/index.php';
+if (Tools::getValue('ajax') === 1) {
+    require_once __DIR__.'/index.php';
+
     return;
 }
 
@@ -92,7 +92,7 @@ if (1 === Tools::getValue('ajax')) {
  * From this line, the code could not be moved outside this file. It still requires the core to work.
  */
 
-require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__.'/bootstrap.php';
 
 $context = Context::getContext();
 
@@ -101,7 +101,7 @@ $context = Context::getContext();
  * -> Duplicated in Symfony
  */
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $import = new AdminImportController();
+    $import = new AdminImportController;
 
     $fields = array_map(function ($elem) {
         return ['field' => $elem];
@@ -116,7 +116,7 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
  * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification();
+    $notification = new Notification;
     echo json_encode($notification->getLastElements());
 }
 
@@ -126,7 +126,7 @@ elseif (Tools::isSubmit('getNotifications')) {
  * -> Duplicated in Symfony
  */
 elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification();
+    $notification = new Notification;
     echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }
 
@@ -141,15 +141,15 @@ elseif (Tools::isSubmit('searchCategory')) {
     $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
+		WHERE cl.`id_lang` = '.(int) $context->language->id.' AND c.`level_depth` <> 0
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category
 		ORDER BY c.`position`
-		LIMIT '.(int)$limit
+		LIMIT '.(int) $limit
     );
     if ($results) {
         foreach ($results as $result) {
-            echo trim($result['name']).'|'.(int)$result['id_category']."\n";
+            echo trim($result['name']).'|'.(int) $result['id_category']."\n";
         }
     }
 }
@@ -169,9 +169,9 @@ elseif (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category
  * -> TODO in Symfony stack
  */
 elseif (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
-    $category = new Category((int)$id_category);
-    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
-    $output = array();
+    $category = new Category((int) $id_category);
+    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int) $category->nleft.' AND c.`nright` > '.(int) $category->nright.'');
+    $output = [];
     foreach ($results as $result) {
         $output[] = $result;
     }

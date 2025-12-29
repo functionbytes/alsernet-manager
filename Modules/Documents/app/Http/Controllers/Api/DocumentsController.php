@@ -2,8 +2,8 @@
 
 namespace Modules\Documents\Http\Controllers\Api;
 
-use App\Models\Prestashop\Order\Order as PrestashopOrder;
 use Carbon\Carbon;
+use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Documents\Entities\Document;
@@ -1415,5 +1415,65 @@ class DocumentsController extends \App\Http\Controllers\Api\ApiController
         $media->delete();
 
         return response()->json(['status' => 'deleted']);
+    }
+
+    /**
+     * Handle Prestashop webhook for paid orders
+     * Creates or updates documents when an order is marked as paid in Prestashop
+     */
+    public function prestashopOrderPaid(Request $request)
+    {
+        try {
+            $orderId = $request->input('order_id') ?? $request->input('id_order');
+
+            if (! $orderId) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order ID is required',
+                ], 400);
+            }
+
+            // Fetch order from Prestashop
+            $order = PrestashopOrder::find($orderId);
+            if (! $order) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order not found in Prestashop',
+                ], 404);
+            }
+
+            // Create document for this order if it doesn't exist
+            $document = Document::where('order_id', $orderId)->first();
+            if (! $document) {
+                $document = Document::create([
+                    'order_id' => $orderId,
+                    'customer_id' => $order->id_customer,
+                    'document_status_id' => DocumentStatus::where('slug', 'pending')->first()?->id,
+                    'source_id' => DocumentSource::where('slug', 'prestashop')->first()?->id,
+                ]);
+            }
+
+            Log::info('Prestashop order paid webhook processed', [
+                'order_id' => $orderId,
+                'document_id' => $document->id,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document created/updated for paid order',
+                'document_id' => $document->id,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error processing Prestashop order paid webhook', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process webhook',
+            ], 500);
+        }
     }
 }

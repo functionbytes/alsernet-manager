@@ -1,24 +1,24 @@
 <?php
 
-include(dirname(__FILE__) . '/../config/config.inc.php');
-include(dirname(__FILE__) . '/../init.php');
+include dirname(__FILE__).'/../config/config.inc.php';
+include dirname(__FILE__).'/../init.php';
 
 $id_articulo = 47424;
 
 function AlsernetNewVisibilidad($id_articulo)
 {
 
-    $datos = Db::getInstance()->getRow("SELECT
+    $datos = Db::getInstance()->getRow('SELECT
                                             *,
                                             0 AS id_product_attribute,
                                             1 AS es_simpe
                                         FROM
                                             aalv_combinacionunica_import aci
                                         WHERE
-                                            id_articulo =" . $id_articulo);
+                                            id_articulo ='.$id_articulo);
 
-    if (!$datos) {
-        $datos = Db::getInstance()->getRow("SELECT
+    if (! $datos) {
+        $datos = Db::getInstance()->getRow('SELECT
                                                 apa.id_product,
                                                 0 AS es_simple,
                                                 aci.*
@@ -26,7 +26,7 @@ function AlsernetNewVisibilidad($id_articulo)
                                                 aalv_combinaciones_import aci
                                                 LEFT JOIN aalv_product_attribute apa ON apa.id_product_attribute = aci.id_product_attribute
                                             WHERE
-                                                aci.id_articulo =" . $id_articulo);
+                                                aci.id_articulo ='.$id_articulo);
     }
 
     // if ($datos['es_simpe']) {
@@ -36,9 +36,9 @@ function AlsernetNewVisibilidad($id_articulo)
     if ($datos['estado_gestion'] != 0) {
 
         // Validamos si tiene la etiqueta OCULTO WEB
-        $array = explode(", ", $datos['etiqueta']);
+        $array = explode(', ', $datos['etiqueta']);
 
-        if (in_array("OCULTO WEB", $array)) {
+        if (in_array('OCULTO WEB', $array)) {
             // Si tiene la etiqueta, forzamos el Stock a 0
             StockAvailable::setQuantity($datos['id_product'], $datos['id_product_attribute'], 0, 1, false);
 
@@ -46,7 +46,7 @@ function AlsernetNewVisibilidad($id_articulo)
                 $product->visibility = 'none';
             }
         } else {
-            $repositorio_stock = Db::getInstance()->getRow("SELECT * FROM aalv_repositorio_stock ars WHERE id_product_attribute = " . $datos['id_product_attribute'] . " AND id_product = " . $datos['id_product']);
+            $repositorio_stock = Db::getInstance()->getRow('SELECT * FROM aalv_repositorio_stock ars WHERE id_product_attribute = '.$datos['id_product_attribute'].' AND id_product = '.$datos['id_product']);
 
             $stock = controlStock($datos['etiqueta'], $datos['estado_gestion'], $datos['externo_disponibilidad'], $repositorio_stock['quantity']);
 
@@ -63,7 +63,7 @@ function AlsernetNewVisibilidad($id_articulo)
     } else {
         // Entonces el producto esta extinto en gestion
 
-        //Actualizamos su Stock a 0, lo forzamos
+        // Actualizamos su Stock a 0, lo forzamos
         StockAvailable::setQuantity($datos['id_product'], $datos['id_product_attribute'], 0, 1, false);
 
         if ($datos['es_simpe']) {
@@ -73,16 +73,16 @@ function AlsernetNewVisibilidad($id_articulo)
     }
     if ($datos['es_simpe']) {
         $product->save();
-    }else{
+    } else {
         // buscamos que el stock de todas las combinaciones esten a 0
-        $cero_stock = Db::getInstance()->getRow("SELECT sum(quantity) AS quantity FROM aalv_stock_available asa WHERE id_product = ".$datos['id_product']." AND id_product_attribute != 0");
+        $cero_stock = Db::getInstance()->getRow('SELECT sum(quantity) AS quantity FROM aalv_stock_available asa WHERE id_product = '.$datos['id_product'].' AND id_product_attribute != 0');
 
-        if((int)$cero_stock['quantity'] == 0){
+        if ((int) $cero_stock['quantity'] == 0) {
 
             $product->visibility = 'none';
             $product->active = 1;
 
-        } if((int)$cero_stock['quantity'] > 0){
+        } if ((int) $cero_stock['quantity'] > 0) {
 
             $product->active = 1;
             $product->visibility = 'both';
@@ -90,13 +90,6 @@ function AlsernetNewVisibilidad($id_articulo)
         $product->save();
     }
 }
-
-
-
-
-
-
-
 
 function controlStock($etiqueta, $estado_gestion, $externo_disponibilidad, $stock)
 {
@@ -113,15 +106,15 @@ function controlStock($etiqueta, $estado_gestion, $externo_disponibilidad, $stoc
 
 function ocultarVeranoInvierno($etiquetas)
 {
-    if ($etiquetas != "") {
-        $etiquetasarray = explode(",", $etiquetas);
+    if ($etiquetas != '') {
+        $etiquetasarray = explode(',', $etiquetas);
         foreach ($etiquetasarray as $key => $value) {
             $etiquetasarray[$key] = trim($value);
         }
         if (count($etiquetasarray) > 0) {
-            $mes = (int)date("m");
-            $dia = (int)date("d");
-            if (in_array("TEMPORADA_INVIERNO", $etiquetasarray)) {
+            $mes = (int) date('m');
+            $dia = (int) date('d');
+            if (in_array('TEMPORADA_INVIERNO', $etiquetasarray)) {
                 switch ($mes) {
                     case 4:
                     case 5:
@@ -136,7 +129,7 @@ function ocultarVeranoInvierno($etiquetas)
                         break;
                 }
             }
-            if (in_array("TEMPORADA_VERANO", $etiquetasarray)) {
+            if (in_array('TEMPORADA_VERANO', $etiquetasarray)) {
                 switch ($mes) {
                     case 10:
                     case 11:
@@ -151,16 +144,19 @@ function ocultarVeranoInvierno($etiquetas)
                         break;
                 }
             }
+
             return false;
         }
     }
+
     return false;
 }
 
 function controlEtiquetaStockWeb($etiquetas)
 {
-    $tags_exclude = Db::getInstance()->getValue("SELECT GROUP_CONCAT(etiqueta) from aalv_etiqueta_stock");
-    $tags_exclude = explode(",", $tags_exclude);
+    $tags_exclude = Db::getInstance()->getValue('SELECT GROUP_CONCAT(etiqueta) from aalv_etiqueta_stock');
+    $tags_exclude = explode(',', $tags_exclude);
     $tags_exclude = array_map('trim', $tags_exclude);
-    return array_intersect($tags_exclude, explode(", ", $etiquetas)) ? true : false;
+
+    return array_intersect($tags_exclude, explode(', ', $etiquetas)) ? true : false;
 }

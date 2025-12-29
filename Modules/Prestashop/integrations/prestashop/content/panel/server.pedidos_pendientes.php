@@ -1,31 +1,27 @@
 <?php
-if (!defined('_PS_ADMIN_DIR_')) {
+
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-use Ds\Vector	as Vector;
 include _PS_ADMIN_DIR_.'/../vendor/XMLRPC/class.XMLRPC.php';
 include _PS_ADMIN_DIR_.'/../vendor/XMLRPC/class.XMLRPCServer.php';
 
-
-
-$myServer=new XMLRPCServer();
-$myServer->registerStaticMethod("WebAlvarez", "obtenerPedidosPendientes");
-$myServer->registerStaticMethod("WebAlvarez", "marcarPedidoAtendido");
+$myServer = new XMLRPCServer;
+$myServer->registerStaticMethod('WebAlvarez', 'obtenerPedidosPendientes');
+$myServer->registerStaticMethod('WebAlvarez', 'marcarPedidoAtendido');
 
 $myServer->request($HTTP_RAW_POST_DATA);
 
-//echo $myServer->getResponse(new String("XML"))->toString();
+// echo $myServer->getResponse(new String("XML"))->toString();
 
+class WebAlvarez
+{
+    public static function obtenerPedidosPendientes($parameters)
+    {
 
-class WebAlvarez {
-
-
-	static function obtenerPedidosPendientes ($parameters) {
-		
-
-    $query = "
+        $query = "
     SELECT
     (select firstname from aalv_address a where a.id_address=o.id_address_invoice) as nombre,
     (select lastname from aalv_address a where a.id_address=o.id_address_invoice) as apellidos,
@@ -35,94 +31,84 @@ class WebAlvarez {
     FROM aalv_orders o
     WHERE o.current_state not in (6,27) and o.id_order in (select id_order from aalv_orders_envio_gestion where id_pedido_gestion='' and error_gestion<>'' and id in (select max(id) from aalv_orders_envio_gestion group by id_order))
 	";
-			
 
-		$result = Db::getInstance()->executeS($query);
-		$output= [];
+        $result = Db::getInstance()->executeS($query);
+        $output = [];
 
-		if ($result){
-			return (array("numero_pedidos_pendientes"=> count($result),"listado"=>$result));
+        if ($result) {
+            return ['numero_pedidos_pendientes' => count($result), 'listado' => $result];
 
-		}
-		else{
-			return (array("numero_pedidos_pendientes"=> 0,"listado"=>$output));
-		}
+        } else {
+            return ['numero_pedidos_pendientes' => 0, 'listado' => $output];
+        }
 
+        /*
+        if ($result->lenght()->getValue() > 0) {
 
-		/*
-		if ($result->lenght()->getValue() > 0) {
+            while ($current = $result->current()) {
+                $output[] = $current->getArray();
+                $result->next();
+            }
+        }
 
-			while ($current = $result->current()) {
-				$output[] = $current->getArray();
-				$result->next();
-			}
-		}
+        return (array("numero_pedidos_pendientes"=> $result->lenght()->getValue(),"listado"=>$output));
+        */
+    }
 
-		return (array("numero_pedidos_pendientes"=> $result->lenght()->getValue(),"listado"=>$output));
-		*/
-	}
+    public static function marcarPedidoAtendido($parameters)
+    {
+        global $alvarez_new_db_config;
+        $id_pedido_web = $parameters['args'][0]['id_pedido_web'];
 
-	static function marcarPedidoAtendido($parameters) {
-		global $alvarez_new_db_config;
-		$id_pedido_web = $parameters["args"][0]["id_pedido_web"];
+        $output = [];
 
-		$output = array();
-		
-
-		$query = "
+        $query = "
             SELECT id as id_pedido_web, current_state
         	FROM aalv_orders
         	WHERE  id_order = '".$id_pedido_web."'
         	ORDER BY id_order
 		";
-        	
-		$result = Db::getInstance()->executeS($query);
 
-		if ($result){
-			if (count($result)>0){
+        $result = Db::getInstance()->executeS($query);
 
-				if ($result[0]["current_state"]==27){
-					return (array("faultCode"=>1001,"faultString"=>"El pedido ya se encuentra marcado como atendido",));
-				}
+        if ($result) {
+            if (count($result) > 0) {
 
-			}
-			else{
-				return (array("faultCode"=>1000,"faultString"=>"No existe un pedido con el identificador indicado",));
+                if ($result[0]['current_state'] == 27) {
+                    return ['faultCode' => 1001, 'faultString' => 'El pedido ya se encuentra marcado como atendido'];
+                }
 
-			}
+            } else {
+                return ['faultCode' => 1000, 'faultString' => 'No existe un pedido con el identificador indicado'];
 
+            }
 
+        }
 
-		}
-
-
-		/*
-		if ($result->lenght()->getValue() > 0) {
-			$current = $result->current()->getArray();
+        /*
+        if ($result->lenght()->getValue() > 0) {
+            $current = $result->current()->getArray();
             if ($current["current_state"] == 27) {
-			// if ($current["atendido"] == 1) {
-				return (array(
+            // if ($current["atendido"] == 1) {
+                return (array(
         "faultCode"=>1001,
         "faultString"=>"El pedido ya se encuentra marcado como atendido",
       ));
-			}
-		} else {
-			//No hay pedido con ese id
-			return (array(
+            }
+        } else {
+            //No hay pedido con ese id
+            return (array(
         "faultCode"=>1000,
         "faultString"=>"No existe un pedido con el identificador indicado",
       ));
-		}*/
+        }*/
 
         $query = "UPDATE aalv_orders SET current_state = 27, note=CONCAT(note, ' .Atendido por Gestión. ') WHERE id_order = ".$id_pedido_web;
-        $query1 = "INSERT INTO aalv_order_history(id_employee, id_order, id_order_state, date_add) VALUES (0,".$id_pedido_web.",27,now())";
-		
-		$result = Db::getInstance()->execute($query);
+        $query1 = 'INSERT INTO aalv_order_history(id_employee, id_order, id_order_state, date_add) VALUES (0,'.$id_pedido_web.',27,now())';
+
+        $result = Db::getInstance()->execute($query);
         $result1 = Db::getInstance()->execute($query1);
 
-		return array("status"=>"OK");
-	}
-
+        return ['status' => 'OK'];
+    }
 }
-
-?>

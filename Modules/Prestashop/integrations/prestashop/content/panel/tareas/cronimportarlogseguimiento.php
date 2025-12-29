@@ -1,57 +1,46 @@
 <?php
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-use PrestaShop\PrestaShop\Adapter\CoreException;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-
-function getfieldvalue($dbh,$sql){
+function getfieldvalue($dbh, $sql)
+{
     $rows = $dbh->query($sql);
-    foreach($rows as $row){
+    foreach ($rows as $row) {
         return $row[0];
     }
 }
 
-
-function getdatarows($dbh,$sql){
-    return  $dbh->query($sql);
+function getdatarows($dbh, $sql)
+{
+    return $dbh->query($sql);
 }
 
+function campo($field, $tipo)
+{
 
-function campo($field, $tipo){
-
-    $devolver = "";
-    if ($field==""){
-        $devolver = "null";
-    }
-    else{
+    $devolver = '';
+    if ($field == '') {
+        $devolver = 'null';
+    } else {
         $devolver = $field;
-        if ($tipo==1){
+        if ($tipo == 1) {
             $devolver = "'".$devolver."'";
         }
     }
+
     return $devolver;
 
 }
 
-
-
 try {
 
-
-
-
-
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e){
+} catch (PDOException $e) {
     echo $e->getMessage();
 }
-
-
-
 
 /*
 $rows = getdatarows($dbh,"SELECT * FROM seguimiento_pedidos where id>4521427 order by id");
@@ -156,7 +145,6 @@ foreach($rows as $row){
 }
 */
 
-
 /*
 $rows = getdatarows($dbh,"SELECT * FROM `log_transportista_envio` where id>113614 ORDER BY `id`");
 
@@ -189,38 +177,25 @@ foreach($rows as $row){
 }
 */
 
-$rows = getdatarows($dbh,"SELECT * FROM `log_transportista_tracking` where id>278722 ORDER BY `id`");
+$rows = getdatarows($dbh, 'SELECT * FROM `log_transportista_tracking` where id>278722 ORDER BY `id`');
 
+foreach ($rows as $row) {
 
+    $id = ''.$row['id'];
+    $numero_pedido = campo(''.$row['numero_pedido'], 1);
+    $numero_envio = campo(''.$row['numero_envio'], 1);
 
+    $fecha = campo(''.$row['fecha'], 1);
+    $transportista = campo(''.$row['transportista'], 1);
 
-foreach($rows as $row){
+    $remitente = campo(''.$row['remitente'], 1);
+    $estado = campo(''.$row['estado'], 0);
+    $estado_descripcion = campo(''.$row['estado_descripcion'], 1);
 
-
-    $id="".$row["id"];
-    $numero_pedido=campo("".$row["numero_pedido"],1);
-    $numero_envio=campo("".$row["numero_envio"],1);
-
-    $fecha=campo("".$row["fecha"],1);
-    $transportista=campo("".$row["transportista"],1);
-
-    $remitente=campo("".$row["remitente"],1);
-    $estado=campo("".$row["estado"],0);
-    $estado_descripcion=campo("".$row["estado_descripcion"],1);
-
-
-    $sql="REPLACE INTO `log_transportista_tracking`(`id`, `numero_pedido`, `numero_envio`, `fecha`, `transportista`, `remitente`, `estado`, `estado_descripcion`) VALUES (".$id.",".$numero_pedido.",".$numero_envio.",".$fecha.",".$transportista.",".$remitente.",".$estado.",".$estado_descripcion.")";
-
-
+    $sql = 'REPLACE INTO `log_transportista_tracking`(`id`, `numero_pedido`, `numero_envio`, `fecha`, `transportista`, `remitente`, `estado`, `estado_descripcion`) VALUES ('.$id.','.$numero_pedido.','.$numero_envio.','.$fecha.','.$transportista.','.$remitente.','.$estado.','.$estado_descripcion.')';
 
     Db::getInstance()->Execute($sql);
 
-
 }
 
-
-
-echo "<br/>acaba";
-
-
-
+echo '<br/>acaba';

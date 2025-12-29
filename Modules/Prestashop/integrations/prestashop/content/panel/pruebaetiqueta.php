@@ -1,15 +1,16 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
+include dirname(__FILE__).'/../config/config.inc.php';
 // include (dirname(__FILE__).'/../init.php');
-include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
+include '/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php';
 
 // $busca = Db::getInstance()->ExecuteS("  SELECT
 //                                             asa.id_product,
@@ -89,7 +90,6 @@ include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
 //     echo "<br>";
 // }
 
-
 // function peticionget($url){
 //     $ch = curl_init();
 //     curl_setopt($ch, CURLOPT_URL, $url);
@@ -98,7 +98,6 @@ include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
 //     curl_close($ch);
 //     return $content;
 // }
-
 
 // $datos = Db::getInstance()->executeS("SELECT bo.`id_banner`, bo.`id_product`, bo.`id_category`, bo.`etiqueta_import`, bo.`id_feature_category`, bo.`id_feature_family`, bo.`id_feature_subfamily`, bo.`id_feature_group` FROM `aalv_banner_object` bo INNER JOIN `aalv_banner` b ON b.`id`=bo.`id_banner` AND b.`active`=1 AND b.`tipo`=2 INNER JOIN `aalv_banner_lang` bl ON bl.`id`=bo.`id_banner` AND bl.`id_lang`=1 WHERE bo.`id_zone`=7 AND ((CONCAT(',', REPLACE(bo.`id_product`, ' ', ''), ',') LIKE CONCAT('%,',48294, ',%')) OR (bo.`id_product`='' AND (1=1 AND (CONCAT(',', TRIM(bo.`reference`), ',') LIKE CONCAT('%,','C102464-1', ',%') OR bo.`reference`='') AND (CONCAT(',', TRIM(bo.`id_manufacturer`), ',') LIKE CONCAT('%,',383, ',%') OR bo.`id_manufacturer`='') AND (CONCAT(',', TRIM(bo.`id_feature_category`), ',') LIKE CONCAT('%,','100000402', ',%') OR bo.`id_feature_category`='') AND (CONCAT(',', TRIM(bo.`id_feature_family`), ',') LIKE CONCAT('%,','100000904', ',%') OR bo.`id_feature_family`='') AND (CONCAT(',', TRIM(bo.`id_feature_subfamily`), ',') LIKE CONCAT('%,','100001687', ',%') OR bo.`id_feature_subfamily`='') AND (CONCAT(',', TRIM(bo.`id_feature_group`), ',') LIKE CONCAT('%,','100007937', ',%') OR bo.`id_feature_group`='') AND (bo.`price_from`<=132.990011 OR bo.`price_from`=0) AND (bo.`price_up`>=132.990011 OR bo.`price_up`=0) ))) ORDER BY bo.`position` ASC");
 
@@ -113,51 +112,48 @@ include ('/var/www/clients/client1/web1/home/alvarezadmin/dbantigua.php');
 
 // controlStock(28747,67065,0,true);
 
-$sql = Db::getInstance()->executeS("select id_articulo, aci.externo_disponibilidad , aci.etiqueta , aci.estado_gestion
-from aalv_combinaciones_import aci where id_articulo >= 300062866 order by id_articulo asc");
+$sql = Db::getInstance()->executeS('select id_articulo, aci.externo_disponibilidad , aci.etiqueta , aci.estado_gestion
+from aalv_combinaciones_import aci where id_articulo >= 300062866 order by id_articulo asc');
 $dbcon = connectBD();
 $nn = 0;
 $sum = 0;
-foreach ($sql as  $value) {
-    # code...
+foreach ($sql as $value) {
+    // code...
 
-    $sql_antigua = "select externo_disponibilidad, etiqueta, estado_gestion from producto where idarticulo = ".$value['id_articulo'];
+    $sql_antigua = 'select externo_disponibilidad, etiqueta, estado_gestion from producto where idarticulo = '.$value['id_articulo'];
     $data = mysqli_query($dbcon, $sql_antigua);
-    $re = mysqli_fetch_array($data,MYSQLI_ASSOC);
+    $re = mysqli_fetch_array($data, MYSQLI_ASSOC);
 
     $update = 'UPDATE aalv_combinaciones_import SET ';
 
     $set = '';
-    if((int)$value['externo_disponibilidad'] != (int)$re['externo_disponibilidad']){
+    if ((int) $value['externo_disponibilidad'] != (int) $re['externo_disponibilidad']) {
         $set .= 'externo_disponibilidad='.$re['externo_disponibilidad'].',';
     }
-    if((int)$value['estado_gestion'] != (int)$re['estado_gestion']){
+    if ((int) $value['estado_gestion'] != (int) $re['estado_gestion']) {
         $set .= 'estado_gestion='.$re['estado_gestion'].',';
     }
 
     if ($value['etiqueta'] != '' || $re['etiqueta'] != '') {
-        $exp_ps = explode(', ',$value['etiqueta']);
-        $exp_antigua = explode(', ',$re['etiqueta']);
-
-
+        $exp_ps = explode(', ', $value['etiqueta']);
+        $exp_antigua = explode(', ', $re['etiqueta']);
 
         if (array_count_values($exp_ps) != array_count_values($exp_antigua)) {
             $set .= 'etiqueta="'.$re['etiqueta'].'" ';
-        }elseif (!empty(array_diff($exp_ps, $exp_antigua)) || !empty(array_diff($exp_antigua, $exp_ps))) {
+        } elseif (! empty(array_diff($exp_ps, $exp_antigua)) || ! empty(array_diff($exp_antigua, $exp_ps))) {
             $set .= 'etiqueta="'.$re['etiqueta'].'" ';
-        }elseif (count($exp_ps) != count($exp_antigua)){
+        } elseif (count($exp_ps) != count($exp_antigua)) {
             $set .= 'etiqueta="'.$re['etiqueta'].'" ';
             dump($value);
             dump($exp_ps);
             dump($exp_antigua);
             echo '---------------------';
             echo '---------------------';
-            die();
+            exit();
         }
     }
 
-
-    if($set != ''){
+    if ($set != '') {
         if (substr($set, -1) === ',') {
             $set = substr($set, 0, -1).' '; // Elimina el último carácter (la coma)
         }
@@ -166,25 +162,23 @@ foreach ($sql as  $value) {
         dump($re);
         dump($set);
         dump($update);
-        die();
+        exit();
         Db::getInstance()->Execute($update);
         Product::alsernetNewVisibilidad($value['id_articulo']);
-        die();
+        exit();
     }
 
-
-    if($nn < 150){
-        echo ".";
+    if ($nn < 150) {
+        echo '.';
         $nn++;
     }
-    if($nn == 150){
+    if ($nn == 150) {
         $sum = $sum + 150;
         echo ' '.$sum.'/'.count($sql);
         echo "\n";
         $nn = 0;
     }
 }
-
 
 // if (!array_count_values($array1) == !array_count_values($array2)) {
 //     echo "Los arrays contienen los mismos elementos en las mismas cantidades.";
@@ -197,6 +191,5 @@ foreach ($sql as  $value) {
 // } else {
 //     echo "Los arrays son diferentes.";
 // }
-
 
 // select etiqueta from producto where idarticulo = 1221

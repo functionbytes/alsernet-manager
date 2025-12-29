@@ -1802,7 +1802,7 @@ class CampaignMaillist extends Model
     {
         // Validation
         // It is ok to have subscriber subscribe again without any confusing message
-        //     if ($subscriber && $subscriber->status == \App\Models\Subscriber::STATUS_SUBSCRIBED) {
+        //     if ($subscriber && $subscriber->status == Modules\Subscriber\Models\Subscriber::STATUS_SUBSCRIBED) {
         //        $rules['mail_already_subscribed'] = 'required';
         //     }
 

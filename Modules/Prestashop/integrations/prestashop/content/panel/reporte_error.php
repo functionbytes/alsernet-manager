@@ -1,20 +1,20 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include (dirname(__FILE__).'/../config/config.inc.php');
-include (dirname(__FILE__).'/../init.php');
+include dirname(__FILE__).'/../config/config.inc.php';
+include dirname(__FILE__).'/../init.php';
 
-//Array
-$arreglo = array();
+// Array
+$arreglo = [];
 
 $productos_a_excliur = '56764,55050,57934,57946,57950,57952,57954,61373,61569,52930,52938,61789,61863,62667,63543,63957,62752,64923,
 64924,64979';
-
 
 /********************************* ARTICULOS QUE EXISTAN EN SHOP PERO NO EN ATTRIBUTE **********************************/
 $arreglo[] = [
@@ -24,12 +24,12 @@ $arreglo[] = [
                     att.id_product_attribute,
                     shop.id_product_attribute
                 FROM
-                    ' . _DB_PREFIX_ . 'product_attribute_shop att
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute shop ON shop.id_product_attribute  = att.id_product_attribute
+                    '._DB_PREFIX_.'product_attribute_shop att
+                    LEFT JOIN '._DB_PREFIX_.'product_attribute shop ON shop.id_product_attribute  = att.id_product_attribute
                 WHERE
                     shop.id_product_attribute IS NULL
                     GROUP BY att.id_product
-                    ORDER BY att.id_product DESC'
+                    ORDER BY att.id_product DESC',
 ];
 /********************************* FIN **********************************/
 
@@ -40,13 +40,13 @@ $arreglo[] = [
                     ava.id_product,
                     ava.id_product_attribute
                 FROM
-                    ' . _DB_PREFIX_ . 'stock_available  ava
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute att ON att.id_product_attribute = ava.id_product_attribute
+                    '._DB_PREFIX_.'stock_available  ava
+                    LEFT JOIN '._DB_PREFIX_.'product_attribute att ON att.id_product_attribute = ava.id_product_attribute
                 WHERE
                     ava.id_product_attribute != 0
                     AND att.id_product_attribute IS null
                 GROUP BY ava.id_product
-                ORDER BY ava.id_product DESC'
+                ORDER BY ava.id_product DESC',
 ];
 /********************************* FIN **********************************/
 
@@ -71,11 +71,11 @@ $arreglo[] = [
     'sql' => '  SELECT
                     id_product
                 FROM
-                    ' . _DB_PREFIX_ . 'product ap
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_import api ON api.id_product = ap.id_product
+                    '._DB_PREFIX_.'product ap
+                    LEFT JOIN '._DB_PREFIX_.'product_import api ON api.id_product = ap.id_product
                 WHERE
                     ap.id_product NOT IN ('.$productos_a_excliur.')
-                    AND api.id_product IS NULL'
+                    AND api.id_product IS NULL',
 ];
 /********************************* FIN **********************************/
 
@@ -85,11 +85,11 @@ $arreglo[] = [
     'sql' => '  SELECT
                     id_product
                 FROM
-                    ' . _DB_PREFIX_ . 'product_import ap
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product api ON api.id_product = ap.id_product
+                    '._DB_PREFIX_.'product_import ap
+                    LEFT JOIN '._DB_PREFIX_.'product api ON api.id_product = ap.id_product
                 WHERE
                     ap.id_product NOT IN ('.$productos_a_excliur.')
-                    AND api.id_product IS NULL'
+                    AND api.id_product IS NULL',
 ];
 /********************************* FIN **********************************/
 
@@ -102,13 +102,13 @@ $arreglo[] = [
                     ap.reference,
                     ap.product_type
                 FROM
-                    ' . _DB_PREFIX_ . 'product ap
-                    left JOIN ' . _DB_PREFIX_ . 'product_attribute apa ON apa.id_product = ap.id_product
-                    left JOIN ' . _DB_PREFIX_ . 'product_import api ON api.id_product = ap.id_product
+                    '._DB_PREFIX_.'product ap
+                    left JOIN '._DB_PREFIX_.'product_attribute apa ON apa.id_product = ap.id_product
+                    left JOIN '._DB_PREFIX_.'product_import api ON api.id_product = ap.id_product
                 WHERE
                     apa.id_product IS NULL
                     AND ap.id_product NOT IN ('.$productos_a_excliur.')
-                    AND ap.reference = ""'
+                    AND ap.reference = ""',
 ];
 /********************************* FIN **********************************/
 
@@ -120,11 +120,11 @@ $arreglo[] = [
                     ap.active,
                     aps.active
                 FROM
-                    ' . _DB_PREFIX_ . 'product ap
-                    INNER JOIN ' . _DB_PREFIX_ . 'product_shop aps ON ap.id_product = aps.id_product
+                    '._DB_PREFIX_.'product ap
+                    INNER JOIN '._DB_PREFIX_.'product_shop aps ON ap.id_product = aps.id_product
                 WHERE
                     ap.active != aps.active
-                ORDER BY id_product DESC'
+                ORDER BY id_product DESC',
 ];
 /********************************* FIN **********************************/
 
@@ -134,10 +134,10 @@ $arreglo[] = [
     'sql' => '  SELECT
                     com.id_product_attribute
                 FROM
-                    ' . _DB_PREFIX_ . 'combinaciones_import com
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute att ON att.id_product_attribute = com.id_product_attribute
+                    '._DB_PREFIX_.'combinaciones_import com
+                    LEFT JOIN '._DB_PREFIX_.'product_attribute att ON att.id_product_attribute = com.id_product_attribute
                 WHERE
-                    att.id_product_attribute IN NULL'
+                    att.id_product_attribute IN NULL',
 ];
 /********************************* FIN **********************************/
 
@@ -148,12 +148,12 @@ $arreglo[] = [
                     apa.cache_default_attribute,
                     apa.id_product
                 FROM
-                    ' . _DB_PREFIX_ . 'product apa
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute apa2 ON apa2.id_product = apa.id_product
+                    '._DB_PREFIX_.'product apa
+                    LEFT JOIN '._DB_PREFIX_.'product_attribute apa2 ON apa2.id_product = apa.id_product
                 WHERE
                     apa.cache_default_attribute != 0
                     AND apa2.id_product_attribute IS NULL
-                ORDER BY apa.id_product DESC'
+                ORDER BY apa.id_product DESC',
 ];
 /********************************* FIN **********************************/
 
@@ -165,9 +165,9 @@ $arreglo[] = [
                     ap.reference,
                     COUNT(*) AS cantidad
                 FROM
-                    ' . _DB_PREFIX_ . 'product ap
+                    '._DB_PREFIX_.'product ap
                 GROUP BY ap.reference
-                HAVING COUNT(*) > 1'
+                HAVING COUNT(*) > 1',
 ];
 /********************************* FIN **********************************/
 
@@ -179,9 +179,9 @@ $arreglo[] = [
                     apa.reference,
                     COUNT(*) AS cantidad
                 FROM
-                    ' . _DB_PREFIX_ . 'product_attribute apa
+                    '._DB_PREFIX_.'product_attribute apa
                 GROUP BY apa.reference
-                HAVING COUNT(*) > 1'
+                HAVING COUNT(*) > 1',
 ];
 /********************************* FIN **********************************/
 
@@ -191,11 +191,11 @@ $arreglo[] = [
     'sql' => '  SELECT
                     pri.id_product
                 FROM
-                    ' . _DB_PREFIX_ . 'specific_price pri
-                    LEFT JOIN ' . _DB_PREFIX_ . 'specific_price_import imp ON imp.id_specific_price = pri.id_specific_price
+                    '._DB_PREFIX_.'specific_price pri
+                    LEFT JOIN '._DB_PREFIX_.'specific_price_import imp ON imp.id_specific_price = pri.id_specific_price
                 WHERE
                     imp.id_specific_price IS NULL
-                    AND pri.id_product NOT IN ('.$productos_a_excliur.')'
+                    AND pri.id_product NOT IN ('.$productos_a_excliur.')',
 ];
 /********************************* FIN **********************************/
 
@@ -205,11 +205,11 @@ $arreglo[] = [
     'sql' => '  SELECT
                     imp.id_product
                 FROM
-                    ' . _DB_PREFIX_ . 'specific_price_import pri
-                    LEFT JOIN ' . _DB_PREFIX_ . 'specific_price imp ON imp.id_specific_price = pri.id_specific_price
+                    '._DB_PREFIX_.'specific_price_import pri
+                    LEFT JOIN '._DB_PREFIX_.'specific_price imp ON imp.id_specific_price = pri.id_specific_price
                 WHERE
                     imp.id_specific_price IS NULL
-                    AND imp.id_product NOT IN ('.$productos_a_excliur.')'
+                    AND imp.id_product NOT IN ('.$productos_a_excliur.')',
 ];
 /********************************* FIN **********************************/
 
@@ -220,25 +220,24 @@ $arreglo[] = [
                     api.id_modelo,
                     COUNT(*) AS cantidad
                 FROM
-                    ' . _DB_PREFIX_ . 'product_import api
+                    '._DB_PREFIX_.'product_import api
                 GROUP BY api.id_modelo
-                HAVING COUNT(*) > 1'
+                HAVING COUNT(*) > 1',
 ];
 /********************************* FIN **********************************/
-
 
 // foreach ($arreglo as $value) {
 //     htmlResultado($value['titulo'],$value['sql']);
 // }
 
-
-function htmlResultado($titulo,$sql) {
+function htmlResultado($titulo, $sql)
+{
     $result = Db::getInstance()->executeS($sql);
-    if(count($result) == 0){
+    if (count($result) == 0) {
         return '';
     }
     $columnNames = array_keys($result[0]);
-    echo "<h2>".$titulo."</h2>";
+    echo '<h2>'.$titulo.'</h2>';
     echo '  <table border="1">';
     echo '      <tr>';
     foreach ($columnNames as $columnName) {
@@ -246,11 +245,11 @@ function htmlResultado($titulo,$sql) {
     }
     echo '      </tr>';
     foreach ($result as $row) {
-        echo "<tr>";
+        echo '<tr>';
         foreach ($row as $value) {
-            echo "<td>" . $value . "</td>";
+            echo '<td>'.$value.'</td>';
         }
-        echo "</tr>";
+        echo '</tr>';
     }
     echo '  </table><hr>';
 }

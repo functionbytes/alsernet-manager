@@ -1,16 +1,16 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include _PS_ADMIN_DIR_ . '/../config/config.inc.php';
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
-
-/*DESACTIVAR TODOS LOS LOTES EN PRESTASHOP*/
+/* DESACTIVAR TODOS LOS LOTES EN PRESTASHOP */
 /*$productos_lotes = Db::getInstance()->ExecuteS("SELECT ap.id_product FROM aalv_product ap INNER JOIN aalv_alsernet_lotes_copia aalc ON ap.id_product = aalc.id_ps_product");
 $total_productos = 0;
 foreach ($productos_lotes as $producto) {
@@ -23,7 +23,6 @@ foreach ($productos_lotes as $producto) {
     $total_productos ++;
 }
 dump("TOTAL DE PRODUCTOS DESACTIVADOS ------ $total_productos");*/
-
 
 // $order = new Order(739173);
 
@@ -92,7 +91,6 @@ dump("TOTAL DE PRODUCTOS DESACTIVADOS ------ $total_productos");*/
 //     }
 // }
 
-
 // $columna = Db::getInstance()->ExecuteS("select id_product from aalv_product ap where active = 1 order by id_product desc");
 // foreach ($columna as $value) {
 //     peticionget("https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=".$value['id_product']);
@@ -106,8 +104,7 @@ dump("TOTAL DE PRODUCTOS DESACTIVADOS ------ $total_productos");*/
 //     echo "----------------------------------------\n";
 // }
 
-//https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=64409
-
+// https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=64409
 
 // function lang_id($id) {
 //     switch ($id) {
@@ -129,7 +126,8 @@ dump("TOTAL DE PRODUCTOS DESACTIVADOS ------ $total_productos");*/
 //     }
 // }
 
-function peticionget($url){
+function peticionget($url)
+{
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -140,7 +138,6 @@ function peticionget($url){
     return $content;
 
 }
-
 
 // Ejecuta la consulta SQL
 // $query = "  SELECT
@@ -173,8 +170,6 @@ function peticionget($url){
 // } else {
 //     echo "No se encontraron categorías hijas desactivadas sin productos.";
 // }
-
-
 
 // function obtenerCategoriasPadres($categoryId, &$categoriaPadreNombres) {
 //     $query = "  SELECT

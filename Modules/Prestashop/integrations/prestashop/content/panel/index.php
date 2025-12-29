@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,17 +30,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 $timer_start = microtime(true);
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 
-if (!defined('PS_ADMIN_DIR')) {
+if (! defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
 require _PS_ADMIN_DIR_.'/../config/config.panel.inc.php';
 
-//small test to clear cache after upgrade
+// small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
     header('Cache-Control: max-age=0, must-revalidate');
     header('Expires: Mon, 06 Jun 1985 06:06:00 GMT+1');
@@ -47,13 +48,13 @@ if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
 }
 
 // For retrocompatibility with "tab" parameter
-if (!isset($_GET['controller']) && isset($_GET['tab'])) {
+if (! isset($_GET['controller']) && isset($_GET['tab'])) {
     $_GET['controller'] = strtolower($_GET['tab']);
 }
-if (!isset($_POST['controller']) && isset($_POST['tab'])) {
+if (! isset($_POST['controller']) && isset($_POST['tab'])) {
     $_POST['controller'] = strtolower($_POST['tab']);
 }
-if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
+if (! isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
     $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 }
 
@@ -73,7 +74,7 @@ require_once __DIR__.'/../app/AppKernel.php';
 
 $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
-//Request::enableHttpMethodParameterOverride();
+// Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
@@ -85,7 +86,7 @@ try {
 } catch (NotFoundHttpException $exception) {
     define('ADMIN_LEGACY_CONTEXT', true);
     // correct Apache charset (except if it's too late)
-    if (!headers_sent()) {
+    if (! headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');
     }
 
