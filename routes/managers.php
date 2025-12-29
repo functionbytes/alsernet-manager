@@ -1,14 +1,7 @@
 <?php
 
-use App\Http\Controllers\Managers\Campaigns\Automations\AutomationsController;
-use App\Http\Controllers\Managers\Campaigns\CampaignsController;
-use App\Http\Controllers\Managers\Campaigns\Layouts\LayoutController;
-use App\Http\Controllers\Managers\Campaigns\Maillists\MaillistController;
-use App\Http\Controllers\Managers\Campaigns\Maillists\SegmentController;
-use App\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
-use App\Http\Controllers\Managers\Campaigns\Products\ProductsController;
-use App\Http\Controllers\Managers\Campaigns\Products\ReportController;
-use App\Http\Controllers\Managers\Campaigns\Templates\TemplatesController;
+// Campaign routes are now handled by Modules\Campaign
+// See: Modules/Campaign/routes/managers.php
 use App\Http\Controllers\Managers\DashboardController;
 use App\Http\Controllers\Managers\Events\EventsController;
 use App\Http\Controllers\Managers\Faqs\CategoriesController as FaqsCategoriesController;

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\Campaigns\GiftvoucherCreated;
+// Campaigns events now managed by Modules\Campaign
 // use App\Listeners\Campaigns\GiftvoucherListener;
 use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;

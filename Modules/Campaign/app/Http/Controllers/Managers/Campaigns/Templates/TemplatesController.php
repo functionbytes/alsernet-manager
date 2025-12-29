@@ -3,8 +3,8 @@
 namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Templates;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Managers\Templates\App;
-use App\Http\Controllers\Managers\Templates\Setting;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Setting;
 use Modules\Campaign\Entities\Template;
 use Modules\Campaign\Entities\TemplateCategory as TemplateCategoryAlias;
 use Illuminate\Http\Request;
@@ -35,7 +35,7 @@ class TemplatesController extends Controller
             $template = Template::uploadSystemTemplate($request, $asAdmin);
 
             if (! empty(Setting::get('storage.s3'))) {
-                App::make('xstore')->store($template);
+                app('xstore')->store($template);
             }
 
             return redirect()->route('manager.templates');
@@ -136,7 +136,7 @@ class TemplatesController extends Controller
 
         if ($request->isMethod('post')) {
             foreach ($request->categories as $key => $value) {
-                $category = \App\Models\Template\TemplateCategory::findByUid($key);
+                $category = TemplateCategoryAlias::findByUid($key);
                 if ($value == 'true') {
                     $template->addCategory($category);
                 } else {

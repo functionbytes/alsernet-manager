@@ -9,7 +9,9 @@ use App\Models\ClickLog;
 use App\Models\FeedbackLog;
 use App\Models\IpLocation;
 use App\Models\Jobs\JobMonitor;
+use App\Models\Layout;
 use App\Models\OpenLog;
+use App\Models\Page;
 use App\Models\Setting;
 use App\Models\Subscriber;
 use App\Models\Template;
@@ -21,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log as LaravelLog;
 use Modules\Campaign\Entities\Campaign;
+use Modules\Campaign\Entities\CampaignWebhook;
 use Modules\Campaign\Events\CampaignUpdated;
 use Modules\Campaign\Jobs\ExportCampaignLog;
 use Validator;
@@ -811,8 +814,8 @@ class CampaignsController extends Controller
 
         // Page content
         $list = $subscriber->mailList;
-        $layout = \App\Models\Layout::where('alias', 'unsubscribe_success_page')->first();
-        $page = \App\Models\Page::findPage($list, $layout);
+        $layout = Layout::where('alias', 'unsubscribe_success_page')->first();
+        $page = Page::findPage($list, $layout);
 
         $page->renderContent(null, $subscriber);
 
@@ -1670,7 +1673,7 @@ class CampaignsController extends Controller
 
     public function webhooksEdit(Request $request)
     {
-        $webhook = ::ModulesCampaignEntitiesCampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         if ($request->isMethod('post')) {
             [$webhook, $validator] = $webhook->updateFromArray($request->all());
@@ -1695,7 +1698,7 @@ class CampaignsController extends Controller
 
     public function webhooksDelete(Request $request)
     {
-        $webhook = ::ModulesCampaignEntitiesCampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         $webhook->delete();
 
@@ -1706,7 +1709,7 @@ class CampaignsController extends Controller
 
     public function webhooksSampleRequest(Request $request)
     {
-        $webhook = ::ModulesCampaignEntitiesCampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
 
         return view('managers.views.campaigns.campaigns.webhooksSampleRequest', [
             'webhook' => $webhook,
@@ -1715,7 +1718,7 @@ class CampaignsController extends Controller
 
     public function webhooksTest(Request $request)
     {
-        $webhook = ::ModulesCampaignEntitiesCampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         if ($request->isMethod('post')) {
@@ -1751,7 +1754,7 @@ class CampaignsController extends Controller
 
     public function webhooksTestMessage(Request $request, $webhook_uid, $message_id)
     {
-        $webhook = ::ModulesCampaignEntitiesCampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         $client = new \GuzzleHttp\Client;
