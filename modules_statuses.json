@@ -1,3 +1,7 @@
 {
-    "Documents": true
+    "Documents": true,
+    "Mail": false,
+    "Prestashop": false,
+    "Returns": false,
+    "Warehouse": false
 }

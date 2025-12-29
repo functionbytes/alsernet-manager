@@ -3,19 +3,19 @@
 namespace Modules\Prestashop\Services;
 
 use App\Models\Category;
-use Modules\Prestashop\Entities\Category as PrestaShopCategory;
 use App\Models\PrestaShopCategoryMapping;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Prestashop\Entities\Category as PrestaShopCategory;
 
 /**
- * PrestaShopCategorySyncService
+ * CategorySyncService
  *
  * Handles bidirectional synchronization between Laravel and PrestaShop categories
  * with conflict detection and resolution strategies
  */
-class PrestaShopCategorySyncService
+class CategorySyncService
 {
     // Sync status constants
     protected const SYNC_STATUS_PENDING = 'pending';

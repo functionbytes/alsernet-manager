@@ -36,15 +36,16 @@ class PrestashopServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
 
         // Register services as singletons
-        $this->app->singleton(
-            \Modules\Prestashop\Services\CategorySyncService::class,
-            fn ($app) => new \Modules\Prestashop\Services\CategorySyncService
-        );
+        // TODO: Uncomment when service classes are properly implemented
+        // $this->app->singleton(
+        //     \Modules\Prestashop\Services\CategorySyncService::class,
+        //     fn ($app) => new \Modules\Prestashop\Services\CategorySyncService
+        // );
 
-        $this->app->singleton(
-            \Modules\Prestashop\Services\SupplierSyncService::class,
-            fn ($app) => new \Modules\Prestashop\Services\SupplierSyncService
-        );
+        // $this->app->singleton(
+        //     \Modules\Prestashop\Services\SupplierSyncService::class,
+        //     fn ($app) => new \Modules\Prestashop\Services\SupplierSyncService
+        // );
     }
 
     /**

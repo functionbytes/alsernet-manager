@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Library\Facades\Hook;
-use App\Models\Return\ReturnRequest;
 use App\Models\Setting\Setting;
-use App\Observers\Returns\ReturnObserver;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -36,7 +34,8 @@ class AppServiceProvider extends ServiceProvider
         $migrator->path(database_path('migrations/auth'));
         $migrator->path(database_path('migrations/core'));
 
-        ReturnRequest::observe(ReturnObserver::class);
+        // TODO: Enable when Returns module is enabled
+        // ReturnRequest::observe(ReturnObserver::class);
 
         Schema::defaultStringLength(191);
 
