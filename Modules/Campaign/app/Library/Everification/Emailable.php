@@ -2,9 +2,9 @@
 
 namespace Modules\Campaign\Library\Everification;
 
-use app\Library\Exception\VerificationTakesLongerThanNormal;
 use Exception;
 use GuzzleHttp\Client;
+use Modules\Campaign\Library\Exception\VerificationTakesLongerThanNormal;
 
 class Emailable
 {

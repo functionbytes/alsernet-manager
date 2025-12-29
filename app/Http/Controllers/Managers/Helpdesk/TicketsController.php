@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Managers\Helpdesk;
 
-use App\Events\Helpdesk\TicketCreated;
-use App\Events\Helpdesk\TicketMessageReceived;
-use App\Events\Helpdesk\TicketStatusChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Helpdesks\StoreTicketRequest;
 use App\Http\Requests\Helpdesks\UpdateTicketRequest;
@@ -18,6 +15,9 @@ use App\Models\Helpdesk\TicketView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Modules\Helpdesk\Events\TicketCreated;
+use Modules\Helpdesk\Events\TicketMessageReceived;
+use Modules\Helpdesk\Events\TicketStatusChanged;
 
 class TicketsController extends Controller
 {

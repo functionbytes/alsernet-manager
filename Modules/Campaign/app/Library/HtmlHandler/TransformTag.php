@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Library\HtmlHandler;
 
-use app\Library\StringHelper;
 use League\Pipeline\StageInterface;
+use Modules\Campaign\Library\StringHelper;
 
 class TransformTag implements StageInterface
 {

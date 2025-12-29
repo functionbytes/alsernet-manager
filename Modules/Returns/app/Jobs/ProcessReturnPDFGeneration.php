@@ -49,7 +49,7 @@ class ProcessReturnPDFGeneration implements ShouldQueue
             ]);
 
             // Opcional: Disparar evento de PDF completado
-            \App\Events\ReturnPDFGenerated::dispatch($this->returnRequest, $pdfPath);
+            \Modules\Returns\Events\ReturnPDFGenerated::dispatch($this->returnRequest, $pdfPath);
 
         } catch (\Exception $e) {
             Log::error('Error generando PDF', [
@@ -66,7 +66,7 @@ class ProcessReturnPDFGeneration implements ShouldQueue
                 ]);
 
                 // Opcional: Notificar a administradores
-                \App\Events\ReturnPDFGenerationFailed::dispatch($this->returnRequest, $e);
+                \Modules\Returns\Events\ReturnPDFGenerationFailed::dispatch($this->returnRequest, $e);
             }
 
             throw $e; // Re-lanzar para que Laravel maneje el reintento

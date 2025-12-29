@@ -2,9 +2,9 @@
 
 namespace Modules\Documents\Commands;
 
-use App\Events\Document\DocumentCreated;
 use Illuminate\Console\Command;
 use Modules\Documents\Entities\Document;
+use Modules\Documents\Events\DocumentCreated;
 use Modules\Documents\Services\DocumentEmailService;
 
 class CreateSampleDocumentsFromPrestashop extends Command

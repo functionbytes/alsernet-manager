@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Jobs\Subscribers;
+use App\Jobs\Base;
 
 use Modules\Subscriber\Models\Subscriber;
 use Illuminate\Bus\Queueable;

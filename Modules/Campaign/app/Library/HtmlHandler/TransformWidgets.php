@@ -2,9 +2,9 @@
 
 namespace Modules\Campaign\Library\HtmlHandler;
 
-use app\Library\StringHelper;
 use App\Models\Product;
 use League\Pipeline\StageInterface;
+use Modules\Campaign\Library\StringHelper;
 
 class TransformWidgets implements StageInterface
 {

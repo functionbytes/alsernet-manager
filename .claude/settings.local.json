@@ -295,7 +295,8 @@
       "Bash(else echo \"Path does not exist: /Users/functionbytes/Function/Coding/manager/database/migrations/webhooks\")",
       "Bash(__NEW_LINE__ echo \"=== CAMPAIGN MODULE API FILES ===\")",
       "Bash(do php -l \"/Users/functionbytes/Function/Coding/manager/Modules/Warehouse/app/Entities/$file.php\")",
-      "Bash(__NEW_LINE__ echo \"=== AUTOMATION CONTROLLER METHOD COUNT ===\")"
+      "Bash(__NEW_LINE__ echo \"=== AUTOMATION CONTROLLER METHOD COUNT ===\")",
+      "Bash(1)"
     ],
     "deny": [],
     "ask": []

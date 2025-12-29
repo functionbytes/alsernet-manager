@@ -3,7 +3,6 @@
 namespace Modules\Campaign\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use App\Library\StringHelper;
 use App\Models\BounceLog;
 use App\Models\ClickLog;
 use App\Models\FeedbackLog;
@@ -26,6 +25,7 @@ use Modules\Campaign\Entities\Campaign;
 use Modules\Campaign\Entities\CampaignWebhook;
 use Modules\Campaign\Events\CampaignUpdated;
 use Modules\Campaign\Jobs\ExportCampaignLog;
+use Modules\Campaign\Library\StringHelper;
 use Validator;
 
 class CampaignsController extends Controller

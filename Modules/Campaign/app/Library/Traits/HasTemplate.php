@@ -2,29 +2,29 @@
 
 namespace Modules\Campaign\Library\Traits;
 
-use app\Library\ExtendedSwiftMessage;
-use app\Library\HtmlHandler\AddDoctype;
-use app\Library\HtmlHandler\AddPreheader;
-use app\Library\HtmlHandler\AppendHtml;
-use app\Library\HtmlHandler\DecodeHtmlSpecialChars;
-use app\Library\HtmlHandler\GenerateSpintax;
-use app\Library\HtmlHandler\GenerateSpintaxForPlainText;
-use app\Library\HtmlHandler\InjectMessageIdToBody;
-use app\Library\HtmlHandler\InjectTrackingPixel;
-use app\Library\HtmlHandler\MakeInlineCss;
-use app\Library\HtmlHandler\ParseRss;
-use app\Library\HtmlHandler\RemoveTitleTag;
-use app\Library\HtmlHandler\ReplaceBareLineFeed;
-use app\Library\HtmlHandler\TransformTag;
-use app\Library\HtmlHandler\TransformUrl;
-use app\Library\HtmlHandler\TransformWidgets;
-use app\Library\Lockable;
-use app\Library\StringHelper;
 use App\Models\Setting;
 use App\Models\Template\Template;
 use Cache;
 use Exception;
 use League\Pipeline\PipelineBuilder;
+use Modules\Campaign\Library\ExtendedSwiftMessage;
+use Modules\Campaign\Library\HtmlHandler\AddDoctype;
+use Modules\Campaign\Library\HtmlHandler\AddPreheader;
+use Modules\Campaign\Library\HtmlHandler\AppendHtml;
+use Modules\Campaign\Library\HtmlHandler\DecodeHtmlSpecialChars;
+use Modules\Campaign\Library\HtmlHandler\GenerateSpintax;
+use Modules\Campaign\Library\HtmlHandler\GenerateSpintaxForPlainText;
+use Modules\Campaign\Library\HtmlHandler\InjectMessageIdToBody;
+use Modules\Campaign\Library\HtmlHandler\InjectTrackingPixel;
+use Modules\Campaign\Library\HtmlHandler\MakeInlineCss;
+use Modules\Campaign\Library\HtmlHandler\ParseRss;
+use Modules\Campaign\Library\HtmlHandler\RemoveTitleTag;
+use Modules\Campaign\Library\HtmlHandler\ReplaceBareLineFeed;
+use Modules\Campaign\Library\HtmlHandler\TransformTag;
+use Modules\Campaign\Library\HtmlHandler\TransformUrl;
+use Modules\Campaign\Library\HtmlHandler\TransformWidgets;
+use Modules\Campaign\Library\Lockable;
+use Modules\Campaign\Library\StringHelper;
 use Soundasleep\Html2Text;
 
 trait HasTemplate

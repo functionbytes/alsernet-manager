@@ -2,7 +2,6 @@
 
 namespace Modules\Campaign\Library;
 
-use App\Library\Traits\TrackJobs;
 use App\Models\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Bus\Batch;
@@ -12,6 +11,7 @@ use Modules\Campaign\Events\CampaignUpdated;
 use Modules\Campaign\Jobs\LoadCampaign;
 use Modules\Campaign\Jobs\RunCampaign;
 use Modules\Campaign\Library\Traits\HasCache;
+use Modules\Campaign\Library\Traits\TrackJobs;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;

@@ -2,12 +2,12 @@
 
 namespace Modules\Campaign\Entities;
 
-use app\Library\StringHelper;
 use App\Models\Traits\HasUid;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Modules\Campaign\Library\StringHelper;
 use Validator;
 
 /**

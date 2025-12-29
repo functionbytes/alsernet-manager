@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Library\Lazada;
 
-use app\Library\Lazada\Lazop\LazopClient;
-use app\Library\Lazada\Lazop\LazopRequest;
+use Modules\Campaign\Library\Lazada\Lazop\LazopClient;
+use Modules\Campaign\Library\Lazada\Lazop\LazopRequest;
 
 if (! defined('LAZOP_SDK_WORK_DIR')) {
     define('LAZOP_SDK_WORK_DIR', dirname(__FILE__));

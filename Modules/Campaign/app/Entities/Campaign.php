@@ -2,23 +2,10 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Jobs\ExecuteCampaignCallback;
-use App\Jobs\SendMessage;
-use app\Library\BaseCampaign;
-use app\Library\Contracts\CampaignInterface;
-use app\Library\Contracts\HasTemplateInterface;
-use app\Library\HtmlHandler\InjectTrackingPixel;
-use app\Library\HtmlHandler\TransformUrl;
-use app\Library\RouletteWheel;
-use app\Library\StringHelper;
+use Modules\Campaign\Library\BaseCampaign;
+use Modules\Campaign\Library\Contracts\CampaignInterface;
+use Modules\Campaign\Library\Contracts\HasTemplateInterface;
 use Modules\Campaign\Library\Traits\HasTemplate;
-use App\Models\SendingServer;
-use App\Models\Setting;
-use Carbon\Carbon;
-use Closure;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use League\Csv\Writer;
 
 /**
  * @property int $id

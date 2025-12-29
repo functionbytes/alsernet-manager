@@ -96,7 +96,7 @@ class ProcessBulkStatusUpdate implements ShouldQueue
             ]);
 
             // Disparar evento de finalización
-            \App\Events\BulkStatusUpdateCompleted::dispatch(
+            \Modules\Returns\Events\BulkStatusUpdateCompleted::dispatch(
                 $this->batchId,
                 $successCount,
                 $errorCount,
@@ -126,7 +126,7 @@ class ProcessBulkStatusUpdate implements ShouldQueue
         ]);
 
         // Notificar al admin que inició la operación
-        \App\Events\BulkStatusUpdateFailed::dispatch(
+        \Modules\Returns\Events\BulkStatusUpdateFailed::dispatch(
             $this->batchId,
             $this->returnIds,
             $exception,

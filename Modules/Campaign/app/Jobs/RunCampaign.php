@@ -1,13 +1,14 @@
 <?php
 
 namespace Modules\Campaign\Jobs;
+use App\Jobs\Base;
 
-use app\Library\Contracts\CampaignInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Campaign\Library\Contracts\CampaignInterface;
 use Modules\Campaign\Library\Traits\Trackable;
 
 class RunCampaign implements ShouldQueue

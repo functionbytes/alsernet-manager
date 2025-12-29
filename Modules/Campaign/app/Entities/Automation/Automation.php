@@ -22,13 +22,6 @@
 
 namespace Modules\Campaign\Entities\Automation;
 
-use app\Library\Automation\Action;
-use app\Library\Automation\Evaluate;
-use app\Library\Automation\Operate;
-use app\Library\Automation\Send;
-use app\Library\Automation\Trigger;
-use app\Library\Automation\Wait;
-use app\Library\Lockable;
 use App\Models\Automation\Customer;
 use App\Models\Automation\Email;
 use App\Models\Automation\Field;
@@ -42,6 +35,13 @@ use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Modules\Campaign\Library\Automation\Action;
+use Modules\Campaign\Library\Automation\Evaluate;
+use Modules\Campaign\Library\Automation\Operate;
+use Modules\Campaign\Library\Automation\Send;
+use Modules\Campaign\Library\Automation\Trigger;
+use Modules\Campaign\Library\Automation\Wait;
+use Modules\Campaign\Library\Lockable;
 use Modules\Campaign\Library\Traits\HasCache;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;

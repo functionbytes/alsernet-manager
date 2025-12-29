@@ -109,7 +109,7 @@ class WidgetConversationController extends Controller
         $conversation->load(['customer', 'status', 'items.author', 'items.user']);
 
         // Broadcast new conversation to manager panel
-        broadcast(new \App\Events\Helpdesk\ConversationCreated($conversation))->toOthers();
+        broadcast(new \Modules\Helpdesk\Events\ConversationCreated($conversation))->toOthers();
 
         return response()->json([
             'success' => true,
@@ -281,7 +281,7 @@ class WidgetConversationController extends Controller
         $message->load(['author', 'user']);
 
         // Broadcast message to manager panel and widget
-        broadcast(new \App\Events\Helpdesk\MessageReceived($conversation, $message))->toOthers();
+        broadcast(new \Modules\Helpdesk\Events\MessageReceived($conversation, $message))->toOthers();
 
         return response()->json([
             'success' => true,
@@ -420,7 +420,7 @@ class WidgetConversationController extends Controller
         $message->load(['author', 'user']);
 
         // Broadcast message to widget and other agents
-        broadcast(new \App\Events\Helpdesk\MessageReceived($conversation, $message))->toOthers();
+        broadcast(new \Modules\Helpdesk\Events\MessageReceived($conversation, $message))->toOthers();
 
         return response()->json([
             'success' => true,
@@ -474,7 +474,7 @@ class WidgetConversationController extends Controller
         $conversation->close();
 
         // Broadcast conversation closed event
-        broadcast(new \App\Events\Helpdesk\ConversationUpdated($conversation))->toOthers();
+        broadcast(new \Modules\Helpdesk\Events\ConversationUpdated($conversation))->toOthers();
 
         return response()->json([
             'success' => true,

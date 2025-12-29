@@ -2,10 +2,10 @@
 
 namespace Modules\Campaign\Library\Storage;
 
-use app\Library\Storage\Contracts\Storable;
-use app\Library\Storage\Contracts\StorageService;
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
+use Modules\Campaign\Library\Storage\Contracts\Storable;
+use Modules\Campaign\Library\Storage\Contracts\StorageService;
 
 class S3 implements StorageService
 {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Jobs\Subscribers;
+use App\Jobs\Base;
 
 use Modules\Mail\Mail\Subscribers\SubscriberCheckMail;
 use Modules\Mail\Models;

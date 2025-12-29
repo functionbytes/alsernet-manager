@@ -22,9 +22,6 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Events\CampaignMaillistSubscription;
-use App\Events\CampaignMaillistUnsubscription;
-use app\Library\StringHelper;
 use App\Models\Blacklist;
 use App\Models\Segment;
 use App\Models\SubscriberField;
@@ -35,6 +32,9 @@ use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Modules\Campaign\Events\MailListSubscription;
+use Modules\Campaign\Events\MailListUnsubscription;
+use Modules\Campaign\Library\StringHelper;
 
 /**
  * @property int $id
@@ -239,7 +239,7 @@ class CampaignMaillistsSubscriber extends Model
             $this->save();
 
             // Trigger events
-            CampaignMaillistUnsubscription::dispatch($this);
+            MailListUnsubscription::dispatch($this);
 
             // Create log
             $this->unsubscribeLogs()->create($trackingInfo);
@@ -970,7 +970,7 @@ class CampaignMaillistsSubscriber extends Model
         $this->status = self::STATUS_SUBSCRIBED;
         $this->save();
 
-        CampaignMaillistSubscription::dispatch($this);
+        MailListSubscription::dispatch($this);
     }
 
     public function scopeUnsubscribed($query)
@@ -1000,7 +1000,7 @@ class CampaignMaillistsSubscriber extends Model
         $this->status = self::STATUS_SUBSCRIBED;
         $this->save();
 
-        CampaignMaillistSubscription::dispatch($this);
+        MailListSubscription::dispatch($this);
     }
 
     public function scopeSimpleSearch($query, $keyword)

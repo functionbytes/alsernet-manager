@@ -2,9 +2,9 @@
 
 namespace Modules\Campaign\Library\HtmlHandler;
 
-use app\Library\StringHelper;
 use bjoernffm\Spintax\Parser;
 use League\Pipeline\StageInterface;
+use Modules\Campaign\Library\StringHelper;
 
 class GenerateSpintax implements StageInterface
 {

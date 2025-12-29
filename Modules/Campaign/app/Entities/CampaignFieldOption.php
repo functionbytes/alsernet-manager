@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Library\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Campaign\Library\Traits\HasUid;
 
 /**
  * @property int $id

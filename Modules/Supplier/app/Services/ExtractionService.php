@@ -2,10 +2,6 @@
 
 namespace Modules\Supplier\Services;
 
-use App\Events\Supplier\ExtractionBatchCompleted;
-use App\Events\Supplier\ExtractionBatchStarted;
-use App\Events\Supplier\ExtractionResultProcessed;
-use App\Events\Supplier\OrchestratorWorkflowTriggered;
 use App\Exceptions\Supplier\ExtractionException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +12,10 @@ use Modules\Supplier\Entities\SupplierExtractionBatch;
 use Modules\Supplier\Entities\SupplierExtractionMapping;
 use Modules\Supplier\Entities\SupplierExtractionResult;
 use Modules\Supplier\Entities\SupplierSource;
+use Modules\Supplier\Events\ExtractionBatchCompleted;
+use Modules\Supplier\Events\ExtractionBatchStarted;
+use Modules\Supplier\Events\ExtractionResultProcessed;
+use Modules\Supplier\Events\OrchestratorWorkflowTriggered;
 
 /**
  * Extraction Service for Supplier Automation System

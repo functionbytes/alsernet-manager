@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Library\Facades;
 
-use app\Library\HookManager;
 use Illuminate\Support\Facades\Facade;
+use Modules\Campaign\Library\HookManager;
 
 class Hook extends Facade
 {

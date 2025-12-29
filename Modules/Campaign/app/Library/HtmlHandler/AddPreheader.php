@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Library\HtmlHandler;
 
-use app\Library\StringHelper;
 use League\Pipeline\StageInterface;
+use Modules\Campaign\Library\StringHelper;
 use Soundasleep\Html2Text;
 
 class AddPreheader implements StageInterface

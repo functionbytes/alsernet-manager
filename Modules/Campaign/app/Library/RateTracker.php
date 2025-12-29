@@ -2,9 +2,9 @@
 
 namespace Modules\Campaign\Library;
 
-use app\Library\Exception\RateLimitExceeded;
 use Carbon\Carbon;
 use Exception;
+use Modules\Campaign\Library\Exception\RateLimitExceeded;
 
 /*
  * Log every credit used to a log file, group by $mode, which could be 'minute' (default), hour, day, month...
