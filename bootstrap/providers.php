@@ -6,6 +6,8 @@ return [
     App\Providers\BootMailConfigurationProvider::class,
     App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
+    Modules\Campaign\Providers\CampaignServiceProvider::class,
     Modules\Documents\Providers\DocumentsServiceProvider::class,
+    Modules\Returns\Providers\ReturnsServiceProvider::class,
     Modules\Subscriber\Providers\SubscriberServiceProvider::class,
 ];
