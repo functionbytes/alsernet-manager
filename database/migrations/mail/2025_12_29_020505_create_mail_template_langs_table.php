@@ -18,7 +18,7 @@ return new class extends Migration
             $table->longText('content')->nullable();
             $table->timestamps();
 
-            $table->unique(['mail_template_id', 'lang_id']);
+            $table->unique(['mail_template_id', 'lang_id'], 'idx_89470');
             $table->index('lang_id');
         });
     }

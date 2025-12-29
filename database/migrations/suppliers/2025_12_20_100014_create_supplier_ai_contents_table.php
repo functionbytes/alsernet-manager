@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_ai_contents', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique()->comment('ULID unique identifier');
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade')->comment('FK to suppliers');
+            $table->unsignedBigInteger('supplier_id')->nullable()->onDelete('cascade')->comment('FK to suppliers');
             $table->foreignId('supplier_product_id')->nullable()->comment('FK to supplier_products (nullable)');
             $table->unsignedInteger('product_id')->nullable()->comment('FK to aalv_product PrestaShop (nullable)');
             $table->string('erp_reference', 100)->nullable()->comment('ERP/Management reference ID');

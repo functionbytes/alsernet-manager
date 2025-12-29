@@ -6,4 +6,5 @@ return [
     App\Providers\BootMailConfigurationProvider::class,
     App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
+    Modules\Documents\Providers\DocumentsServiceProvider::class,
 ];

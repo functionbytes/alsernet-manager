@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_customer_sessions', function (Blueprint $table) {
+        Schema::create('helpdesk_customer_sessions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->string('session_id')->unique();
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_customer_sessions');
+        Schema::dropIfExists('helpdesk_customer_sessions');
     }
 };

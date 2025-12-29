@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('company')->nullable();
             $table->json('detail')->nullable();
             $table->string('user_img')->nullable();
-            $table->foreignId('citie_id')->nullable()->constrained('cities');
+            $table->unsignedBigInteger('citie_id')->nullable();
             $table->foreignId('enterprise_id')->nullable();
             $table->string('timezone')->nullable();
             $table->boolean('voilated')->default(0);

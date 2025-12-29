@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_ticket_histories', function (Blueprint $table) {
+        Schema::create('helpdesk_ticket_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ticket_id');
             $table->unsignedBigInteger('user_id')->nullable();
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->longText('new_value')->nullable();
             $table->string('action_type');
             $table->json('metadata')->nullable();
-            $table->createdAt();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('ticket_id')->references('id')->on('helpdesk_tickets')->onDelete('cascade');
 
@@ -29,6 +29,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_ticket_histories');
+        Schema::dropIfExists('helpdesk_ticket_histories');
     }
 };

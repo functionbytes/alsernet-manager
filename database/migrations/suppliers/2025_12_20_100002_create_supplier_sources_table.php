@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_sources', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique()->comment('ULID unique identifier');
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
+            $table->unsignedBigInteger('supplier_id')->nullable()->onDelete('cascade');
             $table->enum('source_type', ['website', 'ftp', 'file', 'api'])->comment('Type of data source');
             $table->string('label', 255)->comment('Descriptive name for the source');
             $table->text('description')->nullable()->comment('Notes about the source');

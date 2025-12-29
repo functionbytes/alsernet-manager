@@ -48,7 +48,7 @@ return new class extends Migration
             $table->timestampsTz();
 
             // Indexes
-            $table->unique(['scope', 'scope_id', 'name']);
+            $table->unique(['scope', 'scope_id', 'name'], 'idx_82201');
             $table->index(['scope', 'scope_id'], 'variables_scope_idx');
         });
     }

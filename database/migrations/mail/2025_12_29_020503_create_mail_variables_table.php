@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->index('module');
             $table->index('category');
-            $table->unique(['key', 'module']);
+            $table->unique(['key', 'module'], 'idx_90505');
         });
     }
 

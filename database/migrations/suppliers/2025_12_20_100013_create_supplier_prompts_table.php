@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_prompts', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique()->comment('ULID unique identifier');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade')->comment('FK to suppliers (nullable)');
+            $table->unsignedBigInteger('supplier_id')->nullable()
             $table->unsignedInteger('category_id')->nullable()->comment('FK to category (nullable)');
             $table->foreignId('source_id')->nullable()->constrained('supplier_sources')->onDelete('cascade')->comment('FK to supplier_sources (nullable)');
             $table->enum('scope', ['global', 'supplier', 'category', 'supplier_category', 'source'])->comment('Prompt scope');

@@ -18,7 +18,7 @@ use Modules\Documents\Http\Controllers\Managers\Settings\ProductBlockadeControll
 |
 */
 
-Route::middleware(['auth', 'role:manager|super-admin'])->prefix('manager/settings')->name('manager.settings.')->group(function () {
+Route::middleware(['auth', 'role:super-admin'])->prefix('manager/settings')->name('manager.settings.')->group(function () {
 
     Route::group(['prefix' => 'documents'], function () {
 

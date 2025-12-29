@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_locations', function (Blueprint $table) {
             $table->id();
             $table->string('uid')->unique();
-            $table->foreignId('product_id')->constrained('inventaries')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id')->nullable()->onDelete('cascade');
             $table->foreignId('location_id')->nullable();
             $table->foreignId('shop_id')->nullable();
             $table->integer('kardex')->default(0);

@@ -45,7 +45,7 @@ class Group extends Model
             'user_id'
         )
             ->withPivot('conversation_priority')
-            ->withTimestamps(['created_at']);
+            ->withTimestamps();
 
         // Override the query to use the correct database for users table
         $relation->getQuery()->from("{$defaultDatabase}.users");

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->longText('content');
             $table->timestamps();
 
-            $table->unique(['layout_id', 'lang_id']);
+            $table->unique(['layout_id', 'lang_id'], 'idx_6502');
             $table->index('lang_id');
         });
     }

@@ -38,7 +38,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Índices
-            $table->unique(['source_id', 'config_type']);
+            $table->unique(['source_id', 'config_type'], 'idx_86911');
             $table->index('source_id', 'idx_source_configs_source');
             $table->index('config_type', 'idx_source_configs_type');
             $table->index('is_enabled', 'idx_source_configs_enabled');

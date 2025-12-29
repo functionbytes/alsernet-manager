@@ -258,7 +258,11 @@
       "Bash(__NEW_LINE__ echo \"MUESTRA DE MIGRACIONES CONSOLIDADAS:\")",
       "Bash(__NEW_LINE__ echo \"=== FINAL VERIFICATION ===\")",
       "Bash(__NEW_LINE__ echo \"Verificando archivos creados:\" echo \"\" echo \"1. MIGRATIONS_STRUCTURE.md\" ls -lh /Users/functionbytes/Function/Coding/manager/MIGRATIONS_STRUCTURE.md)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(while read dir)",
+      "Bash(do echo 'Checking: $\\(basename $dir\\)' ls -1 $dir/*.php)",
+      "Bash(while read folder)",
+      "Bash(do echo '📁 $folder' head -3 /Users/functionbytes/Function/Coding/manager/database/seeders/$folder/*.php)"
     ],
     "deny": [],
     "ask": []

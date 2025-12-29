@@ -8,22 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_group_user', function (Blueprint $table) {
+        Schema::create('helpdesk_group_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('user_id');
             $table->string('conversation_priority')->default('primary');
-            $table->createdAt();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('group_id')->references('id')->on('helpdesk_groups')->onDelete('cascade');
 
-            $table->unique(['group_id', 'user_id']);
+            $table->unique(['group_id', 'user_id'], 'idx_87211');
             $table->index('group_id');
         });
     }
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_group_user');
+        Schema::dropIfExists('helpdesk_group_user');
     }
 };

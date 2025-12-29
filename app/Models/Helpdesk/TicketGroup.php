@@ -60,7 +60,7 @@ class TicketGroup extends Model
             'user_id'
         )
             ->withPivot('priority')
-            ->withTimestamps(['created_at']);
+            ->withTimestamps();
 
         // Override the query to use the correct database for users table
         $relation->getQuery()->from("{$defaultDatabase}.users");

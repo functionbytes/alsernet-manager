@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_ai_agents', function (Blueprint $table) {
+        Schema::create('helpdesk_ai_agents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
@@ -24,6 +24,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_ai_agents');
+        Schema::dropIfExists('helpdesk_ai_agents');
     }
 };

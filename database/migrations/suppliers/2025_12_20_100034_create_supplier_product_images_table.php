@@ -16,7 +16,7 @@ return new class extends Migration
 
             // References
             $table->foreignId('extraction_result_id')->nullable()->constrained('supplier_extraction_results')->onDelete('cascade')->comment('FK to extraction results');
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade')->comment('FK to suppliers');
+            $table->unsignedBigInteger('supplier_id')->nullable()->onDelete('cascade')->comment('FK to suppliers');
             $table->string('reference', 100)->nullable()->comment('Product reference');
 
             // Original Image

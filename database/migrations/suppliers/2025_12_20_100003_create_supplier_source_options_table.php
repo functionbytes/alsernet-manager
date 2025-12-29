@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_required')->default(false)->comment('Is this option required?');
             $table->timestamps();
 
-            $table->unique(['source_id', 'option_key']);
+            $table->unique(['source_id', 'option_key'], 'idx_99013');
             $table->index('source_id');
         });
     }

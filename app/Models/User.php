@@ -399,7 +399,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\Helpdesk\Group::class, 'helpdesk_group_user')
             ->withPivot('conversation_priority')
-            ->withTimestamps(['created_at']);
+            ->withTimestamps();
     }
 
     /**

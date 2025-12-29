@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_categories', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
+            $table->unsignedBigInteger('supplier_id')->nullable()->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->boolean('is_active')->default(true)->index();
             $table->integer('priority')->default(0);

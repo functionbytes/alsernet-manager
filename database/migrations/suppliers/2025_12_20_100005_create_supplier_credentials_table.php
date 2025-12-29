@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_credentials', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique()->comment('ULID unique identifier');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->nullOnDelete();
+            $table->unsignedBigInteger('supplier_id')->nullable()
             $table->foreignId('source_id')->nullable()->constrained('supplier_sources')->nullOnDelete();
             $table->enum('credential_type', ['ftp', 'api', 'oauth', 'basic_auth', 'proxy']);
             $table->string('name', 100)->comment('Identifier name');

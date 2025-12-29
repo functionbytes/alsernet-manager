@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_canned_replies', function (Blueprint $table) {
+        Schema::create('helpdesk_canned_replies', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('conversation_id')->nullable();
             $table->string('title');
@@ -25,6 +25,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_canned_replies');
+        Schema::dropIfExists('helpdesk_canned_replies');
     }
 };

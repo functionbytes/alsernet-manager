@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_groups', function (Blueprint $table) {
+        Schema::create('helpdesk_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('assignment_mode')->default('round_robin');
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_groups');
+        Schema::dropIfExists('helpdesk_groups');
     }
 };

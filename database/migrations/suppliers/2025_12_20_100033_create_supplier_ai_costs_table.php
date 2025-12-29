@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             // References
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade')->comment('FK to suppliers');
+            $table->unsignedBigInteger('supplier_id')->nullable()
             $table->unsignedBigInteger('content_id')->nullable()->comment('Related content ID if applicable');
             $table->string('batch_id', 100)->nullable()->comment('Batch identifier for grouping');
 

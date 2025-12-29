@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('last_used_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'token']);
+            $table->unique(['user_id', 'token'], 'idx_10310');
         });
 
         // notification_settings
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->boolean('enabled')->default(true);
             $table->timestamps();
 
-            $table->unique(['user_id', 'channel', 'notification_type']);
+            $table->unique(['user_id', 'channel', 'notification_type'], 'idx_47991');
         });
     }
 

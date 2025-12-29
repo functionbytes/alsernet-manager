@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
                     Route::group([], base_path('routes/shops.php'));
                     Route::group([], base_path('routes/administratives.php'));
                     Route::group([], base_path('routes/accountings.php'));
-                    Route::group([], base_path('routes/weapons.php'));
+                    Route::group([], base_path('routes/licence.php'));
                 });
 
         });

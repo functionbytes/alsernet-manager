@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_extraction_results', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique();
-            $table->foreignId('supplier_id')->constrained('suppliers')->cascadeOnDelete();
+            $table->unsignedBigInteger('supplier_id')->nullable()->cascadeOnDelete();
             $table->foreignId('source_id')->constrained('supplier_sources')->cascadeOnDelete();
             $table->foreignId('mapping_id')->constrained('supplier_extraction_mappings')->cascadeOnDelete();
             $table->foreignId('execution_id')->nullable()->constrained('supplier_automation_executions')->nullOnDelete();

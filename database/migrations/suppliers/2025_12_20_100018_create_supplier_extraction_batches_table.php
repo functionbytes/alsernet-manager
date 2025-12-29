@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supplier_extraction_batches', function (Blueprint $table) {
             $table->id();
             $table->char('uid', 26)->unique();
-            $table->foreignId('supplier_id')->constrained('suppliers')->cascadeOnDelete();
+            $table->unsignedBigInteger('supplier_id')->nullable()->cascadeOnDelete();
             $table->foreignId('source_id')->nullable()->constrained('supplier_sources')->nullOnDelete();
             $table->date('batch_date');
             $table->enum('batch_type', ['daily', 'manual', 'incremental', 'full_sync'])->default('daily');

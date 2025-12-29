@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('helpdesk')->create('helpdesk_ticket_views', function (Blueprint $table) {
+        Schema::create('helpdesk_ticket_views', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ticket_id');
             $table->unsignedBigInteger('user_id');
@@ -17,13 +17,13 @@ return new class extends Migration
 
             $table->foreign('ticket_id')->references('id')->on('helpdesk_tickets')->onDelete('cascade');
 
-            $table->unique(['ticket_id', 'user_id']);
+            $table->unique(['ticket_id', 'user_id'], 'idx_6529');
             $table->index('ticket_id');
         });
     }
 
     public function down(): void
     {
-        Schema::connection('helpdesk')->dropIfExists('helpdesk_ticket_views');
+        Schema::dropIfExists('helpdesk_ticket_views');
     }
 };
