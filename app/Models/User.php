@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public const TEMPLATES_DIR = 'home/templates';  // storage/customers/000000/home/files
 
-    public const PRODUCT_DIR = 'home/products';
+    public const PRODUCT_DIR = 'home/inventaries';
 
     public const LOGS_DIR = 'home/logs/';
 

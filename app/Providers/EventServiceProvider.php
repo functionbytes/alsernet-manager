@@ -3,9 +3,6 @@
 namespace App\Providers;
 
 use App\Events\Campaigns\GiftvoucherCreated;
-use App\Events\Document\DocumentCreated;
-use App\Events\Document\DocumentStatusChanged;
-use App\Events\Documents\DocumentValidationStageApproved;
 use App\Listeners\Campaigns\GiftvoucherListener;
 use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;
@@ -17,6 +14,9 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Log\Events\MessageLogged;
+use Modules\Documents\Events\DocumentCreated;
+use Modules\Documents\Events\DocumentStatusChanged;
+use Modules\Documents\Events\DocumentValidationStageApproved;
 use Spatie\Backup\Events\BackupHasFailed;
 use Spatie\Backup\Events\BackupHasSucceeded;
 use Spatie\Backup\Events\BackupWasNotSuccessful;

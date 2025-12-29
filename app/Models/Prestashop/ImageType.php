@@ -19,7 +19,7 @@ class ImageType extends Model
         'name',
         'width',
         'height',
-        'products',
+        'inventaries',
         'categories',
         'manufacturers',
         'suppliers',

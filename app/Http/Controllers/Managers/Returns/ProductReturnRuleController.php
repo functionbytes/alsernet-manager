@@ -56,7 +56,7 @@ class ProductReturnRuleController extends Controller
         $request->validate([
             'rule_type' => 'required|in:category,product,global',
             'category_id' => 'nullable|required_if:rule_type,category|exists:categories,id',
-            'product_id' => 'nullable|required_if:rule_type,product|exists:products,id',
+            'product_id' => 'nullable|required_if:rule_type,product|exists:inventaries,id',
             'is_returnable' => 'required|boolean',
             'return_period_days' => 'nullable|integer|min:1|max:365',
             'max_return_percentage' => 'required|numeric|min:0|max:100',

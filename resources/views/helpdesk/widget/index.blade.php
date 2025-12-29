@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="widget-root"
-         data-preview="{{ $isPreview ? 'true' : 'false' }}"
+         data-preview="{{ ($isPreview ?? false) ? 'true' : 'false' }}"
          data-inline="{{ ($isInline ?? false) ? 'true' : 'false' }}"
          data-conversation-id="{{ $conversationId ?? '' }}"></div>
 </body>

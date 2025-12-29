@@ -195,9 +195,9 @@ class LocationsController extends Controller
 
         if ($searchKey) {
             $items->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
-                $query->where('products.reference', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.barcode', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.title', 'like', '%'.$searchKey.'%')
+                $query->where('inventaries.reference', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.barcode', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.title', 'like', '%'.$searchKey.'%')
                     ->orWhereHas('location', function ($q) use ($searchKey) {
                         $q->where('locations.title', 'like', '%'.$searchKey.'%');
                     });

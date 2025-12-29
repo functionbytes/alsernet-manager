@@ -109,11 +109,11 @@ Alsernet/
 
 // Rutas viejas (Blade) - mantener funcionando
 Route::prefix('legacy')->group(function() {
-    Route::get('/products', [LegacyController::class, 'products']);
+    Route::get('/inventaries', [LegacyController::class, 'inventaries']);
 });
 
 // Rutas nuevas (React con Inertia)
-Route::get('/products', fn() => Inertia::render('Products/Index'));
+Route::get('/inventaries', fn() => Inertia::render('Products/Index'));
 ```
 
 ## ⚡ Comandos Útiles
@@ -186,7 +186,7 @@ use Inertia\Inertia;
 Route::get('/dashboard', function() {
     return Inertia::render('Dashboard', [
         'stats' => [
-            'products' => Product::count()
+            'inventaries' => Product::count()
         ]
     ]);
 });

@@ -41,6 +41,7 @@
         "maatwebsite/excel": "^3.1",
         "milon/barcode": "^11.0|^12.0",
         "nesbot/carbon": "^3.8",
+        "nwidart/laravel-modules": "^12.0",
         "phpmailer/phpmailer": "^6.9",
         "picqer/php-barcode-generator": "^3.2",
         "propaganistas/laravel-disposable-email": "^2.2",
@@ -142,6 +143,18 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": false,
+            "merge-extra-deep": false,
+            "merge-scripts": false
         }
     },
     "config": {
@@ -150,7 +163,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",

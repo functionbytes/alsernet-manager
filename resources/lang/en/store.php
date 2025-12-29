@@ -3,7 +3,7 @@
 return [
 
     /**
-     * products
+     * inventaries
      */
     'product' => 'Products',
     'product.head' => 'Products',

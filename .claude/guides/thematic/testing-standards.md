@@ -209,7 +209,7 @@ class ProductApiTest extends TestCase {
     public function it_lists_products() {
         Product::factory(5)->create();
 
-        $response = $this->getJson('/api/v1/products');
+        $response = $this->getJson('/api/v1/inventaries');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -222,7 +222,7 @@ class ProductApiTest extends TestCase {
     /** @test */
     public function it_creates_product() {
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/products', [
+            ->postJson('/api/v1/inventaries', [
                 'name' => 'Test Product',
                 'price' => 99.99,
                 'category_id' => null,  // Será validado
@@ -231,7 +231,7 @@ class ProductApiTest extends TestCase {
         $response->assertStatus(201)
             ->assertJsonPath('data.name', 'Test Product');
 
-        $this->assertDatabaseHas('products', [
+        $this->assertDatabaseHas('inventaries', [
             'name' => 'Test Product'
         ]);
     }
@@ -239,7 +239,7 @@ class ProductApiTest extends TestCase {
     /** @test */
     public function it_validates_product_input() {
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/products', [
+            ->postJson('/api/v1/inventaries', [
                 'name' => '', // Requerido
                 'price' => -10, // Debe ser positivo
             ]);
@@ -250,7 +250,7 @@ class ProductApiTest extends TestCase {
 
     /** @test */
     public function it_requires_authentication() {
-        $response = $this->postJson('/api/v1/products', [
+        $response = $this->postJson('/api/v1/inventaries', [
             'name' => 'Test',
             'price' => 99.99,
         ]);
@@ -263,13 +263,13 @@ class ProductApiTest extends TestCase {
         $product = Product::factory()->create(['name' => 'Old Name']);
 
         $response = $this->actingAs($this->user)
-            ->patchJson("/api/v1/products/{$product->id}", [
+            ->patchJson("/api/v1/inventaries/{$product->id}", [
                 'name' => 'New Name'
             ]);
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('products', [
+        $this->assertDatabaseHas('inventaries', [
             'id' => $product->id,
             'name' => 'New Name'
         ]);
@@ -280,11 +280,11 @@ class ProductApiTest extends TestCase {
         $product = Product::factory()->create();
 
         $response = $this->actingAs($this->user)
-            ->deleteJson("/api/v1/products/{$product->id}");
+            ->deleteJson("/api/v1/inventaries/{$product->id}");
 
         $response->assertStatus(200);
 
-        $this->assertSoftDeleted('products', [
+        $this->assertSoftDeleted('inventaries', [
             'id' => $product->id
         ]);
     }
@@ -315,11 +315,11 @@ class AuthorizationTest extends TestCase {
     }
 
     protected function createPermissions() {
-        Permission::create(['name' => 'edit products']);
-        Permission::create(['name' => 'delete products']);
+        Permission::create(['name' => 'edit inventaries']);
+        Permission::create(['name' => 'delete inventaries']);
 
         $manager = Role::create(['name' => 'manager']);
-        $manager->givePermissionTo('edit products');
+        $manager->givePermissionTo('edit inventaries');
     }
 
     /** @test */
@@ -330,7 +330,7 @@ class AuthorizationTest extends TestCase {
         $product = Product::factory()->create();
 
         $response = $this->actingAs($manager)
-            ->patchJson("/api/v1/products/{$product->id}", [
+            ->patchJson("/api/v1/inventaries/{$product->id}", [
                 'name' => 'Updated'
             ]);
 
@@ -344,7 +344,7 @@ class AuthorizationTest extends TestCase {
         $product = Product::factory()->create();
 
         $response = $this->actingAs($user)
-            ->deleteJson("/api/v1/products/{$product->id}");
+            ->deleteJson("/api/v1/inventaries/{$product->id}");
 
         $response->assertStatus(403);
     }
@@ -425,7 +425,7 @@ class OrderFlowTest extends TestCase {
         ]);
 
         // 7. Verificar stock reducido
-        $this->assertDatabaseHas('products', [
+        $this->assertDatabaseHas('inventaries', [
             'id' => $product->id,
             'stock' => 8  // 10 - 2
         ]);

@@ -34,7 +34,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href=" {{ route('manager.products.create') }}" class="btn btn-primary">
+                                <a href=" {{ route('manager.inventaries.create') }}" class="btn btn-primary">
                                     <i class="fa-duotone fa-plus"></i>
                                 </a>
                             </div>
@@ -93,18 +93,18 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.products.locations', $product->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.inventaries.locations', $product->uid) }}">
                                                 Ubicacines
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.products.edit', $product->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.inventaries.edit', $product->uid) }}">
                                                 Editar
                                             </a>
                                         </li>
 
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('manager.products.destroy', $product->uid) }}">Eliminar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('manager.inventaries.destroy', $product->uid) }}">Eliminar</a>
                                         </li>
                                     </ul>
                                 </div>

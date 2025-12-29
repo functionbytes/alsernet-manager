@@ -73,7 +73,7 @@ class DocumentService
             'return' => $returnRequest,
             'customer' => $returnRequest->customer,
             'order' => $returnRequest->order,
-            'products' => $returnRequest->products,
+            'inventaries' => $returnRequest->products,
             'return_number' => $returnRequest->getReturnNumber(),
             'instructions' => $this->getReturnInstructions($returnRequest),
         ];
@@ -98,7 +98,7 @@ class DocumentService
             'return' => $returnRequest,
             'customer' => $returnRequest->customer,
             'order' => $returnRequest->order,
-            'products' => $returnRequest->products,
+            'inventaries' => $returnRequest->products,
             'financial_summary' => $returnRequest->getFinancialSummary(),
             'estimated_refund_date' => now()->addDays(config('returns.refund_days', 14)),
         ];

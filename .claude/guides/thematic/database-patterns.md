@@ -19,7 +19,7 @@
 
 ### 1. **UUIDs como Primary Key**
 ```php
-Schema::create('products', function (Blueprint $table) {
+Schema::create('inventaries', function (Blueprint $table) {
     $table->uuid('id')->primary();
     // En lugar de $table->id();
 });
@@ -68,7 +68,7 @@ $table->decimal('price', 10, 2)->default(0); // Con default
 ### Patrón 1: Modelo Principal (Products)
 
 ```php
-Schema::create('products', function (Blueprint $table) {
+Schema::create('inventaries', function (Blueprint $table) {
     $table->uuid('id')->primary();
 
     // Datos principales
@@ -146,7 +146,7 @@ Schema::create('order_items', function (Blueprint $table) {
         ->onDelete('cascade');
 
     $table->foreignUuid('product_id')
-        ->constrained('products')
+        ->constrained('inventaries')
         ->onDelete('restrict');
 
     // Datos de la compra (snapshot)
@@ -370,7 +370,7 @@ Schema::create('categories', function (Blueprint $table) {
 });
 
 // Tabla de productos
-Schema::create('products', function (Blueprint $table) {
+Schema::create('inventaries', function (Blueprint $table) {
     $table->uuid('id')->primary();
     $table->string('sku')->unique();
     $table->string('name');

@@ -234,7 +234,7 @@
                 var location = $("#location").val();
                 var item = $("#item").val();
 
-                // Retrieve and parse products from localStorage
+                // Retrieve and parse inventaries from localStorage
                 var products = getArrayFromLocalStorage(location);
 
                 try {
@@ -243,7 +243,7 @@
                     products = [];
                 }
 
-                // Check if products array is empty
+                // Check if inventaries array is empty
                 if (products.length === 0) {
 
                     if (/Mobi|Android/i.test(navigator.userAgent)) {

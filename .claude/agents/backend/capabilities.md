@@ -457,7 +457,7 @@ class WarehouseResource extends JsonResource {
             'name' => $this->name,
             'location' => $this->location,
             'capacity' => $this->capacity,
-            'products' => ProductResource::collection($this->products),
+            'inventaries' => ProductResource::collection($this->products),
             'created_at' => $this->created_at,
         ];
     }

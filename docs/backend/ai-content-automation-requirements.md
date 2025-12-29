@@ -518,7 +518,7 @@ supplier_contents
   {"option_key": "base_url", "option_value": "https://api.reebok.com/v2"},
   {"option_key": "auth_type", "option_value": "bearer"},
   {"option_key": "api_key", "option_value": "encrypted:yyyy"},
-  {"option_key": "endpoints", "option_value": "{\"products\": \"/products\", \"details\": \"/products/{sku}\"}"},
+  {"option_key": "endpoints", "option_value": "{\"inventaries\": \"/inventaries\", \"details\": \"/inventaries/{sku}\"}"},
   {"option_key": "rate_limit", "option_value": "100"},
   {"option_key": "response_format", "option_value": "json"}
 ]
@@ -895,7 +895,7 @@ Registra cada ejecución/job enviado a n8n.
       {
         "name": "product_details",
         "method": "GET",
-        "path": "/products/{sku}",
+        "path": "/inventaries/{sku}",
         "params": {
           "sku": "RBK-12345"
         }
@@ -903,7 +903,7 @@ Registra cada ejecución/job enviado a n8n.
       {
         "name": "product_specs",
         "method": "GET",
-        "path": "/products/{sku}/specifications",
+        "path": "/inventaries/{sku}/specifications",
         "params": {
           "sku": "RBK-12345",
           "lang": "es-ES"
@@ -3357,8 +3357,8 @@ class SupplierSourceSeeder extends Seeder
                         'client_id' => '${NIKE_API_CLIENT_ID}',
                         'client_secret' => '${NIKE_API_CLIENT_SECRET}',
                         'endpoints' => [
-                            'products' => '/products',
-                            'product_detail' => '/products/{id}',
+                            'inventaries' => '/inventaries',
+                            'product_detail' => '/inventaries/{id}',
                             'inventory' => '/inventory',
                         ],
                     ],
@@ -3406,7 +3406,7 @@ class SupplierSourceSeeder extends Seeder
                         'protocol' => 'sftp',
                         'username' => '${ADIDAS_SFTP_USER}',
                         'key_file' => '${ADIDAS_SFTP_KEY}',
-                        'path' => '/feeds/products/',
+                        'path' => '/feeds/inventaries/',
                         'file_pattern' => 'products_es_*.csv',
                         'delimiter' => ';',
                         'encoding' => 'UTF-8',
@@ -5058,10 +5058,10 @@ class ProcessProductImage implements ShouldQueue
 
 Generar contenido en múltiples idiomas automáticamente.
 
-#### Tabla: `supplier_content_translations`
+#### Tabla: `supplier_content_langs`
 
 ```sql
-CREATE TABLE supplier_content_translations (
+CREATE TABLE supplier_content_langs (
     id BIGSERIAL PRIMARY KEY,
     content_id BIGINT REFERENCES supplier_contents(id) ON DELETE CASCADE,
     lang_id INT NOT NULL,                     -- 1=ES, 2=EN, 3=FR, etc.
@@ -6588,7 +6588,7 @@ CREATE INDEX idx_source_configs_enabled ON supplier_source_configurations(is_ena
         "endpoints": {
             "products_list": {
                 "method": "GET",
-                "path": "/products",
+                "path": "/inventaries",
                 "pagination": {
                     "type": "cursor", // 'offset', 'cursor', 'page', 'link_header'
                     "cursor_param": "after",
@@ -6599,12 +6599,12 @@ CREATE INDEX idx_source_configs_enabled ON supplier_source_configurations(is_ena
             },
             "product_detail": {
                 "method": "GET",
-                "path": "/products/{id}",
+                "path": "/inventaries/{id}",
                 "path_params": ["id"]
             },
             "product_images": {
                 "method": "GET",
-                "path": "/products/{id}/images"
+                "path": "/inventaries/{id}/images"
             },
             "categories": {
                 "method": "GET",
@@ -6631,7 +6631,7 @@ CREATE INDEX idx_source_configs_enabled ON supplier_source_configurations(is_ena
         },
 
         "response_handling": {
-            "data_path": "data.products",
+            "data_path": "data.inventaries",
             "total_path": "meta.total",
             "error_path": "error.message",
             "success_codes": [200, 201],
@@ -6670,7 +6670,7 @@ CREATE INDEX idx_source_configs_enabled ON supplier_source_configurations(is_ena
             "token_url": "https://api.proveedor.com/oauth/token",
             "client_id": "{{ENCRYPTED:credential_ref}}",
             "client_secret": "{{ENCRYPTED:credential_ref}}",
-            "scope": "products:read catalog:read",
+            "scope": "inventaries:read catalog:read",
             "token_storage": "database", // 'database', 'cache'
             "refresh_before_expiry_seconds": 300
         },
@@ -7165,7 +7165,7 @@ CREATE INDEX idx_source_templates_category ON supplier_source_templates(category
         "endpoints": {
             "products_list": {
                 "method": "GET",
-                "path": "/products.json",
+                "path": "/inventaries.json",
                 "pagination": {
                     "type": "link_header",
                     "limit_param": "limit",
@@ -8521,7 +8521,7 @@ class SupplierSourceTemplateSeeder extends Seeder
                 'endpoints' => [
                     'products_list' => [
                         'method' => 'GET',
-                        'path' => '/products.json',
+                        'path' => '/inventaries.json',
                         'pagination' => [
                             'type' => 'link_header',
                             'limit_param' => 'limit',
@@ -8530,7 +8530,7 @@ class SupplierSourceTemplateSeeder extends Seeder
                     ],
                     'product_detail' => [
                         'method' => 'GET',
-                        'path' => '/products/{id}.json',
+                        'path' => '/inventaries/{id}.json',
                     ],
                 ],
                 'rate_limit' => [
@@ -8566,7 +8566,7 @@ class SupplierSourceTemplateSeeder extends Seeder
                 'endpoints' => [
                     'products_list' => [
                         'method' => 'GET',
-                        'path' => '/products',
+                        'path' => '/inventaries',
                         'pagination' => [
                             'type' => 'page',
                             'page_param' => 'page',

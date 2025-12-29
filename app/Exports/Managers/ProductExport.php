@@ -25,7 +25,7 @@ class ProductExport implements FromQuery, Responsable, WithHeadings, WithMapping
 
     public function query()
     {
-        $products = DB::table('products')->where('count', '=', 0)->orderByDesc('count');
+        $products = DB::table('inventaries')->where('count', '=', 0)->orderByDesc('count');
 
         return $products;
     }
@@ -45,9 +45,9 @@ class ProductExport implements FromQuery, Responsable, WithHeadings, WithMapping
     public function queryss()
     {
 
-        $products = DB::table('products')
+        $products = DB::table('inventaries')
             ->join('inventarie_locations_items', function ($join) {
-                $join->on('products.id', '=', 'inventarie_locations_items.product_id');
+                $join->on('inventaries.id', '=', 'inventarie_locations_items.product_id');
             })
             ->join('locations', function ($join) {
                 $join->on(function ($join) {
@@ -56,13 +56,13 @@ class ProductExport implements FromQuery, Responsable, WithHeadings, WithMapping
                 });
             })
             ->select(
-                'products.*',
+                'inventaries.*',
                 'inventarie_locations_items.validate_id',
                 'inventarie_locations_items.original_id',
                 DB::raw('COUNT(inventarie_locations_items.id) as inventory_count')
             )
             ->groupBy(
-                'products.id',
+                'inventaries.id',
                 'locations.id',
                 'locations.title',
                 'inventarie_locations_items.validate_id',

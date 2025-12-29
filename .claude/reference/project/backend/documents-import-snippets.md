@@ -396,7 +396,7 @@ use App\Models\Document\Document;
 
 $document = Document::uid('doc-uuid');
 
-// Get products
+// Get inventaries
 $products = $document->products()->get();
 
 foreach ($products as $product) {
@@ -406,7 +406,7 @@ foreach ($products as $product) {
 // Get product count
 $count = $document->products()->count();
 
-// Manually capture products
+// Manually capture inventaries
 $document->captureProducts();
 ```
 
@@ -574,8 +574,8 @@ if ($existing) {
 try {
     $document->captureProducts();
 } catch (Exception $e) {
-    Log::error("Failed to capture products: {$e->getMessage()}");
-    // Document still created, but with no products
+    Log::error("Failed to capture inventaries: {$e->getMessage()}");
+    // Document still created, but with no inventaries
 }
 
 try {
@@ -696,7 +696,7 @@ dd(\DB::getQueryLog());
 ```php
 $document = Document::uid('doc-uuid');
 
-// Check if products exist
+// Check if inventaries exist
 $products = $document->products()->get();
 \Log::info('Products captured', ['count' => $products->count()]);
 

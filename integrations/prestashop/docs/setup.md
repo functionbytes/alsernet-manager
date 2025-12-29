@@ -251,7 +251,7 @@ php bin/console Alsernet:verify-connection
 
 ```bash
 # Importar todos los productos de Alsernet
-php bin/console Alsernet:sync:products --full --batch=50
+php bin/console Alsernet:sync:inventaries --full --batch=50
 
 # Esto descargará:
 # - 50+ productos
@@ -314,7 +314,7 @@ crontab -e
 # Agregar líneas:
 */5 * * * * /usr/bin/php /var/www/Alsernet/integrations/prestashop/bin/console Alsernet:sync:prices
 */15 * * * * /usr/bin/php /var/www/Alsernet/integrations/prestashop/bin/console Alsernet:sync:stock
-0 * * * * /usr/bin/php /var/www/Alsernet/integrations/prestashop/bin/console Alsernet:sync:products:incremental
+0 * * * * /usr/bin/php /var/www/Alsernet/integrations/prestashop/bin/console Alsernet:sync:inventaries:incremental
 
 # Guardar (Ctrl+O, Enter, Ctrl+X)
 ```
@@ -347,7 +347,7 @@ php bin/console Alsernet:test:auth
 
 # Test de endpoints
 php bin/console Alsernet:test:customers
-php bin/console Alsernet:test:products
+php bin/console Alsernet:test:inventaries
 php bin/console Alsernet:test:orders
 ```
 
@@ -457,7 +457,7 @@ grep SYNC storage/logs/Alsernet-sync.log
 
 ```bash
 # Productos
-php bin/console stats:products
+php bin/console stats:inventaries
 
 # Clientes
 php bin/console stats:customers

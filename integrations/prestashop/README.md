@@ -243,7 +243,7 @@ Requerido:
 
 ```bash
 # Importar productos
-php bin/console Alsernet:sync:products
+php bin/console Alsernet:sync:inventaries
 
 # Importar clientes existentes
 php bin/console Alsernet:sync:customers
@@ -365,7 +365,7 @@ curl -X GET http://Alsernet-url/api/health \
 php bin/console config:set Alsernet:api:timeout 60
 
 # Ejecutar sincronización en background
-php bin/console Alsernet:sync:products --background
+php bin/console Alsernet:sync:inventaries --background
 ```
 
 ---

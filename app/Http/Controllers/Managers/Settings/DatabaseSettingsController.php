@@ -14,8 +14,8 @@ class DatabaseSettingsController extends Controller
     public function index()
     {
         $settings = Setting::getDatabaseSettings();
-        $pageTitle = 'Configuración de Base de Datos';
-        $breadcrumb = 'Configuración / Base de Datos';
+        $pageTitle = 'Configuración de base de Datos';
+        $breadcrumb = 'Configuración / base de Datos';
 
         return view('managers.views.settings.database.index', compact('settings', 'pageTitle', 'breadcrumb'));
     }

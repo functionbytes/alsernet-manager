@@ -112,10 +112,10 @@ private function syncDocumentWithOrder(Document $document, PrestashopOrder $orde
     
     $document->save();
     
-    // Capture products from order
+    // Capture inventaries from order
     $document->captureProducts();
     
-    // Detect document type based on products
+    // Detect document type based on inventaries
     $document->type = $document->detectDocumentType();
     $document->save();
 }

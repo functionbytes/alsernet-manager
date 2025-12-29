@@ -151,7 +151,7 @@
                         <!-- ------------------------------- -->
                         <!-- start notification Dropdown -->
                         <!-- ------------------------------- -->
-                        @include('managers.includes.notifications-bell')
+                        @include('managers.includes.notifications')
                         <!-- ------------------------------- -->
                         <!-- end notification Dropdown -->
                         <!-- ------------------------------- -->
@@ -523,7 +523,7 @@
                         <!-- ------------------------------- -->
                         <!-- start notification Dropdown -->
                         <!-- ------------------------------- -->
-                        @include('managers.includes.notifications-bell')
+                        @include('managers.includes.notifications')
                         <!-- ------------------------------- -->
                         <!-- end notification Dropdown -->
                         <!-- ------------------------------- -->

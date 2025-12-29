@@ -27,7 +27,7 @@ class Customer extends Model
         'language',
         'timezone',
         'custom_attributes',
-        'mail_verified_at',
+        'email_verified_at',
         'banned_at',
         'ban_reason',
         'last_seen_at',
@@ -37,7 +37,7 @@ class Customer extends Model
     ];
 
     protected $casts = [
-        'mail_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime',
         'banned_at' => 'datetime',
         'last_seen_at' => 'datetime',
         'custom_attributes' => 'array',
@@ -113,7 +113,7 @@ class Customer extends Model
      */
     public function scopeVerified($query)
     {
-        return $query->whereNotNull('mail_verified_at');
+        return $query->whereNotNull('email_verified_at');
     }
 
     /**
@@ -182,7 +182,7 @@ class Customer extends Model
     public function verifyEmail()
     {
         $this->update([
-            'mail_verified_at' => now(),
+            'email_verified_at' => now(),
         ]);
 
         return $this;

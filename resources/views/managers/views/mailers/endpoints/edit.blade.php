@@ -70,7 +70,6 @@
                     <div class="col-12">
                         <hr class="my-4">
                         <h6 class="mb-1 fw-semibold">
-                            <i class="fas fa-chart-bar me-2 text-primary"></i>
                             Estadísticas de uso
                         </h6>
                         <p class="text-muted small mb-3">Resumen del uso de este endpoint.</p>

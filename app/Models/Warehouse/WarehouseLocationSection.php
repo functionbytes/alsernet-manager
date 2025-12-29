@@ -91,7 +91,7 @@ class WarehouseLocationSection extends Model
     }
 
     /**
-     * Get total slots (unique products) in this section.
+     * Get total slots (unique inventaries) in this section.
      */
     public function getTotalSlots(): int
     {
@@ -99,7 +99,7 @@ class WarehouseLocationSection extends Model
     }
 
     /**
-     * Get occupied slots count (products with quantity > 0).
+     * Get occupied slots count (inventaries with quantity > 0).
      */
     public function getOccupiedSlots(): int
     {
@@ -107,7 +107,7 @@ class WarehouseLocationSection extends Model
     }
 
     /**
-     * Get available slots count (products with quantity = 0).
+     * Get available slots count (inventaries with quantity = 0).
      */
     public function getAvailableSlots(): int
     {

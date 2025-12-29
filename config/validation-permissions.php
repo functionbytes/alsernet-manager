@@ -12,7 +12,9 @@
  * - contabilidad (3rd stage): Financial/accounting validation (if applicable)
  */
 
-use App\Enums\Document\ValidationAction;
+// Note: Using string values instead of enum to avoid autoload issues during config loading
+// ValidationAction enum values: APPROVE, REJECT, SEND_APPROVAL_EMAIL, ADD_COMMENT,
+// REQUEST_ADDITIONAL_DOCS, MOVE_TO_NEXT_STAGE, ACCESS_ADDITIONAL_FILES
 
 return [
     // =========================================================================
@@ -24,15 +26,15 @@ return [
         'label' => 'Documentación',
         'description' => 'Verificación de documentos requeridos',
         'allowed_actions' => [
-            ValidationAction::APPROVE->value,                 // ✅ Validate docs and move to next
-            ValidationAction::REJECT->value,                  // ❌ Reject if docs incomplete
-            ValidationAction::SEND_APPROVAL_EMAIL->value,     // 📧 Send approval email to customer
-            ValidationAction::ADD_COMMENT->value,             // 💬 Add internal comments
-            ValidationAction::REQUEST_ADDITIONAL_DOCS->value, // 📎 Request more docs if needed
+            'approve',                  // ✅ Validate docs and move to next
+            'reject',                   // ❌ Reject if docs incomplete
+            'send_approval_email',      // 📧 Send approval email to customer
+            'add_comment',              // 💬 Add internal comments
+            'request_additional_docs',  // 📎 Request more docs if needed
         ],
         'restricted_actions' => [
-            ValidationAction::MOVE_TO_NEXT_STAGE->value,      // Cannot skip full approval
-            ValidationAction::ACCESS_ADDITIONAL_FILES->value, // Not applicable at this stage
+            'move_to_next_stage',       // Cannot skip full approval
+            'access_additional_files',  // Not applicable at this stage
         ],
     ],
 
@@ -45,15 +47,15 @@ return [
         'label' => 'Licencias',
         'description' => 'Validación de licencias y documentos de armas',
         'allowed_actions' => [
-            ValidationAction::APPROVE->value,                 // ✅ Confirm docs ok, move to next
-            ValidationAction::ADD_COMMENT->value,             // 💬 Add internal comments
-            ValidationAction::REQUEST_ADDITIONAL_DOCS->value, // 📎 Request more docs if needed
+            'approve',                 // ✅ Confirm docs ok, move to next
+            'add_comment',             // 💬 Add internal comments
+            'request_additional_docs', // 📎 Request more docs if needed
         ],
         'restricted_actions' => [
-            ValidationAction::REJECT->value,                  // ❌ Cannot reject directly
-            ValidationAction::SEND_APPROVAL_EMAIL->value,     // 📧 No approval emails at this stage
-            ValidationAction::MOVE_TO_NEXT_STAGE->value,      // Must fully approve to advance
-            ValidationAction::ACCESS_ADDITIONAL_FILES->value, // Not applicable at this stage
+            'reject',                  // ❌ Cannot reject directly
+            'send_approval_email',     // 📧 No approval emails at this stage
+            'move_to_next_stage',      // Must fully approve to advance
+            'access_additional_files', // Not applicable at this stage
         ],
         'notes' => 'Intermediate stage: Can only confirm and advance, not reject',
     ],
@@ -67,15 +69,15 @@ return [
         'label' => 'Contabilidad',
         'description' => 'Validación final de contabilidad',
         'allowed_actions' => [
-            ValidationAction::APPROVE->value,                 // ✅ Final approval
-            ValidationAction::REJECT->value,                  // ❌ Final rejection
-            ValidationAction::SEND_APPROVAL_EMAIL->value,     // 📧 Send final approval email to customer
-            ValidationAction::ACCESS_ADDITIONAL_FILES->value, // 📎 Access additional attachments
-            ValidationAction::ADD_COMMENT->value,             // 💬 Add internal comments
-            ValidationAction::REQUEST_ADDITIONAL_DOCS->value, // 📎 Request more docs if needed
+            'approve',                 // ✅ Final approval
+            'reject',                  // ❌ Final rejection
+            'send_approval_email',     // 📧 Send final approval email to customer
+            'access_additional_files', // 📎 Access additional attachments
+            'add_comment',             // 💬 Add internal comments
+            'request_additional_docs', // 📎 Request more docs if needed
         ],
         'restricted_actions' => [
-            ValidationAction::MOVE_TO_NEXT_STAGE->value,      // No next stage after this
+            'move_to_next_stage',      // No next stage after this
         ],
         'notes' => 'Final stage: Full permissions for complete validation and approval',
     ],
@@ -84,8 +86,8 @@ return [
     // DEFAULT ACTIONS (available on ALL stages)
     // =========================================================================
     'default_allowed_actions' => [
-        ValidationAction::ADD_COMMENT->value,             // 💬 Comments always allowed
-        ValidationAction::REQUEST_ADDITIONAL_DOCS->value, // 📎 Can request docs at any stage
+        'add_comment',             // 💬 Comments always allowed
+        'request_additional_docs', // 📎 Can request docs at any stage
     ],
 
     // =========================================================================

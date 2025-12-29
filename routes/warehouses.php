@@ -75,9 +75,9 @@ Route::group(['prefix' => 'warehouse', 'middleware' => ['auth', 'check.roles.per
         Route::get('/single/barcode/{slack}', [LocationsBarcodesController::class, 'single'])->name('manager.shops.locations.barcodes.single');
     });
 
-    Route::group(['prefix' => 'products'], function () {
-        Route::get('/all/barcode', [ProductsBarcodesController::class, 'all'])->name('manager.products.barcodes.all');
-        Route::get('/single/barcode/{slack}', [ProductsBarcodesController::class, 'single'])->name('manager.products.barcodes.single');
+    Route::group(['prefix' => 'inventaries'], function () {
+        Route::get('/all/barcode', [ProductsBarcodesController::class, 'all'])->name('manager.inventaries.barcodes.all');
+        Route::get('/single/barcode/{slack}', [ProductsBarcodesController::class, 'single'])->name('manager.inventaries.barcodes.single');
     });
 
     Route::group(['prefix' => 'settings'], function () {

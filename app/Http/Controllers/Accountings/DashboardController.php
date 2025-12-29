@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Accountings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Document\Document;
-use App\Models\Document\DocumentLoad;
-use App\Models\Document\DocumentStatus;
 use Carbon\Carbon;
+use Modules\Documents\Entities\Document;
+use Modules\Documents\Entities\DocumentLoad;
+use Modules\Documents\Entities\DocumentStatus;
 
 class DashboardController extends Controller
 {

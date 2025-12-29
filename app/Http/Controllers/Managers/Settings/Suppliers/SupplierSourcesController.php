@@ -19,13 +19,40 @@ class SupplierSourcesController extends Controller
     /**
      * Display sources list for supplier
      */
-    public function index(string $supplierUid): View
+    public function index(Request $request, string $supplierUid): View
     {
         $supplier = Supplier::where('uid', $supplierUid)->firstOrFail();
+
+        $query = $supplier->sources();
+
+        // Search by label or description
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('label', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by source type
+        if ($sourceType = $request->input('source_type')) {
+            $query->where('source_type', $sourceType);
+        }
+
+        // Filter by active status
+        if ($request->has('is_active') && $request->input('is_active') !== '') {
+            $query->where('is_active', $request->boolean('is_active'));
+        }
+
+        // Order by priority desc
+        $sources = $query->orderBy('priority', 'desc')
+            ->orderBy('label', 'asc')
+            ->paginate(15)
+            ->withQueryString();
+
         $pageTitle = "Fuentes de {$supplier->name}";
         $breadcrumb = "Configuración / Proveedores / {$supplier->name} / Fuentes";
 
-        return view('managers.views.settings.suppliers.sources.index', compact('supplier', 'pageTitle', 'breadcrumb'));
+        return view('managers.views.settings.suppliers.sources.index', compact('supplier', 'sources', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -35,24 +62,44 @@ class SupplierSourcesController extends Controller
     {
         try {
             $supplier = Supplier::where('uid', $supplierUid)->firstOrFail();
-            $query = $supplier->sources()->with(['configuration', 'monitor']);
+            $query = $supplier->sources();
 
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('type', 'like', "%{$search}%")
-                        ->orWhere('url', 'like', "%{$search}%");
+                    $q->where('label', 'like', "%{$search}%")
+                        ->orWhere('source_type', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
             $totalRecords = $supplier->sources()->count();
             $filteredRecords = $query->count();
 
+            // Get column name for ordering (map to actual DB column names)
+            $columns = ['source_type', 'label', 'description', 'is_active', 'priority', 'last_accessed_at', 'actions'];
+            $orderColumn = $columns[$request->input('order.0.column', 4)] ?? 'priority';
+            $orderDir = $request->input('order.0.dir', 'desc');
+
             $sources = $query
-                ->orderBy($request->input('order.0.column', 'created_at'), $request->input('order.0.dir', 'desc'))
+                ->orderBy($orderColumn, $orderDir)
                 ->skip($request->input('start', 0))
                 ->take($request->input('length', 10))
-                ->get();
+                ->get()
+                ->map(function ($source) {
+                    return [
+                        'source_type' => $this->getSourceTypeBadge($source->source_type),
+                        'name' => $source->label,
+                        'url' => $source->description ?? '<span class="text-muted">-</span>',
+                        'is_active' => $source->is_active
+                            ? '<span class="badge bg-success">Activo</span>'
+                            : '<span class="badge bg-secondary">Inactivo</span>',
+                        'priority' => '<span class="badge bg-primary">'.$source->priority.'</span>',
+                        'last_accessed_at' => $source->last_accessed_at
+                            ? $source->last_accessed_at->format('d/m/Y H:i')
+                            : '<span class="text-muted">Nunca</span>',
+                        'actions' => $this->getActionsHtml($source),
+                    ];
+                });
 
             return response()->json([
                 'draw' => $request->input('draw'),
@@ -69,6 +116,59 @@ class SupplierSourcesController extends Controller
                 'message' => 'Error al obtener los datos de fuentes',
             ], 500);
         }
+    }
+
+    /**
+     * Get source type badge HTML
+     */
+    private function getSourceTypeBadge(string $type): string
+    {
+        $badges = [
+            'website' => '<span class="badge bg-info"><i class="fas fa-globe me-1"></i>Web</span>',
+            'ftp' => '<span class="badge bg-warning"><i class="fas fa-server me-1"></i>FTP</span>',
+            'sftp' => '<span class="badge bg-warning"><i class="fas fa-server me-1"></i>SFTP</span>',
+            'api' => '<span class="badge bg-primary"><i class="fas fa-code me-1"></i>API</span>',
+            'upload' => '<span class="badge bg-secondary"><i class="fas fa-upload me-1"></i>Upload</span>',
+            'email' => '<span class="badge bg-success"><i class="fas fa-envelope me-1"></i>Email</span>',
+        ];
+
+        return $badges[$type] ?? '<span class="badge bg-light text-dark">'.$type.'</span>';
+    }
+
+    /**
+     * Get actions dropdown HTML
+     */
+    private function getActionsHtml($source): string
+    {
+        $editUrl = route('manager.settings.suppliers.sources.edit', [$source->supplier->uid, $source->uid]);
+
+        return '
+            <div class="dropdown dropstart">
+                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                    <i class="fa-duotone fa-solid fa-ellipsis"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button class="dropdown-item test-source" data-uid="'.$source->uid.'">
+                            <i class="fas fa-flask me-2"></i>Probar conexión
+                        </button>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="'.$editUrl.'">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <button class="dropdown-item text-danger delete-source"
+                                data-uid="'.$source->uid.'"
+                                data-name="'.$source->label.'">
+                            <i class="fas fa-trash me-2"></i>Eliminar
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        ';
     }
 
     /**
@@ -92,16 +192,13 @@ class SupplierSourcesController extends Controller
             $supplier = Supplier::where('uid', $supplierUid)->firstOrFail();
 
             $source = $supplier->sources()->create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'url' => $request->url,
+                'label' => $request->label ?? $request->name,
+                'source_type' => $request->source_type ?? $request->type,
                 'description' => $request->description,
+                'trust_level' => $request->trust_level ?? 'medium',
+                'usage_notes' => $request->usage_notes,
+                'priority' => $request->priority ?? 10,
                 'is_active' => $request->boolean('is_active', true),
-                'refresh_interval' => $request->refresh_interval ?? 3600,
-                'timeout' => $request->timeout ?? 30,
-                'retry_attempts' => $request->retry_attempts ?? 3,
-                'retry_delay' => $request->retry_delay ?? 5,
-                'metadata' => $request->metadata ?? [],
             ]);
 
             // Create configuration if provided
@@ -132,7 +229,7 @@ class SupplierSourcesController extends Controller
     {
         $supplier = Supplier::where('uid', $supplierUid)->firstOrFail();
         $source = $supplier->sources()->where('uid', $sourceUid)->firstOrFail();
-        $pageTitle = "Editar Fuente: {$source->name}";
+        $pageTitle = "Editar Fuente: {$source->label}";
         $breadcrumb = "Configuración / Proveedores / {$supplier->name} / Fuentes / Editar";
 
         return view('managers.views.settings.suppliers.sources.edit', compact('supplier', 'source', 'pageTitle', 'breadcrumb'));
@@ -148,16 +245,13 @@ class SupplierSourcesController extends Controller
             $source = $supplier->sources()->where('uid', $sourceUid)->firstOrFail();
 
             $source->update([
-                'name' => $request->name,
-                'type' => $request->type,
-                'url' => $request->url,
+                'label' => $request->label ?? $request->name,
+                'source_type' => $request->source_type ?? $request->type,
                 'description' => $request->description,
+                'trust_level' => $request->trust_level ?? $source->trust_level,
+                'usage_notes' => $request->usage_notes,
+                'priority' => $request->priority ?? $source->priority,
                 'is_active' => $request->boolean('is_active'),
-                'refresh_interval' => $request->refresh_interval,
-                'timeout' => $request->timeout,
-                'retry_attempts' => $request->retry_attempts,
-                'retry_delay' => $request->retry_delay,
-                'metadata' => $request->metadata ?? $source->metadata,
             ]);
 
             // Update configuration if provided

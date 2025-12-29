@@ -123,7 +123,7 @@ class CreateSampleDocumentsFromPrestashopTest extends TestCase
         // Act: Create sample document
         $this->artisan('app:create-sample-documents', ['--count' => '1']);
 
-        // Assert: Document has products associated
+        // Assert: Document has inventaries associated
         $document = Document::where('order_id', 1000000)->first();
         $this->assertGreaterThan(0, $document->products()->count());
 

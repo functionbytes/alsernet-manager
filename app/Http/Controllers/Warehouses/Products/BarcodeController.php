@@ -13,8 +13,8 @@ class BarcodeController extends Controller
 
         $products = Product::all()->take(100);
 
-        return view('warehouses.views.products.barcodes.all')->with([
-            'products' => $products,
+        return view('warehouses.views.inventaries.barcodes.all')->with([
+            'inventaries' => $products,
         ]);
 
     }
@@ -24,7 +24,7 @@ class BarcodeController extends Controller
 
         $product = Product::uid($uid);
 
-        return view('warehouses.views.products.barcodes.all')->with([
+        return view('warehouses.views.inventaries.barcodes.all')->with([
             'product' => $product,
         ]);
     }

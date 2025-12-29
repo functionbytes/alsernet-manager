@@ -2,24 +2,21 @@
 
 namespace App\Services\Returns;
 
+use App\Events\Return\ReturnCompleted;
+use App\Events\Return\ReturnCreated;
+use App\Events\Return\ReturnPaymentProcessed;
+// Events
+use App\Events\Return\ReturnStatusChanged;
+use App\Models\Return\ReturnHistory;
 use App\Models\Return\ReturnRequest;
 use App\Models\Return\ReturnStatus;
-use App\Models\Return\ReturnHistory;
-use App\Services\Returns\ReturnPDFService;
-use App\Services\Returns\ReturnEmailService;
-
-// Events
-use App\Events\Return\ReturnCreated;
-use App\Events\Return\ReturnStatusChanged;
-use App\Events\Return\ReturnCompleted;
-use App\Events\Return\ReturnPaymentProcessed;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ReturnService
 {
     protected $pdfService;
+
     protected $emailService;
 
     public function __construct(ReturnPDFService $pdfService, ReturnEmailService $emailService)
@@ -36,14 +33,14 @@ class ReturnService
         return DB::transaction(function () use ($data) {
             // Obtener el estado inicial por defecto
             $initialStatus = ReturnStatus::where('active', true)
-                ->whereHas('state', function($q) {
+                ->whereHas('state', function ($q) {
                     $q->where('name', 'New');
                 })
                 ->first();
 
-            if (!$initialStatus) {
+            if (! $initialStatus) {
                 $initialStatus = ReturnStatus::where('active', true)->first();
-                if (!$initialStatus) {
+                if (! $initialStatus) {
                     throw new \Exception('No hay estados de devolución activos configurados');
                 }
             }
@@ -72,7 +69,7 @@ class ReturnService
                 'phone' => $data['phone'] ?? null,
                 'iban' => $data['iban'] ?? null,
                 'logistics_mode' => $data['logistics_mode'],
-                'created_by' => $data['created_by'] ?? 'web'
+                'created_by' => $data['created_by'] ?? 'web',
             ]);
 
             // Cargar relaciones necesarias
@@ -84,12 +81,12 @@ class ReturnService
                 $data['created_by'] ?? 'web',
                 request()->ip(),
                 request()->userAgent()
-            ));
+            );
 
             Log::info('Return request created successfully', [
                 'return_id' => $return->id_return_request,
                 'order_id' => $return->id_order,
-                'created_by' => $data['created_by'] ?? 'web'
+                'created_by' => $data['created_by'] ?? 'web',
             ]);
 
             return $return;
@@ -107,7 +104,7 @@ class ReturnService
             $newStatus = ReturnStatus::with(['state'])->findOrFail($newStatusId);
 
             // Validar transición de estado
-            if (!$this->isValidStatusTransition($return->id_return_status, $newStatusId)) {
+            if (! $this->isValidStatusTransition($return->id_return_status, $newStatusId)) {
                 throw new \Exception('Transición de estado no válida');
             }
 
@@ -126,7 +123,7 @@ class ReturnService
                 $employeeId,
                 $description,
                 $metadata
-            ));
+            );
 
             // Verificar si la devolución se completó
             if ($this->isReturnCompleted($newStatus)) {
@@ -137,7 +134,7 @@ class ReturnService
                 'return_id' => $returnId,
                 'previous_status' => $previousStatus->id_return_status,
                 'new_status' => $newStatusId,
-                'updated_by' => $employeeId
+                'updated_by' => $employeeId,
             ]);
 
             return $return;
@@ -158,7 +155,7 @@ class ReturnService
                 'payment_status' => $paymentData['status'] ?? 'completed',
                 'processed_at' => now(),
                 'notes' => $paymentData['notes'] ?? null,
-                'id_employee' => $paymentData['employee_id'] ?? 1
+                'id_employee' => $paymentData['employee_id'] ?? 1,
             ]);
 
             // *** DISPARAR EVENTO: Pago Procesado ***
@@ -167,14 +164,14 @@ class ReturnService
                 $payment,
                 $paymentData['employee_id'] ?? 1,
                 $paymentData['metadata'] ?? []
-            ));
+            );
 
             Log::info('Return payment processed', [
                 'return_id' => $return->id_return_request,
                 'payment_id' => $payment->id_return_payment,
                 'amount' => $payment->amount,
                 'method' => $payment->payment_method,
-                'status' => $payment->payment_status
+                'status' => $payment->payment_status,
             ]);
 
             return $payment;
@@ -206,9 +203,9 @@ class ReturnService
             array_merge($metadata, [
                 'final_status_id' => $finalStatus->id_return_status,
                 'processing_start' => $return->created_at->toISOString(),
-                'processing_end' => now()->toISOString()
+                'processing_end' => now()->toISOString(),
             ])
-        ));
+        );
     }
 
     /**
@@ -265,7 +262,7 @@ class ReturnService
         $currentStatus = ReturnStatus::find($currentStatusId);
         $newStatus = ReturnStatus::find($newStatusId);
 
-        if (!$currentStatus || !$newStatus) {
+        if (! $currentStatus || ! $newStatus) {
             return false;
         }
 
@@ -275,7 +272,7 @@ class ReturnService
             2 => [3, 4, 6, 8], // Verification -> Negotiation, Package received, Declined, Pickup
             3 => [4, 7, 10, 11], // Negotiation -> Resolved, Completed, Replaced, Repaired
             4 => [7], // Resolved -> Completed
-            5 => [] // Close (estado final)
+            5 => [], // Close (estado final)
         ];
 
         return in_array($newStatus->id_return_state, $validTransitions[$currentStatus->id_return_state] ?? []);
@@ -308,10 +305,10 @@ class ReturnService
                 ->with('returnType')
                 ->groupBy('id_return_type')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'type' => $item->returnType->getTranslation()->name ?? 'Desconocido',
-                        'count' => $item->count
+                        'count' => $item->count,
                     ];
                 }),
             'by_logistics_mode' => ReturnRequest::selectRaw('logistics_mode, COUNT(*) as count')
@@ -323,7 +320,7 @@ class ReturnService
                 ->groupBy('year', 'month')
                 ->orderBy('year', 'desc')
                 ->orderBy('month', 'desc')
-                ->get()
+                ->get(),
         ];
     }
 
@@ -344,7 +341,7 @@ class ReturnService
             'logistics_mode_label' => $return->getLogisticsModeLabel(),
             'is_approved' => $this->isReturnApproved($returnId),
             'company_info' => config('returns.company_info', []),
-            'custom_content' => config('returns.pdf_content', '')
+            'custom_content' => config('returns.pdf_content', ''),
         ];
     }
 
@@ -356,14 +353,14 @@ class ReturnService
         return DB::transaction(function () use ($data) {
             // Obtener el estado inicial por defecto
             $initialStatus = ReturnStatus::where('active', true)
-                ->whereHas('state', function($q) {
+                ->whereHas('state', function ($q) {
                     $q->where('name', 'New');
                 })
                 ->first();
 
-            if (!$initialStatus) {
+            if (! $initialStatus) {
                 $initialStatus = ReturnStatus::where('active', true)->first();
-                if (!$initialStatus) {
+                if (! $initialStatus) {
                     throw new \Exception('No hay estados de devolución activos configurados');
                 }
             }
@@ -393,7 +390,7 @@ class ReturnService
                     'phone' => $data['phone'] ?? null,
                     'iban' => $data['iban'] ?? null,
                     'logistics_mode' => $data['logistics_mode'],
-                    'created_by' => $data['created_by'] ?? 'silent'
+                    'created_by' => $data['created_by'] ?? 'silent',
                 ]);
             });
 
@@ -412,25 +409,25 @@ class ReturnService
             try {
                 $result = $this->updateReturnStatus($returnId, $newStatusId, $description, $employeeId, [
                     'batch_operation' => true,
-                    'batch_size' => count($returnIds)
+                    'batch_size' => count($returnIds),
                 ]);
 
                 $results[] = [
                     'return_id' => $returnId,
                     'status' => 'success',
-                    'result' => $result
+                    'result' => $result,
                 ];
             } catch (\Exception $e) {
                 $results[] = [
                     'return_id' => $returnId,
                     'status' => 'error',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
 
                 Log::error('Batch status update failed for return', [
                     'return_id' => $returnId,
                     'new_status_id' => $newStatusId,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -449,7 +446,7 @@ class ReturnService
             'customer_satisfaction' => $this->getCustomerSatisfactionScore(),
             'sla_compliance' => $this->getSLAComplianceRate(),
             'top_failure_reasons' => $this->getTopFailureReasons(),
-            'processing_efficiency' => $this->getProcessingEfficiency()
+            'processing_efficiency' => $this->getProcessingEfficiency(),
         ];
     }
 
@@ -498,7 +495,7 @@ class ReturnService
 
     private function getTopFailureReasons(): array
     {
-        return ReturnRequest::whereHas('status', function($q) {
+        return ReturnRequest::whereHas('status', function ($q) {
             $q->where('color', '#dc3545'); // Estados rechazados
         })
             ->selectRaw('id_return_reason, COUNT(*) as count')
@@ -507,10 +504,10 @@ class ReturnService
             ->orderBy('count', 'desc')
             ->limit(5)
             ->get()
-            ->map(function($item) {
+            ->map(function ($item) {
                 return [
                     'reason' => $item->returnReason->getTranslation()->name ?? 'Desconocido',
-                    'count' => $item->count
+                    'count' => $item->count,
                 ];
             })
             ->toArray();
@@ -525,8 +522,8 @@ class ReturnService
             'returns_processed_today' => ReturnRequest::whereDate('updated_at', $today)->count(),
             'returns_processed_yesterday' => ReturnRequest::whereDate('updated_at', $yesterday)->count(),
             'avg_daily_processing' => ReturnRequest::where('updated_at', '>=', now()->subDays(30))
-                    ->selectRaw('COUNT(*) / 30 as avg_daily')
-                    ->value('avg_daily') ?? 0
+                ->selectRaw('COUNT(*) / 30 as avg_daily')
+                ->value('avg_daily') ?? 0,
         ];
     }
 }

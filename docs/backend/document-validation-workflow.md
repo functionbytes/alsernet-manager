@@ -168,7 +168,7 @@ public function determineWorkflowStages(): int
             $stages = 3; // + contabilidad
         }
     } else {
-        // DNI products
+        // DNI inventaries
         if ($this->requires_financing) {
             $stages = 2; // documentacion + contabilidad
         }
@@ -747,7 +747,7 @@ public function handle()
         'combination'
     );
 
-    // Migrate simple products (aalv_combinacionunica_import)
+    // Migrate simple inventaries (aalv_combinacionunica_import)
     $totalMigrated += $this->migrateFromTable(
         'aalv_combinacionunica_import',
         'id_origen',
@@ -903,7 +903,7 @@ public function handle()
 // Obtener documentos pendientes para el grupo "documentacion"
 $pendingDocs = Document::where('validation_status', 'in_validation')
     ->where('current_validator_group', 'documentacion')
-    ->with(['products', 'customer'])
+    ->with(['inventaries', 'customer'])
     ->orderBy('created_at', 'asc')
     ->get();
 ```

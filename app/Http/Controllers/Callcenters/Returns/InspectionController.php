@@ -47,11 +47,11 @@ class InspectionController extends Controller
         ];
 
         // Devoluciones pendientes de inspección
-        $pendingReturns = ReturnRequest::whereHas('products', function ($q) {
+        $pendingReturns = ReturnRequest::whereHas('inventaries', function ($q) {
             $q->where('is_received', true)
                 ->whereNull('inspection_status');
         })
-            ->with(['customer', 'order', 'products'])
+            ->with(['customer', 'order', 'inventaries'])
             ->latest()
             ->paginate(20);
 

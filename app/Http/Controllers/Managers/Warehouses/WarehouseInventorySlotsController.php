@@ -56,7 +56,7 @@ class WarehouseInventorySlotsController extends Controller
             'location' => $location,
             'section' => $section,
             'slots' => $slots,
-            'products' => $products,
+            'inventaries' => $products,
         ]);
     }
 
@@ -78,7 +78,7 @@ class WarehouseInventorySlotsController extends Controller
             'floor' => $floor,
             'location' => $location,
             'section' => $section,
-            'products' => $products,
+            'inventaries' => $products,
         ]);
     }
 
@@ -98,7 +98,7 @@ class WarehouseInventorySlotsController extends Controller
             'floor_uid' => 'required|exists:warehouse_floors,uid',
             'location_uid' => 'required|exists:warehouse_locations,uid',
             'section_uid' => 'required|exists:warehouse_location_sections,uid',
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|exists:inventaries,id',
             'quantity' => 'nullable|integer|min:0',
             'kardex' => 'nullable|integer|min:0',
         ]);
@@ -165,7 +165,7 @@ class WarehouseInventorySlotsController extends Controller
             'location' => $location,
             'section' => $section,
             'slot' => $slot,
-            'products' => $products,
+            'inventaries' => $products,
         ]);
     }
 
@@ -182,7 +182,7 @@ class WarehouseInventorySlotsController extends Controller
 
         $validated = $request->validate([
             'uid' => 'required|exists:warehouse_inventory_slots,uid',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'nullable|exists:inventaries,id',
             'quantity' => 'nullable|integer|min:0',
             'kardex' => 'nullable|integer|min:0',
         ]);

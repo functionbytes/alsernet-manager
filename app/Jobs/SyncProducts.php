@@ -36,7 +36,7 @@ class SyncProducts implements ShouldQueue
      */
     public function handle()
     {
-        // import all lazada products
+        // import all lazada inventaries
         $this->source->classMapping();
         $this->source->importProducts();
     }

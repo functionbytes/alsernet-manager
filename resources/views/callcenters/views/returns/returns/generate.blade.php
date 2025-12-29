@@ -433,7 +433,7 @@
                 }));
 
                 $.ajax({
-                    url: '{{ route("callcenter.returns.validate-products") }}',
+                    url: '{{ route("callcenter.returns.validate-inventaries") }}',
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

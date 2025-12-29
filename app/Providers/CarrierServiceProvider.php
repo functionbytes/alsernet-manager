@@ -22,6 +22,6 @@ class CarrierServiceProvider extends ServiceProvider
         ], 'carriers-config');
 
         // Cargar migraciones
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations/carriers');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations/carriers');
     }
 }

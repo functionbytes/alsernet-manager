@@ -146,7 +146,7 @@ use App\Models\Prestashop\Product;
 use App\Models\Prestashop\Category;
 use App\Models\Prestashop\Order;
 
-// Get all active products
+// Get all active inventaries
 $products = Product::where('active', true)->get();
 
 // Get orders with customer

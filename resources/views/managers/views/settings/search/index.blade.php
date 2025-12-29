@@ -88,7 +88,7 @@
                                         $availableModules = [
                                             'users' => 'Usuarios',
                                             'tickets' => 'Tickets',
-                                            'products' => 'Productos',
+                                            'inventaries' => 'Productos',
                                             'orders' => 'Pedidos',
                                             'customers' => 'Clientes',
                                             'conversations' => 'Conversaciones',

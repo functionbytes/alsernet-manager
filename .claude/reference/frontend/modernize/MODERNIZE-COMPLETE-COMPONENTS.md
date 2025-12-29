@@ -1042,7 +1042,7 @@ Las siguientes 11 páginas están listadas en el sidebar HTML pero **NO existen 
           <button class="btn btn-primary w-100">Add to Cart</button>
         </div>
       </div>
-      <!-- More products (12 total) -->
+      <!-- More inventaries (12 total) -->
     </div>
   </main>
 </div>
@@ -1145,7 +1145,7 @@ Las siguientes 11 páginas están listadas en el sidebar HTML pero **NO existen 
   <div class="related-products">
     <h5>You Might Also Like</h5>
     <div class="products-grid">
-      <!-- Similar products (4 items) -->
+      <!-- Similar inventaries (4 items) -->
     </div>
   </div>
 </div>

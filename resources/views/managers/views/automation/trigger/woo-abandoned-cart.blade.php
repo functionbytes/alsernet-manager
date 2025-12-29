@@ -119,7 +119,7 @@
                         </span>
                         <div class="">
                             <label class="mb-0 display-1">{{ $shopinfo['products_count'] }}</label>
-                            <div class="text-muted small">{{ trans('messages.woo.products') }}</div>
+                            <div class="text-muted small">{{ trans('messages.woo.inventaries') }}</div>
                         </div>
                     </div>
                     <div class="d-flex align-items-center store-states">

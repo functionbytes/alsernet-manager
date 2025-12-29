@@ -455,7 +455,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('warehouses', WarehouseController::class);
 
     // Nested resources
-    Route::get('warehouses/{warehouse}/products', [WarehouseController::class, 'products']);
+    Route::get('warehouses/{warehouse}/inventaries', [WarehouseController::class, 'inventaries']);
 });
 ```
 

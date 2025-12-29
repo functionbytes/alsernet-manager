@@ -35,7 +35,7 @@ class UpdateSupplierRequest extends FormRequest
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'priority' => 'nullable|integer|min:1|max:100',
-            'content_type' => 'nullable|string|in:products,descriptions,images,specifications',
+            'content_type' => 'nullable|string|in:inventaries,descriptions,images,specifications',
             'is_active' => 'nullable|boolean',
             'api_rate_limit' => 'nullable|integer|min:1|max:1000',
             'api_rate_period' => 'nullable|string|in:second,minute,hour,day',

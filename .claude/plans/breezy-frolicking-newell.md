@@ -144,7 +144,7 @@ hasMany(ReturnProduct) → products()
 belongsToMany(Role) → roles()
 
 // With Eager Loading
-with(['status.state', 'customer', 'products'])
+with(['status.state', 'customer', 'inventaries'])
 
 // With Scopes
 ->byCustomer($id)->pending()->latest()

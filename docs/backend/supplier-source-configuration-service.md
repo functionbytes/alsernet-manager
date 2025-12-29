@@ -179,7 +179,7 @@ $result = $service->testFtpConnection(
     config: [
         'host' => 'ftp.supplier.com',
         'port' => 21,
-        'root' => '/products',
+        'root' => '/inventaries',
         'passive' => true,
         'ssl' => false, // true for SFTP
     ],
@@ -344,7 +344,7 @@ $result = $service->applyTransformation($value, $transformation);
 [
     'host' => 'ftp.supplier.com',
     'port' => 21, // or 22 for SFTP
-    'root' => '/products',
+    'root' => '/inventaries',
     'passive' => true,
     'ssl' => false, // true for SFTP
     'timeout' => 90,

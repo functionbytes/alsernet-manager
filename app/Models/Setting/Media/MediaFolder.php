@@ -21,6 +21,7 @@ class MediaFolder extends Model
         'parent_id',
         'user_id',
         'color',
+        'disk',
     ];
 
     protected static function booted(): void

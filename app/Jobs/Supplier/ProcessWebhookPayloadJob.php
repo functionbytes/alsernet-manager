@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  *
  * Processes incoming webhook payloads from supplier sources.
  * Validates signatures, maps payload data, creates/updates extraction results,
- * and dispatches AI content generation jobs for new products.
+ * and dispatches AI content generation jobs for new inventaries.
  */
 class ProcessWebhookPayloadJob implements ShouldQueue
 {
@@ -199,13 +199,13 @@ class ProcessWebhookPayloadJob implements ShouldQueue
      */
     protected function extractItems(array $mappedData): array
     {
-        // Check if data contains an items/products array
+        // Check if data contains an items/inventaries array
         if (isset($mappedData['items']) && is_array($mappedData['items'])) {
             return $mappedData['items'];
         }
 
-        if (isset($mappedData['products']) && is_array($mappedData['products'])) {
-            return $mappedData['products'];
+        if (isset($mappedData['inventaries']) && is_array($mappedData['inventaries'])) {
+            return $mappedData['inventaries'];
         }
 
         // Assume single item if no batch structure found
@@ -287,7 +287,7 @@ class ProcessWebhookPayloadJob implements ShouldQueue
                 'ean' => $result->ean,
             ]);
 
-            // Dispatch AI content generation for updated products
+            // Dispatch AI content generation for updated inventaries
             $this->dispatchAiContentGeneration($result->id);
         }
 
@@ -339,7 +339,7 @@ class ProcessWebhookPayloadJob implements ShouldQueue
             'result_id' => $result->id,
         ]);
 
-        // Dispatch AI content generation for new products
+        // Dispatch AI content generation for new inventaries
         $this->dispatchAiContentGeneration($result->id);
     }
 

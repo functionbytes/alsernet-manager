@@ -108,7 +108,7 @@ Button "Generate New Key"
 
 # Seleccionar:
 - Name: "PrestaShop Integration"
-- Scopes: products, customers, orders, auth
+- Scopes: inventaries, customers, orders, auth
 - Expires: 1 year (o Never)
 
 # 4. Copiar credenciales:
@@ -187,14 +187,14 @@ curl -X POST https://Alsernet.com/api/auth/refresh \
 
 ```bash
 # Listar productos
-GET /api/products
-GET /api/products?page=1&per_page=20&filter[sku]=ABC*
+GET /api/inventaries
+GET /api/inventaries?page=1&per_page=20&filter[sku]=ABC*
 
 # Obtener un producto
-GET /api/products/123
+GET /api/inventaries/123
 
 # Con inclusos
-GET /api/products/123?include=variants,images,categories
+GET /api/inventaries/123?include=variants,images,categories
 ```
 
 ### POST - Crear datos

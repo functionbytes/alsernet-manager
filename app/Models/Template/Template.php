@@ -775,7 +775,7 @@ class Template extends Model
                 ';
             }
 
-            $element->find('.products')[0]->innertext = implode('', $itemsHtml);
+            $element->find('.inventaries')[0]->innertext = implode('', $itemsHtml);
         }
 
         // Woo Single Item

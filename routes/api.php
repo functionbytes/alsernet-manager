@@ -1,10 +1,18 @@
 <?php
 
-use App\Http\Controllers\Api\DocumentsController;
 use App\Http\Controllers\Api\EmailEndpointController;
+use App\Http\Controllers\Api\HealthCheckController;
 use App\Http\Controllers\Managers\Helpdesk\ConversationMessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Health Check Routes (no authentication, no rate limiting - for external monitoring)
+Route::prefix('health')->group(function () {
+    Route::get('ping', [HealthCheckController::class, 'ping']);           // Ping simple
+    Route::get('/', [HealthCheckController::class, 'health']);            // Health check completo
+    Route::get('documents', [HealthCheckController::class, 'documentsHealth']); // Health específico documentos
+    Route::get('detailed', [HealthCheckController::class, 'detailed']);   // Detallado (solo debug)
+});
 
 // Public Email Endpoint Routes (no authentication required, but token validation in controller)
 Route::prefix('email-endpoints')->group(function () {
@@ -14,16 +22,13 @@ Route::prefix('email-endpoints')->group(function () {
 });
 
 // Public Documents Routes (Prestashop integration) - No authentication, only rate limiting
-Route::prefix('documents')->middleware('throttle:60,1')->group(function () {
-    Route::post('/', [DocumentsController::class, 'process']);
-    Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
-    Route::post('/resend-reminder', [DocumentsController::class, 'resendDocumentReminder']);
-    Route::post('/confirm-upload', [DocumentsController::class, 'confirmDocumentUpload']);
-    Route::get('/order/data/{order_id}', [DocumentsController::class, 'getOrderData']);
-    Route::post('/fill-order-data', [DocumentsController::class, 'fillDocumentWithOrderData']);
-    Route::get('/sync/all', [DocumentsController::class, 'syncAllDocumentsWithOrders']);
-    Route::get('/sync/by-query', [DocumentsController::class, 'syncDocumentsByOrderQuery']);
-    Route::post('/sync/by-order', [DocumentsController::class, 'syncDocumentByOrderId']);
+
+// AI Prompt Selection API (for n8n integration)
+Route::prefix('suppliers/prompts')->middleware('throttle:120,1')->group(function () {
+    Route::get('/health', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'health']);
+    Route::post('/select', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'select']);
+    Route::post('/batch-select', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'batchSelect']);
+    Route::get('/explain', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'explain']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

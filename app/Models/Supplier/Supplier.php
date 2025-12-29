@@ -3,8 +3,10 @@
 namespace App\Models\Supplier;
 
 use App\Library\Traits\HasUid;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -23,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $contact_email Contact email
  * @property string|null $contact_phone Contact phone
  * @property int $priority Priority level (higher = more important)
- * @property string $content_type Type of content (products, descriptions, images, specifications)
+ * @property string $content_type Type of content (inventaries, descriptions, images, specifications)
  * @property int $api_rate_limit API rate limit
  * @property string $api_rate_period API rate period (second, minute, hour, day)
  * @property array|null $metadata Additional metadata
@@ -105,6 +107,33 @@ class Supplier extends Model
     public function contents(): HasMany
     {
         return $this->hasMany(SupplierAiContent::class, 'supplier_id');
+    }
+
+    /**
+     * Get categories assigned to this supplier (many-to-many)
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'supplier_categories', 'supplier_id', 'category_id')
+            ->withPivot(['uid', 'is_active', 'priority', 'metadata'])
+            ->withTimestamps()
+            ->using(SupplierCategory::class);
+    }
+
+    /**
+     * Get only active categories for this supplier
+     */
+    public function activeCategories(): BelongsToMany
+    {
+        return $this->categories()->wherePivot('is_active', true);
+    }
+
+    /**
+     * Get all supplier-category pivot records
+     */
+    public function supplierCategories(): HasMany
+    {
+        return $this->hasMany(SupplierCategory::class, 'supplier_id');
     }
 
     /**

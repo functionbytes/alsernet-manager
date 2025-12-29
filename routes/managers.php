@@ -20,9 +20,16 @@ use App\Http\Controllers\Managers\Helpdesk\ConversationsController as HelpdeskCo
 use App\Http\Controllers\Managers\Helpdesk\CustomersController as HelpdeskCustomersController;
 use App\Http\Controllers\Managers\Helpdesk\HelpCenterController;
 use App\Http\Controllers\Managers\Helpdesk\Settings\AttributesController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController as SettingsHelpdeskController;
 use App\Http\Controllers\Managers\Helpdesk\Settings\StatusesController;
 use App\Http\Controllers\Managers\Helpdesk\Settings\TagsController;
 use App\Http\Controllers\Managers\Helpdesk\Settings\TeamController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController;
+use App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController;
 use App\Http\Controllers\Managers\Helpdesk\TicketCommentsController;
 use App\Http\Controllers\Managers\Helpdesk\TicketNotesController;
 use App\Http\Controllers\Managers\Helpdesk\TicketsController as HelpdeskTicketsController;
@@ -32,10 +39,9 @@ use App\Http\Controllers\Managers\PulseController;
 use App\Http\Controllers\Managers\Settings\BackupController;
 use App\Http\Controllers\Managers\Settings\BackupScheduleController;
 use App\Http\Controllers\Managers\Settings\CategoriesController;
+use App\Http\Controllers\Managers\Settings\CategoryController;
 use App\Http\Controllers\Managers\Settings\DatabaseCleanupController;
 use App\Http\Controllers\Managers\Settings\DatabaseSettingsController;
-use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
-use App\Http\Controllers\Managers\Settings\Documents\DocumentTypeController;
 use App\Http\Controllers\Managers\Settings\EmailSettingsController;
 use App\Http\Controllers\Managers\Settings\ErpSettingsController;
 use App\Http\Controllers\Managers\Settings\HoursSettingsController;
@@ -54,9 +60,11 @@ use App\Http\Controllers\Managers\Settings\Roles\RoleController;
 use App\Http\Controllers\Managers\Settings\SearchSettingsController;
 use App\Http\Controllers\Managers\Settings\ServerAccessController;
 use App\Http\Controllers\Managers\Settings\SettingsController;
-use App\Http\Controllers\Managers\Settings\StageEmailActionController;
+use App\Http\Controllers\Managers\Settings\StorageController;
 use App\Http\Controllers\Managers\Settings\SupervisorController;
+use App\Http\Controllers\Managers\Settings\Suppliers\PromptTemplatesController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
+use App\Http\Controllers\Managers\Settings\Suppliers\SupplierCategoriesController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SupplierContentController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SupplierPromptsController;
 use App\Http\Controllers\Managers\Settings\Suppliers\SuppliersController;
@@ -144,28 +152,28 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     });
 
-    Route::group(['prefix' => 'products'], function () {
+    Route::group(['prefix' => 'inventaries'], function () {
 
-        Route::get('/validate', [ProductsController::class, 'validate'])->name('manager.products.validate');
-        Route::get('/validate/products', [ProductsController::class, 'validateProductShop'])->name('manager.products.shop');
-        Route::get('/validate/productss', [ProductsController::class, 'validateProductShops'])->name('manager.products.shops');
-        Route::get('/validate/apps', [ProductsController::class, 'validateManagement'])->name('manager.products.apps');
+        Route::get('/validate', [ProductsController::class, 'validate'])->name('manager.inventaries.validate');
+        Route::get('/validate/inventaries', [ProductsController::class, 'validateProductShop'])->name('manager.inventaries.shop');
+        Route::get('/validate/productss', [ProductsController::class, 'validateProductShops'])->name('manager.inventaries.shops');
+        Route::get('/validate/apps', [ProductsController::class, 'validateManagement'])->name('manager.inventaries.apps');
 
-        Route::get('/', [ProductsController::class, 'index'])->name('manager.products');
-        Route::get('/all/barcode', [ProductsBarcodesController::class, 'index'])->name('manager.products.barcodes.all');
-        Route::get('/reporte/generate/inventary', [ReportController::class, 'generateInventary'])->name('manager.products.generate.inventary');
-        Route::get('/reporte/generate/kardex', [ReportController::class, 'generateKardex'])->name('manager.products.generate.kardex');
-        Route::get('/create', [ProductsController::class, 'create'])->name('manager.products.create');
-        Route::post('/store', [ProductsController::class, 'store'])->name('manager.products.store');
-        Route::post('/update', [ProductsController::class, 'update'])->name('manager.products.update');
-        Route::get('/edit/{uid}', [ProductsController::class, 'edit'])->name('manager.products.edit');
+        Route::get('/', [ProductsController::class, 'index'])->name('manager.inventaries');
+        Route::get('/all/barcode', [ProductsBarcodesController::class, 'index'])->name('manager.inventaries.barcodes.all');
+        Route::get('/reporte/generate/inventary', [ReportController::class, 'generateInventary'])->name('manager.inventaries.generate.inventary');
+        Route::get('/reporte/generate/kardex', [ReportController::class, 'generateKardex'])->name('manager.inventaries.generate.kardex');
+        Route::get('/create', [ProductsController::class, 'create'])->name('manager.inventaries.create');
+        Route::post('/store', [ProductsController::class, 'store'])->name('manager.inventaries.store');
+        Route::post('/update', [ProductsController::class, 'update'])->name('manager.inventaries.update');
+        Route::get('/edit/{uid}', [ProductsController::class, 'edit'])->name('manager.inventaries.edit');
         Route::get('/view/{uid}', [ProductsController::class, 'view'])->name('manager.locations.view');
-        Route::get('/destroy/{uid}', [ProductsController::class, 'destroy'])->name('manager.products.destroy');
+        Route::get('/destroy/{uid}', [ProductsController::class, 'destroy'])->name('manager.inventaries.destroy');
 
-        Route::get('/locations/{uid}', [ProductsController::class, 'locations'])->name('manager.products.locations');
-        Route::get('/locations/details/{uid}', [ProductsController::class, 'details'])->name('manager.products.locations.details');
+        Route::get('/locations/{uid}', [ProductsController::class, 'locations'])->name('manager.inventaries.locations');
+        Route::get('/locations/details/{uid}', [ProductsController::class, 'details'])->name('manager.inventaries.locations.details');
 
-        Route::get('/single/barcode/{uid}', [ProductsBarcodesController::class, 'destroy'])->name('manager.products.barcodes.single');
+        Route::get('/single/barcode/{uid}', [ProductsBarcodesController::class, 'destroy'])->name('manager.inventaries.barcodes.single');
     });
 
     Route::group(['prefix' => 'inventaries'], function () {
@@ -300,9 +308,24 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::post('/hours/update', [HoursSettingsController::class, 'update'])->name('manager.settings.hours.update');
 
         // Storage management routes
-        Route::get('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'index'])->name('manager.settings.storage');
-        Route::post('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'update'])->name('manager.settings.storage.update');
-        Route::delete('/storage', [\App\Http\Controllers\Managers\Settings\StorageController::class, 'destroy'])->name('manager.settings.storage.destroy');
+        Route::get('/storage', [StorageController::class, 'index'])->name('manager.settings.storage');
+        Route::post('/storage', [StorageController::class, 'update'])->name('manager.settings.storage.update');
+        Route::delete('/storage', [StorageController::class, 'destroy'])->name('manager.settings.storage.destroy');
+
+        // Category management routes (hierarchical with PrestaShop sync)
+        Route::group(['prefix' => 'categories'], function () {
+            Route::get('/', [CategoryController::class, 'index'])->name('manager.settings.categories.index');
+            Route::get('/create', [CategoryController::class, 'create'])->name('manager.settings.categories.create');
+            Route::post('/', [CategoryController::class, 'store'])->name('manager.settings.categories.store');
+            Route::get('/{uid}/edit', [CategoryController::class, 'edit'])->name('manager.settings.categories.edit');
+            Route::put('/{uid}', [CategoryController::class, 'update'])->name('manager.settings.categories.update');
+            Route::delete('/{uid}', [CategoryController::class, 'destroy'])->name('manager.settings.categories.destroy');
+            Route::post('/reorder', [CategoryController::class, 'reorder'])->name('manager.settings.categories.reorder');
+            Route::post('/{uid}/sync-to-prestashop', [CategoryController::class, 'syncToPrestaShop'])->name('manager.settings.categories.sync-to-prestashop');
+            Route::post('/sync-from-prestashop', [CategoryController::class, 'syncFromPrestaShop'])->name('manager.settings.categories.sync-from-prestashop');
+            Route::get('/conflicts', [CategoryController::class, 'conflicts'])->name('manager.settings.categories.conflicts');
+            Route::post('/conflicts/{mapping}/resolve', [CategoryController::class, 'resolveConflict'])->name('manager.settings.categories.conflicts.resolve');
+        });
 
         Route::group(['prefix' => 'mailers'], function () {
 
@@ -363,89 +386,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             });
         });
 
-        Route::group(['prefix' => 'documents'], function () {
-
-            Route::get('/', [DocumentConfigurationController::class, 'index'])->name('manager.settings.documents.configurations');
-
-            Route::group(['prefix' => 'configurations'], function () {
-                Route::get('/', [DocumentConfigurationController::class, 'globalSettings'])->name('manager.settings.documents.configurations.global');
-                Route::post('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('manager.settings.documents.configurations.update');
-                Route::get('/search-templates', [DocumentConfigurationController::class, 'searchTemplates'])->name('manager.settings.documents.configurations.search-templates');
-
-                // Storage configuration routes
-                Route::get('/storage', [DocumentConfigurationController::class, 'storageSettings'])->name('manager.settings.documents.configurations.storage');
-                Route::post('/storage', [DocumentConfigurationController::class, 'updateStorageSettings'])->name('manager.settings.documents.configurations.storage.update');
-                Route::post('/storage/test', [DocumentConfigurationController::class, 'testStorageConnection'])->name('manager.settings.documents.configurations.storage.test');
-                Route::get('/storage/stats/{diskName}', [DocumentConfigurationController::class, 'getStorageStats'])->name('manager.settings.documents.configurations.storage.stats');
-                Route::get('/storage/history', [DocumentConfigurationController::class, 'getStorageConfigurationHistory'])->name('manager.settings.documents.configurations.storage.history');
-            });
-
-            Route::group(['prefix' => 'types'], function () {
-                Route::get('/', [DocumentTypeController::class, 'index'])->name('manager.settings.documents.types');
-                Route::get('/create', [DocumentTypeController::class, 'create'])->name('manager.settings.documents.types.create');
-                Route::post('/', [DocumentTypeController::class, 'store'])->name('manager.settings.documents.types.store');
-                Route::get('/edit/{documentType}', [DocumentTypeController::class, 'edit'])->name('manager.settings.documents.types.edit');
-                Route::post('/{documentType}', [DocumentTypeController::class, 'update'])->name('manager.settings.documents.types.update');
-                Route::delete('/{documentType}', [DocumentTypeController::class, 'destroy'])->name('manager.settings.documents.types.destroy');
-                Route::post('/{documentType}/toggle-active', [DocumentTypeController::class, 'toggleActive'])->name('manager.settings.documents.types.toggle-active');
-                Route::get('/export/all', [DocumentTypeController::class, 'export'])->name('manager.settings.documents.types.export');
-            });
-
-            // Validation Conditions
-            Route::group(['prefix' => 'conditions'], function () {
-                Route::get('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'index'])->name('manager.settings.documents.conditions');
-                Route::get('/create', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'create'])->name('manager.settings.documents.conditions.create');
-                Route::post('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'store'])->name('manager.settings.documents.conditions.store');
-                Route::get('/edit/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'edit'])->name('manager.settings.documents.conditions.edit');
-                Route::put('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'update'])->name('manager.settings.documents.conditions.update');
-                Route::delete('/{condition}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'destroy'])->name('manager.settings.documents.conditions.destroy');
-                Route::post('/{condition}/toggle-active', [\App\Http\Controllers\Managers\Settings\Documents\DocumentValidationConditionController::class, 'toggleActive'])->name('manager.settings.documents.conditions.toggle-active');
-            });
-
-            // Stage Email Actions
-            Route::group(['prefix' => 'stage-email-actions'], function () {
-                Route::get('/', [StageEmailActionController::class, 'index'])->name('manager.settings.stage-email-actions.index');
-                Route::get('/{stage}/edit', [StageEmailActionController::class, 'edit'])->name('manager.settings.stage-email-actions.edit');
-                Route::put('/{stage}', [StageEmailActionController::class, 'update'])->name('manager.settings.stage-email-actions.update');
-            });
-
-            // SLA Policies
-            Route::group(['prefix' => 'sla-policies'], function () {
-                Route::get('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'index'])->name('manager.settings.documents.sla-policies.index');
-                Route::get('create', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'create'])->name('manager.settings.documents.sla-policies.create');
-                Route::post('/', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'store'])->name('manager.settings.documents.sla-policies.store');
-                Route::get('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'show'])->name('manager.settings.documents.sla-policies.show');
-                Route::get('{policy}/edit', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'edit'])->name('manager.settings.documents.sla-policies.edit');
-                Route::put('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'update'])->name('manager.settings.documents.sla-policies.update');
-                Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'toggle'])->name('manager.settings.documents.sla-policies.toggle');
-                Route::delete('{policy}', [\App\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController::class, 'destroy'])->name('manager.settings.documents.sla-policies.destroy');
-            });
-
-            // Document Groups
-            Route::group(['prefix' => 'groups'], function () {
-                Route::get('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'index'])->name('manager.settings.documents.groups.index');
-                Route::get('create', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'create'])->name('manager.settings.documents.groups.create');
-                Route::post('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'store'])->name('manager.settings.documents.groups.store');
-                Route::get('{group}/edit', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'edit'])->name('manager.settings.documents.groups.edit');
-                Route::put('{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'update'])->name('manager.settings.documents.groups.update');
-                Route::patch('{group}/toggle', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'toggle'])->name('manager.settings.documents.groups.toggle');
-                Route::delete('{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'destroy'])->name('manager.settings.documents.groups.destroy');
-                Route::post('reorder', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'reorder'])->name('manager.settings.documents.groups.reorder');
-                Route::get('{group}/configuration', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'configuration'])->name('manager.settings.documents.groups.configuration');
-                Route::post('{group}/configuration', [\App\Http\Controllers\Managers\Settings\Documents\DocumentGroupsController::class, 'updateConfiguration'])->name('manager.settings.documents.groups.update-configuration');
-            });
-
-            // Document Settings
-            Route::prefix('settings')->name('settings.')->group(function () {
-                Route::get('/', [\App\Http\Controllers\Managers\Settings\Documents\DocumentSettingsController::class, 'index'])->name('index');
-                Route::post('/update', [\App\Http\Controllers\Managers\Settings\Documents\DocumentSettingsController::class, 'update'])->name('update');
-                Route::post('/store', [\App\Http\Controllers\Managers\Settings\Documents\DocumentSettingsController::class, 'store'])->name('store');
-                Route::get('/sections/{section}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentSettingsController::class, 'getSectionSettings'])->name('get-section');
-                Route::post('/reset/{group}', [\App\Http\Controllers\Managers\Settings\Documents\DocumentSettingsController::class, 'resetToDefaults'])->name('reset');
-            });
-        });
-
         Route::group(['prefix' => 'erp'], function () {
+
             Route::get('/', [ErpSettingsController::class, 'index'])->name('manager.settings.erp.index');
             Route::get('/edit', [ErpSettingsController::class, 'edit'])->name('manager.settings.erp.edit');
             Route::put('/update', [ErpSettingsController::class, 'update'])->name('manager.settings.erp.update');
@@ -489,16 +431,106 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
         // Supplier Automation Routes
         Route::group(['prefix' => 'suppliers'], function () {
+
+            // Main supplier routes (specific paths first before parametrized routes)
             Route::get('/', [SuppliersController::class, 'index'])->name('manager.settings.suppliers.index');
             Route::get('/data', [SuppliersController::class, 'getData'])->name('manager.settings.suppliers.data');
             Route::get('/create', [SuppliersController::class, 'create'])->name('manager.settings.suppliers.create');
             Route::post('/', [SuppliersController::class, 'store'])->name('manager.settings.suppliers.store');
-            Route::get('/{uid}', [SuppliersController::class, 'show'])->name('manager.settings.suppliers.show');
-            Route::get('/{uid}/edit', [SuppliersController::class, 'edit'])->name('manager.settings.suppliers.edit');
+            Route::post('/test-all', [SuppliersController::class, 'testAll'])->name('manager.settings.suppliers.test-all');
+
+            // Specific resource routes (before parametrized routes to avoid route collision)
+            // Prompts
+            Route::prefix('prompts')->name('manager.settings.suppliers.prompts.')->group(function () {
+                Route::get('/', [SupplierPromptsController::class, 'index'])->name('index');
+                Route::get('/data', [SupplierPromptsController::class, 'getData'])->name('data');
+                Route::get('/create', [SupplierPromptsController::class, 'create'])->name('create');
+                Route::post('/', [SupplierPromptsController::class, 'store'])->name('store');
+                Route::get('/{uid}', [SupplierPromptsController::class, 'show'])->name('show');
+                Route::get('/{uid}/edit', [SupplierPromptsController::class, 'edit'])->name('edit');
+                Route::put('/{uid}', [SupplierPromptsController::class, 'update'])->name('update');
+                Route::delete('/{uid}', [SupplierPromptsController::class, 'destroy'])->name('destroy');
+                Route::post('/{uid}/toggle', [SupplierPromptsController::class, 'toggle'])->name('toggle');
+                Route::post('/{uid}/test', [SupplierPromptsController::class, 'test'])->name('test');
+                Route::post('/{uid}/duplicate', [SupplierPromptsController::class, 'duplicate'])->name('duplicate');
+                Route::get('/{uid}/preview', [SupplierPromptsController::class, 'preview'])->name('preview');
+                Route::get('/{uid}/metrics', [SupplierPromptsController::class, 'getMetrics'])->name('metrics');
+            });
+
+            // Templates
+            Route::prefix('templates')->name('manager.settings.suppliers.templates.')->group(function () {
+                Route::get('/', [PromptTemplatesController::class, 'index'])->name('index');
+                Route::get('/create', [PromptTemplatesController::class, 'create'])->name('create');
+                Route::post('/', [PromptTemplatesController::class, 'store'])->name('store');
+                Route::get('/{templateUid}/edit', [PromptTemplatesController::class, 'edit'])->name('edit');
+                Route::put('/{templateUid}', [PromptTemplatesController::class, 'update'])->name('update');
+                Route::delete('/{templateUid}', [PromptTemplatesController::class, 'destroy'])->name('destroy');
+                Route::post('/{templateUid}/clone', [PromptTemplatesController::class, 'clone'])->name('clone');
+            });
+
+            // Automation
+            Route::prefix('automation')->name('manager.settings.suppliers.automation.')->group(function () {
+
+                Route::get('/', [SupplierAutomationController::class, 'index'])->name('index');
+                Route::get('/stats', [SupplierAutomationController::class, 'getHealthMetrics'])->name('stats');
+                Route::get('/logs', [SupplierAutomationController::class, 'logsPage'])->name('logs');
+
+                // Workflows
+                Route::prefix('workflows')->name('workflows.')->group(function () {
+                    Route::get('/', [SupplierAutomationController::class, 'workflows'])->name('data');
+                    Route::get('/create', [SupplierAutomationController::class, 'createWorkflow'])->name('create');
+                    Route::post('/', [SupplierAutomationController::class, 'storeWorkflow'])->name('store');
+                    Route::get('/{uid}/edit', [SupplierAutomationController::class, 'editWorkflow'])->name('edit');
+                    Route::put('/{uid}', [SupplierAutomationController::class, 'updateWorkflow'])->name('update');
+                    Route::delete('/{uid}', [SupplierAutomationController::class, 'destroyWorkflow'])->name('destroy');
+                    Route::post('/{uid}/run', [SupplierAutomationController::class, 'runWorkflow'])->name('run');
+                    Route::post('/run-all', [SupplierAutomationController::class, 'runAllWorkflows'])->name('run-all');
+                });
+
+                // Executions
+                Route::prefix('executions')->name('executions.')->group(function () {
+                    Route::get('/', [SupplierAutomationController::class, 'executions'])->name('data');
+                    Route::get('/{uid}', [SupplierAutomationController::class, 'getExecutionDetails'])->name('show');
+                    Route::post('/{uid}/retry', [SupplierAutomationController::class, 'retryExecution'])->name('retry');
+                    Route::post('/{uid}/cancel', [SupplierAutomationController::class, 'cancelExecution'])->name('cancel');
+                    Route::post('/clear-failed', [SupplierAutomationController::class, 'clearFailedExecutions'])->name('clear-failed');
+                });
+
+                // Triggers
+                Route::prefix('triggers')->name('triggers.')->group(function () {
+                    Route::get('/', [SupplierAutomationController::class, 'triggers'])->name('data');
+                });
+
+                // Alerts
+                Route::prefix('alerts')->name('alerts.')->group(function () {
+                    Route::get('/', [SupplierAutomationController::class, 'alerts'])->name('data');
+                });
+
+                // Logs
+                Route::prefix('logs')->name('logs.')->group(function () {
+                    Route::get('/', [SupplierAutomationController::class, 'getLogs'])->name('data');
+                    Route::post('/download', [SupplierAutomationController::class, 'downloadLogs'])->name('download');
+                });
+            });
+
+            // Content
+            Route::prefix('content')->name('manager.settings.suppliers.content.')->group(function () {
+                Route::get('/', [SupplierContentController::class, 'index'])->name('index');
+                Route::get('/data', [SupplierContentController::class, 'getData'])->name('data');
+                Route::get('/stats', [SupplierContentController::class, 'getStats'])->name('stats');
+                Route::get('/show/{uid}', [SupplierContentController::class, 'show'])->name('show');
+                Route::post('/action/{uid}', [SupplierContentController::class, 'action'])->name('action');
+                Route::post('/publish/{uid}', [SupplierContentController::class, 'publish'])->name('publish');
+                Route::put('/{uid}', [SupplierContentController::class, 'update'])->name('update');
+                Route::post('/bulk-action', [SupplierContentController::class, 'bulkAction'])->name('bulk-action');
+            });
+
+            // Parametrized supplier routes (after specific routes to avoid collision)
+            Route::get('/show/{uid}', [SuppliersController::class, 'show'])->name('manager.settings.suppliers.show');
+            Route::get('/edit/{uid}', [SuppliersController::class, 'edit'])->name('manager.settings.suppliers.edit');
             Route::put('/{uid}', [SuppliersController::class, 'update'])->name('manager.settings.suppliers.update');
             Route::delete('/{uid}', [SuppliersController::class, 'destroy'])->name('manager.settings.suppliers.destroy');
             Route::post('/{uid}/toggle', [SuppliersController::class, 'toggle'])->name('manager.settings.suppliers.toggle');
-            Route::post('/test-all', [SuppliersController::class, 'testAll'])->name('manager.settings.suppliers.test-all');
 
             // Sources
             Route::prefix('{supplierUid}/sources')->name('manager.settings.suppliers.sources.')->group(function () {
@@ -510,35 +542,16 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
                 Route::delete('/{uid}', [SupplierSourcesController::class, 'destroy'])->name('destroy');
                 Route::post('/{uid}/test', [SupplierSourcesController::class, 'testConnection'])->name('test');
             });
-        });
 
-        Route::group(['prefix' => 'supplier-prompts'], function () {
-            Route::get('/', [SupplierPromptsController::class, 'index'])->name('manager.settings.supplier-prompts.index');
-            Route::get('/create', [SupplierPromptsController::class, 'create'])->name('manager.settings.supplier-prompts.create');
-            Route::post('/', [SupplierPromptsController::class, 'store'])->name('manager.settings.supplier-prompts.store');
-            Route::get('/{uid}/edit', [SupplierPromptsController::class, 'edit'])->name('manager.settings.supplier-prompts.edit');
-            Route::put('/{uid}', [SupplierPromptsController::class, 'update'])->name('manager.settings.supplier-prompts.update');
-            Route::delete('/{uid}', [SupplierPromptsController::class, 'destroy'])->name('manager.settings.supplier-prompts.destroy');
-            Route::post('/{uid}/toggle', [SupplierPromptsController::class, 'toggle'])->name('manager.settings.supplier-prompts.toggle');
-            Route::post('/{uid}/test', [SupplierPromptsController::class, 'test'])->name('manager.settings.supplier-prompts.test');
-        });
+            // Categories
+            Route::prefix('{supplierUid}/categories')->name('manager.settings.suppliers.categories.')->group(function () {
+                Route::get('/', [SupplierCategoriesController::class, 'index'])->name('index');
+                Route::post('/', [SupplierCategoriesController::class, 'store'])->name('store');
+                Route::put('/{categoryId}', [SupplierCategoriesController::class, 'update'])->name('update');
+                Route::patch('/{categoryId}/toggle', [SupplierCategoriesController::class, 'toggle'])->name('toggle');
+                Route::delete('/{categoryId}', [SupplierCategoriesController::class, 'destroy'])->name('destroy');
+            });
 
-        Route::group(['prefix' => 'supplier-automation'], function () {
-            Route::get('/', [SupplierAutomationController::class, 'index'])->name('manager.settings.supplier-automation.index');
-            Route::get('/dashboard', [SupplierAutomationController::class, 'dashboard'])->name('manager.settings.supplier-automation.dashboard');
-            Route::post('/run/{uid}', [SupplierAutomationController::class, 'run'])->name('manager.settings.supplier-automation.run');
-            Route::post('/schedule/{uid}', [SupplierAutomationController::class, 'schedule'])->name('manager.settings.supplier-automation.schedule');
-            Route::get('/logs', [SupplierAutomationController::class, 'logs'])->name('manager.settings.supplier-automation.logs');
-            Route::get('/stats', [SupplierAutomationController::class, 'stats'])->name('manager.settings.supplier-automation.stats');
-        });
-
-        Route::group(['prefix' => 'supplier-content'], function () {
-            Route::get('/', [SupplierContentController::class, 'index'])->name('manager.settings.supplier-content.index');
-            Route::get('/{uid}', [SupplierContentController::class, 'show'])->name('manager.settings.supplier-content.show');
-            Route::post('/{uid}/approve', [SupplierContentController::class, 'approve'])->name('manager.settings.supplier-content.approve');
-            Route::post('/{uid}/reject', [SupplierContentController::class, 'reject'])->name('manager.settings.supplier-content.reject');
-            Route::post('/{uid}/edit', [SupplierContentController::class, 'edit'])->name('manager.settings.supplier-content.edit');
-            Route::get('/filter/{status}', [SupplierContentController::class, 'filterByStatus'])->name('manager.settings.supplier-content.filter');
         });
 
         Route::group(['prefix' => 'email'], function () {
@@ -1426,20 +1439,20 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         // Settings
         Route::prefix('settings')->name('manager.helpdesk.settings.')->group(function () {
             // Tickets Settings
-            Route::get('tickets', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'ticketsIndex'])->name('tickets');
-            Route::put('tickets', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'ticketsUpdate'])->name('tickets.update');
+            Route::get('tickets', [SettingsHelpdeskController::class, 'ticketsIndex'])->name('tickets');
+            Route::put('tickets', [SettingsHelpdeskController::class, 'ticketsUpdate'])->name('tickets.update');
 
             // LiveChat Settings (New Helpdesk Widget)
-            Route::get('livechat', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'livechatIndex'])->name('livechat');
-            Route::put('livechat', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'livechatUpdate'])->name('livechat.update');
+            Route::get('livechat', [SettingsHelpdeskController::class, 'livechatIndex'])->name('livechat');
+            Route::put('livechat', [SettingsHelpdeskController::class, 'livechatUpdate'])->name('livechat.update');
 
             // AI Settings
-            Route::get('ai', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'aiIndex'])->name('ai');
-            Route::put('ai', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'aiUpdate'])->name('ai.update');
+            Route::get('ai', [SettingsHelpdeskController::class, 'aiIndex'])->name('ai');
+            Route::put('ai', [SettingsHelpdeskController::class, 'aiUpdate'])->name('ai.update');
 
             // Uploading Settings
-            Route::get('uploading', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'uploadingIndex'])->name('uploading');
-            Route::put('uploading', [\App\Http\Controllers\Managers\Helpdesk\Settings\SettingsController::class, 'uploadingUpdate'])->name('uploading.update');
+            Route::get('uploading', [SettingsHelpdeskController::class, 'uploadingIndex'])->name('uploading');
+            Route::put('uploading', [SettingsHelpdeskController::class, 'uploadingUpdate'])->name('uploading.update');
 
             // Customers Settings (link to existing customers routes)
             Route::get('customers', [HelpdeskCustomersController::class, 'index'])->name('customers');
@@ -1448,69 +1461,69 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::prefix('tickets')->name('tickets.')->group(function () {
                 // Categories
                 Route::prefix('categories')->name('categories.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'store'])->name('store');
-                    Route::get('{category}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'edit'])->name('edit');
-                    Route::put('{category}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'update'])->name('update');
-                    Route::patch('{category}/toggle', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'toggle'])->name('toggle');
-                    Route::delete('{category}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCategoriesController::class, 'reorder'])->name('reorder');
+                    Route::get('/', [TicketCategoriesController::class, 'index'])->name('index');
+                    Route::get('create', [TicketCategoriesController::class, 'create'])->name('create');
+                    Route::post('/', [TicketCategoriesController::class, 'store'])->name('store');
+                    Route::get('{category}/edit', [TicketCategoriesController::class, 'edit'])->name('edit');
+                    Route::put('{category}', [TicketCategoriesController::class, 'update'])->name('update');
+                    Route::patch('{category}/toggle', [TicketCategoriesController::class, 'toggle'])->name('toggle');
+                    Route::delete('{category}', [TicketCategoriesController::class, 'destroy'])->name('destroy');
+                    Route::post('reorder', [TicketCategoriesController::class, 'reorder'])->name('reorder');
                 });
 
                 // Groups
                 Route::prefix('groups')->name('groups.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'store'])->name('store');
-                    Route::get('{group}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'edit'])->name('edit');
-                    Route::put('{group}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'update'])->name('update');
-                    Route::patch('{group}/toggle', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'toggle'])->name('toggle');
-                    Route::delete('{group}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketGroupsController::class, 'reorder'])->name('reorder');
+                    Route::get('/', [TicketGroupsController::class, 'index'])->name('index');
+                    Route::get('create', [TicketGroupsController::class, 'create'])->name('create');
+                    Route::post('/', [TicketGroupsController::class, 'store'])->name('store');
+                    Route::get('{group}/edit', [TicketGroupsController::class, 'edit'])->name('edit');
+                    Route::put('{group}', [TicketGroupsController::class, 'update'])->name('update');
+                    Route::patch('{group}/toggle', [TicketGroupsController::class, 'toggle'])->name('toggle');
+                    Route::delete('{group}', [TicketGroupsController::class, 'destroy'])->name('destroy');
+                    Route::post('reorder', [TicketGroupsController::class, 'reorder'])->name('reorder');
                 });
 
                 // Canned Replies
                 Route::prefix('canned-replies')->name('canned-replies.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'store'])->name('store');
-                    Route::get('{reply}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'edit'])->name('edit');
-                    Route::put('{reply}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'update'])->name('update');
-                    Route::delete('{reply}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketCannedRepliesController::class, 'destroy'])->name('destroy');
+                    Route::get('/', [TicketCannedRepliesController::class, 'index'])->name('index');
+                    Route::get('create', [TicketCannedRepliesController::class, 'create'])->name('create');
+                    Route::post('/', [TicketCannedRepliesController::class, 'store'])->name('store');
+                    Route::get('{reply}/edit', [TicketCannedRepliesController::class, 'edit'])->name('edit');
+                    Route::put('{reply}', [TicketCannedRepliesController::class, 'update'])->name('update');
+                    Route::delete('{reply}', [TicketCannedRepliesController::class, 'destroy'])->name('destroy');
                 });
 
                 // Statuses
                 Route::prefix('statuses')->name('statuses.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'store'])->name('store');
-                    Route::get('{status}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'edit'])->name('edit');
-                    Route::put('{status}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'update'])->name('update');
-                    Route::delete('{status}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketStatusesController::class, 'reorder'])->name('reorder');
+                    Route::get('/', [TicketStatusesController::class, 'index'])->name('index');
+                    Route::get('create', [TicketStatusesController::class, 'create'])->name('create');
+                    Route::post('/', [TicketStatusesController::class, 'store'])->name('store');
+                    Route::get('{status}/edit', [TicketStatusesController::class, 'edit'])->name('edit');
+                    Route::put('{status}', [TicketStatusesController::class, 'update'])->name('update');
+                    Route::delete('{status}', [TicketStatusesController::class, 'destroy'])->name('destroy');
+                    Route::post('reorder', [TicketStatusesController::class, 'reorder'])->name('reorder');
                 });
 
                 // SLA Policies
                 Route::prefix('sla-policies')->name('sla-policies.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'store'])->name('store');
-                    Route::get('{policy}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'edit'])->name('edit');
-                    Route::put('{policy}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'update'])->name('update');
-                    Route::patch('{policy}/toggle', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'toggle'])->name('toggle');
-                    Route::delete('{policy}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketSlaPoliciesController::class, 'destroy'])->name('destroy');
+                    Route::get('/', [TicketSlaPoliciesController::class, 'index'])->name('index');
+                    Route::get('create', [TicketSlaPoliciesController::class, 'create'])->name('create');
+                    Route::post('/', [TicketSlaPoliciesController::class, 'store'])->name('store');
+                    Route::get('{policy}/edit', [TicketSlaPoliciesController::class, 'edit'])->name('edit');
+                    Route::put('{policy}', [TicketSlaPoliciesController::class, 'update'])->name('update');
+                    Route::patch('{policy}/toggle', [TicketSlaPoliciesController::class, 'toggle'])->name('toggle');
+                    Route::delete('{policy}', [TicketSlaPoliciesController::class, 'destroy'])->name('destroy');
                 });
 
                 // Views
                 Route::prefix('views')->name('views.')->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'index'])->name('index');
-                    Route::get('create', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'create'])->name('create');
-                    Route::post('/', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'store'])->name('store');
-                    Route::get('{view}/edit', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'edit'])->name('edit');
-                    Route::put('{view}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'update'])->name('update');
-                    Route::delete('{view}', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [\App\Http\Controllers\Managers\Helpdesk\Settings\TicketViewsController::class, 'reorder'])->name('reorder');
+                    Route::get('/', [TicketViewsController::class, 'index'])->name('index');
+                    Route::get('create', [TicketViewsController::class, 'create'])->name('create');
+                    Route::post('/', [TicketViewsController::class, 'store'])->name('store');
+                    Route::get('{view}/edit', [TicketViewsController::class, 'edit'])->name('edit');
+                    Route::put('{view}', [TicketViewsController::class, 'update'])->name('update');
+                    Route::delete('{view}', [TicketViewsController::class, 'destroy'])->name('destroy');
+                    Route::post('reorder', [TicketViewsController::class, 'reorder'])->name('reorder');
                 });
 
                 // Team Settings
@@ -1615,6 +1628,55 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::put('/folder/{folder}/move', [MediaManagerController::class, 'moveFolder'])->name('folder.move');
         Route::post('/file/{file}/toggle-favorite', [MediaManagerController::class, 'toggleFavorite'])->name('file.toggle-favorite');
         Route::delete('/trash/empty', [MediaManagerController::class, 'emptyTrash'])->name('trash.empty');
+    });
+
+    // Webhooks Management
+    Route::prefix('settings/webhooks')->name('manager.settings.webhooks.')->group(function () {
+
+        // Integrations
+        Route::prefix('integrations')->name('integrations.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'store'])->name('store');
+            Route::get('/{integration}/edit', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'edit'])->name('edit');
+            Route::put('/{integration}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'update'])->name('update');
+            Route::delete('/{integration}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'destroy'])->name('destroy');
+            Route::post('/{integration}/toggle', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'toggle'])->name('toggle');
+
+            // API Keys sub-routes
+            Route::get('/{integration}/api-keys', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'apiKeys'])->name('api-keys');
+            Route::post('/{integration}/api-keys', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'storeApiKey'])->name('api-keys.store');
+            Route::delete('/api-keys/{apiKey}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'destroyApiKey'])->name('api-keys.destroy');
+            Route::post('/api-keys/{apiKey}/revoke', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'revokeApiKey'])->name('api-keys.revoke');
+        });
+
+        // Subscriptions
+        Route::prefix('subscriptions')->name('subscriptions.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'store'])->name('store');
+            Route::get('/{subscription}/edit', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'edit'])->name('edit');
+            Route::put('/{subscription}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'update'])->name('update');
+            Route::delete('/{subscription}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'destroy'])->name('destroy');
+            Route::post('/{subscription}/toggle', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'toggle'])->name('toggle');
+            Route::post('/{subscription}/test', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'test'])->name('test');
+            Route::post('/{subscription}/rotate-secret', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'rotateSecret'])->name('rotate-secret');
+        });
+
+        // Deliveries
+        Route::prefix('deliveries')->name('deliveries.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'index'])->name('index');
+            Route::get('/{delivery}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'show'])->name('show');
+            Route::post('/{delivery}/retry', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'retry'])->name('retry');
+            Route::post('/bulk-retry', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'bulkRetry'])->name('bulk-retry');
+        });
+
+        // Events
+        Route::prefix('events')->name('events.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'index'])->name('index');
+            Route::get('/{event}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'show'])->name('show');
+            Route::post('/{event}/replay', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'replay'])->name('replay');
+        });
     });
 
 });

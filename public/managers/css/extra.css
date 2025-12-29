@@ -108,6 +108,7 @@ No mostrar: 20px;
     position: relative;
     vertical-align: middle;
     width: 100% !important;
+    background: #fff;
 }
 .card-body
 .select2-container
@@ -790,9 +791,9 @@ kbd {
     flex-shrink: 0;
 }
 .result-body nav {
-     display: flex;
-     align-items: center; /* ← centra su contenido */
- }
+    display: flex;
+    align-items: center; /* ← centra su contenido */
+}
 
 .result-body nav ul{
     margin-bottom: 0;

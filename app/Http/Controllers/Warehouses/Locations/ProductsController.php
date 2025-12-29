@@ -28,8 +28,8 @@ class ProductsController extends Controller
 
         $products = $products->paginate(paginationNumber());
 
-        return view('warehouses.views.products.products.index')->with([
-            'products' => $products,
+        return view('warehouses.views.inventaries.inventaries.index')->with([
+            'inventaries' => $products,
             'available' => $available,
             'searchKey' => $searchKey,
         ]);
@@ -47,7 +47,7 @@ class ProductsController extends Controller
         $availables->prepend('', '');
         $availables = $availables->pluck('label', 'id');
 
-        return view('warehouses.views.products.products.create')->with([
+        return view('warehouses.views.inventaries.inventaries.create')->with([
             'availables' => $availables,
         ]);
 
@@ -65,7 +65,7 @@ class ProductsController extends Controller
 
         $availables = $availables->pluck('label', 'id');
 
-        return view('warehouses.views.products.products.edit')->with([
+        return view('warehouses.views.inventaries.inventaries.edit')->with([
             'product' => $product,
             'availables' => $availables,
         ]);
@@ -95,7 +95,7 @@ class ProductsController extends Controller
     {
 
         $product = new Product;
-        $product->uid = $this->generate_uid('products');
+        $product->uid = $this->generate_uid('inventaries');
         $product->title = Str::upper($request->title);
         $product->slug = Str::slug($request->title, '-');
         $product->reference = $request->reference;
@@ -167,6 +167,6 @@ class ProductsController extends Controller
         $product = Product::uid($uid);
         $product->delete();
 
-        return redirect()->route('manager.products');
+        return redirect()->route('manager.inventaries');
     }
 }

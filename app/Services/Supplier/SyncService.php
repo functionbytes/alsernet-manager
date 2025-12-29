@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Throwable;
 
@@ -59,7 +58,7 @@ class SyncService
 
     public function __construct()
     {
-        $this->imageManager = new ImageManager(new Driver);
+        $this->imageManager = new ImageManager(['driver' => 'gd']);
     }
 
     /**
@@ -717,7 +716,7 @@ class SyncService
     protected function syncViaWebService(SupplierAiContent $content, array $productData): bool
     {
         $apiKey = config('prestashop.api_key');
-        $apiUrl = rtrim(config('prestashop.url'), '/').'/api/products';
+        $apiUrl = rtrim(config('prestashop.url'), '/').'/api/inventaries';
 
         try {
             $response = Http::timeout(self::API_TIMEOUT_SECONDS)
@@ -794,7 +793,7 @@ class SyncService
     protected function updateProductViaWebService(int $productId, array $data): bool
     {
         $apiKey = config('prestashop.api_key');
-        $apiUrl = rtrim(config('prestashop.url'), '/')."/api/products/{$productId}";
+        $apiUrl = rtrim(config('prestashop.url'), '/')."/api/inventaries/{$productId}";
 
         try {
             $response = Http::timeout(self::API_TIMEOUT_SECONDS)
@@ -858,7 +857,7 @@ class SyncService
         try {
             $response = Http::timeout(self::API_TIMEOUT_SECONDS)
                 ->retry(self::MAX_RETRY_ATTEMPTS, self::RETRY_DELAY_SECONDS)
-                ->post(config('erp.api_url').'/products', $data);
+                ->post(config('erp.api_url').'/inventaries', $data);
 
             if ($response->successful()) {
                 return [
@@ -970,7 +969,7 @@ class SyncService
     protected function uploadImageViaWebService(int $productId, string $imagePath): bool
     {
         $apiKey = config('prestashop.api_key');
-        $apiUrl = rtrim(config('prestashop.url'), '/')."/api/images/products/{$productId}";
+        $apiUrl = rtrim(config('prestashop.url'), '/')."/api/images/inventaries/{$productId}";
 
         try {
             $response = Http::timeout(self::IMAGE_TIMEOUT_SECONDS)
@@ -1095,7 +1094,7 @@ class SyncService
         try {
             if ($this->isWebServiceEnabled()) {
                 $apiKey = config('prestashop.api_key');
-                $apiUrl = rtrim(config('prestashop.url'), '/')."/api/products/{$productId}";
+                $apiUrl = rtrim(config('prestashop.url'), '/')."/api/inventaries/{$productId}";
 
                 $response = Http::withBasicAuth($apiKey, '')
                     ->delete($apiUrl);

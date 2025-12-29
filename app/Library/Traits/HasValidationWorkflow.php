@@ -137,7 +137,7 @@ trait HasValidationWorkflow
         }
 
         // Check if APPROVE action is allowed at current stage
-        if (! $this->canPerformValidationAction(\App\Enums\Document\ValidationAction::APPROVE)) {
+        if (! $this->canPerformValidationAction(\Modules\Documents\Enums\ValidationAction::APPROVE)) {
             return false;
         }
 
@@ -151,7 +151,7 @@ trait HasValidationWorkflow
             $this->recordValidationAction('approved', $comments, $validator);
 
             // Determine if we should actually send email based on stage permissions
-            $canSendEmail = $this->canPerformValidationAction(\App\Enums\Document\ValidationAction::SEND_APPROVAL_EMAIL);
+            $canSendEmail = $this->canPerformValidationAction(\Modules\Documents\Enums\ValidationAction::SEND_APPROVAL_EMAIL);
             $sendEmailThisStage = $shouldSendEmail && $canSendEmail;
 
             // Move to next stage or complete
@@ -179,7 +179,7 @@ trait HasValidationWorkflow
 
             // Send approval email if allowed and requested
             if ($sendEmailThisStage) {
-                event(new \App\Events\Documents\DocumentApprovalEmailRequested($this, $validator));
+                event(new \Modules\Documents\Events\DocumentApprovalEmailRequested($this, $validator));
             }
 
             return true;
@@ -199,7 +199,7 @@ trait HasValidationWorkflow
         }
 
         // Check if REJECT action is allowed at current stage
-        if (! $this->canPerformValidationAction(\App\Enums\Document\ValidationAction::REJECT)) {
+        if (! $this->canPerformValidationAction(\Modules\Documents\Enums\ValidationAction::REJECT)) {
             return false;
         }
 
@@ -281,15 +281,15 @@ trait HasValidationWorkflow
     /**
      * Get the validation permission service (lazy-loaded singleton).
      */
-    public function getPermissionService(): \App\Services\Documents\ValidationPermissionService
+    public function getPermissionService(): \Modules\Documents\Services\ValidationPermissionService
     {
-        return app(\App\Services\Documents\ValidationPermissionService::class);
+        return app(\Modules\Documents\Services\ValidationPermissionService::class);
     }
 
     /**
      * Check if a specific action is allowed at current validation stage.
      */
-    public function canPerformValidationAction(\App\Enums\Document\ValidationAction $action): bool
+    public function canPerformValidationAction(\Modules\Documents\Enums\ValidationAction $action): bool
     {
         $permissionService = $this->getPermissionService();
 

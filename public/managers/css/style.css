@@ -28491,7 +28491,7 @@ textarea.form-control-lg {
 
 .text-light {
     --bs-text-opacity: 1;
-    color: rgba(var(--bs-light-rgb),var(--bs-text-opacity))!important
+    color: rgb(0 0 0) !important;
 }
 
 .text-dark {
@@ -38398,7 +38398,7 @@ pre.code-view code.hljs {
 }
 
 .message-body {
-    max-height: 360px
+    max-height: 100% !important;
 }
 
 .dropdown-menu-nav {
@@ -48227,8 +48227,8 @@ body .select2-container .flag-icon {
 }
 
 body .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable,body .select2-container--default .select2-results__option--selected {
-    background-color: var(--bs-primary);
-    color: var(--bs-white)
+    background-color: #f5f6f8 !important;
+    color: #000000;
 }
 
 body .select2-results__option {
@@ -48269,7 +48269,7 @@ body .select2-container--default .select2-selection--multiple .select2-selection
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
-    align-items: flex-start
+    align-items: flex-start;
 }
 
 .simplebar-wrapper {

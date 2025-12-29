@@ -50,12 +50,12 @@
                     <ul class="dropdown-menu" aria-labelledby="content-menu">
                         <li class="nav-item" rel0="ProductController/index">
                             <a class="dropdown-item d-flex align-items-center" href="{{ route('Site\ProductController@index') }}">
-                                <span>{{ trans('messages.brand.products') }}</span>
+                                <span>{{ trans('messages.brand.inventaries') }}</span>
                             </a>
                         </li>
                         <li class="nav-item" rel0="ProductController/index2">
                             <a class="dropdown-item d-flex align-items-center" href="{{ route('Site\ProductController@index2') }}">
-                                <span>{{ trans('messages.brand.products') }} (layout 2)</span>
+                                <span>{{ trans('messages.brand.inventaries') }} (layout 2)</span>
                             </a>
                         </li>
                         <li class="nav-item" rel0="CategoryController">
@@ -66,7 +66,7 @@
                     </ul>
                 </li>
                 <li class="nav-item" rel0="OrderController">
-                    <a href="{{ route('Site\OrderController@index') }}" title="{{ trans('messages.products') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
+                    <a href="{{ route('Site\OrderController@index') }}" title="{{ trans('messages.inventaries') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
                         <i class="navbar-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 106.1 107.7"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="Layer_2-2" data-name="Layer 2"><g id="Layer_1-2-2" data-name="Layer 1-2"><g id="Layer_2-2-2" data-name="Layer 2-2"><g id="Layer_1-2-2-2" data-name="Layer 1-2-2"><path d="M26.5,107.7A26.6,26.6,0,0,1,0,81.4v-55A26.6,26.6,0,0,1,26.5,0H62.8a3.5,3.5,0,0,1,3.5,3.5A3.5,3.5,0,0,1,62.8,7H26.5A19.5,19.5,0,0,0,7,26.4v55a19.5,19.5,0,0,0,19.5,19.3H76.6A19.5,19.5,0,0,0,96,81.3V55.4a3.5,3.5,0,0,1,7,0V81.3a26.6,26.6,0,0,1-26.4,26.4Z" style="fill:#f2f2f2"/><path d="M51.5,55.3A16.8,16.8,0,1,1,68.3,38.5,16.8,16.8,0,0,1,51.5,55.3Zm0-26.6a9.8,9.8,0,1,0,9.8,9.8A9.8,9.8,0,0,0,51.5,28.7Z" style="fill:#ffadad"/><path d="M77.9,71.7H25.1a3.5,3.5,0,0,1,0-7H77.9a3.5,3.5,0,0,1,0,7Z" style="fill:#f2f2f2"/><path d="M77.9,86H25.1a3.5,3.5,0,1,1,0-7H77.9a3.5,3.5,0,0,1,0,7Z" style="fill:#f2f2f2"/><path d="M97.1,40.9a2,2,0,0,1-1.1-.3l-9.6-5-9.5,5a2.3,2.3,0,0,1-2.5-.2,2.5,2.5,0,0,1-1-2.3l1.8-10.7-7.7-7.5a2.4,2.4,0,0,1-.6-2.4,2.7,2.7,0,0,1,2-1.7l10.6-1.5,4.7-9.7a2.6,2.6,0,0,1,2.2-1.3h0a2.3,2.3,0,0,1,2.1,1.3l4.9,9.7L104,15.8a2.7,2.7,0,0,1,2,1.7,2.4,2.4,0,0,1-.6,2.4l-7.7,7.5,1.8,10.7a2.5,2.5,0,0,1-1,2.3A2.4,2.4,0,0,1,97.1,40.9ZM86.4,30.5a2,2,0,0,1,1.1.3l6.4,3.3L92.7,27a2.6,2.6,0,0,1,.7-2.1l5.1-5-7-1a2.3,2.3,0,0,1-1.8-1.3l-3.3-6.5-3.2,6.5a2.3,2.3,0,0,1-1.8,1.3l-7,1,5.1,5a2.6,2.6,0,0,1,.7,2.1L79,34.1l6.3-3.3A2,2,0,0,1,86.4,30.5Zm-5.3-14Z" style="fill:#f2f2f2"/></g></g></g></g></g></g></svg>
                         </i>
@@ -74,7 +74,7 @@
                     </a>
                 </li>
                 <li class="nav-item" rel0="CustomerController">
-                    <a href="{{ route('Site\CustomerController@index') }}" title="{{ trans('messages.products') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
+                    <a href="{{ route('Site\CustomerController@index') }}" title="{{ trans('messages.inventaries') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
                         <i class="navbar-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 103"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="Layer_2-2" data-name="Layer 2"><g id="Layer_1-2-2" data-name="Layer 1-2"><path d="M46,51.6A25.8,25.8,0,1,1,71.8,25.8,25.9,25.9,0,0,1,46,51.6ZM46,7A18.8,18.8,0,1,0,64.8,25.8,18.8,18.8,0,0,0,46,7Z" style="fill:#f2f2f2"/><path d="M88.5,103A3.5,3.5,0,0,1,85,99.5a39,39,0,0,0-78,0A3.5,3.5,0,0,1,3.5,103,3.5,3.5,0,0,1,0,99.5a46,46,0,0,1,92,0A3.5,3.5,0,0,1,88.5,103Z" style="fill:#f2f2f2"/><path d="M19.5,103H3.5a3.5,3.5,0,0,1,0-7h16a3.5,3.5,0,0,1,0,7Z" style="fill:#f2f2f2"/><path d="M88.5,103H36.9a3.5,3.5,0,0,1,0-7H88.5a3.5,3.5,0,0,1,0,7Z" style="fill:#f2f2f2"/><path d="M46,39c-3.3,0-6.4-1.6-7.7-4a3.6,3.6,0,0,1,1.4-4.8,3.5,3.5,0,0,1,4.7,1.4A3.5,3.5,0,0,0,46,32a3,3,0,0,0,1.6-.5,3.4,3.4,0,0,1,4.5-1.6,3.4,3.4,0,0,1,1.8,4.6C52.6,37.6,48.9,39,46,39Zm-1.5-7.4Z" style="fill:lime"/></g></g></g></g></svg>
                         </i>
@@ -82,7 +82,7 @@
                     </a>
                 </li>
                 {{-- <li class="nav-item" rel0="TemplateController">
-                    <a href="{{ route('Site\manager.templates') }}" title="{{ trans('messages.products') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
+                    <a href="{{ route('Site\manager.templates') }}" title="{{ trans('messages.inventaries') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1">
                         <i class="navbar-icon" style="">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.8 86.2"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="Layer_2-2" data-name="Layer 2"><g id="Layer_1-2-2" data-name="Layer 1-2"><path d="M72.7,86.2h-61A11.7,11.7,0,0,1,0,74.5v-61A11.7,11.7,0,0,1,11.7,1.8H52.3a3.5,3.5,0,0,1,3.5,3.5,3.5,3.5,0,0,1-3.5,3.5H11.7A4.7,4.7,0,0,0,7,13.5v61a4.7,4.7,0,0,0,4.7,4.7h61a4.7,4.7,0,0,0,4.7-4.7V35.2a3.5,3.5,0,0,1,7,0V74.5A11.7,11.7,0,0,1,72.7,86.2Z" style="fill:#f2f2f2"/><path d="M17.2,23.4a4.9,4.9,0,1,1,4.9-4.9A4.9,4.9,0,0,1,17.2,23.4Zm0-7a2.1,2.1,0,1,0,2.1,2.1A2.1,2.1,0,0,0,17.2,16.4Z" style="fill:#f2f2f2"/><path class="color-badge" d="M32,23.4a4.9,4.9,0,1,1,4.9-4.9A4.9,4.9,0,0,1,32,23.4Zm0-7a2.1,2.1,0,1,0,2.1,2.1A2.1,2.1,0,0,0,32,16.4Z" style="fill:aqua"/><path d="M44,50.5h-.1A5.3,5.3,0,0,1,40,48.9h0a5.6,5.6,0,0,1-1.5-4.1c.2-6.7,9.9-20.2,18.9-28.5S79.8-.3,86.5,0a5.4,5.4,0,0,1,4,1.8c3.2,3.5-.3,9.6-3.6,14.5a104,104,0,0,1-12.8,15C66.3,39.1,51.3,50.5,44,50.5ZM84.1,7.4C79.6,8.7,70.3,14,62.2,21.5A78.4,78.4,0,0,0,50.1,35.7,34.5,34.5,0,0,0,46,43c4.6-1.8,14.5-8.1,23.2-16.7S82.2,11.3,84.1,7.4Z" style="fill:#f2f2f2"/><path class="color-badge" d="M31.4,69.1c-7,0-13.4-3.7-15.3-6.3a3.7,3.7,0,0,1-.7-3.7c1-2.9,4.1-2.7,5.7-2.6a13.1,13.1,0,0,0,2.8.1V56c.1-4.3,2.1-11.6,7.2-14.1s13.1,0,16.5,6,.8,11.2-.4,13.3v.3C43.1,68.3,34.8,69.1,31.4,69.1Zm-2.6-7.2,2.6.2c2.2,0,7.4-.4,9.6-4.1.6-1.2,1.9-4.1.4-6.7s-5.4-4.1-7.1-3.2h0c-1.6.8-3.2,4.6-3.4,7.8a7.9,7.9,0,0,1-.7,4.3l-.3.5Z" style="fill:#ff0"/><rect x="53.5" y="28.5" width="7" height="7.8" transform="translate(-4.8 54.4) rotate(-49.2)" style="fill:#f2f2f2"/></g></g></g></g></svg>
                         </i>
@@ -108,7 +108,7 @@
                             </a>
                         </li>
                         <li class="nav-item" rel0="SettingController/products">
-                            <a class="dropdown-item d-flex align-items-center" href="{{ route('Site\SettingController@products') }}">
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('Site\SettingController@inventaries') }}">
                                 <span>{{ trans('messages.brand.product_settings') }}</span>
                             </a>
                         </li>

@@ -63,7 +63,7 @@ class InventorySlotsController extends Controller
 
         return view('managers.views.warehouse.inventory-slots.create', [
             'locations' => $locations,
-            'products' => $products,
+            'inventaries' => $products,
         ]);
     }
 
@@ -76,7 +76,7 @@ class InventorySlotsController extends Controller
 
         $validated = $request->validate([
             'location_id' => 'required|exists:warehouse_locations,id',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'nullable|exists:inventaries,id',
             'face' => 'required|in:left,right,front,back',
             'level' => 'required|integer|min:1',
             'section' => 'required|integer|min:1',
@@ -127,7 +127,7 @@ class InventorySlotsController extends Controller
 
         return view('managers.views.warehouse.inventory-slots.edit', [
             'slot' => $slot,
-            'products' => $products,
+            'inventaries' => $products,
         ]);
     }
 
@@ -140,7 +140,7 @@ class InventorySlotsController extends Controller
 
         $validated = $request->validate([
             'uid' => 'required|exists:warehouse_inventory_slots,uid',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'nullable|exists:inventaries,id',
             'quantity' => 'nullable|integer|min:0',
             'max_quantity' => 'nullable|integer|min:1',
             'weight_current' => 'nullable|numeric|min:0',

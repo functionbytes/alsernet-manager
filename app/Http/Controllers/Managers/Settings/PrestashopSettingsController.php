@@ -254,7 +254,7 @@ class PrestashopSettingsController extends Controller
     {
         $lastSync = Setting::get('product_blockades_last_sync');
         $syncCount = Setting::get('product_blockades_sync_count', 0);
-        $totalBlockades = \App\Models\Document\DocumentProductBlockade::count();
+        $totalBlockades = \Modules\Documents\Entities\DocumentProductBlockade::count();
 
         return response()->json([
             'success' => true,
@@ -286,7 +286,7 @@ class PrestashopSettingsController extends Controller
 
         try {
             // Check if already exists
-            $exists = \App\Models\Document\DocumentProductBlockade::hasBlockade(
+            $exists = \Modules\Documents\Entities\DocumentProductBlockade::hasBlockade(
                 $request->product_id,
                 $request->product_attribute_id,
                 $request->blockade_type
@@ -299,7 +299,7 @@ class PrestashopSettingsController extends Controller
                 ], 409);
             }
 
-            $blockade = \App\Models\Document\DocumentProductBlockade::create([
+            $blockade = \Modules\Documents\Entities\DocumentProductBlockade::create([
                 'source_id' => $request->source_id,
                 'product_id' => $request->product_id,
                 'product_attribute_id' => $request->product_attribute_id,
@@ -375,7 +375,7 @@ class PrestashopSettingsController extends Controller
         }
 
         try {
-            $blockade = \App\Models\Document\DocumentProductBlockade::find($request->id);
+            $blockade = \Modules\Documents\Entities\DocumentProductBlockade::find($request->id);
             $blockade->delete();
 
             return response()->json([

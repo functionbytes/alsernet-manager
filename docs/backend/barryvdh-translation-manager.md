@@ -27,7 +27,7 @@ php artisan vendor:publish --provider="Barryvdh\TranslationManager\ManagerServic
 php artisan migrate
 ```
 
-This creates the `ltm_translations` table in your database.
+This creates the `ltm_langs` table in your database.
 
 ### 3. Publish Configuration
 
@@ -60,7 +60,7 @@ Publishes Blade templates for customizing the web interface.
 
 ## Database Structure
 
-### `ltm_translations` Table Schema
+### `ltm_langs` Table Schema
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -702,7 +702,7 @@ return [
 **Use Separate Database Connection:**
 
 ```php
-'db_connection' => 'mysql_translations',
+'db_connection' => 'mysql_langs',
 ```
 
 **Enable Alphabetical Sorting:**
@@ -939,18 +939,18 @@ class TranslationManagerTest extends TestCase
         $this->manager = app(Manager::class);
     }
 
-    public function test_can_import_translations()
+    public function test_can_import_langs()
     {
         $count = $this->manager->importTranslations();
 
         $this->assertGreaterThan(0, $count);
-        $this->assertDatabaseHas('ltm_translations', [
+        $this->assertDatabaseHas('ltm_langs', [
             'locale' => 'en',
             'group' => 'messages',
         ]);
     }
 
-    public function test_can_find_translations_in_source()
+    public function test_can_find_langs_in_source()
     {
         $count = $this->manager->findTranslations();
 
@@ -975,13 +975,13 @@ class TranslationManagerTest extends TestCase
             'status' => Translation::STATUS_SAVED,
         ]);
 
-        $this->assertDatabaseHas('ltm_translations', [
+        $this->assertDatabaseHas('ltm_langs', [
             'key' => 'greeting',
             'value' => 'Hello',
         ]);
     }
 
-    public function test_can_export_translations()
+    public function test_can_export_langs()
     {
         Translation::create([
             'locale' => 'en',
@@ -1064,7 +1064,7 @@ The `barryvdh/laravel-translation-manager` package provides:
 
 - [GitHub Repository](https://github.com/barryvdh/laravel-translation-manager)
 - [Packagist Package](https://packagist.org/packages/barryvdh/laravel-translation-manager)
-- [Database Schema Migration](https://github.com/barryvdh/laravel-translation-manager/blob/master/database/migrations/2014_04_02_193005_create_translations_table.php)
+- [Database Schema Migration](https://github.com/barryvdh/laravel-translation-manager/blob/master/database/migrations/2014_04_02_193005_create_langs_table.php)
 - [Laravel Translation Documentation](https://laravel.com/docs/11.x/localization)
 - [Translation Management Best Practices](https://blog.quickadminpanel.com/10-best-laravel-packages-for-multi-language-translations/)
 - [Laravel Localization Guide](https://lokalise.com/blog/laravel-localization-step-by-step/)

@@ -3,9 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Notifications\DocumentApproved;
-use App\Notifications\DocumentRejected;
-use App\Notifications\DocumentStatusChanged;
 use App\Notifications\OrderCreated;
 use App\Notifications\PaymentReceived;
 use App\Notifications\SystemAlert;
@@ -14,6 +11,9 @@ use App\Notifications\TicketCreated;
 use App\Notifications\TicketStatusChanged;
 use App\Notifications\UserMentioned;
 use Illuminate\Console\Command;
+use Modules\Documents\Notifications\DocumentApproved;
+use Modules\Documents\Notifications\DocumentRejected;
+use Modules\Documents\Notifications\DocumentStatusChanged;
 use stdClass;
 
 class SendTestNotifications extends Command

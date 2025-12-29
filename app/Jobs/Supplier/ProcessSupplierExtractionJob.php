@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
  * Processes supplier data extraction from configured sources using the ExtractionService.
  * Implements automatic retry logic with exponential backoff for transient failures.
  * Updates extraction batch status throughout the process and dispatches AI content
- * generation jobs for new or updated products.
+ * generation jobs for new or updated inventaries.
  *
  * @property int $tries Maximum number of retry attempts
  * @property int $timeout Job timeout in seconds
@@ -116,7 +116,7 @@ class ProcessSupplierExtractionJob implements ShouldQueue
             // Complete the extraction batch
             $extractionService->completeExtraction($batch);
 
-            // Dispatch AI content generation jobs for new/updated products
+            // Dispatch AI content generation jobs for new/updated inventaries
             $this->dispatchAiContentJobs($batch);
 
             Log::info('Supplier extraction job completed successfully', [
@@ -263,7 +263,7 @@ class ProcessSupplierExtractionJob implements ShouldQueue
     }
 
     /**
-     * Dispatch AI content generation jobs for new and updated products.
+     * Dispatch AI content generation jobs for new and updated inventaries.
      *
      * @param  SupplierExtractionBatch  $batch  The extraction batch
      */
@@ -275,7 +275,7 @@ class ProcessSupplierExtractionJob implements ShouldQueue
             ->get();
 
         if ($results->isEmpty()) {
-            Log::info('No new or updated products found, skipping AI content generation', [
+            Log::info('No new or updated inventaries found, skipping AI content generation', [
                 'batch_id' => $batch->uid,
             ]);
 

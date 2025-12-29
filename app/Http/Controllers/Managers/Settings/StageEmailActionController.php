@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Document\StageEmailAction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Documents\Entities\StageEmailAction;
 
 class StageEmailActionController extends Controller
 {

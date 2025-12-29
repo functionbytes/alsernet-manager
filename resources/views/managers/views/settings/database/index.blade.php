@@ -44,7 +44,7 @@
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
                                         <h6 class="card-title text-info mb-2">
-                                            <i class="fa fa-server me-1"></i> Servidor
+                                            Servidor
                                         </h6>
                                         <h4 class="mb-1 fw-bold">{{ $settings['db_host'] ?? 'N/A' }}</h4>
                                         <small class="text-muted">Puerto: {{ $settings['db_port'] ?? '3306' }}</small>
@@ -59,7 +59,7 @@
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
                                         <h6 class="card-title text-primary mb-2">
-                                            <i class="fa fa-database me-1"></i> Base de datos
+                                            Base de datos
                                         </h6>
                                         <h4 class="mb-1 fw-bold">{{ $settings['db_database'] ?? 'N/A' }}</h4>
                                         <small class="text-muted">{{ strtoupper($settings['db_connection'] ?? 'N/A') }}</small>
@@ -74,7 +74,7 @@
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
                                         <h6 class="card-title text-success mb-2">
-                                            <i class="fa fa-user me-1"></i> Usuario
+                                            Usuario
                                         </h6>
                                         <h4 class="mb-1 fw-bold">{{ $settings['db_username'] ?? 'root' }}</h4>
                                         <small class="text-muted">Credenciales de acceso</small>
@@ -89,7 +89,7 @@
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
                                         <h6 class="card-title mb-2">
-                                            <i class="fa fa-language me-1"></i> Charset
+                                            Charset
                                         </h6>
                                         <h4 class="mb-1 fw-bold">{{ $settings['db_charset'] ?? 'utf8mb4' }}</h4>
                                         <small class="text-muted">{{ $settings['db_collation'] ?? 'utf8mb4_unicode_ci' }}</small>

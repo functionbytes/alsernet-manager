@@ -196,6 +196,27 @@ When user asks: *"Design a product listing page"*
 **Exception:** Proper nouns and acronyms maintain their original capitalization
 - Example: `<i class="fa fa-database me-2"></i>Configuración de PostgreSQL`
 
+### Icon Usage Rules
+
+**CRITICAL: When NOT to use icons:**
+- ❌ **Card headers with simple text**: Avoid icons in basic section titles
+  - Wrong: `<h6 class="mb-0 fw-bold"><i class="fas fa-history me-2"></i>Historial de cambios</h6>`
+  - ✅ Correct: `<h6 class="mb-0 fw-bold">Historial de cambios</h6>`
+- ❌ **Plain informational headers**: Don't add decorative icons just because you can
+- ❌ **Every single heading**: Icons should be meaningful, not mandatory
+
+**When icons ARE appropriate:**
+- ✅ **Actionable buttons**: Icons that indicate an action (`<i class="fas fa-save"></i> Guardar`)
+- ✅ **Status indicators**: Icons with semantic meaning (`<i class="fas fa-check-circle text-success"></i>`)
+- ✅ **Navigation items**: Icons help identify menu options
+- ✅ **Form field labels**: When the icon adds context (email, password, etc.)
+- ✅ **Sidebar info cards**: Icons categorizing different data types with circular backgrounds
+
+**General principle:**
+- Icons should **add meaning or context**, not just decoration
+- When in doubt, leave it out - clean text is better than cluttered icons
+- Review existing similar components before adding icons
+
 ### Demo URLs Always Available
 
 - Main: https://bootstrapdemos.adminmart.com/modernize/dist/main/index.html

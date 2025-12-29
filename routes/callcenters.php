@@ -44,9 +44,9 @@ Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callc
         Route::post('/proceed-to-generate', [ReturnController::class, 'proceedToGenerate'])->name('proceed.to.generate');
 
         // Rutas AJAX adicionales para funcionalidad avanzada
-        Route::post('/validate-products', [ReturnController::class, 'validate'])->name('validate.products');
+        Route::post('/validate-inventaries', [ReturnController::class, 'validate'])->name('validate.inventaries');
         Route::get('/generate/{uid}', [ReturnController::class, 'generate'])->name('generate');
-        Route::get('/available-products/{orderId}', [ReturnController::class, 'getAvailableProducts'])->name('available.products');
+        Route::get('/available-inventaries/{orderId}', [ReturnController::class, 'getAvailableProducts'])->name('available.inventaries');
 
         // Rutas para el proceso completo de devolución
         Route::post('/store', [ReturnController::class, 'store'])->name('store');
@@ -66,13 +66,13 @@ Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callc
         Route::get('/{id}/pdf', [ReturnController::class, 'downloadPDF'])->name('pdf');
         Route::post('/bulk-update', [ReturnController::class, 'bulkUpdate'])->name('bulk.update');
 
-        Route::post('/validate-products', [ReturnController::class, 'validateProducts'])->name('validate-products');
+        Route::post('/validate-inventaries', [ReturnController::class, 'validateProducts'])->name('validate-inventaries');
 
         // Cancelar devolución
         Route::post('/{id}/cancel', [ReturnController::class, 'cancel'])->name('cancel');
 
         // Obtener productos de una orden (AJAX)
-        Route::get('/order/{orderId}/products', [ReturnController::class, 'getOrderProducts'])->name('order-products');
+        Route::get('/order/{orderId}/inventaries', [ReturnController::class, 'getOrderProducts'])->name('order-inventaries');
 
         // AJAX endpoints
         Route::post('/carrier-time-slots', [ReturnController::class, 'getCarrierTimeSlots']);

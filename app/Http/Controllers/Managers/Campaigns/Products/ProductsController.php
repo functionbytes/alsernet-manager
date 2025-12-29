@@ -101,7 +101,7 @@ class ProductsController extends Controller
             } else {
 
                 $newProduct = new Product;
-                $newProduct->uid = $this->generate_uid('products');
+                $newProduct->uid = $this->generate_uid('inventaries');
                 $newProduct->title = Str::upper($product->title);
                 $newProduct->slug = Str::slug(Str::lower($product->title), '-');
                 $newProduct->reference = $product->reference;
@@ -154,7 +154,7 @@ class ProductsController extends Controller
             } else {
                 // Crear nuevo producto si no existe
                 $newProduct = new Product;
-                $newProduct->uid = $this->generate_uid('products');
+                $newProduct->uid = $this->generate_uid('inventaries');
                 $newProduct->title = Str::upper($product->title);
                 $newProduct->slug = Str::slug(Str::lower($product->title), '-');
                 $newProduct->reference = $product->reference;
@@ -189,9 +189,9 @@ class ProductsController extends Controller
 
         if ($searchKey) {
             $products->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
-                $query->where('products.reference', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.barcode', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.title', 'like', '%'.$searchKey.'%');
+                $query->where('inventaries.reference', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.barcode', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.title', 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -205,8 +205,8 @@ class ProductsController extends Controller
             Product::kardex($product);
         }
 
-        return view('managers.views.products.products.index')->with([
-            'products' => $products,
+        return view('managers.views.inventaries.inventaries.index')->with([
+            'inventaries' => $products,
             'available' => $available,
             'searchKey' => $searchKey,
         ]);
@@ -221,8 +221,8 @@ class ProductsController extends Controller
 
         $products = Product::orderBy('count', 'desc');
 
-        // $products = Product::latest()->get();
-        // foreach ($products as $product) {
+        // $inventaries = Product::latest()->get();
+        // foreach ($inventaries as $product) {
         //   $product->count= count($product->items) > 0 ? $product->items->sum('count') : 0;
         //   $product->save();
         // }
@@ -230,9 +230,9 @@ class ProductsController extends Controller
 
         if ($searchKey) {
             $products->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
-                $query->where('products.reference', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.barcode', 'like', '%'.$searchKey.'%')
-                    ->orWhere('products.title', 'like', '%'.$searchKey.'%');
+                $query->where('inventaries.reference', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.barcode', 'like', '%'.$searchKey.'%')
+                    ->orWhere('inventaries.title', 'like', '%'.$searchKey.'%');
             });
         }
 
@@ -242,12 +242,12 @@ class ProductsController extends Controller
 
         $products = $products->paginate(100);
 
-        // foreach ($products as $product) {
+        // foreach ($inventaries as $product) {
         //   Product::kardex($product);
         // }
 
-        return view('managers.views.products.products.index')->with([
-            'products' => $products,
+        return view('managers.views.inventaries.inventaries.index')->with([
+            'inventaries' => $products,
             'available' => $available,
             'searchKey' => $searchKey,
         ]);
@@ -265,7 +265,7 @@ class ProductsController extends Controller
         $availables->prepend('', '');
         $availables = $availables->pluck('label', 'id');
 
-        return view('managers.views.products.products.create')->with([
+        return view('managers.views.inventaries.inventaries.create')->with([
             'availables' => $availables,
         ]);
 
@@ -283,7 +283,7 @@ class ProductsController extends Controller
 
         $availables = $availables->pluck('label', 'id');
 
-        return view('managers.views.products.products.edit')->with([
+        return view('managers.views.inventaries.inventaries.edit')->with([
             'product' => $product,
             'availables' => $availables,
         ]);
@@ -298,7 +298,7 @@ class ProductsController extends Controller
 
         $locations = $locations->paginate(paginationNumber());
 
-        return view('managers.views.products.products.locations')->with([
+        return view('managers.views.inventaries.inventaries.locations')->with([
             'product' => $product,
             'locations' => $locations,
         ]);
@@ -313,7 +313,7 @@ class ProductsController extends Controller
 
         $items = $items->paginate(paginationNumber());
 
-        return view('managers.views.products.products.details')->with([
+        return view('managers.views.inventaries.inventaries.details')->with([
             'product' => $product,
             'items' => $items,
         ]);
@@ -343,7 +343,7 @@ class ProductsController extends Controller
     {
 
         $product = new Product;
-        $product->uid = $this->generate_uid('products');
+        $product->uid = $this->generate_uid('inventaries');
         $product->title = Str::upper($request->title);
         $product->slug = Str::slug($request->title, '-');
         $product->reference = $request->reference;
@@ -373,6 +373,6 @@ class ProductsController extends Controller
         $product = Product::uid($uid);
         $product->delete();
 
-        return redirect()->route('manager.products');
+        return redirect()->route('manager.inventaries');
     }
 }

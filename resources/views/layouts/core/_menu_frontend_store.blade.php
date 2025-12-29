@@ -137,15 +137,15 @@
                     </a>
                 </li>
 
-                <li class="nav-item dropdown {{ in_array($menu, ['categories','attributes','media','orders','products','funnels']) ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ in_array($menu, ['categories','attributes','media','orders','inventaries','funnels']) ? 'active' : '' }}">
                     <a title="{{ trans('messages.sending') }}" href="{{ route('manager.templates') }}" class="leftbar-tooltip nav-link d-flex align-items-center py-3 lvl-1 dropdown-toggle {{ request()->session()->get('customer-leftbar-state') != 'closed' && Auth::user()->customer->getMenuLayout() == 'left' && in_array($menu, ['sending_server','sending_domain','sender','tracking_domain','email_verification','blacklist']) ? 'show' : '' }}" id="sending-menu" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="navbar-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40.2 36"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M5.1,36A2.9,2.9,0,0,1,3,35.1,2.9,2.9,0,0,1,2.1,33V16.1a5.4,5.4,0,0,1-1.9-3A6,6,0,0,1,.3,9.6L2.5,2.9A3.4,3.4,0,0,1,3.9.8,3.6,3.6,0,0,1,6.2,0H33.8a4.4,4.4,0,0,1,2.5.8,3.9,3.9,0,0,1,1.4,2.1l2.2,6.7a6,6,0,0,1-1.8,6.5V33a3.1,3.1,0,0,1-3,3ZM24.6,14.5a3.7,3.7,0,0,0,2.5-.9,2.9,2.9,0,0,0,.8-2.3L26.6,3h-5v8.3a3.1,3.1,0,0,0,.9,2.2A2.4,2.4,0,0,0,24.6,14.5Zm-9.3,0a3.2,3.2,0,0,0,2.3-.9,3,3,0,0,0,1-2.3V3h-5l-1.2,8.3a2.3,2.3,0,0,0,.7,2.2A2.7,2.7,0,0,0,15.3,14.5Zm-9.1,0a3,3,0,0,0,2-.8,3.3,3.3,0,0,0,1.1-2L10.6,3h-5L3.3,10.3a3,3,0,0,0,.4,2.9A2.8,2.8,0,0,0,6.2,14.5Zm27.8,0a2.8,2.8,0,0,0,2.5-1.3,3.3,3.3,0,0,0,.5-2.9L34.7,3h-5L31,11.7a3.2,3.2,0,0,0,1,2A3,3,0,0,0,34,14.5ZM5.1,33h30V17.5H34a6.9,6.9,0,0,1-2.4-.5,10.2,10.2,0,0,1-2.2-1.6,6.2,6.2,0,0,1-2,1.5,5.8,5.8,0,0,1-2.6.6,6.8,6.8,0,0,1-2.6-.4,8.5,8.5,0,0,1-2.1-1.4A4.3,4.3,0,0,1,18.2,17a7.1,7.1,0,0,1-2.6.5,7.6,7.6,0,0,1-2.7-.5,6.5,6.5,0,0,1-2.1-1.6A13.8,13.8,0,0,1,8.5,17a6.8,6.8,0,0,1-2.3.5H5.1Zm30,0h0Z"/></g></g></svg>
                         </i>
                         <span>{{ trans('store.store') }}</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-bottom {{ request()->session()->get('customer-leftbar-state') != 'closed' && Auth::user()->customer->getMenuLayout() == 'left' && in_array($menu, ['categories','attributes','media','orders','products','funnels']) ? 'show' : '' }}" aria-labelledby="sending-menu">
-                        <li class="nav-item {{ $menu == 'products' ? 'active' : '' }}">
+                    <ul class="dropdown-menu dropdown-menu-bottom {{ request()->session()->get('customer-leftbar-state') != 'closed' && Auth::user()->customer->getMenuLayout() == 'left' && in_array($menu, ['categories','attributes','media','orders','inventaries','funnels']) ? 'show' : '' }}" aria-labelledby="sending-menu">
+                        <li class="nav-item {{ $menu == 'inventaries' ? 'active' : '' }}">
                             <a href="{{ route('Store\ProductController@index') }}"
                                 class="dropdown-item d-flex align-items-center">
                                 <i class="navbar-icon">
@@ -213,7 +213,7 @@
                                     <i class="navbar-icon" style="">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 88.3 71.5" style="enable-background:new 0 0 88.3 71.5;" xml:space="preserve"> <style type="text/css"> .st0{fill:#93A8C1;}.st1{fill:#414042;}</style> <g id="Layer_2_1_"> <g id="Layer_1-2"> <rect x="18.4" y="48" class="st0" width="52.5" height="10.1"/> <rect x="18.4" y="30.8" class="st0" width="52.5" height="10.1"/> <path class="st1" d="M71.3,71.5C71.3,71.5,71.3,71.5,71.3,71.5L17.7,71c-0.6,0-1.2-0.3-1.7-0.7s-0.7-1.1-0.7-1.7l0.9-38l-4.4,2.7 c-0.6,0.4-1.3,0.5-1.9,0.3c-0.6-0.2-1.2-0.6-1.5-1.2c-2.7-5.5-5.4-11-8.2-16.5c-0.4-0.9-0.3-1.9,0.3-2.6c4.4-5.1,10-9.1,16.3-11.4 c4.7-1.6,7.7-1.5,13.6-1.3c3,0.1,6.8,0.2,12.2,0.2c6.2-0.1,10.4-0.3,13.5-0.5c5.3-0.3,8-0.5,12.5,0.8c7.3,2.2,13.8,6.3,19,11.9 c0.6,0.7,0.8,1.7,0.4,2.6L80.6,32c-0.3,0.6-0.8,1.1-1.4,1.3c-0.6,0.2-1.3,0.1-1.9-0.2l-4.7-2.7l1.1,38.7c0,0.6-0.2,1.3-0.7,1.7 C72.6,71.2,72,71.5,71.3,71.5z M20.1,66.2l48.7,0.5l-1.2-40.5c0-0.9,0.4-1.7,1.2-2.1c0.7-0.4,1.7-0.5,2.4,0l6.1,3.5L83,15 c-4.4-4.4-9.8-7.6-15.7-9.4C63.6,4.6,61.5,4.7,56.4,5C53.3,5.2,49,5.4,42.7,5.5c-5.5,0-9.3-0.1-12.4-0.2c-5.8-0.2-8-0.3-11.8,1.1 c-5,1.8-9.6,4.9-13.3,8.8c2.1,4.2,4.2,8.5,6.3,12.7l5.9-3.7c0.7-0.5,1.7-0.5,2.4,0c0.8,0.4,1.2,1.3,1.2,2.1L20.1,66.2z"/> <path class="st1" d="M44.4,18c-3.5,0-6.9-1.6-10-4.8c-2.6-2.8-4.2-6.3-4.5-10c-0.1-1.3,0.8-2.5,2.1-2.6c1.3-0.1,2.5,0.8,2.6,2.1 c0.3,2.6,1.4,5.2,3.2,7.1c0.9,0.9,3.5,3.6,7,3.3c3.9-0.3,6.4-3.9,7.5-6.1c0.8-1.5,1.3-3.2,1.6-4.9c0.2-1.3,1.4-2.2,2.7-2 c1.3,0.2,2.2,1.4,2,2.7c-0.3,2.2-1,4.3-2.1,6.3c-2.7,5.3-6.8,8.4-11.4,8.7C44.9,18,44.7,18,44.4,18z"/> </g> </g> </svg>
                                     </i>
-                                    <span>{{ trans('messages.products') }}</span>
+                                    <span>{{ trans('messages.inventaries') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ $menu == 'source' ? 'active' : '' }}">

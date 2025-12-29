@@ -6,6 +6,7 @@ use App\Library\Facades\Hook;
 use App\Models\Return\ReturnRequest;
 use App\Models\Setting\Setting;
 use App\Observers\Returns\ReturnObserver;
+use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
@@ -23,8 +24,17 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations/submit');
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations/helpdesk');
+        // Register organized migration paths
+        $migrator = $this->app->make(Migrator::class);
+
+        $migrator->path(database_path('migrations/documents'));
+        $migrator->path(database_path('migrations/returns'));
+        $migrator->path(database_path('migrations/helpdesk'));
+        $migrator->path(database_path('migrations/mail'));
+        $migrator->path(database_path('migrations/webhooks'));
+        $migrator->path(database_path('migrations/inventaries'));
+        $migrator->path(database_path('migrations/auth'));
+        $migrator->path(database_path('migrations/core'));
 
         ReturnRequest::observe(ReturnObserver::class);
 

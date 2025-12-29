@@ -138,12 +138,12 @@ class ProductPolicy {
 
     public function create(User $user) {
         // Solo manager puede crear
-        return $user->hasPermissionTo('create products');
+        return $user->hasPermissionTo('create inventaries');
     }
 
     public function update(User $user, Product $product) {
         // Manager puede editar cualquiera
-        if ($user->hasPermissionTo('edit products')) {
+        if ($user->hasPermissionTo('edit inventaries')) {
             return true;
         }
 
@@ -183,9 +183,9 @@ class ProductController extends Controller {
 $admin = Role::create(['name' => 'admin']);
 $manager = Role::create(['name' => 'manager']);
 
-$createPermission = Permission::create(['name' => 'create products']);
-$editPermission = Permission::create(['name' => 'edit products']);
-$deletePermission = Permission::create(['name' => 'delete products']);
+$createPermission = Permission::create(['name' => 'create inventaries']);
+$editPermission = Permission::create(['name' => 'edit inventaries']);
+$deletePermission = Permission::create(['name' => 'delete inventaries']);
 
 // Asignar permisos a roles
 $admin->givePermissionTo([
@@ -203,7 +203,7 @@ $manager->givePermissionTo([
 $user->assignRole('manager');
 
 // Verificar en el código
-if ($user->hasPermissionTo('edit products')) {
+if ($user->hasPermissionTo('edit inventaries')) {
     // Permitir edición
 }
 
@@ -449,7 +449,7 @@ APP_KEY=<strong-key>    # Generado por artisan key:generate
 
 ```php
 // routes/web.php (Formularios HTML)
-Route::post('/products', [ProductController::class, 'store'])
+Route::post('/inventaries', [ProductController::class, 'store'])
     ->middleware('csrf');  // Protección automática
 
 // Blade template

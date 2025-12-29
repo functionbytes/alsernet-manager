@@ -151,7 +151,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('manager.products.store') }}",
+                        url: "{{ route('manager.inventaries.store') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -172,7 +172,7 @@
                                 });
 
                                 setTimeout(function() {
-                                    window.location.href = "{{ route('manager.products') }}";
+                                    window.location.href = "{{ route('manager.inventaries') }}";
                                 }, 2000);
 
                             }else{

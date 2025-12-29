@@ -118,7 +118,7 @@
                             <span class="hide-menu">Productos</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('manager.products') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('manager.inventaries') }}" aria-expanded="false">
                                 <span class="hide-menu">Productos</span>
                             </a>
                         </li>
@@ -430,42 +430,21 @@
 
                         <li><span class="sidebar-divider"></span></li>
 
-                        <!-- Documentos -->
+                        <!-- Documentos - Dinámico desde módulo -->
+                        @if(isset($documentsNavigation) && !empty($documentsNavigation['items']))
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Documentos</span>
+                            <span class="hide-menu">{{ $documentsNavigation['title'] }}</span>
                         </li>
+                        @foreach($documentsNavigation['items'] as $item)
                         <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.configurations') }}" class="sidebar-link">
-                                <span class="hide-menu">Configuraciones</span>
+                            <a href="{{ $item['url'] }}" class="sidebar-link {{ $item['active'] ? 'active' : '' }}">
+                                <span class="hide-menu">{{ $item['label'] }}</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.configurations.storage') }}" class="sidebar-link">
-                                <span class="hide-menu">Almacenamiento</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="sidebar-link">
-                                <span class="hide-menu">Grupos de validación</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.types') }}" class="sidebar-link">
-                                <span class="hide-menu">Tipos de documento</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.conditions') }}" class="sidebar-link">
-                                <span class="hide-menu">Condiciones de validación</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="sidebar-link">
-                                <span class="hide-menu">Políticas SLA</span>
-                            </a>
-                        </li>
+                        @endforeach
 
                         <li><span class="sidebar-divider"></span></li>
+                        @endif
 
                         <!-- Integraciones -->
                         <li class="nav-small-cap">
@@ -494,17 +473,22 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.supplier-prompts.index') }}" class="sidebar-link">
+                            <a href="{{ route('manager.settings.suppliers.prompts.index') }}" class="sidebar-link">
                                 <span class="hide-menu">Prompts AI</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.supplier-automation.index') }}" class="sidebar-link">
-                                <span class="hide-menu">Automatización</span>
+                            <a href="{{ route('manager.settings.suppliers.templates.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Plantillas de Prompts</span>
                             </a>
                         </li>
+                        {{-- <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.suppliers.automation.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Automatización</span>
+                            </a>
+                        </li> --}}
                         <li class="sidebar-item">
-                            <a href="{{ route('manager.settings.supplier-content.index') }}" class="sidebar-link">
+                            <a href="{{ route('manager.settings.suppliers.content.index') }}" class="sidebar-link">
                                 <span class="hide-menu">Contenido AI</span>
                             </a>
                         </li>
@@ -538,6 +522,33 @@
                         <li class="sidebar-item">
                             <a href="{{ route('manager.settings.mailers.endpoints.index') }}" class="sidebar-link">
                                 <span class="hide-menu">Email Endpoints</span>
+                            </a>
+                        </li>
+
+                        <li><span class="sidebar-divider"></span></li>
+
+                        <!-- Webhooks -->
+                        <li class="nav-small-cap">
+                            <span class="hide-menu">Webhooks</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.webhooks.integrations.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Integraciones</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.webhooks.subscriptions.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Suscripciones</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.webhooks.deliveries.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Entregas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('manager.settings.webhooks.events.index') }}" class="sidebar-link">
+                                <span class="hide-menu">Eventos</span>
                             </a>
                         </li>
 

@@ -185,7 +185,7 @@ class SubscribersController extends Controller
         $subscriber = Product::uid($uid);
         $subscriber->delete();
 
-        return redirect()->route('manager.products');
+        return redirect()->route('manager.inventaries');
     }
 
     public function createImport(Request $request)

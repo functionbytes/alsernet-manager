@@ -31,6 +31,9 @@ class DynamicConfigServiceProvider extends ServiceProvider
 
                 // Load prestashop configuration
                 $this->loadPrestashopConfig();
+
+                // Load custom storage disks
+                $this->loadStorageConfig();
             } catch (\Exception $e) {
                 // Silently fail if database is not ready
                 // This allows the app to boot even if database is not configured
@@ -147,6 +150,77 @@ class DynamicConfigServiceProvider extends ServiceProvider
             ]);
         } catch (\Exception $e) {
             // PrestaShop config not available yet
+        }
+    }
+
+    /**
+     * Load custom storage disks from settings
+     */
+    private function loadStorageConfig(): void
+    {
+        try {
+            $customDisksJson = Setting::get('system.custom_storage_disks', '[]');
+            $customDisks = json_decode($customDisksJson, true) ?: [];
+
+            // Register each custom disk with Laravel's filesystem config
+            foreach ($customDisks as $disk) {
+                $diskName = $disk['name'];
+                $driver = $disk['driver'];
+
+                // Build disk configuration based on driver type
+                $diskConfig = [
+                    'driver' => $driver,
+                ];
+
+                // Add driver-specific configuration
+                switch ($driver) {
+                    case 'local':
+                        $diskConfig['root'] = $disk['root'] ?? storage_path('app');
+                        if (isset($disk['url'])) {
+                            $diskConfig['url'] = $disk['url'];
+                        }
+                        $diskConfig['throw'] = false;
+                        break;
+
+                    case 'ftp':
+                        $diskConfig['host'] = $disk['host'] ?? '';
+                        $diskConfig['username'] = $disk['username'] ?? '';
+                        $diskConfig['password'] = $disk['password'] ?? '';
+                        $diskConfig['port'] = (int) ($disk['port'] ?? 21);
+                        $diskConfig['root'] = $disk['root'] ?? '/';
+                        $diskConfig['passive'] = true;
+                        $diskConfig['ssl'] = false;
+                        $diskConfig['timeout'] = 30;
+                        break;
+
+                    case 'sftp':
+                        $diskConfig['host'] = $disk['host'] ?? '';
+                        $diskConfig['username'] = $disk['username'] ?? '';
+                        $diskConfig['password'] = $disk['password'] ?? '';
+                        $diskConfig['port'] = (int) ($disk['port'] ?? 22);
+                        $diskConfig['root'] = $disk['root'] ?? '/';
+                        $diskConfig['timeout'] = 30;
+                        break;
+
+                    case 's3':
+                        $diskConfig['key'] = $disk['key'] ?? '';
+                        $diskConfig['secret'] = $disk['secret'] ?? '';
+                        $diskConfig['region'] = $disk['region'] ?? '';
+                        $diskConfig['bucket'] = $disk['bucket'] ?? '';
+                        if (isset($disk['url'])) {
+                            $diskConfig['url'] = $disk['url'];
+                        }
+                        $diskConfig['endpoint'] = $disk['endpoint'] ?? null;
+                        $diskConfig['use_path_style_endpoint'] = false;
+                        $diskConfig['throw'] = false;
+                        break;
+                }
+
+                // Register the disk configuration
+                config(["filesystems.disks.{$diskName}" => $diskConfig]);
+            }
+        } catch (\Exception $e) {
+            // Storage config not available yet
         }
     }
 }

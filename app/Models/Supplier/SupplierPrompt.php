@@ -26,10 +26,15 @@ use Illuminate\Support\Str;
  * @property int $version
  * @property bool $is_default
  * @property bool $is_active
+ * @property bool $is_template
+ * @property string|null $template_category
+ * @property int|null $cloned_from_template_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Supplier\Supplier|null $supplier
  * @property-read \App\Models\Supplier\SupplierSource|null $source
+ * @property-read \App\Models\Supplier\SupplierPrompt|null $templateSource
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Supplier\SupplierPrompt> $clonedPrompts
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Supplier\SupplierAiContent> $contents
  * @property-read int|null $contents_count
  *
@@ -88,6 +93,9 @@ class SupplierPrompt extends Model
         'version',
         'is_default',
         'is_active',
+        'is_template',
+        'template_category',
+        'cloned_from_template_id',
     ];
 
     protected function casts(): array
@@ -97,11 +105,13 @@ class SupplierPrompt extends Model
             'seo_focus' => 'boolean',
             'is_default' => 'boolean',
             'is_active' => 'boolean',
+            'is_template' => 'boolean',
             'priority' => 'integer',
             'version' => 'integer',
             'supplier_id' => 'integer',
             'category_id' => 'integer',
             'source_id' => 'integer',
+            'cloned_from_template_id' => 'integer',
         ];
     }
 
@@ -127,6 +137,22 @@ class SupplierPrompt extends Model
     public function contents(): HasMany
     {
         return $this->hasMany(SupplierAiContent::class, 'prompt_id');
+    }
+
+    /**
+     * Template source - if this prompt was cloned from a template
+     */
+    public function templateSource(): BelongsTo
+    {
+        return $this->belongsTo(SupplierPrompt::class, 'cloned_from_template_id');
+    }
+
+    /**
+     * Prompts that were cloned from this template
+     */
+    public function clonedPrompts(): HasMany
+    {
+        return $this->hasMany(SupplierPrompt::class, 'cloned_from_template_id');
     }
 
     public function scopeActive($query)
@@ -172,6 +198,65 @@ class SupplierPrompt extends Model
     public function scopeUid($query, string $uid)
     {
         return $query->where('uid', $uid);
+    }
+
+    /**
+     * Filter only templates
+     */
+    public function scopeTemplates($query)
+    {
+        return $query->where('is_template', true);
+    }
+
+    /**
+     * Filter templates by category
+     */
+    public function scopeTemplateCategory($query, string $category)
+    {
+        return $query->templates()->where('template_category', $category);
+    }
+
+    /**
+     * Filter non-template prompts
+     */
+    public function scopeNotTemplates($query)
+    {
+        return $query->where('is_template', false);
+    }
+
+    /**
+     * Clone this template into a new prompt
+     *
+     * @param  array  $overrides  Fields to override (supplier_id, category_id, etc.)
+     */
+    public function cloneFromTemplate(array $overrides = []): self
+    {
+        // Prepare base data from template
+        $data = [
+            'label' => $this->label,
+            'prompt_template' => $this->prompt_template,
+            'scope' => $this->scope,
+            'content_type' => $this->content_type ?? 'description',
+            'output_language' => $this->output_language,
+            'tone' => $this->tone,
+            'seo_focus' => $this->seo_focus,
+            'priority' => $this->priority,
+            'version' => 1,
+            'is_active' => true,
+            'is_template' => false, // Cloned prompts are NOT templates
+            'cloned_from_template_id' => $this->id,
+            'required_sections' => $this->required_sections,
+            'notes' => $this->notes ?? null,
+        ];
+
+        // Merge with overrides
+        $data = array_merge($data, $overrides);
+
+        // Generate new UID
+        $data['uid'] = (string) Str::ulid();
+
+        // Create new prompt
+        return self::create($data);
     }
 
     /**

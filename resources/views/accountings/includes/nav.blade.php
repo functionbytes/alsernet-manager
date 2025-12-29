@@ -61,11 +61,12 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="{{ route('accounting.documents.in-review') }}" class="sidebar-link">
+                            <a href="{{ route('accounting.documents.pending') }}" class="sidebar-link">
                                 <i class="fas fa-clock me-2"></i>
-                                <span class="hide-menu">En revisión</span>
+                                <span class="hide-menu">Pendientes</span>
                             </a>
                         </li>
+                        {{-- TODO: Implementar ruta accounting.documents.configuration-tags
                         <li class="sidebar-item">
                             <a href="{{ route('accounting.documents.configuration-tags') }}" class="sidebar-link"
                                data-bs-toggle="tooltip" data-bs-placement="right"
@@ -74,6 +75,7 @@
                                 <span class="hide-menu">Configuración de etiquetas</span>
                             </a>
                         </li>
+                        --}}
                     </ul>
                 </nav>
 

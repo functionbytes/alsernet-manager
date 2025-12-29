@@ -11,7 +11,7 @@
                 <div class="col-sm-12 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active"><a href="{{ route('manager.dashboard') }}">Inicio</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ route('manager.products') }}">Equipo</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ route('manager.inventaries') }}">Equipo</a></li>
                         <li class="breadcrumb-item "><a href="javascript:void(0)">Editar</a></li>
                     </ol>
                 </div>

@@ -2,7 +2,7 @@
 
 ## Resumen
 
-Se implementó un sistema de **UID (Unique Identifier)** para la tabla `email_template_translations`, permitiendo acceso directo a traducciones específicas de templates de email mediante URLs del tipo:
+Se implementó un sistema de **UID (Unique Identifier)** para la tabla `email_template_langs`, permitiendo acceso directo a traducciones específicas de templates de email mediante URLs del tipo:
 
 ```
 /manager/settings/mailers/templates/edit/{template_uid}/{translation_uid}
@@ -40,10 +40,10 @@ Cuando haces click en "English", el link es:
 
 ### 1. **Migration** (`database/migrations/2025_12_11_165703_...`)
 
-Agrega la columna `uid` a la tabla `email_template_translations`:
+Agrega la columna `uid` a la tabla `email_template_langs`:
 
 ```php
-Schema::table('email_template_translations', function (Blueprint $table) {
+Schema::table('email_template_langs', function (Blueprint $table) {
     $table->uuid('uid')->unique()->after('id')->nullable();
 });
 ```
@@ -171,7 +171,7 @@ Verifica que las traducciones tengan UIDs:
 
 ```sql
 SELECT id, uid, email_template_id, lang_id
-FROM email_template_translations
+FROM email_template_langs
 LIMIT 5;
 ```
 

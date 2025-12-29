@@ -23,6 +23,7 @@ class MediaFile extends Model
         'alt',
         'folder_id',
         'user_id',
+        'disk',
         'metadata',
         'visibility',
     ];

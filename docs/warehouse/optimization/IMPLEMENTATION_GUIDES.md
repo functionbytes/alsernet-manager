@@ -229,7 +229,7 @@ public function view($warehouse_uid, $location_id)
 {
     $location = WarehouseLocation::find($location_id);
     return view('managers.views.warehouse.locations.view', compact('location'));
-    // Problem: Loading location triggers N+1 when accessing sections/slots/products
+    // Problem: Loading location triggers N+1 when accessing sections/slots/inventaries
 }
 
 // AFTER

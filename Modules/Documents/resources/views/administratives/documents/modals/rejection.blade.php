@@ -1,0 +1,98 @@
+{{-- Modal: Notificación de rechazo --}}
+<div class="modal fade" id="rejectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <div>
+                    <h5 class="modal-title">
+                        Notificación de rechazo
+                    </h5>
+                    <p class="text-muted small mb-0">Notifica al cliente que sus documentos fueron rechazados.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
+                </div>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-danger w-100 mb-1" id="btnSendRejection">
+                    Enviar rechazo
+                </button>
+                <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // ===== Handler: Enviar Rechazo =====
+        $('#btnSendRejection').on('click', function() {
+            const $btn = $(this);
+            const reason = $('#rejectionReason').val().trim();
+
+            if (!reason) {
+                toastr.warning('Debes especificar la razón del rechazo', 'Atención', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-bottom-right"
+                });
+                $('#rejectionReason').focus();
+                return;
+            }
+
+            // Recoger documentos rechazados seleccionados
+            const rejectedDocs = [];
+            $('input[name="rejected_docs[]"]:checked').each(function() {
+                rejectedDocs.push($(this).val());
+            });
+
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
+
+            $.ajax({
+                url: "{{ route('administrative.documents.send-rejection', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                method: 'POST',
+                data: {
+                    reason: reason,
+                    rejected_docs: rejectedDocs
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Email de rechazo enviado a: ' + response.recipient, 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                        $('#rejectionModal').modal('hide');
+
+                        // Limpiar textarea de razón
+                        $('#rejectionReason').val('');
+
+                        // Limpiar checkboxes (desmarcar todos)
+                        $('input[name="rejected_docs[]"]').prop('checked', false);
+
+                        // Recargar historial de acciones
+                        if (typeof reloadActionHistory === 'function') {
+                            reloadActionHistory();
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    const message = xhr.responseJSON?.message || 'Error al enviar el email';
+                    toastr.error(message, 'Error', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).html('Enviar');
+                }
+            });
+        });
+    });
+</script>
+@endpush

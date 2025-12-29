@@ -1,378 +1,379 @@
 @extends('layouts.managers')
 
+@section('title', 'Revisión de Contenido')
+
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Cola de Revisión de Contenido'])
+    @include('managers.includes.card', ['title' => 'Revisión de Contenido'])
 
     <div class="widget-content searchable-container list">
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+        @include('managers.components.alerts')
 
-        <!-- Stats Cards -->
-        <div class="row mb-3">
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card bg-light-secondary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <i class="fas fa-clock fs-7 text-warning"></i>
+        <div class="card">
+            <!-- Header Section -->
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Contenido de IA generado</h5>
+                        <p class="small mb-0 text-muted">Revisa y aprueba el contenido generado por IA</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        @if(request('search') || request('status') || request('supplier_id'))
+                            <a href="{{ route('manager.settings.suppliers.content.index') }}" class="btn btn-secondary">
+                                Limpiar filtros
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $stats['total'] }}</h4>
+                                        <small class="text-muted">Contenidos generados</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <p class="mb-1 text-muted">Pendiente Revisión</p>
-                                <h5 class="mb-0" id="pendingCount">{{ $stats['pending'] ?? 0 }}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Pendiente</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $stats['pending'] }}</h4>
+                                        <small class="text-muted">Requiere revisión</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Aprobado</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $stats['approved'] }}</h4>
+                                        <small class="text-muted">Contenido validado</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-danger mb-2">Rechazado</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $stats['rejected'] }}</h4>
+                                        <small class="text-muted">Contenido descartado</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card bg-light-secondary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <i class="fas fa-check-circle fs-7 text-success"></i>
-                            </div>
-                            <div>
-                                <p class="mb-1 text-muted">Aprobado</p>
-                                <h5 class="mb-0" id="approvedCount">{{ $stats['approved'] ?? 0 }}</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card bg-light-secondary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <i class="fas fa-times-circle fs-7 text-danger"></i>
-                            </div>
-                            <div>
-                                <p class="mb-1 text-muted">Rechazado</p>
-                                <h5 class="mb-0" id="rejectedCount">{{ $stats['rejected'] ?? 0 }}</h5>
+            <!-- Search and Filters Section -->
+            <div class="card-body border-bottom">
+                <form method="GET" action="{{ route('manager.settings.suppliers.content.index') }}">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label small">Buscar</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="search" name="search" class="form-control" placeholder="Buscar contenido..." value="{{ request('search') }}">
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card bg-light-secondary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <i class="fas fa-chart-line fs-7 text-primary"></i>
-                            </div>
-                            <div>
-                                <p class="mb-1 text-muted">Calidad Promedio</p>
-                                <h5 class="mb-0" id="avgQuality">{{ $stats['avg_quality'] ?? 0 }}%</h5>
-                            </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Proveedor</label>
+                            <select class="form-select" name="supplier_id">
+                                <option value="">Todos los proveedores</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                        {{ $supplier->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Estado</label>
+                            <select class="form-select" name="status">
+                                <option value="">Todos los estados</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pendiente</option>
+                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Aprobado</option>
+                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rechazado</option>
+                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Publicado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-        </div>
 
-        <!-- Filters -->
-        <div class="card card-body mb-3">
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <select class="form-select" id="filterSupplier">
-                        <option value="">Todos los proveedores</option>
-                        @foreach($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" id="filterStatus">
-                        <option value="">Todos los estados</option>
-                        <option value="pending">Pendiente</option>
-                        <option value="approved">Aprobado</option>
-                        <option value="rejected">Rechazado</option>
-                        <option value="published">Publicado</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" id="filterQuality">
-                        <option value="">Todas las calidades</option>
-                        <option value="high">Alta (≥ 80%)</option>
-                        <option value="medium">Media (50-79%)</option>
-                        <option value="low">Baja (< 50%)</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <input type="date" class="form-control" id="filterDate" placeholder="Fecha">
-                </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-secondary w-100" id="refreshTableBtn">
-                        <i class="fas fa-sync me-2"></i> Actualizar
-                    </button>
-                </div>
+            <!-- Content List -->
+            <div class="card-body">
+                @if($contents->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th width="25%">Producto</th>
+                                <th width="15%">Proveedor</th>
+                                <th width="15%">Tipo de contenido</th>
+                                <th width="10%">Prompt</th>
+                                <th width="10%" class="text-center">Estado</th>
+                                <th width="15%">Fecha</th>
+                                <th width="10%" class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($contents as $content)
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <strong>{{ $content->generated_name ?? $content->model_id ?? 'Sin nombre' }}</strong>
+                                            @if($content->erp_reference)
+                                                <br><small class="text-muted">Ref: {{ $content->erp_reference }}</small>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if($content->supplier)
+                                            <small class="text-muted">{{ $content->supplier->name }}</small>
+                                        @else
+                                            <small class="text-muted">-</small>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @php
+                                                $types = [];
+                                                if($content->generated_name) $types[] = 'Nombre';
+                                                if($content->short_description) $types[] = 'Descripción';
+                                                if($content->seo_title) $types[] = 'SEO';
+                                            @endphp
+                                            {{ !empty($types) ? implode(', ', $types) : 'Completo' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if($content->prompt)
+                                            <small class="text-muted">{{ $content->prompt->label }}</small>
+                                        @else
+                                            <small class="text-muted">-</small>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @switch($content->status)
+                                            @case('pending')
+                                                <span class="badge bg-warning">Pendiente</span>
+                                                @break
+                                            @case('approved')
+                                                <span class="badge bg-success">Aprobado</span>
+                                                @break
+                                            @case('rejected')
+                                                <span class="badge bg-danger">Rechazado</span>
+                                                @break
+                                            @case('published')
+                                                <span class="badge bg-info">Publicado</span>
+                                                @break
+                                            @default
+                                                <span class="badge bg-secondary">{{ ucfirst($content->status) }}</span>
+                                        @endswitch
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ $content->created_at?->format('d/m/Y H:i') ?? 'N/A' }}</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-duotone fa-solid fa-ellipsis"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('manager.settings.suppliers.content.show', $content->uid) }}">
+                                                        <i class="fas fa-eye me-2"></i> Ver detalle
+                                                    </a>
+                                                </li>
+                                                @if($content->status === 'pending')
+                                                    <li>
+                                                        <form method="POST" action="{{ route('manager.settings.suppliers.content.action', $content->uid) }}" class="approve-form">
+                                                            @csrf
+                                                            <input type="hidden" name="action" value="approve">
+                                                            <button type="submit" class="dropdown-item text-success">
+                                                                <i class="fas fa-check me-2"></i> Aprobar
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="dropdown-item text-danger reject-btn"
+                                                                data-uid="{{ $content->uid }}">
+                                                            <i class="fas fa-times me-2"></i> Rechazar
+                                                        </button>
+                                                    </li>
+                                                @endif
+                                                @if($content->status === 'approved')
+                                                    <li>
+                                                        <form method="POST" action="{{ route('manager.settings.suppliers.content.publish', $content->uid) }}" class="publish-form">
+                                                            @csrf
+                                                            <button type="submit" class="dropdown-item text-info">
+                                                                <i class="fas fa-paper-plane me-2"></i> Publicar
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                @endif
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <form method="POST" action="{{ route('manager.settings.suppliers.content.action', $content->uid) }}" class="regenerate-form">
+                                                        @csrf
+                                                        <input type="hidden" name="action" value="regenerate">
+                                                        <button type="submit" class="dropdown-item text-warning">
+                                                            <i class="fas fa-redo me-2"></i> Regenerar
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="text-center py-5">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="round-48 rounded-circle bg-light-subtle text-muted mb-3 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-magic fs-7"></i>
+                            </div>
+                            <h6 class="mb-1">No hay contenido para mostrar</h6>
+                            <p class="text-muted mb-3">
+                                @if(request('search') || request('status') || request('supplier_id'))
+                                    No se encontraron resultados con los filtros aplicados
+                                @else
+                                    Aún no se ha generado contenido con IA
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                @endif
             </div>
-        </div>
 
-        <!-- Bulk Actions -->
-        <div class="card card-body mb-3">
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" id="bulkApproveBtn" disabled>
-                    <i class="fas fa-check me-2"></i> Aprobar Seleccionados
-                </button>
-                <button type="button" class="btn btn-danger" id="bulkRejectBtn" disabled>
-                    <i class="fas fa-times me-2"></i> Rechazar Seleccionados
-                </button>
-                <button type="button" class="btn btn-warning" id="bulkRegenerateBtn" disabled>
-                    <i class="fas fa-redo me-2"></i> Regenerar Seleccionados
-                </button>
-                <span class="ms-auto text-muted" id="selectedCount">0 seleccionados</span>
-            </div>
+            <!-- Pagination -->
+            @if($contents->hasPages())
+                <div class="card-footer bg-white border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted small">
+                            Mostrando <strong>{{ $contents->firstItem() }}</strong> a <strong>{{ $contents->lastItem() }}</strong>
+                            de <strong>{{ $contents->total() }}</strong> contenidos
+                        </div>
+                        <nav aria-label="Page navigation">
+                            {{ $contents->links() }}
+                        </nav>
+                    </div>
+                </div>
+            @endif
         </div>
-
-        <!-- Content Table -->
-        <div class="card card-body">
-            <h5 class="mb-3">Cola de Contenido</h5>
-            <div class="table-responsive">
-                <table class="table table-hover table-striped" id="contentTable">
-                    <thead>
-                        <tr>
-                            <th width="30">
-                                <input type="checkbox" id="selectAll" class="form-check-input">
-                            </th>
-                            <th>Producto</th>
-                            <th>Proveedor</th>
-                            <th>Tipo</th>
-                            <th>Calidad</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                            <th class="text-end">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
 @endsection
 
 @push('scripts')
-<script src="{{ url('managers/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ url('managers/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-<link rel="stylesheet" href="{{ url('managers/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    let table;
-    let selectedIds = [];
-
-    // Initialize DataTable
-    function initTable() {
-        table = $('#contentTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ route("manager.settings.suppliers.content.data") }}',
-                data: function(d) {
-                    d.supplier_id = $('#filterSupplier').val();
-                    d.status = $('#filterStatus').val();
-                    d.quality = $('#filterQuality').val();
-                    d.date = $('#filterDate').val();
-                }
-            },
-            columns: [
-                {
-                    data: 'id',
-                    orderable: false,
-                    searchable: false,
-                    render: function(data) {
-                        return `<input type="checkbox" class="form-check-input content-checkbox" value="${data}">`;
-                    }
-                },
-                { data: 'product', name: 'product' },
-                { data: 'supplier', name: 'supplier' },
-                { data: 'content_type', name: 'content_type' },
-                { data: 'quality_score', name: 'quality_score' },
-                { data: 'status', name: 'status' },
-                { data: 'created_at', name: 'created_at' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-end' }
-            ],
-            order: [[6, 'desc']],
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-            }
-        });
-    }
-
-    initTable();
-
-    // Refresh table
-    $('#refreshTableBtn').on('click', function() {
-        table.ajax.reload();
-        refreshStats();
-        toastr.info('Tabla actualizada', 'Contenido');
-    });
-
-    // Filter change
-    $('#filterSupplier, #filterStatus, #filterQuality, #filterDate').on('change', function() {
-        table.ajax.reload();
-    });
-
-    // Select all checkboxes
-    $('#selectAll').on('change', function() {
-        const isChecked = $(this).is(':checked');
-        $('.content-checkbox').prop('checked', isChecked);
-        updateSelectedIds();
-    });
-
-    // Individual checkbox change
-    $(document).on('change', '.content-checkbox', function() {
-        updateSelectedIds();
-    });
-
-    // Update selected IDs array
-    function updateSelectedIds() {
-        selectedIds = [];
-        $('.content-checkbox:checked').each(function() {
-            selectedIds.push($(this).val());
-        });
-
-        $('#selectedCount').text(selectedIds.length + ' seleccionados');
-
-        const hasSelection = selectedIds.length > 0;
-        $('#bulkApproveBtn, #bulkRejectBtn, #bulkRegenerateBtn').prop('disabled', !hasSelection);
-    }
-
-    // Refresh stats
-    function refreshStats() {
-        $.ajax({
-            url: '{{ route("manager.settings.suppliers.content.stats") }}',
-            method: 'GET',
-            success: function(response) {
-                if (response.success) {
-                    $('#pendingCount').text(response.data.pending);
-                    $('#approvedCount').text(response.data.approved);
-                    $('#rejectedCount').text(response.data.rejected);
-                    $('#avgQuality').text(response.data.avg_quality + '%');
-                }
-            }
-        });
-    }
-
-    // Bulk approve
-    $('#bulkApproveBtn').on('click', function() {
-        if (selectedIds.length === 0) return;
+    // Approve form confirmation
+    $('.approve-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = this;
 
         Swal.fire({
             title: '¿Aprobar contenido?',
-            text: `Se aprobarán ${selectedIds.length} elementos seleccionados.`,
+            text: 'El contenido será marcado como aprobado.',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Sí, aprobar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                bulkAction('approve', selectedIds);
+                form.submit();
             }
         });
     });
 
-    // Bulk reject
-    $('#bulkRejectBtn').on('click', function() {
-        if (selectedIds.length === 0) return;
+    // Reject button - open modal for reason
+    $('.reject-btn').on('click', function() {
+        const uid = $(this).data('uid');
 
         Swal.fire({
             title: '¿Rechazar contenido?',
-            text: `Se rechazarán ${selectedIds.length} elementos seleccionados.`,
-            icon: 'warning',
+            input: 'textarea',
+            inputLabel: 'Motivo del rechazo',
+            inputPlaceholder: 'Escribe el motivo...',
+            inputAttributes: {
+                'aria-label': 'Escribe el motivo del rechazo'
+            },
             showCancelButton: true,
+            confirmButtonText: 'Rechazar',
+            cancelButtonText: 'Cancelar',
             confirmButtonColor: '#d33',
-            confirmButtonText: 'Sí, rechazar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                bulkAction('reject', selectedIds);
-            }
-        });
-    });
-
-    // Bulk regenerate
-    $('#bulkRegenerateBtn').on('click', function() {
-        if (selectedIds.length === 0) return;
-
-        Swal.fire({
-            title: '¿Regenerar contenido?',
-            text: `Se regenerarán ${selectedIds.length} elementos seleccionados.`,
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, regenerar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                bulkAction('regenerate', selectedIds);
-            }
-        });
-    });
-
-    // Bulk action handler
-    function bulkAction(action, ids) {
-        $.ajax({
-            url: '{{ route("manager.settings.suppliers.content.bulk-action") }}',
-            method: 'POST',
-            data: {
-                action: action,
-                ids: ids
-            },
-            success: function(response) {
-                if (response.success) {
-                    toastr.success(response.message, 'Acción Masiva');
-                    table.ajax.reload();
-                    refreshStats();
-                    selectedIds = [];
-                    updateSelectedIds();
-                    $('#selectAll').prop('checked', false);
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes escribir un motivo'
                 }
-            },
-            error: function() {
-                toastr.error('Error al ejecutar la acción', 'Error');
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create form and submit
+                const form = $('<form>', {
+                    'method': 'POST',
+                    'action': '{{ route("manager.settings.suppliers.content.action", ":uid") }}'.replace(':uid', uid)
+                });
+
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': '{{ csrf_token() }}'
+                }));
+
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'action',
+                    'value': 'reject'
+                }));
+
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'reason',
+                    'value': result.value
+                }));
+
+                $('body').append(form);
+                form.submit();
             }
         });
-    }
-
-    // Individual approve
-    $(document).on('click', '.approve-content', function() {
-        const id = $(this).data('id');
-        bulkAction('approve', [id]);
     });
 
-    // Individual reject
-    $(document).on('click', '.reject-content', function() {
-        const id = $(this).data('id');
-        bulkAction('reject', [id]);
-    });
-
-    // Individual regenerate
-    $(document).on('click', '.regenerate-content', function() {
-        const id = $(this).data('id');
-        bulkAction('regenerate', [id]);
-    });
-
-    // View details
-    $(document).on('click', '.view-content', function() {
-        const id = $(this).data('id');
-        window.location.href = '{{ route("manager.settings.suppliers.content.show", ":id") }}'.replace(':id', id);
-    });
-
-    // Publish content
-    $(document).on('click', '.publish-content', function() {
-        const id = $(this).data('id');
+    // Publish form confirmation
+    $('.publish-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = this;
 
         Swal.fire({
             title: '¿Publicar contenido?',
@@ -383,25 +384,37 @@ $(document).ready(function() {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: '{{ route("manager.settings.suppliers.content.publish", ":id") }}'.replace(':id', id),
-                    method: 'POST',
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message, 'Contenido');
-                            table.ajax.reload();
-                            refreshStats();
-                        }
-                    },
-                    error: function() {
-                        toastr.error('Error al publicar contenido', 'Error');
-                    }
-                });
+                form.submit();
             }
         });
     });
+
+    // Regenerate form confirmation
+    $('.regenerate-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+
+        Swal.fire({
+            title: '¿Regenerar contenido?',
+            text: 'Se generará nuevo contenido con IA.',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, regenerar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+
+    @if (session('success'))
+        toastr.success('{{ session('success') }}', 'Éxito');
+    @endif
+
+    @if (session('error'))
+        toastr.error('{{ session('error') }}', 'Error');
+    @endif
 });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush

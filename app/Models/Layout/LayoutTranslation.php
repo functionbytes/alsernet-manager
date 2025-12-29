@@ -22,7 +22,7 @@ class LayoutTranslation extends Model
 {
     use HasUid;
 
-    protected $table = 'layout_translations';
+    protected $table = 'layout_langs';
 
     protected $fillable = [
         'uid',

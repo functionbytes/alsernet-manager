@@ -25,7 +25,7 @@
             .done(function( data ) {
                 element.obj.attr('preview', 'yes');
 
-                element.obj.find('.products').html('');
+                element.obj.find('.inventaries').html('');
                 data.forEach( function(item) {
                     var cols = (12/element.obj.attr('data-display'));
                     var midCols = cols > 6 ? 12 : 6;
@@ -52,7 +52,7 @@ border-color: #9b5c8f;" class="btn btn-primary text-white">
                         </div>
                     `;
 
-                    element.obj.find('.products').append(row);
+                    element.obj.find('.inventaries').append(row);
                 });
 
                 if (element.obj.attr('data-display') == '1') {
@@ -88,10 +88,10 @@ border-color: #9b5c8f;" class="btn btn-primary text-white">
         display(display) {
             var element = this;
 
-            element.obj.find('.products').html('');
+            element.obj.find('.inventaries').html('');
             var preItems = element.obj.attr('data-max-items') > display ? display : element.obj.attr('data-max-items');
             for(var i=0; i<preItems;i++) {
-                element.obj.find('.products').append(`
+                element.obj.find('.inventaries').append(`
                     <div class="woo-col-item mb-4 mt-4 col-12 col-sm-6 col-md-4">
                         <div class="">
                             <div class="img-col mb-3">
@@ -132,9 +132,9 @@ border-color: #9b5c8f;" class="btn btn-primary text-white">
             }
 
             if (element.obj.attr('data-max-items') > display) {
-                element.obj.find('.products').addClass('more');
+                element.obj.find('.inventaries').addClass('more');
             } else {
-                element.obj.find('.products').removeClass('more');
+                element.obj.find('.inventaries').removeClass('more');
             }
         }
 

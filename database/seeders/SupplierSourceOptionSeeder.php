@@ -67,9 +67,9 @@ class SupplierSourceOptionSeeder extends Seeder
                 'api_key' => 'encrypted:nike_api_key_12345',
                 'auth_header' => 'Authorization',
                 'endpoints' => json_encode([
-                    'products' => '/products',
-                    'details' => '/products/{id}',
-                    'search' => '/products/search?q={query}',
+                    'inventaries' => '/inventaries',
+                    'details' => '/inventaries/{id}',
+                    'search' => '/inventaries/search?q={query}',
                 ]),
                 'rate_limit' => '100',
                 'response_format' => 'json',
@@ -159,8 +159,8 @@ class SupplierSourceOptionSeeder extends Seeder
                 'auth_type' => 'oauth2',
                 'api_key' => 'encrypted:asics_client_id',
                 'endpoints' => json_encode([
-                    'products' => '/products',
-                    'details' => '/products/{sku}',
+                    'inventaries' => '/inventaries',
+                    'details' => '/inventaries/{sku}',
                     'categories' => '/categories',
                 ]),
                 'rate_limit' => '60',

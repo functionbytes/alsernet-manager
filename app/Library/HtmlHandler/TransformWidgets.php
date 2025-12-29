@@ -30,7 +30,7 @@ class TransformWidgets implements StageInterface
             $nodes = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
 
             foreach ($nodes as $node) {
-                $pList = $node->getElementsByTagName('products')[0];
+                $pList = $node->getElementsByTagName('inventaries')[0];
                 $pHtml = Product::generateWidgetProductListHtmlContent([
                     'count' => $node->getAttribute('data-count'),
                     'cols' => $node->getAttribute('data-cols'),

@@ -173,7 +173,7 @@ if (! function_exists('checkCouponValidityForCheckout')) {
             if ($coupon->start_date >= $date && $coupon->end_date >= $date) {
                 $subTotal = (float) getSubTotal($price, $coupon->code, false);
                 if ($subTotal >= (float) $coupon->min_spend) {
-                    // check if coupon is for categories or products
+                    // check if coupon is for categories or inventaries
                     if (isset($coupon->bundle_ids) || isset($coupon->course_ids)) {
 
                         if (! validateCouponForCoursesAndBundles($item, $type, $coupon)) {

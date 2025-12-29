@@ -189,8 +189,8 @@ Response:
 ```php
 // Route
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/api/v1/products', [ProductController::class, 'index']);
-    Route::post('/api/v1/products', [ProductController::class, 'store']);
+    Route::get('/api/v1/inventaries', [ProductController::class, 'index']);
+    Route::post('/api/v1/inventaries', [ProductController::class, 'store']);
 });
 
 // En el controlador
@@ -379,7 +379,7 @@ class ProductController extends Controller {
 
 // routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('products', ProductController::class);
+    Route::apiResource('inventaries', ProductController::class);
 });
 ```
 
@@ -389,7 +389,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 ```php
 // Ruta
-Route::post('/api/v1/products/{product}/adjust-stock',
+Route::post('/api/v1/inventaries/{product}/adjust-stock',
     [ProductController::class, 'adjustStock']
 )->middleware('auth:sanctum');
 
@@ -432,7 +432,7 @@ class ProductController extends Controller {
 ### Ejemplo 3: Búsqueda Avanzada
 
 ```php
-// GET /api/v1/products/search?q=laptop&category=electronics&sort=-price&page=1
+// GET /api/v1/inventaries/search?q=laptop&category=electronics&sort=-price&page=1
 
 class ProductController extends Controller {
     public function search(Request $request) {

@@ -26,20 +26,45 @@ class SupplierContentController extends Controller
         $pageTitle = 'Revisión de Contenido de IA';
         $breadcrumb = 'Configuración / Proveedores / Contenido';
 
-        $statusFilter = $request->input('status', 'pending');
+        // Build query
+        $query = SupplierAiContent::query()->with(['supplier', 'prompt']);
+
+        // Apply search filter
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('generated_name', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('model_id', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply status filter
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        // Apply supplier filter
+        if ($supplierId = $request->input('supplier_id')) {
+            $query->where('supplier_id', $supplierId);
+        }
+
+        // Get paginated content
+        $contents = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         // Get suppliers for filter dropdown
         $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
 
         // Get stats
         $stats = [
+            'total' => SupplierAiContent::count(),
             'pending' => SupplierAiContent::where('status', 'pending')->count(),
             'approved' => SupplierAiContent::where('status', 'approved')->count(),
             'rejected' => SupplierAiContent::where('status', 'rejected')->count(),
-            'avg_quality' => 0,
         ];
 
-        return view('managers.views.settings.suppliers.content.index', compact('pageTitle', 'breadcrumb', 'statusFilter', 'suppliers', 'stats'));
+        return view('managers.views.settings.suppliers.content.index', compact('pageTitle', 'breadcrumb', 'contents', 'suppliers', 'stats'));
     }
 
     /**
@@ -49,20 +74,24 @@ class SupplierContentController extends Controller
     {
         try {
             $query = SupplierAiContent::query()
-                ->with(['supplier', 'prompt', 'extractionResult', 'validation']);
+                ->with(['supplier', 'prompt']);
 
+            // Search filter
             if ($search = $request->input('search.value')) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhere('meta_title', 'like', "%{$search}%");
+                    $q->where('generated_name', 'like', "%{$search}%")
+                        ->orWhere('short_description', 'like', "%{$search}%")
+                        ->orWhere('erp_reference', 'like', "%{$search}%")
+                        ->orWhere('model_id', 'like', "%{$search}%");
                 });
             }
 
+            // Status filter
             if ($status = $request->input('status')) {
                 $query->where('status', $status);
             }
 
+            // Supplier filter
             if ($supplierId = $request->input('supplier_id')) {
                 $query->where('supplier_id', $supplierId);
             }
@@ -70,11 +99,30 @@ class SupplierContentController extends Controller
             $totalRecords = SupplierAiContent::count();
             $filteredRecords = $query->count();
 
+            // Map DataTables column index to actual column names
+            $columns = ['id', 'generated_name', 'supplier_id', 'status', 'status', 'status', 'created_at'];
+            $orderColumnIndex = $request->input('order.0.column', 6);
+            $orderColumn = $columns[$orderColumnIndex] ?? 'created_at';
+            $orderDir = $request->input('order.0.dir', 'desc');
+
             $contents = $query
-                ->orderBy($request->input('order.0.column', 'created_at'), $request->input('order.0.dir', 'desc'))
+                ->orderBy($orderColumn, $orderDir)
                 ->skip($request->input('start', 0))
                 ->take($request->input('length', 10))
-                ->get();
+                ->get()
+                ->map(function (SupplierAiContent $content) {
+                    return [
+                        'id' => $content->id,
+                        'uid' => $content->uid,
+                        'product' => $content->generated_name ?? $content->model_id ?? 'Sin nombre',
+                        'supplier' => $content->supplier?->name ?? 'N/A',
+                        'content_type' => $this->formatContentType($content),
+                        'quality_score' => $this->formatQuality(0), // TODO: Implementar cálculo real
+                        'status' => $this->formatStatus($content->status),
+                        'created_at' => $content->created_at?->format('d/m/Y H:i') ?? 'N/A',
+                        'actions' => $this->getActions($content),
+                    ];
+                });
 
             return response()->json([
                 'draw' => $request->input('draw'),
@@ -91,6 +139,94 @@ class SupplierContentController extends Controller
                 'message' => 'Error al obtener los datos de contenido',
             ], 500);
         }
+    }
+
+    /**
+     * Format content type for display
+     */
+    private function formatContentType(SupplierAiContent $content): string
+    {
+        $types = [];
+        if ($content->generated_name) {
+            $types[] = 'Nombre';
+        }
+        if ($content->short_description) {
+            $types[] = 'Descripción';
+        }
+        if ($content->seo_title) {
+            $types[] = 'SEO';
+        }
+
+        return ! empty($types) ? implode(', ', $types) : 'Completo';
+    }
+
+    /**
+     * Format quality score for display
+     */
+    private function formatQuality(int $score): string
+    {
+        if ($score >= 80) {
+            $badge = 'success';
+        } elseif ($score >= 50) {
+            $badge = 'warning';
+        } else {
+            $badge = 'danger';
+        }
+
+        return "<span class=\"badge bg-{$badge}\">{$score}%</span>";
+    }
+
+    /**
+     * Format status for display
+     */
+    private function formatStatus(string $status): string
+    {
+        return match ($status) {
+            'pending' => '<span class="badge bg-warning">Pendiente</span>',
+            'approved' => '<span class="badge bg-success">Aprobado</span>',
+            'rejected' => '<span class="badge bg-danger">Rechazado</span>',
+            'published' => '<span class="badge bg-info">Publicado</span>',
+            default => '<span class="badge bg-secondary">'.ucfirst($status).'</span>',
+        };
+    }
+
+    /**
+     * Get action buttons HTML
+     */
+    private function getActions(SupplierAiContent $content): string
+    {
+        $actions = '<div class="btn-group btn-group-sm" role="group">';
+
+        $actions .= "
+            <button type=\"button\" class=\"btn btn-outline-primary view-content\" data-id=\"{$content->uid}\" title=\"Ver detalle\">
+                <i class=\"fas fa-eye\"></i>
+            </button>";
+
+        if ($content->status === 'pending') {
+            $actions .= "
+                <button type=\"button\" class=\"btn btn-outline-success approve-content\" data-id=\"{$content->uid}\" title=\"Aprobar\">
+                    <i class=\"fas fa-check\"></i>
+                </button>
+                <button type=\"button\" class=\"btn btn-outline-danger reject-content\" data-id=\"{$content->uid}\" title=\"Rechazar\">
+                    <i class=\"fas fa-times\"></i>
+                </button>";
+        }
+
+        if ($content->status === 'approved') {
+            $actions .= "
+                <button type=\"button\" class=\"btn btn-outline-info publish-content\" data-id=\"{$content->uid}\" title=\"Publicar\">
+                    <i class=\"fas fa-paper-plane\"></i>
+                </button>";
+        }
+
+        $actions .= "
+            <button type=\"button\" class=\"btn btn-outline-warning regenerate-content\" data-id=\"{$content->uid}\" title=\"Regenerar\">
+                <i class=\"fas fa-redo\"></i>
+            </button>";
+
+        $actions .= '</div>';
+
+        return $actions;
     }
 
     /**

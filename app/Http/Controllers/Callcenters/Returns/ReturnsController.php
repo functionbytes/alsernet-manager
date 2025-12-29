@@ -412,8 +412,8 @@ class ReturnsController extends Controller
     {
         $returnRequest = ReturnRequest::with([
             'order',
-            'products.orderProduct',
-            'products.returnReason',
+            'inventaries.orderProduct',
+            'inventaries.returnReason',
             'status',
             'returnType',
         ])->findOrFail($returnId);
@@ -486,7 +486,7 @@ class ReturnsController extends Controller
      */
     public function success($returnId)
     {
-        $returnRequest = ReturnRequest::with(['order', 'products', 'status'])
+        $returnRequest = ReturnRequest::with(['order', 'inventaries', 'status'])
             ->findOrFail($returnId);
 
         return view('callcenters.views.returns.success')->with([
@@ -504,7 +504,7 @@ class ReturnsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'products' => $products->map(function ($product) {
+                'inventaries' => $products->map(function ($product) {
                     return $product->getDisplayInfo();
                 }),
             ]);
@@ -537,11 +537,11 @@ class ReturnsController extends Controller
     {
         $request->validate([
             'return_id' => 'required|exists:return_requests,id_return_request',
-            'products' => 'required|array',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.reason' => 'required|string',
-            'products.*.condition' => 'required|string',
+            'inventaries' => 'required|array',
+            'inventaries.*.product_id' => 'required|exists:inventaries,id',
+            'inventaries.*.quantity' => 'required|integer|min:1',
+            'inventaries.*.reason' => 'required|string',
+            'inventaries.*.condition' => 'required|string',
         ]);
 
         $returnRequest = ReturnRequest::findOrFail($request->return_id);
@@ -603,11 +603,11 @@ class ReturnsController extends Controller
     {
         $request->validate([
             'return_id' => 'required|exists:return_requests,id_return_request',
-            'products' => 'required|array|min:1',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.reason' => 'required|string',
-            'products.*.condition' => 'required|string',
+            'inventaries' => 'required|array|min:1',
+            'inventaries.*.product_id' => 'required|exists:inventaries,id',
+            'inventaries.*.quantity' => 'required|integer|min:1',
+            'inventaries.*.reason' => 'required|string',
+            'inventaries.*.condition' => 'required|string',
             'notes' => 'nullable|string',
         ]);
 

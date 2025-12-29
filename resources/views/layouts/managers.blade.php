@@ -314,7 +314,7 @@
                 e.preventDefault();
                 const url = $(this).data("href");
                 $("#delete-modal").modal("show");
-                $("#delete-link").attr("href", url);
+                $("#delete-form").attr("action", url);
             });
         }
     });

@@ -337,7 +337,7 @@ return [
     'wpanel.others.des_upload_video.title' => 'Choose a video file on your local PC to upload',
     'wpanel.others.des_url_image.title' => 'Set an image URL to replace the current one in the design. Note that image will be actually downloaded and stored on your server',
     'wpanel.others.des_url_video.title' => 'Enter your video\'s public URL',
-    'wpanel.others.des_widget_name.title' => 'This is great functionality which for instance allows for a more personalized shopping experience or the ability to upsell other products or services.',
+    'wpanel.others.des_widget_name.title' => 'This is great functionality which for instance allows for a more personalized shopping experience or the ability to upsell other inventaries or services.',
     'wpanel.others.desktop.1280.title' => '1280 x 1024',
     'wpanel.others.desktop.1360.title' => '1360 x 768',
     'wpanel.others.desktop.1920.title' => '1920 x 1080',

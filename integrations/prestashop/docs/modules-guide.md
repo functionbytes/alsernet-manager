@@ -296,7 +296,7 @@ Sincronizar catálogo de productos desde Alsernet a PrestaShop (mayormente unidi
 
 ```bash
 # Importar todos los productos desde Alsernet
-php bin/console Alsernet:sync:products --full --batch=50
+php bin/console Alsernet:sync:inventaries --full --batch=50
 
 # Procesamiento:
 # 1. Obtiene productos de Alsernet (en lotes de 50)
@@ -310,7 +310,7 @@ php bin/console Alsernet:sync:products --full --batch=50
 
 ```bash
 # Sincronizar solo productos modificados
-php bin/console Alsernet:sync:products --incremental
+php bin/console Alsernet:sync:inventaries --incremental
 
 # Se ejecuta cada:
 Configuration::updateValue('Alsernet_PRODUCTS_SYNC_INTERVAL', 300); // 5 min
@@ -320,7 +320,7 @@ Configuration::updateValue('Alsernet_PRODUCTS_SYNC_INTERVAL', 300); // 5 min
 
 ```bash
 # Actualizar solo precios (más rápido)
-php bin/console Alsernet:sync:products --prices-only
+php bin/console Alsernet:sync:inventaries --prices-only
 
 # Frequency:
 Configuration::updateValue('Alsernet_PRODUCTS_PRICE_INTERVAL', 60); // 1 min
@@ -330,7 +330,7 @@ Configuration::updateValue('Alsernet_PRODUCTS_PRICE_INTERVAL', 60); // 1 min
 
 ```bash
 # Actualizar solo stock
-php bin/console Alsernet:sync:products --stock-only
+php bin/console Alsernet:sync:inventaries --stock-only
 
 # Frequency:
 Configuration::updateValue('Alsernet_PRODUCTS_STOCK_INTERVAL', 120); // 2 min
@@ -745,7 +745,7 @@ En cPanel o servidor:
 */15 * * * * /usr/bin/php /path/to/prestashop/bin/console Alsernet:sync:stock
 
 # Ejecutar cada hora
-0 * * * * /usr/bin/php /path/to/prestashop/bin/console Alsernet:sync:products:incremental
+0 * * * * /usr/bin/php /path/to/prestashop/bin/console Alsernet:sync:inventaries:incremental
 
 # Ejecutar cada 2 horas
 0 */2 * * * /usr/bin/php /path/to/prestashop/bin/console Alsernet:sync:customers
@@ -762,7 +762,7 @@ En cPanel o servidor:
 tail -f storage/logs/Alsernet-sync.log
 
 # Módulo específico
-tail -f storage/logs/Alsernet-products.log
+tail -f storage/logs/Alsernet-inventaries.log
 tail -f storage/logs/Alsernet-customers.log
 tail -f storage/logs/Alsernet-orders.log
 ```

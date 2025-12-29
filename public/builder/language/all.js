@@ -174,7 +174,7 @@ var LANGUAGE = {
         'navbar.contents.tag_options': 'TAG OPTIONS',
         'navbar.contents.widgets': 'widgets',
         'navbar.contents.layouts': 'layouts',
-        'navbar.contents.tags': 'tags',        
+        'navbar.contents.tags': 'tags',
         'navbar.contents.setting': 'Setting',
         'navbar.contents.show_more.loading': 'Show more...',
         'navbar.contents.show_less.loading': 'Show less...',
@@ -266,7 +266,7 @@ var LANGUAGE = {
         'wpanel.others.desktop.1280.title': '1280 x 1024',
         'wpanel.others.desktop.1360.title': '1360 x 768',
         'wpanel.others.desktop.1920.title': '1920 x 1080',
-        
+
         'wpanel.others.change_image.title': 'Change Image',
         'wpanel.others.loading.title': 'Loading...',
         'wpanel.others.upload.title': 'Upload',
@@ -281,7 +281,7 @@ var LANGUAGE = {
         'wpanel.others.des_base64_image.title': 'Copy and paste Base64 content of your image to have it replace the current one. Note that your image will also be stored on the server',
         'wpanel.others.des_upload_video.title': 'Choose a video file on your local PC to upload',
         'wpanel.others.des_url_video.title': 'Enter your video\'s public URL',
-        'wpanel.others.des_widget_name.title': 'This is great functionality which for instance allows for a more personalized shopping experience or the ability to upsell other products or services.',
+        'wpanel.others.des_widget_name.title': 'This is great functionality which for instance allows for a more personalized shopping experience or the ability to upsell other inventaries or services.',
         'wpanel.others.add.title': 'Add',
         'wpanel.others.des_template_toolbox.title': 'Start making your beautiful email or landing page design by choosing a template and modify it with your own content',
         'wpanel.others.select_parent.title': 'Select parent',

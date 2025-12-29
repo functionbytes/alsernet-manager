@@ -302,10 +302,72 @@ class ValidatorGroup extends Model
 
     /**
      * Get the route key name for route model binding.
-     * Uses 'id' for backwards compatibility with existing routes.
+     * Uses 'uid' for public-facing routes.
      */
     public function getRouteKeyName(): string
     {
-        return 'id';
+        return 'uid';
+    }
+
+    /**
+     * Get email action configurations for a specific user based on their groups.
+     * Returns merged configurations from all groups the user belongs to.
+     * If a user belongs to multiple groups, the most permissive setting wins (OR logic).
+     *
+     * @return array<string, bool>
+     */
+    public static function getEmailConfigurationsForUser(User|int $user): array
+    {
+        $userId = $user instanceof User ? $user->id : $user;
+
+        // Get all active groups the user belongs to
+        $userGroups = static::query()
+            ->whereHas('users', function ($q) use ($userId) {
+                $q->where('users.id', $userId);
+            })
+            ->where('is_active', true)
+            ->with(['configurations' => function ($q) {
+                $q->where('category', 'email_actions')
+                    ->where('is_active', true);
+            }])
+            ->get();
+
+        // If user doesn't belong to any group, return default (all disabled)
+        if ($userGroups->isEmpty()) {
+            return [
+                'enable_initial_request' => false,
+                'enable_missing_docs' => false,
+                'enable_reminder' => false,
+                'enable_upload_confirmation' => false,
+                'enable_approval' => false,
+                'enable_rejection' => false,
+                'enable_custom_email' => false,
+            ];
+        }
+
+        // Merge configurations from all groups (OR logic - most permissive wins)
+        $mergedConfig = [];
+        foreach ($userGroups as $group) {
+            foreach ($group->configurations as $config) {
+                // If any group enables an action, it's enabled
+                if (! isset($mergedConfig[$config->key]) || ! $mergedConfig[$config->key]) {
+                    $mergedConfig[$config->key] = (bool) $config->value;
+                } else {
+                    // Use OR logic: if either is true, keep true
+                    $mergedConfig[$config->key] = $mergedConfig[$config->key] || (bool) $config->value;
+                }
+            }
+        }
+
+        // Ensure all expected keys exist with defaults
+        return array_merge([
+            'enable_initial_request' => false,
+            'enable_missing_docs' => false,
+            'enable_reminder' => false,
+            'enable_upload_confirmation' => false,
+            'enable_approval' => false,
+            'enable_rejection' => false,
+            'enable_custom_email' => false,
+        ], $mergedConfig);
     }
 }

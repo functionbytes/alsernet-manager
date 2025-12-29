@@ -74,8 +74,8 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Código</th>
                                     <th>Nombre</th>
+                                    <th>Código</th>
                                     <th>Sitio web</th>
                                     <th class="text-center">Estado</th>
                                     <th class="text-center">Prioridad</th>
@@ -87,12 +87,10 @@
                             <tbody>
                                 @foreach($suppliers as $supplier)
                                     <tr>
-                                        <td>
-                                            <code class="bg-light px-2 py-1 rounded">{{ strtoupper($supplier->code) }}</code>
-                                        </td>
+
                                         <td>
                                             <div>
-                                                <strong>{{ $supplier->name }}</strong>
+                                                {{ $supplier->name }}
                                                 @if($supplier->description)
                                                     <br>
                                                     <small class="text-muted">{{ Str::limit($supplier->description, 60) }}</small>
@@ -100,9 +98,13 @@
                                             </div>
                                         </td>
                                         <td>
+                                            <code class="bg-light px-2 py-1 rounded">{{ strtoupper($supplier->code) }}</code>
+                                        </td>
+
+                                        <td>
                                             @if($supplier->website)
                                                 <a href="{{ $supplier->website }}" target="_blank" class="text-primary">
-                                                    <i class="fas fa-external-link-alt"></i> {{ Str::limit($supplier->website, 30) }}
+                                                    {{ Str::limit($supplier->website, 30) }}
                                                 </a>
                                             @else
                                                 <span class="text-muted">—</span>
@@ -120,7 +122,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge bg-light-secondary text-dark rounded-3 py-1 px-2 fs-2">
+                                            <span class="badge bg-light-secondary text-info ">
                                                 {{ $supplier->priority }}
                                             </span>
                                         </td>

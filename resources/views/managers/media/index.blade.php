@@ -210,6 +210,48 @@
         box-shadow: 0 6px 20px rgba(93, 135, 255, 0.2);
     }
 
+    /* Upload Zone Modern */
+    .upload-zone-modern {
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        border: 2px dashed #e0e7ff;
+        transition: all 0.3s ease;
+    }
+
+    .upload-zone-modern:hover {
+        border-color: #5D87FF;
+        background: linear-gradient(135deg, #f0f4ff 0%, #f8f9ff 100%);
+        box-shadow: 0 4px 16px rgba(93, 135, 255, 0.1);
+    }
+
+    .upload-zone-modern.drag-active {
+        border-color: #5D87FF;
+        background: linear-gradient(135deg, #e8f0ff 0%, #f0f4ff 100%);
+        box-shadow: 0 6px 20px rgba(93, 135, 255, 0.2);
+        transform: scale(1.01);
+    }
+
+    .upload-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #5D87FF 0%, #4570ea 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(93, 135, 255, 0.3);
+    }
+
+    .upload-icon-wrapper i {
+        font-size: 28px;
+        color: white;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
     .card-header {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
         border-color: #f0f0f0 !important;
@@ -625,9 +667,20 @@
                         <h5 class="mb-1 fw-bold">Gestor de Medios</h5>
                         <p class="small mb-0 text-muted">Organiza y gestiona todos tus archivos y carpetas en un solo lugar</p>
                     </div>
-                    <button v-if="currentView === 'all'" @click="showNewFolderModal" class="btn btn-primary">
-                        <i class="fas fa-folder-plus me-1"></i>Nueva Carpeta
-                    </button>
+                    <div class="d-flex gap-2 align-items-center">
+                        {{-- Filesystem Selector --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="form-label mb-0 text-muted small"><i class="fas fa-hdd me-1"></i>Almacenamiento:</label>
+                            <select v-model="activeDisk" @change="changeActiveDisk" class="form-select form-select-sm" style="min-width: 150px;">
+                                @foreach($availableDisks as $disk)
+                                <option value="{{ $disk['name'] }}">{{ $disk['label'] }} ({{ $disk['driver'] }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button v-if="currentView === 'all'" @click="showNewFolderModal" class="btn btn-primary">
+                            <i class="fas fa-folder-plus me-1"></i>Nueva Carpeta
+                        </button>
+                    </div>
                 </div>
 
                 {{-- Selection Toolbar (replaces header when items are selected) --}}
@@ -720,20 +773,31 @@
                 <div class="media-content">
             {{-- Upload Zone - Only visible in "all" view --}}
             <div v-if="currentView === 'all'" class="card-body border-bottom">
-                <div class="alert bg-light border-0 mb-0" role="alert" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
-                    <div class="d-flex align-items-start">
-                        <i class="fas fa-cloud-upload-alt fs-4 me-3 mt-1"></i>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold mb-2">Subir Archivos</h6>
-                            <p class="mb-3 small">
-                                Arrastra archivos aquí o usa los botones para subir desde tu dispositivo o desde una URL.
-                                Tamaño máximo: <strong>100MB</strong> por archivo.
+                <div
+                    class="upload-zone-modern rounded-3 p-4"
+                    :class="{ 'drag-active': isDragging }"
+                    @dragover.prevent="handleDragOver"
+                    @dragleave.prevent="handleDragLeave"
+                    @drop.prevent="handleDrop">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="upload-icon-wrapper">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h6 class="fw-bold mb-1">Subir archivos</h6>
+                            <p class="mb-3 text-muted small">
+                                <i class="fas fa-hand-pointer me-1"></i>Arrastra archivos aquí o usa los botones
+                                <span class="d-block d-sm-inline ms-0 ms-sm-2">
+                                    <i class="fas fa-info-circle me-1"></i>Límite: <strong>100MB</strong> por archivo
+                                </span>
                             </p>
-                            <div class="d-flex gap-2">
-                                <button @click="showUploadModal" class="btn btn-sm btn-primary">
+                            <div class="d-flex flex-wrap gap-2">
+                                <button @click="showUploadModal" class="btn btn-primary btn-sm rounded-pill px-3">
                                     <i class="fas fa-upload me-1"></i>Seleccionar archivos
                                 </button>
-                                <button @click="showUploadFromUrlModal" class="btn btn-sm btn-outline-primary">
+                                <button @click="showUploadFromUrlModal" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                                     <i class="fas fa-link me-1"></i>Desde URL
                                 </button>
                             </div>
@@ -1659,6 +1723,7 @@
                 filterType: 'all',
                 currentView: 'all',
                 uploadUrlData: { url: '', filename: '' },
+                activeDisk: '{{ $activeDisk }}',
                 // Enhanced upload modal
                 uploadQueue: [],
                 isDragging: false,
@@ -1722,6 +1787,33 @@
                     toastr.error('Error al cargar archivos', 'Error');
                 } finally {
                     this.loading = false;
+                }
+            },
+            async changeActiveDisk() {
+                try {
+                    const response = await fetch('{{ route('manager.media.set-disk') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            disk: this.activeDisk
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        toastr.success(data.message, 'Éxito');
+                        // Reload media list with new disk
+                        await this.loadMedia(0);
+                    } else {
+                        toastr.error(data.message || 'Error al cambiar disco', 'Error');
+                    }
+                } catch (error) {
+                    console.error('Error changing active disk:', error);
+                    toastr.error('Error al cambiar el disco de almacenamiento', 'Error');
                 }
             },
             navigateToFolder(folderId) {

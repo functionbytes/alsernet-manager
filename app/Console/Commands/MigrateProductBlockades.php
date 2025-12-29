@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Document\DocumentProductBlockade;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Modules\Documents\Entities\DocumentProductBlockade;
 
 class MigrateProductBlockades extends Command
 {
@@ -53,7 +53,7 @@ class MigrateProductBlockades extends Command
         $totalMigrated = 0;
         // Combinations: read id_origen from PrestaShop → save as source_id locally
         $totalMigrated += $this->migrateFromTable('aalv_combinaciones_import', 'id_origen', 'id_product_attribute', $blockadeLabels, 'combination');
-        // Simple products: read id_origen from PrestaShop → save as source_id locally
+        // Simple inventaries: read id_origen from PrestaShop → save as source_id locally
         $totalMigrated += $this->migrateFromTable('aalv_combinacionunica_import', 'id_origen', 'id_product', $blockadeLabels, 'product');
 
         $this->info("Migration completed! Total records migrated: {$totalMigrated}");
@@ -78,7 +78,7 @@ class MigrateProductBlockades extends Command
      * @param  string  $origenColumn  Column name in external table (id_origen) → maps to source_id locally
      * @param  string  $productColumn  Column name in external table (id_product or id_product_attribute) → maps to product_id or product_attribute_id locally
      * @param  string  $blockadeLabels  Comma-separated blockade labels
-     * @param  string  $type  Type of product: 'product' for simple products, 'combination' for combinations
+     * @param  string  $type  Type of product: 'product' for simple inventaries, 'combination' for combinations
      */
     private function migrateFromTable(string $tableName, string $origenColumn, string $productColumn, string $blockadeLabels, string $type): int
     {
@@ -105,14 +105,14 @@ class MigrateProductBlockades extends Command
             // Convert label to lowercase for blockade_type
             $blockadeType = strtolower($label);
 
-            // Get all products with this label in the etiqueta column
+            // Get all inventaries with this label in the etiqueta column
             $products = DB::connection('prestashop')
                 ->table($tableName)
                 ->select($origenColumn, $productColumn, 'etiqueta')
                 ->whereRaw("FIND_IN_SET(?, REPLACE(etiqueta, ', ', ','))", [$label])
                 ->get();
 
-            $this->info("Found {$products->count()} products with label {$label}");
+            $this->info("Found {$products->count()} inventaries with label {$label}");
 
             foreach ($products as $product) {
                 $idOrigen = $product->{$origenColumn};
@@ -125,7 +125,7 @@ class MigrateProductBlockades extends Command
                 ];
 
                 if ($type === 'product') {
-                    // Simple products: product_id = product_id, product_attribute_id = null
+                    // Simple inventaries: product_id = product_id, product_attribute_id = null
                     $data['product_id'] = $productId;
                     $data['product_attribute_id'] = null;
                     // Check if already exists

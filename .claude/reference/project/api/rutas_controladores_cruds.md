@@ -328,7 +328,7 @@ Route::middleware(['auth', 'check.roles.permissions:manager'])->group(function (
             // Rutas CRUD
         });
 
-        Route::group(['prefix' => 'products'], function () {
+        Route::group(['prefix' => 'inventaries'], function () {
             // Rutas CRUD
         });
 
@@ -421,8 +421,8 @@ Route::middleware(['auth', 'check.roles.permissions:callcenter'])->group(functio
             Route::post('/validateorder', [ReturnController::class, 'validateOrder']);
             Route::post('/proceed-to-generate', [ReturnController::class, 'proceedToGenerate']);
             Route::get('/generate/{uid}', [ReturnController::class, 'generate']);
-            Route::post('/validate-products', [ReturnController::class, 'validate']);
-            Route::get('/available-products/{orderId}', [ReturnController::class, 'getAvailableProducts']);
+            Route::post('/validate-inventaries', [ReturnController::class, 'validate']);
+            Route::get('/available-inventaries/{orderId}', [ReturnController::class, 'getAvailableProducts']);
 
             // Flujo de devolución
             Route::get('/review/{returnId}', [ReturnsController::class, 'review']);

@@ -156,7 +156,7 @@ class TransferController extends Controller
     public function transfer(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|exists:inventaries,id',
             'from_section_id' => 'required|exists:warehouse_location_sections,id',
             'to_section_id' => 'required|exists:warehouse_location_sections,id',
             'quantity' => 'required|integer|min:1',
@@ -270,7 +270,7 @@ class TransferController extends Controller
     public function history(Request $request)
     {
         $request->validate([
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'nullable|exists:inventaries,id',
             'days' => 'nullable|integer|min:1|max:365',
         ]);
 

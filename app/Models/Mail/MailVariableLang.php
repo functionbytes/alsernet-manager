@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class MailVariableLang extends Model
 {
-    protected $table = 'mail_variable_translations';
+    protected $table = 'mail_variable_langs';
 
     protected $fillable = [
         'uid',

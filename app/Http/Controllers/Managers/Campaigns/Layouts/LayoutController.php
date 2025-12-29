@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Managers\Campaigns\Layouts;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
-use App\Models\/Mail/MailLayout.php
 use Illuminate\Http\Request;
 
 class LayoutController extends Controller

@@ -13,9 +13,67 @@ use Illuminate\View\View;
 
 class MediaManagerController extends Controller
 {
+    /**
+     * Obtener el disco de almacenamiento actualmente seleccionado
+     */
+    private function getActiveDisk(): string
+    {
+        return session('media_active_disk', 'media');
+    }
+
+    /**
+     * Obtener lista de discos disponibles para el Media Manager
+     */
+    private function getAvailableDisks(): array
+    {
+        $disks = [];
+        $configDisks = config('filesystems.disks');
+
+        foreach ($configDisks as $diskName => $diskConfig) {
+            $disks[$diskName] = [
+                'name' => $diskName,
+                'driver' => $diskConfig['driver'] ?? 'unknown',
+                'label' => ucfirst($diskName),
+            ];
+        }
+
+        return $disks;
+    }
+
+    /**
+     * Cambiar el disco de almacenamiento activo
+     */
+    public function setActiveDisk(Request $request): JsonResponse
+    {
+        $request->validate([
+            'disk' => 'required|string',
+        ]);
+
+        $disk = $request->string('disk');
+
+        // Verificar que el disco exista en la configuración
+        if (! config("filesystems.disks.{$disk}")) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El disco seleccionado no existe',
+            ], 404);
+        }
+
+        session(['media_active_disk' => $disk]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Disco cambiado a: {$disk}",
+            'disk' => $disk,
+        ]);
+    }
+
     public function index(): View
     {
-        return view('managers.media.index');
+        return view('managers.media.index', [
+            'activeDisk' => $this->getActiveDisk(),
+            'availableDisks' => $this->getAvailableDisks(),
+        ]);
     }
 
     public function getList(Request $request): JsonResponse
@@ -25,9 +83,25 @@ class MediaManagerController extends Controller
         $view = $request->string('view', 'all');
         $perPage = $request->integer('per_page', 30);
         $page = $request->integer('page', 1);
+        $activeDisk = $this->getActiveDisk();
 
-        $query = MediaFile::query()->byUser();
-        $folderQuery = MediaFolder::query()->byUser();
+        // Filtrar por disco activo, incluyendo archivos sin disco asignado cuando el disco es 'media'
+        $query = MediaFile::query()->byUser()->where(function ($q) use ($activeDisk) {
+            $q->where('disk', $activeDisk);
+            // Si el disco activo es 'media', incluir también archivos sin disco asignado (legacy)
+            if ($activeDisk === 'media') {
+                $q->orWhereNull('disk');
+            }
+        });
+
+        // Filtrar carpetas por disco activo
+        $folderQuery = MediaFolder::query()->byUser()->where(function ($q) use ($activeDisk) {
+            $q->where('disk', $activeDisk);
+            // Si el disco activo es 'media', incluir también carpetas sin disco asignado (legacy)
+            if ($activeDisk === 'media') {
+                $q->orWhereNull('disk');
+            }
+        });
 
         // Breadcrumbs
         $breadcrumbs = [];
@@ -128,10 +202,11 @@ class MediaManagerController extends Controller
 
         $file = $request->file('file');
         $folderId = $request->integer('folder_id');
+        $activeDisk = $this->getActiveDisk();
 
         // Guardar archivo
         $path = "{$folderId}";
-        $storedPath = $file->store($path, 'media');
+        $storedPath = $file->store($path, $activeDisk);
 
         // Crear registro en BD
         $mediaFile = MediaFile::create([
@@ -141,6 +216,7 @@ class MediaManagerController extends Controller
             'url' => $storedPath,
             'folder_id' => $folderId > 0 ? $folderId : null,
             'user_id' => auth()->id(),
+            'disk' => $activeDisk,
             'metadata' => $this->extractMetadata($file),
         ]);
 
@@ -164,10 +240,13 @@ class MediaManagerController extends Controller
             'parent_id' => 'nullable|exists:media_folders,id',
         ]);
 
+        $activeDisk = $this->getActiveDisk();
+
         $folder = MediaFolder::create([
             'name' => $request->string('name'),
             'parent_id' => $request->integer('parent_id', 0) > 0 ? $request->integer('parent_id') : null,
             'user_id' => auth()->id(),
+            'disk' => $activeDisk,
         ]);
 
         return response()->json([
@@ -221,11 +300,13 @@ class MediaManagerController extends Controller
         $this->authorize('create', MediaFile::class);
 
         try {
-            // Get original file info, removing 'media/' prefix if it exists
-            $originalPath = str_replace('media/', '', $file->url);
+            $activeDisk = $file->disk ?? 'media';
+
+            // Get original file info, removing disk prefix if it exists
+            $originalPath = preg_replace('/^(media|public|local)\//', '', $file->url);
 
             // Check if source file exists
-            if (! Storage::disk('media')->exists($originalPath)) {
+            if (! Storage::disk($activeDisk)->exists($originalPath)) {
                 return response()->json(['message' => 'El archivo original no existe'], 404);
             }
 
@@ -241,7 +322,7 @@ class MediaManagerController extends Controller
             $newStoredPath = $directory.'/'.pathinfo($newFileName, PATHINFO_FILENAME).'_'.uniqid().'.'.pathinfo($newFileName, PATHINFO_EXTENSION);
 
             // Copy the file in storage
-            Storage::disk('media')->copy($originalPath, $newStoredPath);
+            Storage::disk($activeDisk)->copy($originalPath, $newStoredPath);
 
             // Create new database record for the copied file
             $newFile = MediaFile::create([
@@ -251,6 +332,7 @@ class MediaManagerController extends Controller
                 'url' => $newStoredPath,
                 'folder_id' => $file->folder_id,
                 'user_id' => auth()->id(),
+                'disk' => $activeDisk,
                 'metadata' => $file->metadata ?? [],
             ]);
 
@@ -368,6 +450,7 @@ class MediaManagerController extends Controller
             $url = $request->string('url');
             $customFilename = $request->string('filename', '');
             $folderId = $request->integer('folder_id', 0);
+            $activeDisk = $this->getActiveDisk();
 
             // Download file from URL
             $response = @file_get_contents($url);
@@ -402,7 +485,7 @@ class MediaManagerController extends Controller
 
             // Store file
             $path = "{$folderId}";
-            $storedPath = Storage::disk('media')->putFileAs($path, new \Symfony\Component\HttpFoundation\File\File($tempPath), $filename);
+            $storedPath = Storage::disk($activeDisk)->putFileAs($path, new \Symfony\Component\HttpFoundation\File\File($tempPath), $filename);
 
             // Create database record
             $mediaFile = MediaFile::create([
@@ -412,6 +495,7 @@ class MediaManagerController extends Controller
                 'url' => $storedPath,
                 'folder_id' => $folderId > 0 ? $folderId : null,
                 'user_id' => auth()->id(),
+                'disk' => $activeDisk,
                 'metadata' => [],
             ]);
 
@@ -477,10 +561,11 @@ class MediaManagerController extends Controller
             // Delete all trashed files
             $trashedFiles = MediaFile::byUser()->onlyTrashed()->get();
             foreach ($trashedFiles as $file) {
+                $fileDisk = $file->disk ?? 'media';
                 // Delete physical file
-                $path = str_replace('media/', '', $file->url);
-                if (Storage::disk('media')->exists($path)) {
-                    Storage::disk('media')->delete($path);
+                $path = preg_replace('/^(media|public|local)\//', '', $file->url);
+                if (Storage::disk($fileDisk)->exists($path)) {
+                    Storage::disk($fileDisk)->delete($path);
                 }
                 // Force delete from database
                 $file->forceDelete();

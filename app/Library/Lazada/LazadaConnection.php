@@ -90,7 +90,7 @@ class LazadaConnection
 
     public function getProducts($options = [])
     {
-        return $this->makeRequest('/products/get', $options);
+        return $this->makeRequest('/inventaries/get', $options);
     }
 
     public function getBrands()

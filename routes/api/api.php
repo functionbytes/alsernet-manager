@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\DocumentsController;
 use App\Http\Controllers\Api\ErpController;
 use App\Http\Controllers\Api\Return\PublicReturnController;
 use App\Http\Controllers\Api\Return\ReturnController;
 use App\Http\Controllers\Api\SubscribersController;
 use App\Http\Controllers\Api\TicketsController;
 use Illuminate\Support\Facades\Route;
+use Modules\Documents\Http\Controllers\Api\DocumentsController;
 
 Route::group(['prefix' => 'subscribers'], function () {
     Route::post('/', [SubscribersController::class, 'process']);

@@ -225,10 +225,10 @@ class ReturnRequest extends Model
     public function scopeWithFullDetails($query)
     {
         return $query->with([
-            'order.products',
+            'order.inventaries',
             'customer',
-            'products.orderProduct',
-            'products.returnReason',
+            'inventaries.orderProduct',
+            'inventaries.returnReason',
             'status.state',
             'status.translations',
             'returnType.translations',
@@ -353,7 +353,7 @@ class ReturnRequest extends Model
             'can_be_modified' => $this->canBeModified(),
             'has_approved_products' => $this->hasApprovedProducts(),
             'has_rejected_products' => $this->hasRejectedProducts(),
-            'products' => $this->products->map(function ($product) {
+            'inventaries' => $this->products->map(function ($product) {
                 return $product->getDisplayInfo();
             }),
         ];
@@ -765,7 +765,7 @@ class ReturnRequest extends Model
 
             return true;
         } catch (\Exception $e) {
-            Log::error('Error approving all products', [
+            Log::error('Error approving all inventaries', [
                 'return_id' => $this->id,
                 'error' => $e->getMessage(),
             ]);
@@ -790,7 +790,7 @@ class ReturnRequest extends Model
 
             return true;
         } catch (\Exception $e) {
-            Log::error('Error rejecting all products', [
+            Log::error('Error rejecting all inventaries', [
                 'return_id' => $this->id,
                 'error' => $e->getMessage(),
             ]);
@@ -870,7 +870,7 @@ class ReturnRequest extends Model
     {
         return $query->where(function ($q) {
             $q->where('created_at', '<', now()->subDays(config('returns.sla_days', 7)))
-                ->orWhereHas('products', function ($pq) {
+                ->orWhereHas('inventaries', function ($pq) {
                     $pq->whereNull('is_approved');
                 });
         });
