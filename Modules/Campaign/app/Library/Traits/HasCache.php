@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Traits;
+namespace Modules\Campaign\Library\Traits;
 
 use Illuminate\Support\Facades\Cache;
 

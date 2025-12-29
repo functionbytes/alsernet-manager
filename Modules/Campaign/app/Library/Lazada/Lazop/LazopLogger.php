@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Lazada\Lazop;
+namespace Modules\Campaign\Library\Lazada\Lazop;
 
 class LazopLogger
 {

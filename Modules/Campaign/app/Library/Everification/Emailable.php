@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Everification;
+namespace Modules\Campaign\Library\Everification;
 
 use app\Library\Exception\VerificationTakesLongerThanNormal;
 use Exception;

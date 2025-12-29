@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Storage;
+namespace Modules\Campaign\Library\Storage;
 
 use app\Library\Storage\Contracts\Storable;
 use app\Library\Storage\Contracts\StorageService;

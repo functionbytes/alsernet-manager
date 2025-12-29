@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Contracts;
+namespace Modules\Campaign\Library\Contracts;
 
 use Closure;
 

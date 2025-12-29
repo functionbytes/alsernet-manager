@@ -22,7 +22,7 @@
  * @todo separate the time-series and the quota stuffs
  */
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 use Closure;
 

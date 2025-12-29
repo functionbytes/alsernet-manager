@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 use Symfony\Component\CssSelector\Exception\ParseException;
 use function App\Helpers\url_get_contents_ssl_safe;

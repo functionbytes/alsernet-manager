@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 // use Swift_Message;
 

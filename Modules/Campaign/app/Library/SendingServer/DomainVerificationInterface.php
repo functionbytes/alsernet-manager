@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\SendingServer;
+namespace Modules\Campaign\Library\SendingServer;
 
 interface DomainVerificationInterface
 {

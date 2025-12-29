@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Storage\Contracts;
+namespace Modules\Campaign\Library\Storage\Contracts;
 
 interface Storable
 {

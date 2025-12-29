@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\HtmlHandler;
+namespace Modules\Campaign\Library\HtmlHandler;
 
 use bjoernffm\Spintax\Parser;
 use League\Pipeline\StageInterface;

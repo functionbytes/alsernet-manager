@@ -20,7 +20,7 @@
  * @link       http://acellemail.com
  */
 
-namespace app\Library\Notification;
+namespace Modules\Campaign\Library\Notification;
 
 use App\Models\Notification;
 use App\Models\Setting;

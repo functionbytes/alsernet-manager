@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 use app\Library\Exception\RateLimitExceeded;
 use Carbon\Carbon;

@@ -20,7 +20,7 @@
  * @link       http://acellemail.com
  */
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 use Exception;
 use RecursiveDirectoryIterator;

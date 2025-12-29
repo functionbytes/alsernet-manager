@@ -21,7 +21,7 @@
  * @link       http://acellemail.com
  */
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 /**
  * Note: This class is deprecated as Laravel 12 uses Symfony Mailer instead of SwiftMailer

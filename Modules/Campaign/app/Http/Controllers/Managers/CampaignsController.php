@@ -1673,7 +1673,7 @@ class CampaignsController extends Controller
 
     public function webhooksEdit(Request $request)
     {
-        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = CampaignWebhook::findByUid($request->webhook_uid);
 
         if ($request->isMethod('post')) {
             [$webhook, $validator] = $webhook->updateFromArray($request->all());
@@ -1698,7 +1698,7 @@ class CampaignsController extends Controller
 
     public function webhooksDelete(Request $request)
     {
-        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = CampaignWebhook::findByUid($request->webhook_uid);
 
         $webhook->delete();
 
@@ -1709,7 +1709,7 @@ class CampaignsController extends Controller
 
     public function webhooksSampleRequest(Request $request)
     {
-        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = CampaignWebhook::findByUid($request->webhook_uid);
 
         return view('managers.views.campaigns.campaigns.webhooksSampleRequest', [
             'webhook' => $webhook,
@@ -1718,7 +1718,7 @@ class CampaignsController extends Controller
 
     public function webhooksTest(Request $request)
     {
-        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         if ($request->isMethod('post')) {
@@ -1754,7 +1754,7 @@ class CampaignsController extends Controller
 
     public function webhooksTestMessage(Request $request, $webhook_uid, $message_id)
     {
-        $webhook = \Modules\Campaign\Entities\CampaignWebhook::findByUid($request->webhook_uid);
+        $webhook = CampaignWebhook::findByUid($request->webhook_uid);
         $result = null;
 
         $client = new \GuzzleHttp\Client;

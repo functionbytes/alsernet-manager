@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Automation;
+namespace Modules\Campaign\Library\Automation;
 
 use App\Models\EmailLink;
 use Exception;

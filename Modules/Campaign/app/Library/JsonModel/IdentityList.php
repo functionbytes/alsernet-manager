@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\JsonModel;
+namespace Modules\Campaign\Library\JsonModel;
 
 // Do not extend base
 class IdentityList

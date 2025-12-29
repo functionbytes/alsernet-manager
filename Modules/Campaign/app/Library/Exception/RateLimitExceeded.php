@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Exception;
+namespace Modules\Campaign\Library\Exception;
 
 use Exception;
 

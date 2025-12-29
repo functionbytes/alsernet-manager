@@ -20,7 +20,7 @@
  * @link       http://acellemail.com
  */
 
-namespace app\Library;
+namespace Modules\Campaign\Library;
 
 use app\Library\Facades\Hook;
 use App\ModelS\Lang;

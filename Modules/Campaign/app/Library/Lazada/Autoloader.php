@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Library\Lazada;
+namespace Modules\Campaign\Library\Lazada;
 
 class Autoloader
 {
