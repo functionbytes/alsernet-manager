@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 class NavigationService
@@ -33,6 +32,23 @@ class NavigationService
     }
 
     /**
+     * Generar URL de ruta de forma segura, manejando parámetros faltantes
+     */
+    protected function safeRoute(string $routeName): ?string
+    {
+        try {
+            if (! Route::has($routeName)) {
+                return null;
+            }
+
+            return route($routeName);
+        } catch (\Exception $e) {
+            // Si la ruta requiere parámetros, retorna null
+            return null;
+        }
+    }
+
+    /**
      * Obtener navegación del Dashboard
      */
     protected function getDashboardNav(): array
@@ -59,35 +75,52 @@ class NavigationService
         $items = [];
 
         // Suscripciones
-        $items[] = [
-            'label' => 'Suscriptiones',
-            'url' => route('manager.subscribers'),
-            'active' => str_contains(Route::currentRouteName(), 'subscribers'),
-        ];
-        $items[] = [
-            'label' => 'Listas',
-            'url' => route('manager.subscribers.lists'),
-            'active' => str_contains(Route::currentRouteName(), 'subscribers.lists'),
-        ];
-        $items[] = [
-            'label' => 'Estados',
-            'url' => route('manager.subscribers.conditions'),
-            'active' => str_contains(Route::currentRouteName(), 'subscribers.conditions'),
-        ];
+        $url = $this->safeRoute('manager.subscribers');
+        if ($url) {
+            $items[] = [
+                'label' => 'Suscriptiones',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'subscribers'),
+            ];
+        }
+
+        $url = $this->safeRoute('manager.subscribers.lists');
+        if ($url) {
+            $items[] = [
+                'label' => 'Listas',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'subscribers.lists'),
+            ];
+        }
+
+        $url = $this->safeRoute('manager.subscribers.conditions');
+        if ($url) {
+            $items[] = [
+                'label' => 'Estados',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'subscribers.conditions'),
+            ];
+        }
 
         // Productos
-        $items[] = [
-            'label' => 'Productos',
-            'url' => route('manager.inventaries'),
-            'active' => str_contains(Route::currentRouteName(), 'inventaries'),
-        ];
+        $url = $this->safeRoute('manager.inventaries');
+        if ($url) {
+            $items[] = [
+                'label' => 'Productos',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'inventaries'),
+            ];
+        }
 
         // Tiendas
-        $items[] = [
-            'label' => 'Tiendas',
-            'url' => route('manager.shops'),
-            'active' => str_contains(Route::currentRouteName(), 'shops'),
-        ];
+        $url = $this->safeRoute('manager.shops');
+        if ($url) {
+            $items[] = [
+                'label' => 'Tiendas',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'shops'),
+            ];
+        }
 
         return [
             'id' => 'ecommerce',
@@ -105,28 +138,42 @@ class NavigationService
         $items = [];
 
         // Campañas
-        $items[] = [
-            'label' => 'Campañas',
-            'url' => route('manager.campaigns'),
-            'active' => str_contains(Route::currentRouteName(), 'campaigns'),
-        ];
-        $items[] = [
-            'label' => 'Listas',
-            'url' => route('manager.maillists'),
-            'active' => str_contains(Route::currentRouteName(), 'maillists'),
-        ];
+        $url = $this->safeRoute('manager.campaigns');
+        if ($url) {
+            $items[] = [
+                'label' => 'Campañas',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'campaigns'),
+            ];
+        }
+
+        $url = $this->safeRoute('manager.maillists');
+        if ($url) {
+            $items[] = [
+                'label' => 'Listas',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'maillists'),
+            ];
+        }
 
         // Plantillas
-        $items[] = [
-            'label' => 'Plantillas campaña',
-            'url' => route('manager.templates'),
-            'active' => str_contains(Route::currentRouteName(), 'templates'),
-        ];
-        $items[] = [
-            'label' => 'Plantilla correos',
-            'url' => route('manager.layouts'),
-            'active' => str_contains(Route::currentRouteName(), 'layouts'),
-        ];
+        $url = $this->safeRoute('manager.templates');
+        if ($url) {
+            $items[] = [
+                'label' => 'Plantillas campaña',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'templates'),
+            ];
+        }
+
+        $url = $this->safeRoute('manager.layouts');
+        if ($url) {
+            $items[] = [
+                'label' => 'Plantilla correos',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'layouts'),
+            ];
+        }
 
         return [
             'id' => 'marketing',
@@ -141,17 +188,22 @@ class NavigationService
      */
     protected function getUsuariosNav(): array
     {
+        $items = [];
+
+        $url = $this->safeRoute('manager.users');
+        if ($url) {
+            $items[] = [
+                'label' => 'Usuarios',
+                'url' => $url,
+                'active' => str_contains(Route::currentRouteName(), 'users'),
+            ];
+        }
+
         return [
             'id' => 'usuarios',
             'icon' => 'fa-users',
             'title' => 'Usuarios',
-            'items' => [
-                [
-                    'label' => 'Usuarios',
-                    'url' => route('manager.users'),
-                    'active' => str_contains(Route::currentRouteName(), 'users'),
-                ],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -243,32 +295,63 @@ class NavigationService
         $items = [];
 
         // General
-        $items[] = ['label' => 'Principal', 'url' => route('manager.settings'), 'active' => Route::currentRouteName() === 'manager.settings'];
-        $items[] = ['label' => 'Categorías', 'url' => route('manager.categories'), 'active' => str_contains(Route::currentRouteName(), 'categories')];
-        $items[] = ['label' => 'Búsqueda', 'url' => route('manager.settings.search.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.search')];
-        $items[] = ['label' => 'Localización', 'url' => route('manager.settings.localization.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.localization')];
-        $items[] = ['label' => 'Traducciones', 'url' => route('manager.settings.translations.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.translations')];
-        $items[] = ['label' => 'Carga de archivos', 'url' => route('manager.settings.uploading.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.uploading')];
-        $items[] = ['label' => 'Gestor de Medios', 'url' => route('manager.media.index'), 'active' => str_contains(Route::currentRouteName(), 'media.index')];
+        $routes = [
+            ['name' => 'manager.settings', 'label' => 'Principal', 'key' => 'settings'],
+            ['name' => 'manager.categories', 'label' => 'Categorías', 'key' => 'categories'],
+            ['name' => 'manager.settings.search.index', 'label' => 'Búsqueda', 'key' => 'settings.search'],
+            ['name' => 'manager.settings.localization.index', 'label' => 'Localización', 'key' => 'settings.localization'],
+            ['name' => 'manager.settings.translations.index', 'label' => 'Traducciones', 'key' => 'settings.translations'],
+            ['name' => 'manager.settings.uploading.index', 'label' => 'Carga de archivos', 'key' => 'settings.uploading'],
+            ['name' => 'manager.media.index', 'label' => 'Gestor de Medios', 'key' => 'media.index'],
+        ];
+
+        foreach ($routes as $route) {
+            $url = $this->safeRoute($route['name']);
+            if ($url) {
+                $items[] = ['label' => $route['label'], 'url' => $url, 'active' => str_contains(Route::currentRouteName(), $route['key'])];
+            }
+        }
 
         // Helpdesk - Solo si el módulo está disponible
-        $items[] = ['label' => 'Live chat', 'url' => route('manager.helpdesk.settings.livechat'), 'active' => str_contains(Route::currentRouteName(), 'helpdesk.settings.livechat')];
-        $items[] = ['label' => 'Inteligencia artificial', 'url' => route('manager.helpdesk.settings.ai'), 'active' => str_contains(Route::currentRouteName(), 'helpdesk.settings.ai')];
+        $helpdesk_routes = [
+            ['name' => 'manager.helpdesk.settings.livechat', 'label' => 'Live chat', 'key' => 'helpdesk.settings.livechat'],
+            ['name' => 'manager.helpdesk.settings.ai', 'label' => 'Inteligencia artificial', 'key' => 'helpdesk.settings.ai'],
+        ];
+
+        foreach ($helpdesk_routes as $route) {
+            $url = $this->safeRoute($route['name']);
+            if ($url) {
+                $items[] = ['label' => $route['label'], 'url' => $url, 'active' => str_contains(Route::currentRouteName(), $route['key'])];
+            }
+        }
 
         // Email/Comunicaciones
-        $items[] = ['label' => 'Email/SMTP', 'url' => route('manager.settings.email.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.email')];
-        $items[] = ['label' => 'Plantillas de correo', 'url' => route('manager.settings.mailers.templates.index'), 'active' => str_contains(Route::currentRouteName(), 'settings.mailers')];
-        $items[] = ['label' => 'Componentes de correo', 'url' => route('manager.settings.mailers.components.index'), 'active' => false];
-        $items[] = ['label' => 'Variables de correo', 'url' => route('manager.settings.mailers.variables.index'), 'active' => false];
-        $items[] = ['label' => 'Email Endpoints', 'url' => route('manager.settings.mailers.endpoints.index'), 'active' => false];
+        $email_routes = [
+            ['name' => 'manager.settings.email.index', 'label' => 'Email/SMTP', 'key' => 'settings.email'],
+            ['name' => 'manager.settings.mailers.templates.index', 'label' => 'Plantillas de correo', 'key' => 'settings.mailers'],
+            ['name' => 'manager.settings.mailers.components.index', 'label' => 'Componentes de correo', 'key' => false],
+            ['name' => 'manager.settings.mailers.variables.index', 'label' => 'Variables de correo', 'key' => false],
+            ['name' => 'manager.settings.mailers.endpoints.index', 'label' => 'Email Endpoints', 'key' => false],
+        ];
+
+        foreach ($email_routes as $route) {
+            $url = $this->safeRoute($route['name']);
+            if ($url) {
+                $items[] = ['label' => $route['label'], 'url' => $url, 'active' => $route['key'] ? str_contains(Route::currentRouteName(), $route['key']) : false];
+            }
+        }
 
         // Webhooks
-        if ($this->routeExists('manager.settings.webhooks.integrations.index')) {
-            $items[] = ['label' => 'Webhooks', 'url' => route('manager.settings.webhooks.integrations.index'), 'active' => str_contains(Route::currentRouteName(), 'webhooks')];
+        $url = $this->safeRoute('manager.settings.webhooks.integrations.index');
+        if ($url) {
+            $items[] = ['label' => 'Webhooks', 'url' => $url, 'active' => str_contains(Route::currentRouteName(), 'webhooks')];
         }
 
         // Almacenamiento
-        $items[] = ['label' => 'Almacenamiento', 'url' => route('manager.settings.storage'), 'active' => Route::currentRouteName() === 'manager.settings.storage'];
+        $url = $this->safeRoute('manager.settings.storage');
+        if ($url) {
+            $items[] = ['label' => 'Almacenamiento', 'url' => $url, 'active' => Route::currentRouteName() === 'manager.settings.storage'];
+        }
 
         return [
             'id' => 'configuracion',
@@ -283,17 +366,23 @@ class NavigationService
      */
     protected function getAccesoNav(): array
     {
-        if (!auth()->user()->can('role:view')) {
+        if (! auth()->user() || ! auth()->user()->can('role:view')) {
             return ['id' => 'acceso', 'icon' => 'fa-shield-halved', 'title' => 'Acceso', 'items' => []];
         }
 
         $items = [];
 
         if (auth()->user()->can('role:view')) {
-            $items[] = ['label' => 'Roles', 'url' => route('manager.roles'), 'active' => str_contains(Route::currentRouteName(), 'roles')];
+            $url = $this->safeRoute('manager.roles');
+            if ($url) {
+                $items[] = ['label' => 'Roles', 'url' => $url, 'active' => str_contains(Route::currentRouteName(), 'roles')];
+            }
         }
 
-        $items[] = ['label' => 'Permisos', 'url' => route('manager.permissions'), 'active' => str_contains(Route::currentRouteName(), 'permissions')];
+        $url = $this->safeRoute('manager.permissions');
+        if ($url) {
+            $items[] = ['label' => 'Permisos', 'url' => $url, 'active' => str_contains(Route::currentRouteName(), 'permissions')];
+        }
 
         return [
             'id' => 'acceso',
@@ -316,7 +405,7 @@ class NavigationService
      */
     public function getNavigation(): array
     {
-        return array_filter($this->navigation, fn ($section) => !empty($section['items']));
+        return array_filter($this->navigation, fn ($section) => ! empty($section['items']));
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace Modules\Warehouse\Entities;
 
 use App\Models\Traits\HasUid;
+use Database\Factories\Warehouse\WarehouseLocationFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +15,14 @@ class WarehouseLocation extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_locations';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseLocationFactory::new();
+    }
 
     protected $primaryKey = 'id';
 

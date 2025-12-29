@@ -26,8 +26,9 @@ class CampaignSeeder extends Seeder
         // Get the first mailing list to associate campaigns with
         $maillist = CampaignMaillist::first();
 
-        if (!$maillist) {
+        if (! $maillist) {
             $this->command->warn('⚠️  No mailing list found. Please run CampaignMaillistSeeder first.');
+
             return;
         }
 
@@ -109,7 +110,7 @@ class CampaignSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Campaigns seeded successfully (' . count($campaigns) . ' campaigns created)');
+        $this->command->info('✅ Campaigns seeded successfully ('.count($campaigns).' campaigns created)');
     }
 
     /**

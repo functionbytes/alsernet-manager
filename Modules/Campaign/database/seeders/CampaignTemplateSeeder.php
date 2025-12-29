@@ -24,8 +24,9 @@ class CampaignTemplateSeeder extends Seeder
         // Get a mailing list to associate campaigns with
         $maillist = CampaignMaillist::first();
 
-        if (!$maillist) {
+        if (! $maillist) {
             $this->command->warn('⚠️  No mailing list found. Please run CampaignMaillistSeeder first.');
+
             return;
         }
 
@@ -90,7 +91,7 @@ class CampaignTemplateSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Campaign templates seeded successfully (' . count($templates) . ' templates created)');
+        $this->command->info('✅ Campaign templates seeded successfully ('.count($templates).' templates created)');
     }
 
     /**

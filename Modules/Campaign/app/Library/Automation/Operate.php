@@ -2,8 +2,8 @@
 
 namespace app\Library\Automation;
 
-use Modules\Campaign\Entities\CampaignMaillist;
 use Exception;
+use Modules\Campaign\Entities\CampaignMaillist;
 
 class Operate extends Action
 {

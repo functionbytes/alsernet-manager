@@ -2,11 +2,11 @@
 
 namespace Modules\Campaign\Entities;
 
-use Modules\Campaign\Events\CampaignUpdated;
 use app\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Campaign\Events\CampaignUpdated;
 
 /**
  * @property int $id

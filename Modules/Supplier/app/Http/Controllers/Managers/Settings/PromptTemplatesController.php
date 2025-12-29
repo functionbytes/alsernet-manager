@@ -4,11 +4,11 @@ namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Entities\SupplierPrompt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Entities\SupplierPrompt;
 
 class PromptTemplatesController extends Controller
 {

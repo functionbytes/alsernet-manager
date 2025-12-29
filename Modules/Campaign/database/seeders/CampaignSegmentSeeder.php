@@ -26,8 +26,9 @@ class CampaignSegmentSeeder extends Seeder
         // Get a mailing list to associate segments with
         $maillist = CampaignMaillist::first();
 
-        if (!$maillist) {
+        if (! $maillist) {
             $this->command->warn('⚠️  No mailing list found. Please run CampaignMaillistSeeder first.');
+
             return;
         }
 
@@ -139,7 +140,7 @@ class CampaignSegmentSeeder extends Seeder
             $segmentCount++;
         }
 
-        $this->command->info('✅ Campaign segments seeded successfully (' . $segmentCount . ' segments created)');
+        $this->command->info('✅ Campaign segments seeded successfully ('.$segmentCount.' segments created)');
     }
 
     /**

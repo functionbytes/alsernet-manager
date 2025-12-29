@@ -2,16 +2,16 @@
 
 namespace Modules\Supplier\Services;
 
+use Exception;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Modules\Supplier\Entities\Supplier;
 use Modules\Supplier\Entities\SupplierAiContent;
 use Modules\Supplier\Entities\SupplierAiCost;
 use Modules\Supplier\Entities\SupplierContentValidation;
 use Modules\Supplier\Entities\SupplierExtractionResult;
 use Modules\Supplier\Entities\SupplierPrompt;
-use Exception;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 /**
  * Content Generation Service for Supplier Automation System

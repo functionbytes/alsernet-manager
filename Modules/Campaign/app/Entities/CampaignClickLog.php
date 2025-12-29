@@ -22,12 +22,12 @@
 
 namespace Modules\Campaign\Entities;
 
-use Modules\Campaign\Events\CampaignUpdated;
 use app\Library\StringHelper;
 use App\Models\IpLocation;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use Modules\Campaign\Events\CampaignUpdated;
 
 /**
  * @property-read CampaignTrackingLog|null $trackingLog

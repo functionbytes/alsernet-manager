@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Webhooks;
 
-use App\Models\Webhook\WebhookEventCatalog;
+use Modules\Webhook\Models\WebhookEventCatalog;
 use Illuminate\Database\Seeder;
 
 class WebhookEventCatalogSeeder extends Seeder

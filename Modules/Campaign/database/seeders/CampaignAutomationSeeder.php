@@ -24,8 +24,9 @@ class CampaignAutomationSeeder extends Seeder
         // Get a mailing list to associate automations with
         $maillist = CampaignMaillist::first();
 
-        if (!$maillist) {
+        if (! $maillist) {
             $this->command->warn('⚠️  No mailing list found. Please run CampaignMaillistSeeder first.');
+
             return;
         }
 
@@ -57,7 +58,7 @@ class CampaignAutomationSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Campaign automations seeded successfully (' . count($automations) . ' automations created)');
+        $this->command->info('✅ Campaign automations seeded successfully ('.count($automations).' automations created)');
     }
 
     /**

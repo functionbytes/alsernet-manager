@@ -21,7 +21,6 @@ class MaillistController extends Controller
      *
      * GET /api/maillists
      *
-     * @param Request $request
      * @return JsonResponse List of maillists with basic information
      */
     public function index(Request $request): JsonResponse
@@ -46,7 +45,6 @@ class MaillistController extends Controller
      *
      * POST /api/maillists
      *
-     * @param Request $request
      * @return JsonResponse Created maillist data
      */
     public function store(Request $request): JsonResponse
@@ -66,7 +64,7 @@ class MaillistController extends Controller
                 return response()->json($validator->messages(), 422);
             }
 
-            $maillist = new CampaignMaillist();
+            $maillist = new CampaignMaillist;
             $maillist->customer_id = $user->customer_id;
             $maillist->name = $request->get('name');
             $maillist->description = $request->get('description', '');
@@ -89,7 +87,7 @@ class MaillistController extends Controller
      *
      * GET /api/maillists/{uid}
      *
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse Maillist data with statistics
      */
     public function show(string $uid): JsonResponse
@@ -129,8 +127,7 @@ class MaillistController extends Controller
      *
      * PUT /api/maillists/{uid}
      *
-     * @param Request $request
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse Updated maillist data
      */
     public function update(Request $request, string $uid): JsonResponse
@@ -176,7 +173,7 @@ class MaillistController extends Controller
      *
      * DELETE /api/maillists/{uid}
      *
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse Success message
      */
     public function delete(string $uid): JsonResponse
@@ -208,8 +205,7 @@ class MaillistController extends Controller
      *
      * GET /api/maillists/{uid}/subscribers
      *
-     * @param Request $request
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse List of subscribers in the maillist
      */
     public function subscribers(Request $request, string $uid): JsonResponse
@@ -251,7 +247,7 @@ class MaillistController extends Controller
      *
      * POST /api/maillists/{uid}/verify
      *
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse Status of verification job
      */
     public function verify(string $uid): JsonResponse
@@ -293,7 +289,7 @@ class MaillistController extends Controller
      *
      * GET /api/maillists/{uid}/stats
      *
-     * @param string $uid Maillist's UID
+     * @param  string  $uid  Maillist's UID
      * @return JsonResponse Statistics for the maillist
      */
     public function stats(string $uid): JsonResponse
@@ -335,9 +331,6 @@ class MaillistController extends Controller
 
     /**
      * Calculate the growth rate for a maillist.
-     *
-     * @param int $maillistId
-     * @return float
      */
     private function calculateGrowthRate(int $maillistId): float
     {

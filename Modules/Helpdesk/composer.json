@@ -1,0 +1,16 @@
+{
+    "name": "nwidart/helpdesk",
+    "description": "Helpdesk support ticket system module",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Helpdesk\\": "app/",
+            "Modules\\Helpdesk\\Database\\Factories\\": "database/factories/",
+            "Modules\\Helpdesk\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Helpdesk\\Tests\\": "tests/"
+        }
+    }
+}

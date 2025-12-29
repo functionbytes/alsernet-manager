@@ -99,6 +99,6 @@ class CampaignMaillistSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Campaign mailing lists seeded successfully (' . count($maillists) . ' lists created)');
+        $this->command->info('✅ Campaign mailing lists seeded successfully ('.count($maillists).' lists created)');
     }
 }

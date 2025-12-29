@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Campaign\Http\Controllers\Api\CampaignController;
 use Modules\Campaign\Http\Controllers\Api\AutomationController;
-use Modules\Campaign\Http\Controllers\Api\SubscriberController;
+use Modules\Campaign\Http\Controllers\Api\CampaignController;
 use Modules\Campaign\Http\Controllers\Api\MaillistController;
+use Modules\Campaign\Http\Controllers\Api\SubscriberController;
 
 /*
 |--------------------------------------------------------------------------

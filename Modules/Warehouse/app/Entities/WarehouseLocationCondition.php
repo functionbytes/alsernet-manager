@@ -3,6 +3,8 @@
 namespace Modules\Warehouse\Entities;
 
 use App\Models\Traits\HasUid;
+use Database\Factories\Warehouse\WarehouseLocationConditionFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +14,14 @@ class WarehouseLocationCondition extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_location_conditions';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseLocationConditionFactory::new();
+    }
 
     protected $fillable = [
         'uid',

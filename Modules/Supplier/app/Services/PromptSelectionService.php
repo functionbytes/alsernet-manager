@@ -2,9 +2,9 @@
 
 namespace Modules\Supplier\Services;
 
-use Modules\Supplier\Entities\SupplierPrompt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Modules\Supplier\Entities\SupplierPrompt;
 
 /**
  * PromptSelectionService

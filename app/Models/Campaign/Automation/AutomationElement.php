@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Campaign\Automation;
+namespace Modules\Campaign\Entities\Automation;
 
 use App\Models\Automation\Email;
 use App\Models\Automation\the;

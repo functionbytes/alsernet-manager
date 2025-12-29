@@ -50,7 +50,7 @@ class CampaignSegment extends Model
 
     public function mailList()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignMaillist');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignMaillist');
     }
 
     public function segmentConditions()

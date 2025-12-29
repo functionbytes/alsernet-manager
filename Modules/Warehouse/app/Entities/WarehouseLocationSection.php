@@ -2,6 +2,9 @@
 
 namespace Modules\Warehouse\Entities;
 
+use Database\Factories\Warehouse\WarehouseLocationSectionFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +13,16 @@ use Illuminate\Support\Str;
 
 class WarehouseLocationSection extends Model
 {
+    use HasFactory;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseLocationSectionFactory::new();
+    }
+
     /**
      * The attributes that are mass assignable.
      *

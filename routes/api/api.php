@@ -29,7 +29,9 @@ use Modules\Documents\Http\Controllers\Api\DocumentsController;
 
 Route::group(['prefix' => 'documents'], function () {
     Route::post('/', [DocumentsController::class, 'process']);
-    Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
+    // @deprecated Webhook routes are now handled by Modules\Webhook
+    // See: Modules/Webhook/routes/api.php
+    // Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
     Route::post('/resend-reminder', [DocumentsController::class, 'resendDocumentReminder']);
     Route::post('/confirm-upload', [DocumentsController::class, 'confirmDocumentUpload']);
     Route::get('/order/data/{order_id}', [DocumentsController::class, 'getOrderData']);

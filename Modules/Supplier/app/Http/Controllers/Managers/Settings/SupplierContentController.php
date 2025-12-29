@@ -3,13 +3,13 @@
 namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
-use Modules\Supplier\Entities\SupplierAiContent;
-use Modules\Supplier\Services\ContentGenerationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Modules\Prestashop\Services\SupplierSyncService;
+use Modules\Supplier\Entities\SupplierAiContent;
+use Modules\Supplier\Services\ContentGenerationService;
 
 class SupplierContentController extends Controller
 {

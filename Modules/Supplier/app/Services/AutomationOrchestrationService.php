@@ -2,6 +2,13 @@
 
 namespace Modules\Supplier\Services;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Supplier\Entities\SupplierAutomationAlert;
 use Modules\Supplier\Entities\SupplierAutomationChain;
 use Modules\Supplier\Entities\SupplierAutomationChainExecution;
@@ -13,13 +20,6 @@ use Modules\Supplier\Entities\SupplierAutomationRetryQueue;
 use Modules\Supplier\Entities\SupplierAutomationTrigger;
 use Modules\Supplier\Entities\SupplierAutomationWorkflow;
 use Modules\Supplier\Entities\SupplierSource;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class AutomationOrchestrationService
 {

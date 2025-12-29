@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Jobs\Webhook;
+namespace Modules\Webhook\Jobs;
 
-use App\Models\Webhook\WebhookDelivery;
-use App\Models\Webhook\WebhookEvent;
-use App\Models\Webhook\WebhookSubscription;
-use App\Services\Webhook\WebhookRuleEngineService;
+use Modules\Webhook\Models\WebhookDelivery;
+use Modules\Webhook\Models\WebhookEvent;
+use Modules\Webhook\Models\WebhookSubscription;
+use Modules\Webhook\Services\WebhookRuleEngineService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;

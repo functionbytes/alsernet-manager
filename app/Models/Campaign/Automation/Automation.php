@@ -20,7 +20,7 @@
  * @link       http://acellemail.com
  */
 
-namespace App\Models\Campaign\Automation;
+namespace Modules\Campaign\Entities\Automation;
 
 use app\Library\Automation\Action;
 use app\Library\Automation\Evaluate;

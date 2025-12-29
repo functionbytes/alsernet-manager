@@ -5,12 +5,12 @@ namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierSourceRequest;
 use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierSourceRequest;
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Services\SourceConfigurationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Services\SourceConfigurationService;
 
 class SupplierSourcesController extends Controller
 {

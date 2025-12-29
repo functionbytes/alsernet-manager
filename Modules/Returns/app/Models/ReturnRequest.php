@@ -2,8 +2,8 @@
 
 namespace Modules\Returns\Models;
 
-use App\Models\Traits\HasUid;
 use App\Models\Return\Order\ReturnOrder;
+use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

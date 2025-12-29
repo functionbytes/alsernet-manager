@@ -2,13 +2,6 @@
 
 namespace Modules\Supplier\Jobs;
 
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Entities\SupplierAiContent;
-use Modules\Supplier\Entities\SupplierAiCost;
-use Modules\Supplier\Entities\SupplierAutomationRateLimit;
-use Modules\Supplier\Entities\SupplierExtractionResult;
-use Modules\Supplier\Entities\SupplierPrompt;
-use Modules\Supplier\Services\ContentGenerationService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,6 +11,13 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Entities\SupplierAiContent;
+use Modules\Supplier\Entities\SupplierAiCost;
+use Modules\Supplier\Entities\SupplierAutomationRateLimit;
+use Modules\Supplier\Entities\SupplierExtractionResult;
+use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Services\ContentGenerationService;
 
 /**
  * Generate AI Content Job

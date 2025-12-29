@@ -12,7 +12,7 @@ class CampaignServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/campaign.php',
+            __DIR__.'/../../config/campaign.php',
             'campaign'
         );
         $this->app->register(RouteServiceProvider::class);
@@ -33,7 +33,7 @@ class CampaignServiceProvider extends ServiceProvider
     private function publishConfig(): void
     {
         $this->publishes([
-            __DIR__ . '/../../config/campaign.php' => config_path('campaign.php'),
+            __DIR__.'/../../config/campaign.php' => config_path('campaign.php'),
         ], 'campaign-config');
     }
 

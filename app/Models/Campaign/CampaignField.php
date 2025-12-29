@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $required
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignFieldOption> $fieldOptions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignFieldOption> $fieldOptions
  * @property-read int|null $field_options_count
- * @property-read \App\Models\Campaign\CampaignMaillist $mailList
+ * @property-read \Modules\Campaign\Entities\CampaignMaillist $mailList
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignField newQuery()
@@ -61,12 +61,12 @@ class CampaignField extends Model
 
     public function mailList()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignMaillist', 'maillist_id');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignMaillist', 'maillist_id');
     }
 
     public function fieldOptions()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignFieldOption', 'maillist_id');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignFieldOption', 'maillist_id');
     }
 
     public static function formatTag($string)

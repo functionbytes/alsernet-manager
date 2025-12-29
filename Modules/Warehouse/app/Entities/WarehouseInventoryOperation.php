@@ -3,6 +3,8 @@
 namespace Modules\Warehouse\Entities;
 
 use App\Models\Traits\HasUid;
+use Database\Factories\Warehouse\WarehouseInventoryOperationFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,14 @@ class WarehouseInventoryOperation extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_inventory_operations';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseInventoryOperationFactory::new();
+    }
 
     protected static function boot()
     {

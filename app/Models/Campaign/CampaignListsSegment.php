@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $segment_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Campaign\Campaign $campaign
- * @property-read \App\Models\Campaign\CampaignMaillist|null $mailList
- * @property-read \App\Models\Campaign\CampaignSegment|null $segment
+ * @property-read \Modules\Campaign\Entities\Campaign $campaign
+ * @property-read \Modules\Campaign\Entities\CampaignMaillist|null $mailList
+ * @property-read \Modules\Campaign\Entities\CampaignSegment|null $segment
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignListsSegment newQuery()
@@ -33,16 +33,16 @@ class CampaignListsSegment extends Model
 
     public function campaign()
     {
-        return $this->belongsTo('App\Models\Campaign\Campaign');
+        return $this->belongsTo('Modules\Campaign\Entities\Campaign');
     }
 
     public function mailList()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignMaillist');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignMaillist');
     }
 
     public function segment()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignSegment');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignSegment');
     }
 }

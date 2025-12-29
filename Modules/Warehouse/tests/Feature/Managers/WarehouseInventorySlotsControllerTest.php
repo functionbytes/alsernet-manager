@@ -52,7 +52,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index lists slots for section
      */
-    public function testIndexListsSlotsForSection(): void
+    public function test_index_lists_slots_for_section(): void
     {
         for ($i = 1; $i <= 5; $i++) {
             WarehouseInventorySlot::factory()
@@ -79,7 +79,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index filters by occupied status
      */
-    public function testIndexFiltersByIdStatusOccupiedOrAvailable(): void
+    public function test_index_filters_by_id_status_occupied_or_available(): void
     {
         WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -107,7 +107,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index filters by product
      */
-    public function testIndexFiltersByIdProduct(): void
+    public function test_index_filters_by_id_product(): void
     {
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
@@ -141,7 +141,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test store creates slot with product
      */
-    public function testStoreCreatesSlotWithProduct(): void
+    public function test_store_creates_slot_with_product(): void
     {
         $data = [
             'warehouse_uid' => $this->warehouse->uid,
@@ -166,7 +166,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test store prevents duplicate product in same section
      */
-    public function testStorePreventsDuplicateProductInSection(): void
+    public function test_store_prevents_duplicate_product_in_section(): void
     {
         WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -190,7 +190,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test addQuantity increments properly
      */
-    public function testAddQuantityIncrementsProperly(): void
+    public function test_add_quantity_increments_properly(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -223,7 +223,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test subtractQuantity decrements properly
      */
-    public function testSubtractQuantityDecrementsProperly(): void
+    public function test_subtract_quantity_decrements_properly(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -256,7 +256,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test subtractQuantity validation prevents negative stock
      */
-    public function testSubtractQuantityValidation(): void
+    public function test_subtract_quantity_validation(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -283,7 +283,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test clear empties slot
      */
-    public function testClearEmptiesSlot(): void
+    public function test_clear_empties_slot(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -313,7 +313,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test moveTo transfers product to new section
      */
-    public function testMoveToTransfersProductToNewSection(): void
+    public function test_move_to_transfers_product_to_new_section(): void
     {
         $newSection = $this->location->sections()->create([
             'code' => 'NEW-SEC',
@@ -353,7 +353,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test moveTo validates destination exists
      */
-    public function testMoveToValidatesDestination(): void
+    public function test_move_to_validates_destination(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -380,7 +380,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test update modifies slot data
      */
-    public function testUpdateSlotModifiesData(): void
+    public function test_update_slot_modifies_data(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -407,7 +407,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test destroy removes slot
      */
-    public function testDestroyRemovesSlot(): void
+    public function test_destroy_removes_slot(): void
     {
         $slot = WarehouseInventorySlot::factory()
             ->for($this->section)
@@ -431,7 +431,7 @@ class WarehouseInventorySlotsControllerTest extends TestCase
     /**
      * Test index shows pagination and counts
      */
-    public function testIndexShowsPaginationAndCounts(): void
+    public function test_index_shows_pagination_and_counts(): void
     {
         for ($i = 1; $i <= 25; $i++) {
             WarehouseInventorySlot::factory()

@@ -23,11 +23,9 @@ class MailListUpdated
     /**
      * Create a new event instance.
      *
-     * @param MailList $mailList The mail list that was updated
+     * @param  MailList  $mailList  The mail list that was updated
      */
-    public function __construct(public MailList $mailList)
-    {
-    }
+    public function __construct(public MailList $mailList) {}
 
     /**
      * Get the channels the event should broadcast on.

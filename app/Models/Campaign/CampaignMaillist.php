@@ -3,9 +3,6 @@
 namespace App\Models\Campaign;
 
 use App;
-use Modules\Campaign\Events\MailListImported;
-use Modules\Campaign\Events\MailListSubscription;
-use Modules\Campaign\Events\MailListUpdated;
 use App\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
@@ -15,7 +12,6 @@ use app\Library\ExtendedSwiftMessage;
 use app\Library\MailListFieldMapping;
 use app\Library\RouletteWheel;
 use app\Library\StringHelper;
-use Modules\Campaign\Library\Traits\HasCache;
 use App\Library\Traits\QueryHelper;
 use App\Library\Traits\TrackJobs;
 use App\Models\Setting;
@@ -28,6 +24,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use League\Csv\Writer;
+use Modules\Campaign\Events\MailListImported;
+use Modules\Campaign\Events\MailListSubscription;
+use Modules\Campaign\Events\MailListUpdated;
+use Modules\Campaign\Library\Traits\HasCache;
 
 /**
  * @property int $id
@@ -48,17 +48,17 @@ use League\Csv\Writer;
  * @property int $all_sending_servers
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\Automation\Automation> $automations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\Automation\Automation> $automations
  * @property-read int|null $automations_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\Campaign> $campaigns
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\Campaign> $campaigns
  * @property-read int|null $campaigns_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignField> $fields
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignField> $fields
  * @property-read int|null $fields_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignSegment> $segments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignSegment> $segments
  * @property-read int|null $segments_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignMaillistsSubscriber> $subscribers
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignMaillistsSubscriber> $subscribers
  * @property-read int|null $subscribers_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignMaillist newModelQuery()
@@ -142,17 +142,17 @@ class CampaignMaillist extends Model
 
     public function fields()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignField');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignField');
     }
 
     public function segments()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignSegment', 'maillist_id');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignSegment', 'maillist_id');
     }
 
     public function automations()
     {
-        return $this->hasMany('App\Models\Campaign\Automation\Automation');
+        return $this->hasMany('Modules\Campaign\Entities\Automation\Automation');
     }
 
     public function pages()
@@ -167,12 +167,12 @@ class CampaignMaillist extends Model
 
     public function subscribers()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignMailListsSubscriber', 'maillist_id');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignMailListsSubscriber', 'maillist_id');
     }
 
     public function campaigns()
     {
-        return $this->belongsToMany('App\Models\Campaign\Campaign', 'campaigns_lists_segments', 'maillist_id', 'campaign_id');
+        return $this->belongsToMany('Modules\Campaign\Entities\Campaign', 'campaigns_lists_segments', 'maillist_id', 'campaign_id');
     }
 
     public function subscriberFields()
@@ -2020,7 +2020,7 @@ class CampaignMaillist extends Model
                 }
 
                 // Check tag exsit
-                $tag = App\Models\Campaign\CampaignField::formatTag($item['tag']);
+                $tag = Modules\Campaign\Entities\CampaignField::formatTag($item['tag']);
                 if (in_array($tag, $tags)) {
                     $conflict_tag = true;
                 }
@@ -2040,16 +2040,16 @@ class CampaignMaillist extends Model
         // Save fields
         $saved_ids = [];
         foreach ($request->fields as $uid => $item) {
-            $field = App\Models\Campaign\CampaignField::findByUid($item['uid']);
+            $field = Modules\Campaign\Entities\CampaignField::findByUid($item['uid']);
             if (! $field) {
-                $field = new App\Models\Campaign\CampaignField;
+                $field = new Modules\Campaign\Entities\CampaignField;
                 $field->maillist_id = $this->id;
             }
 
             // If email field
             if ($this->getEmailField()->uid != $field->uid) {
                 // save exsit field
-                $item['tag'] = App\Models\Campaign\CampaignField::formatTag($item['tag']);
+                $item['tag'] = Modules\Campaign\Entities\CampaignField::formatTag($item['tag']);
                 $field->fill($item);
                 $field->save();
 
@@ -2057,7 +2057,7 @@ class CampaignMaillist extends Model
                 $field->fieldOptions()->delete();
                 if (isset($item['options'])) {
                     foreach ($item['options'] as $key2 => $item2) {
-                        $option = new App\Models\Campaign\CampaignFieldOption($item2);
+                        $option = new Modules\Campaign\Entities\CampaignFieldOption($item2);
                         $option->field_id = $field->id;
                         $option->save();
                     }
@@ -2088,9 +2088,9 @@ class CampaignMaillist extends Model
         // Get old post values
         if (isset($params['fields'])) {
             foreach ($params['fields'] as $key => $item) {
-                $field = App\Models\Campaign\CampaignField::findByUid($item['uid']);
+                $field = Modules\Campaign\Entities\CampaignField::findByUid($item['uid']);
                 if (! $field) {
-                    $field = new App\Models\Campaign\CampaignField;
+                    $field = new Modules\Campaign\Entities\CampaignField;
                     $field->uid = $key;
                 }
                 $field->fill($item);
@@ -2106,7 +2106,7 @@ class CampaignMaillist extends Model
                 if (isset($item['options'])) {
                     $field->fieldOptions = collect();
                     foreach ($item['options'] as $key2 => $item2) {
-                        $option = new App\Models\Campaign\CampaignFieldOption($item2);
+                        $option = new Modules\Campaign\Entities\CampaignFieldOption($item2);
                         $option->uid = $key2;
                         $field->fieldOptions->push($option);
                     }

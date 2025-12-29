@@ -43,7 +43,6 @@ class CampaignController extends Controller
      *
      * POST /api/campaigns
      *
-     * @param Request $request
      * @return JsonResponse Created campaign data
      */
     public function store(Request $request): JsonResponse
@@ -88,7 +87,7 @@ class CampaignController extends Controller
      *
      * GET /api/campaigns/{id}
      *
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Campaign data with statistics
      */
     public function show(string $id): JsonResponse
@@ -147,8 +146,7 @@ class CampaignController extends Controller
      *
      * PUT /api/campaigns/{id}
      *
-     * @param Request $request
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Updated campaign data
      */
     public function update(Request $request, string $id): JsonResponse
@@ -198,7 +196,7 @@ class CampaignController extends Controller
      *
      * POST /api/campaigns/{id}/pause
      *
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Campaign data with updated status
      */
     public function pause(string $id): JsonResponse
@@ -241,7 +239,7 @@ class CampaignController extends Controller
      *
      * POST /api/campaigns/{id}/run
      *
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Campaign data with updated status
      */
     public function run(string $id): JsonResponse
@@ -284,7 +282,7 @@ class CampaignController extends Controller
      *
      * POST /api/campaigns/{id}/resume
      *
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Campaign data with updated status
      */
     public function resume(string $id): JsonResponse
@@ -327,7 +325,7 @@ class CampaignController extends Controller
      *
      * DELETE /api/campaigns/{id}
      *
-     * @param string $id Campaign's UID
+     * @param  string  $id  Campaign's UID
      * @return JsonResponse Success message
      */
     public function delete(string $id): JsonResponse

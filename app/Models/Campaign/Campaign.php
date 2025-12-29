@@ -11,7 +11,6 @@ use app\Library\HtmlHandler\InjectTrackingPixel;
 use app\Library\HtmlHandler\TransformUrl;
 use app\Library\RouletteWheel;
 use app\Library\StringHelper;
-use Modules\Campaign\Library\Traits\HasTemplate;
 use App\Models\SendingServer;
 use App\Models\Setting;
 use Carbon\Carbon;
@@ -19,6 +18,7 @@ use Closure;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Writer;
+use Modules\Campaign\Library\Traits\HasTemplate;
 
 /**
  * @property int $id
@@ -48,17 +48,17 @@ use League\Csv\Writer;
  * @property int|null $template_id
  * @property int $use_default_sending_server_from_email
  * @property string|null $preheader
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignLink> $campaignLinks
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignLink> $campaignLinks
  * @property-read int|null $campaign_links_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignWebhook> $campaignWebhooks
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignWebhook> $campaignWebhooks
  * @property-read int|null $campaign_webhooks_count
  * @property-read \App\Models\User|null $customer
- * @property-read \App\Models\Campaign\CampaignMaillist|null $defaultMailList
+ * @property-read \Modules\Campaign\Entities\CampaignMaillist|null $defaultMailList
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignListsSegment> $listsSegments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignListsSegment> $listsSegments
  * @property-read int|null $lists_segments_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Campaign\CampaignMaillist> $mailLists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignMaillist> $mailLists
  * @property-read int|null $mail_lists_count
  * @property-read \App\Models\Template\Template|null $template
  *
@@ -133,7 +133,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
      */
     public function defaultMailList()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignMaillist', 'default_maillist_id');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignMaillist', 'default_maillist_id');
     }
 
     /**
@@ -141,7 +141,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
      */
     public function mailLists()
     {
-        return $this->belongsToMany('App\Models\Campaign\CampaignMaillist', 'campaigns_lists_segments');
+        return $this->belongsToMany('Modules\Campaign\Entities\CampaignMaillist', 'campaigns_lists_segments');
     }
 
     /**
@@ -149,7 +149,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
      */
     public function campaignLinks()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignLink');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignLink');
     }
 
     /**
@@ -157,7 +157,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
      */
     public function campaignWebhooks()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignWebhook');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignWebhook');
     }
 
     /**
@@ -267,7 +267,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
      */
     public function listsSegments()
     {
-        return $this->hasMany('App\Models\Campaign\CampaignListsSegment');
+        return $this->hasMany('Modules\Campaign\Entities\CampaignListsSegment');
     }
 
     /**
@@ -2301,7 +2301,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
 
     public function newWebhook()
     {
-        $webhook = new \App\Models\CampaignWebhook;
+        $webhook = new \Modules\Campaign\EntitiesWebhook;
         $webhook->campaign_id = $this->id;
 
         return $webhook;

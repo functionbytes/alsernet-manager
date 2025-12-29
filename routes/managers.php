@@ -661,17 +661,19 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::match(['get', 'post'], '/{uid}/preheader/add', [CampaignsController::class, 'preheaderAdd'])->name('manager.campaigns.preheaderAdd');
         Route::get('/{uid}/preheader', [CampaignsController::class, 'preheader'])->name('manager.campaigns.preheader');
 
-        Route::post('/webhooks/{webhook_uid}/test/{message_id}', [CampaignsController::class, 'webhooksTestMessage'])->name('manager.campaigns.webhooksTestMessage');
+        // @deprecated Webhook routes are now handled by Modules\Webhook
+        // See: Modules/Webhook/routes/managers.php
+        // Route::post('/webhooks/{webhook_uid}/test/{message_id}', [CampaignsController::class, 'webhooksTestMessage'])->name('manager.campaigns.webhooksTestMessage');
         Route::get('/{uid}/click-log/{message_id}/execute', [CampaignsController::class, 'clickLogExecute'])->name('manager.campaigns.clickLogExecute');
         Route::get('/{uid}/open-log/{message_id}/execute', [CampaignsController::class, 'openLogExecute'])->name('manager.campaigns.openLogExecute');
-        Route::match(['get', 'post'], '/webhooks/{webhook_uid}/test', [CampaignsController::class, 'webhooksTest'])->name('manager.campaigns.webhooksTest');
-        Route::get('/webhooks/{webhook_uid}/sample/request', [CampaignsController::class, 'webhooksSampleRequest'])->name('manager.campaigns.webhooksSampleRequest');
-        Route::post('/webhooks/{webhook_uid}/delete', [CampaignsController::class, 'webhooksDelete'])->name('manager.campaigns.webhooksDelete');
-        Route::match(['get', 'post'], '/webhooks/{webhook_uid}/edit', [CampaignsController::class, 'webhooksEdit'])->name('manager.campaigns.webhooksEdit');
-        Route::get('/{uid}/webhooks/list', [CampaignsController::class, 'webhooksList'])->name('manager.campaigns.webhooksList');
-        Route::get('/{uid}/webhooks/link-select', [CampaignsController::class, 'webhooksLinkSelect'])->name('manager.campaigns.webhooksLinkSelect');
-        Route::match(['get', 'post'], '/{uid}/webhooks/add', [CampaignsController::class, 'webhooksAdd'])->name('manager.campaigns.webhooksAdd');
-        Route::get('/{uid}/webhooks', [CampaignsController::class, 'webhooks'])->name('manager.campaigns.webhooks');
+        // Route::match(['get', 'post'], '/webhooks/{webhook_uid}/test', [CampaignsController::class, 'webhooksTest'])->name('manager.campaigns.webhooksTest');
+        // Route::get('/webhooks/{webhook_uid}/sample/request', [CampaignsController::class, 'webhooksSampleRequest'])->name('manager.campaigns.webhooksSampleRequest');
+        // Route::post('/webhooks/{webhook_uid}/delete', [CampaignsController::class, 'webhooksDelete'])->name('manager.campaigns.webhooksDelete');
+        // Route::match(['get', 'post'], '/webhooks/{webhook_uid}/edit', [CampaignsController::class, 'webhooksEdit'])->name('manager.campaigns.webhooksEdit');
+        // Route::get('/{uid}/webhooks/list', [CampaignsController::class, 'webhooksList'])->name('manager.campaigns.webhooksList');
+        // Route::get('/{uid}/webhooks/link-select', [CampaignsController::class, 'webhooksLinkSelect'])->name('manager.campaigns.webhooksLinkSelect');
+        // Route::match(['get', 'post'], '/{uid}/webhooks/add', [CampaignsController::class, 'webhooksAdd'])->name('manager.campaigns.webhooksAdd');
+        // Route::get('/{uid}/webhooks', [CampaignsController::class, 'webhooks'])->name('manager.campaigns.webhooks');
 
         Route::get('/{uid}/preview-as/list', [CampaignsController::class, 'previewAsList'])->name('manager.campaigns.previewAsList');
         Route::get('/{uid}/preview-as', [CampaignsController::class, 'previewAs'])->name('manager.campaigns.previewAs');
@@ -863,14 +865,16 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::post('/{uid}/update', [AutomationsController::class, 'update'])->name('manager.automations.update');
         Route::get('/{uid}/settings', [AutomationsController::class, 'settings'])->name('manager.automations.settings');
 
-        Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/test', [AutomationsController::class, 'webhooksTest'])->name('manager.automations.webhooksTest');
-        Route::get('/emails/webhooks/{webhook_uid}/sample/request', [AutomationsController::class, 'webhooksSampleRequest'])->name('manager.automations.webhooksSampleRequest');
-        Route::post('/emails/webhooks/{webhook_uid}/delete', [AutomationsController::class, 'webhooksDelete'])->name('manager.automations.webhooksDelete');
-        Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/edit', [AutomationsController::class, 'webhooksEdit'])->name('manager.automations.webhooksEdit');
-        Route::get('/emails/{email_uid}/webhooks/list', [AutomationsController::class, 'webhooksList'])->name('manager.automations.webhooksList');
-        Route::get('/emails/{email_uid}/webhooks/link-select', [AutomationsController::class, 'webhooksLinkSelect'])->name('manager.automations.webhooksLinkSelect');
-        Route::match(['get', 'post'], 'automation/emails/{email_uid}/webhooks/add', [AutomationsController::class, 'webhooksAdd'])->name('manager.automations.webhooksAdd');
-        Route::get('/emails/{email_uid}/webhooks', [AutomationsController::class, 'webhooks'])->name('manager.automations.webhooks');
+        // @deprecated Webhook routes are now handled by Modules\Webhook
+        // See: Modules/Webhook/routes/managers.php
+        // Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/test', [AutomationsController::class, 'webhooksTest'])->name('manager.automations.webhooksTest');
+        // Route::get('/emails/webhooks/{webhook_uid}/sample/request', [AutomationsController::class, 'webhooksSampleRequest'])->name('manager.automations.webhooksSampleRequest');
+        // Route::post('/emails/webhooks/{webhook_uid}/delete', [AutomationsController::class, 'webhooksDelete'])->name('manager.automations.webhooksDelete');
+        // Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/edit', [AutomationsController::class, 'webhooksEdit'])->name('manager.automations.webhooksEdit');
+        // Route::get('/emails/{email_uid}/webhooks/list', [AutomationsController::class, 'webhooksList'])->name('manager.automations.webhooksList');
+        // Route::get('/emails/{email_uid}/webhooks/link-select', [AutomationsController::class, 'webhooksLinkSelect'])->name('manager.automations.webhooksLinkSelect');
+        // Route::match(['get', 'post'], 'automation/emails/{email_uid}/webhooks/add', [AutomationsController::class, 'webhooksAdd'])->name('manager.automations.webhooksAdd');
+        // Route::get('/emails/{email_uid}/webhooks', [AutomationsController::class, 'webhooks'])->name('manager.automations.webhooks');
 
         Route::post('/disable', [AutomationsController::class, 'disable'])->name('manager.automations.disable');
         Route::post('/enable', [AutomationsController::class, 'enable'])->name('manager.automations.enable');
@@ -1444,6 +1448,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::delete('/trash/empty', [MediaManagerController::class, 'emptyTrash'])->name('trash.empty');
     });
 
+    // @deprecated Webhook routes are now handled by Modules\Webhook
+    // See: Modules/Webhook/routes/managers.php
+    /*
     // Webhooks Management
     Route::prefix('settings/webhooks')->name('manager.settings.webhooks.')->group(function () {
 
@@ -1492,5 +1499,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::post('/{event}/replay', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'replay'])->name('replay');
         });
     });
+    */
 
 });

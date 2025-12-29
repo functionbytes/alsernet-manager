@@ -285,7 +285,17 @@
       "Bash(then)",
       "Bash(else)",
       "Bash(__NEW_LINE__ echo \"=== WEBHOOK MODULE STRUCTURE ===\" find /Users/functionbytes/Function/Coding/manager/Modules/Webhook -type f)",
-      "Bash(__NEW_LINE__ echo '=== FINAL SUPPLIER MODULE AUDIT ===' echo echo '✅ Old models removed:' find app/Models/Supplier -name *.php)"
+      "Bash(__NEW_LINE__ echo '=== FINAL SUPPLIER MODULE AUDIT ===' echo echo '✅ Old models removed:' find app/Models/Supplier -name *.php)",
+      "Bash('s/^namespace App\\\\\\\\Jobs\\\\\\\\Webhook;$/namespace Modules\\\\\\\\Webhook\\\\\\\\Jobs;/g' )",
+      "Bash({} +)",
+      "Bash(__NEW_LINE__ for file in Modules/Campaign/app/Http/Controllers/Api/{CampaignController,AutomationController,SubscriberController,MaillistController}.php)",
+      "Bash(paste:*)",
+      "Bash(if [ -d /Users/functionbytes/Function/Coding/manager/database/migrations/webhooks ])",
+      "Bash(then rm -rf /Users/functionbytes/Function/Coding/manager/database/migrations/webhooks)",
+      "Bash(else echo \"Path does not exist: /Users/functionbytes/Function/Coding/manager/database/migrations/webhooks\")",
+      "Bash(__NEW_LINE__ echo \"=== CAMPAIGN MODULE API FILES ===\")",
+      "Bash(do php -l \"/Users/functionbytes/Function/Coding/manager/Modules/Warehouse/app/Entities/$file.php\")",
+      "Bash(__NEW_LINE__ echo \"=== AUTOMATION CONTROLLER METHOD COUNT ===\")"
     ],
     "deny": [],
     "ask": []

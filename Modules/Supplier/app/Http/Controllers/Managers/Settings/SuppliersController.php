@@ -5,11 +5,11 @@ namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierRequest;
 use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierRequest;
-use Modules\Supplier\Entities\Supplier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Supplier\Entities\Supplier;
 
 class SuppliersController extends Controller
 {

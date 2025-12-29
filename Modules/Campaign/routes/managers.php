@@ -1,16 +1,13 @@
 <?php
 
-use Modules\Campaign\App\Http\Controllers\Managers\CampaignsController;
+use Illuminate\Support\Facades\Route;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Automations\AutomationsController;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Layouts\LayoutController;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Maillists\MaillistController;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Maillists\SegmentController;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Maillists\SubscriberController;
-use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
-use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Products\ProductsController;
-use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Products\ReportController;
 use Modules\Campaign\App\Http\Controllers\Managers\Campaigns\Templates\TemplatesController;
-use Illuminate\Support\Facades\Route;
+use Modules\Campaign\App\Http\Controllers\Managers\CampaignsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -343,163 +340,163 @@ Route::group(
 
         });
 
-// ===================================================================
-// MAILLISTS ROUTES - Subscriber list management (40+ routes)
-// ===================================================================
+        // ===================================================================
+        // MAILLISTS ROUTES - Subscriber list management (40+ routes)
+        // ===================================================================
 
-Route::group(['prefix' => 'maillists', 'name' => 'maillists.'], function (): void {
+        Route::group(['prefix' => 'maillists', 'name' => 'maillists.'], function (): void {
 
-    // Maillist CRUD operations
-    Route::get('/', [MaillistController::class, 'index'])->name('index');
-    Route::get('/create', [MaillistController::class, 'create'])->name('create');
-    Route::post('/store', [MaillistController::class, 'store'])->name('store');
-    Route::get('/edit/{uid}', [MaillistController::class, 'edit'])->name('edit');
-    Route::get('/view/{uid}', [MaillistController::class, 'view'])->name('view');
-    Route::get('/destroy/{uid}', [MaillistController::class, 'destroy'])->name('destroy');
+            // Maillist CRUD operations
+            Route::get('/', [MaillistController::class, 'index'])->name('index');
+            Route::get('/create', [MaillistController::class, 'create'])->name('create');
+            Route::post('/store', [MaillistController::class, 'store'])->name('store');
+            Route::get('/edit/{uid}', [MaillistController::class, 'edit'])->name('edit');
+            Route::get('/view/{uid}', [MaillistController::class, 'view'])->name('view');
+            Route::get('/destroy/{uid}', [MaillistController::class, 'destroy'])->name('destroy');
 
-    // Maillist update and management
-    Route::get('/lists/{uid}/overview', [MaillistController::class, 'overview'])->name('overview');
-    Route::get('/lists/{uid}/edit', [MaillistController::class, 'edit'])->name('lists.edit');
-    Route::post('/lists/{uid}/update', [MaillistController::class, 'update'])->name('update');
-    Route::match(['get', 'post'], '/lists/copy', [MaillistController::class, 'copy'])->name('copy');
-    Route::match(['get', 'post'], '/lists/select', [MaillistController::class, 'selectList'])->name('selectList');
+            // Maillist update and management
+            Route::get('/lists/{uid}/overview', [MaillistController::class, 'overview'])->name('overview');
+            Route::get('/lists/{uid}/edit', [MaillistController::class, 'edit'])->name('lists.edit');
+            Route::post('/lists/{uid}/update', [MaillistController::class, 'update'])->name('update');
+            Route::match(['get', 'post'], '/lists/copy', [MaillistController::class, 'copy'])->name('copy');
+            Route::match(['get', 'post'], '/lists/select', [MaillistController::class, 'selectList'])->name('selectList');
 
-    // Maillist verification management
-    Route::get('/lists/{uid}/verification', [MaillistController::class, 'verification'])->name('verification');
-    Route::post('/lists/{uid}/verification/start', [MaillistController::class, 'startVerification'])->name('startVerification');
-    Route::post('/lists/{uid}/verification/{job_uid}/stop', [MaillistController::class, 'stopVerification'])->name('stopVerification');
-    Route::post('/lists/{uid}/verification/reset', [MaillistController::class, 'resetVerification'])->name('resetVerification');
-    Route::get('/lists/{uid}/verification/{job_uid}/progress', [MaillistController::class, 'verificationProgress'])->name('verificationProgress');
+            // Maillist verification management
+            Route::get('/lists/{uid}/verification', [MaillistController::class, 'verification'])->name('verification');
+            Route::post('/lists/{uid}/verification/start', [MaillistController::class, 'startVerification'])->name('startVerification');
+            Route::post('/lists/{uid}/verification/{job_uid}/stop', [MaillistController::class, 'stopVerification'])->name('stopVerification');
+            Route::post('/lists/{uid}/verification/reset', [MaillistController::class, 'resetVerification'])->name('resetVerification');
+            Route::get('/lists/{uid}/verification/{job_uid}/progress', [MaillistController::class, 'verificationProgress'])->name('verificationProgress');
 
-    // Maillist embedded forms
-    Route::match(['get', 'post'], '/lists/{uid}/embedded-form', [MaillistController::class, 'embeddedForm'])->name('embeddedForm');
-    Route::get('/lists/{uid}/embedded-form-frame', [MaillistController::class, 'embeddedFormFrame'])->name('embeddedFormFrame');
-    Route::post('/lists/{uid}/embedded-form-subscribe', [MaillistController::class, 'embeddedFormSubscribe'])->name('embeddedFormSubscribe');
-    Route::post('/lists/{uid}/embedded-form-subscribe-captcha', [MaillistController::class, 'embeddedFormSubscribe'])->name('embeddedFormSubscribeCaptcha');
+            // Maillist embedded forms
+            Route::match(['get', 'post'], '/lists/{uid}/embedded-form', [MaillistController::class, 'embeddedForm'])->name('embeddedForm');
+            Route::get('/lists/{uid}/embedded-form-frame', [MaillistController::class, 'embeddedFormFrame'])->name('embeddedFormFrame');
+            Route::post('/lists/{uid}/embedded-form-subscribe', [MaillistController::class, 'embeddedFormSubscribe'])->name('embeddedFormSubscribe');
+            Route::post('/lists/{uid}/embedded-form-subscribe-captcha', [MaillistController::class, 'embeddedFormSubscribe'])->name('embeddedFormSubscribeCaptcha');
 
-    // Maillist customer cloning
-    Route::get('/lists/{uid}/clone-to-customers/choose', [MaillistController::class, 'cloneForCustomersChoose'])->name('cloneForCustomersChoose');
-    Route::post('/lists/{uid}/clone-to-customers', [MaillistController::class, 'cloneForCustomers'])->name('cloneForCustomers');
+            // Maillist customer cloning
+            Route::get('/lists/{uid}/clone-to-customers/choose', [MaillistController::class, 'cloneForCustomersChoose'])->name('cloneForCustomersChoose');
+            Route::post('/lists/{uid}/clone-to-customers', [MaillistController::class, 'cloneForCustomers'])->name('cloneForCustomers');
 
-    // Maillist analytics and charts
-    Route::get('/lists/{uid}/email-verification/chart', [MaillistController::class, 'emailVerificationChart'])->name('emailVerificationChart');
-    Route::get('/lists/{uid}/list-growth', [MaillistController::class, 'listGrowthChart'])->name('listGrowthChart');
-    Route::get('/lists/{uid}/list-statistics-chart', [MaillistController::class, 'statisticsChart'])->name('statisticsChart');
+            // Maillist analytics and charts
+            Route::get('/lists/{uid}/email-verification/chart', [MaillistController::class, 'emailVerificationChart'])->name('emailVerificationChart');
+            Route::get('/lists/{uid}/list-growth', [MaillistController::class, 'listGrowthChart'])->name('listGrowthChart');
+            Route::get('/lists/{uid}/list-statistics-chart', [MaillistController::class, 'statisticsChart'])->name('statisticsChart');
 
-    // Maillist listing and deletion
-    Route::get('/lists/listing/{page?}', [MaillistController::class, 'listing'])->name('listing');
-    Route::get('/lists/sort', [MaillistController::class, 'sort'])->name('sort');
-    Route::get('/lists/quick-view', [MaillistController::class, 'quickView'])->name('quickView');
-    Route::post('/lists/delete', [MaillistController::class, 'delete'])->name('delete');
-    Route::get('/lists/delete/confirm', [MaillistController::class, 'deleteConfirm'])->name('delete.confirm');
+            // Maillist listing and deletion
+            Route::get('/lists/listing/{page?}', [MaillistController::class, 'listing'])->name('listing');
+            Route::get('/lists/sort', [MaillistController::class, 'sort'])->name('sort');
+            Route::get('/lists/quick-view', [MaillistController::class, 'quickView'])->name('quickView');
+            Route::post('/lists/delete', [MaillistController::class, 'delete'])->name('delete');
+            Route::get('/lists/delete/confirm', [MaillistController::class, 'deleteConfirm'])->name('delete.confirm');
 
-    // Email utilities
-    Route::get('/lists/{uid}/check-email', [AutomationsController::class, 'checkEmail'])->name('checkEmail');
+            // Email utilities
+            Route::get('/lists/{uid}/check-email', [AutomationsController::class, 'checkEmail'])->name('checkEmail');
 
-});
+        });
 
-// ===================================================================
-// AUTOMATIONS ROUTES - Automated email workflows (35+ routes)
-// ===================================================================
+        // ===================================================================
+        // AUTOMATIONS ROUTES - Automated email workflows (35+ routes)
+        // ===================================================================
 
-Route::group(['prefix' => 'automations', 'name' => 'automations.'], function (): void {
+        Route::group(['prefix' => 'automations', 'name' => 'automations.'], function (): void {
 
-    // Automation CRUD and state management
-    Route::get('/', [AutomationsController::class, 'index'])->name('index');
-    Route::post('/enable', [AutomationsController::class, 'enable'])->name('enable');
-    Route::post('/disable', [AutomationsController::class, 'disable'])->name('disable');
-    Route::delete('/delete', [AutomationsController::class, 'delete'])->name('delete');
-    Route::match(['get', 'post'], 'automation/{uid}/copy', [AutomationsController::class, 'copy'])->name('copy');
+            // Automation CRUD and state management
+            Route::get('/', [AutomationsController::class, 'index'])->name('index');
+            Route::post('/enable', [AutomationsController::class, 'enable'])->name('enable');
+            Route::post('/disable', [AutomationsController::class, 'disable'])->name('disable');
+            Route::delete('/delete', [AutomationsController::class, 'delete'])->name('delete');
+            Route::match(['get', 'post'], 'automation/{uid}/copy', [AutomationsController::class, 'copy'])->name('copy');
 
-    // Automation data and settings
-    Route::get('/{uid}/settings', [AutomationsController::class, 'settings'])->name('settings');
-    Route::post('/{uid}/update', [AutomationsController::class, 'update'])->name('update');
-    Route::post('/{uid}/data/save', [AutomationsController::class, 'saveData'])->name('saveData');
-    Route::get('/{uid}/insight', [AutomationsController::class, 'insight'])->name('insight');
-    Route::get('/{uid}/last-saved', [AutomationsController::class, 'lastSaved'])->name('lastSaved');
+            // Automation data and settings
+            Route::get('/{uid}/settings', [AutomationsController::class, 'settings'])->name('settings');
+            Route::post('/{uid}/update', [AutomationsController::class, 'update'])->name('update');
+            Route::post('/{uid}/data/save', [AutomationsController::class, 'saveData'])->name('saveData');
+            Route::get('/{uid}/insight', [AutomationsController::class, 'insight'])->name('insight');
+            Route::get('/{uid}/last-saved', [AutomationsController::class, 'lastSaved'])->name('lastSaved');
 
-    // Automation trigger and execution
-    Route::get('trigger/{id}', [AutomationsController::class, 'show'])->name('show');
-    Route::get('/{automation}/{subscriber}/trigger', [AutomationsController::class, 'triggerNow'])->name('triggerNow');
-    Route::get('/{automation}/run', [AutomationsController::class, 'run'])->name('run');
-    Route::post('/{uid}/trigger-all', [AutomationsController::class, 'triggerAll'])->name('triggerAll');
-    Route::get('/{uid}/debug', [AutomationsController::class, 'debug'])->name('debug');
+            // Automation trigger and execution
+            Route::get('trigger/{id}', [AutomationsController::class, 'show'])->name('show');
+            Route::get('/{automation}/{subscriber}/trigger', [AutomationsController::class, 'triggerNow'])->name('triggerNow');
+            Route::get('/{automation}/run', [AutomationsController::class, 'run'])->name('run');
+            Route::post('/{uid}/trigger-all', [AutomationsController::class, 'triggerAll'])->name('triggerAll');
+            Route::get('/{uid}/debug', [AutomationsController::class, 'debug'])->name('debug');
 
-    // Automation email preheader management
-    Route::get('/{uid}/template/{email_uid}/preheader', [AutomationsController::class, 'emailPreheader'])->name('emailPreheader');
-    Route::match(['get', 'post'], 'automation/{uid}/template/{email_uid}/preheader/add', [AutomationsController::class, 'emailPreheaderAdd'])->name('emailPreheaderAdd');
-    Route::post('/{uid}/template/{email_uid}/preheader/remove', [AutomationsController::class, 'emailPreheaderRemove'])->name('emailPreheaderRemove');
+            // Automation email preheader management
+            Route::get('/{uid}/template/{email_uid}/preheader', [AutomationsController::class, 'emailPreheader'])->name('emailPreheader');
+            Route::match(['get', 'post'], 'automation/{uid}/template/{email_uid}/preheader/add', [AutomationsController::class, 'emailPreheaderAdd'])->name('emailPreheaderAdd');
+            Route::post('/{uid}/template/{email_uid}/preheader/remove', [AutomationsController::class, 'emailPreheaderRemove'])->name('emailPreheaderRemove');
 
-    // Automation email testing
-    Route::match(['get', 'post'], 'automation/{email_uid}/send-test-email', [AutomationsController::class, 'sendTestEmail'])->name('send.test');
+            // Automation email testing
+            Route::match(['get', 'post'], 'automation/{email_uid}/send-test-email', [AutomationsController::class, 'sendTestEmail'])->name('send.test');
 
-    // Automation conditions management
-    Route::get('/{uid}/condition/remove', [AutomationsController::class, 'conditionRemove'])->name('conditionRemove');
-    Route::get('/{uid}/condition/setting', [AutomationsController::class, 'conditionSetting'])->name('conditionSetting');
-    Route::match(['get', 'post'], 'automation/condition/wait/custom', [AutomationsController::class, 'conditionWaitCustom'])->name('conditionWaitCustom');
+            // Automation conditions management
+            Route::get('/{uid}/condition/remove', [AutomationsController::class, 'conditionRemove'])->name('conditionRemove');
+            Route::get('/{uid}/condition/setting', [AutomationsController::class, 'conditionSetting'])->name('conditionSetting');
+            Route::match(['get', 'post'], 'automation/condition/wait/custom', [AutomationsController::class, 'conditionWaitCustom'])->name('conditionWaitCustom');
 
-    // Automation wait time management
-    Route::get('/{uid}/wait-time', [AutomationsController::class, 'waitTime'])->name('waitTime');
-    Route::post('/{uid}/wait-time', [AutomationsController::class, 'waitTime'])->name('waitTime.update');
+            // Automation wait time management
+            Route::get('/{uid}/wait-time', [AutomationsController::class, 'waitTime'])->name('waitTime');
+            Route::post('/{uid}/wait-time', [AutomationsController::class, 'waitTime'])->name('waitTime.update');
 
-    // Automation operations management
-    Route::get('/{uid}/operation/select', [AutomationsController::class, 'operationSelect'])->name('operation.select');
-    Route::get('/{uid}/operation/show', [AutomationsController::class, 'operationShow'])->name('operationShow');
-    Route::match(['get', 'post'], 'automation/{uid}/operation/create', [AutomationsController::class, 'operationCreate'])->name('operation.create');
-    Route::match(['get', 'post'], 'automation/{uid}/operation/edit', [AutomationsController::class, 'operationEdit'])->name('operation.edit');
+            // Automation operations management
+            Route::get('/{uid}/operation/select', [AutomationsController::class, 'operationSelect'])->name('operation.select');
+            Route::get('/{uid}/operation/show', [AutomationsController::class, 'operationShow'])->name('operationShow');
+            Route::match(['get', 'post'], 'automation/{uid}/operation/create', [AutomationsController::class, 'operationCreate'])->name('operation.create');
+            Route::match(['get', 'post'], 'automation/{uid}/operation/edit', [AutomationsController::class, 'operationEdit'])->name('operation.edit');
 
-    // Automation cart management
-    Route::get('/{uid}/cart/items', [AutomationsController::class, 'cartItems'])->name('cartItems');
-    Route::get('/{uid}/cart/list', [AutomationsController::class, 'cartList'])->name('cartList');
-    Route::get('/{uid}/cart/stats', [AutomationsController::class, 'cartStats'])->name('cartStats');
-    Route::match(['get', 'post'], 'automation/{uid}/cart/wait', [AutomationsController::class, 'cartWait'])->name('cartWait');
-    Route::match(['get', 'post'], 'automation/{uid}/cart/change-store', [AutomationsController::class, 'cartChangeStore'])->name('cartChangeStore');
-    Route::match(['get', 'post'], 'automation/{uid}/cart/change-list', [AutomationsController::class, 'cartChangeList'])->name('cartChangeList');
+            // Automation cart management
+            Route::get('/{uid}/cart/items', [AutomationsController::class, 'cartItems'])->name('cartItems');
+            Route::get('/{uid}/cart/list', [AutomationsController::class, 'cartList'])->name('cartList');
+            Route::get('/{uid}/cart/stats', [AutomationsController::class, 'cartStats'])->name('cartStats');
+            Route::match(['get', 'post'], 'automation/{uid}/cart/wait', [AutomationsController::class, 'cartWait'])->name('cartWait');
+            Route::match(['get', 'post'], 'automation/{uid}/cart/change-store', [AutomationsController::class, 'cartChangeStore'])->name('cartChangeStore');
+            Route::match(['get', 'post'], 'automation/{uid}/cart/change-list', [AutomationsController::class, 'cartChangeList'])->name('cartChangeList');
 
-    // Automation subscribers management
-    Route::get('/{uid}/subscribers', [AutomationsController::class, 'subscribers'])->name('subscribers.');
-    Route::get('/{uid}/subscribers/list', [AutomationsController::class, 'subscribersList'])->name('subscribers.List');
-    Route::get('/{uid}/subscribers/{subscriber_uid}/show', [AutomationsController::class, 'subscribersShow'])->name('subscribers.Show');
-    Route::post('/{uid}/subscribers/{subscriber_uid}/restart', [AutomationsController::class, 'subscribersRestart'])->name('subscribers.restart');
-    Route::post('/{uid}/subscribers/{subscriber_uid}/remove', [AutomationsController::class, 'subscribersRemove'])->name('subscribers.remove');
+            // Automation subscribers management
+            Route::get('/{uid}/subscribers', [AutomationsController::class, 'subscribers'])->name('subscribers.');
+            Route::get('/{uid}/subscribers/list', [AutomationsController::class, 'subscribersList'])->name('subscribers.List');
+            Route::get('/{uid}/subscribers/{subscriber_uid}/show', [AutomationsController::class, 'subscribersShow'])->name('subscribers.Show');
+            Route::post('/{uid}/subscribers/{subscriber_uid}/restart', [AutomationsController::class, 'subscribersRestart'])->name('subscribers.restart');
+            Route::post('/{uid}/subscribers/{subscriber_uid}/remove', [AutomationsController::class, 'subscribersRemove'])->name('subscribers.remove');
 
-    // Automation email webhooks management
-    Route::get('/emails/{email_uid}/webhooks', [AutomationsController::class, 'webhooks'])->name('webhooks');
-    Route::match(['get', 'post'], 'automation/emails/{email_uid}/webhooks/add', [AutomationsController::class, 'webhooksAdd'])->name('webhooksAdd');
-    Route::get('/emails/{email_uid}/webhooks/list', [AutomationsController::class, 'webhooksList'])->name('webhooksList');
-    Route::get('/emails/{email_uid}/webhooks/link-select', [AutomationsController::class, 'webhooksLinkSelect'])->name('webhooksLinkSelect');
-    Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/edit', [AutomationsController::class, 'webhooksEdit'])->name('webhooksEdit');
-    Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/test', [AutomationsController::class, 'webhooksTest'])->name('webhooksTest');
-    Route::post('/emails/webhooks/{webhook_uid}/delete', [AutomationsController::class, 'webhooksDelete'])->name('webhooksDelete');
-    Route::get('/emails/webhooks/{webhook_uid}/sample/request', [AutomationsController::class, 'webhooksSampleRequest'])->name('webhooksSampleRequest');
+            // Automation email webhooks management
+            Route::get('/emails/{email_uid}/webhooks', [AutomationsController::class, 'webhooks'])->name('webhooks');
+            Route::match(['get', 'post'], 'automation/emails/{email_uid}/webhooks/add', [AutomationsController::class, 'webhooksAdd'])->name('webhooksAdd');
+            Route::get('/emails/{email_uid}/webhooks/list', [AutomationsController::class, 'webhooksList'])->name('webhooksList');
+            Route::get('/emails/{email_uid}/webhooks/link-select', [AutomationsController::class, 'webhooksLinkSelect'])->name('webhooksLinkSelect');
+            Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/edit', [AutomationsController::class, 'webhooksEdit'])->name('webhooksEdit');
+            Route::match(['get', 'post'], 'automation/emails/webhooks/{webhook_uid}/test', [AutomationsController::class, 'webhooksTest'])->name('webhooksTest');
+            Route::post('/emails/webhooks/{webhook_uid}/delete', [AutomationsController::class, 'webhooksDelete'])->name('webhooksDelete');
+            Route::get('/emails/webhooks/{webhook_uid}/sample/request', [AutomationsController::class, 'webhooksSampleRequest'])->name('webhooksSampleRequest');
 
-    // Automation listing
-    Route::get('/listing', [AutomationsController::class, 'listing'])->name('listing');
+            // Automation listing
+            Route::get('/listing', [AutomationsController::class, 'listing'])->name('listing');
 
-});
+        });
 
-// ===================================================================
-// LAYOUTS ROUTES - Email layout templates (9 routes)
-// ===================================================================
+        // ===================================================================
+        // LAYOUTS ROUTES - Email layout templates (9 routes)
+        // ===================================================================
 
-Route::group(['prefix' => 'layouts', 'name' => 'layouts.'], function (): void {
+        Route::group(['prefix' => 'layouts', 'name' => 'layouts.'], function (): void {
 
-    // Layout CRUD operations
-    Route::get('/', [LayoutController::class, 'index'])->name('index');
-    Route::get('/create', [LayoutController::class, 'create'])->name('create');
-    Route::post('/store', [LayoutController::class, 'store'])->name('store');
-    Route::get('/edit/{uid}', [LayoutController::class, 'edit'])->name('edit');
-    Route::patch('/update/{uid}', [LayoutController::class, 'update'])->name('update');
-    Route::get('/view/{uid}', [LayoutController::class, 'view'])->name('view');
-    Route::get('/destroy/{uid}', [LayoutController::class, 'destroy'])->name('destroy');
+            // Layout CRUD operations
+            Route::get('/', [LayoutController::class, 'index'])->name('index');
+            Route::get('/create', [LayoutController::class, 'create'])->name('create');
+            Route::post('/store', [LayoutController::class, 'store'])->name('store');
+            Route::get('/edit/{uid}', [LayoutController::class, 'edit'])->name('edit');
+            Route::patch('/update/{uid}', [LayoutController::class, 'update'])->name('update');
+            Route::get('/view/{uid}', [LayoutController::class, 'view'])->name('view');
+            Route::get('/destroy/{uid}', [LayoutController::class, 'destroy'])->name('destroy');
 
-    // Layout listing and sorting
-    Route::get('/listing/{page?}', [LayoutController::class, 'listing'])->name('listing');
-    Route::get('/sort', [LayoutController::class, 'sort'])->name('sort');
+            // Layout listing and sorting
+            Route::get('/listing/{page?}', [LayoutController::class, 'listing'])->name('listing');
+            Route::get('/sort', [LayoutController::class, 'sort'])->name('sort');
 
-});
+        });
 
-    // ===================================================================
-    // END - Campaign Module Routes (171+ total routes)
-    // ===================================================================
-});
+        // ===================================================================
+        // END - Campaign Module Routes (171+ total routes)
+        // ===================================================================
+    });

@@ -3,6 +3,7 @@
 namespace Modules\Campaign\Http\ViewComposers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
 class NavigationComposer
@@ -37,6 +38,11 @@ class NavigationComposer
 
         $items = [];
         foreach ($section['items'] ?? [] as $item) {
+            // Check if route exists
+            if (! Route::has($item['route'])) {
+                continue;
+            }
+
             // Check item permission if defined
             if (! empty($item['permission']) && ! $this->hasPermission($item['permission'])) {
                 continue;

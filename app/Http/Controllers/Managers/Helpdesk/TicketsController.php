@@ -183,7 +183,7 @@ class TicketsController extends Controller
 
         // Get available agents (users with helpdesk permissions)
         $agents = \App\Models\User::where('available', 1)
-            ->where('confirmed', 1)
+            ->where('verified', 1)
             ->orderBy('firstname')
             ->orderBy('lastname')
             ->get();

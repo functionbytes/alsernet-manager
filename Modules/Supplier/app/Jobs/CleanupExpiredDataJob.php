@@ -2,15 +2,15 @@
 
 namespace Modules\Supplier\Jobs;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Supplier\Entities\SupplierAiCost;
 use Modules\Supplier\Entities\SupplierAutomationExecution;
 use Modules\Supplier\Entities\SupplierAutomationSetting;
 use Modules\Supplier\Entities\SupplierContentLog;
 use Modules\Supplier\Entities\SupplierExtractionResult;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Cleanup Expired Data Job

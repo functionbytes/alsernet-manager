@@ -10,5 +10,7 @@ return [
     Modules\Documents\Providers\DocumentsServiceProvider::class,
     Modules\Returns\Providers\ReturnsServiceProvider::class,
     Modules\Subscriber\Providers\SubscriberServiceProvider::class,
+    Modules\Webhook\Providers\WebhookServiceProvider::class,
     Modules\Supplier\Providers\SupplierServiceProvider::class,
+    Modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
 ];

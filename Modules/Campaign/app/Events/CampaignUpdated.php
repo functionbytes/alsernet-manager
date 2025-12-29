@@ -23,11 +23,9 @@ class CampaignUpdated
     /**
      * Create a new event instance.
      *
-     * @param Campaign $campaign The campaign that was updated
+     * @param  Campaign  $campaign  The campaign that was updated
      */
-    public function __construct(public Campaign $campaign)
-    {
-    }
+    public function __construct(public Campaign $campaign) {}
 
     /**
      * Get the channels the event should broadcast on.

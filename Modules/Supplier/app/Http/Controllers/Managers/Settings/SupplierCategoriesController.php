@@ -4,10 +4,10 @@ namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Modules\Supplier\Entities\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Supplier\Entities\Supplier;
 
 class SupplierCategoriesController extends Controller
 {

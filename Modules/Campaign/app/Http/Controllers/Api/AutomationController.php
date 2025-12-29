@@ -21,7 +21,6 @@ class AutomationController extends Controller
      *
      * GET /api/automations
      *
-     * @param Request $request
      * @return JsonResponse List of automations with basic information
      */
     public function index(Request $request): JsonResponse
@@ -46,7 +45,6 @@ class AutomationController extends Controller
      *
      * POST /api/automations
      *
-     * @param Request $request
      * @return JsonResponse Created automation data
      */
     public function store(Request $request): JsonResponse
@@ -64,7 +62,7 @@ class AutomationController extends Controller
                 return response()->json($validator->messages(), 422);
             }
 
-            $automation = new Automation();
+            $automation = new Automation;
             $automation->customer_id = $user->customer_id;
             $automation->name = $request->get('name');
             $automation->description = $request->get('description', '');
@@ -86,7 +84,7 @@ class AutomationController extends Controller
      *
      * GET /api/automations/{uid}
      *
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Automation data with configuration
      */
     public function show(string $uid): JsonResponse
@@ -124,8 +122,7 @@ class AutomationController extends Controller
      *
      * PUT /api/automations/{uid}
      *
-     * @param Request $request
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Updated automation data
      */
     public function update(Request $request, string $uid): JsonResponse
@@ -169,7 +166,7 @@ class AutomationController extends Controller
      *
      * DELETE /api/automations/{uid}
      *
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Success message
      */
     public function delete(string $uid): JsonResponse
@@ -203,7 +200,7 @@ class AutomationController extends Controller
      *
      * Queues the specified automation for execution as a background job.
      *
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Status of the queued automation
      */
     public function execute(string $uid): JsonResponse
@@ -250,7 +247,7 @@ class AutomationController extends Controller
      *
      * POST /api/automations/{uid}/enable
      *
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Status of the automation
      */
     public function enable(string $uid): JsonResponse
@@ -297,7 +294,7 @@ class AutomationController extends Controller
      *
      * POST /api/automations/{uid}/disable
      *
-     * @param string $uid Automation's UID
+     * @param  string  $uid  Automation's UID
      * @return JsonResponse Status of the automation
      */
     public function disable(string $uid): JsonResponse

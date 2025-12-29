@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Managers\Settings\Webhooks;
+namespace Modules\Webhook\Http\Requests\Managers\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
 

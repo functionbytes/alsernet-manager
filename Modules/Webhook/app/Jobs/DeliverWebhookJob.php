@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Jobs\Webhook;
+namespace Modules\Webhook\Jobs;
 
-use App\Models\Webhook\WebhookDelivery;
-use App\Services\Webhook\WebhookDeliveryService;
+use Modules\Webhook\Models\WebhookDelivery;
+use Modules\Webhook\Services\WebhookDeliveryService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;

@@ -3,10 +3,10 @@
 namespace Modules\Supplier\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Supplier\Services\PromptSelectionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Modules\Supplier\Services\PromptSelectionService;
 
 /**
  * PromptSelectionApiController

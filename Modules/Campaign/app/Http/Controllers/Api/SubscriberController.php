@@ -20,7 +20,6 @@ class SubscriberController extends Controller
      *
      * GET /api/subscribers
      *
-     * @param Request $request
      * @return JsonResponse List of subscribers with basic information
      */
     public function index(Request $request): JsonResponse
@@ -45,7 +44,6 @@ class SubscriberController extends Controller
      *
      * POST /api/subscribers
      *
-     * @param Request $request
      * @return JsonResponse Created subscriber data
      */
     public function store(Request $request): JsonResponse
@@ -65,7 +63,7 @@ class SubscriberController extends Controller
                 return response()->json($validator->messages(), 422);
             }
 
-            $subscriber = new Subscriber();
+            $subscriber = new Subscriber;
             $subscriber->customer_id = $user->customer_id;
             $subscriber->email = $request->get('email');
             $subscriber->first_name = $request->get('first_name', '');
@@ -88,7 +86,7 @@ class SubscriberController extends Controller
      *
      * GET /api/subscribers/{uid}
      *
-     * @param string $uid Subscriber's UID
+     * @param  string  $uid  Subscriber's UID
      * @return JsonResponse Subscriber data with details
      */
     public function show(string $uid): JsonResponse
@@ -127,8 +125,7 @@ class SubscriberController extends Controller
      *
      * PUT /api/subscribers/{uid}
      *
-     * @param Request $request
-     * @param string $uid Subscriber's UID
+     * @param  string  $uid  Subscriber's UID
      * @return JsonResponse Updated subscriber data
      */
     public function update(Request $request, string $uid): JsonResponse
@@ -146,7 +143,7 @@ class SubscriberController extends Controller
 
             // Validate
             $validator = \Validator::make($request->all(), [
-                'email' => 'sometimes|email|unique:subscribers,email,' . $subscriber->id,
+                'email' => 'sometimes|email|unique:subscribers,email,'.$subscriber->id,
                 'first_name' => 'sometimes|string|max:255',
                 'last_name' => 'sometimes|string|max:255',
                 'status' => 'sometimes|string|in:subscribed,unsubscribed,pending',
@@ -174,7 +171,7 @@ class SubscriberController extends Controller
      *
      * DELETE /api/subscribers/{uid}
      *
-     * @param string $uid Subscriber's UID
+     * @param  string  $uid  Subscriber's UID
      * @return JsonResponse Success message
      */
     public function delete(string $uid): JsonResponse
@@ -206,8 +203,7 @@ class SubscriberController extends Controller
      *
      * GET /api/subscribers/{uid}/logs
      *
-     * @param Request $request
-     * @param string $uid Subscriber's UID
+     * @param  string  $uid  Subscriber's UID
      * @return JsonResponse Subscriber activity logs
      */
     public function logs(Request $request, string $uid): JsonResponse

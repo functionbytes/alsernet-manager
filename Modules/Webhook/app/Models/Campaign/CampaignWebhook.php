@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Campaign;
+namespace Modules\Webhook\Models\Campaign;
 
 use App\Models\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

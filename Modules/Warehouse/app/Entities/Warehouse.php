@@ -3,6 +3,8 @@
 namespace Modules\Warehouse\Entities;
 
 use App\Models\Shop;
+use Database\Factories\Warehouse\WarehouseFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +19,14 @@ class Warehouse extends Model
     use HasFactory, LogsActivity, SoftDeletes;
 
     protected $table = 'warehouses';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseFactory::new();
+    }
 
     protected $primaryKey = 'id';
 

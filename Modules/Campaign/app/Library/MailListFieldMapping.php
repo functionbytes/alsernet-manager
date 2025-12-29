@@ -2,9 +2,9 @@
 
 namespace app\Library;
 
-use Modules\Campaign\Entities\CampaignMaillist;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Modules\Campaign\Entities\CampaignMaillist;
 
 class MailListFieldMapping
 {

@@ -16,12 +16,11 @@ class AutomationService
     /**
      * Create a new automation instance.
      *
-     * @param array $data Automation data
-     * @return Automation
+     * @param  array  $data  Automation data
      */
     public function create(array $data): Automation
     {
-        $automation = new Automation();
+        $automation = new Automation;
         $automation->fill($data);
         $automation->save();
 
@@ -31,9 +30,8 @@ class AutomationService
     /**
      * Update an existing automation.
      *
-     * @param Automation $automation The automation to update
-     * @param array $data Updated automation data
-     * @return Automation
+     * @param  Automation  $automation  The automation to update
+     * @param  array  $data  Updated automation data
      */
     public function update(Automation $automation, array $data): Automation
     {
@@ -45,8 +43,7 @@ class AutomationService
     /**
      * Delete an automation.
      *
-     * @param Automation $automation The automation to delete
-     * @return bool
+     * @param  Automation  $automation  The automation to delete
      */
     public function delete(Automation $automation): bool
     {
@@ -58,8 +55,7 @@ class AutomationService
      *
      * Queues the automation for background processing.
      *
-     * @param Automation $automation The automation to execute
-     * @return bool
+     * @param  Automation  $automation  The automation to execute
      */
     public function execute(Automation $automation): bool
     {
@@ -69,7 +65,7 @@ class AutomationService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Automation execution failed: ' . $exception->getMessage(), [
+            \Log::error('Automation execution failed: '.$exception->getMessage(), [
                 'automation_id' => $automation->id,
                 'automation_uid' => $automation->uid,
                 'exception' => $exception,
@@ -82,8 +78,7 @@ class AutomationService
     /**
      * Enable an automation.
      *
-     * @param Automation $automation The automation to enable
-     * @return bool
+     * @param  Automation  $automation  The automation to enable
      */
     public function enable(Automation $automation): bool
     {
@@ -92,7 +87,7 @@ class AutomationService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Automation enable failed: ' . $exception->getMessage(), [
+            \Log::error('Automation enable failed: '.$exception->getMessage(), [
                 'automation_id' => $automation->id,
                 'automation_uid' => $automation->uid,
                 'exception' => $exception,
@@ -105,8 +100,7 @@ class AutomationService
     /**
      * Disable an automation.
      *
-     * @param Automation $automation The automation to disable
-     * @return bool
+     * @param  Automation  $automation  The automation to disable
      */
     public function disable(Automation $automation): bool
     {
@@ -115,7 +109,7 @@ class AutomationService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Automation disable failed: ' . $exception->getMessage(), [
+            \Log::error('Automation disable failed: '.$exception->getMessage(), [
                 'automation_id' => $automation->id,
                 'automation_uid' => $automation->uid,
                 'exception' => $exception,

@@ -3,12 +3,12 @@
 namespace Modules\Campaign\Jobs;
 
 use app\Library\Contracts\CampaignInterface;
-use Modules\Campaign\Library\Traits\Trackable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Campaign\Library\Traits\Trackable;
 
 class RunCampaign implements ShouldQueue
 {
@@ -49,7 +49,7 @@ class RunCampaign implements ShouldQueue
             $this->campaign->logger()->info('Launch campaign ---------------------->');
             $this->campaign->run();
         } catch (\Throwable $e) {
-            $errorMsg = 'Error scheduling campaign: ' . $e->getMessage() . "\n" . $e->getTraceAsString();
+            $errorMsg = 'Error scheduling campaign: '.$e->getMessage()."\n".$e->getTraceAsString();
             $this->campaign->setError($errorMsg);
 
             // To set the job to failed

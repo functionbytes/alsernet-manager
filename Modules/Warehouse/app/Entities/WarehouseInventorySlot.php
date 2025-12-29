@@ -2,8 +2,10 @@
 
 namespace Modules\Warehouse\Entities;
 
-use App\Models\Traits\HasUid;
 use App\Models\Product\Product;
+use App\Models\Traits\HasUid;
+use Database\Factories\Warehouse\WarehouseInventorySlotFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,14 @@ class WarehouseInventorySlot extends Model
     use HasFactory, HasUid;
 
     protected $table = 'warehouse_inventory_slots';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return WarehouseInventorySlotFactory::new();
+    }
 
     protected $primaryKey = 'id';
 

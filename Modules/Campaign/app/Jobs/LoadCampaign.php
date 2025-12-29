@@ -3,13 +3,13 @@
 namespace Modules\Campaign\Jobs;
 
 use app\Library\Contracts\CampaignInterface;
-use Modules\Campaign\Library\Traits\Trackable;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\Campaign\Library\Traits\Trackable;
 
 class LoadCampaign implements ShouldQueue
 {

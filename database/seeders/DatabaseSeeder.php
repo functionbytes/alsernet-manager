@@ -54,7 +54,7 @@ use Database\Seeders\Permissions\RolesAndUsersSeeder;
 use Database\Seeders\Campaigns\CampaignSeeder;
 
 // Webhooks
-use Database\Seeders\Webhooks\WebhookEventCatalogSeeder;
+use Modules\Webhook\Database\Seeders\WebhookEventCatalogSeeder;
 
 use Illuminate\Database\Seeder;
 

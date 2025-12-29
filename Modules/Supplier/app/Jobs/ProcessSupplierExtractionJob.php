@@ -2,14 +2,14 @@
 
 namespace Modules\Supplier\Jobs;
 
-use Modules\Supplier\Entities\SupplierExtractionBatch;
-use Modules\Supplier\Entities\SupplierSource;
-use Modules\Supplier\Services\ExtractionService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Modules\Supplier\Entities\SupplierExtractionBatch;
+use Modules\Supplier\Entities\SupplierSource;
+use Modules\Supplier\Services\ExtractionService;
 
 /**
  * Process Supplier Extraction Job

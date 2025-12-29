@@ -15,12 +15,11 @@ class CampaignService
     /**
      * Create a new campaign instance.
      *
-     * @param array $data Campaign data
-     * @return Campaign
+     * @param  array  $data  Campaign data
      */
     public function create(array $data): Campaign
     {
-        $campaign = new Campaign();
+        $campaign = new Campaign;
         $campaign->fill($data);
         $campaign->save();
 
@@ -30,9 +29,8 @@ class CampaignService
     /**
      * Update an existing campaign.
      *
-     * @param Campaign $campaign The campaign to update
-     * @param array $data Updated campaign data
-     * @return Campaign
+     * @param  Campaign  $campaign  The campaign to update
+     * @param  array  $data  Updated campaign data
      */
     public function update(Campaign $campaign, array $data): Campaign
     {
@@ -44,8 +42,7 @@ class CampaignService
     /**
      * Delete a campaign.
      *
-     * @param Campaign $campaign The campaign to delete
-     * @return bool
+     * @param  Campaign  $campaign  The campaign to delete
      */
     public function delete(Campaign $campaign): bool
     {
@@ -55,8 +52,7 @@ class CampaignService
     /**
      * Execute a campaign.
      *
-     * @param Campaign $campaign The campaign to execute
-     * @return bool
+     * @param  Campaign  $campaign  The campaign to execute
      */
     public function execute(Campaign $campaign): bool
     {
@@ -65,7 +61,7 @@ class CampaignService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Campaign execution failed: ' . $exception->getMessage(), [
+            \Log::error('Campaign execution failed: '.$exception->getMessage(), [
                 'campaign_id' => $campaign->id,
                 'campaign_uid' => $campaign->uid,
                 'exception' => $exception,
@@ -78,8 +74,7 @@ class CampaignService
     /**
      * Pause a campaign.
      *
-     * @param Campaign $campaign The campaign to pause
-     * @return bool
+     * @param  Campaign  $campaign  The campaign to pause
      */
     public function pause(Campaign $campaign): bool
     {
@@ -88,7 +83,7 @@ class CampaignService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Campaign pause failed: ' . $exception->getMessage(), [
+            \Log::error('Campaign pause failed: '.$exception->getMessage(), [
                 'campaign_id' => $campaign->id,
                 'campaign_uid' => $campaign->uid,
                 'exception' => $exception,
@@ -101,8 +96,7 @@ class CampaignService
     /**
      * Resume a paused campaign.
      *
-     * @param Campaign $campaign The campaign to resume
-     * @return bool
+     * @param  Campaign  $campaign  The campaign to resume
      */
     public function resume(Campaign $campaign): bool
     {
@@ -111,7 +105,7 @@ class CampaignService
 
             return true;
         } catch (\Exception $exception) {
-            \Log::error('Campaign resume failed: ' . $exception->getMessage(), [
+            \Log::error('Campaign resume failed: '.$exception->getMessage(), [
                 'campaign_id' => $campaign->id,
                 'campaign_uid' => $campaign->uid,
                 'exception' => $exception,
@@ -124,7 +118,7 @@ class CampaignService
     /**
      * Get campaign statistics.
      *
-     * @param Campaign $campaign The campaign to get statistics for
+     * @param  Campaign  $campaign  The campaign to get statistics for
      * @return array Campaign statistics
      */
     public function getStatistics(Campaign $campaign): array

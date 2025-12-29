@@ -5,12 +5,12 @@ namespace Modules\Supplier\Http\Controllers\Managers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierPromptRequest;
 use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierPromptRequest;
-use Modules\Supplier\Entities\SupplierPrompt;
-use Modules\Supplier\Services\ContentGenerationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Services\ContentGenerationService;
 
 class SupplierPromptsController extends Controller
 {

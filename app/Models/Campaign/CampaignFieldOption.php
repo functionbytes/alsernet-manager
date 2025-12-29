@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $value
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Campaign\CampaignField $field
+ * @property-read \Modules\Campaign\Entities\CampaignField $field
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignFieldOption newQuery()
@@ -42,6 +42,6 @@ class CampaignFieldOption extends Model
 
     public function field()
     {
-        return $this->belongsTo('App\Models\Campaign\CampaignField');
+        return $this->belongsTo('Modules\Campaign\Entities\CampaignField');
     }
 }

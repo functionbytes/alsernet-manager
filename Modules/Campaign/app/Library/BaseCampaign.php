@@ -2,16 +2,16 @@
 
 namespace app\Library;
 
-use Modules\Campaign\Events\CampaignUpdated;
-use Modules\Campaign\Jobs\LoadCampaign;
-use Modules\Campaign\Jobs\RunCampaign;
-use Modules\Campaign\Library\Traits\HasCache;
-use App\Models\Traits\HasUid;
 use App\Library\Traits\TrackJobs;
+use App\Models\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Campaign\Events\CampaignUpdated;
+use Modules\Campaign\Jobs\LoadCampaign;
+use Modules\Campaign\Jobs\RunCampaign;
+use Modules\Campaign\Library\Traits\HasCache;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
