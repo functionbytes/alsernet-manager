@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Campaigns;
+namespace Modules\Campaign\Http\Controllers\Managers\Campaigns;
 
 use App\Http\Controllers\Controller;
 use app\Library\StringHelper;

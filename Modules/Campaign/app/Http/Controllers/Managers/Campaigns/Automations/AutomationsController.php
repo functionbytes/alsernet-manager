@@ -3,14 +3,14 @@
 namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations;
 
 use App\Http\Controllers\Controller;
-use Modules\Campaign\Entities\Email;
-use Modules\Mail\Entities\MailList;
+use App\Http\Controllers\Managers\Automations\Email;
+use App\Http\Controllers\Managers\Automations\MailList;
 use Modules\Campaign\Jobs\ForceTriggerAutomation;
 use App\Models\Attachment;
 use App\Models\Automation2;
 use App\Models\Segment;
 use App\Models\Setting;
-use App\Models\Subscriber;
+use Modules\Subscriber\Models\Subscriber;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use Exception;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Campaigns\Products;
+namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Products;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

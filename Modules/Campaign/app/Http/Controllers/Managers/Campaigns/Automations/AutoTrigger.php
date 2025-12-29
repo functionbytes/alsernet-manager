@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Campaigns\Automations;
+namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Automations\AutoTriggerModel;
