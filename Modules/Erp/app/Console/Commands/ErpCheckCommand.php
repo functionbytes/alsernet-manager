@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Erp\Console\Commands;
 
 use App\Models\Setting;
 use Modules\Supplier\Services\Integrations\ErpService;

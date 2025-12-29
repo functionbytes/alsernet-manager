@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Modules\Erp\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Modules\Supplier\Services\Integrations\ErpService;

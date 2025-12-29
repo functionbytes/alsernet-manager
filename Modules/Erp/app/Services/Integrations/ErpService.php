@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Integrations;
+namespace Modules\Erp\Services\Integrations;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;

@@ -36,7 +36,7 @@ use App\Http\Controllers\Managers\Settings\CategoryController;
 use App\Http\Controllers\Managers\Settings\DatabaseCleanupController;
 use App\Http\Controllers\Managers\Settings\DatabaseSettingsController;
 use App\Http\Controllers\Managers\Settings\EmailSettingsController;
-use App\Http\Controllers\Managers\Settings\ErpSettingsController;
+use Modules\Erp\Http\Controllers\Managers\ErpSettingsController;
 use App\Http\Controllers\Managers\Settings\HoursSettingsController;
 use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\LangsController;

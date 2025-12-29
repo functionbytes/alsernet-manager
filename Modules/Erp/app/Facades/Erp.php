@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Facades;
+namespace Modules\Erp\Facades;
 
 use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Support\Facades\Facade;

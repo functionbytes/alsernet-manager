@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Managers\Settings;
+namespace Modules\Erp\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
