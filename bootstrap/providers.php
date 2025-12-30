@@ -20,4 +20,5 @@ return [
     Modules\Faq\Providers\FaqServiceProvider::class,
     Modules\Users\Providers\UsersServiceProvider::class,
     Modules\Notification\Providers\NotificationServiceProvider::class,
+    Modules\Backup\Providers\BackupServiceProvider::class,
 ];
