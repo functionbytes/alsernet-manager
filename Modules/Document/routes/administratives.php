@@ -34,25 +34,5 @@ Route::middleware(['auth', 'role:administrative|super-admin'])->prefix('administ
         Route::post('/{uid}/admin-upload', [DocumentsController::class, 'adminUploadDocument'])->name('documents.admin-upload');
         Route::get('/{uid}/refresh-section', [DocumentsController::class, 'refreshDocumentsSection'])->name('documents.refresh-section');
 
-        /*
-         * ═══════════════════════════════════════════════════════════════════════
-         * RUTAS MIGRADAS A API - Usar /api/documents en su lugar
-         * ═══════════════════════════════════════════════════════════════════════
-         *
-         * ARCHIVOS (moved to API):
-         * - POST   /api/documents/{uid}/files           → route('api.documents.files.store')
-         * - GET    /api/documents/files/{id}            → route('api.documents.files.get')
-         * - DELETE /api/documents/files/{id}            → route('api.documents.files.delete')
-         *
-         * ESTADO Y OPERACIONES (moved to API):
-         * - POST   /api/documents/sync-fields           → route('api.documents.sync-fields')
-         * - GET    /api/documents/{uid}/state           → route('api.documents.state')
-         * - DELETE /api/documents/{uid}                 → route('api.documents.delete')
-         *
-         * TODAS LAS DEMÁS RUTAS API están documentadas en:
-         * → Modules/Document/routes/api.php
-         * ═══════════════════════════════════════════════════════════════════════
-         */
-
     });
 });

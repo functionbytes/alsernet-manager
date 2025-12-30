@@ -6,28 +6,14 @@ use App\Models\User;
 use Illuminate\Support\Collection;
 use Modules\Document\Entities\DocumentValidatorGroup;
 
-/**
- * PermissionService
- *
- * Servicio centralizado para gestionar permisos de documentos
- * combinando Spatie Permission (role-based) con ValidatorGroup (group-based)
- */
 class PermissionService
 {
-    /**
-     * Verificar si un usuario tiene acceso a una acción específica de documento
-     *
-     * @param  string  $action  Nombre de la acción (ej: 'manage', 'send-custom-email')
-     * @param  string|null  $profile  Perfil actual (ej: 'administrative', 'manager')
-     */
     public function can(User $user, string $action, ?string $profile = null): bool
     {
-        // Super-admin SIEMPRE tiene acceso
         if ($user->hasRole('super-admin')) {
             return true;
         }
 
-        // Construir el nombre del permiso según el perfil
         $permissionName = $this->buildPermissionName($action, $profile);
 
         // Verificar permiso Spatie
@@ -35,7 +21,6 @@ class PermissionService
             return false;
         }
 
-        // Si es una acción de email, verificar configuración de ValidatorGroup
         if ($this->isEmailAction($action)) {
             return $this->hasEmailActionAccess($user, $action);
         }
@@ -43,12 +28,8 @@ class PermissionService
         return true;
     }
 
-    /**
-     * Obtener todas las acciones disponibles para un usuario
-     */
     public function getAvailableActions(User $user, ?string $profile = null): array
     {
-        // Super-admin obtiene TODAS las acciones
         if ($user->hasRole('super-admin')) {
             return $this->getAllActions();
         }
@@ -65,13 +46,8 @@ class PermissionService
         return $available;
     }
 
-    /**
-     * Obtener configuración de acciones de email para un usuario
-     * Combina permisos Spatie con configuración ValidatorGroup
-     */
     public function getEmailActionsConfig(User $user, ?string $profile = null): array
     {
-        // Super-admin tiene todo habilitado
         if ($user->hasRole('super-admin')) {
             return [
                 'enable_initial_request' => true,
@@ -84,7 +60,6 @@ class PermissionService
             ];
         }
 
-        // Obtener configuración base de DocumentValidatorGroup
         $groupConfig = DocumentValidatorGroup::getEmailConfigurationsForUser($user);
 
         // Filtrar por permisos Spatie
@@ -100,9 +75,6 @@ class PermissionService
         return $finalConfig;
     }
 
-    /**
-     * Verificar si usuario está en un DocumentValidatorGroup activo
-     */
     public function isInValidatorGroup(User $user): bool
     {
         return DocumentValidatorGroup::query()
@@ -122,13 +94,6 @@ class PermissionService
             ->get();
     }
 
-    // =========================================================================
-    // MÉTODOS PRIVADOS
-    // =========================================================================
-
-    /**
-     * Construir nombre del permiso según perfil y acción
-     */
     private function buildPermissionName(string $action, ?string $profile = null): string
     {
         $profile = $profile ?? 'administrative'; // Default profile
@@ -136,9 +101,6 @@ class PermissionService
         return "{$profile}.documents.{$action}";
     }
 
-    /**
-     * Verificar si una acción es de tipo email
-     */
     private function isEmailAction(string $action): bool
     {
         $emailActions = [
@@ -154,9 +116,6 @@ class PermissionService
         return in_array($action, $emailActions);
     }
 
-    /**
-     * Verificar acceso a acción de email según DocumentValidatorGroup
-     */
     private function hasEmailActionAccess(User $user, string $action): bool
     {
         $groupConfig = DocumentValidatorGroup::getEmailConfigurationsForUser($user);
@@ -176,9 +135,6 @@ class PermissionService
         return $configKey ? ($groupConfig[$configKey] ?? false) : false;
     }
 
-    /**
-     * Obtener lista completa de acciones disponibles
-     */
     private function getAllActions(): array
     {
         return [

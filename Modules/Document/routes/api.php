@@ -4,16 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Document\Http\Controllers\Api\DocumentValidationController;
 
-/*
-|--------------------------------------------------------------------------
-| API Document Routes
-|--------------------------------------------------------------------------
-|
-| Rutas API para el procesamiento y sincronización de documentos
-|
-*/
-
-// Public API routes (webhooks, external processing)
 Route::prefix('api/documents')->middleware('throttle:60,1')->group(function () {
     Route::post('/', [DocumentsController::class, 'process']);
     Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
@@ -26,15 +16,6 @@ Route::prefix('api/documents')->middleware('throttle:60,1')->group(function () {
     Route::post('/sync/by-order', [DocumentsController::class, 'syncDocumentByOrderId']);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Authenticated API Routes - Generic for all profiles
-|--------------------------------------------------------------------------
-|
-| El backend detecta automáticamente el perfil del usuario y filtra/valida
-| según corresponda. NO se necesita duplicar rutas por perfil.
-|
-*/
 Route::prefix('api/documents')->middleware(['auth', 'throttle:60,1'])->group(function () {
 
     // Validation workflow actions

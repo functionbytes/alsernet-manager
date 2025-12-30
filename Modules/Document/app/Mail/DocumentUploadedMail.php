@@ -12,14 +12,8 @@ class DocumentUploadedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(protected Document $document) {}
 
-    /**
-     * Build the message.
-     */
     public function build(): self
     {
         $customer = $this->document->customer;

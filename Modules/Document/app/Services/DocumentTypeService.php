@@ -6,9 +6,6 @@ use Modules\Document\Entities\DocumentConfiguration;
 
 class DocumentTypeService
 {
-    /**
-     * Obtener los documentos requeridos para un tipo de documento
-     */
     public static function getRequiredDocuments(string $documentType): array
     {
         $config = DocumentConfiguration::getByType($documentType);
@@ -17,13 +14,9 @@ class DocumentTypeService
             return $config->required_documents;
         }
 
-        // Fallback a configuración por defecto si no existe en BD
         return self::getDefaultDocuments($documentType);
     }
 
-    /**
-     * Obtener documentos por defecto según el tipo
-     */
     public static function getDefaultDocuments(string $documentType): array
     {
         $defaults = [
@@ -54,9 +47,6 @@ class DocumentTypeService
         return $defaults[$documentType] ?? $defaults['general'];
     }
 
-    /**
-     * Obtener documentos faltantes comparando requeridos vs cargados
-     */
     public static function getMissingDocuments(string $documentType, array $uploadedDocs): array
     {
         $requiredDocs = self::getRequiredDocuments($documentType);
@@ -71,9 +61,6 @@ class DocumentTypeService
         return $missingDocs;
     }
 
-    /**
-     * Validar que todos los documentos requeridos estén cargados
-     */
     public static function allDocumentsUploaded(string $documentType, array $uploadedDocs): bool
     {
         $requiredDocs = self::getRequiredDocuments($documentType);

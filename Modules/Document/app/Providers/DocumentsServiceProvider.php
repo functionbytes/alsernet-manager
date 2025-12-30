@@ -2,8 +2,17 @@
 
 namespace Modules\Document\Providers;
 
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Document\Commands\CreateSampleDocumentsFromPrestashop;
+use Modules\Document\Commands\InitializeDocumentWorkflows;
+use Modules\Document\Commands\SendDocumentUploadReminders;
+use Modules\Document\Commands\SyncDocumentFields;
+use Modules\Document\Entities\Document;
+use Modules\Document\Http\ViewComposers\NavigationComposer;
+use Modules\Document\Policies\DocumentPolicy;
+use Modules\Document\Services\PermissionService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -16,9 +25,6 @@ class DocumentsServiceProvider extends ServiceProvider
 
     protected string $nameLower = 'documents';
 
-    /**
-     * Boot the application events.
-     */
     public function boot(): void
     {
         $this->registerCommands();
@@ -30,20 +36,14 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
-    /**
-     * Register the service provider.
-     */
     public function register(): void
     {
-        // Note: EventServiceProvider is intentionally NOT registered here
-        // All Document events are handled by App\Providers\EventServiceProvider
-        // which is responsible for the entire application's event-listener mappings
+
         $this->app->register(RouteServiceProvider::class);
 
-        // Registrar PermissionService como singleton
         $this->app->singleton(
-            \Modules\Document\Services\PermissionService::class,
-            fn ($app) => new \Modules\Document\Services\PermissionService
+            PermissionService::class,
+            fn ($app) => new PermissionService
         );
 
         // Registrar DocumentPolicy
@@ -55,10 +55,10 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerPolicies(): void
     {
-        if (class_exists(\Modules\Document\Entities\Document::class)) {
-            \Illuminate\Support\Facades\Gate::policy(
-                \Modules\Document\Entities\Document::class,
-                \Modules\Document\Policies\DocumentPolicy::class
+        if (class_exists(Document::class)) {
+            Gate::policy(
+                Document::class,
+                DocumentPolicy::class
             );
         }
     }
@@ -69,10 +69,10 @@ class DocumentsServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         $this->commands([
-            \Modules\Document\Commands\SendDocumentUploadReminders::class,
-            \Modules\Document\Commands\InitializeDocumentWorkflows::class,
-            \Modules\Document\Commands\CreateSampleDocumentsFromPrestashop::class,
-            \Modules\Document\Commands\SyncDocumentFields::class,
+            SendDocumentUploadReminders::class,
+            InitializeDocumentWorkflows::class,
+            CreateSampleDocumentsFromPrestashop::class,
+            SyncDocumentFields::class,
         ]);
     }
 
@@ -87,9 +87,6 @@ class DocumentsServiceProvider extends ServiceProvider
         // });
     }
 
-    /**
-     * Register translations.
-     */
     public function registerTranslations(): void
     {
         $langPath = resource_path('lang/modules/'.$this->nameLower);
@@ -103,9 +100,6 @@ class DocumentsServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register config.
-     */
     protected function registerConfig(): void
     {
         $configPath = module_path($this->name, config('modules.paths.generator.config.path'));
@@ -136,23 +130,16 @@ class DocumentsServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Merge config from the given path recursively.
-     */
     protected function merge_config_from(string $path, string $key): void
     {
         $existing = config($key, []);
         $module_config = require $path;
 
-        // Only merge if the config file returned an array
         if (is_array($module_config)) {
             config([$key => array_replace_recursive($existing, $module_config)]);
         }
     }
 
-    /**
-     * Register views.
-     */
     public function registerViews(): void
     {
         $viewPath = resource_path('views/modules/'.$this->nameLower);
@@ -165,21 +152,15 @@ class DocumentsServiceProvider extends ServiceProvider
         Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
     }
 
-    /**
-     * Register view composers.
-     */
     protected function registerViewComposers(): void
     {
         // Register navigation composer for managers layout
         view()->composer(
             'managers.includes.nav',
-            \Modules\Document\Http\ViewComposers\NavigationComposer::class
+            NavigationComposer::class
         );
     }
 
-    /**
-     * Get the services provided by the provider.
-     */
     public function provides(): array
     {
         return [];

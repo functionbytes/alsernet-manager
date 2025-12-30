@@ -31,27 +31,16 @@ class DocumentsConfiguration extends Model
         'reminder_days' => 'integer',
     ];
 
-    /**
-     * Obtiene la configuración por tipo de documento
-     */
     public static function getByType(string $documentType): ?self
     {
         return self::where('document_type', $documentType)->first();
     }
 
-    /**
-     * Obtiene todas las configuraciones
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
     public static function getAll()
     {
         return self::all();
     }
 
-    /**
-     * Crea o actualiza la configuración para un tipo de documento
-     */
     public static function createOrUpdate(string $documentType, array $data): self
     {
         return self::updateOrCreate(
@@ -60,9 +49,6 @@ class DocumentsConfiguration extends Model
         );
     }
 
-    /**
-     * Exporta todas las configuraciones para caché o seeding
-     */
     public static function exportAll(): array
     {
         $configs = [];

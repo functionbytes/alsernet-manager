@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Documents;
 
-use App\Models\Document\DocumentValidationCondition;
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentValidationCondition;
 
 class DocumentValidationConditionSeeder extends Seeder
 {

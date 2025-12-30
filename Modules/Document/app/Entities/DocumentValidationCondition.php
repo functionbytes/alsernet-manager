@@ -11,7 +11,6 @@ class DocumentValidationCondition extends Model
 
     use HasUid;
 
-    // Condition Types
     public const TYPE_SALE_TYPE_MATCH = 'sale_type_match';
 
     public const TYPE_MODEL_FIELD = 'model_field';
@@ -48,7 +47,6 @@ class DocumentValidationCondition extends Model
         ];
     }
 
-    // Scopes
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -64,11 +62,6 @@ class DocumentValidationCondition extends Model
         return $query->orderBy('sort_order')->orderBy('name');
     }
 
-    /**
-     * Check if a given sale_type matches this condition
-     *
-     * @param  string  $saleType  The sale_type to check (from getSaleType())
-     */
     public function matches(string $saleType): bool
     {
         if (! $this->is_active || empty($this->sale_types)) {
@@ -78,9 +71,6 @@ class DocumentValidationCondition extends Model
         return in_array($saleType, $this->sale_types);
     }
 
-    /**
-     * Get condition by key (cached)
-     */
     public static function getByKey(string $key): ?self
     {
         return cache()->remember("validation_condition:{$key}", 3600, function () use ($key) {
@@ -88,9 +78,6 @@ class DocumentValidationCondition extends Model
         });
     }
 
-    /**
-     * Clear condition cache
-     */
     public static function clearCache(?string $key = null): void
     {
         if ($key) {
@@ -104,9 +91,6 @@ class DocumentValidationCondition extends Model
         }
     }
 
-    /**
-     * Boot method to clear cache on save/delete
-     */
     protected static function booted(): void
     {
         static::saved(function ($condition) {

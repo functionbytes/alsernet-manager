@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\ErpController;
 use App\Http\Controllers\Api\Return\PublicReturnController;
 use App\Http\Controllers\Api\Return\ReturnController;
 use Illuminate\Support\Facades\Route;
-use Modules\Documents\Http\Controllers\Api\DocumentsController;
+use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Helpdesk\Http\Controllers\Api\TicketsController;
 
 // @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php

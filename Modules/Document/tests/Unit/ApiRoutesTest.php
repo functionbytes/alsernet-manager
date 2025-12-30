@@ -57,7 +57,7 @@ class ApiRoutesTest extends TestCase
             );
         }
 
-        $this->assertTrue(true, "✅ Todas las rutas API están registradas correctamente");
+        $this->assertTrue(true, '✅ Todas las rutas API están registradas correctamente');
     }
 
     public function test_api_routes_use_correct_http_methods()
@@ -119,7 +119,7 @@ class ApiRoutesTest extends TestCase
     public function test_api_routes_point_to_correct_controller()
     {
         $routes = \Route::getRoutes();
-        $expectedController = 'Modules\Documents\Http\Controllers\Api\DocumentValidationController';
+        $expectedController = 'Modules\Document\Http\Controllers\Api\DocumentValidationController';
 
         $routesToCheck = [
             'api.documents.approve-stage',
@@ -159,6 +159,6 @@ class ApiRoutesTest extends TestCase
         echo "╚════════════════════════════════════════════════════════════╝\n";
         echo "\n";
 
-        $this->assertGreaterThanOrEqual(13, $count, "Deberían existir al menos 13 rutas API");
+        $this->assertGreaterThanOrEqual(13, $count, 'Deberían existir al menos 13 rutas API');
     }
 }

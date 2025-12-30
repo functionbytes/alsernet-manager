@@ -32,33 +32,21 @@ class DocumentValidatorGroupConfigurationHistory extends Model
         ];
     }
 
-    /**
-     * Get the validator group this history entry belongs to.
-     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(DocumentValidatorGroup::class, 'validator_group_id');
     }
 
-    /**
-     * Get the configuration this history entry is for.
-     */
     public function configuration(): BelongsTo
     {
         return $this->belongsTo(DocumentValidatorGroupConfiguration::class, 'configuration_id');
     }
 
-    /**
-     * Get the user who made this change.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get human-readable action label.
-     */
     public function getActionLabelAttribute(): string
     {
         return match ($this->action) {
@@ -69,9 +57,6 @@ class DocumentValidatorGroupConfigurationHistory extends Model
         };
     }
 
-    /**
-     * Get formatted change description.
-     */
     public function getChangeDescriptionAttribute(): string
     {
         if ($this->action === 'create') {

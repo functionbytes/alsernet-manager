@@ -2,46 +2,14 @@
 
 namespace Modules\Document\Entities;
 
-use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Document\Traits\HasUid;
 
 class DocumentStageEmailAction extends Model
 {
-    protected $table = 'document_stage_email_actions';
-
     use HasUid;
 
-    // Email action types
-    public const ACTION_SOLICITUD_DOCUMENTOS = 'solicitud_documentos';
-
-    public const ACTION_CONFIRMACION_ARCHIVOS = 'confirmacion_archivos';
-
-    public const ACTION_APROBACION = 'aprobacion';
-
-    public const ACTION_RECHAZO = 'rechazo';
-
-    public const ACTION_CORREO_PERSONALIZADO = 'correo_personalizado';
-
-    // Validation stages
-    public const STAGE_DOCUMENTACION = 'documentacion';
-
-    public const STAGE_LICENCIAS = 'licencias';
-
-    public const STAGE_CONTABILIDAD = 'contabilidad';
-
-    public const AVAILABLE_ACTIONS = [
-        self::ACTION_SOLICITUD_DOCUMENTOS => 'Solicitud de documentos',
-        self::ACTION_CONFIRMACION_ARCHIVOS => 'Confirmación de archivos subidos',
-        self::ACTION_APROBACION => 'Notificación de aprobación',
-        self::ACTION_RECHAZO => 'Notificación de rechazo',
-        self::ACTION_CORREO_PERSONALIZADO => 'Correo personalizado',
-    ];
-
-    public const AVAILABLE_STAGES = [
-        self::STAGE_DOCUMENTACION => 'Documentación',
-        self::STAGE_LICENCIAS => 'Licencias',
-        self::STAGE_CONTABILIDAD => 'Contabilidad',
-    ];
+    protected $table = 'document_stage_email_actions';
 
     protected $fillable = [
         'uid',

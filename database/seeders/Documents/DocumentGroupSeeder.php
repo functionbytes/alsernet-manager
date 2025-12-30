@@ -4,7 +4,7 @@ namespace Database\Seeders\Documents;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Modules\Documents\Entities\DocumentGroup;
+use Modules\Document\Entities\DocumentGroup;
 
 class DocumentGroupSeeder extends Seeder
 {

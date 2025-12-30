@@ -2,24 +2,18 @@
 
 namespace Modules\Document\Providers;
 
-use App\Listeners\Campaigns\SendNewUserNotification;
-use App\Listeners\Documents\LogDocumentStatusChange;
-use App\Listeners\Documents\SendDocumentUploadNotification;
-use App\Listeners\Documents\SendStageNotifications;
-use App\Listeners\Systems\Backups\BackupEventListener;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Events\DocumentStatusChanged;
 use Modules\Document\Events\DocumentValidationStageApproved;
-use Spatie\Backup\Events\BackupHasSucceeded;
-use Spatie\Backup\Events\BackupWasNotSuccessful;
+use Modules\Document\Listeners\LogDocumentStatusChange;
+use Modules\Document\Listeners\SendDocumentUploadNotification;
+use Modules\Document\Listeners\SendStageNotifications;
 
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
 
-
-        // Eventos de Documentos
         DocumentCreated::class => [
             SendDocumentUploadNotification::class,
         ],
@@ -32,24 +26,15 @@ class EventServiceProvider extends ServiceProvider
             SendStageNotifications::class,
         ],
 
-        //
-
     ];
 
     public function boot(): void
     {
         parent::boot();
 
-
     }
 
-    /**
-     * Register handlers for backup events to suppress notification errors
-     */
-    private function registerBackupEventHandlers(): void
-    {
-
-    }
+    private function registerBackupEventHandlers(): void {}
 
     public function shouldDiscoverEvents(): bool
     {

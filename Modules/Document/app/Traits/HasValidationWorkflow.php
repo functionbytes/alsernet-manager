@@ -1,12 +1,14 @@
 <?php
 
-namespace Modules\Campaign\Library\Traits;
+namespace Modules\Document\Traits;
 
 use App\Models\User;
-use app\Validation\ValidatorGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Modules\Document\Entities\DocumentValidationHistory;
+use Modules\Document\Entities\DocumentValidatorGroup;
+use Modules\Document\Enums\ValidationAction;
 
 /**
  * Trait HasValidationWorkflow
@@ -56,13 +58,13 @@ trait HasValidationWorkflow
     /**
      * Current validator group relationship.
      */
-    public function currentValidatorGroup(): ?ValidatorGroup
+    public function currentValidatorGroup(): ?DocumentValidatorGroup
     {
         if (empty($this->current_validator_group)) {
             return null;
         }
 
-        return ValidatorGroup::findByKey($this->current_validator_group);
+        return DocumentValidatorGroup::findByKey($this->current_validator_group);
     }
 
     // =========================================================================
@@ -81,7 +83,7 @@ trait HasValidationWorkflow
         }
 
         // Verify all groups exist
-        $groups = ValidatorGroup::getByKeysInOrder($stageKeys);
+        $groups = DocumentValidatorGroup::getByKeysInOrder($stageKeys);
         if ($groups->count() !== count($stageKeys)) {
             return false;
         }
@@ -137,7 +139,7 @@ trait HasValidationWorkflow
         }
 
         // Check if APPROVE action is allowed at current stage
-        if (! $this->canPerformValidationAction(\Modules\Document\Enums\ValidationAction::APPROVE)) {
+        if (! $this->canPerformValidationAction(ValidationAction::APPROVE)) {
             return false;
         }
 
@@ -151,7 +153,7 @@ trait HasValidationWorkflow
             $this->recordValidationAction('approved', $comments, $validator);
 
             // Determine if we should actually send email based on stage permissions
-            $canSendEmail = $this->canPerformValidationAction(\Modules\Document\Enums\ValidationAction::SEND_APPROVAL_EMAIL);
+            $canSendEmail = $this->canPerformValidationAction(ValidationAction::SEND_APPROVAL_EMAIL);
             $sendEmailThisStage = $shouldSendEmail && $canSendEmail;
 
             // Move to next stage or complete
@@ -179,7 +181,7 @@ trait HasValidationWorkflow
 
             // Send approval email if allowed and requested
             if ($sendEmailThisStage) {
-                event(new \Modules\Document\Events\DocumentApprovalEmailRequested($this, $validator));
+                event(new DocumentApprovalEmailRequested($this, $validator));
             }
 
             return true;
@@ -199,7 +201,7 @@ trait HasValidationWorkflow
         }
 
         // Check if REJECT action is allowed at current stage
-        if (! $this->canPerformValidationAction(\Modules\Document\Enums\ValidationAction::REJECT)) {
+        if (! $this->canPerformValidationAction(ValidationAction::REJECT)) {
             return false;
         }
 
@@ -281,15 +283,15 @@ trait HasValidationWorkflow
     /**
      * Get the validation permission service (lazy-loaded singleton).
      */
-    public function getPermissionService(): \Modules\Document\Services\ValidationPermissionService
+    public function getPermissionService(): \App\Services\Documents\ValidationPermissionService
     {
-        return app(\Modules\Document\Services\ValidationPermissionService::class);
+        return app(\App\Services\Documents\ValidationPermissionService::class);
     }
 
     /**
      * Check if a specific action is allowed at current validation stage.
      */
-    public function canPerformValidationAction(\Modules\Document\Enums\ValidationAction $action): bool
+    public function canPerformValidationAction(ValidationAction $action): bool
     {
         $permissionService = $this->getPermissionService();
 
@@ -474,7 +476,7 @@ trait HasValidationWorkflow
      */
     public function validationHistory()
     {
-        return $this->morphMany(\app\Validation\ValidationHistory::class, 'validatable');
+        return $this->morphMany(DocumentValidationHistory::class, 'validatable');
     }
 
     /**

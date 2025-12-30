@@ -8,9 +8,6 @@ use Modules\Document\Entities\DocumentNote;
 
 class DocumentActionService
 {
-    /**
-     * Registrar que se envió un correo de notificación inicial
-     */
     public static function logInitialRequestEmail(Document $document, string $email, ?string $message = null): DocumentAction
     {
         return DocumentAction::logAction(
@@ -26,9 +23,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar que se envió un recordatorio
-     */
     public static function logReminderEmail(Document $document, string $email, ?string $message = null): DocumentAction
     {
         return DocumentAction::logAction(
@@ -44,9 +38,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar que se envió un correo de documentos específicos
-     */
     public static function logMissingDocumentsEmail(Document $document, string $email, array $missingDocs, ?string $message = null): DocumentAction
     {
         return DocumentAction::logAction(
@@ -63,9 +54,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar que se confirmó la carga de documentos
-     */
     public static function logUploadConfirmation(Document $document, ?int $adminId = null): DocumentAction
     {
         return DocumentAction::logAction(
@@ -78,9 +66,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar que se cargaron documentos
-     */
     public static function logDocumentUpload(Document $document, array $uploadedFiles): DocumentAction
     {
         return DocumentAction::logAction(
@@ -96,9 +81,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar un cambio de estado
-     */
     public static function logStatusChange(Document $document, string $oldStatus, string $newStatus, ?int $adminId = null): DocumentAction
     {
         return DocumentAction::logAction(
@@ -134,9 +116,6 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Registrar eliminación de documento
-     */
     public static function logDocumentDeletion(Document $document, string $fileName, int $adminId): DocumentAction
     {
         return DocumentAction::logAction(
@@ -152,17 +131,11 @@ class DocumentActionService
         );
     }
 
-    /**
-     * Obtener historial de un documento
-     */
     public static function getDocumentHistory(Document $document)
     {
         return DocumentAction::getDocumentHistory($document->id);
     }
 
-    /**
-     * Agregar una nota al documento
-     */
     public static function addNote(Document $document, int $adminId, string $content, bool $isInternal = true): DocumentNote
     {
         $note = DocumentNote::addNote($document->id, $adminId, $content, $isInternal);
@@ -184,17 +157,11 @@ class DocumentActionService
         return $note;
     }
 
-    /**
-     * Obtener notas del documento
-     */
     public static function getDocumentNotes(Document $document, bool $onlyInternal = false)
     {
         return DocumentNote::getDocumentNotes($document->id, $onlyInternal);
     }
 
-    /**
-     * Registrar que se envió un correo personalizado
-     */
     public static function logCustomEmail(Document $document, string $email, string $subject, string $content, ?string $message = null, ?int $adminId = null): DocumentAction
     {
         return DocumentAction::logAction(

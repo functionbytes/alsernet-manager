@@ -10,10 +10,10 @@ use App\Notifications\TicketCreated;
 use App\Notifications\TicketStatusChanged;
 use App\Notifications\UserMentioned;
 use Illuminate\Console\Command;
-use Modules\Documents\Notifications\DocumentApproved;
-use Modules\Documents\Notifications\DocumentRejected;
-use Modules\Documents\Notifications\DocumentStatusChanged;
-use Modules\Documents\Notifications\PaymentReceived;
+use Modules\Document\Notifications\DocumentApproved;
+use Modules\Document\Notifications\DocumentRejected;
+use Modules\Document\Notifications\DocumentStatusChanged;
+use Modules\Document\Notifications\PaymentReceived;
 use stdClass;
 
 class SendTestNotifications extends Command

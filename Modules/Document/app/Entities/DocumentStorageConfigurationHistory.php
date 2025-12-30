@@ -2,6 +2,7 @@
 
 namespace Modules\Document\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,25 +26,16 @@ class DocumentStorageConfigurationHistory extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Get the user who made the change.
-     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'changed_by');
+        return $this->belongsTo(User::class, 'changed_by');
     }
 
-    /**
-     * Get recent configuration changes.
-     */
     public function scopeRecent($query)
     {
         return $query->orderBy('created_at', 'desc');
     }
 
-    /**
-     * Filter by disk name.
-     */
     public function scopeForDisk($query, string $diskName)
     {
         return $query->where(function ($q) use ($diskName) {
@@ -52,17 +44,11 @@ class DocumentStorageConfigurationHistory extends Model
         });
     }
 
-    /**
-     * Filter by user.
-     */
     public function scopeByUser($query, int $userId)
     {
         return $query->where('changed_by', $userId);
     }
 
-    /**
-     * Get a human-readable action label.
-     */
     public function getActionLabelAttribute(): string
     {
         return match ($this->action) {
@@ -73,9 +59,6 @@ class DocumentStorageConfigurationHistory extends Model
         };
     }
 
-    /**
-     * Get a human-readable change description.
-     */
     public function getChangeDescriptionAttribute(): string
     {
         if ($this->action === 'create') {

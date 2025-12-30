@@ -9,11 +9,6 @@ class RouteServiceProvider extends ServiceProvider
 {
     protected string $name = 'Document';
 
-    /**
-     * Called before routes are registered.
-     *
-     * Register any model bindings or pattern based filters.
-     */
     public function boot(): void
     {
         parent::boot();
@@ -28,11 +23,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
     }
 
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     */
     protected function mapWebRoutes(): void
     {
         // Manager settings routes
@@ -48,11 +38,6 @@ class RouteServiceProvider extends ServiceProvider
             ->group(module_path($this->name, 'routes/administratives.php'));
     }
 
-    /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
-     */
     protected function mapApiRoutes(): void
     {
         Route::middleware(['api', 'throttle:60,1'])

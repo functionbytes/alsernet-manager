@@ -27,25 +27,16 @@ class DocumentLoad extends Model
         ];
     }
 
-    /**
-     * Get documents with this load type
-     */
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class, 'load_id');
     }
 
-    /**
-     * Scope for active loads
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope ordered
-     */
     public function scopeOrdered($query)
     {
         return $query->orderBy('order');

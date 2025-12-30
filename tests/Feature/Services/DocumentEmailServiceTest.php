@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Services;
 
-use App\Models\Document\Document;
 use App\Models\Setting;
-use App\Services\Documents\DocumentEmailService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Modules\Document\Entities\Document;
+use Modules\Document\Services\DocumentEmailService;
 use Tests\TestCase;
 
 class DocumentEmailServiceTest extends TestCase

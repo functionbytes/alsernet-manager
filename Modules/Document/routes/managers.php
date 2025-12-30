@@ -102,4 +102,5 @@ Route::group(['prefix' => 'documents'], function () {
         Route::post('/labels', [ProductBlockadeController::class, 'saveLabels'])->name('save-labels');
         Route::delete('/{id}', [ProductBlockadeController::class, 'destroy'])->name('destroy');
     });
+
 });

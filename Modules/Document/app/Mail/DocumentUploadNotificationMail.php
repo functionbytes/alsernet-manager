@@ -12,17 +12,11 @@ class DocumentUploadNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(
         protected Document $document,
         protected ?string $customContent = null
     ) {}
 
-    /**
-     * Build the message.
-     */
     public function build(): self
     {
         $customerName = trim(sprintf(

@@ -3,7 +3,6 @@
 namespace Modules\Role\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Role\Providers\PermissionBladeServiceProvider;
 
 class RoleServiceProvider extends ServiceProvider
 {
@@ -15,10 +14,12 @@ class RoleServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/managers.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
+
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'role');
 
         $this->publishes([
-            __DIR__ . '/../../config/role.php' => config_path('role.php'),
+            __DIR__.'/../../config/role.php' => config_path('role.php'),
         ], 'role-config');
     }
 }

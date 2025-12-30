@@ -57,7 +57,7 @@ class ProductBlockade extends Model
      */
     public function documentType(): BelongsTo
     {
-        $modelClass = 'Modules\Documents\Entities\DocumentType';
+        $modelClass = 'Modules\Document\Entities\DocumentType';
 
         return $this->belongsTo($modelClass, 'document_type_id');
     }

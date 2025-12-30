@@ -12,16 +12,8 @@ class LogDocumentStatusChange
 {
     use PreventsDuplicateEventExecution;
 
-    /**
-     * Handle the event.
-     *
-     * Logs document status changes to:
-     * 1. document_status_histories - Status change history
-     * 2. document_status_transition_logs - Which transition rule was used
-     */
     public function handle(DocumentStatusChanged $event): void
     {
-        // Prevent duplicate execution within the same request
         if ($this->preventDuplicateExecution($event)) {
             return;
         }

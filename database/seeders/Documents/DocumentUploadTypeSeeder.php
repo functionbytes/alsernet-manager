@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Documents;
 
-use App\Models\Document\DocumentUploadType;
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentUploadType;
 
 class DocumentUploadTypeSeeder extends Seeder
 {

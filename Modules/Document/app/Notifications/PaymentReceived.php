@@ -2,12 +2,12 @@
 
 namespace Modules\Document\Notifications;
 
-use App\Models\Notifications\NotificationPreference;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Modules\Notification\Models\NotificationPreference;
 
 class PaymentReceived extends Notification implements ShouldBroadcast, ShouldQueue
 {
@@ -66,9 +66,6 @@ class PaymentReceived extends Notification implements ShouldBroadcast, ShouldQue
         ];
     }
 
-    /**
-     * Get the broadcastable representation of the notification.
-     */
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         $orderNumber = $this->order->number ?? ($this->order->id ?? 'N/A');
@@ -88,19 +85,11 @@ class PaymentReceived extends Notification implements ShouldBroadcast, ShouldQue
         ]);
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
         return $this->toDatabase($notifiable);
     }
 
-    /**
-     * Determinar el tipo de notificación para broadcasting
-     */
     public function broadcastType(): string
     {
         return 'payment.received';

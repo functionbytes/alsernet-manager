@@ -4,8 +4,8 @@ namespace Database\Seeders\Documents;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Modules\Documents\Entities\ValidatorGroup;
-use Modules\Documents\Entities\ValidatorGroupConfiguration;
+use Modules\Document\Entities\ValidatorGroup;
+use Modules\Document\Entities\ValidatorGroupConfiguration;
 
 class DocumentValidatorGroupConfigurationSeeder extends Seeder
 {

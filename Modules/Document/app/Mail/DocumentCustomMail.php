@@ -2,23 +2,13 @@
 
 namespace Modules\Document\Mail;
 
-use Modules\Mail\Models\MailTemplate;
-use Modules\Mail\Services\MailTemplateRendererService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Document\Entities\Document;
+use Modules\Mail\Models\MailTemplate;
+use Modules\Mail\Services\Mails\MailTemplateRendererService;
 
-/**
- * DocumentCustomMail
- *
- * Mailable para correos personalizados sobre documentos
- * Soporta tanto contenido personalizado como plantillas de BD
- *
- * Uso:
- * - Con contenido personalizado: new DocumentCustomMail($document, $subject, $content)
- * - Con template BD: new DocumentCustomMail($document, null, null, $emailTemplate)
- */
 class DocumentCustomMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -33,13 +23,6 @@ class DocumentCustomMail extends Mailable
 
     protected $templateVariables = [];
 
-    /**
-     * Create a new message instance.
-     *
-     * @param  string|null  $subject  - Asunto (si null, usa template)
-     * @param  string|null  $content  - Contenido personalizado (si null, usa template)
-     * @param  MailTemplate|null  $emailTemplate  - Template de BD
-     */
     public function __construct(
         Document $document,
         ?string $subject = null,

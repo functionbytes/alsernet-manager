@@ -20,9 +20,6 @@ class DocumentMissingNotificationMail extends Mailable
         protected ?string $notes = null
     ) {}
 
-    /**
-     * Build the message.
-     */
     public function build(): self
     {
         $customerName = trim(sprintf(

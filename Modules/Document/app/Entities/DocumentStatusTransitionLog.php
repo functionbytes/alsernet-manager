@@ -26,57 +26,36 @@ class DocumentStatusTransitionLog extends Model
         ];
     }
 
-    /**
-     * Relation: Document being transitioned
-     */
     public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'document_id');
     }
 
-    /**
-     * Relation: The transition definition used
-     */
     public function transition(): BelongsTo
     {
         return $this->belongsTo(DocumentStatusTransition::class, 'transition_id');
     }
 
-    /**
-     * Relation: From status
-     */
     public function fromStatus(): BelongsTo
     {
         return $this->belongsTo(DocumentStatus::class, 'from_status_id');
     }
 
-    /**
-     * Relation: To status
-     */
     public function toStatus(): BelongsTo
     {
         return $this->belongsTo(DocumentStatus::class, 'to_status_id');
     }
 
-    /**
-     * Relation: User who performed the transition
-     */
     public function performedBy(): BelongsTo
     {
         return $this->belongsTo(\App\Models\User::class, 'performed_by');
     }
 
-    /**
-     * Scope: Get transition logs for a document
-     */
     public function scopeForDocument($query, int $documentId)
     {
         return $query->where('document_id', $documentId);
     }
 
-    /**
-     * Scope: Get recent transition logs
-     */
     public function scopeRecent($query)
     {
         return $query->orderBy('created_at', 'desc');

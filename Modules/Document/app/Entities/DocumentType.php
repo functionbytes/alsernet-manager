@@ -2,15 +2,15 @@
 
 namespace Modules\Document\Entities;
 
-use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Document\Traits\HasUid;
 
 class DocumentType extends Model
 {
-    protected $table = 'document_types';
-
     use HasUid;
+
+    protected $table = 'document_types';
 
     protected $fillable = [
         'uid',
@@ -35,16 +35,14 @@ class DocumentType extends Model
         ];
     }
 
-    // Relations
     public function requirements(): HasMany
     {
         return $this->hasMany(DocumentRequirement::class)->orderBy('sort_order');
     }
 
-    // Get translations using barryvdh/laravel-translation-manager
     public function getTranslationsList()
     {
-        $langs = \App\Models\Lang::all();
+        $langs = Lang::all();
         $translations = [];
 
         foreach ($langs as $lang) {
@@ -64,12 +62,11 @@ class DocumentType extends Model
     // Get translation for specific language
     public function translate(?int $langId = null)
     {
-        $langId = $langId ?? \App\Models\Lang::getDefaultLangId();
+        $langId = $langId ?? Lang::getDefaultLangId();
 
         return $this->getTranslationsList()->firstWhere('lang_id', $langId);
     }
 
-    // Scopes
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -80,7 +77,6 @@ class DocumentType extends Model
         return $query->where('slug', $slug);
     }
 
-    // Translation methods using Laravel's localization
     public function getLabel(): string
     {
         return __("documents.types.{$this->slug}.label");
@@ -96,8 +92,6 @@ class DocumentType extends Model
         return __("documents.types.{$this->slug}.instructions");
     }
 
-    // Magic getters for backwards compatibility
-    // Priorizan valores de la BD, con fallback a archivos de idiomas
     public function getLabelAttribute(): string
     {
         $value = $this->attributes['label'] ?? null;
@@ -125,7 +119,6 @@ class DocumentType extends Model
             ->first();
     }
 
-    // Get required documents array for current language
     public function getRequiredDocuments(): array
     {
         $docs = [];
@@ -137,16 +130,6 @@ class DocumentType extends Model
         return $docs;
     }
 
-    /**
-     * Get validation workflow stages for this document type
-     * Return configured stages or default ['documentacion'] if not set
-     *
-     * Supports two formats:
-     * - Old: ['documentacion', 'licencias'] - simple array
-     * - New: [{'key': 'documentacion', 'order': 1, 'conditions': {...}}] - ordered with conditions
-     *
-     * @return array<string> Array of ValidatorGroup keys in order
-     */
     public function getValidationStages(): array
     {
         if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
@@ -169,12 +152,6 @@ class DocumentType extends Model
         return $this->validation_stages;
     }
 
-    /**
-     * Get full validation stage configuration with conditions
-     * Return array of stage objects with key, order, and conditions
-     *
-     * @return array<array{key: string, order: int, conditions: array}>
-     */
     public function getValidationStagesWithConditions(): array
     {
         if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
@@ -209,18 +186,11 @@ class DocumentType extends Model
             ->toArray();
     }
 
-    // For backwards compatibility with old getByType method
     public static function getByType(string $type): ?self
     {
         return self::getBySlug($type);
     }
 
-    /**
-     * Get all valid document type slugs for product blockades
-     * Return active document types that can be used as sale type conditions
-     *
-     * @return array<string> Array of slugs (e.g., ['dni', 'escopeta', 'rifle', 'corta'])
-     */
     public static function getValidBlockadeTypes(): array
     {
         return self::active()

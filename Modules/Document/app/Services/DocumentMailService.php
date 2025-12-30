@@ -7,10 +7,6 @@ use Modules\Document\Entities\Document;
 
 class DocumentMailService
 {
-    /**
-     * Envía notificación inicial pidiendo carga de documentación
-     * Usa plantilla de BD
-     */
     public static function sendUploadNotification(Document $document): bool
     {
         try {
@@ -25,7 +21,6 @@ class DocumentMailService
                 return false;
             }
 
-            // Usar plantilla de BD
             $result = DocumentEmailTemplateService::sendInitialRequest($document);
 
             if ($result) {
@@ -49,14 +44,10 @@ class DocumentMailService
         }
     }
 
-    /**
-     * Envía recordatorio para cargar documentación
-     * Usa plantilla de BD
-     */
     public static function sendReminder(Document $document): bool
     {
         try {
-            // Recargar documento para verificar si ya fue cargado
+
             $document = $document->fresh();
 
             if (! $document) {
@@ -65,7 +56,6 @@ class DocumentMailService
                 return false;
             }
 
-            // Si no hay documentos faltantes, el documento está completo - no enviar recordatorio
             if (empty($document->getMissingDocuments())) {
                 Log::info('Document is complete, skipping reminder', [
                     'document_uid' => $document->uid,
@@ -85,7 +75,6 @@ class DocumentMailService
                 return false;
             }
 
-            // Usar plantilla de BD
             $result = DocumentEmailTemplateService::sendReminder($document);
 
             if ($result) {
@@ -109,10 +98,6 @@ class DocumentMailService
         }
     }
 
-    /**
-     * Envía confirmación cuando el documento es cargado
-     * Usa plantilla de BD
-     */
     public static function sendUploadedConfirmation(Document $document): bool
     {
         try {
@@ -151,10 +136,6 @@ class DocumentMailService
         }
     }
 
-    /**
-     * Envía todos los emails relacionados con un documento de forma batch
-     * Útil para reintentos o procesamiento en lote
-     */
     public static function sendAll(Document $document, array $types = ['notification', 'confirmation']): array
     {
         $results = [

@@ -5,25 +5,14 @@ namespace Modules\Document\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Modules\Document\Enums\ValidationAction;
 use Modules\Document\Events\DocumentValidationStageApproved;
+use Modules\Document\Services\ValidationPermissionService;
 
-/**
- * SendStageNotifications Listener
- *
- * Handles sending notifications based on the validation stage.
- * Different stages have different notification rules:
- *
- * - Stage 1 (Documentación): Send approval email to customer
- * - Stage 2 (Licencias): Internal notification only, no customer email
- * - Stage 3 (Contabilidad): Final approval email to customer
- */
 class SendStageNotifications implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    /**
-     * Handle the event.
-     */
     public function handle(DocumentValidationStageApproved $event): void
     {
         Log::info('Document validation stage approved', [
@@ -43,11 +32,6 @@ class SendStageNotifications implements ShouldQueue
         };
     }
 
-    /**
-     * Notifications for documentation stage (1st stage)
-     * - Send approval email to customer
-     * - Notify validators in next stage (if exists)
-     */
     private function notifyDocumentationStage(DocumentValidationStageApproved $event): void
     {
         // ✅ Send approval email to customer if permission allows
@@ -63,12 +47,6 @@ class SendStageNotifications implements ShouldQueue
         ]);
     }
 
-    /**
-     * Notifications for licencias stage (2nd stage - intermediate)
-     * - Internal notification only
-     * - No customer email
-     * - Notify validators in next stage
-     */
     private function notifyLicenciasStage(DocumentValidationStageApproved $event): void
     {
         // ⚠️ NO customer email for intermediate stages
@@ -82,11 +60,6 @@ class SendStageNotifications implements ShouldQueue
         ]);
     }
 
-    /**
-     * Notifications for contabilidad stage (3rd stage - final)
-     * - Send final approval email to customer
-     * - Notify document owner/stakeholders
-     */
     private function notifyContabilidadStage(DocumentValidationStageApproved $event): void
     {
         // ✅ Send FINAL approval email to customer
@@ -194,11 +167,11 @@ class SendStageNotifications implements ShouldQueue
     private function shouldSendApprovalEmail(DocumentValidationStageApproved $event): bool
     {
         // Check if stage allows sending approval emails
-        $permissionService = app(\Modules\Document\Services\ValidationPermissionService::class);
+        $permissionService = app(ValidationPermissionService::class);
 
         return $permissionService->canPerformValidationAction(
             $event->document,
-            \App\Enums\Document\ValidationAction::SEND_APPROVAL_EMAIL
+            ValidationAction::SEND_APPROVAL_EMAIL
         );
     }
 

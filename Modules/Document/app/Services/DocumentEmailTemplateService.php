@@ -2,18 +2,15 @@
 
 namespace Modules\Document\Services;
 
-use Modules\Mail\Models\MailTemplate;
 use App\Models\Setting;
-use Modules\Mail\Services\MailTemplateRendererService;
 use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentMail;
+use Modules\Mail\Models\MailTemplate;
+use Modules\Mail\Services\Mails\MailTemplateRendererService;
 
 class DocumentEmailTemplateService
 {
-    /**
-     * Enviar email de solicitud inicial usando plantilla de BD
-     */
     public static function sendInitialRequest(Document $document): bool
     {
         try {
@@ -65,9 +62,6 @@ class DocumentEmailTemplateService
         }
     }
 
-    /**
-     * Enviar email de recordatorio usando plantilla de BD
-     */
     public static function sendReminder(Document $document): bool
     {
         try {
@@ -83,8 +77,7 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
+            $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -93,21 +86,16 @@ class DocumentEmailTemplateService
                 ? now()->diffInDays($document->created_at)
                 : 0;
 
-            // Agregar variables específicas de recordatorio
             $variables['DAYS_SINCE_REQUEST'] = $daysSinceRequest;
 
-            // Crear mensaje de recordatorio (solo texto, sin contenedor)
-            // La plantilla ya tiene su propio contenedor con estilos
             $variables['REMINDER_MESSAGE'] = sprintf(
                 'Han pasado <strong>%d día%s</strong> desde que solicitamos su documentación y aún no hemos recibido respuesta. Le recordamos que es importante que nos envíe los documentos lo antes posible para poder continuar con el procesamiento de su pedido.',
                 $daysSinceRequest,
                 $daysSinceRequest === 1 ? '' : 's'
             );
 
-            // Get lang_id from document (defaults to 1 if not set)
             $langId = $document->lang_id ?? 1;
 
-            // Get translation for the template using document's language
             $translation = $template->translate($langId);
             if (! $translation || ! $translation->subject) {
                 return false;
@@ -121,7 +109,6 @@ class DocumentEmailTemplateService
                     ->subject($subject);
             });
 
-            // Log the email
             self::logEmail($document, 'reminder', $subject, $content, $template, [
                 'days_since_request' => $daysSinceRequest,
             ]);
@@ -137,9 +124,6 @@ class DocumentEmailTemplateService
         }
     }
 
-    /**
-     * Enviar email de documentos faltantes usando plantilla de BD
-     */
     public static function sendMissingDocuments(Document $document, array $missingDocs = [], ?string $notes = null): bool
     {
         try {

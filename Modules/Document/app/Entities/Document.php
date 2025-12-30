@@ -2,14 +2,14 @@
 
 namespace Modules\Document\Entities;
 
-use App\Library\Traits\HasUid;
-use App\Library\Traits\HasValidationWorkflow;
-use Modules\Document\Services\DocumentMailService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Document\Services\DocumentMailService;
+use Modules\Document\Traits\HasUid;
+use Modules\Document\Traits\HasValidationWorkflow;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 

@@ -2,25 +2,13 @@
 
 namespace Modules\Document\Factories;
 
-use Modules\Mail\Mail\Documents\DocumentCustomMail;
-use Modules\Mail\Models\MailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
+use Modules\Document\Mail\DocumentCustomMail;
+use Modules\Mail\Models\MailTemplate;
 
-/**
- * DocumentEmailFactory
- *
- * Factory para crear y enviar emails de documentos usando plantillas
- * Simplifica el proceso de enviar emails pre-diseñados con variables automáticas
- */
 class DocumentEmailFactory
 {
-    /**
-     * Enviar email usando plantilla de documento
-     *
-     * @param  string  $templateKey  - Clave del template: 'document_uploaded', 'document_reminder', etc.
-     * @param  array  $additionalVariables  - Variables adicionales
-     */
     public static function sendByTemplateKey(
         Document $document,
         string $templateKey,
@@ -40,11 +28,6 @@ class DocumentEmailFactory
         return self::sendByTemplate($document, $template, $additionalVariables);
     }
 
-    /**
-     * Enviar email usando plantilla específica
-     *
-     * @param  array  $additionalVariables  - Variables adicionales
-     */
     public static function sendByTemplate(
         Document $document,
         MailTemplate $template,
@@ -80,9 +63,6 @@ class DocumentEmailFactory
         }
     }
 
-    /**
-     * Enviar email personalizado (legacy)
-     */
     public static function sendCustom(Document $document, string $subject, string $content): bool
     {
         try {
@@ -104,27 +84,16 @@ class DocumentEmailFactory
         }
     }
 
-    /**
-     * Enviar email de confirmación (documento subido)
-     */
     public static function sendUploadedNotification(Document $document): bool
     {
         return self::sendByTemplateKey($document, 'document_uploaded');
     }
 
-    /**
-     * Enviar recordatorio de documentos
-     */
     public static function sendReminder(Document $document): bool
     {
         return self::sendByTemplateKey($document, 'document_reminder');
     }
 
-    /**
-     * Enviar notificación de documentos faltantes
-     *
-     * @param  string  $missingDocuments  - Lista de documentos faltantes
-     */
     public static function sendMissingNotification(Document $document, string $missingDocuments = ''): bool
     {
         return self::sendByTemplateKey($document, 'document_missing', [
@@ -132,17 +101,11 @@ class DocumentEmailFactory
         ]);
     }
 
-    /**
-     * Enviar confirmación de aprobación
-     */
     public static function sendApprovedNotification(Document $document): bool
     {
         return self::sendByTemplateKey($document, 'document_approved');
     }
 
-    /**
-     * Enviar email de prueba de una plantilla
-     */
     public static function sendTestEmail(MailTemplate $template, string $testEmail): bool
     {
         try {
@@ -169,9 +132,6 @@ class DocumentEmailFactory
         }
     }
 
-    /**
-     * Obtener plantilla de documento disponible
-     */
     public static function getTemplate(string $templateKey): ?MailTemplate
     {
         return MailTemplate::where('key', $templateKey)
@@ -180,11 +140,6 @@ class DocumentEmailFactory
             ->first();
     }
 
-    /**
-     * Obtener todas las plantillas de documentos disponibles
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
     public static function getAvailableTemplates()
     {
         return MailTemplate::where('is_enabled', true)
@@ -193,9 +148,6 @@ class DocumentEmailFactory
             ->get();
     }
 
-    /**
-     * Obtener plantillas de documentos con estadísticas
-     */
     public static function getTemplatesWithStats(): array
     {
         return self::getAvailableTemplates()

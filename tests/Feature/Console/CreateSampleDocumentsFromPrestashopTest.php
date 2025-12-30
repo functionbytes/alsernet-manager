@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Console;
 
-use App\Models\Document\Document;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Document\Entities\Document;
 use Tests\TestCase;
 
 class CreateSampleDocumentsFromPrestashopTest extends TestCase

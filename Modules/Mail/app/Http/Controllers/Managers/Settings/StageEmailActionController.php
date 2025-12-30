@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Modules\Documents\Entities\DocumentStageEmailAction;
+use Modules\Document\Entities\DocumentStageEmailAction;
 
 class StageEmailActionController extends Controller
 {

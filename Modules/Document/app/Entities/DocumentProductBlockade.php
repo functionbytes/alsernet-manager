@@ -7,28 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DocumentProductBlockade extends Model
 {
-    /**
-     * The table associated with the model.
-     */
     protected $table = 'document_product_blockades';
 
-    /**
-     * Blockade type constants (legacy compatibility)
-     * Note: These are kept for backward compatibility but document_type_id is now preferred
-     */
-    public const TYPE_DNI = 'dni';
-
-    public const TYPE_ESCOPETA = 'escopeta';
-
-    public const TYPE_RIFLE = 'rifle';
-
-    public const TYPE_CORTA = 'corta';
-
-    public const TYPE_BALINES = 'balines';
-
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
         'source_id',
         'product_id',
@@ -36,9 +16,6 @@ class DocumentProductBlockade extends Model
         'document_type_id',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
     protected function casts(): array
     {
         return [
@@ -51,22 +28,11 @@ class DocumentProductBlockade extends Model
         ];
     }
 
-    /**
-     * Get the document type for this blockade
-     */
     public function documentType(): BelongsTo
     {
         return $this->belongsTo(DocumentType::class);
     }
 
-    /**
-     * Check if product has a specific blockade type
-     * Works with both simple products (product_id) and combinations (product_attribute_id)
-     *
-     * @param  int|null  $idProduct  Product ID
-     * @param  int|null  $idProductAttribute  Product attribute ID (combination)
-     * @param  string|null  $documentTypeSlug  Document type slug (e.g., 'dni', 'rifle')
-     */
     public static function hasBlockade(?int $idProduct = null, ?int $idProductAttribute = null, ?string $documentTypeSlug = null): bool
     {
         $query = static::query();
@@ -88,9 +54,6 @@ class DocumentProductBlockade extends Model
         return $query->exists();
     }
 
-    /**
-     * Get all blockade types (slugs) for a product (simple or combination)
-     */
     public static function getBlockadeTypes(?int $idProduct = null, ?int $idProductAttribute = null): array
     {
         $query = static::query()->with('documentType');
@@ -109,17 +72,11 @@ class DocumentProductBlockade extends Model
             ->toArray();
     }
 
-    /**
-     * Check if product has DNI requirement
-     */
     public static function requiresDni(?int $idProduct = null, ?int $idProductAttribute = null): bool
     {
         return static::hasBlockade($idProduct, $idProductAttribute, 'dni');
     }
 
-    /**
-     * Get sale type for a product (returns first found document type slug)
-     */
     public static function getSaleType(?int $idProduct = null, ?int $idProductAttribute = null): ?string
     {
         $query = static::query()->with('documentType');

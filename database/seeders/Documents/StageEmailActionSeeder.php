@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Documents;
 
-use App\Models\Document\StageEmailAction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Document\Entities\StageEmailAction;
 
 class StageEmailActionSeeder extends Seeder
 {

@@ -13,20 +13,11 @@ class CheckSlaBreachesJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct()
     {
         $this->onQueue('default');
     }
 
-    /**
-     * Execute the job.
-     *
-     * Checks for SLA breaches on documents and creates breach records
-     * for escalation and notifications.
-     */
     public function handle(): void
     {
         try {
@@ -57,9 +48,6 @@ class CheckSlaBreachesJob implements ShouldQueue
         }
     }
 
-    /**
-     * Check if document exceeded upload request time SLA
-     */
     private function checkUploadRequestSla(Document $document): void
     {
         $slaPolicy = $document->slaPolicy;
@@ -107,9 +95,6 @@ class CheckSlaBreachesJob implements ShouldQueue
         }
     }
 
-    /**
-     * Check if document exceeded review time SLA
-     */
     private function checkReviewSla(Document $document): void
     {
         $slaPolicy = $document->slaPolicy;
@@ -160,9 +145,6 @@ class CheckSlaBreachesJob implements ShouldQueue
         }
     }
 
-    /**
-     * Check if document exceeded approval time SLA
-     */
     private function checkApprovalSla(Document $document): void
     {
         $slaPolicy = $document->slaPolicy;
@@ -212,9 +194,6 @@ class CheckSlaBreachesJob implements ShouldQueue
         }
     }
 
-    /**
-     * Escalate a breach by notifying administrators
-     */
     private function escalateBreach(
         DocumentSlaBreach $breach,
         \Modules\Document\Entities\DocumentSlaPolicy $slaPolicy,

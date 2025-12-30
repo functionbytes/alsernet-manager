@@ -3,7 +3,6 @@
 namespace Modules\Document\Entities;
 
 use App\Models\User;
-use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,9 +33,6 @@ class DocumentValidatorGroup extends Model
         ];
     }
 
-    /**
-     * Boot the model.
-     */
     protected static function booted(): void
     {
         // Auto-increment sort_order for new groups
@@ -57,13 +53,6 @@ class DocumentValidatorGroup extends Model
         });
     }
 
-    // =========================================================================
-    // RELATIONSHIPS
-    // =========================================================================
-
-    /**
-     * Get the users that belong to the validator group.
-     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -74,45 +63,26 @@ class DocumentValidatorGroup extends Model
         )->withPivot('priority', 'created_at');
     }
 
-    /**
-     * Get users with primary priority.
-     */
     public function primaryUsers(): BelongsToMany
     {
         return $this->users()->wherePivot('priority', 'primary');
     }
 
-    /**
-     * Get users with backup priority.
-     */
     public function backupUsers(): BelongsToMany
     {
         return $this->users()->wherePivot('priority', 'backup');
     }
 
-    /**
-     * Get configurations for this validator group.
-     */
     public function configurations(): HasMany
     {
         return $this->hasMany(DocumentValidatorGroupConfiguration::class);
     }
 
-    /**
-     * Get configuration change history for this validator group.
-     */
     public function configurationHistory(): HasMany
     {
         return $this->hasMany(DocumentValidatorGroupConfigurationHistory::class);
     }
 
-    // =========================================================================
-    // STATIC FINDERS
-    // =========================================================================
-
-    /**
-     * Find the default group.
-     */
     public static function findDefault(): ?self
     {
         return static::query()
@@ -121,9 +91,6 @@ class DocumentValidatorGroup extends Model
             ->first();
     }
 
-    /**
-     * Find a group by its unique key.
-     */
     public static function findByKey(string $key): ?self
     {
         return static::query()
@@ -132,9 +99,6 @@ class DocumentValidatorGroup extends Model
             ->first();
     }
 
-    /**
-     * Get all active groups ordered by sort_order.
-     */
     public static function getActiveOrdered(): Collection
     {
         return static::query()
@@ -143,11 +107,6 @@ class DocumentValidatorGroup extends Model
             ->get();
     }
 
-    /**
-     * Get groups by their keys in order.
-     *
-     * @param  array<string>  $keys
-     */
     public static function getByKeysInOrder(array $keys): Collection
     {
         $groups = static::query()
@@ -162,15 +121,6 @@ class DocumentValidatorGroup extends Model
             ->filter();
     }
 
-    // =========================================================================
-    // ASSIGNMENT LOGIC
-    // =========================================================================
-
-    /**
-     * Get the next user for assignment based on assignment mode.
-     *
-     * @param  string|null  $entityType  Optional entity type for load balancing
-     */
     public function getNextUser(?string $entityType = null): ?User
     {
         $users = $this->primaryUsers()->get();
@@ -190,9 +140,6 @@ class DocumentValidatorGroup extends Model
         };
     }
 
-    /**
-     * Get next user using round robin based on pivot created_at.
-     */
     protected function getNextUserRoundRobin(Collection $users): User
     {
         return $users->sortBy(function (User $user) {
@@ -200,10 +147,6 @@ class DocumentValidatorGroup extends Model
         })->first();
     }
 
-    /**
-     * Get next user using load balancing.
-     * The entity using this must implement countPendingAssignments().
-     */
     protected function getNextUserLoadBalanced(Collection $users, ?string $entityType = null): User
     {
         if ($entityType && class_exists($entityType)) {
@@ -216,13 +159,9 @@ class DocumentValidatorGroup extends Model
             })->first();
         }
 
-        // Fallback to first user if no entity type provided
         return $users->first();
     }
 
-    /**
-     * Check if a user belongs to this group.
-     */
     public function hasUser(User|int $user): bool
     {
         $userId = $user instanceof User ? $user->id : $user;
@@ -230,51 +169,26 @@ class DocumentValidatorGroup extends Model
         return $this->users()->where('users.id', $userId)->exists();
     }
 
-    /**
-     * Check if a user can validate for this group.
-     */
     public function canUserValidate(User|int $user): bool
     {
         return $this->is_active && $this->hasUser($user);
     }
 
-    // =========================================================================
-    // SCOPES
-    // =========================================================================
-
-    /**
-     * Scope to filter by key.
-     */
     public function scopeKey($query, string $key)
     {
         return $query->where('key', $key);
     }
 
-    /**
-     * Scope to get only active groups.
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope to get groups ordered by their sort order.
-     */
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order');
     }
 
-    // =========================================================================
-    // UTILITIES
-    // =========================================================================
-
-    /**
-     * Reorder groups based on an array of IDs.
-     *
-     * @param  array<int>  $ids
-     */
     public static function reorder(array $ids): void
     {
         foreach ($ids as $order => $id) {
@@ -282,22 +196,11 @@ class DocumentValidatorGroup extends Model
         }
     }
 
-    /**
-     * Get the route key name for route model binding.
-     * Uses 'uid' for public-facing routes.
-     */
     public function getRouteKeyName(): string
     {
         return 'uid';
     }
 
-    /**
-     * Get email action configurations for a specific user based on their groups.
-     * Return merged configurations from all groups the user belongs to.
-     * If a user belongs to multiple groups, the most permissive setting wins (OR logic).
-     *
-     * @return array<string, bool>
-     */
     public static function getEmailConfigurationsForUser(User|int $user): array
     {
         $userId = $user instanceof User ? $user->id : $user;
@@ -327,7 +230,6 @@ class DocumentValidatorGroup extends Model
             ];
         }
 
-        // Merge configurations from all groups (OR logic - most permissive wins)
         $mergedConfig = [];
         foreach ($userGroups as $group) {
             foreach ($group->configurations as $config) {

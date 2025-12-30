@@ -25,33 +25,21 @@ class DocumentValidatorGroupConfiguration extends Model
         'is_active' => 'boolean',
     ];
 
-    /**
-     * Relación con DocumentValidatorGroup
-     */
     public function validatorGroup(): BelongsTo
     {
         return $this->belongsTo(DocumentValidatorGroup::class);
     }
 
-    /**
-     * Scope para obtener configuraciones activas
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope para obtener por categoría
-     */
     public function scopeByCategory($query, string $category)
     {
         return $query->where('category', $category);
     }
 
-    /**
-     * Obtener todas las configuraciones de un grupo
-     */
     public static function getGroupConfigurations(int $groupId, ?string $category = null)
     {
         $query = static::where('validator_group_id', $groupId)
@@ -66,9 +54,6 @@ class DocumentValidatorGroupConfiguration extends Model
         return $query->get();
     }
 
-    /**
-     * Verificar si una configuración está habilitada
-     */
     public static function isEnabled(int $groupId, string $key): bool
     {
         return static::where('validator_group_id', $groupId)

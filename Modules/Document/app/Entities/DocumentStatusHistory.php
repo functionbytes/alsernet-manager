@@ -2,6 +2,7 @@
 
 namespace Modules\Document\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -42,7 +43,7 @@ class DocumentStatusHistory extends Model
 
     public function changedBy(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'changed_by');
+        return $this->belongsTo(User::class, 'changed_by');
     }
 
     public function scopeRecent($query)

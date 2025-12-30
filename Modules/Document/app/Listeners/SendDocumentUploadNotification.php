@@ -2,21 +2,15 @@
 
 namespace Modules\Document\Listeners;
 
-use App\Jobs\Documents\MailTemplateJob;
 use Illuminate\Support\Facades\Log;
 use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Traits\PreventsDuplicateEventExecution;
 
 class SendDocumentUploadNotification
 {
     use PreventsDuplicateEventExecution;
 
-    /**
-     * Maneja el evento DocumentCreated
-     * 1. Set status to "Pending" (Solicitado)
-     * 2. Envía email inicial pidiendo la carga de documentos (síncrono)
-     * 3. Programa el recordatorio con delay según reminder_days (asíncrono)
-     */
     public function handle(DocumentCreated $event): void
     {
         // Prevent duplicate execution within the same request

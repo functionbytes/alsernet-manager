@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Documents;
 
-use App\Models\Document\DocumentType;
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentType;
 
 class DocumentTypeSeeder extends Seeder
 {

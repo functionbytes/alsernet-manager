@@ -27,33 +27,21 @@ class DocumentSync extends Model
         ];
     }
 
-    /**
-     * Get documents with this sync type
-     */
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class, 'sync_id');
     }
 
-    /**
-     * Scope for active syncs
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope ordered
-     */
     public function scopeOrdered($query)
     {
         return $query->orderBy('order');
     }
 
-    /**
-     * Find by key
-     */
     public static function findByKey(string $key): ?self
     {
         return self::where('key', $key)->first();

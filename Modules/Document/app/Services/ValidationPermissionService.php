@@ -2,17 +2,11 @@
 
 namespace Modules\Document\Services;
 
-use App\Enums\Document\ValidationAction;
 use Illuminate\Support\Facades\Config;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentStageEmailAction;
+use Modules\Document\Enums\ValidationAction;
 
-/**
- * ValidationPermissionService
- *
- * Manages validation permissions for documents.
- * Determines which actions are allowed based on the current validation stage.
- */
 class ValidationPermissionService
 {
     /**

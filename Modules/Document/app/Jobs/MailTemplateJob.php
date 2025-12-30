@@ -2,6 +2,7 @@
 
 namespace Modules\Document\Jobs;
 
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Modules\Document\Entities\Document;
@@ -12,9 +13,6 @@ class MailTemplateJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(
         private Document $document,
         private string $emailType,
@@ -28,9 +26,6 @@ class MailTemplateJob implements ShouldQueue
         }
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         try {
@@ -68,9 +63,6 @@ class MailTemplateJob implements ShouldQueue
         }
     }
 
-    /**
-     * Log successful email send
-     */
     private function logSuccess(): void
     {
         try {
@@ -97,22 +89,19 @@ class MailTemplateJob implements ShouldQueue
                 ],
             ]);
 
-            \Log::info('Document email sent successfully', [
+            Log::info('Document email sent successfully', [
                 'document_uid' => $this->document->uid,
                 'email_type' => $this->emailType,
                 'recipient' => $this->document->customer_email,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to log email action', [
+            Log::error('Failed to log email action', [
                 'document_uid' => $this->document->uid,
                 'error' => $e->getMessage(),
             ]);
         }
     }
 
-    /**
-     * Log failed email send
-     */
     private function logFailure(string $errorMessage): void
     {
         try {
@@ -139,13 +128,13 @@ class MailTemplateJob implements ShouldQueue
                 ],
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to log failed email action', [
+            Log::error('Failed to log failed email action', [
                 'document_uid' => $this->document->uid,
                 'error' => $e->getMessage(),
             ]);
         }
 
-        \Log::error('Failed to send document email', [
+        Log::error('Failed to send document email', [
             'document_uid' => $this->document->uid,
             'email_type' => $this->emailType,
             'error' => $errorMessage,
