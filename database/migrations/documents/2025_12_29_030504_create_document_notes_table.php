@@ -6,14 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * Notas internas y comentarios sobre documentos.
+     * Permite registrar notas privadas (internas) o visibles al cliente.
+     */
     public function up(): void
     {
         Schema::create('document_notes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('document_id')->constrained('documents')->cascadeOnDelete();
-            $table->unsignedBigInteger('created_by');
-            $table->longText('content');
-            $table->boolean('is_internal')->default(true);
+            $table->foreignId('document_id')
+                ->constrained('documents')
+                ->cascadeOnDelete();
+            $table->foreignId('created_by')
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->longText('content')->comment('Contenido de la nota');
+            $table->boolean('is_internal')->default(true)->comment('Verdadero si es nota interna, falso si es visible al cliente');
             $table->timestamps();
 
             $table->index('document_id');
@@ -21,6 +31,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('document_notes');

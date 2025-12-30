@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * Crea la tabla document_validator_groups que define grupos de validadores
+     * para validación polimórfica de documentos en múltiples etapas.
+     */
     public function up(): void
     {
         Schema::create('document_validator_groups', function (Blueprint $table) {
@@ -25,6 +31,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('document_validator_groups');

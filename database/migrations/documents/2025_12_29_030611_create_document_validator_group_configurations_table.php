@@ -8,12 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * Configuraciones específicas por grupo de validadores.
+     * Permite personalizar comportamientos como aprobación automática,
+     * acciones de email, workflows, etc. por grupo.
      */
     public function up(): void
     {
         Schema::create('document_validator_group_configurations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('validator_group_id');
+            $table->foreignId('validator_group_id')
+                ->constrained('document_validator_groups')
+                ->onDelete('cascade');
             $table->string('key')->comment('Configuration key (e.g., enable_auto_approval)');
             $table->string('label')->comment('Display label');
             $table->text('description')->nullable()->comment('Description of the configuration');
