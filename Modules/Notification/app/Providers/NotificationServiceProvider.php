@@ -3,21 +3,51 @@
 namespace Modules\Notification\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Notification\Console\Commands\CleanOldNotifications;
 
 class NotificationServiceProvider extends ServiceProvider
 {
-    public function register()
+    protected string $name = 'Notification';
+
+    public function register(): void
     {
-        // Register Notification services
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/notification.php',
+            'notification'
+        );
+
+        // Register commands
+        $this->registerCommands();
     }
 
-    public function boot()
+    public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/managers.php');
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'notification');
+        // Load routes
+        $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
 
+        // Publish config
         $this->publishes([
-            __DIR__ . '/../../config/notification.php' => config_path('notification.php'),
+            __DIR__.'/../../config/notification.php' => config_path('notification.php'),
         ], 'notification-config');
+
+        // Publish assets (CSS and JavaScript)
+        $this->publishes([
+            __DIR__.'/../../resources/css' => public_path('Modules/Notification/css'),
+            __DIR__.'/../../resources/js' => public_path('Modules/Notification/js'),
+        ], 'notification-assets');
+
+        // Load migrations
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+
+        // Load views
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'notification');
+    }
+
+    protected function registerCommands(): void
+    {
+        $this->commands([
+            CleanOldNotifications::class,
+        ]);
     }
 }
