@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
-use Modules\Documents\Entities\DocumentConfiguration;
+use Modules\Document\Entities\DocumentConfiguration;
 
 class DocumentTypeService
 {

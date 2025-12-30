@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Documents\Events;
+namespace Modules\Document\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentStatus;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentStatus;
 
 class DocumentStatusChanged
 {

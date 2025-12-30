@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Managers\Settings;
+namespace Modules\Document\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Modules\Documents\Entities\DocumentRequirement;
-use Modules\Documents\Entities\DocumentRequirementTranslation;
-use Modules\Documents\Entities\DocumentType;
-use Modules\Documents\Entities\DocumentValidationCondition;
-use Modules\Documents\Entities\DocumentValidatorGroup;
+use Modules\Document\Entities\DocumentRequirement;
+use Modules\Document\Entities\DocumentRequirementTranslation;
+use Modules\Document\Entities\DocumentType;
+use Modules\Document\Entities\DocumentValidationCondition;
+use Modules\Document\Entities\DocumentValidatorGroup;
 
 /**
  * DocumentTypeController

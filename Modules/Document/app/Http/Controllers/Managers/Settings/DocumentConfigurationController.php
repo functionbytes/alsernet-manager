@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Managers\Settings;
+namespace Modules\Document\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use Modules\Mail\Models\MailTemplate;
@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Modules\Documents\Entities\DocumentStorageConfigurationHistory;
+use Modules\Document\Entities\DocumentStorageConfigurationHistory;
 
 /**
  * OrderConfigurationController

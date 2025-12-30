@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Providers;
+namespace Modules\Document\Providers;
 
 use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;
@@ -8,9 +8,9 @@ use App\Listeners\Documents\SendDocumentUploadNotification;
 use App\Listeners\Documents\SendStageNotifications;
 use App\Listeners\Systems\Backups\BackupEventListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Documents\Events\DocumentCreated;
-use Modules\Documents\Events\DocumentStatusChanged;
-use Modules\Documents\Events\DocumentValidationStageApproved;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Events\DocumentStatusChanged;
+use Modules\Document\Events\DocumentValidationStageApproved;
 use Spatie\Backup\Events\BackupHasSucceeded;
 use Spatie\Backup\Events\BackupWasNotSuccessful;
 

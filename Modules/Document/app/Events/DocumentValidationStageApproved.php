@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Documents\Events;
+namespace Modules\Document\Events;
 
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 /**
  * DocumentValidationStageApproved Event

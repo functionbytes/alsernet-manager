@@ -1,4 +1,4 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
     <div class="container-fluid">
@@ -9,8 +9,5 @@
 
 
 @push('scripts')
-
-
-
 
 @endpush

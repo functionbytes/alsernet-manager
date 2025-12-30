@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Factories;
+namespace Modules\Document\Factories;
 
 use Modules\Mail\Mail\Documents\DocumentCustomMail;
 use Modules\Mail\Models\MailTemplate;
 use Illuminate\Support\Facades\Mail;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 /**
  * DocumentEmailFactory

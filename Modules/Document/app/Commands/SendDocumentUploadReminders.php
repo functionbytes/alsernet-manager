@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Commands;
+namespace Modules\Document\Commands;
 
 use App\Jobs\Documents\MailTemplateJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 class SendDocumentUploadReminders extends Command
 {

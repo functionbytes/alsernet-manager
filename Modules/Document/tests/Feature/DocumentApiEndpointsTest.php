@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Tests\Feature;
+namespace Modules\Document\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,14 +35,14 @@ class DocumentApiEndpointsTest extends TestCase
         $this->actingAs($this->user);
 
         // USAR DOCUMENTO REAL de la base de datos
-        $document = \Modules\Documents\Entities\Document::where('validation_status', 'pending')
+        $document = \Modules\Document\Entities\Document::where('validation_status', 'pending')
             ->first();
 
         if ($document) {
             $this->documentUid = $document->uid;
         } else {
             // Usar cualquier documento si no hay pending
-            $document = \Modules\Documents\Entities\Document::first();
+            $document = \Modules\Document\Entities\Document::first();
             $this->documentUid = $document ? $document->uid : 'test-uid-' . uniqid();
         }
     }

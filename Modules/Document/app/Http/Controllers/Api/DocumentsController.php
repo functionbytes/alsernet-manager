@@ -1,21 +1,21 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Api;
+namespace Modules\Document\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentLoad;
-use Modules\Documents\Entities\DocumentSource;
-use Modules\Documents\Entities\DocumentStatus;
-use Modules\Documents\Entities\DocumentSync;
-use Modules\Documents\Entities\DocumentUploadType;
-use Modules\Documents\Events\DocumentCreated;
-use Modules\Documents\Jobs\MailTemplateJob;
-use Modules\Documents\Services\DocumentEmailService;
-use Modules\Documents\Services\DocumentTypeService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentLoad;
+use Modules\Document\Entities\DocumentSource;
+use Modules\Document\Entities\DocumentStatus;
+use Modules\Document\Entities\DocumentSync;
+use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Jobs\MailTemplateJob;
+use Modules\Document\Services\DocumentEmailService;
+use Modules\Document\Services\DocumentTypeService;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends \App\Http\Controllers\Api\ApiController

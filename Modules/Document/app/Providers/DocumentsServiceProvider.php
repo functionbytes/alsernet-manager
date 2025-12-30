@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Providers;
+namespace Modules\Document\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -42,8 +42,8 @@ class DocumentsServiceProvider extends ServiceProvider
 
         // Registrar PermissionService como singleton
         $this->app->singleton(
-            \Modules\Documents\Services\PermissionService::class,
-            fn ($app) => new \Modules\Documents\Services\PermissionService
+            \Modules\Document\Services\PermissionService::class,
+            fn ($app) => new \Modules\Document\Services\PermissionService
         );
 
         // Registrar DocumentPolicy
@@ -55,10 +55,10 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerPolicies(): void
     {
-        if (class_exists(\App\Models\Document\Document::class)) {
+        if (class_exists(\Modules\Document\Entities\Document::class)) {
             \Illuminate\Support\Facades\Gate::policy(
-                \App\Models\Document\Document::class,
-                \Modules\Documents\Policies\DocumentPolicy::class
+                \Modules\Document\Entities\Document::class,
+                \Modules\Document\Policies\DocumentPolicy::class
             );
         }
     }
@@ -69,10 +69,10 @@ class DocumentsServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         $this->commands([
-            \Modules\Documents\Commands\SendDocumentUploadReminders::class,
-            \Modules\Documents\Commands\InitializeDocumentWorkflows::class,
-            \Modules\Documents\Commands\CreateSampleDocumentsFromPrestashop::class,
-            \Modules\Documents\Commands\SyncDocumentFields::class,
+            \Modules\Document\Commands\SendDocumentUploadReminders::class,
+            \Modules\Document\Commands\InitializeDocumentWorkflows::class,
+            \Modules\Document\Commands\CreateSampleDocumentsFromPrestashop::class,
+            \Modules\Document\Commands\SyncDocumentFields::class,
         ]);
     }
 
@@ -173,7 +173,7 @@ class DocumentsServiceProvider extends ServiceProvider
         // Register navigation composer for managers layout
         view()->composer(
             'managers.includes.nav',
-            \Modules\Documents\Http\ViewComposers\NavigationComposer::class
+            \Modules\Document\Http\ViewComposers\NavigationComposer::class
         );
     }
 

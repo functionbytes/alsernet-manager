@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Commands;
+namespace Modules\Document\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Events\DocumentCreated;
-use Modules\Documents\Services\DocumentEmailService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Services\DocumentEmailService;
 
 class CreateSampleDocumentsFromPrestashop extends Command
 {

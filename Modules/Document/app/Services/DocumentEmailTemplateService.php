@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
 use Modules\Mail\Models\MailTemplate;
 use App\Models\Setting;
 use Modules\Mail\Services\MailTemplateRendererService;
 use Illuminate\Support\Facades\Mail;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentMail;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentMail;
 
 class DocumentEmailTemplateService
 {
@@ -30,7 +30,7 @@ class DocumentEmailTemplateService
             }
 
             // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
+            $requiredDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -84,7 +84,7 @@ class DocumentEmailTemplateService
             }
 
             // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
+            $requiredDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -383,7 +383,7 @@ class DocumentEmailTemplateService
             // Si se proporcionaron documentos rechazados específicos, usarlos
             // Si no, usar todos los documentos requeridos
             if (empty($rejectedDocs)) {
-                $rejectedDocs = \App\Services\Documents\DocumentTypeService::getRequiredDocuments($document->type);
+                $rejectedDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
             }
 
             $variables = self::prepareDocumentVariables($document, $rejectedDocs, $reason);

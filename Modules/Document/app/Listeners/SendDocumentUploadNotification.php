@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Listeners;
+namespace Modules\Document\Listeners;
 
 use App\Jobs\Documents\MailTemplateJob;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Events\DocumentCreated;
-use Modules\Documents\Traits\PreventsDuplicateEventExecution;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Traits\PreventsDuplicateEventExecution;
 
 class SendDocumentUploadNotification
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Entities;
+namespace Modules\Document\Entities;
 
 use App\Library\Traits\HasUid;
 use App\Library\Traits\HasValidationWorkflow;
-use App\Services\Documents\DocumentMailService;
+use Modules\Document\Services\DocumentMailService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

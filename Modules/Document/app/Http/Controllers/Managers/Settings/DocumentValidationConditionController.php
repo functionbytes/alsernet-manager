@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Managers\Settings;
+namespace Modules\Document\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Modules\Documents\Entities\DocumentType;
-use Modules\Documents\Entities\DocumentValidationCondition;
+use Modules\Document\Entities\DocumentType;
+use Modules\Document\Entities\DocumentValidationCondition;
 
 /**
  * DocumentValidationConditionController

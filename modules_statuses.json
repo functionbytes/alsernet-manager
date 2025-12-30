@@ -4,5 +4,9 @@
     "Media": true,
     "Prestashop": false,
     "Returns": false,
-    "Warehouse": true
+    "Warehouse": true,
+    "Helpdesk": false,
+    "Subscriber": false,
+    "Return": false,
+    "Campaign": false
 }

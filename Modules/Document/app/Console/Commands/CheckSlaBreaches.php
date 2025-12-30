@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Console\Commands;
+namespace Modules\Document\Console\Commands;
 
 use Modules\Helpdesk\Events\SlaBreached;
 use Modules\Helpdesk\Models\Ticket;

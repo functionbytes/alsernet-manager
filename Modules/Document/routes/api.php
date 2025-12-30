@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Documents\Http\Controllers\Api\DocumentsController;
-use Modules\Documents\Http\Controllers\Api\DocumentValidationController;
+use Modules\Document\Http\Controllers\Api\DocumentsController;
+use Modules\Document\Http\Controllers\Api\DocumentValidationController;
 
 /*
 |--------------------------------------------------------------------------

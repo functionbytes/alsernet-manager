@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Mail;
+namespace Modules\Document\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 class DocumentMissingNotificationMail extends Mailable
 {

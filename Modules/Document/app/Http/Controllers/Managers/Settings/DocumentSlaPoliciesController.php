@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Managers\Settings;
+namespace Modules\Document\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentSlaPolicy;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentSlaPolicy;
 
 class DocumentSlaPoliciesController extends Controller
 {

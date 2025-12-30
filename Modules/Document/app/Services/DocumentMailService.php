@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 class DocumentMailService
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
 use App\Enums\Document\ValidationAction;
 use Illuminate\Support\Facades\Config;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentStageEmailAction;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentStageEmailAction;
 
 /**
  * ValidationPermissionService

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Console\Commands;
+namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Modules\Documents\Entities\DocumentProductBlockade;
+use Modules\Document\Entities\DocumentProductBlockade;
 
 class MigrateProductBlockades extends Command
 {

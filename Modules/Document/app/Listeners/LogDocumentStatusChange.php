@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Documents\Listeners;
+namespace Modules\Document\Listeners;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Entities\DocumentStatusHistory;
-use Modules\Documents\Events\DocumentStatusChanged;
-use Modules\Documents\Traits\PreventsDuplicateEventExecution;
+use Modules\Document\Entities\DocumentStatusHistory;
+use Modules\Document\Events\DocumentStatusChanged;
+use Modules\Document\Traits\PreventsDuplicateEventExecution;
 
 class LogDocumentStatusChange
 {
@@ -42,13 +42,13 @@ class LogDocumentStatusChange
             ]);
 
             // Find and log the transition used
-            $transition = \Modules\Documents\Entities\DocumentStatusTransition::where('from_status_id', $event->fromStatus->id)
+            $transition = \Modules\Document\Entities\DocumentStatusTransition::where('from_status_id', $event->fromStatus->id)
                 ->where('to_status_id', $event->toStatus->id)
                 ->active()
                 ->first();
 
             if ($transition) {
-                \Modules\Documents\Entities\DocumentStatusTransitionLog::create([
+                \Modules\Document\Entities\DocumentStatusTransitionLog::create([
                     'document_id' => $event->document->id,
                     'transition_id' => $transition->id,
                     'from_status_id' => $event->fromStatus->id,

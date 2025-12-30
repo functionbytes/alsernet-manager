@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Entities;
+namespace Modules\Document\Entities;
 
 use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;

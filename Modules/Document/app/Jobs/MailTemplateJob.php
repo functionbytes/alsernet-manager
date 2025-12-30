@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Documents\Jobs;
+namespace Modules\Document\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentAction;
-use Modules\Documents\Services\DocumentEmailTemplateService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentAction;
+use Modules\Document\Services\DocumentEmailTemplateService;
 
 class MailTemplateJob implements ShouldQueue
 {

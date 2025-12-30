@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Enums;
+namespace Modules\Document\Enums;
 
 /**
  * ValidationAction Enum

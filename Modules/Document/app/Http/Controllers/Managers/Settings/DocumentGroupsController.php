@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Managers\Settings;
+namespace Modules\Document\Http\Controllers\Managers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Modules\Documents\Entities\DocumentValidatorGroup;
+use Modules\Document\Entities\DocumentValidatorGroup;
 
 class DocumentGroupsController extends Controller
 {

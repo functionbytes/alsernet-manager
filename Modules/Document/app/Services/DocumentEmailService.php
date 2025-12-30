@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Jobs\MailTemplateJob;
+use Modules\Document\Entities\Document;
+use Modules\Document\Jobs\MailTemplateJob;
 
 class DocumentEmailService
 {
@@ -89,7 +89,7 @@ class DocumentEmailService
             $allowedPreviousStatuses = ['pending', 'awaiting_documents'];
 
             if ($currentStatus && in_array($currentStatus->key, $allowedPreviousStatuses)) {
-                $receivedStatus = \Modules\Documents\Entities\DocumentStatus::where('key', 'received')->first();
+                $receivedStatus = \Modules\Document\Entities\DocumentStatus::where('key', 'received')->first();
                 if ($receivedStatus) {
                     $document->update(['status_id' => $receivedStatus->id]);
 
@@ -100,7 +100,7 @@ class DocumentEmailService
                     ]);
 
                     // Fire DocumentStatusChanged event
-                    \Modules\Documents\Events\DocumentStatusChanged::dispatch(
+                    \Modules\Document\Events\DocumentStatusChanged::dispatch(
                         $document,
                         $currentStatus,
                         $receivedStatus,

@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Documents\Jobs;
+namespace Modules\Document\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentSlaBreach;
-use Modules\Documents\Entities\DocumentStatus;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentSlaBreach;
+use Modules\Document\Entities\DocumentStatus;
 
 class CheckSlaBreachesJob implements ShouldQueue
 {
@@ -217,7 +217,7 @@ class CheckSlaBreachesJob implements ShouldQueue
      */
     private function escalateBreach(
         DocumentSlaBreach $breach,
-        \Modules\Documents\Entities\DocumentSlaPolicy $slaPolicy,
+        \Modules\Document\Entities\DocumentSlaPolicy $slaPolicy,
         Document $document
     ): void {
         try {

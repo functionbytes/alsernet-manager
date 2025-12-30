@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Modules\Documents\Entities\DocumentValidatorGroup;
+use Modules\Document\Entities\DocumentValidatorGroup;
 
 /**
  * PermissionService

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Administratives;
+namespace Modules\Document\Http\Controllers\Administratives;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
@@ -11,21 +11,21 @@ use App\Models\Setting;
 use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentLoad;
-use Modules\Documents\Entities\DocumentNote;
-use Modules\Documents\Entities\DocumentSource;
-use Modules\Documents\Entities\DocumentStatus;
-use Modules\Documents\Entities\DocumentStatusTransition;
-use Modules\Documents\Entities\DocumentSync;
-use Modules\Documents\Entities\DocumentType;
-use Modules\Documents\Entities\DocumentUploadType;
-use Modules\Documents\Events\DocumentCreated;
-use Modules\Documents\Events\DocumentStatusChanged;
-use Modules\Documents\Jobs\MailTemplateJob;
-use Modules\Documents\Services\DocumentActionService;
-use Modules\Documents\Services\DocumentEmailService;
-use Modules\Documents\Services\DocumentTypeService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentLoad;
+use Modules\Document\Entities\DocumentNote;
+use Modules\Document\Entities\DocumentSource;
+use Modules\Document\Entities\DocumentStatus;
+use Modules\Document\Entities\DocumentStatusTransition;
+use Modules\Document\Entities\DocumentSync;
+use Modules\Document\Entities\DocumentType;
+use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Events\DocumentStatusChanged;
+use Modules\Document\Jobs\MailTemplateJob;
+use Modules\Document\Services\DocumentActionService;
+use Modules\Document\Services\DocumentEmailService;
+use Modules\Document\Services\DocumentTypeService;
 use setasign\Fpdi\Fpdi;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -427,7 +427,7 @@ class DocumentsController extends Controller
 
                 // Check for product blockades using source_id (id_origen in ERP = source_id in our table)
                 if ($idArticulo) {
-                    $blockades = \Modules\Documents\Entities\DocumentProductBlockade::where('source_id', $idArticulo)
+                    $blockades = \Modules\Document\Entities\DocumentProductBlockade::where('source_id', $idArticulo)
                         ->pluck('blockade_type')
                         ->toArray();
 
@@ -1322,7 +1322,7 @@ class DocumentsController extends Controller
         // Get email action configurations based on document's current validator group
         $userEmailConfig = [];
         if ($document->current_validator_group) {
-            $currentGroup = \Modules\Documents\Validations\ValidatorGroup::where('key', $document->current_validator_group)
+            $currentGroup = \Modules\Document\Validations\ValidatorGroup::where('key', $document->current_validator_group)
                 ->where('is_active', true)
                 ->with(['configurations' => function ($q) {
                     $q->where('category', 'email_actions')
@@ -2862,7 +2862,7 @@ class DocumentsController extends Controller
      */
     public function emailPreview($mailUid)
     {
-        $mail = \Modules\Documents\Entities\DocumentMail::where('uid', $mailUid)->firstOrFail();
+        $mail = \Modules\Document\Entities\DocumentMail::where('uid', $mailUid)->firstOrFail();
         $document = $mail->document;
 
         return view('administratives.views.documents.emails.preview', compact('mail', 'document'));
@@ -3016,7 +3016,7 @@ class DocumentsController extends Controller
         }
 
         // Obtener todos los grupos de validación que el usuario pertenece
-        $validatorGroups = \Modules\Documents\Validation\ValidatorGroup::whereHas(
+        $validatorGroups = \Modules\Document\Validation\ValidatorGroup::whereHas(
             'users',
             fn ($q) => $q->where('users.id', $user->id)
         )->pluck('key')->toArray();

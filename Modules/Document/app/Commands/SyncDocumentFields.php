@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Commands;
+namespace Modules\Document\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Services\DocumentTypeService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Services\DocumentTypeService;
 
 class SyncDocumentFields extends Command
 {

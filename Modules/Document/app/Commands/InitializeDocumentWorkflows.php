@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Documents\Commands;
+namespace Modules\Document\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 
 class InitializeDocumentWorkflows extends Command
 {

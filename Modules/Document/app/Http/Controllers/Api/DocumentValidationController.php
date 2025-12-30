@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Documents\Http\Controllers\Api;
+namespace Modules\Document\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Services\DocumentActionService;
-use Modules\Documents\Services\DocumentEmailService;
+use Modules\Document\Entities\Document;
+use Modules\Document\Services\DocumentActionService;
+use Modules\Document\Services\DocumentEmailService;
 
 /**
  * API Controller Genérico para Validación de Documentos

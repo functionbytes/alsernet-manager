@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Policies;
+namespace Modules\Document\Policies;
 
-use App\Models\Document\Document;
+use Modules\Document\Entities\Document;
 use App\Models\User;
-use Modules\Documents\Services\PermissionService;
+use Modules\Document\Services\PermissionService;
 
 /**
  * DocumentPolicy
@@ -211,7 +211,7 @@ class DocumentPolicy
             return false;
         }
 
-        $validatorGroup = \Modules\Documents\Validations\\ValidatorGroup::findByKey($currentGroup);
+        $validatorGroup = \Modules\Document\Validations\\ValidatorGroup::findByKey($currentGroup);
         if (! $validatorGroup) {
             return false;
         }

@@ -31,7 +31,7 @@
                         $nextStage = $document->current_stage + 1;
                         $stages = $document->getValidationWorkflowStages();
                         $nextGroup = $stages[$nextStage - 1] ?? null;
-                        $nextGroupModel = $nextGroup ? \Modules\Documents\Validations\\ValidatorGroup::findByKey($nextGroup) : null;
+                        $nextGroupModel = $nextGroup ? \Modules\Document\Validations\\ValidatorGroup::findByKey($nextGroup) : null;
                         $nextGroupUsers = $nextGroupModel ? $nextGroupModel->users : collect();
                     @endphp
 

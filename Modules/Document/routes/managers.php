@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentConfigurationController;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentGroupsController;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentSettingsController;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentTypeController;
-use Modules\Documents\Http\Controllers\Managers\Settings\DocumentValidationConditionController;
-use Modules\Documents\Http\Controllers\Managers\Settings\ProductBlockadeController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentConfigurationController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentGroupsController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentSettingsController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentSlaPoliciesController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentTypeController;
+use Modules\Document\Http\Controllers\Managers\Settings\DocumentValidationConditionController;
+use Modules\Document\Http\Controllers\Managers\Settings\ProductBlockadeController;
 
 /*
 |--------------------------------------------------------------------------

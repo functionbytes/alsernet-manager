@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Tests\Feature;
+namespace Modules\Document\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Modules\Documents\Entities\Document;
+use Modules\Document\Entities\Document;
 use App\Models\User;
 
 class DocumentValidationApiTest extends TestCase

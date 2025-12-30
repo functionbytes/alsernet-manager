@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Traits;
+namespace Modules\Document\Traits;
 
 /**
  * Trait PreventsDuplicateEventExecution

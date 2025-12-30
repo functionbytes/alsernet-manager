@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Documents\Http\ViewComposers;
+namespace Modules\Document\Http\ViewComposers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;

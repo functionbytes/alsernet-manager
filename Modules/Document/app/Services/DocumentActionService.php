@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Documents\Services;
+namespace Modules\Document\Services;
 
-use Modules\Documents\Entities\Document;
-use Modules\Documents\Entities\DocumentAction;
-use Modules\Documents\Entities\DocumentNote;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentAction;
+use Modules\Document\Entities\DocumentNote;
 
 class DocumentActionService
 {

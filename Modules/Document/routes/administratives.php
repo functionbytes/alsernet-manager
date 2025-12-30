@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Documents\Http\Controllers\Administratives\DocumentsController;
+use Modules\Document\Http\Controllers\Administratives\DocumentsController;
 
 /*
 |--------------------------------------------------------------------------

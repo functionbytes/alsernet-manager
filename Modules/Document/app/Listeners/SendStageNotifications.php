@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Documents\Listeners;
+namespace Modules\Document\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
-use Modules\Documents\Events\DocumentValidationStageApproved;
+use Modules\Document\Events\DocumentValidationStageApproved;
 
 /**
  * SendStageNotifications Listener
@@ -194,7 +194,7 @@ class SendStageNotifications implements ShouldQueue
     private function shouldSendApprovalEmail(DocumentValidationStageApproved $event): bool
     {
         // Check if stage allows sending approval emails
-        $permissionService = app(\App\Services\Documents\ValidationPermissionService::class);
+        $permissionService = app(\Modules\Document\Services\ValidationPermissionService::class);
 
         return $permissionService->canPerformValidationAction(
             $event->document,
