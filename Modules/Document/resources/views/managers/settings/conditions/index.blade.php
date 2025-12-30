@@ -21,7 +21,7 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search') || request('status'))
-                            <a href="{{ route('manager.settings.documents.conditions') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.settings.documents.conditions.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
@@ -34,7 +34,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.documents.conditions') }}">
+                <form method="GET" action="{{ route('manager.settings.documents.conditions.index') }}">
                     <div class="row align-items-center g-2">
                         <div class="col-md-6">
                             <div class="input-group">

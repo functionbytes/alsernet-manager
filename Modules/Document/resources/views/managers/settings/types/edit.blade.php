@@ -280,7 +280,7 @@
                                                                                 <div class="alert bg-warning-subtle border-warning mb-0">
                                                                                     <h6 class="mb-0 fw-semibold">No hay condiciones configuradas</h6>
                                                                                     <p class="mb-0">
-                                                                                        <a href="{{ route('manager.settings.documents.conditions') }}" class="alert-link">Crear condiciones</a>
+                                                                                        <a href="{{ route('manager.settings.documents.conditions.index') }}" class="alert-link">Crear condiciones</a>
                                                                                     </p>
                                                                                 </div>
                                                                         @else
@@ -552,7 +552,7 @@
                             <button type="submit" class="btn btn-primary w-100 mb-1">
                                 Guardar
                             </button>
-                            <a href="{{ route('manager.settings.documents.types') }}" class="btn btn-secondary w-100">
+                            <a href="{{ route('manager.settings.documents.types.index') }}" class="btn btn-secondary w-100">
                                 Cancelar
                             </a>
                         </div>
@@ -588,7 +588,7 @@ $(document).ready(function() {
             <div class="alert bg-warning-subtle border-warning mb-0">
                 <h6 class="mb-0 fw-semibold">No hay condiciones configuradas</h6>
                 <p class="mb-0">
-                    <a href="{{ route('manager.settings.documents.conditions') }}" class="alert-link">Crear condiciones</a>
+                    <a href="{{ route('manager.settings.documents.conditions.index') }}" class="alert-link">Crear condiciones</a>
                 </p>
             </div>
         @else

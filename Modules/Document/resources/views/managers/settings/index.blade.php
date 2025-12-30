@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="card-footer  border-top">
-                        <a href="{{ route('manager.settings.documents.types') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('manager.settings.documents.types.index') }}" class="btn btn-primary w-100">
                             Ir a tipos de documentos
                         </a>
                     </div>

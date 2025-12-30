@@ -301,7 +301,7 @@
                 <button type="submit" class="btn btn-info px-4 w-100 mb-1">
                     Guardar
                 </button>
-                <a href="{{ route('manager.settings.documents.conditions') }}" class="btn btn-light px-4 w-100">
+                <a href="{{ route('manager.settings.documents.conditions.index') }}" class="btn btn-light px-4 w-100">
                     Cancelar
                 </a>
             </div>
