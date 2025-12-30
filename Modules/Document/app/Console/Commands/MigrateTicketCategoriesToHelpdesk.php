@@ -2,8 +2,8 @@
 
 namespace Modules\Document\Console\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 class MigrateTicketCategoriesToHelpdesk extends Command

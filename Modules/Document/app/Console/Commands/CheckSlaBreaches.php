@@ -2,12 +2,12 @@
 
 namespace Modules\Document\Console\Commands;
 
-use Modules\Helpdesk\Events\SlaBreached;
-use Modules\Helpdesk\Models\Ticket;
 use Modules\Helpdesk\Models\TicketSlaBreach;
-use Carbon\Carbon;
-use Illuminate\Console\Command;
+use Modules\Helpdesk\Events\SlaBreached;
 use Illuminate\Support\Facades\Log;
+use Modules\Helpdesk\Models\Ticket;
+use Illuminate\Console\Command;
+use Carbon\Carbon;
 
 class CheckSlaBreaches extends Command
 {

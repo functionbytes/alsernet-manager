@@ -1,6 +1,6 @@
 {
     "Documents": true,
-    "Mail": false,
+    "Mail": true,
     "Media": true,
     "Prestashop": false,
     "Returns": false,
