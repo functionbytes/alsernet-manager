@@ -25,11 +25,17 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapWebRoutes(): void
     {
-        // Manager settings routes
+        // Manager settings VIEW routes (GET only)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings')
             ->name('manager.settings.')
             ->group(module_path($this->name, 'routes/managers.php'));
+
+        // Manager settings API routes (POST, PUT, DELETE)
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('api/manager/settings')
+            ->name('api.manager.settings.')
+            ->group(module_path($this->name, 'routes/api/settings.php'));
 
         // Administrative routes
         Route::middleware(['web', 'auth', 'role:administrative|super-admin'])
