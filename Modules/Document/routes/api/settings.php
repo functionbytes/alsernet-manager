@@ -22,7 +22,7 @@ use Modules\Document\Http\Controllers\Managers\Settings\ProductBlockadeControlle
 Route::middleware(['auth', 'role:manager|super-admin'])->group(function () {
 
     Route::prefix('documents/configurations')->name('documents.configurations.')->group(function () {
-        Route::post('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('store');
+        Route::post('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('update');
         Route::post('/storage', [DocumentConfigurationController::class, 'updateStorageSettings'])->name('storage.update');
         Route::post('/storage/test', [DocumentConfigurationController::class, 'testStorageConnection'])->name('storage.test');
     });

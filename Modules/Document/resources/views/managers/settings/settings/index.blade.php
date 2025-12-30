@@ -160,7 +160,7 @@
                         Los cambios se aplicaran inmediatamente despues de guardar
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('manager.settings.documents.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('manager.settings.documents.configurations') }}" class="btn btn-outline-secondary">
                             <i class="ti ti-arrow-left me-1"></i> Volver
                         </a>
                         <button type="submit" form="documentSettingsForm" class="btn btn-primary" id="btnSaveSettingsFooter" disabled>

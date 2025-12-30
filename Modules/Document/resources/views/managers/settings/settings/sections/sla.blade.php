@@ -473,7 +473,7 @@
                             <h6 class="mb-1 fw-semibold">Documentos Fuera de SLA</h6>
                             <p class="mb-0">Hay <strong>{{ $slaStats['breached'] }}</strong> documentos que han excedido el tiempo SLA establecido.</p>
                         </div>
-                        <a href="{{ route('manager.settings.documents.index') }}?filter=breached" class="btn btn-danger btn-sm">
+                        <a href="{{ route('manager.settings.documents.configurations') }}?filter=breached" class="btn btn-danger btn-sm">
                             <i class="ti ti-eye me-1"></i> Ver Documentos
                         </a>
                     </div>
@@ -491,7 +491,7 @@
                             <h6 class="mb-1 fw-semibold">Documentos por Vencer</h6>
                             <p class="mb-0">Hay <strong>{{ $slaStats['expiring_soon'] }}</strong> documentos que venceran en las proximas 24 horas.</p>
                         </div>
-                        <a href="{{ route('manager.settings.documents.index') }}?filter=expiring" class="btn btn-warning btn-sm">
+                        <a href="{{ route('manager.settings.documents.configurations') }}?filter=expiring" class="btn btn-warning btn-sm">
                             <i class="ti ti-eye me-1"></i> Ver Documentos
                         </a>
                     </div>

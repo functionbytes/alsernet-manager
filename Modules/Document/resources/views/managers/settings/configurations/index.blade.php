@@ -320,7 +320,7 @@
                                 <button type="submit" class="btn btn-primary w-100 mb-1">
                                     Guardar
                                 </button>
-                                <a href="{{ route('manager.settings.documents.configurations') }}" class="btn btn-secondary w-100">
+                                <a href="{{ route('manager.settings.documents.configurations.global') }}" class="btn btn-secondary w-100">
                                     Volver
                                 </a>
                         </div>
