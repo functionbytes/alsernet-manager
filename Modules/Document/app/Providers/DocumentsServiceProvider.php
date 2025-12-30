@@ -2,8 +2,8 @@
 
 namespace Modules\Document\Providers;
 
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Modules\Document\Commands\CreateSampleDocumentsFromPrestashop;
 use Modules\Document\Commands\InitializeDocumentWorkflows;
