@@ -14,7 +14,7 @@ use Psr\Http\Message\RequestInterface;
 interface NetworkExceptionInterface extends ClientExceptionInterface
 {
     /**
-     * Returns the request.
+     * Return the request.
      *
      * The request object MAY be a different object from the one passed to ClientInterface::sendRequest()
      *

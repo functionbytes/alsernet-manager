@@ -59,7 +59,7 @@ class TranslationCatalogueBuilder
     }
 
     /**
-     * Returns the catalogue as array. This catalogue will contain only the required domain.
+     * Return the catalogue as array. This catalogue will contain only the required domain.
      * If search strings are provided, only messages which match them will be returned.
      * Catalogue is the combination of the 3 layers of catalogue : default, file-translated and user-translated.
      * User-translated will override file-translated, which will override default catalogue.
@@ -116,7 +116,7 @@ class TranslationCatalogueBuilder
     }
 
     /**
-     * Returns the catalogue as array. This catalogue will contain all available domains.
+     * Return the catalogue as array. This catalogue will contain all available domains.
      * If search strings are provided, only messages which match them will be returned.
      * Catalogue is the combination of the 3 layers of catalogue : default, file-translated and user-translated.
      * User-translated will override file-translated, which will override default catalogue.

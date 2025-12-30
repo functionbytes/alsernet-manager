@@ -373,7 +373,7 @@ $config = [
 
     'cad_exts' => ['dwg', 'dxf', 'hpgl', 'plt', 'spl', 'step', 'stp', 'iges', 'igs', 'sat', 'cgm', 'svg'],
 
-    // Preview with Google Documents
+    // Preview with Google Document
     'googledoc_enabled' => true,
     'googledoc_file_exts' => ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'odt', 'odp', 'ods'],
 

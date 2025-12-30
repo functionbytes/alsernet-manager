@@ -65,7 +65,7 @@ class TranslationServiceGrpcClient extends \Grpc\BaseStub {
     }
 
     /**
-     * Returns a list of supported languages for translation.
+     * Return a list of supported languages for translation.
      * @param \Google\Cloud\Translate\V3\GetSupportedLanguagesRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -137,7 +137,7 @@ class TranslationServiceGrpcClient extends \Grpc\BaseStub {
     }
 
     /**
-     * Creates a glossary and returns the long-running operation. Returns
+     * Creates a glossary and returns the long-running operation. Return
      * NOT_FOUND, if the project doesn't exist.
      * @param \Google\Cloud\Translate\V3\CreateGlossaryRequest $argument input argument
      * @param array $metadata metadata
@@ -153,7 +153,7 @@ class TranslationServiceGrpcClient extends \Grpc\BaseStub {
     }
 
     /**
-     * Lists glossaries in a project. Returns NOT_FOUND, if the project doesn't
+     * Lists glossaries in a project. Return NOT_FOUND, if the project doesn't
      * exist.
      * @param \Google\Cloud\Translate\V3\ListGlossariesRequest $argument input argument
      * @param array $metadata metadata
@@ -169,7 +169,7 @@ class TranslationServiceGrpcClient extends \Grpc\BaseStub {
     }
 
     /**
-     * Gets a glossary. Returns NOT_FOUND, if the glossary doesn't
+     * Gets a glossary. Return NOT_FOUND, if the glossary doesn't
      * exist.
      * @param \Google\Cloud\Translate\V3\GetGlossaryRequest $argument input argument
      * @param array $metadata metadata
@@ -187,7 +187,7 @@ class TranslationServiceGrpcClient extends \Grpc\BaseStub {
     /**
      * Deletes a glossary, or cancels glossary construction
      * if the glossary isn't created yet.
-     * Returns NOT_FOUND, if the glossary doesn't exist.
+     * Return NOT_FOUND, if the glossary doesn't exist.
      * @param \Google\Cloud\Translate\V3\DeleteGlossaryRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options

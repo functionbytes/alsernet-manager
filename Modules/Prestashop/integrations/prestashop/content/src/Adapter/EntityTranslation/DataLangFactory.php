@@ -59,7 +59,7 @@ class DataLangFactory
     }
 
     /**
-     * Returns the appropriate DataLang class name using a table name as source. Note: the class may not exist.
+     * Return the appropriate DataLang class name using a table name as source. Note: the class may not exist.
      *
      * @param string $tableName Table name, accepts with and without db prefix and _lang suffix
      *

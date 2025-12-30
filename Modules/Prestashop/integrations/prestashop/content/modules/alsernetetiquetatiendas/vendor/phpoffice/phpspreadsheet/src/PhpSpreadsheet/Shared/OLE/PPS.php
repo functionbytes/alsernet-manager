@@ -154,7 +154,7 @@ class PPS
     }
 
     /**
-     * Returns the amount of data saved for this PPS.
+     * Return the amount of data saved for this PPS.
      *
      * @return int The amount of data (in bytes)
      */
@@ -168,7 +168,7 @@ class PPS
     }
 
     /**
-     * Returns a string with the PPS's WK (What is a WK?).
+     * Return a string with the PPS's WK (What is a WK?).
      *
      * @return string The binary string
      */

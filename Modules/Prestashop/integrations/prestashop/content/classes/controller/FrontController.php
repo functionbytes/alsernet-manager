@@ -1305,7 +1305,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns theme directory (regular or mobile).
+     * Return theme directory (regular or mobile).
      *
      * @return string
      */
@@ -1315,7 +1315,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns the layout corresponding to the current page by using the override system
+     * Return the layout corresponding to the current page by using the override system
      * Ex:
      * On the url: http://localhost/index.php?id_product=1&controller=product, this method will
      * check if the layout exists in the following files (in that order), and return the first found:
@@ -1359,7 +1359,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns template path.
+     * Return template path.
      *
      * @param  string  $template
      * @return string
@@ -1441,7 +1441,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns cache ID for product color list.
+     * Return cache ID for product color list.
      *
      * @param  int  $id_product
      * @return string

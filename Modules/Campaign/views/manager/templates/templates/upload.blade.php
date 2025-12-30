@@ -9,9 +9,9 @@
     <div class="page-title">
         <ul class="breadcrumb breadcrumb-caret position-right">
             <li class="breadcrumb-item"><a
-                        href="{{ action("Admin\HomeController@index") }}">{{ trans('messages.home') }}</a></li>
+                    href="{{ action("Admin\HomeController@index") }}">{{ trans('messages.home') }}</a></li>
             <li class="breadcrumb-item"><a
-                        href="{{ action("Admin\TemplateController@index") }}">{{ trans('messages.templates') }}</a></li>
+                    href="{{ action("Admin\TemplateController@index") }}">{{ trans('messages.templates') }}</a></li>
         </ul>
         <h1>
             <span class="text-semibold"><span class="material-symbols-rounded">file_upload</span> {{ trans('messages.upload_template') }}</span>
@@ -39,7 +39,7 @@
 
                 {{ csrf_field() }}
 
-                <input type="hidden" name="type" value="{{ App\Models\Template\Template::TYPE_EMAIL }}"/>
+                <input type="hidden" name="type" value="{{ \Modules\Campaign\Models\Template\Template::TYPE_EMAIL }}"/>
 
                 @include('helpers.form_control', ['required' => true, 'type' => 'text', 'label' => 'Nombre de la plantilla' , 'name' => 'title', 'value' => old('title'), 'rules' => ['title' => 'required']])
 

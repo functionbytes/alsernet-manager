@@ -50,7 +50,7 @@ class DateTime
     /**
      * DATETIMENOW.
      *
-     * Returns the current date and time.
+     * Return the current date and time.
      * The NOW function is useful when you need to display the current date and time on a worksheet or
      * calculate a value based on the current date and time, and have that value updated each time you
      * open the worksheet.
@@ -77,7 +77,7 @@ class DateTime
     /**
      * DATENOW.
      *
-     * Returns the current date.
+     * Return the current date.
      * The NOW function is useful when you need to display the current date and time on a worksheet or
      * calculate a value based on the current date and time, and have that value updated each time you
      * open the worksheet.
@@ -200,7 +200,7 @@ class DateTime
     /**
      * DATEVALUE.
      *
-     * Returns a value that represents a particular date.
+     * Return a value that represents a particular date.
      * Use DATEVALUE to convert a date represented by a text string to an Excel or PHP date/time stamp
      * value.
      *
@@ -235,7 +235,7 @@ class DateTime
     /**
      * TIMEVALUE.
      *
-     * Returns a value that represents a particular time.
+     * Return a value that represents a particular time.
      * Use TIMEVALUE to convert a time represented by a text string to an Excel or PHP date/time stamp
      * value.
      *
@@ -290,7 +290,7 @@ class DateTime
     /**
      * DAYS.
      *
-     * Returns the number of days between two dates
+     * Return the number of days between two dates
      *
      * Excel Function:
      *        DAYS(endDate, startDate)
@@ -315,7 +315,7 @@ class DateTime
     /**
      * DAYS360.
      *
-     * Returns the number of days between two dates based on a 360-day year (twelve 30-day months),
+     * Return the number of days between two dates based on a 360-day year (twelve 30-day months),
      * which is used in some accounting calculations. Use this function to help compute payments if
      * your accounting system is based on twelve 30-day months.
      *
@@ -390,7 +390,7 @@ class DateTime
     /**
      * NETWORKDAYS.
      *
-     * Returns the number of whole working days between start_date and end_date. Working days
+     * Return the number of whole working days between start_date and end_date. Working days
      * exclude weekends and any dates identified in holidays.
      * Use NETWORKDAYS to calculate employee benefits that accrue based on the number of days
      * worked during a specific term.
@@ -419,7 +419,7 @@ class DateTime
     /**
      * WORKDAY.
      *
-     * Returns the date that is the indicated number of working days before or after a date (the
+     * Return the date that is the indicated number of working days before or after a date (the
      * starting date). Working days exclude weekends and any dates identified as holidays.
      * Use WORKDAY to exclude weekends or holidays when you calculate invoice due dates, expected
      * delivery times, or the number of days of work performed.
@@ -450,7 +450,7 @@ class DateTime
     /**
      * DAYOFMONTH.
      *
-     * Returns the day of the month, for a specified date. The day is given as an integer
+     * Return the day of the month, for a specified date. The day is given as an integer
      * ranging from 1 to 31.
      *
      * Excel Function:
@@ -474,7 +474,7 @@ class DateTime
     /**
      * WEEKDAY.
      *
-     * Returns the day of the week for a specified date. The day is given as an integer
+     * Return the day of the week for a specified date. The day is given as an integer
      * ranging from 0 to 7 (dependent on the requested style).
      *
      * Excel Function:
@@ -675,7 +675,7 @@ class DateTime
     /**
      * WEEKNUM.
      *
-     * Returns the week of the year for a specified date.
+     * Return the week of the year for a specified date.
      * The WEEKNUM function considers the week containing January 1 to be the first week of the year.
      * However, there is a European standard that defines the first week as the one with the majority
      * of days (four or more) falling in the new year. This means that for years in which there are
@@ -714,7 +714,7 @@ class DateTime
     /**
      * ISOWEEKNUM.
      *
-     * Returns the ISO 8601 week number of the year for a specified date.
+     * Return the ISO 8601 week number of the year for a specified date.
      *
      * Excel Function:
      *        ISOWEEKNUM(dateValue)
@@ -737,7 +737,7 @@ class DateTime
     /**
      * MONTHOFYEAR.
      *
-     * Returns the month of a date represented by a serial number.
+     * Return the month of a date represented by a serial number.
      * The month is given as an integer, ranging from 1 (January) to 12 (December).
      *
      * Excel Function:
@@ -761,7 +761,7 @@ class DateTime
     /**
      * YEAR.
      *
-     * Returns the year corresponding to a date.
+     * Return the year corresponding to a date.
      * The year is returned as an integer in the range 1900-9999.
      *
      * Excel Function:
@@ -785,7 +785,7 @@ class DateTime
     /**
      * HOUROFDAY.
      *
-     * Returns the hour of a time value.
+     * Return the hour of a time value.
      * The hour is given as an integer, ranging from 0 (12:00 A.M.) to 23 (11:00 P.M.).
      *
      * Excel Function:
@@ -809,7 +809,7 @@ class DateTime
     /**
      * MINUTE.
      *
-     * Returns the minutes of a time value.
+     * Return the minutes of a time value.
      * The minute is given as an integer, ranging from 0 to 59.
      *
      * Excel Function:
@@ -833,7 +833,7 @@ class DateTime
     /**
      * SECOND.
      *
-     * Returns the seconds of a time value.
+     * Return the seconds of a time value.
      * The second is given as an integer in the range 0 (zero) to 59.
      *
      * Excel Function:
@@ -857,7 +857,7 @@ class DateTime
     /**
      * EDATE.
      *
-     * Returns the serial number that represents the date that is the indicated number of months
+     * Return the serial number that represents the date that is the indicated number of months
      * before or after a specified date (the start_date).
      * Use EDATE to calculate maturity dates or due dates that fall on the same day of the month
      * as the date of issue.
@@ -887,7 +887,7 @@ class DateTime
     /**
      * EOMONTH.
      *
-     * Returns the date value for the last day of the month that is the indicated number of months
+     * Return the date value for the last day of the month that is the indicated number of months
      * before or after start_date.
      * Use EOMONTH to calculate maturity dates or due dates that fall on the last day of the month.
      *

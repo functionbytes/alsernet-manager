@@ -2,12 +2,12 @@
 
 namespace Modules\Mail\Mail\Subscribers;
 
-use App\Models\Layout\Layout;
-use Modules\Subscriber\Models\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Crypt;
+use Modules\Campaign\Models\Layout\Layout;
+use Modules\Subscriber\Models\Subscriber;
 
 class UnsubscribersPartiesMail extends Mailable
 {

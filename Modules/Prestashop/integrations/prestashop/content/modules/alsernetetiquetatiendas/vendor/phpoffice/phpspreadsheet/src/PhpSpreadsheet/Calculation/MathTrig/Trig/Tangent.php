@@ -14,7 +14,7 @@ class Tangent
     /**
      * TAN.
      *
-     * Returns the result of builtin function tan after validating args.
+     * Return the result of builtin function tan after validating args.
      *
      * @param mixed $angle Should be numeric, or can be an array of numbers
      *
@@ -40,7 +40,7 @@ class Tangent
     /**
      * TANH.
      *
-     * Returns the result of builtin function sinh after validating args.
+     * Return the result of builtin function sinh after validating args.
      *
      * @param mixed $angle Should be numeric, or can be an array of numbers
      *
@@ -66,7 +66,7 @@ class Tangent
     /**
      * ATAN.
      *
-     * Returns the arctangent of a number.
+     * Return the arctangent of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *
@@ -92,7 +92,7 @@ class Tangent
     /**
      * ATANH.
      *
-     * Returns the inverse hyperbolic tangent of a number.
+     * Return the inverse hyperbolic tangent of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *

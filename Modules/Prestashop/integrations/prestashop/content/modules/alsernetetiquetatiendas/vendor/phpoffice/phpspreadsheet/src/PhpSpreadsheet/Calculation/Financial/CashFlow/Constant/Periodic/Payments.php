@@ -13,7 +13,7 @@ class Payments
     /**
      * PMT.
      *
-     * Returns the constant payment (annuity) for a cash flow with a constant interest rate.
+     * Return the constant payment (annuity) for a cash flow with a constant interest rate.
      *
      * @param mixed $interestRate Interest rate per period
      * @param mixed $numberOfPeriods Number of periods
@@ -58,7 +58,7 @@ class Payments
     /**
      * PPMT.
      *
-     * Returns the interest payment for a given period for an investment based on periodic, constant payments
+     * Return the interest payment for a given period for an investment based on periodic, constant payments
      *         and a constant interest rate.
      *
      * @param mixed $interestRate Interest rate per period

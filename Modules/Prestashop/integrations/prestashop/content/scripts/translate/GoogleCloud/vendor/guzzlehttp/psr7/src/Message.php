@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 final class Message
 {
     /**
-     * Returns the string representation of an HTTP message.
+     * Return the string representation of an HTTP message.
      *
      * @param MessageInterface $message Message to convert to a string.
      */

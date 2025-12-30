@@ -155,7 +155,7 @@ class Database
     /**
      * DMAX.
      *
-     * Returns the largest number in a column of a list or database that matches conditions you that
+     * Return the largest number in a column of a list or database that matches conditions you that
      * specify.
      *
      * Excel Function:
@@ -191,7 +191,7 @@ class Database
     /**
      * DMIN.
      *
-     * Returns the smallest number in a column of a list or database that matches conditions you that
+     * Return the smallest number in a column of a list or database that matches conditions you that
      * specify.
      *
      * Excel Function:

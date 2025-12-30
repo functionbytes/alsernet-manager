@@ -12,7 +12,7 @@ class Amortization
     /**
      * AMORDEGRC.
      *
-     * Returns the depreciation for each accounting period.
+     * Return the depreciation for each accounting period.
      * This function is provided for the French accounting system. If an asset is purchased in
      * the middle of the accounting period, the prorated depreciation is taken into account.
      * The function is similar to AMORLINC, except that a depreciation coefficient is applied in
@@ -106,7 +106,7 @@ class Amortization
     /**
      * AMORLINC.
      *
-     * Returns the depreciation for each accounting period.
+     * Return the depreciation for each accounting period.
      * This function is provided for the French accounting system. If an asset is purchased in
      * the middle of the accounting period, the prorated depreciation is taken into account.
      *

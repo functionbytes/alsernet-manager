@@ -210,7 +210,7 @@ abstract class AbstractAdminQueryBuilder
     }
 
     /**
-     * Returns the last SQL query that was compiled on this Provider.
+     * Return the last SQL query that was compiled on this Provider.
      *
      * @return string The last SQL query that was compiled with $this->compileSqlQuery()
      */

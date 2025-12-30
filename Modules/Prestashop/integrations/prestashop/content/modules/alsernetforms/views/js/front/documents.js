@@ -297,7 +297,7 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
             } else {
                 // Error en este archivo
                 $('#uploadProgress').hide();
-                $submitButton.prop('disabled', false).html('Upload Documents');
+                $submitButton.prop('disabled', false).html('Upload Document');
 
                 if (window.toastr) {
                     toastr.error('Error uploading "' + fileData.file.name + '": ' + (response.message || 'Unknown error'), 'Error', {
@@ -313,7 +313,7 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
         error: function (xhr, status, error) {
             // Error en la petición
             $('#uploadProgress').hide();
-            $submitButton.prop('disabled', false).html('Upload Documents');
+            $submitButton.prop('disabled', false).html('Upload Document');
 
             let errorMsg = "Error uploading document. Please try again.";
             if (xhr.responseJSON && xhr.responseJSON.message) {

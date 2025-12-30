@@ -724,7 +724,7 @@ class PDF417 {
 	}
 
 	/**
-	 * Returns a barcode array which is readable by TCPDF
+	 * Return a barcode array which is readable by TCPDF
 	 * @return array barcode array readable by TCPDF;
 	 * @public
 	 */
@@ -733,7 +733,7 @@ class PDF417 {
 	}
 
 	/**
-	 * Returns the error correction level (0-8) to be used
+	 * Return the error correction level (0-8) to be used
 	 * @param int $ecl error correction level
 	 * @param int $numcw number of data codewords
 	 * @return int error correction level
@@ -771,7 +771,7 @@ class PDF417 {
 	}
 
 	/**
-	 * Returns the error correction codewords
+	 * Return the error correction codewords
 	 * @param array $cw array of codewords including Symbol Length Descriptor and pad
 	 * @param int $ecl error correction level 0-8
 	 * @return array of error correction codewords

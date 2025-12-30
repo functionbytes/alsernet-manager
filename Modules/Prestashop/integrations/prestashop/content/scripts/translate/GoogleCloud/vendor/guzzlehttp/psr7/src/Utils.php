@@ -272,7 +272,7 @@ final class Utils
      * - size: Size of the stream.
      *
      * This method accepts the following `$resource` types:
-     * - `Psr\Http\Message\StreamInterface`: Returns the value as-is.
+     * - `Psr\Http\Message\StreamInterface`: Return the value as-is.
      * - `string`: Creates a stream object that uses the given string as the contents.
      * - `resource`: Creates a stream object that wraps the given PHP stream resource.
      * - `Iterator`: If the provided value implements `Iterator`, then a read-only
@@ -452,7 +452,7 @@ final class Utils
     }
 
     /**
-     * Returns a UriInterface for the given value.
+     * Return a UriInterface for the given value.
      *
      * This function accepts a string or UriInterface and returns a
      * UriInterface for the given value. If the value is already a

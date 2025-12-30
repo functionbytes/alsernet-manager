@@ -81,7 +81,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Returns roles for the current employee.
+     * Return roles for the current employee.
      *
      * @return array
      */

@@ -2,11 +2,11 @@
 
 namespace Modules\Warehouse\Tests\Feature\Managers;
 
-use App\Models\Product\Product;
 use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\WarehouseFloor;
 use Modules\Warehouse\Entities\WarehouseLocation;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Models\Product\Product;
 use Tests\TestCase;
 
 class WarehouseInventorySlotsControllerTest extends TestCase

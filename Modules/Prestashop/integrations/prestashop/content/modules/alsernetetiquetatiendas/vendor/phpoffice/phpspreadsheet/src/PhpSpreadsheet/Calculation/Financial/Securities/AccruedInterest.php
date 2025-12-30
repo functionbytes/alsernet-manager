@@ -16,7 +16,7 @@ class AccruedInterest
     /**
      * ACCRINT.
      *
-     * Returns the accrued interest for a security that pays periodic interest.
+     * Return the accrued interest for a security that pays periodic interest.
      *
      * Excel Function:
      *        ACCRINT(issue,firstinterest,settlement,rate,par,frequency[,basis][,calc_method])
@@ -95,7 +95,7 @@ class AccruedInterest
     /**
      * ACCRINTM.
      *
-     * Returns the accrued interest for a security that pays interest at maturity.
+     * Return the accrued interest for a security that pays interest at maturity.
      *
      * Excel Function:
      *        ACCRINTM(issue,settlement,rate[,par[,basis]])

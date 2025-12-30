@@ -33,7 +33,7 @@ namespace PrestaShopBundle\Routing\Converter;
 interface CacheKeyGeneratorInterface
 {
     /**
-     * Returns a string used as key for caching the legacy routes information.
+     * Return a string used as key for caching the legacy routes information.
      * You can vary this cache key in order to update the cache when needed.
      * (e.g: RoutingCacheKeyGenerator generates its key based on the last modification
      * date of routing files so that each modifications regenerate the cache).

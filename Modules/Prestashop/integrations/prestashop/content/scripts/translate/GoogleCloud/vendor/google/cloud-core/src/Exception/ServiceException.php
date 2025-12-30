@@ -106,7 +106,7 @@ class ServiceException extends GoogleException
     }
 
     /**
-     * Returns the metadata from the ErrorInfo part of the exception
+     * Return the metadata from the ErrorInfo part of the exception
      *
      * @return array
      */
@@ -130,7 +130,7 @@ class ServiceException extends GoogleException
     }
 
     /**
-     * Returns the reason from the ErrorInfo part of the exception
+     * Return the reason from the ErrorInfo part of the exception
      *
      * @return string
      */

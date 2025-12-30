@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Product;
+namespace Modules\Warehouse\Models\Product;
 
-use App\Models\Inventarie\Kardex;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Warehouse\Models\Kardex;
 
 /**
  * @property int $id
@@ -21,11 +21,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $deleted_at
  * @property int $validate
  * @property int $count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product\ProductLocation> $localizations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Warehouse\Models\Product\ProductLocation> $localizations
  * @property-read int|null $localizations_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product\ProductLocation> $locations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Warehouse\Models\Product\ProductLocation> $locations
  * @property-read int|null $locations_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product\ProductLocation> $stock
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Warehouse\Models\Product\ProductLocation> $stock
  * @property-read int|null $stock_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product available()
@@ -106,17 +106,17 @@ class Product extends Model
 
     public function localizations()
     {
-        return $this->hasMany('App\Models\Product\ProductLocation');
+        return $this->hasMany('Modules\Warehouse\Models\Product\ProductLocation');
     }
 
     public function locations()
     {
-        return $this->hasMany('App\Models\Product\ProductLocation');
+        return $this->hasMany('Modules\Warehouse\Models\Product\ProductLocation');
     }
 
     public function count()
     {
-        return $this->hasMany('App\Models\Product\ProductLocation')->sum('count');
+        return $this->hasMany('Modules\Warehouse\Models\Product\ProductLocation')->sum('count');
     }
 
     public function items()
@@ -165,7 +165,7 @@ class Product extends Model
      */
     public function stock()
     {
-        return $this->hasMany('App\Models\Product\ProductLocation');
+        return $this->hasMany('Modules\Warehouse\Models\Product\ProductLocation');
     }
 
     /**

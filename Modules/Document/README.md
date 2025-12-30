@@ -211,10 +211,10 @@ Policy de Laravel para autorización de documentos.
 
 ```bash
 # Ejecutar tests del módulo
-php artisan test Modules/Documents/tests
+php artisan test Modules/Document/tests
 
 # Test específico
-php artisan test Modules/Documents/tests/Feature/PermissionServiceTest.php
+php artisan test Modules/Document/tests/Feature/PermissionServiceTest.php
 ```
 
 ## 📦 Migraciones Pendientes

@@ -2189,7 +2189,7 @@ window.priceCalculation = (function () {
     },
 
     /**
-     * Returns the tax rates that apply
+     * Return the tax rates that apply
      * @return {Number[]}
      */
     getRates() {

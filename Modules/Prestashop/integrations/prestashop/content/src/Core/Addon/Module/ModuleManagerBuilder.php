@@ -96,7 +96,7 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of ModuleManager.
+     * Return an instance of ModuleManager.
      *
      * @return ModuleManager
      */
@@ -124,7 +124,7 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of ModuleRepository.
+     * Return an instance of ModuleRepository.
      *
      * @return ModuleRepository
      */
@@ -232,7 +232,7 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
+     * Return an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
      *
      * @return \Symfony\Component\Routing\Router
      */
@@ -253,7 +253,7 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns country iso from context.
+     * Return country iso from context.
      */
     private function getCountryIso()
     {

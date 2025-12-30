@@ -13,7 +13,7 @@ class Weibull
     /**
      * WEIBULL.
      *
-     * Returns the Weibull distribution. Use this distribution in reliability
+     * Return the Weibull distribution. Use this distribution in reliability
      * analysis, such as calculating a device's mean time to failure.
      *
      * @param mixed $value Float value for the distribution

@@ -2,7 +2,7 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;

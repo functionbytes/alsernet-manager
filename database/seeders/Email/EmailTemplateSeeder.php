@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Email;
 
-use App\Models\Layout\Layout;
-use Modules\Mail\Models\MailTemplate;
 use Illuminate\Database\Seeder;
+use Modules\Campaign\Models\Layout\Layout;
+use Modules\Mail\Models\MailTemplate;
 
 class EmailTemplateSeeder extends Seeder
 {

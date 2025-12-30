@@ -88,7 +88,7 @@ class Pool implements PromisorInterface
      * @param array           $options  Passes through the options available in
      *                                  {@see \GuzzleHttp\Pool::__construct}
      *
-     * @return array Returns an array containing the response or an exception
+     * @return array Return an array containing the response or an exception
      *               in the same order that the requests were sent.
      *
      * @throws \InvalidArgumentException if the event format is incorrect.

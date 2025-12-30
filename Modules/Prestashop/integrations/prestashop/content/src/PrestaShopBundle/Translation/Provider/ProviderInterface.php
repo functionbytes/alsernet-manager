@@ -41,14 +41,14 @@ interface ProviderInterface
     public function getDirectories();
 
     /**
-     * Returns a list of patterns for catalogue domain filtering (including XLF file lookup)
+     * Return a list of patterns for catalogue domain filtering (including XLF file lookup)
      *
      * @return string[]
      */
     public function getFilters();
 
     /**
-     * Returns a list of patterns for translation domains to get from database.
+     * Return a list of patterns for translation domains to get from database.
      *
      * @return string[] List of Mysql compatible regexes (no regex delimiter)
      */

@@ -85,7 +85,7 @@ class ApiException extends Exception
     }
 
     /**
-     * Returns null if metadata does not contain error info, or returns containsErrorInfo() array
+     * Return null if metadata does not contain error info, or returns containsErrorInfo() array
      * if the metadata does contain error info.
      * @param array $metadata
      * @return array $details {
@@ -112,7 +112,7 @@ class ApiException extends Exception
     }
 
     /**
-     * Returns the `reason` in ErrorInfo for an exception, or null if there is no ErrorInfo.
+     * Return the `reason` in ErrorInfo for an exception, or null if there is no ErrorInfo.
      * @return string|null $reason
      */
     public function getReason()
@@ -121,7 +121,7 @@ class ApiException extends Exception
     }
 
     /**
-     * Returns the `domain` in ErrorInfo for an exception, or null if there is no ErrorInfo.
+     * Return the `domain` in ErrorInfo for an exception, or null if there is no ErrorInfo.
      * @return string|null $domain
      */
     public function getDomain()
@@ -130,7 +130,7 @@ class ApiException extends Exception
     }
 
     /**
-     * Returns the `metadata` in ErrorInfo for an exception, or null if there is no ErrorInfo.
+     * Return the `metadata` in ErrorInfo for an exception, or null if there is no ErrorInfo.
      * @return array|null $errorInfoMetadata
      */
     public function getErrorInfoMetadata()

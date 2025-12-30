@@ -79,7 +79,7 @@ class HookEvent extends Event
     }
 
     /**
-     * Returns Hook parameters and context parameters
+     * Return Hook parameters and context parameters
      *
      * @return array
      */

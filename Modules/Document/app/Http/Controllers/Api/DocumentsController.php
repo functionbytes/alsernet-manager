@@ -516,7 +516,7 @@ class DocumentsController extends \App\Http\Controllers\Api\ApiController
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Documents uploaded successfully',
+                'message' => 'Document uploaded successfully',
                 'data' => [
                     'uploaded_documents' => $uploadedDocs,
                     'missing_documents' => $document->getMissingDocuments(),

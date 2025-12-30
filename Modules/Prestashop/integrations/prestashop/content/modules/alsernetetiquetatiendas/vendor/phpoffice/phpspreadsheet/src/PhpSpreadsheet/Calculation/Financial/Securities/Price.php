@@ -15,7 +15,7 @@ class Price
     /**
      * PRICE.
      *
-     * Returns the price per $100 face value of a security that pays periodic interest.
+     * Return the price per $100 face value of a security that pays periodic interest.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security settlement date is the date after the issue date when the security
@@ -91,7 +91,7 @@ class Price
     /**
      * PRICEDISC.
      *
-     * Returns the price per $100 face value of a discounted security.
+     * Return the price per $100 face value of a discounted security.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security settlement date is the date after the issue date when the security
@@ -147,7 +147,7 @@ class Price
     /**
      * PRICEMAT.
      *
-     * Returns the price per $100 face value of a security that pays interest at maturity.
+     * Return the price per $100 face value of a security that pays interest at maturity.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security's settlement date is the date after the issue date when the
@@ -226,7 +226,7 @@ class Price
     /**
      * RECEIVED.
      *
-     * Returns the amount received at maturity for a fully invested Security.
+     * Return the amount received at maturity for a fully invested Security.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security settlement date is the date after the issue date when the security

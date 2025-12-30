@@ -655,7 +655,7 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Returns image path in the old or in the new filesystem.
+     * Return image path in the old or in the new filesystem.
      *
      * @ returns string image path
      */
@@ -677,7 +677,7 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Returns the path to the folder containing the image in the new filesystem.
+     * Return the path to the folder containing the image in the new filesystem.
      *
      * @return string path to folder
      */
@@ -722,7 +722,7 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Returns the path to the image without file extension.
+     * Return the path to the image without file extension.
      *
      * @return string path
      */
@@ -738,7 +738,7 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Returns the path to the folder containing the image in the new filesystem.
+     * Return the path to the folder containing the image in the new filesystem.
      *
      * @param  mixed  $idImage
      * @return string path to folder
@@ -841,7 +841,7 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Returns the path where a product image should be created (without file format).
+     * Return the path where a product image should be created (without file format).
      *
      * @return string path
      */

@@ -162,7 +162,7 @@ export default class ProductPartialUpdater {
   }
 
   /**
-   * Returns the updated data, only fields which are different from the initial page load
+   * Return the updated data, only fields which are different from the initial page load
    * are returned (token and method are added since they are required for a valid request).
    *
    * If no fields have been modified this method returns null.
@@ -208,7 +208,7 @@ export default class ProductPartialUpdater {
   }
 
   /**
-   * Returns the serialized form data as an Object indexed by field name
+   * Return the serialized form data as an Object indexed by field name
    *
    * @returns {{}}
    */

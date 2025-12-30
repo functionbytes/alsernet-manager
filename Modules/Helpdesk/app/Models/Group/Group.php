@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Group;
+namespace Modules\Helpdesk\Models\Group;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $available
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Group\GroupCategorie> $categorie
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Helpdesk\Models\Group\GroupCategorie> $categorie
  * @property-read int|null $categorie_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ticket\TicketCategorie> $categories
  * @property-read int|null $categories_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Group\GroupUser> $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Helpdesk\Models\Group\GroupUser> $user
  * @property-read int|null $user_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
@@ -99,11 +99,11 @@ class Group extends Model
 
     public function user()
     {
-        return $this->hasMany('App\Models\Group\GroupUser', 'group_id');
+        return $this->hasMany('Modules\Helpdesk\Models\Group\GroupUser', 'group_id');
     }
 
     public function categorie()
     {
-        return $this->hasMany('App\Models\Group\GroupCategorie', 'group_id');
+        return $this->hasMany('Modules\Helpdesk\Models\Group\GroupCategorie', 'group_id');
     }
 }

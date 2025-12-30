@@ -12,7 +12,7 @@
 
         {{ csrf_field() }}
 
-        @foreach(App\Models\Template\TemplateCategory::all() as $category)
+        @foreach(\Modules\Campaign\Models\Template\TemplateCategory::all() as $category)
             @include('helpers.form_control', [
                 'type' => 'checkbox2',
                 'name' => 'categories['.$category->uid.']',

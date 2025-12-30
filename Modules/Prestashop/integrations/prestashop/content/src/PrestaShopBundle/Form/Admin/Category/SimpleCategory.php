@@ -111,7 +111,7 @@ class SimpleCategory extends CommonAbstractType
     }
 
     /**
-     * Returns the block prefix of this type.
+     * Return the block prefix of this type.
      *
      * @return string The prefix name
      */

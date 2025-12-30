@@ -314,7 +314,7 @@ class ZoneController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns zone error messages mapping.
+     * Return zone error messages mapping.
      *
      * @param Exception $e
      *

@@ -68,7 +68,7 @@ class TranslationsExtension extends Twig_Extension
     }
 
     /**
-     * Returns a list of functions to add to the existing list.
+     * Return a list of functions to add to the existing list.
      *
      * @return array An array of functions
      */
@@ -81,7 +81,7 @@ class TranslationsExtension extends Twig_Extension
     }
 
     /**
-     * Returns concatenated edit translation forms.
+     * Return concatenated edit translation forms.
      *
      * @param array $translationsTree
      * @param string|null $themeName
@@ -133,7 +133,7 @@ class TranslationsExtension extends Twig_Extension
     }
 
     /**
-     * Returns a tree of translations key values.
+     * Return a tree of translations key values.
      *
      * @param array $translationsTree
      * @param string|null $themeName
@@ -324,7 +324,7 @@ class TranslationsExtension extends Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
+     * Return the name of the extension.
      *
      * @return string The extension name
      */

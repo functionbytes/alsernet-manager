@@ -15,7 +15,7 @@ class MediaFolderSeeder extends Seeder
      * Creates a hierarchical organization system for documents, images, and other media assets.
      *
      * Folder structure:
-     * - Documents: Organized by type (PDFs, contracts, etc.)
+     * - Document: Organized by type (PDFs, contracts, etc.)
      * - Images: Organized by category (products, team, marketing, etc.)
      * - Videos: Organized by purpose (tutorials, promotions, etc.)
      * - Archives: Temporary storage for processed/archived files
@@ -25,7 +25,7 @@ class MediaFolderSeeder extends Seeder
     public function run(): void
     {
         $folders = [
-            // Root Documents
+            // Root Document
             [
                 'uid' => Str::ulid(),
                 'name' => 'Documentos',
@@ -39,7 +39,7 @@ class MediaFolderSeeder extends Seeder
                 'is_protected' => true,
                 'is_active' => true,
             ],
-            // Documents Subfolders
+            // Document Subfolders
             [
                 'uid' => Str::ulid(),
                 'name' => 'Contratos',

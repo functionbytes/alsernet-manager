@@ -35,7 +35,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 interface FilterableGridDefinitionFactoryInterface extends GridDefinitionFactoryInterface
 {
     /**
-     * Returns a (unique) id to identify the grid filters, this is used as a key to persist
+     * Return a (unique) id to identify the grid filters, this is used as a key to persist
      * (and clear) the Filters associated to the grid.
      *
      * @return string

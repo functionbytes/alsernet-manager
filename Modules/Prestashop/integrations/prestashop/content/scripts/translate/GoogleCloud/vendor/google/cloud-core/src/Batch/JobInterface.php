@@ -41,7 +41,7 @@ interface JobInterface
     public function identifier();
 
     /**
-     * Returns the number of workers for this job.
+     * Return the number of workers for this job.
      *
      * @return int
      */

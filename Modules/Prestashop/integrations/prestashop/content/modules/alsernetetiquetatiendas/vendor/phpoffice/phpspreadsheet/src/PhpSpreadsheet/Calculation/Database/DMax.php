@@ -9,7 +9,7 @@ class DMax extends DatabaseAbstract
     /**
      * DMAX.
      *
-     * Returns the largest number in a column of a list or database that matches conditions you that
+     * Return the largest number in a column of a list or database that matches conditions you that
      * specify.
      *
      * Excel Function:

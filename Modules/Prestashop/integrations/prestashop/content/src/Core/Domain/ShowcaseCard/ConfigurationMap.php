@@ -60,7 +60,7 @@ class ConfigurationMap
     }
 
     /**
-     * Returns the ps_configuration configuration name for "closed status" of the provided card
+     * Return the ps_configuration configuration name for "closed status" of the provided card
      *
      * @param ShowcaseCard $cardName
      *

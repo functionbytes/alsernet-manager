@@ -398,7 +398,7 @@ class RetrySettings
     }
 
     /**
-     * @return bool Returns true if retries are enabled, otherwise returns false.
+     * @return bool Return true if retries are enabled, otherwise returns false.
      */
     public function retriesEnabled()
     {

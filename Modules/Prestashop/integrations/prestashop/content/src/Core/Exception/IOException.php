@@ -48,7 +48,7 @@ class IOException extends CoreException
     }
 
     /**
-     * Returns the associated path for the exception.
+     * Return the associated path for the exception.
      *
      * @return string|null
      */

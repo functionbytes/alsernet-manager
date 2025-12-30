@@ -14,7 +14,7 @@ class ComplexFunctions
     /**
      * IMABS.
      *
-     * Returns the absolute value (modulus) of a complex number in x + yi or x + yj text format.
+     * Return the absolute value (modulus) of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMABS(complexNumber)
@@ -44,7 +44,7 @@ class ComplexFunctions
     /**
      * IMARGUMENT.
      *
-     * Returns the argument theta of a complex number, i.e. the angle in radians from the real
+     * Return the argument theta of a complex number, i.e. the angle in radians from the real
      * axis to the representation of the number in polar coordinates.
      *
      * Excel Function:
@@ -79,7 +79,7 @@ class ComplexFunctions
     /**
      * IMCONJUGATE.
      *
-     * Returns the complex conjugate of a complex number in x + yi or x + yj text format.
+     * Return the complex conjugate of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCONJUGATE(complexNumber)
@@ -109,7 +109,7 @@ class ComplexFunctions
     /**
      * IMCOS.
      *
-     * Returns the cosine of a complex number in x + yi or x + yj text format.
+     * Return the cosine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOS(complexNumber)
@@ -139,7 +139,7 @@ class ComplexFunctions
     /**
      * IMCOSH.
      *
-     * Returns the hyperbolic cosine of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic cosine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOSH(complexNumber)
@@ -169,7 +169,7 @@ class ComplexFunctions
     /**
      * IMCOT.
      *
-     * Returns the cotangent of a complex number in x + yi or x + yj text format.
+     * Return the cotangent of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOT(complexNumber)
@@ -199,7 +199,7 @@ class ComplexFunctions
     /**
      * IMCSC.
      *
-     * Returns the cosecant of a complex number in x + yi or x + yj text format.
+     * Return the cosecant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCSC(complexNumber)
@@ -229,7 +229,7 @@ class ComplexFunctions
     /**
      * IMCSCH.
      *
-     * Returns the hyperbolic cosecant of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic cosecant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCSCH(complexNumber)
@@ -259,7 +259,7 @@ class ComplexFunctions
     /**
      * IMSIN.
      *
-     * Returns the sine of a complex number in x + yi or x + yj text format.
+     * Return the sine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSIN(complexNumber)
@@ -289,7 +289,7 @@ class ComplexFunctions
     /**
      * IMSINH.
      *
-     * Returns the hyperbolic sine of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic sine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSINH(complexNumber)
@@ -319,7 +319,7 @@ class ComplexFunctions
     /**
      * IMSEC.
      *
-     * Returns the secant of a complex number in x + yi or x + yj text format.
+     * Return the secant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSEC(complexNumber)
@@ -349,7 +349,7 @@ class ComplexFunctions
     /**
      * IMSECH.
      *
-     * Returns the hyperbolic secant of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic secant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSECH(complexNumber)
@@ -379,7 +379,7 @@ class ComplexFunctions
     /**
      * IMTAN.
      *
-     * Returns the tangent of a complex number in x + yi or x + yj text format.
+     * Return the tangent of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMTAN(complexNumber)
@@ -409,7 +409,7 @@ class ComplexFunctions
     /**
      * IMSQRT.
      *
-     * Returns the square root of a complex number in x + yi or x + yj text format.
+     * Return the square root of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSQRT(complexNumber)
@@ -444,7 +444,7 @@ class ComplexFunctions
     /**
      * IMLN.
      *
-     * Returns the natural logarithm of a complex number in x + yi or x + yj text format.
+     * Return the natural logarithm of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLN(complexNumber)
@@ -478,7 +478,7 @@ class ComplexFunctions
     /**
      * IMLOG10.
      *
-     * Returns the common logarithm (base 10) of a complex number in x + yi or x + yj text format.
+     * Return the common logarithm (base 10) of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLOG10(complexNumber)
@@ -512,7 +512,7 @@ class ComplexFunctions
     /**
      * IMLOG2.
      *
-     * Returns the base-2 logarithm of a complex number in x + yi or x + yj text format.
+     * Return the base-2 logarithm of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLOG2(complexNumber)
@@ -546,7 +546,7 @@ class ComplexFunctions
     /**
      * IMEXP.
      *
-     * Returns the exponential of a complex number in x + yi or x + yj text format.
+     * Return the exponential of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMEXP(complexNumber)
@@ -576,7 +576,7 @@ class ComplexFunctions
     /**
      * IMPOWER.
      *
-     * Returns a complex number in x + yi or x + yj text format raised to a power.
+     * Return a complex number in x + yi or x + yj text format raised to a power.
      *
      * Excel Function:
      *        IMPOWER(complexNumber,realNumber)

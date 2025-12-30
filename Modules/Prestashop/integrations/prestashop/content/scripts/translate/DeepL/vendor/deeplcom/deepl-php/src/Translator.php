@@ -338,7 +338,7 @@ class Translator
     }
 
     /**
-     * Returns when the given document translation completes, or throws an exception if there was an error
+     * Return when the given document translation completes, or throws an exception if there was an error
      * communicating with the DeepL API or the document translation failed.
      * @param DocumentHandle $handle Handle to the document translation.
      * @return DocumentStatus DocumentStatus object for the completed translation. You can use the billedCharacters
@@ -545,7 +545,7 @@ class Translator
     }
 
     /**
-     * Returns '1' if the argument is truthy, otherwise '0'.
+     * Return '1' if the argument is truthy, otherwise '0'.
      * @param mixed $arg Argument to check.
      * @return string '1' or '0'.
      */
@@ -739,7 +739,7 @@ class Translator
     }
 
     /**
-     * Returns true if the specified DeepL Authentication Key is associated with a free account,
+     * Return true if the specified DeepL Authentication Key is associated with a free account,
      * otherwise false.
      * @param string $authKey The authentication key to check.
      * @return bool True if the key is associated with a free account, otherwise false.

@@ -228,7 +228,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     }
 
     /**
-     * Returns the subquery defining if a customer is new or not
+     * Return the subquery defining if a customer is new or not
      */
     private function getNewCustomerSubSelect(): string
     {

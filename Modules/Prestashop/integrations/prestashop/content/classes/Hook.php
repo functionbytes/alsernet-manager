@@ -132,7 +132,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns the canonical name for a given hook.
+     * Return the canonical name for a given hook.
      *
      * @param  string  $hookName
      * @return string
@@ -188,7 +188,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns the hook ID from a given hook name.
+     * Return the hook ID from a given hook name.
      *
      * By default, if the provided hook name is an alias, this method will return the id of their canonical hook.
      * Otherwise, it will treat the alias as a normal hook and will return false if it's not registered in the hooks table.
@@ -241,7 +241,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list of hook names, indexed by lower case alias.
+     * Return a list of hook names, indexed by lower case alias.
      *
      * @since 1.5.0
      *
@@ -301,7 +301,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns all backward compatibility hook names for a given canonical hook name.
+     * Return all backward compatibility hook names for a given canonical hook name.
      *
      * @param  string  $canonicalHookName  Canonical hook name
      * @return string[] List of aliases
@@ -325,7 +325,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list of canonical hook names, indexed by lower case alias.
+     * Return a list of canonical hook names, indexed by lower case alias.
      *
      * @return array Array of hook names, indexed by lower case alias
      *
@@ -352,7 +352,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list containing the canonical name for the provided hook name followed by all its aliases.
+     * Return a list containing the canonical name for the provided hook name followed by all its aliases.
      */
     public static function getAllKnownNames(string $hookName): array
     {
@@ -679,7 +679,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list of modules that are registered for a given hook, each following this schema:
+     * Return a list of modules that are registered for a given hook, each following this schema:
      *
      * ```
      *     [
@@ -1174,7 +1174,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns all hook IDs, indexed by hook name.
+     * Return all hook IDs, indexed by hook name.
      *
      * @param  bool  $withAliases  [default=false] If true, includes hook aliases along their canonical hook id
      * @param  bool  $refreshCache  [default=false] Force cache refresh
@@ -1220,7 +1220,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns the name of the method to invoke in a module for a given hook name
+     * Return the name of the method to invoke in a module for a given hook name
      *
      * @param  string  $hookName  Hook name
      * @return string Method name

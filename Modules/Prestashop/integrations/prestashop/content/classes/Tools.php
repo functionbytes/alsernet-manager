@@ -267,7 +267,7 @@ class ToolsCore
     }
 
     /**
-     * Returns the available protocol for the current shop in use
+     * Return the available protocol for the current shop in use
      * SSL if Configuration is set on and available for the server.
      *
      * @return string
@@ -281,7 +281,7 @@ class ToolsCore
     }
 
     /**
-     * Returns the set protocol according to configuration (http[s]).
+     * Return the set protocol according to configuration (http[s]).
      *
      * @param  bool  $use_ssl  true if require ssl
      * @return string (http|https)
@@ -292,7 +292,7 @@ class ToolsCore
     }
 
     /**
-     * Returns the <b>current</b> host used, with the protocol (http or https) if $http is true
+     * Return the <b>current</b> host used, with the protocol (http or https) if $http is true
      * This function should not be used to choose http or https domain name.
      * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead.
      *
@@ -323,7 +323,7 @@ class ToolsCore
     }
 
     /**
-     * Returns domain name according to configuration and ignoring ssl.
+     * Return domain name according to configuration and ignoring ssl.
      *
      * @param  bool  $http  if true, return domain name with protocol
      * @param  bool  $entities  if true, convert special chars to HTML entities
@@ -345,7 +345,7 @@ class ToolsCore
     }
 
     /**
-     * Returns domain name according to configuration and depending on ssl activation.
+     * Return domain name according to configuration and depending on ssl activation.
      *
      * @param  bool  $http  if true, return domain name with protocol
      * @param  bool  $entities  if true, convert special chars to HTML entities
@@ -457,7 +457,7 @@ class ToolsCore
     }
 
     /**
-     * Returns a safe URL referrer.
+     * Return a safe URL referrer.
      *
      * @param  string  $referrer  URL referrer
      * @return string secured referrer
@@ -799,7 +799,7 @@ class ToolsCore
     }
 
     /**
-     * Returns a well formatted number.
+     * Return a well formatted number.
      *
      * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
      * @see Locale
@@ -2005,7 +2005,7 @@ class ToolsCore
     }
 
     /**
-     * Returns the rounded value up of $value to specified precision.
+     * Return the rounded value up of $value to specified precision.
      *
      * @param  float  $value
      * @param  int  $precision
@@ -2028,7 +2028,7 @@ class ToolsCore
     }
 
     /**
-     * Returns the rounded value down of $value to specified precision.
+     * Return the rounded value down of $value to specified precision.
      *
      * @param  float  $value
      * @param  int  $precision
@@ -3945,7 +3945,7 @@ exit;
     }
 
     /**
-     * Returns an array containing information about
+     * Return an array containing information about
      * HTTP file upload variable ($_FILES).
      *
      * @param  string  $input  File upload field name

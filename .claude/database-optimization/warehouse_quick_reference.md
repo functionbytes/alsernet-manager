@@ -107,7 +107,7 @@ $stand = Stand::create([
 ]);
 
 // Crear automáticamente todas las posiciones
-$stand->createSlots();  // Returns: 48 (si ROW con 2×4×6)
+$stand->createSlots();  // Return: 48 (si ROW con 2×4×6)
 ```
 
 ### Scopes

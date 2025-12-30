@@ -361,7 +361,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Returns a translation domain tree
+     * Return a translation domain tree
      *
      * @param string $lang
      * @param string $type "themes", "modules", "mails", "mails_body", "back", "front" or "others"

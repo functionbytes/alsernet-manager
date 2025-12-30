@@ -28,7 +28,7 @@ class DocumentSource extends Model
     }
 
     /**
-     * Relation: Documents using this source
+     * Relation: Document using this source
      */
     public function documents(): HasMany
     {

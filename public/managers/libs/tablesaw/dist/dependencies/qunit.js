@@ -34,7 +34,7 @@
   }();
 
   /**
-   * Returns a function that proxies to the given method name on the globals
+   * Return a function that proxies to the given method name on the globals
    * console object. The proxy will also detect if the console doesn't exist and
    * will appropriately no-op. This allows support for IE9, which doesn't have a
    * console if the developer tools are not open.
@@ -171,7 +171,7 @@
   	setTimeout: setTimeout$1 !== undefined
   };
 
-  // Returns a new Array with the elements that are in a but not in b
+  // Return a new Array with the elements that are in a but not in b
   function diff(a, b) {
   	var i,
   	    j,
@@ -3705,7 +3705,7 @@
   			this.test.timeout = duration;
   		}
 
-  		// Documents a "step", which is a string value, in a test as a passing assertion
+  		// Document a "step", which is a string value, in a test as a passing assertion
 
   	}, {
   		key: "step",

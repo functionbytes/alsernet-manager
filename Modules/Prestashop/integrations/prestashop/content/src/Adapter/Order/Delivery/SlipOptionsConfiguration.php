@@ -49,7 +49,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage slip options in back office.
+     * Return configuration used to manage slip options in back office.
      *
      * @return array
      */

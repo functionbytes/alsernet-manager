@@ -13,7 +13,7 @@ class TreasuryBill
     /**
      * TBILLEQ.
      *
-     * Returns the bond-equivalent yield for a Treasury bill.
+     * Return the bond-equivalent yield for a Treasury bill.
      *
      * @param mixed $settlement The Treasury bill's settlement date.
      *                                The Treasury bill's settlement date is the date after the issue date
@@ -58,7 +58,7 @@ class TreasuryBill
     /**
      * TBILLPRICE.
      *
-     * Returns the price per $100 face value for a Treasury bill.
+     * Return the price per $100 face value for a Treasury bill.
      *
      * @param mixed $settlement The Treasury bill's settlement date.
      *                                The Treasury bill's settlement date is the date after the issue date
@@ -108,7 +108,7 @@ class TreasuryBill
     /**
      * TBILLYIELD.
      *
-     * Returns the yield for a Treasury bill.
+     * Return the yield for a Treasury bill.
      *
      * @param mixed $settlement The Treasury bill's settlement date.
      *                                The Treasury bill's settlement date is the date after the issue date when

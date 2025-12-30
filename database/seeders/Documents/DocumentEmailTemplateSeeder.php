@@ -3,10 +3,10 @@
 namespace Database\Seeders\Documents;
 
 use App\Models\Lang;
-use App\Models\Layout\Layout;
-use Modules\Mail\Models\MailTemplate;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Campaign\Models\Layout\Layout;
+use Modules\Mail\Models\MailTemplate;
 
 class DocumentEmailTemplateSeeder extends Seeder
 {

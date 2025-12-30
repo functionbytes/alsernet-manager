@@ -44,7 +44,7 @@ class Gamma extends GammaBase
     /**
      * GAMMADIST.
      *
-     * Returns the gamma distribution.
+     * Return the gamma distribution.
      *
      * @param mixed $value Float Value at which you want to evaluate the distribution
      *                      Or can be an array of values
@@ -84,7 +84,7 @@ class Gamma extends GammaBase
     /**
      * GAMMAINV.
      *
-     * Returns the inverse of the Gamma distribution.
+     * Return the inverse of the Gamma distribution.
      *
      * @param mixed $probability Float probability at which you want to evaluate the distribution
      *                      Or can be an array of values
@@ -121,7 +121,7 @@ class Gamma extends GammaBase
     /**
      * GAMMALN.
      *
-     * Returns the natural logarithm of the gamma function.
+     * Return the natural logarithm of the gamma function.
      *
      * @param mixed $value Float Value at which you want to evaluate the distribution
      *                      Or can be an array of values

@@ -18,7 +18,7 @@ class Conditional
     /**
      * AVERAGEIF.
      *
-     * Returns the average value from a range of cells that contain numbers within the list of arguments
+     * Return the average value from a range of cells that contain numbers within the list of arguments
      *
      * Excel Function:
      *        AVERAGEIF(range,condition[, average_range])
@@ -121,7 +121,7 @@ class Conditional
     /**
      * MAXIFS.
      *
-     * Returns the maximum value within a range of cells that contain numbers within the list of arguments
+     * Return the maximum value within a range of cells that contain numbers within the list of arguments
      *
      * Excel Function:
      *        MAXIFS(max_range, criteria_range1, criteria1, [criteria_range2, criteria2]…)
@@ -145,7 +145,7 @@ class Conditional
     /**
      * MINIFS.
      *
-     * Returns the minimum value within a range of cells that contain numbers within the list of arguments
+     * Return the minimum value within a range of cells that contain numbers within the list of arguments
      *
      * Excel Function:
      *        MINIFS(min_range, criteria_range1, criteria1, [criteria_range2, criteria2]…)

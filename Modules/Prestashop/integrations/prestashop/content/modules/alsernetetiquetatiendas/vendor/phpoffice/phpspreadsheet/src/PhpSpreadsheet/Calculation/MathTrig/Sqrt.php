@@ -12,7 +12,7 @@ class Sqrt
     /**
      * SQRT.
      *
-     * Returns the result of builtin function sqrt after validating args.
+     * Return the result of builtin function sqrt after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *
@@ -38,7 +38,7 @@ class Sqrt
     /**
      * SQRTPI.
      *
-     * Returns the square root of (number * pi).
+     * Return the square root of (number * pi).
      *
      * @param array|float $number Number, or can be an array of numbers
      *

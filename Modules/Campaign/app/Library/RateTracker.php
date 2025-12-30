@@ -196,7 +196,7 @@ class RateTracker
         // Move cursor to the end of file
         fseek($fopen, 0, SEEK_END);
 
-        // Returns the current position of the file read/write pointer
+        // Return the current position of the file read/write pointer
         $offset = ftell($fopen) - 1; // Offset values from: -1, 0, 1, 2...
 
         if ($offset < 0) {

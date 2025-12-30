@@ -912,7 +912,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Returns category inventaries.
+     * Return category inventaries.
      *
      * @param  int  $idLang  Language ID
      * @param  int  $pageNumber  Page number
@@ -1065,7 +1065,7 @@ class CategoryCore extends ObjectModel
 
     /**
      * Get root Category object
-     * Returns the top Category if there are multiple root Categories.
+     * Return the top Category if there are multiple root Categories.
      *
      * @param  int|null  $idLang  Language ID
      * @param  Shop|null  $shop  Shop object
@@ -1828,7 +1828,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Returns the number of categories + 1 having $idCategoryParent as parent.
+     * Return the number of categories + 1 having $idCategoryParent as parent.
      *
      * @param  int  $idCategoryParent  The parent category
      * @param  int  $idShop  Shop ID

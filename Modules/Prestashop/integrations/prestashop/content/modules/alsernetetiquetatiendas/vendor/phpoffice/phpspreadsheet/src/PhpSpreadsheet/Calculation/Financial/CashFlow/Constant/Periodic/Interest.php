@@ -17,7 +17,7 @@ class Interest
     /**
      * IPMT.
      *
-     * Returns the interest payment for a given period for an investment based on periodic, constant payments
+     * Return the interest payment for a given period for an investment based on periodic, constant payments
      *         and a constant interest rate.
      *
      * Excel Function:
@@ -79,7 +79,7 @@ class Interest
     /**
      * ISPMT.
      *
-     * Returns the interest payment for an investment based on an interest rate and a constant payment schedule.
+     * Return the interest payment for an investment based on an interest rate and a constant payment schedule.
      *
      * Excel Function:
      *     =ISPMT(interest_rate, period, number_payments, pv)
@@ -130,7 +130,7 @@ class Interest
     /**
      * RATE.
      *
-     * Returns the interest rate per period of an annuity.
+     * Return the interest rate per period of an annuity.
      * RATE is calculated by iteration and can have zero or more solutions.
      * If the successive results of RATE do not converge to within 0.0000001 after 20 iterations,
      * RATE returns the #NUM! error value.

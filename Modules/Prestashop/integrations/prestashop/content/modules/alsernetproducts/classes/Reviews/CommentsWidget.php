@@ -63,7 +63,7 @@ class LGCommentsWidget
     }
 
     /**
-     * Returns an array of template vars needed to render de widget
+     * Return an array of template vars needed to render de widget
      *
      * @param $module
      * @return array

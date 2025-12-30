@@ -697,7 +697,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Returns the valid reset password token if it validity date is > now().
+     * Return the valid reset password token if it validity date is > now().
      */
     public function getValidResetPasswordToken()
     {
@@ -735,7 +735,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Returns the default tab class name.
+     * Return the default tab class name.
      *
      * @return string|null
      */

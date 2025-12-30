@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 /**
- * Returns the executable query from a prepared one.
+ * Return the executable query from a prepared one.
  */
 interface QueryParserInterface
 {

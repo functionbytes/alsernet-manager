@@ -345,7 +345,7 @@ class Datamatrix {
 	}
 
 	/**
-	 * Returns a barcode array which is readable by TCPDF
+	 * Return a barcode array which is readable by TCPDF
 	 * @return array barcode array readable by TCPDF;
 	 * @public
 	 */
@@ -467,7 +467,7 @@ class Datamatrix {
 	}
 
 	/**
-	 * Returns true if the char belongs to the selected mode
+	 * Return true if the char belongs to the selected mode
 	 * @param int $chr Character (byte) to check.
 	 * @param int $mode Current encoding mode.
 	 * @return boolean true if the char is of the selected mode.

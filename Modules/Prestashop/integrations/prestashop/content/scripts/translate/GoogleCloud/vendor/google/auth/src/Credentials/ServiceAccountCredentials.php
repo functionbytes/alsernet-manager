@@ -233,7 +233,7 @@ class ServiceAccountCredentials extends CredentialsLoader implements
     /**
      * Get the project ID from the service account keyfile.
      *
-     * Returns null if the project ID does not exist in the keyfile.
+     * Return null if the project ID does not exist in the keyfile.
      *
      * @param callable $httpHandler Not used by this credentials type.
      * @return string|null

@@ -2,13 +2,13 @@
 
 namespace Modules\Warehouse\Entities;
 
-use App\Models\Product\Product;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Database\Factories\Warehouse\WarehouseInventoryMovementFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Warehouse\Models\Product\Product;
 
 class WarehouseInventoryMovement extends Model
 {

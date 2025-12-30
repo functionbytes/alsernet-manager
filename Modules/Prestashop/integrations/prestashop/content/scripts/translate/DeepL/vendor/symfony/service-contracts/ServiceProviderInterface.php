@@ -22,7 +22,7 @@ use Psr\Container\ContainerInterface;
 interface ServiceProviderInterface extends ContainerInterface
 {
     /**
-     * Returns an associative array of service types keyed by the identifiers provided by the current container.
+     * Return an associative array of service types keyed by the identifiers provided by the current container.
      *
      * Examples:
      *

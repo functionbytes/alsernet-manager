@@ -14,7 +14,7 @@ class Offset
     /**
      * OFFSET.
      *
-     * Returns a reference to a range that is a specified number of rows and columns from a cell or range of cells.
+     * Return a reference to a range that is a specified number of rows and columns from a cell or range of cells.
      * The reference that is returned can be a single cell or a range of cells. You can specify the number of rows and
      * the number of columns to be returned.
      *

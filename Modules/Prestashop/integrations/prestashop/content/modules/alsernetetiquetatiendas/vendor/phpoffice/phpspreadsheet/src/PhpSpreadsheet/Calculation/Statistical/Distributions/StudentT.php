@@ -16,7 +16,7 @@ class StudentT
     /**
      * TDIST.
      *
-     * Returns the probability of Student's T distribution.
+     * Return the probability of Student's T distribution.
      *
      * @param mixed $value Float value for the distribution
      *                      Or can be an array of values
@@ -53,7 +53,7 @@ class StudentT
     /**
      * TINV.
      *
-     * Returns the one-tailed probability of the chi-squared distribution.
+     * Return the one-tailed probability of the chi-squared distribution.
      *
      * @param mixed $probability Float probability for the function
      *                      Or can be an array of values

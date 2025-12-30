@@ -77,7 +77,7 @@ class Message
     }
 
     /**
-     * Returns whether a message is translated or not.
+     * Return whether a message is translated or not.
      * It's TRUE if one of fileTranslation or userTranslation is not null
      */
     public function isTranslated(): bool
@@ -86,7 +86,7 @@ class Message
     }
 
     /**
-     * Returns the translated string
+     * Return the translated string
      * UserTranslation OR FileTranslation OR Default key
      *
      * @return string

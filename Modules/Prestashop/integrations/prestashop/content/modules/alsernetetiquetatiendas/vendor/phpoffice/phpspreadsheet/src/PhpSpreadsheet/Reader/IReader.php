@@ -80,7 +80,7 @@ interface IReader
 
     /**
      * Get which sheets to load
-     * Returns either an array of worksheet names (the list of worksheets that should be loaded), or a null
+     * Return either an array of worksheet names (the list of worksheets that should be loaded), or a null
      *        indicating that all worksheets in the workbook should be loaded.
      *
      * @return mixed

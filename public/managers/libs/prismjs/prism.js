@@ -98,7 +98,7 @@ var Prism = (function (_self) {
 			},
 
 			/**
-			 * Returns the name of the type of the given value.
+			 * Return the name of the type of the given value.
 			 *
 			 * @param {any} o
 			 * @returns {string}
@@ -118,7 +118,7 @@ var Prism = (function (_self) {
 			},
 
 			/**
-			 * Returns a unique number for the given object. Later calls will still return the same number.
+			 * Return a unique number for the given object. Later calls will still return the same number.
 			 *
 			 * @param {Object} obj
 			 * @returns {number}
@@ -181,7 +181,7 @@ var Prism = (function (_self) {
 			},
 
 			/**
-			 * Returns the Prism language of the given element set by a `language-xxxx` or `lang-xxxx` class.
+			 * Return the Prism language of the given element set by a `language-xxxx` or `lang-xxxx` class.
 			 *
 			 * If no language is set for the element or the element is `null` or `undefined`, `none` will be returned.
 			 *
@@ -217,7 +217,7 @@ var Prism = (function (_self) {
 			},
 
 			/**
-			 * Returns the script element that is currently executing.
+			 * Return the script element that is currently executing.
 			 *
 			 * This does __not__ work for line script element.
 			 *
@@ -259,7 +259,7 @@ var Prism = (function (_self) {
 			},
 
 			/**
-			 * Returns whether a given class is active for `element`.
+			 * Return whether a given class is active for `element`.
 			 *
 			 * The class can be activated if `element` or one of its ancestors has the given class and it can be deactivated
 			 * if `element` or one of its ancestors has the negated version of the given class. The _negated version_ of the

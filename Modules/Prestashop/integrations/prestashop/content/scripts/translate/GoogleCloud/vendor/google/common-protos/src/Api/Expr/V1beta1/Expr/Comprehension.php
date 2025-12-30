@@ -61,7 +61,7 @@ class Comprehension extends \Google\Protobuf\Internal\Message
     private $accu_init = null;
     /**
      * An expression which can contain iter_var and accu_var.
-     * Returns false when the result has been computed and may be used as
+     * Return false when the result has been computed and may be used as
      * a hint to short-circuit the remainder of the comprehension.
      *
      * Generated from protobuf field <code>.google.api.expr.v1beta1.Expr loop_condition = 5;</code>
@@ -98,7 +98,7 @@ class Comprehension extends \Google\Protobuf\Internal\Message
      *           The initial value of the accumulator.
      *     @type \Google\Api\Expr\V1beta1\Expr $loop_condition
      *           An expression which can contain iter_var and accu_var.
-     *           Returns false when the result has been computed and may be used as
+     *           Return false when the result has been computed and may be used as
      *           a hint to short-circuit the remainder of the comprehension.
      *     @type \Google\Api\Expr\V1beta1\Expr $loop_step
      *           An expression which can contain iter_var and accu_var.
@@ -219,7 +219,7 @@ class Comprehension extends \Google\Protobuf\Internal\Message
 
     /**
      * An expression which can contain iter_var and accu_var.
-     * Returns false when the result has been computed and may be used as
+     * Return false when the result has been computed and may be used as
      * a hint to short-circuit the remainder of the comprehension.
      *
      * Generated from protobuf field <code>.google.api.expr.v1beta1.Expr loop_condition = 5;</code>
@@ -232,7 +232,7 @@ class Comprehension extends \Google\Protobuf\Internal\Message
 
     /**
      * An expression which can contain iter_var and accu_var.
-     * Returns false when the result has been computed and may be used as
+     * Return false when the result has been computed and may be used as
      * a hint to short-circuit the remainder of the comprehension.
      *
      * Generated from protobuf field <code>.google.api.expr.v1beta1.Expr loop_condition = 5;</code>

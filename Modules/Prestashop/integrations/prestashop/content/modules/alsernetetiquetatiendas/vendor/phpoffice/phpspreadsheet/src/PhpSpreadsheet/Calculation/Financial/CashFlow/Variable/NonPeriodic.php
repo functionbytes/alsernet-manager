@@ -18,7 +18,7 @@ class NonPeriodic
     /**
      * XIRR.
      *
-     * Returns the internal rate of return for a schedule of cash flows that is not necessarily periodic.
+     * Return the internal rate of return for a schedule of cash flows that is not necessarily periodic.
      *
      * Excel Function:
      *        =XIRR(values,dates,guess)
@@ -78,7 +78,7 @@ class NonPeriodic
     /**
      * XNPV.
      *
-     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     * Return the net present value for a schedule of cash flows that is not necessarily periodic.
      * To calculate the net present value for a series of cash flows that is periodic, use the NPV function.
      *
      * Excel Function:

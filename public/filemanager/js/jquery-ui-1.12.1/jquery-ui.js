@@ -14971,7 +14971,7 @@ var widgetsSlider = $.widget( "ui.slider", $.ui.mouse, {
 		}
 	},
 
-	// Returns the step-aligned value that val is closest to, between (inclusive) min and max
+	// Return the step-aligned value that val is closest to, between (inclusive) min and max
 	_trimAlignValue: function( val ) {
 		if ( val <= this._valueMin() ) {
 			return this._valueMin();

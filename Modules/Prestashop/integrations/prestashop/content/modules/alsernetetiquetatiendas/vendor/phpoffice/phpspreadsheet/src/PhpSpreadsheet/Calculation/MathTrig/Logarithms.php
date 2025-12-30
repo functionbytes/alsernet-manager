@@ -12,7 +12,7 @@ class Logarithms
     /**
      * LOG_BASE.
      *
-     * Returns the logarithm of a number to a specified base. The default base is 10.
+     * Return the logarithm of a number to a specified base. The default base is 10.
      *
      * Excel Function:
      *        LOG(number[,base])
@@ -47,7 +47,7 @@ class Logarithms
     /**
      * LOG10.
      *
-     * Returns the result of builtin function log after validating args.
+     * Return the result of builtin function log after validating args.
      *
      * @param mixed $number Should be numeric
      *                      Or can be an array of values
@@ -75,7 +75,7 @@ class Logarithms
     /**
      * LN.
      *
-     * Returns the result of builtin function log after validating args.
+     * Return the result of builtin function log after validating args.
      *
      * @param mixed $number Should be numeric
      *                      Or can be an array of values

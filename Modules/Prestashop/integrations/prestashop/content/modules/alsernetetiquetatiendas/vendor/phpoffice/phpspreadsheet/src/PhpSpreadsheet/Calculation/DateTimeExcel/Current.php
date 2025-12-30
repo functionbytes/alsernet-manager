@@ -10,7 +10,7 @@ class Current
     /**
      * DATENOW.
      *
-     * Returns the current date.
+     * Return the current date.
      * The NOW function is useful when you need to display the current date and time on a worksheet or
      * calculate a value based on the current date and time, and have that value updated each time you
      * open the worksheet.
@@ -35,7 +35,7 @@ class Current
     /**
      * DATETIMENOW.
      *
-     * Returns the current date and time.
+     * Return the current date and time.
      * The NOW function is useful when you need to display the current date and time on a worksheet or
      * calculate a value based on the current date and time, and have that value updated each time you
      * open the worksheet.

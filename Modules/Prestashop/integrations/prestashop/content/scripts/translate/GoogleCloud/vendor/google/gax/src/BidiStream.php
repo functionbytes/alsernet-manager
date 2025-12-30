@@ -109,7 +109,7 @@ class BidiStream
     }
 
     /**
-     * Read the next response from the server. Returns null if the streaming call completed
+     * Read the next response from the server. Return null if the streaming call completed
      * successfully. Throws an ApiException if the streaming call failed.
      *
      * @throws ValidationException

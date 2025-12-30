@@ -67,7 +67,7 @@ class RequestParamsHeaderDescriptor
     }
 
     /**
-     * Returns an associative array that contains request params header metadata.
+     * Return an associative array that contains request params header metadata.
      *
      * @return array
      */

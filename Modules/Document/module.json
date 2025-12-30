@@ -1,11 +1,11 @@
 {
-    "name": "Documents",
-    "alias": "documents",
+    "name": "Document",
+    "alias": "document",
     "description": "Módulo de gestión de documentos con sistema de permisos dual (Spatie + ValidatorGroup)",
     "keywords": ["documents", "permissions", "workflow", "validation"],
     "priority": 0,
     "providers": [
-        "Modules\\Documents\\Providers\\DocumentsServiceProvider"
+        "Modules\\Document\\Providers\\DocumentsServiceProvider"
     ],
     "files": []
 }

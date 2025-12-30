@@ -370,12 +370,12 @@ Todas las nuevas rutas API requieren autenticación (`auth` middleware).
 1. **Revisar el frontend** para actualizar las llamadas a las rutas migradas
 2. **Buscar y reemplazar** en vistas Blade:
    ```bash
-   grep -r "documents.resend-reminder" Modules/Documents/resources/views/
-   grep -r "documents.confirm-upload" Modules/Documents/resources/views/
-   grep -r "documents.sync-fields" Modules/Documents/resources/views/
-   grep -r "documents.state" Modules/Documents/resources/views/
-   grep -r "documents.delete-single" Modules/Documents/resources/views/
-   grep -r "documents.sync.all" Modules/Documents/resources/views/
+   grep -r "documents.resend-reminder" Modules/Document/resources/views/
+   grep -r "documents.confirm-upload" Modules/Document/resources/views/
+   grep -r "documents.sync-fields" Modules/Document/resources/views/
+   grep -r "documents.state" Modules/Document/resources/views/
+   grep -r "documents.delete-single" Modules/Document/resources/views/
+   grep -r "documents.sync.all" Modules/Document/resources/views/
    ```
 
 3. **Actualizar archivos JavaScript/Vue** que usen estas rutas

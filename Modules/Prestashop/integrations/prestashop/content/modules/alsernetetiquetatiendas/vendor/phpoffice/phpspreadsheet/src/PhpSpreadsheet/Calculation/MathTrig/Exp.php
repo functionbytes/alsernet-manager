@@ -12,7 +12,7 @@ class Exp
     /**
      * EXP.
      *
-     * Returns the result of builtin function exp after validating args.
+     * Return the result of builtin function exp after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *

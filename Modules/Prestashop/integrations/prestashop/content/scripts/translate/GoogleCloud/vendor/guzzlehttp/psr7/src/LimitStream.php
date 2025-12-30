@@ -55,7 +55,7 @@ final class LimitStream implements StreamInterface
     }
 
     /**
-     * Returns the size of the limited subset of data
+     * Return the size of the limited subset of data
      */
     public function getSize(): ?int
     {

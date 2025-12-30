@@ -193,7 +193,7 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
-     * Returns the domain without separating dots
+     * Return the domain without separating dots
      *
      * @param string|null $domain Domain name
      *

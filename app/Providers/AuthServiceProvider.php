@@ -12,9 +12,6 @@ use Modules\Campaign\Policies\CampaignPolicy;
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
-        User::class => \App\Policies\V1\UserPolicy::class,
-        Campaign::class => CampaignPolicy::class,
-        Ticket::class => \App\Policies\TicketPolicy::class,
     ];
 
     public function boot(): void

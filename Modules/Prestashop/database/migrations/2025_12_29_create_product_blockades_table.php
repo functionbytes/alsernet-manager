@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      *
      * Note: This migration creates the product_blockades table for the Prestashop module.
-     * This table was previously named 'document_product_blockades' and was managed by the Documents module.
+     * This table was previously named 'document_product_blockades' and was managed by the Document module.
      * It is now owned and managed by the Prestashop module.
      */
     public function up(): void

@@ -465,7 +465,7 @@ class WebserviceRequestCore
      * @param  string  $params
      * @param  string  $bad_class_name
      * @param  string  $inputXml
-     * @return array Returns an array of results (headers, content, type of resource...)
+     * @return array Return an array of results (headers, content, type of resource...)
      */
     public function fetch($key, $method, $url, $params, $bad_class_name, $inputXml = null)
     {

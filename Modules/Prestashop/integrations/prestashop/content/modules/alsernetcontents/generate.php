@@ -72,7 +72,7 @@ $footers = [
         ],
         "items" => [
             1 => [["title" => "Cambios y devoluciones", "url" => "https://returns.itsrever.com/alvarez?lang=es"],["cms" => "14"],["cms" => "15"],["title" => "Estado de mi pedido", "url" => "/seguimiento-pedido-invitado"]],
-            2 => [["title" => "Returns and exchanges", "url" => "https://returns.itsrever.com/alvarez?lang=en"],["cms" => "14"],["cms" => "15"],["title" => "Status of my order", "url" => "/en/guest-tracking"]],
+            2 => [["title" => "Return and exchanges", "url" => "https://returns.itsrever.com/alvarez?lang=en"],["cms" => "14"],["cms" => "15"],["title" => "Status of my order", "url" => "/en/guest-tracking"]],
             3 => [["title" => "Retour et d'échange", "url" => "https://returns.itsrever.com/alvarez?lang=fr"],["cms" => "14"],["cms" => "15"],["title" => "Situation de ma commande", "url" => "/fr/suivi-de-commande-invite"]],
             4 => [["title" => "Devoluções e trocas", "url" => "https://returns.itsrever.com/alvarez?lang=pt"],["cms" => "14"],["cms" => "15"],["title" => "Mon compte Information", "url" => "/pt/seguimento-de-visitante"]],
             5 => [["title" => "Rrückgabe & umtausch", "url" => "https://returns.itsrever.com/alvarez?lang=de"],["cms" => "14"],["cms" => "15"],["title" => "Status meiner bestellung", "url" => "/de/auftragsverfolgung-gast"]],

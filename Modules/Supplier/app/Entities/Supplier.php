@@ -3,7 +3,7 @@
 namespace Modules\Supplier\Entities;
 
 use App\Models\Category;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

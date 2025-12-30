@@ -13,7 +13,7 @@ class Cotangent
     /**
      * COT.
      *
-     * Returns the cotangent of an angle.
+     * Return the cotangent of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *
@@ -39,7 +39,7 @@ class Cotangent
     /**
      * COTH.
      *
-     * Returns the hyperbolic cotangent of an angle.
+     * Return the hyperbolic cotangent of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *
@@ -65,7 +65,7 @@ class Cotangent
     /**
      * ACOT.
      *
-     * Returns the arccotangent of a number.
+     * Return the arccotangent of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *
@@ -91,7 +91,7 @@ class Cotangent
     /**
      * ACOTH.
      *
-     * Returns the hyperbolic arccotangent of a number.
+     * Return the hyperbolic arccotangent of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *

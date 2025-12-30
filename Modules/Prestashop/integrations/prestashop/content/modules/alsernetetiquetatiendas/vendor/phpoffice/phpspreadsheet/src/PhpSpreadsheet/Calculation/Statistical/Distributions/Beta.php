@@ -20,7 +20,7 @@ class Beta
     /**
      * BETADIST.
      *
-     * Returns the beta distribution.
+     * Return the beta distribution.
      *
      * @param mixed $value Float value at which you want to evaluate the distribution
      *                      Or can be an array of values
@@ -74,7 +74,7 @@ class Beta
     /**
      * BETAINV.
      *
-     * Returns the inverse of the Beta distribution.
+     * Return the inverse of the Beta distribution.
      *
      * @param mixed $probability Float probability at which you want to evaluate the distribution
      *                      Or can be an array of values

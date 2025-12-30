@@ -14,7 +14,7 @@ namespace Psr\Cache;
 interface CacheItemPoolInterface
 {
     /**
-     * Returns a Cache Item representing the specified key.
+     * Return a Cache Item representing the specified key.
      *
      * This method must always return a CacheItemInterface object, even in case of
      * a cache miss. It MUST NOT return null.
@@ -32,7 +32,7 @@ interface CacheItemPoolInterface
     public function getItem($key);
 
     /**
-     * Returns a traversable set of cache items.
+     * Return a traversable set of cache items.
      *
      * @param string[] $keys
      *   An indexed array of keys of items to retrieve.

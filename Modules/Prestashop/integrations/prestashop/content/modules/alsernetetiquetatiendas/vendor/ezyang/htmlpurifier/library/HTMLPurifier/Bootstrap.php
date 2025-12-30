@@ -51,7 +51,7 @@ class HTMLPurifier_Bootstrap
     }
 
     /**
-     * Returns the path for a specific class.
+     * Return the path for a specific class.
      * @param string $class Class path to get
      * @return string
      */

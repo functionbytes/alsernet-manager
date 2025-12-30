@@ -19,7 +19,7 @@ class CreateSampleDocumentsFromPrestashopTest extends TestCase
         $this->artisan('app:create-sample-documents', ['--count' => '3'])
             ->assertExitCode(0);
 
-        // Assert: Documents were created
+        // Assert: Document were created
         $this->assertDatabaseCount('documents', 3);
 
         // Assert: Check document details
@@ -73,7 +73,7 @@ class CreateSampleDocumentsFromPrestashopTest extends TestCase
             '--send-emails' => true,
         ])->assertExitCode(0);
 
-        // Assert: Documents have customer emails
+        // Assert: Document have customer emails
         $documents = Document::where('order_id', '>=', 1000000)->get();
         $this->assertCount(2, $documents);
 
@@ -140,7 +140,7 @@ class CreateSampleDocumentsFromPrestashopTest extends TestCase
 
         // Act & Assert: Command output shows correct count
         $this->artisan('app:create-sample-documents', ['--count' => '2'])
-            ->expectsOutput('Documents created: 2')
+            ->expectsOutput('Document created: 2')
             ->assertExitCode(0);
     }
 
@@ -152,7 +152,7 @@ class CreateSampleDocumentsFromPrestashopTest extends TestCase
         // Act: Create sample documents (names have Spanish characters)
         $this->artisan('app:create-sample-documents', ['--count' => '3']);
 
-        // Assert: Documents with accented characters were created
+        // Assert: Document with accented characters were created
         $documents = Document::where('order_id', '>=', 1000000)->get();
         $namesWithAccents = $documents
             ->map(fn (Document $d) => $d->customer_firstname.$d->customer_lastname)

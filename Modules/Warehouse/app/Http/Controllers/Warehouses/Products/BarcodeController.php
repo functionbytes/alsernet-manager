@@ -3,8 +3,8 @@
 namespace Modules\Warehouse\Http\Controllers\Warehouses\Products;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
+use Modules\Warehouse\Models\Product\Product;
 
 class BarcodeController extends Controller
 {

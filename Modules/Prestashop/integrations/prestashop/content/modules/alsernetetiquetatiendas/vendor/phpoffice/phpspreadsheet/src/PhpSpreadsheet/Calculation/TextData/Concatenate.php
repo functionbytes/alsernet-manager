@@ -96,7 +96,7 @@ class Concatenate
     /**
      * REPT.
      *
-     * Returns the result of builtin function round after validating args.
+     * Return the result of builtin function round after validating args.
      *
      * @param mixed $stringValue The value to repeat
      *                         Or can be an array of values

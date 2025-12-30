@@ -82,7 +82,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Returns form errors for JS implementation.
+     * Return form errors for JS implementation.
      *
      * Parse all errors mapped by id html field
      *
@@ -146,7 +146,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Return the event with the response(s).
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *

@@ -690,7 +690,7 @@
 
 
 	/**
-	 * Returns the indexed element wrapped in a new `shoestring` object.
+	 * Return the indexed element wrapped in a new `shoestring` object.
 	 *
 	 * @param {integer} index The index of the element to wrap and return.
 	 * @return shoestring
@@ -768,7 +768,7 @@
 
 
 	/**
-	 * Returns the first element of the set wrapped in a new `shoestring` object.
+	 * Return the first element of the set wrapped in a new `shoestring` object.
 	 *
 	 * @return shoestring
 	 * @this shoestring
@@ -780,7 +780,7 @@
 
 
 	/**
-	 * Returns the raw DOM node at the passed index.
+	 * Return the raw DOM node at the passed index.
 	 *
 	 * @param {integer} index The index of the element to wrap and return.
 	 * @return {HTMLElement|undefined|array}
@@ -916,7 +916,7 @@
 
 
 	/**
-	 * Returns the last element of the set wrapped in a new `shoestring` object.
+	 * Return the last element of the set wrapped in a new `shoestring` object.
 	 *
 	 * @return shoestring
 	 * @this shoestring
@@ -928,7 +928,7 @@
 
 
 	/**
-	 * Returns a `shoestring` object with the set of siblings of each element in the original set.
+	 * Return a `shoestring` object with the set of siblings of each element in the original set.
 	 *
 	 * @return shoestring
 	 * @this shoestring
@@ -991,7 +991,7 @@
 
 
 	/**
-	 * Returns the set of first parents for each element in the current set.
+	 * Return the set of first parents for each element in the current set.
 	 *
 	 * @return shoestring
 	 * @this shoestring
@@ -1044,7 +1044,7 @@
 
 
 	/**
-	 * Returns a `shoestring` object with the set of *one* siblingx before each element in the original set.
+	 * Return a `shoestring` object with the set of *one* siblingx before each element in the original set.
 	 *
 	 * @return shoestring
 	 * @this shoestring
@@ -1084,7 +1084,7 @@
 
 
 	/**
-	 * Returns a `shoestring` object with the set of *all* siblings before each element in the original set.
+	 * Return a `shoestring` object with the set of *all* siblings before each element in the original set.
 	 *
 	 * @return shoestring
 	 * @this shoestring

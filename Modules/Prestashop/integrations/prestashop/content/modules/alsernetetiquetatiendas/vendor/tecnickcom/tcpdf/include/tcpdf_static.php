@@ -280,7 +280,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns a temporary filename for caching object on filesystem.
+	 * Return a temporary filename for caching object on filesystem.
 	 * @param string $type Type of file (name of the subdir on the tcpdf cache folder).
 	 * @param string $file_id TCPDF file_id.
 	 * @return string filename.
@@ -366,7 +366,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns timestamp in seconds from formatted date-time.
+	 * Return timestamp in seconds from formatted date-time.
 	 * @param string $date Formatted date-time.
 	 * @return int seconds.
 	 * @since 5.9.152 (2012-03-23)
@@ -381,7 +381,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns a formatted date-time.
+	 * Return a formatted date-time.
 	 * @param int $time Time in seconds.
 	 * @return string escaped date string.
 	 * @since 5.9.152 (2012-03-23)
@@ -392,7 +392,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns a string containing random data to be used as a seed for encryption methods.
+	 * Return a string containing random data to be used as a seed for encryption methods.
 	 * @param string $seed starting seed value
 	 * @return string containing random data
 	 * @author Nicola Asuni
@@ -430,7 +430,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the input text encrypted using AES algorithm and the specified key.
+	 * Return the input text encrypted using AES algorithm and the specified key.
 	 * This method requires openssl or mcrypt. Text is padded to 16bytes blocks
 	 * @param string $key encryption key
 	 * @param string $text input text to be encrypted
@@ -459,7 +459,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the input text encrypted using AES algorithm and the specified key.
+	 * Return the input text encrypted using AES algorithm and the specified key.
 	 * This method requires openssl or mcrypt. Text is not padded
 	 * @param string $key encryption key
 	 * @param string $text input text to be encrypted
@@ -484,7 +484,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the input text encrypted using RC4 algorithm and the specified key.
+	 * Return the input text encrypted using RC4 algorithm and the specified key.
 	 * RC4 is the standard encryption algorithm used in PDF format
 	 * @param string $key Encryption key.
 	 * @param string $text Input text to be encrypted.
@@ -1200,7 +1200,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns true if the CSS selector is valid for the selected HTML tag
+	 * Return true if the CSS selector is valid for the selected HTML tag
 	 * @param array $dom array of HTML tags and properties
 	 * @param int $key key of the current HTML tag
 	 * @param string $selector CSS selector string
@@ -1360,7 +1360,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the styles array that apply for the selected HTML tag.
+	 * Return the styles array that apply for the selected HTML tag.
 	 * @param array $dom array of HTML tags and properties
 	 * @param int $key key of the current HTML tag
 	 * @param array $css array of CSS properties
@@ -1438,7 +1438,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the Roman representation of an integer number
+	 * Return the Roman representation of an integer number
 	 * @param int $number number to convert
 	 * @return string roman representation of the specified number
 	 * @since 4.4.004 (2008-12-10)
@@ -1510,7 +1510,7 @@ class TCPDF_STATIC {
 	 * @param string $haystack The string to search in.
 	 * @param string $needle substring to search.
 	 * @param int $offset May be specified to begin searching an arbitrary number of characters into the string.
-	 * @return int|false Returns the position where the needle exists. Returns FALSE if the needle was not found.
+	 * @return int|false Return the position where the needle exists. Return FALSE if the needle was not found.
 	 * @since 4.8.038 (2010-03-13)
 	 * @public static
 	 */
@@ -1522,7 +1522,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns an array of hyphenation patterns.
+	 * Return an array of hyphenation patterns.
 	 * @param string $file TEX file containing hypenation patterns. TEX patterns can be downloaded from http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/
 	 * @return array of hyphenation patterns
 	 * @author Nicola Asuni
@@ -1762,7 +1762,7 @@ class TCPDF_STATIC {
 	}
 
 	/**
-	 * Returns the angle in radiants between two vectors
+	 * Return the angle in radiants between two vectors
 	 * @param int $x1 X coordinate of first vector point
 	 * @param int $y1 Y coordinate of first vector point
 	 * @param int $x2 X coordinate of second vector point
@@ -1793,7 +1793,7 @@ class TCPDF_STATIC {
 	 * @param string $subject The input string.
 	 * @param int $limit If specified, then only substrings up to limit are returned with the rest of the string being placed in the last substring. A limit of -1, 0 or NULL means "no limit" and, as is standard across PHP, you can use NULL to skip to the flags parameter.
 	 * @param int $flags The flags as specified on the preg_split PHP function.
-	 * @return array Returns an array containing substrings of subject split along boundaries matched by pattern.modifier
+	 * @return array Return an array containing substrings of subject split along boundaries matched by pattern.modifier
 	 * @author Nicola Asuni
 	 * @since 6.0.023
 	 * @public static
@@ -1827,7 +1827,7 @@ class TCPDF_STATIC {
 	 * Wrapper to use fopen only with local files
 	 * @param string $filename Name of the file to open
 	 * @param string $mode
-	 * @return resource|false Returns a file pointer resource on success, or FALSE on error.
+	 * @return resource|false Return a file pointer resource on success, or FALSE on error.
 	 * @public static
 	 */
 	public static function fopenLocal($filename, $mode) {
@@ -1842,7 +1842,7 @@ class TCPDF_STATIC {
 	/**
 	 * Check if the URL exist.
 	 * @param string $url URL to check.
-	 * @return bool Returns TRUE if the URL exists; FALSE otherwise.
+	 * @return bool Return TRUE if the URL exists; FALSE otherwise.
 	 * @public static
 	 * @since 6.2.25
 	 */
@@ -1893,7 +1893,7 @@ class TCPDF_STATIC {
 	 * Checks whether a file or directory exists.
 	 * Only allows some protocols and local files.
 	 * @param string $filename Path to the file or directory.
-	 * @return bool Returns TRUE if the file or directory specified by filename exists; FALSE otherwise.
+	 * @return bool Return TRUE if the file or directory specified by filename exists; FALSE otherwise.
 	 * @public static
 	 */
 	public static function file_exists($filename) {
@@ -2113,7 +2113,7 @@ class TCPDF_STATIC {
 	 * Reads up to length bytes from the file pointer referenced by handle. Reading stops as soon as one of the following conditions is met: length bytes have been read; EOF (end of file) is reached.
 	 * @param resource $handle
 	 * @param int $length
-	 * @return string|false Returns the read string or FALSE in case of error.
+	 * @return string|false Return the read string or FALSE in case of error.
 	 * @author Nicola Asuni
 	 * @since 4.5.027 (2009-03-16)
 	 * @public static

@@ -37,7 +37,7 @@ class RejectionException extends \RuntimeException
     }
 
     /**
-     * Returns the rejection reason.
+     * Return the rejection reason.
      *
      * @return mixed
      */

@@ -78,7 +78,7 @@ class TableSorting {
   }
 
   /**
-   * Returns the inverted direction to sort according to the column's current one
+   * Return the inverted direction to sort according to the column's current one
    * @param {jQuery} column
    * @return {string}
    * @private
@@ -88,7 +88,7 @@ class TableSorting {
   }
 
   /**
-   * Returns the url for the sorted table
+   * Return the url for the sorted table
    * @param {string} colName
    * @param {string} direction
    * @param {string} prefix

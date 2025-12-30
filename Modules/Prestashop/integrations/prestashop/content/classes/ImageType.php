@@ -84,7 +84,7 @@ class ImageTypeCore extends ObjectModel
     protected $webserviceParameters = [];
 
     /**
-     * Returns image type definitions.
+     * Return image type definitions.
      *
      * @param string|null Image type
      * @param  bool  $orderBySize

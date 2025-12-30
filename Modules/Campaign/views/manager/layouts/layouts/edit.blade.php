@@ -88,7 +88,8 @@
                         <label for="categories" class="control-label col-form-label">Idiomas</label>
                         <select class="form-control select2" id="categories" multiple="multiple">
                             @foreach($langs as $id => $name)
-                                <option value="{{ $id }}" {{ $id == $layout->lang_id ? 'selected' : '' }}>{{ $name }}</option>
+                                <option
+                                    value="{{ $id }}" {{ $id == $layout->lang_id ? 'selected' : '' }}>{{ $name }}</option>
                             @endforeach
                         </select>
                         <label id="categories-error" class="error d-none" for="categories"></label>
@@ -160,7 +161,7 @@
                         fetch: function (callback) {
                             var items = [];
 
-                            @foreach(App\Models\Template\Template::tags() as $tag)
+                            @foreach(\Modules\Campaign\Models\Template\Template::tags() as $tag)
                             items.push({
                                 type: 'menuitem',
                                 text: '{{ "{".$tag["name"]."}" }}',

@@ -62,7 +62,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Debug mode in back office.
+     * Return configuration used to manage Debug mode in back office.
      *
      * @return array
      */

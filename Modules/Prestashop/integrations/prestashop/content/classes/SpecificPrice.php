@@ -495,7 +495,7 @@ class SpecificPriceCore extends ObjectModel
     }
 
     /**
-     * Returns the specificPrice information related to a given productId and context.
+     * Return the specificPrice information related to a given productId and context.
      *
      * @param  int  $id_product
      * @param  int  $id_shop

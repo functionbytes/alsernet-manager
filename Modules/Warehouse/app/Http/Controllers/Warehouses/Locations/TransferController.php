@@ -3,12 +3,12 @@
 namespace Modules\Warehouse\Http\Controllers\Warehouses\Locations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use App\Services\Inventories\BarcodeReadingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Warehouse\Entities\WarehouseInventorySlot;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Models\Product\Product;
 
 class TransferController extends Controller
 {

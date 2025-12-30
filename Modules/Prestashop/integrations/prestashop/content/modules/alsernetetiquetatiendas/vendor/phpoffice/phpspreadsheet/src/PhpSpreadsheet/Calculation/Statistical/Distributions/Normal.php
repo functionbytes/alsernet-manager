@@ -16,7 +16,7 @@ class Normal
     /**
      * NORMDIST.
      *
-     * Returns the normal distribution for the specified mean and standard deviation. This
+     * Return the normal distribution for the specified mean and standard deviation. This
      * function has a very wide range of applications in statistics, including hypothesis
      * testing.
      *
@@ -62,7 +62,7 @@ class Normal
     /**
      * NORMINV.
      *
-     * Returns the inverse of the normal cumulative distribution for the specified mean and standard deviation.
+     * Return the inverse of the normal cumulative distribution for the specified mean and standard deviation.
      *
      * @param mixed $probability Float probability for which we want the value
      *                      Or can be an array of values

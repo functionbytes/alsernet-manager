@@ -11,7 +11,7 @@ class Depreciation
     /**
      * DB.
      *
-     * Returns the depreciation of an asset for a specified period using the
+     * Return the depreciation of an asset for a specified period using the
      * fixed-declining balance method.
      * This form of depreciation is used if you want to get a higher depreciation value
      * at the beginning of the depreciation (as opposed to linear depreciation). The
@@ -80,7 +80,7 @@ class Depreciation
     /**
      * DDB.
      *
-     * Returns the depreciation of an asset for a specified period using the
+     * Return the depreciation of an asset for a specified period using the
      * double-declining balance method or some other method you specify.
      *
      * Excel Function:
@@ -139,7 +139,7 @@ class Depreciation
     /**
      * SLN.
      *
-     * Returns the straight-line depreciation of an asset for one period
+     * Return the straight-line depreciation of an asset for one period
      *
      * @param mixed $cost Initial cost of the asset
      * @param mixed $salvage Value at the end of the depreciation
@@ -171,7 +171,7 @@ class Depreciation
     /**
      * SYD.
      *
-     * Returns the sum-of-years' digits depreciation of an asset for a specified period.
+     * Return the sum-of-years' digits depreciation of an asset for a specified period.
      *
      * @param mixed $cost Initial cost of the asset
      * @param mixed $salvage Value at the end of the depreciation

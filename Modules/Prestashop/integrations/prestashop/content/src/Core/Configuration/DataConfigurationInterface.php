@@ -48,7 +48,7 @@ interface DataConfigurationInterface
      *
      * @param array $configuration
      *
-     * @return bool Returns true if no exception are thrown
+     * @return bool Return true if no exception are thrown
      */
     public function validateConfiguration(array $configuration);
 }

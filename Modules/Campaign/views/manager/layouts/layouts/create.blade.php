@@ -158,7 +158,7 @@
                         fetch: function (callback) {
                             var items = [];
 
-                            @foreach(App\Models\Template\Template::tags() as $tag)
+                            @foreach(\Modules\Campaign\Models\Template\Template::tags() as $tag)
                             items.push({
                                 type: 'menuitem',
                                 text: '{{ "{".$tag["name"]."}" }}',

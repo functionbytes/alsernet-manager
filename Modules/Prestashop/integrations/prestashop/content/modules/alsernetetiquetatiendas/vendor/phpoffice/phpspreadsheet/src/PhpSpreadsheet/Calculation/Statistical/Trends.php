@@ -56,7 +56,7 @@ class Trends
     /**
      * CORREL.
      *
-     * Returns covariance, the average of the products of deviations for each data point pair.
+     * Return covariance, the average of the products of deviations for each data point pair.
      *
      * @param mixed $yValues array of mixed Data Series Y
      * @param null|mixed $xValues array of mixed Data Series X
@@ -84,7 +84,7 @@ class Trends
     /**
      * COVAR.
      *
-     * Returns covariance, the average of the products of deviations for each data point pair.
+     * Return covariance, the average of the products of deviations for each data point pair.
      *
      * @param mixed $yValues array of mixed Data Series Y
      * @param mixed $xValues array of mixed Data Series X
@@ -142,7 +142,7 @@ class Trends
     /**
      * GROWTH.
      *
-     * Returns values along a predicted exponential Trend
+     * Return values along a predicted exponential Trend
      *
      * @param mixed[] $yValues Data Series Y
      * @param mixed[] $xValues Data Series X
@@ -326,7 +326,7 @@ class Trends
     /**
      * RSQ.
      *
-     * Returns the square of the Pearson product moment correlation coefficient through data points
+     * Return the square of the Pearson product moment correlation coefficient through data points
      *     in known_y's and known_x's.
      *
      * @param mixed[] $yValues Data Series Y
@@ -351,7 +351,7 @@ class Trends
     /**
      * SLOPE.
      *
-     * Returns the slope of the linear regression line through data points in known_y's and known_x's.
+     * Return the slope of the linear regression line through data points in known_y's and known_x's.
      *
      * @param mixed[] $yValues Data Series Y
      * @param mixed[] $xValues Data Series X
@@ -375,7 +375,7 @@ class Trends
     /**
      * STEYX.
      *
-     * Returns the standard error of the predicted y-value for each x in the regression.
+     * Return the standard error of the predicted y-value for each x in the regression.
      *
      * @param mixed[] $yValues Data Series Y
      * @param mixed[] $xValues Data Series X
@@ -399,7 +399,7 @@ class Trends
     /**
      * TREND.
      *
-     * Returns values along a linear Trend
+     * Return values along a linear Trend
      *
      * @param mixed[] $yValues Data Series Y
      * @param mixed[] $xValues Data Series X

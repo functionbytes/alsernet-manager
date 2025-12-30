@@ -39,7 +39,7 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Module translations.
+ * Return the 3 layers of translation catalogues related to the Module translations.
  * The default catalogue is searched in app/Resources/translations/default, in any file starting with "ModulesMODULENAME"
  * If not found, default catalogue is extracted for module's templates
  * The file catalogue is searched in app/Resources/translations/LOCALE, in any file starting with "ModulesMODULENAME"
@@ -318,7 +318,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     }
 
     /**
-     * Returns the translations directory within the module files
+     * Return the translations directory within the module files
      *
      * @return string
      */
@@ -332,7 +332,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     }
 
     /**
-     * Returns the cached default catalogue
+     * Return the cached default catalogue
      *
      * @param string $locale
      *

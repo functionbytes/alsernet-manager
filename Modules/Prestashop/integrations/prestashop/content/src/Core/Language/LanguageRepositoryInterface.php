@@ -35,7 +35,7 @@ use Doctrine\Persistence\ObjectRepository;
 interface LanguageRepositoryInterface extends ObjectRepository
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * Return a LanguageInterface whose locale matches the provided one.
      *
      * @param string $locale
      *
@@ -44,7 +44,7 @@ interface LanguageRepositoryInterface extends ObjectRepository
     public function getOneByLocale($locale);
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
+     * Return a LanguageInterface which isoCode matches the provided one.
      *
      * @param string $isoCode
      *
@@ -53,7 +53,7 @@ interface LanguageRepositoryInterface extends ObjectRepository
     public function getOneByIsoCode($isoCode);
 
     /**
-     * Returns a LanguageInterface whose locale matches the provided one,
+     * Return a LanguageInterface whose locale matches the provided one,
      * if no one is found try matching by isoCode (splitting the locale if
      * necessary).
      *

@@ -29,7 +29,7 @@ namespace Symfony\Contracts\Service;
 interface ServiceSubscriberInterface
 {
     /**
-     * Returns an array of service types required by such instances, optionally keyed by the service names used internally.
+     * Return an array of service types required by such instances, optionally keyed by the service names used internally.
      *
      * For mandatory dependencies:
      *

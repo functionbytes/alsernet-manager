@@ -110,7 +110,7 @@ Route::group(['prefix' => 'tracking', 'name' => 'tracking.'], function () {
     Route::post('/{return}/check-updates', [ReturnTrackingController::class, 'checkUpdates'])->name('check-updates');
 });
 
-// PDF Documents management
+// PDF Document management
 Route::group(['prefix' => 'pdf-documents', 'name' => 'pdf-documents.'], function () {
     Route::get('/', [PdfDocumentController::class, 'index'])->name('index');
     Route::get('/create', [PdfDocumentController::class, 'create'])->name('create');

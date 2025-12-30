@@ -40,7 +40,7 @@ interface ThemeCatalogInterface
     public const LIST_MAIL_THEMES_HOOK = 'actionListMailThemes';
 
     /**
-     * Returns the list of existing themes.
+     * Return the list of existing themes.
      *
      * @return ThemeCollectionInterface
      */

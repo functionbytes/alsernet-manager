@@ -33,7 +33,7 @@ class TaxManagerFactoryCore
     protected static $cache_tax_manager;
 
     /**
-     * Returns a tax manager able to handle this address.
+     * Return a tax manager able to handle this address.
      *
      * @param  string  $type
      * @return TaxManagerInterface

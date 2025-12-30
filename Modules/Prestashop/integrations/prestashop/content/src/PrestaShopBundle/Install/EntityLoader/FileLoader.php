@@ -132,7 +132,7 @@ class FileLoader
     }
 
     /**
-     * Returns the lookup paths for the provided entity / iso.
+     * Return the lookup paths for the provided entity / iso.
      *
      * @param string $entity Entity name
      * @param string|null $iso [default=null] 2-letter language code

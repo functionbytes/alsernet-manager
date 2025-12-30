@@ -87,7 +87,7 @@ class MathTrig
     /**
      * CEILING.
      *
-     * Returns number rounded up, away from zero, to the nearest multiple of significance.
+     * Return number rounded up, away from zero, to the nearest multiple of significance.
      *        For example, if you want to avoid using pennies in your prices and your product is
      *        priced at $4.42, use the formula =CEILING(4.42,0.05) to round prices up to the
      *        nearest nickel.
@@ -113,7 +113,7 @@ class MathTrig
     /**
      * COMBIN.
      *
-     * Returns the number of combinations for a given number of items. Use COMBIN to
+     * Return the number of combinations for a given number of items. Use COMBIN to
      *        determine the total possible number of groups for a given number of items.
      *
      * Excel Function:
@@ -137,7 +137,7 @@ class MathTrig
     /**
      * EVEN.
      *
-     * Returns number rounded up to the nearest even integer.
+     * Return number rounded up to the nearest even integer.
      * You can use this function for processing items that come in twos. For example,
      *        a packing crate accepts rows of one or two items. The crate is full when
      *        the number of items, rounded up to the nearest two, matches the crate's
@@ -176,7 +176,7 @@ class MathTrig
     /**
      * FACT.
      *
-     * Returns the factorial of a number.
+     * Return the factorial of a number.
      * The factorial of a number is equal to 1*2*3*...* number.
      *
      * Excel Function:
@@ -199,7 +199,7 @@ class MathTrig
     /**
      * FACTDOUBLE.
      *
-     * Returns the double factorial of a number.
+     * Return the double factorial of a number.
      *
      * Excel Function:
      *        FACTDOUBLE(factVal)
@@ -313,7 +313,7 @@ class MathTrig
     /**
      * GCD.
      *
-     * Returns the greatest common divisor of a series of numbers.
+     * Return the greatest common divisor of a series of numbers.
      * The greatest common divisor is the largest integer that divides both
      *        number1 and number2 without a remainder.
      *
@@ -337,7 +337,7 @@ class MathTrig
     /**
      * LCM.
      *
-     * Returns the lowest common multiplier of a series of numbers
+     * Return the lowest common multiplier of a series of numbers
      * The least common multiple is the smallest positive integer that is a multiple
      * of all integer arguments number1, number2, and so on. Use LCM to add fractions
      * with different denominators.
@@ -362,7 +362,7 @@ class MathTrig
     /**
      * LOG_BASE.
      *
-     * Returns the logarithm of a number to a specified base. The default base is 10.
+     * Return the logarithm of a number to a specified base. The default base is 10.
      *
      * Excel Function:
      *        LOG(number[,base])
@@ -385,7 +385,7 @@ class MathTrig
     /**
      * MDETERM.
      *
-     * Returns the matrix determinant of an array.
+     * Return the matrix determinant of an array.
      *
      * Excel Function:
      *        MDETERM(array)
@@ -407,7 +407,7 @@ class MathTrig
     /**
      * MINVERSE.
      *
-     * Returns the inverse matrix for the matrix stored in an array.
+     * Return the inverse matrix for the matrix stored in an array.
      *
      * Excel Function:
      *        MINVERSE(array)
@@ -485,7 +485,7 @@ class MathTrig
     /**
      * MULTINOMIAL.
      *
-     * Returns the ratio of the factorial of a sum of values to the product of factorials.
+     * Return the ratio of the factorial of a sum of values to the product of factorials.
      *
      * @Deprecated 1.18.0
      *
@@ -504,7 +504,7 @@ class MathTrig
     /**
      * ODD.
      *
-     * Returns number rounded up to the nearest odd integer.
+     * Return number rounded up to the nearest odd integer.
      *
      * @Deprecated 1.18.0
      *
@@ -667,7 +667,7 @@ class MathTrig
     /**
      * SERIESSUM.
      *
-     * Returns the sum of a power series
+     * Return the sum of a power series
      *
      * @Deprecated 1.18.0
      *
@@ -689,7 +689,7 @@ class MathTrig
     /**
      * SIGN.
      *
-     * Determines the sign of a number. Returns 1 if the number is positive, zero (0)
+     * Determines the sign of a number. Return 1 if the number is positive, zero (0)
      *        if the number is 0, and -1 if the number is negative.
      *
      * @Deprecated 1.18.0
@@ -722,7 +722,7 @@ class MathTrig
     /**
      * SQRTPI.
      *
-     * Returns the square root of (number * pi).
+     * Return the square root of (number * pi).
      *
      * @Deprecated 1.18.0
      *
@@ -741,7 +741,7 @@ class MathTrig
     /**
      * SUBTOTAL.
      *
-     * Returns a subtotal in a list or database.
+     * Return a subtotal in a list or database.
      *
      * @Deprecated 1.18.0
      *
@@ -951,7 +951,7 @@ class MathTrig
     /**
      * SEC.
      *
-     * Returns the secant of an angle.
+     * Return the secant of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -970,7 +970,7 @@ class MathTrig
     /**
      * SECH.
      *
-     * Returns the hyperbolic secant of an angle.
+     * Return the hyperbolic secant of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -989,7 +989,7 @@ class MathTrig
     /**
      * CSC.
      *
-     * Returns the cosecant of an angle.
+     * Return the cosecant of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -1008,7 +1008,7 @@ class MathTrig
     /**
      * CSCH.
      *
-     * Returns the hyperbolic cosecant of an angle.
+     * Return the hyperbolic cosecant of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -1027,7 +1027,7 @@ class MathTrig
     /**
      * COT.
      *
-     * Returns the cotangent of an angle.
+     * Return the cotangent of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -1046,7 +1046,7 @@ class MathTrig
     /**
      * COTH.
      *
-     * Returns the hyperbolic cotangent of an angle.
+     * Return the hyperbolic cotangent of an angle.
      *
      * @Deprecated 1.18.0
      *
@@ -1065,7 +1065,7 @@ class MathTrig
     /**
      * ACOT.
      *
-     * Returns the arccotangent of a number.
+     * Return the arccotangent of a number.
      *
      * @Deprecated 1.18.0
      *
@@ -1101,7 +1101,7 @@ class MathTrig
     /**
      * ACOTH.
      *
-     * Returns the hyperbolic arccotangent of a number.
+     * Return the hyperbolic arccotangent of a number.
      *
      * @Deprecated 1.18.0
      *
@@ -1120,7 +1120,7 @@ class MathTrig
     /**
      * ROUND.
      *
-     * Returns the result of builtin function round after validating args.
+     * Return the result of builtin function round after validating args.
      *
      * @Deprecated 1.17.0
      *
@@ -1140,7 +1140,7 @@ class MathTrig
     /**
      * ABS.
      *
-     * Returns the result of builtin function abs after validating args.
+     * Return the result of builtin function abs after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1164,7 +1164,7 @@ class MathTrig
      * @See MathTrig\Trig\Cosine::acos()
      *      Use the acos method in the MathTrig\Trig\Cosine class instead
      *
-     * Returns the result of builtin function acos after validating args.
+     * Return the result of builtin function acos after validating args.
      *
      * @param array|float $number Should be numeric
      *
@@ -1178,7 +1178,7 @@ class MathTrig
     /**
      * ACOSH.
      *
-     * Returns the result of builtin function acosh after validating args.
+     * Return the result of builtin function acosh after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1197,7 +1197,7 @@ class MathTrig
     /**
      * ASIN.
      *
-     * Returns the result of builtin function asin after validating args.
+     * Return the result of builtin function asin after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1216,7 +1216,7 @@ class MathTrig
     /**
      * ASINH.
      *
-     * Returns the result of builtin function asinh after validating args.
+     * Return the result of builtin function asinh after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1235,7 +1235,7 @@ class MathTrig
     /**
      * ATAN.
      *
-     * Returns the result of builtin function atan after validating args.
+     * Return the result of builtin function atan after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1254,7 +1254,7 @@ class MathTrig
     /**
      * ATANH.
      *
-     * Returns the result of builtin function atanh after validating args.
+     * Return the result of builtin function atanh after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1273,7 +1273,7 @@ class MathTrig
     /**
      * COS.
      *
-     * Returns the result of builtin function cos after validating args.
+     * Return the result of builtin function cos after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1292,7 +1292,7 @@ class MathTrig
     /**
      * COSH.
      *
-     * Returns the result of builtin function cos after validating args.
+     * Return the result of builtin function cos after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1311,7 +1311,7 @@ class MathTrig
     /**
      * DEGREES.
      *
-     * Returns the result of builtin function rad2deg after validating args.
+     * Return the result of builtin function rad2deg after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1330,7 +1330,7 @@ class MathTrig
     /**
      * EXP.
      *
-     * Returns the result of builtin function exp after validating args.
+     * Return the result of builtin function exp after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1349,7 +1349,7 @@ class MathTrig
     /**
      * LN.
      *
-     * Returns the result of builtin function log after validating args.
+     * Return the result of builtin function log after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1368,7 +1368,7 @@ class MathTrig
     /**
      * LOG10.
      *
-     * Returns the result of builtin function log after validating args.
+     * Return the result of builtin function log after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1387,7 +1387,7 @@ class MathTrig
     /**
      * RADIANS.
      *
-     * Returns the result of builtin function deg2rad after validating args.
+     * Return the result of builtin function deg2rad after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1406,7 +1406,7 @@ class MathTrig
     /**
      * SIN.
      *
-     * Returns the result of builtin function sin after validating args.
+     * Return the result of builtin function sin after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1425,7 +1425,7 @@ class MathTrig
     /**
      * SINH.
      *
-     * Returns the result of builtin function sinh after validating args.
+     * Return the result of builtin function sinh after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1444,7 +1444,7 @@ class MathTrig
     /**
      * SQRT.
      *
-     * Returns the result of builtin function sqrt after validating args.
+     * Return the result of builtin function sqrt after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1463,7 +1463,7 @@ class MathTrig
     /**
      * TAN.
      *
-     * Returns the result of builtin function tan after validating args.
+     * Return the result of builtin function tan after validating args.
      *
      * @Deprecated 1.18.0
      *
@@ -1482,7 +1482,7 @@ class MathTrig
     /**
      * TANH.
      *
-     * Returns the result of builtin function sinh after validating args.
+     * Return the result of builtin function sinh after validating args.
      *
      * @Deprecated 1.18.0
      *

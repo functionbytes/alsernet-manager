@@ -290,7 +290,7 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the last error, if found.
+     * Return the last error, if found.
      *
      * @param string $themeName The technical theme name
      *

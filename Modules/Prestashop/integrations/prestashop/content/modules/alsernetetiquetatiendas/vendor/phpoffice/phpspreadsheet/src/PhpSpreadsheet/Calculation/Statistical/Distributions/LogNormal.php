@@ -13,7 +13,7 @@ class LogNormal
     /**
      * LOGNORMDIST.
      *
-     * Returns the cumulative lognormal distribution of x, where ln(x) is normally distributed
+     * Return the cumulative lognormal distribution of x, where ln(x) is normally distributed
      * with parameters mean and standard_dev.
      *
      * @param mixed $value Float value for which we want the probability
@@ -51,7 +51,7 @@ class LogNormal
     /**
      * LOGNORM.DIST.
      *
-     * Returns the lognormal distribution of x, where ln(x) is normally distributed
+     * Return the lognormal distribution of x, where ln(x) is normally distributed
      * with parameters mean and standard_dev.
      *
      * @param mixed $value Float value for which we want the probability
@@ -97,7 +97,7 @@ class LogNormal
     /**
      * LOGINV.
      *
-     * Returns the inverse of the lognormal cumulative distribution
+     * Return the inverse of the lognormal cumulative distribution
      *
      * @param mixed $probability Float probability for which we want the value
      *                      Or can be an array of values

@@ -3,7 +3,6 @@
 namespace Modules\Warehouse\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Warehouse\Entities\Warehouse;
@@ -11,6 +10,7 @@ use Modules\Warehouse\Entities\WarehouseFloor;
 use Modules\Warehouse\Entities\WarehouseInventorySlot;
 use Modules\Warehouse\Entities\WarehouseLocation;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Models\Product\Product;
 
 class WarehouseInventorySlotsController extends Controller
 {

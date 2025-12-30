@@ -913,13 +913,13 @@ class DocumentSettingsController extends Controller
             $documentsWithMedia = Document::has('media')->count();
             $documentsConfirmed = Document::whereNotNull('confirmed_at')->count();
 
-            // Documents by type
+            // Document by type
             $documentsByType = Document::select('type', DB::raw('COUNT(*) as count'))
                 ->groupBy('type')
                 ->pluck('count', 'type')
                 ->toArray();
 
-            // Documents by source
+            // Document by source
             $documentsBySource = Document::select('source', DB::raw('COUNT(*) as count'))
                 ->whereNotNull('source')
                 ->groupBy('source')
@@ -929,7 +929,7 @@ class DocumentSettingsController extends Controller
             // Recent documents (last 30 days)
             $recentDocuments = Document::where('created_at', '>=', now()->subDays(30))->count();
 
-            // Documents pending upload
+            // Document pending upload
             $pendingUpload = Document::whereNull('confirmed_at')
                 ->doesntHave('media')
                 ->count();

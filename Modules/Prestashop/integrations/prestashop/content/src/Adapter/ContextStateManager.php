@@ -269,7 +269,7 @@ final class ContextStateManager
     }
 
     /**
-     * Returns the index of the current stack
+     * Return the index of the current stack
      *
      * @return int
      */

@@ -12,7 +12,7 @@ class Combinations
     /**
      * COMBIN.
      *
-     * Returns the number of combinations for a given number of items. Use COMBIN to
+     * Return the number of combinations for a given number of items. Use COMBIN to
      *        determine the total possible number of groups for a given number of items.
      *
      * Excel Function:
@@ -46,7 +46,7 @@ class Combinations
     /**
      * COMBINA.
      *
-     * Returns the number of combinations for a given number of items. Use COMBIN to
+     * Return the number of combinations for a given number of items. Use COMBIN to
      *        determine the total possible number of groups for a given number of items.
      *
      * Excel Function:

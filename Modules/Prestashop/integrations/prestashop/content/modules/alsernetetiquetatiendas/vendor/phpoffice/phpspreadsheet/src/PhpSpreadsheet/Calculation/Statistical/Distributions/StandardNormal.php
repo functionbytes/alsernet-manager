@@ -15,7 +15,7 @@ class StandardNormal
     /**
      * NORMSDIST.
      *
-     * Returns the standard normal cumulative distribution function. The distribution has
+     * Return the standard normal cumulative distribution function. The distribution has
      * a mean of 0 (zero) and a standard deviation of one. Use this function in place of a
      * table of standard normal curve areas.
      *
@@ -38,7 +38,7 @@ class StandardNormal
     /**
      * NORM.S.DIST.
      *
-     * Returns the standard normal cumulative distribution function. The distribution has
+     * Return the standard normal cumulative distribution function. The distribution has
      * a mean of 0 (zero) and a standard deviation of one. Use this function in place of a
      * table of standard normal curve areas.
      *
@@ -63,7 +63,7 @@ class StandardNormal
     /**
      * NORMSINV.
      *
-     * Returns the inverse of the standard normal cumulative distribution
+     * Return the inverse of the standard normal cumulative distribution
      *
      * @param mixed $value float probability for which we want the value
      *                      Or can be an array of values
@@ -112,7 +112,7 @@ class StandardNormal
     /**
      * ZTEST.
      *
-     * Returns the one-tailed P-value of a z-test.
+     * Return the one-tailed P-value of a z-test.
      *
      * For a given hypothesized population mean, x, Z.TEST returns the probability that the sample mean would be
      *     greater than the average of observations in the data set (array) — that is, the observed sample mean.

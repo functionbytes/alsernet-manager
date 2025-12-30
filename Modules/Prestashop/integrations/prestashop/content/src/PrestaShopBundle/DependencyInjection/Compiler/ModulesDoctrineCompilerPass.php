@@ -67,7 +67,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * Returns a list of CompilerPassInterface indexed with their associated resource.
+     * Return a list of CompilerPassInterface indexed with their associated resource.
      *
      * @param array $activeModules
      *

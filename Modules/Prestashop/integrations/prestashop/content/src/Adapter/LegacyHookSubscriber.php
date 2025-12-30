@@ -43,7 +43,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class LegacyHookSubscriber implements EventSubscriberInterface
 {
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * Return an array of event names this subscriber wants to listen to.
      *
      * The array keys are event names and the value are a function name
      * that will be solved by magic __call(). The function contains data to extract: hookId, moduleId

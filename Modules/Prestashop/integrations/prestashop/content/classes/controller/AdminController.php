@@ -3845,7 +3845,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Returns an array with selected shops and type (group or boutique shop).
+     * Return an array with selected shops and type (group or boutique shop).
      *
      * @param  string  $table
      * @return array

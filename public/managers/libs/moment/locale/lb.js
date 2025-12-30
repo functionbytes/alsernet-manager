@@ -37,7 +37,7 @@
         return 'virun ' + string;
     }
     /**
-     * Returns true if the word before the given number loses the '-n' ending.
+     * Return true if the word before the given number loses the '-n' ending.
      * e.g. 'an 10 Deeg' but 'a 5 Deeg'
      *
      * @param number {integer}

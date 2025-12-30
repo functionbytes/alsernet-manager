@@ -81,7 +81,7 @@ class StockManager implements StockInterface
     }
 
     /**
-     * Returns True if Stocks are managed by a module (or by legacy ASM).
+     * Return True if Stocks are managed by a module (or by legacy ASM).
      *
      * @return bool True if Stocks are managed by a module (or by legacy ASM)
      */

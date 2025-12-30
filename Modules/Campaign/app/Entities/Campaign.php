@@ -47,7 +47,7 @@ use Modules\Campaign\Library\Traits\HasTemplate;
  * @property-read int|null $lists_segments_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignMaillist> $mailLists
  * @property-read int|null $mail_lists_count
- * @property-read \App\Models\Template\Template|null $template
+ * @property-read \Modules\Campaign\Models\Template\Template|null $template
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign byStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign filter($request)

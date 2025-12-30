@@ -171,7 +171,7 @@ class StylesheetGenerator
     }
 
     /**
-     * Returns the full path for the RTL filename corresponding to the provided base filename.
+     * Return the full path for the RTL filename corresponding to the provided base filename.
      *
      * @param string $baseFileName Base file name
      *

@@ -44,7 +44,7 @@ class GetSupportedLanguagesRequest extends \Google\Protobuf\Internal\Message
      *   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
      * - General (built-in) models:
      *   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
-     * Returns languages supported by the specified model.
+     * Return languages supported by the specified model.
      * If missing, we get supported languages of Google general NMT model.
      *
      * Generated from protobuf field <code>string model = 2 [(.google.api.field_behavior) = OPTIONAL];</code>
@@ -78,7 +78,7 @@ class GetSupportedLanguagesRequest extends \Google\Protobuf\Internal\Message
      *             `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
      *           - General (built-in) models:
      *             `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
-     *           Returns languages supported by the specified model.
+     *           Return languages supported by the specified model.
      *           If missing, we get supported languages of Google general NMT model.
      * }
      */
@@ -166,7 +166,7 @@ class GetSupportedLanguagesRequest extends \Google\Protobuf\Internal\Message
      *   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
      * - General (built-in) models:
      *   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
-     * Returns languages supported by the specified model.
+     * Return languages supported by the specified model.
      * If missing, we get supported languages of Google general NMT model.
      *
      * Generated from protobuf field <code>string model = 2 [(.google.api.field_behavior) = OPTIONAL];</code>
@@ -184,7 +184,7 @@ class GetSupportedLanguagesRequest extends \Google\Protobuf\Internal\Message
      *   `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
      * - General (built-in) models:
      *   `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
-     * Returns languages supported by the specified model.
+     * Return languages supported by the specified model.
      * If missing, we get supported languages of Google general NMT model.
      *
      * Generated from protobuf field <code>string model = 2 [(.google.api.field_behavior) = OPTIONAL];</code>

@@ -15,7 +15,7 @@ class BackupNotification extends BaseNotifiable
 {
     /**
      * Get the receivers of the notification.
-     * Returns an empty array so no notifications are sent.
+     * Return an empty array so no notifications are sent.
      *
      * @return array
      */

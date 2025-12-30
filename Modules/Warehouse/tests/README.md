@@ -58,7 +58,7 @@ $structure = $this->createWarehouseStructure([
     'slots_per_section' => 4,
 ]);
 
-// Returns: [
+// Return: [
 //     'warehouse' => Warehouse,
 //     'floors' => [
 //         [

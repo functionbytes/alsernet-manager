@@ -4,10 +4,10 @@ namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Products;
 
 use App\Http\Controllers\Controller;
 use App\Models\App;
-use App\Models\Product\Product;
-use App\Models\Product\ProductLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Models\Product\Product;
+use Modules\Warehouse\Models\Product\ProductLocation;
 
 class ProductsController extends Controller
 {

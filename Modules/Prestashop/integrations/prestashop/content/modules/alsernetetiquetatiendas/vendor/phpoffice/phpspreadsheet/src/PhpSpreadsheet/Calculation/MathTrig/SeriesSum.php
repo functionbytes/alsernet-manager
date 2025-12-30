@@ -13,7 +13,7 @@ class SeriesSum
     /**
      * SERIESSUM.
      *
-     * Returns the sum of a power series
+     * Return the sum of a power series
      *
      * @param mixed $x Input value
      * @param mixed $n Initial power

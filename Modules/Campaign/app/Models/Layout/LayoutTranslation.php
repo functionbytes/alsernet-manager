@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Layout;
+namespace Modules\Campaign\Models\Layout;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $content
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Layout\Layout $layout
+ * @property-read \Modules\Campaign\Models\Layout\Layout $layout
  * @property-read \App\Models\Lang $lang
  */
 class LayoutTranslation extends Model

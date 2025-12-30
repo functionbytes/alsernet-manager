@@ -40,7 +40,7 @@ interface FetchAuthTokenInterface
     public function getCacheKey();
 
     /**
-     * Returns an associative array with the token and
+     * Return an associative array with the token and
      * expiration time.
      *
      * @return null|array<mixed> {

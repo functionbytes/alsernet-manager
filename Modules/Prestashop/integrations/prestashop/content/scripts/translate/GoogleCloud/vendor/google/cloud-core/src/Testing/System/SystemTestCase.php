@@ -233,7 +233,7 @@ class SystemTestCase extends TestCase
     }
 
     /**
-     * Returns `true` when "using emulator" flag is set either for called class name or its
+     * Return `true` when "using emulator" flag is set either for called class name or its
      * fully-qualified name prefix or `false` otherwise.
      *
      * Example:

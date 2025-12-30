@@ -49,7 +49,7 @@ class Indirect
     /**
      * INDIRECT.
      *
-     * Returns the reference specified by a text string.
+     * Return the reference specified by a text string.
      * References are immediately evaluated to display their contents.
      *
      * Excel Function:

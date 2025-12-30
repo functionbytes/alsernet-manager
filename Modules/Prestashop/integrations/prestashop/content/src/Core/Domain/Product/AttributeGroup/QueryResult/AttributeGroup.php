@@ -143,7 +143,7 @@ class AttributeGroup
     }
 
     /**
-     * Returns list of attributes since it's optional returns null when attributes were
+     * Return list of attributes since it's optional returns null when attributes were
      * not queried. Empty array however means that the group contains no attributes.
      *
      * @return Attribute[]|null

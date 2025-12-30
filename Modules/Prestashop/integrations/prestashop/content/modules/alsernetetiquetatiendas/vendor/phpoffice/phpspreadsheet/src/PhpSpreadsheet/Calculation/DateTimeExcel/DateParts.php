@@ -14,7 +14,7 @@ class DateParts
     /**
      * DAYOFMONTH.
      *
-     * Returns the day of the month, for a specified date. The day is given as an integer
+     * Return the day of the month, for a specified date. The day is given as an integer
      * ranging from 1 to 31.
      *
      * Excel Function:
@@ -54,7 +54,7 @@ class DateParts
     /**
      * MONTHOFYEAR.
      *
-     * Returns the month of a date represented by a serial number.
+     * Return the month of a date represented by a serial number.
      * The month is given as an integer, ranging from 1 (January) to 12 (December).
      *
      * Excel Function:
@@ -92,7 +92,7 @@ class DateParts
     /**
      * YEAR.
      *
-     * Returns the year corresponding to a date.
+     * Return the year corresponding to a date.
      * The year is returned as an integer in the range 1900-9999.
      *
      * Excel Function:

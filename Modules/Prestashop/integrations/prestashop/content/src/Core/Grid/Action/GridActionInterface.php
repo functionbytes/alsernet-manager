@@ -39,7 +39,7 @@ interface GridActionInterface
     public function getId();
 
     /**
-     * Returns translated action name.
+     * Return translated action name.
      *
      * @return string
      */
@@ -55,7 +55,7 @@ interface GridActionInterface
     public function setName($name);
 
     /**
-     * Returns action icon name.
+     * Return action icon name.
      *
      * @return string
      */
@@ -71,7 +71,7 @@ interface GridActionInterface
     public function setIcon($icon);
 
     /**
-     * Returns grid action type.
+     * Return grid action type.
      *
      * @return string
      */

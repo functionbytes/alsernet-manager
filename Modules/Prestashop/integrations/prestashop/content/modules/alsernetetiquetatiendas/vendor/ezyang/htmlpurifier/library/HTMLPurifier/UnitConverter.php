@@ -185,7 +185,7 @@ class HTMLPurifier_UnitConverter
     }
 
     /**
-     * Returns the number of significant figures in a string number.
+     * Return the number of significant figures in a string number.
      * @param string $n Decimal number
      * @return int number of sigfigs
      */

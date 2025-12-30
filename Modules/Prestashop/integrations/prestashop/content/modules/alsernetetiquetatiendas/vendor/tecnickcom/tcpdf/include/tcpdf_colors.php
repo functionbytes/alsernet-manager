@@ -263,7 +263,7 @@ class TCPDF_COLORS {
 	}
 
 	/**
-	 * Returns an array (RGB or CMYK) from an html color name, or a six-digit (i.e. #3FE5AA), or three-digit (i.e. #7FF) hexadecimal color, or a javascript color array, or javascript color name.
+	 * Return an array (RGB or CMYK) from an html color name, or a six-digit (i.e. #3FE5AA), or three-digit (i.e. #7FF) hexadecimal color, or a javascript color array, or javascript color name.
 	 * @param string $hcolor HTML color.
 	 * @param array $spotc Reference to an array of spot colors.
 	 * @param array $defcol Color to return in case of error.

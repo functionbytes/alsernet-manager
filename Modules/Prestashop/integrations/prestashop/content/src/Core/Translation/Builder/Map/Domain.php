@@ -102,7 +102,7 @@ class Domain
     /**
      * Builds the domain metadata tree.
      *
-     * Returns a structure like this:
+     * Return a structure like this:
      *
      * ```
      * [

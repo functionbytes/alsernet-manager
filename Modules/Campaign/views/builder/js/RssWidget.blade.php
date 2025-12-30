@@ -23,14 +23,14 @@
             `);
 
             // default content html
-            var config = Base64.encode(JSON.stringify({!! json_encode(\App\Models\Template\Template::defaultRssConfig()) !!}));
+            var config = Base64.encode(JSON.stringify({!! json_encode(\Modules\Campaign\Models\Template\Template::defaultRssConfig()) !!}));
             this.setContentHtml(`
-                <div id="`+this.id+`"
+                <div id="` + this.id + `"
                     class="rss-widget"
                     builder-element="RssElement"
                     builder-draggable
                     data-preview="no"
-                    data-config="`+config+`"
+                    data-config="` + config + `"
                 ></div>
             `);
 
@@ -38,7 +38,7 @@
             this.setDraggingHtml(this.getButtonHtml());
 
             // before save events: remove placeholder before save
-            currentEditor.addBeforeSaveEvent(function() {
+            currentEditor.addBeforeSaveEvent(function () {
                 // find placeholder
                 if (!_this.getPlaceholder().length) {
                     return;

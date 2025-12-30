@@ -136,7 +136,7 @@ class ChainedBlockStream
     }
 
     /**
-     * Returns the position of the file pointer, i.e. its offset into the file
+     * Return the position of the file pointer, i.e. its offset into the file
      * stream. Implements support for ftell().
      *
      * @return int

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Template;
+namespace Modules\Campaign\Models\Template;
 
 use app\Library\HtmlHandler\AddDoctype;
 use app\Library\HtmlHandler\DecodeHtmlSpecialChars;
@@ -11,15 +11,22 @@ use app\Library\HtmlHandler\TransformWidgets;
 use app\Library\StringHelper;
 use app\Library\Tool;
 use App\Models\Product;
+use App\Models\Template\Closure;
+use App\Models\Template\collect;
+use App\Models\Template\Exception;
+use App\Models\Template\RecursiveDirectoryIterator;
+use App\Models\Template\RecursiveIteratorIterator;
+use App\Models\Template\SplFileInfo;
+use App\Models\Template\Validator;
+use App\Models\Template\ZipArchive;
 use App\Models\TrackingDomain;
-use App\Models\Traits\HasUid;
 use App\Models\User;
+use App\Traits\HasUid;
 use DOMDocument;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use KubAT\PhpSimple\HtmlDomParser;
 use League\Pipeline\PipelineBuilder;
-
 use function App\Helpers\is_non_web_link;
 use function App\Helpers\url_get_contents_ssl_safe;
 
@@ -63,7 +70,7 @@ class Template extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany('App\Models\Template\TemplateCategory', 'templates_categories', 'template_id', 'category_id');
+        return $this->belongsToMany('Modules\Campaign\Models\Template\TemplateCategory', 'templates_categories', 'template_id', 'category_id');
     }
 
     /**
@@ -496,7 +503,7 @@ class Template extends Model
         // To remove query string if any like ?search=abc
         // For example
         //     parse_url('/assets/path/file.jpg?id=320943&search=', PHP_URL_PATH)
-        // Returns
+        // Return
         //     /assets/path/file.jpg
         $url = parse_url($url, PHP_URL_PATH);
 

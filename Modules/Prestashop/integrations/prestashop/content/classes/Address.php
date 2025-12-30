@@ -260,7 +260,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Returns fields required for an address in an array hash.
+     * Return fields required for an address in an array hash.
      *
      * @return array Hash values
      */
@@ -441,8 +441,8 @@ class AddressCore extends ObjectModel
     public static function addressExists($id_address)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address` 
-            FROM '._DB_PREFIX_.'address a 
+            'SELECT `id_address`
+            FROM '._DB_PREFIX_.'address a
             WHERE a.`id_address` = '.(int) $id_address,
             false
         );
@@ -558,7 +558,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Returns Address ID for a given Supplier ID.
+     * Return Address ID for a given Supplier ID.
      *
      * @since 1.5.0
      *

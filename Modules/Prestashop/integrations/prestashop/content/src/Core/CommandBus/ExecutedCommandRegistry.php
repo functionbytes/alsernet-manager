@@ -106,7 +106,7 @@ final class ExecutedCommandRegistry
     }
 
     /**
-     * Returns the file and line that invoked the handle method
+     * Return the file and line that invoked the handle method
      *
      * @return array
      */

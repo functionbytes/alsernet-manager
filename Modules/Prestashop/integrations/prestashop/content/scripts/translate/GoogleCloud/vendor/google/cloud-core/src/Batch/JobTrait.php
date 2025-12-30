@@ -68,7 +68,7 @@ trait JobTrait
     }
 
     /**
-     * Returns the number of workers for this job. **Defaults to* 1.
+     * Return the number of workers for this job. **Defaults to* 1.
      *
      * @return int
      */
@@ -78,7 +78,7 @@ trait JobTrait
     }
 
     /**
-     * Returns the optional file required to run this job.
+     * Return the optional file required to run this job.
      *
      * @return string|null
      */

@@ -23,7 +23,7 @@ Route::prefix('email-endpoints')->group(function () {
 });
 */
 
-// Public Documents Routes (Prestashop integration) - No authentication, only rate limiting
+// Public Document Routes (Prestashop integration) - No authentication, only rate limiting
 
 // AI Prompt Selection API (for n8n integration)
 Route::prefix('suppliers/prompts')->middleware('throttle:120,1')->group(function () {

@@ -70,7 +70,7 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
     }
 
     /**
-     * Returns routes that are missing _legacy_link configuration
+     * Return routes that are missing _legacy_link configuration
      *
      * @return array
      */

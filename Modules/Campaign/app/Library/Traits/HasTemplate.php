@@ -3,7 +3,6 @@
 namespace Modules\Campaign\Library\Traits;
 
 use App\Models\Setting;
-use App\Models\Template\Template;
 use Cache;
 use Exception;
 use League\Pipeline\PipelineBuilder;
@@ -25,6 +24,7 @@ use Modules\Campaign\Library\HtmlHandler\TransformUrl;
 use Modules\Campaign\Library\HtmlHandler\TransformWidgets;
 use Modules\Campaign\Library\Lockable;
 use Modules\Campaign\Library\StringHelper;
+use Modules\Campaign\Models\Template\Template;
 use Soundasleep\Html2Text;
 
 trait HasTemplate
@@ -34,7 +34,7 @@ trait HasTemplate
      */
     public function template()
     {
-        return $this->belongsTo('App\Models\Template\Template');
+        return $this->belongsTo('Modules\Campaign\Models\Template\Template');
     }
 
     /**

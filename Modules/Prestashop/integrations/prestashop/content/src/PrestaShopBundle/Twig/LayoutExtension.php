@@ -118,7 +118,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     }
 
     /**
-     * Returns a list of functions to add to the existing list.
+     * Return a list of functions to add to the existing list.
      *
      * @return array An array of functions
      */
@@ -133,7 +133,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     }
 
     /**
-     * Returns a legacy configuration key.
+     * Return a legacy configuration key.
      *
      * @param string $key
      * @param mixed $default Default value is null
@@ -266,7 +266,7 @@ EOF;
     }
 
     /**
-     * Returns the name of the extension.
+     * Return the name of the extension.
      *
      * @return string The extension name
      */

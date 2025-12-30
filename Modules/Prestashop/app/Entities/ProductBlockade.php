@@ -53,7 +53,7 @@ class ProductBlockade extends Model
 
     /**
      * Get the document type for this blockade
-     * Uses dynamic model reference to avoid hard dependency on Documents module
+     * Uses dynamic model reference to avoid hard dependency on Document module
      */
     public function documentType(): BelongsTo
     {

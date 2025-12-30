@@ -99,14 +99,14 @@ export default class FormObjectMapper {
 
     return {
       /**
-       * Returns the model mapped to the form (current live state)
+       * Return the model mapped to the form (current live state)
        *
        * @returns {*|{}}
        */
       getModel: () => this.model,
 
       /**
-       * Returns all inputs associated to a model field.
+       * Return all inputs associated to a model field.
        *
        * @param {string} modelKey
        *
@@ -178,7 +178,7 @@ export default class FormObjectMapper {
    *
    * @param {string} modelKey
    *
-   * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
+   * @returns {*|{}|undefined} Return any element from the model, undefined if not found
    * @private
    */
   getValue(modelKey) {

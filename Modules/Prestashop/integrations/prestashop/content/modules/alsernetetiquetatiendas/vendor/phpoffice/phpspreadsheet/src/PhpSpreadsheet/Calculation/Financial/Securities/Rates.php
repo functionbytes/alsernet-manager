@@ -13,7 +13,7 @@ class Rates
     /**
      * DISC.
      *
-     * Returns the discount rate for a security.
+     * Return the discount rate for a security.
      *
      * Excel Function:
      *        DISC(settlement,maturity,price,redemption[,basis])
@@ -76,7 +76,7 @@ class Rates
     /**
      * INTRATE.
      *
-     * Returns the interest rate for a fully invested security.
+     * Return the interest rate for a fully invested security.
      *
      * Excel Function:
      *        INTRATE(settlement,maturity,investment,redemption[,basis])

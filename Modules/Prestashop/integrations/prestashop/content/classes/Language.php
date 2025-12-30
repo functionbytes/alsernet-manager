@@ -685,7 +685,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns installed languages.
+     * Return installed languages.
      *
      * @see loadLanguages()
      *
@@ -713,7 +713,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns an array of installed language IDs.
+     * Return an array of installed language IDs.
      *
      * @param  bool  $active  Select only active languages
      * @param  int|false  $id_shop  Shop ID
@@ -725,7 +725,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns installed language information for the provided id_lang
+     * Return installed language information for the provided id_lang
      *
      * @param  int  $id_lang  Language Id
      * @return array|false
@@ -777,7 +777,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns language information form the all_languages file using IETF language tag
+     * Return language information form the all_languages file using IETF language tag
      *
      * @param  string  $locale  IETF language tag
      * @return array|false
@@ -799,7 +799,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns language id from iso code.
+     * Return language id from iso code.
      *
      * @param  string  $iso_code  Iso code
      * @param  bool  $no_cache
@@ -827,7 +827,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns language id from locale
+     * Return language id from locale
      *
      * @param  string  $locale  Locale IETF language tag
      * @param  bool  $noCache
@@ -853,7 +853,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns language information from the all-languages file
+     * Return language information from the all-languages file
      *
      * @param  string  $iso  2-letter ISO code
      * @return string[]|false
@@ -870,7 +870,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns locale with iso parameter.
+     * Return locale with iso parameter.
      *
      * @param  string  $isoCode  2-letter ISO code
      * @return string|false
@@ -891,7 +891,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns iso with locale parameter.
+     * Return iso with locale parameter.
      *
      * @param  string  $locale
      * @return string|false
@@ -915,7 +915,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * Retrieves a language code from an installed language using a 2-letter iso code
      *
      * @param  string  $iso_code  2-letter iso code
-     * @return string|false Returns the language code, or false if it doesn't exist
+     * @return string|false Return the language code, or false if it doesn't exist
      *
      * @throws PrestaShopException
      */
@@ -1647,7 +1647,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns an RTL stylesheet processor instance.
+     * Return an RTL stylesheet processor instance.
      *
      * @return RtlStylesheetProcessor
      */
@@ -1687,7 +1687,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * Returns the path to the local translation pack file
+     * Return the path to the local translation pack file
      *
      * @param  string  $locale  IETF language tag
      * @param  string  $type  self::PACK_TYPE_SYMFONY|self::PACK_TYPE_EMAILS

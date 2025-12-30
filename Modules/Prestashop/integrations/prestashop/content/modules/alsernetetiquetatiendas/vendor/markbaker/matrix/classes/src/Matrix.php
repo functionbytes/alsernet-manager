@@ -273,7 +273,7 @@ class Matrix
     }
 
     /**
-     * Returns a Generator that will yield each row of the matrix in turn as a vector matrix
+     * Return a Generator that will yield each row of the matrix in turn as a vector matrix
      *     or the value of each cell if the matrix is a column vector
      *
      * @return Generator|Matrix[]|mixed[]
@@ -288,7 +288,7 @@ class Matrix
     }
 
     /**
-     * Returns a Generator that will yield each column of the matrix in turn as a vector matrix
+     * Return a Generator that will yield each column of the matrix in turn as a vector matrix
      *     or the value of each cell if the matrix is a row vector
      *
      * @return Generator|Matrix[]|mixed[]
@@ -399,7 +399,7 @@ class Matrix
     ];
 
     /**
-     * Returns the result of the function call or operation
+     * Return the result of the function call or operation
      *
      * @param string $functionName
      * @param mixed[] $arguments

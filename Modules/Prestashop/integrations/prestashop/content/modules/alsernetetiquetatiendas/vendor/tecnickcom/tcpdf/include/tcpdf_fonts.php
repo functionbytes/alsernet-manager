@@ -943,7 +943,7 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Returns a subset of the TrueType font data without the unused glyphs.
+	 * Return a subset of the TrueType font data without the unused glyphs.
 	 * @param string $font TrueType font data.
 	 * @param array $subsetchars Array of used characters (the glyphs to keep).
 	 * @return string A subset of TrueType font data without the unused glyphs.
@@ -1659,10 +1659,10 @@ class TCPDF_FONTS {
 
 
 	/**
-	 * Returns the unicode caracter specified by the value
+	 * Return the unicode caracter specified by the value
 	 * @param int $c UTF-8 value
 	 * @param boolean $unicode True if we are in unicode mode, false otherwise.
-	 * @return string Returns the specified character.
+	 * @return string Return the specified character.
 	 * @since 2.3.000 (2008-03-05)
 	 * @public static
 	 */
@@ -1688,9 +1688,9 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Returns the unicode caracter specified by UTF-8 value
+	 * Return the unicode caracter specified by UTF-8 value
 	 * @param int $c UTF-8 value
-	 * @return string Returns the specified character.
+	 * @return string Return the specified character.
 	 * @public static
 	 */
 	public static function unichrUnicode($c) {
@@ -1698,9 +1698,9 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Returns the unicode caracter specified by ASCII value
+	 * Return the unicode caracter specified by ASCII value
 	 * @param int $c UTF-8 value
-	 * @return string Returns the specified character.
+	 * @return string Return the specified character.
 	 * @public static
 	 */
 	public static function unichrASCII($c) {

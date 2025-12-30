@@ -47,7 +47,7 @@ class Usage
     {
         $list = [
             'Characters' => $this->character,
-            'Documents' => $this->document,
+            'Document' => $this->document,
             'Team documents' => $this->teamDocument,
         ];
         $result = 'Usage this billing period:';

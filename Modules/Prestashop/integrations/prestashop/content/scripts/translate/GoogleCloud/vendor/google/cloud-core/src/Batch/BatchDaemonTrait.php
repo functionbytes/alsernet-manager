@@ -28,7 +28,7 @@ namespace Google\Cloud\Core\Batch;
 trait BatchDaemonTrait
 {
     /**
-     * Returns whether or not the BatchDaemon is running.
+     * Return whether or not the BatchDaemon is running.
      *
      * @return bool
      */

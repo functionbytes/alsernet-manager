@@ -65,7 +65,7 @@ class AdminReturnControllerCore extends AdminController
                         'type' => 'text',
                         'size' => '2', ],
                     'PS_RETURN_PREFIX' => [
-                        'title' => $this->trans('Returns prefix', [], 'Admin.Orderscustomers.Feature'),
+                        'title' => $this->trans('Return prefix', [], 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', [], 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang',
@@ -138,7 +138,7 @@ class AdminReturnControllerCore extends AdminController
                 ],
                 [
                     'type' => 'pdf_order_return',
-                    'label' => $this->trans('Returns form', [], 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Return form', [], 'Admin.Orderscustomers.Feature'),
                     'name' => '',
                     'size' => '',
                     'required' => false,

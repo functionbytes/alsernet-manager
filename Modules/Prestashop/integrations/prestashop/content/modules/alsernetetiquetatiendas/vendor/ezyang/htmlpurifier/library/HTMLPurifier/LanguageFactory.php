@@ -128,7 +128,7 @@ class HTMLPurifier_LanguageFactory
     }
 
     /**
-     * Returns the fallback language for language
+     * Return the fallback language for language
      * @note Loads the original language into cache
      * @param string $code language code
      * @return string|bool

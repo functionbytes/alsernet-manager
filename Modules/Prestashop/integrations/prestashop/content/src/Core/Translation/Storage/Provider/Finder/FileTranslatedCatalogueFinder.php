@@ -70,7 +70,7 @@ class FileTranslatedCatalogueFinder extends AbstractCatalogueFinder
     }
 
     /**
-     * Returns the translation catalogue for the provided locale
+     * Return the translation catalogue for the provided locale
      *
      * @param string $locale
      *

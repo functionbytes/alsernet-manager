@@ -290,7 +290,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
     }
 
     /**
-     * Returns true if passed token is inline (and, ergo, allowed in
+     * Return true if passed token is inline (and, ergo, allowed in
      * paragraph tags)
      * @param HTMLPurifier_Token $token
      * @return bool

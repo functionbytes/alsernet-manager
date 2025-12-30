@@ -82,7 +82,7 @@ class DescriptionFactory extends BaseDescriptionFactory
     }
 
     /**
-     * Returns the parsed text of this description.
+     * Return the parsed text of this description.
      */
     public function create(string $contents, ?TypeContext $context = null): Description
     {

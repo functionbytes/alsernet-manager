@@ -265,7 +265,7 @@ class PromptSelectionService
     /**
      * Prepare data for n8n integration
      *
-     * Returns a structured response ready for n8n consumption
+     * Return a structured response ready for n8n consumption
      *
      * @return array|null Array with prompt and metadata, or null if no prompt found
      */

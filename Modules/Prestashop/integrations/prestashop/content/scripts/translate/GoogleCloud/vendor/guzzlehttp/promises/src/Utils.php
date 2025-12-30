@@ -65,7 +65,7 @@ final class Utils
      * Synchronously waits on a promise to resolve and returns an inspection
      * state array.
      *
-     * Returns a state associative array containing a "state" key mapping to a
+     * Return a state associative array containing a "state" key mapping to a
      * valid promise state. If the state of the promise is "fulfilled", the
      * array will contain a "value" key mapping to the fulfilled value of the
      * promise. If the promise is rejected, the array will contain a "reason"
@@ -95,7 +95,7 @@ final class Utils
      * Waits on all of the provided promises, but does not unwrap rejected
      * promises as thrown exception.
      *
-     * Returns an array of inspection state arrays.
+     * Return an array of inspection state arrays.
      *
      * @see inspect for the inspection state array format.
      *
@@ -116,7 +116,7 @@ final class Utils
     /**
      * Waits on all of the provided promises and returns the fulfilled values.
      *
-     * Returns an array that contains the value of each promise (in the same
+     * Return an array that contains the value of each promise (in the same
      * order the promises were provided). An exception is thrown if any of the
      * promises are rejected.
      *
@@ -245,7 +245,7 @@ final class Utils
     }
 
     /**
-     * Returns a promise that is fulfilled when all of the provided promises have
+     * Return a promise that is fulfilled when all of the provided promises have
      * been fulfilled or rejected.
      *
      * The returned promise is fulfilled with an array of inspection state arrays.

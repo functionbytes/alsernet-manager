@@ -2,11 +2,11 @@
 
 namespace Modules\Mail\Mail\Subscribers;
 
-use App\Models\Layout\Layout;
-use Modules\Subscriber\Models\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Campaign\Models\Layout\Layout;
+use Modules\Subscriber\Models\Subscriber;
 
 class SubscribersWelcomeMail extends Mailable
 {

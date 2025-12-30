@@ -48,7 +48,7 @@ class CheckRequirements
     }
 
     /**
-     * Returns a summary of all system requirements.
+     * Return a summary of all system requirements.
      *
      * @return array
      */

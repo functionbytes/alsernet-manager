@@ -290,7 +290,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns the error list.
+     * Return the error list.
      */
     public function getErrorList()
     {
@@ -368,7 +368,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns the formatted fields with associated values.
+     * Return the formatted fields with associated values.
      *
      * @param  Address  $address  Address object
      * @param  AddressFormat  $addressFormat  The format
@@ -479,7 +479,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns selected fields required for an address in an array according to a selection hash.
+     * Return selected fields required for an address in an array according to a selection hash.
      *
      * @return array String values
      */
@@ -545,7 +545,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns address format fields in array by country.
+     * Return address format fields in array by country.
      *
      * @param  int  $idCountry  If null using PS_COUNTRY_DEFAULT
      * @param  bool  $splitAll
@@ -599,7 +599,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns address format by country if not defined using default country.
+     * Return address format by country if not defined using default country.
      *
      * @param  int  $idCountry  Country ID
      * @return string field address format
@@ -617,7 +617,7 @@ class AddressFormatCore extends ObjectModel
     }
 
     /**
-     * Returns address format by Country.
+     * Return address format by Country.
      *
      * @param  int  $idCountry  Country ID
      * @return string field Address format

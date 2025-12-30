@@ -521,7 +521,7 @@ class Font
     }
 
     /**
-     * Returns the font path given the font.
+     * Return the font path given the font.
      *
      * @return string Path to TrueType font file
      */
@@ -568,7 +568,7 @@ class Font
     ];
 
     /**
-     * Returns the associated charset for the font name.
+     * Return the associated charset for the font name.
      *
      * @param string $fontName Font name
      *

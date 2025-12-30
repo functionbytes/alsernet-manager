@@ -35,7 +35,7 @@ use Language;
 class LanguageDataProvider
 {
     /**
-     * Returns languages data.
+     * Return languages data.
      *
      * @param bool $active
      * @param bool $shopId
@@ -49,7 +49,7 @@ class LanguageDataProvider
     }
 
     /**
-     * Returns language code by iso code.
+     * Return language code by iso code.
      *
      * @param string $isoCode - ISO 3166-2 alpha-2 format code
      *

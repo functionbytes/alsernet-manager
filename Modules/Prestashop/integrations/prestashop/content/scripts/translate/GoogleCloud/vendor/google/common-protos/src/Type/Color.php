@@ -277,7 +277,7 @@ class Color extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Returns the unboxed value from <code>getAlpha()</code>
+     * Return the unboxed value from <code>getAlpha()</code>
 
      * The fraction of this color that should be applied to the pixel. That is,
      * the final pixel color is defined by the equation:

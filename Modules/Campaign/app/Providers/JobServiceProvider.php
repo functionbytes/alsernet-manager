@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Modules\Campaign\Providers;
 
 use app\Library\Log as MailLog;
 use Illuminate\Contracts\Queue\ShouldQueue;

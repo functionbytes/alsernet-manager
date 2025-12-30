@@ -11,7 +11,7 @@ class Gcd
     /**
      * Recursively determine GCD.
      *
-     * Returns the greatest common divisor of a series of numbers.
+     * Return the greatest common divisor of a series of numbers.
      * The greatest common divisor is the largest integer that divides both
      *        number1 and number2 without a remainder.
      *
@@ -31,7 +31,7 @@ class Gcd
     /**
      * GCD.
      *
-     * Returns the greatest common divisor of a series of numbers.
+     * Return the greatest common divisor of a series of numbers.
      * The greatest common divisor is the largest integer that divides both
      *        number1 and number2 without a remainder.
      *

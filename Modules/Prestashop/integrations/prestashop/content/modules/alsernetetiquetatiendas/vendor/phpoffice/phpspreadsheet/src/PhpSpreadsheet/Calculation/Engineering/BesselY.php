@@ -13,7 +13,7 @@ class BesselY
     /**
      * BESSELY.
      *
-     * Returns the Bessel function, which is also called the Weber function or the Neumann function.
+     * Return the Bessel function, which is also called the Weber function or the Neumann function.
      *
      *    Excel Function:
      *        BESSELY(x,ord)

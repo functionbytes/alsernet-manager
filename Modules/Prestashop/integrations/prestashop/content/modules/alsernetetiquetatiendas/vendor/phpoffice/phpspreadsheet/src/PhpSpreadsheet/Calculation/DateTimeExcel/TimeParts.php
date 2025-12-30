@@ -13,7 +13,7 @@ class TimeParts
     /**
      * HOUROFDAY.
      *
-     * Returns the hour of a time value.
+     * Return the hour of a time value.
      * The hour is given as an integer, ranging from 0 (12:00 A.M.) to 23 (11:00 P.M.).
      *
      * Excel Function:
@@ -53,7 +53,7 @@ class TimeParts
     /**
      * MINUTE.
      *
-     * Returns the minutes of a time value.
+     * Return the minutes of a time value.
      * The minute is given as an integer, ranging from 0 to 59.
      *
      * Excel Function:
@@ -93,7 +93,7 @@ class TimeParts
     /**
      * SECOND.
      *
-     * Returns the seconds of a time value.
+     * Return the seconds of a time value.
      * The minute is given as an integer, ranging from 0 to 59.
      *
      * Excel Function:

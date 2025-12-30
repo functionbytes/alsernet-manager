@@ -14,7 +14,7 @@ class Confidence
     /**
      * CONFIDENCE.
      *
-     * Returns the confidence interval for a population mean
+     * Return the confidence interval for a population mean
      *
      * @param mixed $alpha As a float
      *                      Or can be an array of values

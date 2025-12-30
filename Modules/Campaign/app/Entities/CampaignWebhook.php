@@ -2,7 +2,7 @@
 
 namespace Modules\Campaign\Entities;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;

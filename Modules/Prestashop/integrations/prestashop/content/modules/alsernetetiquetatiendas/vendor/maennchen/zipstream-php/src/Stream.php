@@ -94,7 +94,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is seekable.
+     * Return whether or not the stream is seekable.
      *
      * @return bool
      */
@@ -111,8 +111,8 @@ class Stream implements StreamInterface
      *
      * @link http://php.net/manual/en/function.stream-get-meta-data.php
      * @param string $key Specific metadata to retrieve.
-     * @return array|mixed|null Returns an associative array if no key is
-     *     provided. Returns a specific key value if a key is provided and the
+     * @return array|mixed|null Return an associative array if no key is
+     *     provided. Return a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
     public function getMetadata($key = null)
@@ -124,7 +124,7 @@ class Stream implements StreamInterface
     /**
      * Get the size of the stream if known.
      *
-     * @return int|null Returns the size in bytes if known, or null if unknown.
+     * @return int|null Return the size in bytes if known, or null if unknown.
      */
     public function getSize(): ?int
     {
@@ -133,7 +133,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns the current position of the file read/write pointer
+     * Return the current position of the file read/write pointer
      *
      * @return int Position of the file pointer
      * @throws \RuntimeException on error.
@@ -148,7 +148,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns true if the stream is at the end of the stream.
+     * Return true if the stream is at the end of the stream.
      *
      * @return bool
      */
@@ -176,7 +176,7 @@ class Stream implements StreamInterface
      * Write data to the stream.
      *
      * @param string $string The string that is to be written.
-     * @return int Returns the number of bytes written to the stream.
+     * @return int Return the number of bytes written to the stream.
      * @throws \RuntimeException on failure.
      */
     public function write($string): int
@@ -191,7 +191,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is writable.
+     * Return whether or not the stream is writable.
      *
      * @return bool
      */
@@ -206,7 +206,7 @@ class Stream implements StreamInterface
      * @param int $length Read up to $length bytes from the object and return
      *     them. Fewer than $length bytes may be returned if underlying stream
      *     call returns fewer bytes.
-     * @return string Returns the data read from the stream, or an empty string
+     * @return string Return the data read from the stream, or an empty string
      *     if no bytes are available.
      * @throws \RuntimeException if an error occurs.
      */
@@ -223,7 +223,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is readable.
+     * Return whether or not the stream is readable.
      *
      * @return bool
      */
@@ -233,7 +233,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns the remaining contents in a string
+     * Return the remaining contents in a string
      *
      * @return string
      * @throws \RuntimeException if unable to read or an error occurs while

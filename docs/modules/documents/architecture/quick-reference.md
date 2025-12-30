@@ -83,7 +83,7 @@ resources/views/managers/views/settings/documents/
 
 2. **Add method to DocumentEmailService**
    ```php
-   // app/Services/Documents/DocumentEmailService.php
+   // app/Services/Document/DocumentEmailService.php
 
    public function sendNewTypeEmail(Document $document): void
    {
@@ -137,7 +137,7 @@ resources/views/managers/views/settings/documents/
 2. Validate transitions:
    ```php
    $transition = DocumentStatusTransition::getValidTransitions($currentStatus);
-   // Returns array of valid next statuses
+   // Return array of valid next statuses
    ```
 
 ### Add Document Type with Custom Requirements
@@ -386,7 +386,7 @@ try {
 ### SLA Compliance
 
 ```php
-// Documents within SLA
+// Document within SLA
 $inSla = Document::whereHas('slaBreaches', fn($q) =>
     $q->whereNull('resolved')
 )->count();
@@ -452,13 +452,13 @@ $types = \Cache::remember('document_types', 3600, function() {
 
 ```bash
 # Run document-related tests
-php artisan test tests/Feature/Documents
+php artisan test tests/Feature/Document
 
 # Run specific test
-php artisan test tests/Feature/Documents/DocumentStatusTransitionTest
+php artisan test tests/Feature/Document/DocumentStatusTransitionTest
 
 # Test email job
-php artisan test tests/Feature/Documents/SendDocumentEmailJobTest
+php artisan test tests/Feature/Document/SendDocumentEmailJobTest
 
 # Test with specific filter
 php artisan test --filter=testDocumentStatusTransition
@@ -474,7 +474,7 @@ php artisan db:seed --class=DocumentStatusSeeder
 php artisan db:seed --class=DocumentStatusTransitionSeeder
 
 # Create new service
-php artisan make:class Services/Documents/DocumentStatusService
+php artisan make:class Services/Document/DocumentStatusService
 
 # Create new job
 php artisan make:job Document/SendDocumentReminderJob

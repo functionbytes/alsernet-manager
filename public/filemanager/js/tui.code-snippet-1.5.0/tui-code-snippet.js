@@ -846,7 +846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the first index at which a given element can be found in the array
+	 * Return the first index at which a given element can be found in the array
 	 * from start index(default 0), or -1 if it is not present.<br>
 	 * It compares searchElement to elements of the Array using strict equality
 	 * (the same method used by the ===, or triple-equals, operator).
@@ -1948,7 +1948,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 **********/
 
 	/**
-	 * Returns a popup-list administered by current window.
+	 * Return a popup-list administered by current window.
 	 * @param {string} [key] The key of popup.
 	 * @returns {Object} popup window list object
 	 */
@@ -3542,7 +3542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * @fileoverview
 	 *  Implements the Map object.
@@ -3667,7 +3667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns true if the specified value is NaN.<br>
+	 * Return true if the specified value is NaN.<br>
 	 * For unsing NaN as a key, use this method to test equality of NaN<br>
 	 * because === operator doesn't work for NaN.
 	 * @private
@@ -3679,7 +3679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the index of the specified key.
+	 * Return the index of the specified key.
 	 * @private
 	 * @param  {*} key - The key object to search for.
 	 * @returns {number} The index of the specified key
@@ -3701,7 +3701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the original key of the specified key.
+	 * Return the original key of the specified key.
 	 * @private
 	 * @param  {*} key - key
 	 * @returns {*} Original key
@@ -3718,7 +3718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the unique key of the specified key.
+	 * Return the unique key of the specified key.
 	 * @private
 	 * @param  {*} key - key
 	 * @returns {*} Unique key
@@ -3735,7 +3735,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the value object of the specified key.
+	 * Return the value object of the specified key.
 	 * @private
 	 * @param  {*} key - The key of the value object to be returned
 	 * @param  {number} keyIndex - The index of the key
@@ -3755,7 +3755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the original value of the specified key.
+	 * Return the original value of the specified key.
 	 * @private
 	 * @param  {*} key - The key of the value object to be returned
 	 * @param  {number} keyIndex - The index of the key
@@ -3766,7 +3766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns key-value pair of the specified key.
+	 * Return key-value pair of the specified key.
 	 * @private
 	 * @param  {*} key - The key of the value object to be returned
 	 * @param  {number} keyIndex - The index of the key
@@ -3818,7 +3818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns the value associated to the key, or undefined if there is none.
+	 * Return the value associated to the key, or undefined if there is none.
 	 * @param  {*} key - The key of the element to return
 	 * @returns {*} Element associated with the specified key
 	 */
@@ -3830,7 +3830,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns a new Iterator object that contains the keys for each element
+	 * Return a new Iterator object that contains the keys for each element
 	 * in the Map object in insertion order.
 	 * @returns {Iterator} A new Iterator object
 	 */
@@ -3839,7 +3839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns a new Iterator object that contains the values for each element
+	 * Return a new Iterator object that contains the values for each element
 	 * in the Map object in insertion order.
 	 * @returns {Iterator} A new Iterator object
 	 */
@@ -3848,7 +3848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns a new Iterator object that contains the [key, value] pairs
+	 * Return a new Iterator object that contains the [key, value] pairs
 	 * for each element in the Map object in insertion order.
 	 * @returns {Iterator} A new Iterator object
 	 */
@@ -3857,7 +3857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Returns a boolean asserting whether a value has been associated to the key
+	 * Return a boolean asserting whether a value has been associated to the key
 	 * in the Map object or not.
 	 * @param  {*} key - The key of the element to test for presence
 	 * @returns {boolean} True if an element with the specified key exists;

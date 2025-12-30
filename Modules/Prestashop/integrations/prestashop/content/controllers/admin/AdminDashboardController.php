@@ -436,7 +436,7 @@ class AdminDashboardControllerCore extends AdminController
     }
 
     /**
-     * Returns last news from the blog
+     * Return last news from the blog
      *
      * @throws PrestaShopException
      */
@@ -479,7 +479,7 @@ class AdminDashboardControllerCore extends AdminController
     }
 
     /**
-     * Returns the Help center link for the provided locale
+     * Return the Help center link for the provided locale
      *
      * @param string $languageCode 2-letter locale code
      *

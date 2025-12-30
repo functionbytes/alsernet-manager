@@ -96,7 +96,7 @@ class HTMLPurifier_Zipper
     }
 
     /**
-     * Returns true if we are at the end of the list.
+     * Return true if we are at the end of the list.
      * @return bool
      */
     public function done() {

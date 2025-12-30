@@ -60,7 +60,7 @@ trait MockStubTrait
     /**
      * Overrides the _simpleRequest method in \Grpc\BaseStub
      * (https://github.com/grpc/grpc/blob/master/src/php/lib/Grpc/BaseStub.php)
-     * Returns a MockUnaryCall object that will return the first item from $responses
+     * Return a MockUnaryCall object that will return the first item from $responses
      * @param string $method The API method name to be called
      * @param \Google\Protobuf\Internal\Message $argument The request object to the API method
      * @param callable $deserialize A function to deserialize the response object
@@ -88,7 +88,7 @@ trait MockStubTrait
     /**
      * Overrides the _clientStreamRequest method in \Grpc\BaseStub
      * (https://github.com/grpc/grpc/blob/master/src/php/lib/Grpc/BaseStub.php)
-     * Returns a MockClientStreamingCall object that will return the first item from $responses
+     * Return a MockClientStreamingCall object that will return the first item from $responses
      *
      * @param string   $method      The name of the method to call
      * @param callable $deserialize A function that deserializes the responses
@@ -117,7 +117,7 @@ trait MockStubTrait
     /**
      * Overrides the _serverStreamRequest method in \Grpc\BaseStub
      * (https://github.com/grpc/grpc/blob/master/src/php/lib/Grpc/BaseStub.php)
-     * Returns a MockServerStreamingCall object that will stream items from $responses, and return
+     * Return a MockServerStreamingCall object that will stream items from $responses, and return
      * a final status of $serverStreamingStatus.
      *
      * @param string   $method      The name of the method to call
@@ -154,7 +154,7 @@ trait MockStubTrait
     /**
      * Overrides the _bidiRequest method in \Grpc\BaseStub
      * (https://github.com/grpc/grpc/blob/master/src/php/lib/Grpc/BaseStub.php)
-     * Returns a MockBidiStreamingCall object that will stream items from $responses, and return
+     * Return a MockBidiStreamingCall object that will stream items from $responses, and return
      * a final status of $serverStreamingStatus.
      *
      * @param string   $method      The name of the method to call

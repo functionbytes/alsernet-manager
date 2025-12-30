@@ -109,7 +109,7 @@ database/seeders/
 Each seeder folder has its own namespace for proper organization:
 
 ```php
-// Documents folder
+// Document folder
 namespace Database\Seeders\Documents;
 
 // Suppliers folder

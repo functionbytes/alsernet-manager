@@ -18,7 +18,7 @@
           <th>{l s='Return' d='Shop.Customer.Orders'}</th>
           <th>{l s='Package status' d='Shop.Customer.Orders'}</th>
           <th>{l s='Date issued' d='Shop.Customer.Orders'}</th>
-          <th>{l s='Returns form' d='Shop.Customer.Orders'}</th>
+          <th>{l s='Return form' d='Shop.Customer.Orders'}</th>
         </tr>
       </thead>
       <tbody>
@@ -61,7 +61,7 @@
             </li>
             {if $return.print_url}
               <li>
-                <strong>{l s='Returns form' d='Shop.Customer.Orders'}</strong>
+                <strong>{l s='Return form' d='Shop.Customer.Orders'}</strong>
                 <a href="{$return.print_url}">{l s='Print out' d='Shop.Customer.Orders'}</a>
               </li>
             {/if}

@@ -18,7 +18,7 @@ class ChiSquared
     /**
      * CHIDIST.
      *
-     * Returns the one-tailed probability of the chi-squared distribution.
+     * Return the one-tailed probability of the chi-squared distribution.
      *
      * @param mixed $value Float value for which we want the probability
      *                      Or can be an array of values
@@ -59,7 +59,7 @@ class ChiSquared
     /**
      * CHIDIST.
      *
-     * Returns the one-tailed probability of the chi-squared distribution.
+     * Return the one-tailed probability of the chi-squared distribution.
      *
      * @param mixed $value Float value for which we want the probability
      *                      Or can be an array of values
@@ -108,7 +108,7 @@ class ChiSquared
     /**
      * CHIINV.
      *
-     * Returns the inverse of the right-tailed probability of the chi-squared distribution.
+     * Return the inverse of the right-tailed probability of the chi-squared distribution.
      *
      * @param mixed $probability Float probability at which you want to evaluate the distribution
      *                      Or can be an array of values
@@ -149,7 +149,7 @@ class ChiSquared
     /**
      * CHIINV.
      *
-     * Returns the inverse of the left-tailed probability of the chi-squared distribution.
+     * Return the inverse of the left-tailed probability of the chi-squared distribution.
      *
      * @param mixed $probability Float probability at which you want to evaluate the distribution
      *                      Or can be an array of values

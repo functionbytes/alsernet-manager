@@ -112,7 +112,7 @@
       options.processQueue = processQueue;
     },
 
-    // Returns the number of files currently in the processsing queue:
+    // Return the number of files currently in the processsing queue:
     processing() {
       return this._processing;
     },

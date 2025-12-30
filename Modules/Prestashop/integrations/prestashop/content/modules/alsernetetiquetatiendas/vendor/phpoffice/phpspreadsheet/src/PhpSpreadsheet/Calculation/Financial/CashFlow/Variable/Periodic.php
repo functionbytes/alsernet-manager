@@ -14,7 +14,7 @@ class Periodic
     /**
      * IRR.
      *
-     * Returns the internal rate of return for a series of cash flows represented by the numbers in values.
+     * Return the internal rate of return for a series of cash flows represented by the numbers in values.
      * These cash flows do not have to be even, as they would be for an annuity. However, the cash flows must occur
      * at regular intervals, such as monthly or annually. The internal rate of return is the interest rate received
      * for an investment consisting of payments (negative values) and income (positive values) that occur at regular
@@ -85,7 +85,7 @@ class Periodic
     /**
      * MIRR.
      *
-     * Returns the modified internal rate of return for a series of periodic cash flows. MIRR considers both
+     * Return the modified internal rate of return for a series of periodic cash flows. MIRR considers both
      *        the cost of the investment and the interest received on reinvestment of cash.
      *
      * Excel Function:
@@ -134,7 +134,7 @@ class Periodic
     /**
      * NPV.
      *
-     * Returns the Net Present Value of a cash flow series given a discount rate.
+     * Return the Net Present Value of a cash flow series given a discount rate.
      *
      * @param mixed $rate
      *

@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class MerchandiseReturnController responsible for "Sell > Customer Service > Merchandise Returns" page
+ * Class MerchandiseReturnController responsible for "Sell > Customer Service > Merchandise Return" page
  */
 class MerchandiseReturnController extends FrameworkBundleAdminController
 {

@@ -61,7 +61,7 @@ class Column
     }
 
     /**
-     * Returns a boolean true if the column contains no cells. By default, this means that no cell records exist in the
+     * Return a boolean true if the column contains no cells. By default, this means that no cell records exist in the
      *         collection for this column. false will be returned otherwise.
      *     This rule can be modified by passing a $definitionOfEmptyFlags value:
      *          1 - CellIterator::TREAT_NULL_VALUE_AS_EMPTY_CELL If the only cells in the collection are null value
@@ -100,7 +100,7 @@ class Column
     }
 
     /**
-     * Returns bound worksheet.
+     * Return bound worksheet.
      */
     public function getWorksheet(): Worksheet
     {

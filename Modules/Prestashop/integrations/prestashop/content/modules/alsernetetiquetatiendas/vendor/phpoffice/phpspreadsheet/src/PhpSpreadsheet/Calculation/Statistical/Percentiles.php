@@ -15,7 +15,7 @@ class Percentiles
     /**
      * PERCENTILE.
      *
-     * Returns the nth percentile of values in a range..
+     * Return the nth percentile of values in a range..
      *
      * Excel Function:
      *        PERCENTILE(value1[,value2[, ...]],entry)
@@ -63,7 +63,7 @@ class Percentiles
     /**
      * PERCENTRANK.
      *
-     * Returns the rank of a value in a data set as a percentage of the data set.
+     * Return the rank of a value in a data set as a percentage of the data set.
      * Note that the returned rank is simply rounded to the appropriate significant digits,
      *      rather than floored (as MS Excel), so value 3 for a value set of  1, 2, 3, 4 will return
      *      0.667 rather than 0.666
@@ -116,7 +116,7 @@ class Percentiles
     /**
      * QUARTILE.
      *
-     * Returns the quartile of a data set.
+     * Return the quartile of a data set.
      *
      * Excel Function:
      *        QUARTILE(value1[,value2[, ...]],entry)
@@ -148,7 +148,7 @@ class Percentiles
     /**
      * RANK.
      *
-     * Returns the rank of a number in a list of numbers.
+     * Return the rank of a number in a list of numbers.
      *
      * @param mixed $value The number whose rank you want to find
      * @param mixed $valueSet An array of float values, or a reference to, a list of numbers

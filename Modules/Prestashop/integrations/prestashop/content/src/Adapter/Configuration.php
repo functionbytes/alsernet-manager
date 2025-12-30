@@ -90,7 +90,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
+     * Return constant defined by given $key if exists or check directly into PrestaShop
      * \Configuration.
      *
      * @param string $key

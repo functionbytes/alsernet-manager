@@ -45,7 +45,7 @@ class InsecureCredentials implements FetchAuthTokenInterface
     }
 
     /**
-     * Returns the cache key. In this case it returns a null value, disabling
+     * Return the cache key. In this case it returns a null value, disabling
      * caching.
      *
      * @return string|null

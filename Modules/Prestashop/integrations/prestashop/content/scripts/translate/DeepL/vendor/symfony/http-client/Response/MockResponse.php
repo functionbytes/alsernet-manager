@@ -67,7 +67,7 @@ class MockResponse implements ResponseInterface, StreamableInterface
     }
 
     /**
-     * Returns the options used when doing the request.
+     * Return the options used when doing the request.
      */
     public function getRequestOptions(): array
     {
@@ -75,7 +75,7 @@ class MockResponse implements ResponseInterface, StreamableInterface
     }
 
     /**
-     * Returns the URL used when doing the request.
+     * Return the URL used when doing the request.
      */
     public function getRequestUrl(): string
     {
@@ -83,7 +83,7 @@ class MockResponse implements ResponseInterface, StreamableInterface
     }
 
     /**
-     * Returns the method used when doing the request.
+     * Return the method used when doing the request.
      */
     public function getRequestMethod(): string
     {

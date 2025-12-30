@@ -189,7 +189,7 @@ class WarehouseLocationStylesController extends Controller
 
     /**
      * API: Get all available location styles
-     * Returns JSON with all available styles for dropdown selection
+     * Return JSON with all available styles for dropdown selection
      */
     public function apiGetAllStyles()
     {

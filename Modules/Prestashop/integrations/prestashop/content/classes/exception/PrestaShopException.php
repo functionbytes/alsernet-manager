@@ -134,7 +134,7 @@ class PrestaShopExceptionCore extends Exception
 
     /**
      * Prevent critical arguments to be displayed in the debug trace page (e.g. database password)
-     * Returns the array of args with critical arguments replaced by placeholders.
+     * Return the array of args with critical arguments replaced by placeholders.
      *
      *
      * @return array

@@ -72,7 +72,7 @@ interface TransportInterface
     public function startServerStreamingCall(Call $call, array $options);
 
     /**
-     * Returns a promise used to execute network requests.
+     * Return a promise used to execute network requests.
      *
      * @param Call $call
      * @param array<mixed> $options

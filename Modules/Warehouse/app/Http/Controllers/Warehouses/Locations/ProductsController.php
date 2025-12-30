@@ -3,9 +3,9 @@
 namespace Modules\Warehouse\Http\Controllers\Warehouses\Locations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Models\Product\Product;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductsController extends Controller

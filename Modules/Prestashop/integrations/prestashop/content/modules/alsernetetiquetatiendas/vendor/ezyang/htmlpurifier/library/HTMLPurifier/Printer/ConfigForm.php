@@ -88,7 +88,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
     }
 
     /**
-     * Returns HTML output for a configuration form
+     * Return HTML output for a configuration form
      * @param HTMLPurifier_Config|array $config Configuration object of current form state, or an array
      *        where [0] has an HTML namespace and [1] is being rendered.
      * @param array|bool $allowed Optional namespace(s) and directives to restrict form to.

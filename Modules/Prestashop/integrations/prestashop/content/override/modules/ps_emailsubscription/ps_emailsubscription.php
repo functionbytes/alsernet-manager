@@ -31,7 +31,7 @@ if (! defined('_PS_VERSION_')) {
 class Ps_EmailsubscriptionOverride extends Ps_Emailsubscription
 {
     /**
-     * Returns a email by token.
+     * Return a email by token.
      *
      * @param  string  $token
      * @return string email

@@ -417,7 +417,7 @@ class CustomerCore extends ObjectModel
     /**
      * Return customers list.
      *
-     * @param  bool|null  $onlyActive  Returns only active customers when `true`
+     * @param  bool|null  $onlyActive  Return only active customers when `true`
      * @return array Customers
      */
     public static function getCustomers($onlyActive = null)
@@ -1442,7 +1442,7 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Returns the valid reset password token if it validity date is > now().
+     * Return the valid reset password token if it validity date is > now().
      */
     public function getValidResetPasswordToken()
     {

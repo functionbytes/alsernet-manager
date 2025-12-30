@@ -118,7 +118,7 @@ class SlackRecord
     }
 
     /**
-     * Returns required data in format that Slack
+     * Return required data in format that Slack
      * is expecting.
      *
      * @phpstan-param FormattedRecord $record
@@ -201,7 +201,7 @@ class SlackRecord
     }
 
     /**
-     * Returns a Slack message attachment color associated with
+     * Return a Slack message attachment color associated with
      * provided level.
      */
     public function getAttachmentColor(int $level): string

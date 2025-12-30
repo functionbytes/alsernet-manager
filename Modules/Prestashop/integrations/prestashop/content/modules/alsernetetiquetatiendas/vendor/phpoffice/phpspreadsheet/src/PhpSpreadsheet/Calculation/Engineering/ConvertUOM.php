@@ -434,7 +434,7 @@ class ConvertUOM
 
     /**
      *    getConversionGroups
-     * Returns a list of the different conversion groups for UOM conversions.
+     * Return a list of the different conversion groups for UOM conversions.
      *
      * @return array
      */
@@ -450,7 +450,7 @@ class ConvertUOM
 
     /**
      *    getConversionGroupUnits
-     * Returns an array of units of measure, for a specified conversion group, or for all groups.
+     * Return an array of units of measure, for a specified conversion group, or for all groups.
      *
      * @param string $category The group whose units of measure you want to retrieve
      *
@@ -492,7 +492,7 @@ class ConvertUOM
 
     /**
      *    getConversionMultipliers
-     * Returns an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM().
+     * Return an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM().
      *
      * @return mixed[]
      */
@@ -503,7 +503,7 @@ class ConvertUOM
 
     /**
      *    getBinaryConversionMultipliers
-     * Returns an array of the additional Multiplier prefixes that can be used with Information Units of Measure in CONVERTUOM().
+     * Return an array of the additional Multiplier prefixes that can be used with Information Units of Measure in CONVERTUOM().
      *
      * @return mixed[]
      */

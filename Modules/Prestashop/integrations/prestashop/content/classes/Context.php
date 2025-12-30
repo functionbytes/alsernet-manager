@@ -232,7 +232,7 @@ class ContextCore
     }
 
     /**
-     * Returns mobile device type.
+     * Return mobile device type.
      *
      * @return int
      */
@@ -379,7 +379,7 @@ class ContextCore
     }
 
     /**
-     * Returns a translator depending on service container availability and if the method
+     * Return a translator depending on service container availability and if the method
      * is called by the installer or not.
      *
      * @param  bool  $isInstaller  Set to true if the method is called by the installer
@@ -407,7 +407,7 @@ class ContextCore
     }
 
     /**
-     * Returns a new instance of Translator for the provided locale code.
+     * Return a new instance of Translator for the provided locale code.
      *
      * @param  string  $locale  IETF language tag (eg. "en-US")
      * @return Translator
@@ -477,7 +477,7 @@ class ContextCore
     }
 
     /**
-     * Returns the computing precision according to the current currency
+     * Return the computing precision according to the current currency
      *
      * @return int
      */

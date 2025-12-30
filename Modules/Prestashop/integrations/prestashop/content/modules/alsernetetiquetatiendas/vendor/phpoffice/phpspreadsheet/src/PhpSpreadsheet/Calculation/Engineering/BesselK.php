@@ -14,7 +14,7 @@ class BesselK
     /**
      * BESSELK.
      *
-     *    Returns the modified Bessel function Kn(x), which is equivalent to the Bessel functions evaluated
+     *    Return the modified Bessel function Kn(x), which is equivalent to the Bessel functions evaluated
      *        for purely imaginary arguments.
      *
      *    Excel Function:

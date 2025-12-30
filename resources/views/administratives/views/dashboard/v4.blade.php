@@ -383,7 +383,7 @@
         </div>
     </div>
 
-    {{-- Recent Documents Table (from v2 - most detailed) --}}
+    {{-- Recent Document Table (from v2 - most detailed) --}}
     <div class="row g-3 mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">

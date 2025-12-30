@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models\Product;
+namespace Modules\Warehouse\Models\Product;
 
-use App\Models\Inventarie\Kardex;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Warehouse\Models\Kardex;
 
 /**
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order\Order> $orders
  * @property-read int|null $orders_count
- * @property-read \App\Models\Product\Product|null $product
+ * @property-read \Modules\Warehouse\Models\Product\Product|null $product
  * @property-read \App\Models\Shop|null $shop
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation id($id)
@@ -81,7 +81,7 @@ class ProductLocation extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Product\Product', 'product_id', 'id');
+        return $this->belongsTo('Modules\Warehouse\Models\Product\Product', 'product_id', 'id');
     }
 
     public function location(): BelongsTo

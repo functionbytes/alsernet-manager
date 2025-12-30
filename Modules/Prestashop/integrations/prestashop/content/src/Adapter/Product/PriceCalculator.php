@@ -42,7 +42,7 @@ class PriceCalculator
      *                                     NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
      * @param int|null $divisor Useful when paying many time without fees (optional)
-     * @param bool $onlyReduc Returns only the reduction amount
+     * @param bool $onlyReduc Return only the reduction amount
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $forceAssociatedTax DEPRECATED - NOT USED Force to apply the associated tax.
@@ -118,7 +118,7 @@ class PriceCalculator
      * @param int $quantity Quantity Required for Specific prices : quantity discount application
      * @param bool $useTax with (1) or without (0) tax
      * @param int $decimals Number of decimals returned
-     * @param bool $onlyReduc Returns only the reduction amount
+     * @param bool $onlyReduc Return only the reduction amount
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param bool $withEcotax insert ecotax in price output
      * @param null $specificPrice If a specific price applies regarding the previous parameters,

@@ -9,7 +9,7 @@ class DMin extends DatabaseAbstract
     /**
      * DMIN.
      *
-     * Returns the smallest number in a column of a list or database that matches conditions you that
+     * Return the smallest number in a column of a list or database that matches conditions you that
      * specify.
      *
      * Excel Function:

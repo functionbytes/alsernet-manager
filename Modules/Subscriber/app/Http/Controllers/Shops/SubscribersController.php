@@ -5,11 +5,11 @@ namespace Modules\Subscriber\Http\Controllers\Shops;
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use App\Models\Lang;
-use App\Models\Product\Product;
-use Modules\Subscriber\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Subscriber\Models\Subscriber;
+use Modules\Warehouse\Models\Product\Product;
 
 class SubscribersController extends Controller
 {

@@ -35,7 +35,7 @@ use Rize\UriTemplate\Parser;
  *
  * RESERVED
  * --------
- * RFC 1738 ":" | "/" | "?" |                 | "@" | "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=" | "-" | "_" | "." | 
+ * RFC 1738 ":" | "/" | "?" |                 | "@" | "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=" | "-" | "_" | "." |
  * RFC 3986 ":" | "/" | "?" | "#" | "[" | "]" | "@" | "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "="
  * RFC 6570 ":" | "/" | "?" | "#" | "[" | "]" | "@" | "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "="
  *
@@ -325,7 +325,7 @@ abstract class Abstraction
 
         return $single ? reset($values) : $values;
     }
-    
+
     /**
      * Extracts value from variable
      *
@@ -389,7 +389,7 @@ abstract class Abstraction
     }
 
     /**
-     * Returns the correct regex given the variable location in the URI
+     * Return the correct regex given the variable location in the URI
      *
      * @return string
      */

@@ -128,7 +128,7 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns true if the tax is used in an order details.
+     * Return true if the tax is used in an order details.
      *
      * @return bool
      */
@@ -193,7 +193,7 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the ecotax tax rate.
+     * Return the ecotax tax rate.
      *
      * @param  int  $id_address
      * @return float $tax_rate
@@ -209,7 +209,7 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the carrier tax rate.
+     * Return the carrier tax rate.
      *
      * @param  int  $id_carrier
      * @param  int  $id_address
@@ -250,7 +250,7 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the product tax rate.
+     * Return the product tax rate.
      *
      * @param  int  $id_product
      * @param  int  $id_address

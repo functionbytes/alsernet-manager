@@ -60,7 +60,7 @@ class CreateSampleDocumentsFromPrestashop extends Command
 
         $this->newLine();
         $this->info('✓ Complete!');
-        $this->line("  Documents created: {$createdCount}");
+        $this->line("  Document created: {$createdCount}");
         if ($sendEmails) {
             $this->line("  Emails sent: {$emailCount}");
         }

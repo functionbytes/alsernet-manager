@@ -32,7 +32,7 @@ class WarehouseMapController extends Controller
 
     /**
      * API endpoint: Get layout specification from database
-     * Returns JSON compatible with the SVG drawing logic
+     * Return JSON compatible with the SVG drawing logic
      */
     public function getLayoutSpec(Request $request): JsonResponse
     {

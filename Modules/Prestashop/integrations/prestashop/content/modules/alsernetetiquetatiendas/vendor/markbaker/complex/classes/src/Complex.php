@@ -220,7 +220,7 @@ class Complex
     }
 
     /**
-     * Returns true if this is a real value, false if a complex value
+     * Return true if this is a real value, false if a complex value
      *
      * @return Bool
      */
@@ -230,7 +230,7 @@ class Complex
     }
 
     /**
-     * Returns true if this is a complex value, false if a real value
+     * Return true if this is a complex value, false if a real value
      *
      * @return Bool
      */
@@ -286,7 +286,7 @@ class Complex
     }
 
     /**
-     * Returns the reverse of this complex number
+     * Return the reverse of this complex number
      *
      * @return    Complex
      */
@@ -366,7 +366,7 @@ class Complex
     ];
 
     /**
-     * Returns the result of the function call or operation
+     * Return the result of the function call or operation
      *
      * @return    Complex|float
      * @throws    Exception|\InvalidArgumentException

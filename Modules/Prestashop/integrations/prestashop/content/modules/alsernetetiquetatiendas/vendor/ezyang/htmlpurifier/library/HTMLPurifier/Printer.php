@@ -43,7 +43,7 @@ class HTMLPurifier_Printer
     // function render() {}
 
     /**
-     * Returns a start tag
+     * Return a start tag
      * @param string $tag Tag name
      * @param array $attr Attribute array
      * @return string
@@ -56,7 +56,7 @@ class HTMLPurifier_Printer
     }
 
     /**
-     * Returns an end tag
+     * Return an end tag
      * @param string $tag Tag name
      * @return string
      */

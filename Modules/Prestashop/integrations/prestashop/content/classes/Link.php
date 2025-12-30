@@ -967,7 +967,7 @@ class LinkCore
     }
 
     /**
-     * Returns a link to a product image for display
+     * Return a link to a product image for display
      * Note: the new image filesystem stores product images in subdirectories of img/p/.
      *
      * @param  string  $name  rewrite link of the image
@@ -1023,7 +1023,7 @@ class LinkCore
     }
 
     /**
-     * Returns a link to a supplier image for display.
+     * Return a link to a supplier image for display.
      *
      * @param  int  $idSupplier
      * @param  string|null  $type  image type (small_default, medium_default, large_default, etc.)
@@ -1047,7 +1047,7 @@ class LinkCore
     }
 
     /**
-     * Returns a link to a manufacturer image for display.
+     * Return a link to a manufacturer image for display.
      *
      * @param  int  $idManufacturer
      * @param  string|null  $type  image type (small_default, medium_default, large_default, etc.)
@@ -1071,7 +1071,7 @@ class LinkCore
     }
 
     /**
-     * Returns a link to a store image for display.
+     * Return a link to a store image for display.
      *
      * @param  string  $name
      * @param  int  $idStore

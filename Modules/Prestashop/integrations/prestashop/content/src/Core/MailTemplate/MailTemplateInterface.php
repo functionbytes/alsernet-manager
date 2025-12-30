@@ -54,7 +54,7 @@ interface MailTemplateInterface
     public function getType();
 
     /**
-     * Returns the absolute path to the template file.
+     * Return the absolute path to the template file.
      *
      * @return string
      */

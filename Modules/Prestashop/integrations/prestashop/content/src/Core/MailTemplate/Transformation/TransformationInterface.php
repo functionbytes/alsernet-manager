@@ -44,7 +44,7 @@ interface TransformationInterface
     public function apply($templateContent, array $templateVariables);
 
     /**
-     * Returns the type of templates this transformation is associated with,
+     * Return the type of templates this transformation is associated with,
      * either html or txt, so that the renderer knows if it has to be applied
      * or not
      *

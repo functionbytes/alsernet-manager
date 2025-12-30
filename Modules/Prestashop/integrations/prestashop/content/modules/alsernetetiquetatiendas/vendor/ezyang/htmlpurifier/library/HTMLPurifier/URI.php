@@ -259,7 +259,7 @@ class HTMLPurifier_URI
     }
 
     /**
-     * Returns true if this URL might be considered a 'local' URL given
+     * Return true if this URL might be considered a 'local' URL given
      * the current context.  This is true when the host is null, or
      * when it matches the host supplied to the configuration.
      *
@@ -283,7 +283,7 @@ class HTMLPurifier_URI
     }
 
     /**
-     * Returns true if this URL should be considered a 'benign' URL,
+     * Return true if this URL should be considered a 'benign' URL,
      * that is:
      *
      *      - It is a local URL (isLocal), and

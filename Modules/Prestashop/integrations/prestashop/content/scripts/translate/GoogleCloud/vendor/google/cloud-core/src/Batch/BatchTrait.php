@@ -125,7 +125,7 @@ trait BatchTrait
     }
 
     /**
-     * Returns an array representation of a callback which will be used to write
+     * Return an array representation of a callback which will be used to write
      * batch items.
      *
      * @return array

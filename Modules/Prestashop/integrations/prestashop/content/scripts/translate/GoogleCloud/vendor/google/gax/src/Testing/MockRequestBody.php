@@ -214,7 +214,7 @@ class MockRequestBody extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Returns the unboxed value from <code>getBytesValue()</code>
+     * Return the unboxed value from <code>getBytesValue()</code>
 
      * Generated from protobuf field <code>.google.protobuf.BytesValue bytes_value = 5;</code>
      * @return string|null
@@ -333,7 +333,7 @@ class MockRequestBody extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Returns the unboxed value from <code>getInt64Value()</code>
+     * Return the unboxed value from <code>getInt64Value()</code>
 
      * Generated from protobuf field <code>.google.protobuf.Int64Value int64_value = 8;</code>
      * @return int|string|null
@@ -420,7 +420,7 @@ class MockRequestBody extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Returns the unboxed value from <code>getStringValue()</code>
+     * Return the unboxed value from <code>getStringValue()</code>
 
      * Generated from protobuf field <code>.google.protobuf.StringValue string_value = 10;</code>
      * @return string|null

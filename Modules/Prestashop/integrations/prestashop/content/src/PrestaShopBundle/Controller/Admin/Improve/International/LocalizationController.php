@@ -213,7 +213,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns localization configuration form handler.
+     * Return localization configuration form handler.
      *
      * @return FormHandlerInterface
      */
@@ -223,7 +223,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns localization local units form handler.
+     * Return localization local units form handler.
      *
      * @return FormHandlerInterface
      */
@@ -233,7 +233,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns localization advanced form handler.
+     * Return localization advanced form handler.
      *
      * @return FormHandlerInterface
      */

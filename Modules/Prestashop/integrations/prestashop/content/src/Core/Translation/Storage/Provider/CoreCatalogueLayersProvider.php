@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\UserTranslate
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Core interface translations.
+ * Return the 3 layers of translation catalogues related to the Core interface translations.
  * The files pattern depends on the desired Type
  * The default catalogue is in app/Resources/translations/default, in any file starting with "files pattern"
  * The file catalogue is in app/Resources/translations/LOCALE, in any file starting with "files pattern"

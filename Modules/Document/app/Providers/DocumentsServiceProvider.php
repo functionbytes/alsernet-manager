@@ -12,7 +12,7 @@ class DocumentsServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = 'Documents';
+    protected string $name = 'Document';
 
     protected string $nameLower = 'documents';
 

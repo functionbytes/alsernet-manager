@@ -2,11 +2,11 @@
 
 namespace Modules\Campaign\Library\HtmlHandler;
 
-use App\Models\Template\Template;
 use Exception;
 use League\Pipeline\StageInterface;
 use Modules\Campaign\Entities\CampaignTrackingDomain;
 use Modules\Campaign\Library\StringHelper;
+use Modules\Campaign\Models\Template\Template;
 
 class TransformUrl implements StageInterface
 {

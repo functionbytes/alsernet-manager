@@ -34,14 +34,14 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 interface GridDataInterface
 {
     /**
-     * Returns final grid rows ready for rendering.
+     * Return final grid rows ready for rendering.
      *
      * @return RecordCollectionInterface
      */
     public function getRecords();
 
     /**
-     * Returns total rows in data source.
+     * Return total rows in data source.
      *
      * @return int
      */

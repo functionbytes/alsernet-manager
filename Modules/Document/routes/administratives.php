@@ -50,7 +50,7 @@ Route::middleware(['auth', 'role:administrative|super-admin'])->prefix('administ
          * - DELETE /api/documents/{uid}                 → route('api.documents.delete')
          *
          * TODAS LAS DEMÁS RUTAS API están documentadas en:
-         * → Modules/Documents/routes/api.php
+         * → Modules/Document/routes/api.php
          * ═══════════════════════════════════════════════════════════════════════
          */
 

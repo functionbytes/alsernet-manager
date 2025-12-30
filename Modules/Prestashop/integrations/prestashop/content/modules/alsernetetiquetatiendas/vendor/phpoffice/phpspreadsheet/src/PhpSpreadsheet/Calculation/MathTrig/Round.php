@@ -13,7 +13,7 @@ class Round
     /**
      * ROUND.
      *
-     * Returns the result of builtin function round after validating args.
+     * Return the result of builtin function round after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      * @param mixed $precision Should be int, or can be an array of numbers
@@ -150,7 +150,7 @@ class Round
     /**
      * EVEN.
      *
-     * Returns number rounded up to the nearest even integer.
+     * Return number rounded up to the nearest even integer.
      * You can use this function for processing items that come in twos. For example,
      *        a packing crate accepts rows of one or two items. The crate is full when
      *        the number of items, rounded up to the nearest two, matches the crate's
@@ -183,7 +183,7 @@ class Round
     /**
      * ODD.
      *
-     * Returns number rounded up to the nearest odd integer.
+     * Return number rounded up to the nearest odd integer.
      *
      * @param array|float $number Number to round, or can be an array of numbers
      *

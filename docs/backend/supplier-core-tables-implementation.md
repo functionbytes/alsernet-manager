@@ -174,7 +174,7 @@ $allOptions = $source->getOptionsArray();
 $selectors = $source->options()
     ->byKey('selectors')
     ->first()
-    ->getParsedValue(); // Returns decoded JSON array
+    ->getParsedValue(); // Return decoded JSON array
 ```
 
 ### Using Scopes

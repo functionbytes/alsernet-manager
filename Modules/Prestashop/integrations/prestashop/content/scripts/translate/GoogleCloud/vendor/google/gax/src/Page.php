@@ -80,7 +80,7 @@ class Page implements IteratorAggregate
     }
 
     /**
-     * Returns true if there are more pages that can be retrieved from the
+     * Return true if there are more pages that can be retrieved from the
      * API.
      *
      * @return bool
@@ -91,7 +91,7 @@ class Page implements IteratorAggregate
     }
 
     /**
-     * Returns the next page token from the response.
+     * Return the next page token from the response.
      *
      * @return string
      */
@@ -224,7 +224,7 @@ class Page implements IteratorAggregate
     }
 
     /**
-     * Returns a collection of elements with a fixed size set by
+     * Return a collection of elements with a fixed size set by
      * the collectionSize parameter. The collection will only contain
      * fewer than collectionSize elements if there are no more
      * pages to be retrieved from the server.

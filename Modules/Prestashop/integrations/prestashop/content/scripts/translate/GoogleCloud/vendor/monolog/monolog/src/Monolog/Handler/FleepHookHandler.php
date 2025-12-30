@@ -75,7 +75,7 @@ class FleepHookHandler extends SocketHandler
     }
 
     /**
-     * Returns the default formatter to use with this handler
+     * Return the default formatter to use with this handler
      *
      * Overloaded to remove empty context and extra arrays from the end of the log message.
      *

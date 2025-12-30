@@ -310,7 +310,7 @@ Creates database entry for undefined translation key.
 
 ```php
 $locales = $manager->getLocales();
-// Returns: ['en', 'es', 'de', 'fr']
+// Return: ['en', 'es', 'de', 'fr']
 ```
 
 **Sources:** Configuration, database, and filesystem locales combined.

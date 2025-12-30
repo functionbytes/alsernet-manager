@@ -4,7 +4,6 @@ namespace Modules\Campaign\Console\Commands;
 
 use App\Models\User;
 use App\Notifications\OrderCreated;
-use App\Notifications\PaymentReceived;
 use App\Notifications\SystemAlert;
 use App\Notifications\TicketAssigned;
 use App\Notifications\TicketCreated;
@@ -14,6 +13,7 @@ use Illuminate\Console\Command;
 use Modules\Documents\Notifications\DocumentApproved;
 use Modules\Documents\Notifications\DocumentRejected;
 use Modules\Documents\Notifications\DocumentStatusChanged;
+use Modules\Documents\Notifications\PaymentReceived;
 use stdClass;
 
 class SendTestNotifications extends Command

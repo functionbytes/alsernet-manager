@@ -19,7 +19,7 @@ use RuntimeException;
 class Sample
 {
     /**
-     * Returns whether we run on CLI or browser.
+     * Return whether we run on CLI or browser.
      *
      * @return bool
      */
@@ -69,7 +69,7 @@ class Sample
     }
 
     /**
-     * Returns an array of all known samples.
+     * Return an array of all known samples.
      *
      * @return string[][] [$name => $path]
      */
@@ -133,7 +133,7 @@ class Sample
     }
 
     /**
-     * Returns the temporary directory and make sure it exists.
+     * Return the temporary directory and make sure it exists.
      *
      * @return string
      */
@@ -148,7 +148,7 @@ class Sample
     }
 
     /**
-     * Returns the filename that should be used for sample output.
+     * Return the filename that should be used for sample output.
      *
      * @param string $filename
      * @param string $extension

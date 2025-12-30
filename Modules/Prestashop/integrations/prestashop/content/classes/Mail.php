@@ -213,7 +213,7 @@ class MailCore extends ObjectModel
             $idShop
         );
 
-        // Returns immediately if emails are deactivated
+        // Return immediately if emails are deactivated
         if ($configuration['PS_MAIL_METHOD'] == self::METHOD_DISABLE) {
             return true;
         }

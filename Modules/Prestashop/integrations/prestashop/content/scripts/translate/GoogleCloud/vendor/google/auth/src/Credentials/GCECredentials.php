@@ -452,7 +452,7 @@ class GCECredentials extends CredentialsLoader implements
     /**
      * Fetch the default Project ID from compute engine.
      *
-     * Returns null if called outside GCE.
+     * Return null if called outside GCE.
      *
      * @param callable $httpHandler Callback which delivers psr7 request
      * @return string|null

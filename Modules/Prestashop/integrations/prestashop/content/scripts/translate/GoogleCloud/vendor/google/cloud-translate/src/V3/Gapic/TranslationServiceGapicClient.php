@@ -642,7 +642,7 @@ class TranslationServiceGapicClient
     }
 
     /**
-     * Creates a glossary and returns the long-running operation. Returns
+     * Creates a glossary and returns the long-running operation. Return
      * NOT_FOUND, if the project doesn't exist.
      *
      * Sample code:
@@ -712,7 +712,7 @@ class TranslationServiceGapicClient
     /**
      * Deletes a glossary, or cancels glossary construction
      * if the glossary isn't created yet.
-     * Returns NOT_FOUND, if the glossary doesn't exist.
+     * Return NOT_FOUND, if the glossary doesn't exist.
      *
      * Sample code:
      * ```
@@ -866,7 +866,7 @@ class TranslationServiceGapicClient
     }
 
     /**
-     * Gets a glossary. Returns NOT_FOUND, if the glossary doesn't
+     * Gets a glossary. Return NOT_FOUND, if the glossary doesn't
      * exist.
      *
      * Sample code:
@@ -906,7 +906,7 @@ class TranslationServiceGapicClient
     }
 
     /**
-     * Returns a list of supported languages for translation.
+     * Return a list of supported languages for translation.
      *
      * Sample code:
      * ```
@@ -951,7 +951,7 @@ class TranslationServiceGapicClient
      *           `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
      *
      *
-     *           Returns languages supported by the specified model.
+     *           Return languages supported by the specified model.
      *           If missing, we get supported languages of Google general NMT model.
      *     @type RetrySettings|array $retrySettings
      *           Retry settings to use for this call. Can be a {@see RetrySettings} object, or an
@@ -983,7 +983,7 @@ class TranslationServiceGapicClient
     }
 
     /**
-     * Lists glossaries in a project. Returns NOT_FOUND, if the project doesn't
+     * Lists glossaries in a project. Return NOT_FOUND, if the project doesn't
      * exist.
      *
      * Sample code:

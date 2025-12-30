@@ -621,7 +621,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Returns installed module filepaths.
+     * Return installed module filepaths.
      *
      * @return array
      */

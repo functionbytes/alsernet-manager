@@ -647,7 +647,7 @@ class QRcode {
 	}
 
 	/**
-	 * Returns a barcode array which is readable by TCPDF
+	 * Return a barcode array which is readable by TCPDF
 	 * @return array barcode array readable by TCPDF;
 	 * @public
 	 */
@@ -2074,7 +2074,7 @@ class QRcode {
 	}
 
 	/**
-	 * Returns a stream of bits.
+	 * Return a stream of bits.
 	 * @param int $items
 	 * @return array padded merged byte stream
 	 */

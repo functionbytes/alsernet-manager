@@ -26,7 +26,7 @@ class Statistical
     /**
      * AVEDEV.
      *
-     * Returns the average of the absolute deviations of data points from their mean.
+     * Return the average of the absolute deviations of data points from their mean.
      * AVEDEV is a measure of the variability in a data set.
      *
      * Excel Function:
@@ -49,7 +49,7 @@ class Statistical
     /**
      * AVERAGE.
      *
-     * Returns the average (arithmetic mean) of the arguments
+     * Return the average (arithmetic mean) of the arguments
      *
      * Excel Function:
      *        AVERAGE(value1[,value2[, ...]])
@@ -71,7 +71,7 @@ class Statistical
     /**
      * AVERAGEA.
      *
-     * Returns the average of its arguments, including numbers, text, and logical values
+     * Return the average of its arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        AVERAGEA(value1[,value2[, ...]])
@@ -93,7 +93,7 @@ class Statistical
     /**
      * AVERAGEIF.
      *
-     * Returns the average value from a range of cells that contain numbers within the list of arguments
+     * Return the average value from a range of cells that contain numbers within the list of arguments
      *
      * Excel Function:
      *        AVERAGEIF(value1[,value2[, ...]],condition)
@@ -117,7 +117,7 @@ class Statistical
     /**
      * BETADIST.
      *
-     * Returns the beta distribution.
+     * Return the beta distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -140,7 +140,7 @@ class Statistical
     /**
      * BETAINV.
      *
-     * Returns the inverse of the Beta distribution.
+     * Return the inverse of the Beta distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -163,7 +163,7 @@ class Statistical
     /**
      * BINOMDIST.
      *
-     * Returns the individual term binomial distribution probability. Use BINOMDIST in problems with
+     * Return the individual term binomial distribution probability. Use BINOMDIST in problems with
      *        a fixed number of tests or trials, when the outcomes of any trial are only success or failure,
      *        when trials are independent, and when the probability of success is constant throughout the
      *        experiment. For example, BINOMDIST can calculate the probability that two of the next three
@@ -189,7 +189,7 @@ class Statistical
     /**
      * CHIDIST.
      *
-     * Returns the one-tailed probability of the chi-squared distribution.
+     * Return the one-tailed probability of the chi-squared distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -209,7 +209,7 @@ class Statistical
     /**
      * CHIINV.
      *
-     * Returns the one-tailed probability of the chi-squared distribution.
+     * Return the one-tailed probability of the chi-squared distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -229,7 +229,7 @@ class Statistical
     /**
      * CONFIDENCE.
      *
-     * Returns the confidence interval for a population mean
+     * Return the confidence interval for a population mean
      *
      * @Deprecated 1.18.0
      *
@@ -250,7 +250,7 @@ class Statistical
     /**
      * CORREL.
      *
-     * Returns covariance, the average of the products of deviations for each data point pair.
+     * Return covariance, the average of the products of deviations for each data point pair.
      *
      * @Deprecated 1.18.0
      *
@@ -381,7 +381,7 @@ class Statistical
     /**
      * COVAR.
      *
-     * Returns covariance, the average of the products of deviations for each data point pair.
+     * Return covariance, the average of the products of deviations for each data point pair.
      *
      * @Deprecated 1.18.0
      *
@@ -401,7 +401,7 @@ class Statistical
     /**
      * CRITBINOM.
      *
-     * Returns the smallest value for which the cumulative binomial distribution is greater
+     * Return the smallest value for which the cumulative binomial distribution is greater
      *        than or equal to a criterion value
      *
      * See https://support.microsoft.com/en-us/help/828117/ for details of the algorithm used
@@ -425,7 +425,7 @@ class Statistical
     /**
      * DEVSQ.
      *
-     * Returns the sum of squares of deviations of data points from their sample mean.
+     * Return the sum of squares of deviations of data points from their sample mean.
      *
      * Excel Function:
      *        DEVSQ(value1[,value2[, ...]])
@@ -447,7 +447,7 @@ class Statistical
     /**
      * EXPONDIST.
      *
-     *    Returns the exponential distribution. Use EXPONDIST to model the time between events,
+     *    Return the exponential distribution. Use EXPONDIST to model the time between events,
      *        such as how long an automated bank teller takes to deliver cash. For example, you can
      *        use EXPONDIST to determine the probability that the process takes at most 1 minute.
      *
@@ -470,7 +470,7 @@ class Statistical
     /**
      * F.DIST.
      *
-     *    Returns the F probability distribution.
+     *    Return the F probability distribution.
      *    You can use this function to determine whether two data sets have different degrees of diversity.
      *    For example, you can examine the test scores of men and women entering high school, and determine
      *        if the variability in the females is different from that found in the males.
@@ -496,7 +496,7 @@ class Statistical
     /**
      * FISHER.
      *
-     * Returns the Fisher transformation at x. This transformation produces a function that
+     * Return the Fisher transformation at x. This transformation produces a function that
      *        is normally distributed rather than skewed. Use this function to perform hypothesis
      *        testing on the correlation coefficient.
      *
@@ -517,7 +517,7 @@ class Statistical
     /**
      * FISHERINV.
      *
-     * Returns the inverse of the Fisher transformation. Use this transformation when
+     * Return the inverse of the Fisher transformation. Use this transformation when
      *        analyzing correlations between ranges or arrays of data. If y = FISHER(x), then
      *        FISHERINV(y) = x.
      *
@@ -559,7 +559,7 @@ class Statistical
     /**
      * GAMMA.
      *
-     * Returns the gamma function value.
+     * Return the gamma function value.
      *
      * @Deprecated 1.18.0
      *
@@ -578,7 +578,7 @@ class Statistical
     /**
      * GAMMADIST.
      *
-     * Returns the gamma distribution.
+     * Return the gamma distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -600,7 +600,7 @@ class Statistical
     /**
      * GAMMAINV.
      *
-     * Returns the inverse of the Gamma distribution.
+     * Return the inverse of the Gamma distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -621,7 +621,7 @@ class Statistical
     /**
      * GAMMALN.
      *
-     * Returns the natural logarithm of the gamma function.
+     * Return the natural logarithm of the gamma function.
      *
      * @Deprecated 1.18.0
      *
@@ -660,7 +660,7 @@ class Statistical
     /**
      * GEOMEAN.
      *
-     * Returns the geometric mean of an array or range of positive data. For example, you
+     * Return the geometric mean of an array or range of positive data. For example, you
      *        can use GEOMEAN to calculate average growth rate given compound interest with
      *        variable rates.
      *
@@ -684,7 +684,7 @@ class Statistical
     /**
      * GROWTH.
      *
-     * Returns values along a predicted exponential Trend
+     * Return values along a predicted exponential Trend
      *
      * @Deprecated 1.18.0
      *
@@ -706,7 +706,7 @@ class Statistical
     /**
      * HARMEAN.
      *
-     * Returns the harmonic mean of a data set. The harmonic mean is the reciprocal of the
+     * Return the harmonic mean of a data set. The harmonic mean is the reciprocal of the
      *        arithmetic mean of reciprocals.
      *
      * Excel Function:
@@ -729,7 +729,7 @@ class Statistical
     /**
      * HYPGEOMDIST.
      *
-     * Returns the hypergeometric distribution. HYPGEOMDIST returns the probability of a given number of
+     * Return the hypergeometric distribution. HYPGEOMDIST returns the probability of a given number of
      * sample successes, given the sample size, population successes, and population size.
      *
      * @Deprecated 1.18.0
@@ -777,7 +777,7 @@ class Statistical
     /**
      * KURT.
      *
-     * Returns the kurtosis of a data set. Kurtosis characterizes the relative peakedness
+     * Return the kurtosis of a data set. Kurtosis characterizes the relative peakedness
      * or flatness of a distribution compared with the normal distribution. Positive
      * kurtosis indicates a relatively peaked distribution. Negative kurtosis indicates a
      * relatively flat distribution.
@@ -799,7 +799,7 @@ class Statistical
     /**
      * LARGE.
      *
-     * Returns the nth largest value in a data set. You can use this function to
+     * Return the nth largest value in a data set. You can use this function to
      *        select a value based on its relative standing.
      *
      * Excel Function:
@@ -868,7 +868,7 @@ class Statistical
     /**
      * LOGINV.
      *
-     * Returns the inverse of the normal cumulative distribution
+     * Return the inverse of the normal cumulative distribution
      *
      * @Deprecated 1.18.0
      *
@@ -893,7 +893,7 @@ class Statistical
     /**
      * LOGNORMDIST.
      *
-     * Returns the cumulative lognormal distribution of x, where ln(x) is normally distributed
+     * Return the cumulative lognormal distribution of x, where ln(x) is normally distributed
      * with parameters mean and standard_dev.
      *
      * @Deprecated 1.18.0
@@ -915,7 +915,7 @@ class Statistical
     /**
      * LOGNORM.DIST.
      *
-     * Returns the lognormal distribution of x, where ln(x) is normally distributed
+     * Return the lognormal distribution of x, where ln(x) is normally distributed
      * with parameters mean and standard_dev.
      *
      * @Deprecated 1.18.0
@@ -961,7 +961,7 @@ class Statistical
     /**
      * MAXA.
      *
-     * Returns the greatest value in a list of arguments, including numbers, text, and logical values
+     * Return the greatest value in a list of arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        maxA(value1[,value2[, ...]])
@@ -1005,7 +1005,7 @@ class Statistical
     /**
      * MEDIAN.
      *
-     * Returns the median of the given numbers. The median is the number in the middle of a set of numbers.
+     * Return the median of the given numbers. The median is the number in the middle of a set of numbers.
      *
      * Excel Function:
      *        MEDIAN(value1[,value2[, ...]])
@@ -1050,7 +1050,7 @@ class Statistical
     /**
      * MINA.
      *
-     * Returns the smallest value in a list of arguments, including numbers, text, and logical values
+     * Return the smallest value in a list of arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        MINA(value1[,value2[, ...]])
@@ -1072,7 +1072,7 @@ class Statistical
     /**
      * MINIFS.
      *
-     * Returns the minimum value within a range of cells that contain numbers within the list of arguments
+     * Return the minimum value within a range of cells that contain numbers within the list of arguments
      *
      * Excel Function:
      *        MINIFS(min_range, criteria_range1, criteria1, [criteria_range2, criteria2], ...)
@@ -1094,7 +1094,7 @@ class Statistical
     /**
      * MODE.
      *
-     * Returns the most frequently occurring, or repetitive, value in an array or range of data
+     * Return the most frequently occurring, or repetitive, value in an array or range of data
      *
      * Excel Function:
      *        MODE(value1[,value2[, ...]])
@@ -1116,7 +1116,7 @@ class Statistical
     /**
      * NEGBINOMDIST.
      *
-     * Returns the negative binomial distribution. NEGBINOMDIST returns the probability that
+     * Return the negative binomial distribution. NEGBINOMDIST returns the probability that
      *        there will be number_f failures before the number_s-th success, when the constant
      *        probability of a success is probability_s. This function is similar to the binomial
      *        distribution, except that the number of successes is fixed, and the number of trials is
@@ -1141,7 +1141,7 @@ class Statistical
     /**
      * NORMDIST.
      *
-     * Returns the normal distribution for the specified mean and standard deviation. This
+     * Return the normal distribution for the specified mean and standard deviation. This
      * function has a very wide range of applications in statistics, including hypothesis
      * testing.
      *
@@ -1165,7 +1165,7 @@ class Statistical
     /**
      * NORMINV.
      *
-     * Returns the inverse of the normal cumulative distribution for the specified mean and standard deviation.
+     * Return the inverse of the normal cumulative distribution for the specified mean and standard deviation.
      *
      * @Deprecated 1.18.0
      *
@@ -1186,7 +1186,7 @@ class Statistical
     /**
      * NORMSDIST.
      *
-     * Returns the standard normal cumulative distribution function. The distribution has
+     * Return the standard normal cumulative distribution function. The distribution has
      * a mean of 0 (zero) and a standard deviation of one. Use this function in place of a
      * table of standard normal curve areas.
      *
@@ -1207,7 +1207,7 @@ class Statistical
     /**
      * NORM.S.DIST.
      *
-     * Returns the standard normal cumulative distribution function. The distribution has
+     * Return the standard normal cumulative distribution function. The distribution has
      * a mean of 0 (zero) and a standard deviation of one. Use this function in place of a
      * table of standard normal curve areas.
      *
@@ -1229,7 +1229,7 @@ class Statistical
     /**
      * NORMSINV.
      *
-     * Returns the inverse of the standard normal cumulative distribution
+     * Return the inverse of the standard normal cumulative distribution
      *
      * @Deprecated 1.18.0
      *
@@ -1248,7 +1248,7 @@ class Statistical
     /**
      * PERCENTILE.
      *
-     * Returns the nth percentile of values in a range..
+     * Return the nth percentile of values in a range..
      *
      * Excel Function:
      *        PERCENTILE(value1[,value2[, ...]],entry)
@@ -1270,7 +1270,7 @@ class Statistical
     /**
      * PERCENTRANK.
      *
-     * Returns the rank of a value in a data set as a percentage of the data set.
+     * Return the rank of a value in a data set as a percentage of the data set.
      * Note that the returned rank is simply rounded to the appropriate significant digits,
      *      rather than floored (as MS Excel), so value 3 for a value set of  1, 2, 3, 4 will return
      *      0.667 rather than 0.666
@@ -1294,7 +1294,7 @@ class Statistical
     /**
      * PERMUT.
      *
-     * Returns the number of permutations for a given number of objects that can be
+     * Return the number of permutations for a given number of objects that can be
      *        selected from number objects. A permutation is any set or subset of objects or
      *        events where internal order is significant. Permutations are different from
      *        combinations, for which the internal order is not significant. Use this function
@@ -1318,7 +1318,7 @@ class Statistical
     /**
      * POISSON.
      *
-     * Returns the Poisson distribution. A common application of the Poisson distribution
+     * Return the Poisson distribution. A common application of the Poisson distribution
      * is predicting the number of events over a specific time, such as the number of
      * cars arriving at a toll plaza in 1 minute.
      *
@@ -1341,7 +1341,7 @@ class Statistical
     /**
      * QUARTILE.
      *
-     * Returns the quartile of a data set.
+     * Return the quartile of a data set.
      *
      * Excel Function:
      *        QUARTILE(value1[,value2[, ...]],entry)
@@ -1363,7 +1363,7 @@ class Statistical
     /**
      * RANK.
      *
-     * Returns the rank of a number in a list of numbers.
+     * Return the rank of a number in a list of numbers.
      *
      * @Deprecated 1.18.0
      *
@@ -1384,7 +1384,7 @@ class Statistical
     /**
      * RSQ.
      *
-     * Returns the square of the Pearson product moment correlation coefficient through data points in known_y's and known_x's.
+     * Return the square of the Pearson product moment correlation coefficient through data points in known_y's and known_x's.
      *
      * @Deprecated 1.18.0
      *
@@ -1404,7 +1404,7 @@ class Statistical
     /**
      * SKEW.
      *
-     * Returns the skewness of a distribution. Skewness characterizes the degree of asymmetry
+     * Return the skewness of a distribution. Skewness characterizes the degree of asymmetry
      * of a distribution around its mean. Positive skewness indicates a distribution with an
      * asymmetric tail extending toward more positive values. Negative skewness indicates a
      * distribution with an asymmetric tail extending toward more negative values.
@@ -1426,7 +1426,7 @@ class Statistical
     /**
      * SLOPE.
      *
-     * Returns the slope of the linear regression line through data points in known_y's and known_x's.
+     * Return the slope of the linear regression line through data points in known_y's and known_x's.
      *
      * @Deprecated 1.18.0
      *
@@ -1446,7 +1446,7 @@ class Statistical
     /**
      * SMALL.
      *
-     * Returns the nth smallest value in a data set. You can use this function to
+     * Return the nth smallest value in a data set. You can use this function to
      *        select a value based on its relative standing.
      *
      * Excel Function:
@@ -1469,7 +1469,7 @@ class Statistical
     /**
      * STANDARDIZE.
      *
-     * Returns a normalized value from a distribution characterized by mean and standard_dev.
+     * Return a normalized value from a distribution characterized by mean and standard_dev.
      *
      * @Deprecated 1.18.0
      *
@@ -1584,7 +1584,7 @@ class Statistical
      * @see Statistical\Trends::STEYX()
      *      Use the STEYX() method in the Statistical\Trends class instead
      *
-     * Returns the standard error of the predicted y-value for each x in the regression.
+     * Return the standard error of the predicted y-value for each x in the regression.
      *
      * @param mixed[] $yValues Data Series Y
      * @param mixed[] $xValues Data Series X
@@ -1599,7 +1599,7 @@ class Statistical
     /**
      * TDIST.
      *
-     * Returns the probability of Student's T distribution.
+     * Return the probability of Student's T distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -1620,7 +1620,7 @@ class Statistical
     /**
      * TINV.
      *
-     * Returns the one-tailed probability of the Student-T distribution.
+     * Return the one-tailed probability of the Student-T distribution.
      *
      * @Deprecated 1.18.0
      *
@@ -1640,7 +1640,7 @@ class Statistical
     /**
      * TREND.
      *
-     * Returns values along a linear Trend
+     * Return values along a linear Trend
      *
      * @Deprecated 1.18.0
      *
@@ -1662,7 +1662,7 @@ class Statistical
     /**
      * TRIMMEAN.
      *
-     * Returns the mean of the interior of a data set. TRIMMEAN calculates the mean
+     * Return the mean of the interior of a data set. TRIMMEAN calculates the mean
      *        taken by excluding a percentage of data points from the top and bottom tails
      *        of a data set.
      *
@@ -1774,7 +1774,7 @@ class Statistical
     /**
      * WEIBULL.
      *
-     * Returns the Weibull distribution. Use this distribution in reliability
+     * Return the Weibull distribution. Use this distribution in reliability
      * analysis, such as calculating a device's mean time to failure.
      *
      * @Deprecated 1.18.0
@@ -1797,7 +1797,7 @@ class Statistical
     /**
      * ZTEST.
      *
-     * Returns the one-tailed P-value of a z-test.
+     * Return the one-tailed P-value of a z-test.
      *
      * For a given hypothesized population mean, x, Z.TEST returns the probability that the sample mean would be
      *     greater than the average of observations in the data set (array) — that is, the observed sample mean.

@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 interface GetShowcaseCardIsClosedHandlerInterface
 {
     /**
-     * Returns the "closed state" of a showcase command
+     * Return the "closed state" of a showcase command
      *
      * @param GetShowcaseCardIsClosed $query
      *

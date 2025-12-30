@@ -130,7 +130,7 @@ class TranslationService
     }
 
     /**
-     * Returns the translation domains tree and counters with total of wording and total of missing translations
+     * Return the translation domains tree and counters with total of wording and total of missing translations
      * The tree should look like
      *  tree => [
      *      total_langs => int

@@ -260,7 +260,7 @@ function translate($string)
 }
 
 /**
- * Returns a new Tab object
+ * Return a new Tab object
  *
  * @param  string  $tab  class name
  * @return mixed(AdminTab, bool) tab object or false if failed

@@ -78,7 +78,7 @@ export default class PositionExtension {
   }
 
   /**
-   * Returns the current table positions
+   * Return the current table positions
    * @returns {Array}
    * @private
    */

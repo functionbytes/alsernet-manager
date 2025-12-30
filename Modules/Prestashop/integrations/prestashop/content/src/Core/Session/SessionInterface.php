@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Session;
 interface SessionInterface
 {
     /**
-     * Returns session id
+     * Return session id
      *
      * @return int
      */
@@ -48,7 +48,7 @@ interface SessionInterface
     public function setUserId($id);
 
     /**
-     * Returns session user id
+     * Return session user id
      *
      * @return int
      */
@@ -64,7 +64,7 @@ interface SessionInterface
     public function setToken($string);
 
     /**
-     * Returns session token
+     * Return session token
      *
      * @return string
      */

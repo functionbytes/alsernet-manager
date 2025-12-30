@@ -522,7 +522,7 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * Returns the name of the currency (using the translated name base on the id_lang
+     * Return the name of the currency (using the translated name base on the id_lang
      * provided on creation). This method is useful when $this->name contains an array
      * but you still need to get its name as a string.
      *

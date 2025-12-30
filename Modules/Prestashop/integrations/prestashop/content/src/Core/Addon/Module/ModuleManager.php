@@ -174,7 +174,7 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the total of module notifications
+     * Return the total of module notifications
      * Not used anymore, but kept for backward compatibility.
      *
      * @return int
@@ -618,7 +618,7 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the last error, if found.
+     * Return the last error, if found.
      *
      * @param string $name The technical module name
      *

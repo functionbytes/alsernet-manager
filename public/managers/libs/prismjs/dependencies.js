@@ -47,7 +47,7 @@ var getLoader = (function () {
 	}
 
 	/**
-	 * Returns a new set for the given string array.
+	 * Return a new set for the given string array.
 	 *
 	 * @param {string[]} array
 	 * @returns {StringSet}
@@ -170,7 +170,7 @@ var getLoader = (function () {
 	}
 
 	/**
-	 * Returns a function which resolves the aliases of its given id of alias.
+	 * Return a function which resolves the aliases of its given id of alias.
 	 *
 	 * @param {EntryMap} entryMap
 	 * @returns {(idOrAlias: string) => string}
@@ -302,7 +302,7 @@ var getLoader = (function () {
 	}
 
 	/**
-	 * Returns whether the given object has any keys.
+	 * Return whether the given object has any keys.
 	 *
 	 * @param {object} obj
 	 */
@@ -314,7 +314,7 @@ var getLoader = (function () {
 	}
 
 	/**
-	 * Returns an object which provides methods to get the ids of the components which have to be loaded (`getIds`) and
+	 * Return an object which provides methods to get the ids of the components which have to be loaded (`getIds`) and
 	 * a way to efficiently load them in synchronously and asynchronous contexts (`load`).
 	 *
 	 * The set of ids to be loaded is a superset of `load`. If some of these ids are in `loaded`, the corresponding

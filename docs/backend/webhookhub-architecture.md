@@ -587,9 +587,7 @@ return new class extends Migration
 
 namespace App\Models\Webhook;
 
-use App\Models\Traits\HasUid;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasUid;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WebhookIntegration extends Model
 {
@@ -725,10 +723,7 @@ class WebhookApiKey extends Model
 
 namespace App\Models\Webhook;
 
-use App\Models\Traits\HasUid;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasUid;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsTo;use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WebhookEvent extends Model
 {
@@ -789,10 +784,7 @@ class WebhookEvent extends Model
 
 namespace App\Models\Webhook;
 
-use App\Models\Traits\HasUid;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasUid;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsTo;use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WebhookSubscription extends Model
 {
@@ -871,10 +863,7 @@ class WebhookSubscription extends Model
 
 namespace App\Models\Webhook;
 
-use App\Models\Traits\HasUid;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasUid;use Illuminate\Database\Eloquent\Model;use Illuminate\Database\Eloquent\Relations\BelongsTo;use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WebhookDelivery extends Model
 {

@@ -13,7 +13,7 @@ class Secant
     /**
      * SEC.
      *
-     * Returns the secant of an angle.
+     * Return the secant of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *
@@ -39,7 +39,7 @@ class Secant
     /**
      * SECH.
      *
-     * Returns the hyperbolic secant of an angle.
+     * Return the hyperbolic secant of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *

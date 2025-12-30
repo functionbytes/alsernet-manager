@@ -60,7 +60,7 @@ class CollectionFilter implements FilterInterface
     }
 
     /**
-     * Returns the current queue.
+     * Return the current queue.
      *
      * @return FilterInterface[]
      */

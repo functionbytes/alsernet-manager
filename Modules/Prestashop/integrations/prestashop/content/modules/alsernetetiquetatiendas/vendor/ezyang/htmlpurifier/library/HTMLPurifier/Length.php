@@ -95,7 +95,7 @@ class HTMLPurifier_Length
     }
 
     /**
-     * Returns string representation of number.
+     * Return string representation of number.
      * @return string
      */
     public function toString()
@@ -125,7 +125,7 @@ class HTMLPurifier_Length
     }
 
     /**
-     * Returns true if this length unit is valid.
+     * Return true if this length unit is valid.
      * @return bool
      */
     public function isValid()

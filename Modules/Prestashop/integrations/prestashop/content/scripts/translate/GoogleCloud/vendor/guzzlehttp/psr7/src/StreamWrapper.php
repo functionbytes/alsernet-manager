@@ -23,7 +23,7 @@ final class StreamWrapper
     private $mode;
 
     /**
-     * Returns a resource representing the stream.
+     * Return a resource representing the stream.
      *
      * @param StreamInterface $stream The stream to get a resource for
      *

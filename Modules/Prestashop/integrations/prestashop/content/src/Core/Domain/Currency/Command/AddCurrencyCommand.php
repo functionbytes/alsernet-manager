@@ -212,7 +212,7 @@ class AddCurrencyCommand
     }
 
     /**
-     * Returns the currency's localized transformations, indexed by language id
+     * Return the currency's localized transformations, indexed by language id
      *
      * @return string[]
      */

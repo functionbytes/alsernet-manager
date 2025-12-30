@@ -2,11 +2,11 @@
 
 namespace Modules\Warehouse\Tests\Feature\Warehouses;
 
-use App\Models\Product\Product;
 use App\Models\User;
 use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\WarehouseLocation;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Models\Product\Product;
 use Tests\TestCase;
 
 class TransferControllerTest extends TestCase

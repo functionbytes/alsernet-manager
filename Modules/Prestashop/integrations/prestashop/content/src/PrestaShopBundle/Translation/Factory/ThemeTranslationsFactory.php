@@ -34,7 +34,7 @@ use PrestaShopBundle\Translation\Provider\ThemeProvider;
  *
  * But in this particular case, the identifier is the theme name.
  *
- * Returns MessageCatalogue object or Translation tree array.
+ * Return MessageCatalogue object or Translation tree array.
  */
 class ThemeTranslationsFactory extends TranslationsFactory
 {

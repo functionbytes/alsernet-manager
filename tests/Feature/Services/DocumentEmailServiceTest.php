@@ -157,7 +157,7 @@ class DocumentEmailServiceTest extends TestCase
         // Act: Send rejection email with reason
         $this->emailService->sendRejectionEmail(
             $document,
-            'Documents do not meet quality standards'
+            'Document do not meet quality standards'
         );
 
         // Assert: Job was dispatched

@@ -34,7 +34,7 @@ use DateTimeInterface;
 interface OrderInvoiceDataProviderInterface
 {
     /**
-     * Returns all the order invoices that match the date interval.
+     * Return all the order invoices that match the date interval.
      *
      * @param DateTimeInterface $dateFrom
      * @param DateTimeInterface $dateTo
@@ -44,7 +44,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
 
     /**
-     * Returns all the order invoices by given status.
+     * Return all the order invoices by given status.
      *
      * @param int $orderStateId
      *
@@ -53,7 +53,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByStatus($orderStateId);
 
     /**
-     * Returns the next available invoice number.
+     * Return the next available invoice number.
      *
      * @return int
      */

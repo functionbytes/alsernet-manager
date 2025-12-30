@@ -11,7 +11,7 @@ class Service
     /**
      * WEBSERVICE.
      *
-     * Returns data from a web service on the Internet or Intranet.
+     * Return data from a web service on the Internet or Intranet.
      *
      * Excel Function:
      *        Webservice(url)
@@ -55,7 +55,7 @@ class Service
     /**
      * URLENCODE.
      *
-     * Returns data from a web service on the Internet or Intranet.
+     * Return data from a web service on the Internet or Intranet.
      *
      * Excel Function:
      *        urlEncode(text)

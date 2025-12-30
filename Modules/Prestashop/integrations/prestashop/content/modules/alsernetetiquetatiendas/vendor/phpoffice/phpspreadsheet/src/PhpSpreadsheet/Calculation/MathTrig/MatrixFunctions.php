@@ -86,7 +86,7 @@ class MatrixFunctions
     /**
      * MDETERM.
      *
-     * Returns the matrix determinant of an array.
+     * Return the matrix determinant of an array.
      *
      * Excel Function:
      *        MDETERM(array)
@@ -111,7 +111,7 @@ class MatrixFunctions
     /**
      * MINVERSE.
      *
-     * Returns the inverse matrix for the matrix stored in an array.
+     * Return the inverse matrix for the matrix stored in an array.
      *
      * Excel Function:
      *        MINVERSE(array)

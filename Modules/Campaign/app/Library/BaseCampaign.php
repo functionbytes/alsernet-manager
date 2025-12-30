@@ -2,7 +2,7 @@
 
 namespace Modules\Campaign\Library;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

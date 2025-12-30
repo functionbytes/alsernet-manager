@@ -184,7 +184,7 @@ class DocumentGroupsController extends Controller
 
         // Check if group has documents assigned (if applicable to your system)
         // Uncomment and adjust if you have documents assigned to groups
-        // $documentsCount = \Modules\Documents\Entities\Document::where('group_id', $group->id)->count();
+        // $documentsCount = \Modules\Document\Entities\Document::where('group_id', $group->id)->count();
         // if ($documentsCount > 0) {
         //     return back()->with('error', 'No se puede eliminar un grupo que tiene documentos asignados.');
         // }

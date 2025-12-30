@@ -2883,7 +2883,7 @@ class imageLib
     public function getErrors()
     // Author:     Jarrod Oberto
     // Date:       19-11-09
-    // Purpose:    Returns the error array
+    // Purpose:    Return the error array
     // Param in:   n/a
     // Param out:  Array of errors
     // Reference:

@@ -44,7 +44,7 @@ class Minimum extends MaxMinBase
     /**
      * MINA.
      *
-     * Returns the smallest value in a list of arguments, including numbers, text, and logical values
+     * Return the smallest value in a list of arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        MINA(value1[,value2[, ...]])

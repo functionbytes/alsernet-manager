@@ -14,7 +14,7 @@ class DateValue
     /**
      * DATEVALUE.
      *
-     * Returns a value that represents a particular date.
+     * Return a value that represents a particular date.
      * Use DATEVALUE to convert a date represented by a text string to an Excel or PHP date/time stamp
      * value.
      *

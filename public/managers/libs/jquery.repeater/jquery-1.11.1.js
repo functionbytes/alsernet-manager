@@ -881,7 +881,7 @@ function Sizzle( selector, context, results, seed ) {
 
 /**
  * Create key-value caches of limited size
- * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
+ * @returns {Function(string, Object)} Return the Object data after storing it on itself with
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
  *	deleting the oldest entry
  */
@@ -947,7 +947,7 @@ function addHandle( attrs, handler ) {
  * Checks document order of two siblings
  * @param {Element} a
  * @param {Element} b
- * @returns {Number} Returns less than 0 if a precedes b, greater than 0 if a follows b
+ * @returns {Number} Return less than 0 if a precedes b, greater than 0 if a follows b
  */
 function siblingCheck( a, b ) {
 	var cur = b && a,
@@ -973,7 +973,7 @@ function siblingCheck( a, b ) {
 }
 
 /**
- * Returns a function to use in pseudos for input types
+ * Return a function to use in pseudos for input types
  * @param {String} type
  */
 function createInputPseudo( type ) {
@@ -984,7 +984,7 @@ function createInputPseudo( type ) {
 }
 
 /**
- * Returns a function to use in pseudos for buttons
+ * Return a function to use in pseudos for buttons
  * @param {String} type
  */
 function createButtonPseudo( type ) {
@@ -995,7 +995,7 @@ function createButtonPseudo( type ) {
 }
 
 /**
- * Returns a function to use in pseudos for positionals
+ * Return a function to use in pseudos for positionals
  * @param {Function} fn
  */
 function createPositionalPseudo( fn ) {
@@ -1043,7 +1043,7 @@ isXML = Sizzle.isXML = function( elem ) {
 /**
  * Sets document-related variables once based on the current document
  * @param {Element|Object} [doc] An element or document object to use to set the document
- * @returns {Object} Returns the current document
+ * @returns {Object} Return the current document
  */
 setDocument = Sizzle.setDocument = function( node ) {
 	var hasCompare,

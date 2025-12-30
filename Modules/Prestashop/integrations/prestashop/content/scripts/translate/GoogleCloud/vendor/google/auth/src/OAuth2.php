@@ -866,7 +866,7 @@ class OAuth2 implements FetchAuthTokenInterface
             return $this->grantType;
         }
 
-        // Returns the inferred grant type, based on the current object instance
+        // Return the inferred grant type, based on the current object instance
         // state.
         if (!is_null($this->code)) {
             return 'authorization_code';
@@ -1261,7 +1261,7 @@ class OAuth2 implements FetchAuthTokenInterface
     }
 
     /**
-     * Returns true if the acccess token has expired.
+     * Return true if the acccess token has expired.
      *
      * @return bool
      */

@@ -88,7 +88,7 @@ class DataLangCore
     }
 
     /**
-     * Returns the table primary key
+     * Return the table primary key
      *
      * @return string[]
      */
@@ -98,7 +98,7 @@ class DataLangCore
     }
 
     /**
-     * Returns the list of database fields to update
+     * Return the list of database fields to update
      *
      * @return string[]
      */
@@ -119,7 +119,7 @@ class DataLangCore
     }
 
     /**
-     * Returns the default translation domain
+     * Return the default translation domain
      *
      * @return string
      */
@@ -129,7 +129,7 @@ class DataLangCore
     }
 
     /**
-     * Returns the table name where the translations are to be performed
+     * Return the table name where the translations are to be performed
      */
     public function getTableName(): string
     {

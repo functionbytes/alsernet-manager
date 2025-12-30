@@ -94,7 +94,7 @@ class TypedRegexValidator extends ConstraintValidator
     }
 
     /**
-     * Returns regex pattern that depends on type
+     * Return regex pattern that depends on type
      *
      * @param string $type
      *

@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Repository;
 interface RepositoryInterface
 {
     /**
-     * Returns the complete list of items.
+     * Return the complete list of items.
      *
      * @return array
      */

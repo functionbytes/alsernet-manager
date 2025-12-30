@@ -104,8 +104,8 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
     /**
      * Validates if the cart rule is applicable to cart
      *
-     * Returns null if cart rule is valid.
-     * Returns translated error message if cart rule is not valid.
+     * Return null if cart rule is valid.
+     * Return translated error message if cart rule is not valid.
      *
      * @param CartRule $cartRule
      *

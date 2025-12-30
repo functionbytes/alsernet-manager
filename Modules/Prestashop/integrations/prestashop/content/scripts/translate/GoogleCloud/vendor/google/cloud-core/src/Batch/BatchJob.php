@@ -185,7 +185,7 @@ class BatchJob implements JobInterface
     }
 
     /**
-     * Returns the period in seconds from the last execution to force
+     * Return the period in seconds from the last execution to force
      * executing the job.
      *
      * @return float
@@ -196,7 +196,7 @@ class BatchJob implements JobInterface
     }
 
     /**
-     * Returns the batch size.
+     * Return the batch size.
      *
      * @return int
      */

@@ -8,7 +8,7 @@ namespace GuzzleHttp;
  * @param mixed $input Any type of variable to describe the type of. This
  *                     parameter misses a typehint because of that.
  *
- * @return string Returns a string containing the type of the variable and
+ * @return string Return a string containing the type of the variable and
  *                if a class is provided, the class name.
  *
  * @deprecated describe_type will be removed in guzzlehttp/guzzle:8.0. Use Utils::describeType instead.
@@ -32,7 +32,7 @@ function headers_from_lines(iterable $lines): array
 }
 
 /**
- * Returns a debug stream based on the provided variable.
+ * Return a debug stream based on the provided variable.
  *
  * @param mixed $value Optional value
  *
@@ -50,7 +50,7 @@ function debug_resource($value = null)
  *
  * The returned handler is not wrapped by any default middlewares.
  *
- * @return callable(\Psr\Http\Message\RequestInterface, array): \GuzzleHttp\Promise\PromiseInterface Returns the best handler for the given system.
+ * @return callable(\Psr\Http\Message\RequestInterface, array): \GuzzleHttp\Promise\PromiseInterface Return the best handler for the given system.
  *
  * @throws \RuntimeException if no viable Handler is available.
  *
@@ -72,7 +72,7 @@ function default_user_agent(): string
 }
 
 /**
- * Returns the default cacert bundle for the current system.
+ * Return the default cacert bundle for the current system.
  *
  * First, the openssl.cafile and curl.cainfo php.ini settings are checked.
  * If those settings are not configured, then the common locations for
@@ -103,7 +103,7 @@ function normalize_header_keys(array $headers): array
 }
 
 /**
- * Returns true if the provided host matches any of the no proxy areas.
+ * Return true if the provided host matches any of the no proxy areas.
  *
  * This method will strip a port from the host if it is present. Each pattern
  * can be matched with an exact match (e.g., "foo.com" == "foo.com") or a

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Group;
+namespace Modules\Helpdesk\Models\Group;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $group_id
  * @property int $category_id
- * @property-read \App\Models\Group\Group $groups
+ * @property-read \Modules\Helpdesk\Models\Group\Group $groups
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupCategorie newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupCategorie newQuery()
@@ -33,6 +33,6 @@ class GroupCategorie extends Model
 
     public function groups()
     {
-        return $this->belongsTo('App\Models\Group\Group', 'group_id', 'id');
+        return $this->belongsTo('Modules\Helpdesk\Models\Group\Group', 'group_id', 'id');
     }
 }

@@ -10,7 +10,7 @@ use GuzzleHttp\Utils;
 final class HeaderProcessor
 {
     /**
-     * Returns the HTTP version, status code, reason phrase, and headers.
+     * Return the HTTP version, status code, reason phrase, and headers.
      *
      * @param string[] $headers
      *

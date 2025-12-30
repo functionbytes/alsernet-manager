@@ -44,7 +44,7 @@ class Engineering
     /**
      * BESSELI.
      *
-     *    Returns the modified Bessel function In(x), which is equivalent to the Bessel function evaluated
+     *    Return the modified Bessel function In(x), which is equivalent to the Bessel function evaluated
      *        for purely imaginary arguments
      *
      *    Excel Function:
@@ -71,7 +71,7 @@ class Engineering
     /**
      * BESSELJ.
      *
-     *    Returns the Bessel function
+     *    Return the Bessel function
      *
      *    Excel Function:
      *        BESSELJ(x,ord)
@@ -96,7 +96,7 @@ class Engineering
     /**
      * BESSELK.
      *
-     *    Returns the modified Bessel function Kn(x), which is equivalent to the Bessel functions evaluated
+     *    Return the modified Bessel function Kn(x), which is equivalent to the Bessel functions evaluated
      *        for purely imaginary arguments.
      *
      *    Excel Function:
@@ -122,7 +122,7 @@ class Engineering
     /**
      * BESSELY.
      *
-     * Returns the Bessel function, which is also called the Weber function or the Neumann function.
+     * Return the Bessel function, which is also called the Weber function or the Neumann function.
      *
      *    Excel Function:
      *        BESSELY(x,ord)
@@ -578,7 +578,7 @@ class Engineering
     /**
      * IMAGINARY.
      *
-     * Returns the imaginary coefficient of a complex number in x + yi or x + yj text format.
+     * Return the imaginary coefficient of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMAGINARY(complexNumber)
@@ -600,7 +600,7 @@ class Engineering
     /**
      * IMREAL.
      *
-     * Returns the real coefficient of a complex number in x + yi or x + yj text format.
+     * Return the real coefficient of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMREAL(complexNumber)
@@ -621,7 +621,7 @@ class Engineering
     /**
      * IMABS.
      *
-     * Returns the absolute value (modulus) of a complex number in x + yi or x + yj text format.
+     * Return the absolute value (modulus) of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMABS(complexNumber)
@@ -642,7 +642,7 @@ class Engineering
     /**
      * IMARGUMENT.
      *
-     * Returns the argument theta of a complex number, i.e. the angle in radians from the real
+     * Return the argument theta of a complex number, i.e. the angle in radians from the real
      * axis to the representation of the number in polar coordinates.
      *
      * Excel Function:
@@ -664,7 +664,7 @@ class Engineering
     /**
      * IMCONJUGATE.
      *
-     * Returns the complex conjugate of a complex number in x + yi or x + yj text format.
+     * Return the complex conjugate of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCONJUGATE(complexNumber)
@@ -685,7 +685,7 @@ class Engineering
     /**
      * IMCOS.
      *
-     * Returns the cosine of a complex number in x + yi or x + yj text format.
+     * Return the cosine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOS(complexNumber)
@@ -706,7 +706,7 @@ class Engineering
     /**
      * IMCOSH.
      *
-     * Returns the hyperbolic cosine of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic cosine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOSH(complexNumber)
@@ -727,7 +727,7 @@ class Engineering
     /**
      * IMCOT.
      *
-     * Returns the cotangent of a complex number in x + yi or x + yj text format.
+     * Return the cotangent of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCOT(complexNumber)
@@ -748,7 +748,7 @@ class Engineering
     /**
      * IMCSC.
      *
-     * Returns the cosecant of a complex number in x + yi or x + yj text format.
+     * Return the cosecant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCSC(complexNumber)
@@ -769,7 +769,7 @@ class Engineering
     /**
      * IMCSCH.
      *
-     * Returns the hyperbolic cosecant of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic cosecant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMCSCH(complexNumber)
@@ -790,7 +790,7 @@ class Engineering
     /**
      * IMSIN.
      *
-     * Returns the sine of a complex number in x + yi or x + yj text format.
+     * Return the sine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSIN(complexNumber)
@@ -811,7 +811,7 @@ class Engineering
     /**
      * IMSINH.
      *
-     * Returns the hyperbolic sine of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic sine of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSINH(complexNumber)
@@ -832,7 +832,7 @@ class Engineering
     /**
      * IMSEC.
      *
-     * Returns the secant of a complex number in x + yi or x + yj text format.
+     * Return the secant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSEC(complexNumber)
@@ -853,7 +853,7 @@ class Engineering
     /**
      * IMSECH.
      *
-     * Returns the hyperbolic secant of a complex number in x + yi or x + yj text format.
+     * Return the hyperbolic secant of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSECH(complexNumber)
@@ -874,7 +874,7 @@ class Engineering
     /**
      * IMTAN.
      *
-     * Returns the tangent of a complex number in x + yi or x + yj text format.
+     * Return the tangent of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMTAN(complexNumber)
@@ -895,7 +895,7 @@ class Engineering
     /**
      * IMSQRT.
      *
-     * Returns the square root of a complex number in x + yi or x + yj text format.
+     * Return the square root of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSQRT(complexNumber)
@@ -916,7 +916,7 @@ class Engineering
     /**
      * IMLN.
      *
-     * Returns the natural logarithm of a complex number in x + yi or x + yj text format.
+     * Return the natural logarithm of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLN(complexNumber)
@@ -937,7 +937,7 @@ class Engineering
     /**
      * IMLOG10.
      *
-     * Returns the common logarithm (base 10) of a complex number in x + yi or x + yj text format.
+     * Return the common logarithm (base 10) of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLOG10(complexNumber)
@@ -958,7 +958,7 @@ class Engineering
     /**
      * IMLOG2.
      *
-     * Returns the base-2 logarithm of a complex number in x + yi or x + yj text format.
+     * Return the base-2 logarithm of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMLOG2(complexNumber)
@@ -979,7 +979,7 @@ class Engineering
     /**
      * IMEXP.
      *
-     * Returns the exponential of a complex number in x + yi or x + yj text format.
+     * Return the exponential of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMEXP(complexNumber)
@@ -1000,7 +1000,7 @@ class Engineering
     /**
      * IMPOWER.
      *
-     * Returns a complex number in x + yi or x + yj text format raised to a power.
+     * Return a complex number in x + yi or x + yj text format raised to a power.
      *
      * Excel Function:
      *        IMPOWER(complexNumber,realNumber)
@@ -1022,7 +1022,7 @@ class Engineering
     /**
      * IMDIV.
      *
-     * Returns the quotient of two complex numbers in x + yi or x + yj text format.
+     * Return the quotient of two complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMDIV(complexDividend,complexDivisor)
@@ -1044,7 +1044,7 @@ class Engineering
     /**
      * IMSUB.
      *
-     * Returns the difference of two complex numbers in x + yi or x + yj text format.
+     * Return the difference of two complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSUB(complexNumber1,complexNumber2)
@@ -1066,7 +1066,7 @@ class Engineering
     /**
      * IMSUM.
      *
-     * Returns the sum of two or more complex numbers in x + yi or x + yj text format.
+     * Return the sum of two or more complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSUM(complexNumber[,complexNumber[,...]])
@@ -1087,7 +1087,7 @@ class Engineering
     /**
      * IMPRODUCT.
      *
-     * Returns the product of two or more complex numbers in x + yi or x + yj text format.
+     * Return the product of two or more complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMPRODUCT(complexNumber[,complexNumber[,...]])
@@ -1108,7 +1108,7 @@ class Engineering
     /**
      * DELTA.
      *
-     * Tests whether two values are equal. Returns 1 if number1 = number2; returns 0 otherwise.
+     * Tests whether two values are equal. Return 1 if number1 = number2; returns 0 otherwise.
      * Use this function to filter a set of values. For example, by summing several DELTA
      *     functions you calculate the count of equal pairs. This function is also known as the
      *     Kronecker Delta function.
@@ -1136,7 +1136,7 @@ class Engineering
      *    Excel Function:
      *        GESTEP(number[,step])
      *
-     *    Returns 1 if number >= step; returns 0 (zero) otherwise
+     *    Return 1 if number >= step; returns 0 (zero) otherwise
      *    Use this function to filter a set of values. For example, by summing several GESTEP
      *        functions you calculate the count of values that exceed a threshold.
      *
@@ -1157,7 +1157,7 @@ class Engineering
     /**
      * BITAND.
      *
-     * Returns the bitwise AND of two integer values.
+     * Return the bitwise AND of two integer values.
      *
      * Excel Function:
      *        BITAND(number1, number2)
@@ -1179,7 +1179,7 @@ class Engineering
     /**
      * BITOR.
      *
-     * Returns the bitwise OR of two integer values.
+     * Return the bitwise OR of two integer values.
      *
      * Excel Function:
      *        BITOR(number1, number2)
@@ -1201,7 +1201,7 @@ class Engineering
     /**
      * BITXOR.
      *
-     * Returns the bitwise XOR of two integer values.
+     * Return the bitwise XOR of two integer values.
      *
      * Excel Function:
      *        BITXOR(number1, number2)
@@ -1223,7 +1223,7 @@ class Engineering
     /**
      * BITLSHIFT.
      *
-     * Returns the number value shifted left by shift_amount bits.
+     * Return the number value shifted left by shift_amount bits.
      *
      * Excel Function:
      *        BITLSHIFT(number, shift_amount)
@@ -1245,7 +1245,7 @@ class Engineering
     /**
      * BITRSHIFT.
      *
-     * Returns the number value shifted right by shift_amount bits.
+     * Return the number value shifted right by shift_amount bits.
      *
      * Excel Function:
      *        BITRSHIFT(number, shift_amount)
@@ -1267,7 +1267,7 @@ class Engineering
     /**
      * ERF.
      *
-     * Returns the error function integrated between the lower and upper bound arguments.
+     * Return the error function integrated between the lower and upper bound arguments.
      *
      *    Note: In Excel 2007 or earlier, if you input a negative value for the upper or lower bound arguments,
      *            the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
@@ -1295,7 +1295,7 @@ class Engineering
     /**
      * ERFPRECISE.
      *
-     * Returns the error function integrated between the lower and upper bound arguments.
+     * Return the error function integrated between the lower and upper bound arguments.
      *
      *    Excel Function:
      *        ERF.PRECISE(limit)
@@ -1316,7 +1316,7 @@ class Engineering
     /**
      * ERFC.
      *
-     *    Returns the complementary ERF function integrated between x and infinity
+     *    Return the complementary ERF function integrated between x and infinity
      *
      *    Note: In Excel 2007 or earlier, if you input a negative value for the lower bound argument,
      *        the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
@@ -1341,7 +1341,7 @@ class Engineering
 
     /**
      *    getConversionGroups
-     * Returns a list of the different conversion groups for UOM conversions.
+     * Return a list of the different conversion groups for UOM conversions.
      *
      * @Deprecated 1.16.0
      *
@@ -1356,7 +1356,7 @@ class Engineering
 
     /**
      *    getConversionGroupUnits
-     * Returns an array of units of measure, for a specified conversion group, or for all groups.
+     * Return an array of units of measure, for a specified conversion group, or for all groups.
      *
      * @Deprecated 1.16.0
      *
@@ -1389,7 +1389,7 @@ class Engineering
 
     /**
      *    getConversionMultipliers
-     * Returns an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM().
+     * Return an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM().
      *
      * @Deprecated 1.16.0
      *
@@ -1405,7 +1405,7 @@ class Engineering
     /**
      *    getBinaryConversionMultipliers.
      *
-     * Returns an array of the additional Multiplier prefixes that can be used with Information Units of Measure
+     * Return an array of the additional Multiplier prefixes that can be used with Information Units of Measure
      *     in CONVERTUOM().
      *
      * @Deprecated 1.16.0

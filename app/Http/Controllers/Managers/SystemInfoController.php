@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use App\Services\Systems\SystemInfoService;
+use App\Services\SystemInfoService;
 
 class SystemInfoController extends Controller
 {

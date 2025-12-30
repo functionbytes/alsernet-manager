@@ -65,7 +65,7 @@ class OrderProductCustomizationsForViewing
     }
 
     /**
-     * Returns customizations of type FILE
+     * Return customizations of type FILE
      *
      * @return OrderProductCustomizationForViewing[]
      */
@@ -75,7 +75,7 @@ class OrderProductCustomizationsForViewing
     }
 
     /**
-     * Returns customizations of type TEXT
+     * Return customizations of type TEXT
      *
      * @return OrderProductCustomizationForViewing[]
      */

@@ -2,7 +2,7 @@
 
 namespace Modules\Warehouse\Models;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -80,7 +80,7 @@ class WarehouseInventorySlot extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Product\Product', 'product_id', 'id');
+        return $this->belongsTo('Modules\Warehouse\Models\Product\Product', 'product_id', 'id');
     }
 
     /**

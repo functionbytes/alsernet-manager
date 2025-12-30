@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Systems;
+namespace App\Services;
 
 class SystemInfoService
 {

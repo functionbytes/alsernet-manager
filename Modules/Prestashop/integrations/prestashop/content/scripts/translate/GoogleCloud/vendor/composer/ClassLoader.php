@@ -475,7 +475,7 @@ class ClassLoader
     }
 
     /**
-     * Returns the currently registered loaders keyed by their corresponding vendor directories.
+     * Return the currently registered loaders keyed by their corresponding vendor directories.
      *
      * @return array<string, self>
      */

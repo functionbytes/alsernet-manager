@@ -168,14 +168,14 @@ abstract class DbCore
     abstract public function _escape($str);
 
     /**
-     * Returns the text of the error message from previous database operation.
+     * Return the text of the error message from previous database operation.
      *
      * @return string
      */
     abstract public function getMsgError();
 
     /**
-     * Returns the number of the error from previous database operation.
+     * Return the number of the error from previous database operation.
      *
      * @return int
      */
@@ -198,7 +198,7 @@ abstract class DbCore
     abstract public function getBestEngine();
 
     /**
-     * Returns database object instance.
+     * Return database object instance.
      *
      * @param  bool  $master  Decides whether the connection to be returned by the master server or the slave server
      * @return Db Singleton instance of Db object
@@ -279,7 +279,7 @@ abstract class DbCore
     }
 
     /**
-     * Returns the best child layer database class.
+     * Return the best child layer database class.
      *
      * @return string
      */
@@ -620,7 +620,7 @@ abstract class DbCore
     }
 
     /**
-     * Returns an associative array containing the first row of the query
+     * Return an associative array containing the first row of the query
      * This function automatically adds "LIMIT 1" to the query.
      *
      * @param  string|DbQuery  $sql  the select query (without "LIMIT 1")
@@ -668,11 +668,11 @@ abstract class DbCore
     }
 
     /**
-     * Returns a value from the first row, first column of a SELECT query.
+     * Return a value from the first row, first column of a SELECT query.
      *
      * @param  string|DbQuery  $sql
      * @param  bool  $use_cache
-     * @return string|false Returns false if no results
+     * @return string|false Return false if no results
      */
     public function getValue($sql, $use_cache = true)
     {

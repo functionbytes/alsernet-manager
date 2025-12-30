@@ -86,7 +86,7 @@ class FieldDescriptor
     }
 
     /**
-     * @return Descriptor Returns a descriptor for the field type if the field type is a message, otherwise throws \Exception
+     * @return Descriptor Return a descriptor for the field type if the field type is a message, otherwise throws \Exception
      * @throws \Exception
      */
     public function getMessageType()
@@ -99,7 +99,7 @@ class FieldDescriptor
     }
 
     /**
-     * @return EnumDescriptor Returns an enum descriptor if the field type is an enum, otherwise throws \Exception
+     * @return EnumDescriptor Return an enum descriptor if the field type is an enum, otherwise throws \Exception
      * @throws \Exception
      */
     public function getEnumType()

@@ -154,7 +154,7 @@ class Version
     }
 
     /**
-     * Returns the current version in legacy format (eg. "1.7.6.0")
+     * Return the current version in legacy format (eg. "1.7.6.0")
      *
      * @param bool $full [default=false] If true, include pre-release and build metadata (eg. "1.7.6.0-dev+build.1")
      *
@@ -173,7 +173,7 @@ class Version
     }
 
     /**
-     * Returns SemVer compliant version (eg. "7.6.0")
+     * Return SemVer compliant version (eg. "7.6.0")
      *
      * @return string
      */
@@ -183,7 +183,7 @@ class Version
     }
 
     /**
-     * Returns the current major version as a string.
+     * Return the current major version as a string.
      *
      * @return string For example "1.7"
      */
@@ -193,7 +193,7 @@ class Version
     }
 
     /**
-     * Returns the current major version as an integer.
+     * Return the current major version as an integer.
      *
      * @return int For example 17
      */
@@ -203,7 +203,7 @@ class Version
     }
 
     /**
-     * Returns the current minor version.
+     * Return the current minor version.
      *
      * @return int
      */
@@ -213,7 +213,7 @@ class Version
     }
 
     /**
-     * Returns the current patch version.
+     * Return the current patch version.
      *
      * @return int
      */
@@ -223,7 +223,7 @@ class Version
     }
 
     /**
-     * Returns the current release version.
+     * Return the current release version.
      *
      * @deprecated Since 1.7.6.0, use getPatchVersion();
      *
@@ -240,7 +240,7 @@ class Version
     }
 
     /**
-     * Returns the current pre release version (if any)
+     * Return the current pre release version (if any)
      *
      * @return string
      */
@@ -250,7 +250,7 @@ class Version
     }
 
     /**
-     * Returns the current build metadata (if any)
+     * Return the current build metadata (if any)
      *
      * @return string
      */
@@ -260,7 +260,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is greater than the provided version.
+     * Return if the current version is greater than the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -274,7 +274,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is greater than or equal to the provided version.
+     * Return if the current version is greater than or equal to the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -288,7 +288,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is less than the provided version.
+     * Return if the current version is less than the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -302,7 +302,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is less than or equal to the provided version.
+     * Return if the current version is less than or equal to the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -316,7 +316,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is equal to the provided version.
+     * Return if the current version is equal to the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -330,7 +330,7 @@ class Version
     }
 
     /**
-     * Returns if the current version is not equal to the provided version.
+     * Return if the current version is not equal to the provided version.
      *
      * @param string $version Must be a valid version string, for example "1.7.4.0"
      *
@@ -344,7 +344,7 @@ class Version
     }
 
     /**
-     * Returns the semantic version string
+     * Return the semantic version string
      */
     public function __toString()
     {

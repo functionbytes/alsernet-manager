@@ -1880,7 +1880,7 @@ abstract class ModuleCore implements ModuleInterface
      * Create the Addons API call from the module name only.
      *
      * @param  string  $module_name  Module dir name
-     * @return bool Returns if the module is trusted by addons.prestashop.com
+     * @return bool Return if the module is trusted by addons.prestashop.com
      */
     final public static function checkModuleFromAddonsApi($module_name)
     {
@@ -1902,7 +1902,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Returns the list of the payment module associated to the current customer.
+     * Return the list of the payment module associated to the current customer.
      *
      * @see PaymentModule::getInstalledPaymentModules() if you don't care about the context
      *
@@ -3473,7 +3473,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Returns the container depending on the environment:
+     * Return the container depending on the environment:
      *  - Legacy: light container with few services specifically defined for legacy front/admin controllers
      *  - Symfony: symfony container with all the migrated services (CQRS, ...)
      *
@@ -3516,7 +3516,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Returns shop theme name from context as a default compile Id.
+     * Return shop theme name from context as a default compile Id.
      *
      * @return string
      */
@@ -3526,7 +3526,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Returns the declared multistore compatibility level
+     * Return the declared multistore compatibility level
      */
     public function getMultistoreCompatibility(): int
     {

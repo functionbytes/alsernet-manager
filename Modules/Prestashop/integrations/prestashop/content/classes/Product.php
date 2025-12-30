@@ -31,6 +31,7 @@ define('_CUSTOMIZE_FILE_', 0);
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
+use Modules\Helpdesk\Models\Group\Group;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -874,12 +875,12 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Returns price display method for a customer (i.e. price should be including tax or not).
+     * Return price display method for a customer (i.e. price should be including tax or not).
      *
      * @see initPricesComputation()
      *
      * @param  int|null  $id_customer  Customer identifier
-     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     * @return int Return 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
     public static function getTaxCalculationMethod($id_customer = null)
     {
@@ -3492,7 +3493,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Returns product price.
+     * Return product price.
      *
      * @param  int  $id_product  Product identifier
      * @param  bool  $usetax  With taxes or not (optional)
@@ -3501,7 +3502,7 @@ class ProductCore extends ObjectModel
      *                                          NULL does apply the default combination price impact
      * @param  int  $decimals  Number of decimals (optional)
      * @param  int|null  $divisor  Useful when paying many time without fees (optional)
-     * @param  bool  $only_reduc  Returns only the reduction amount
+     * @param  bool  $only_reduc  Return only the reduction amount
      * @param  bool  $usereduc  Set if the returned amount will include reduction
      * @param  int  $quantity  Required for quantity discount application (default value: 1)
      * @param  bool  $force_associated_tax  DEPRECATED - NOT USED Force to apply the associated tax.
@@ -3668,7 +3669,7 @@ class ProductCore extends ObjectModel
      * @param  int  $quantity  Quantity Required for Specific prices : quantity discount application
      * @param  bool  $use_tax  with (1) or without (0) tax
      * @param  int  $decimals  Number of decimals returned
-     * @param  bool  $only_reduc  Returns only the reduction amount
+     * @param  bool  $only_reduc  Return only the reduction amount
      * @param  bool  $use_reduc  Set if the returned amount will include reduction
      * @param  bool  $with_ecotax  insert ecotax in price output
      * @param  array|null  $specific_price  If a specific price applies regarding the previous parameters,
@@ -4289,7 +4290,7 @@ class ProductCore extends ObjectModel
      *                             - O Deny orders
      *                             - 1 Allow orders
      *                             - 2 Use global setting
-     * @return bool|int Returns false is Stock Management is disabled, or the (int) configuration if it's enabled
+     * @return bool|int Return false is Stock Management is disabled, or the (int) configuration if it's enabled
      */
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
@@ -6630,7 +6631,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Returns tax rate.
+     * Return tax rate.
      *
      *
      * @return float The total taxes rate applied to the product
@@ -8229,7 +8230,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Returns product type based on existing associations without taking the saved value
+     * Return product type based on existing associations without taking the saved value
      * in database into account.
      */
     public function getDynamicProductType(): string

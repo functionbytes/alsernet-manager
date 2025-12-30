@@ -64,7 +64,7 @@ class ConfigYamlLoader extends FileLoader
     }
 
     /**
-     * Returns the parsed config after the YAML file has been loaded.
+     * Return the parsed config after the YAML file has been loaded.
      *
      * @return array
      */

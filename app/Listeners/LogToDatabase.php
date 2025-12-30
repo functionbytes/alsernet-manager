@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Listeners\Systems;
+namespace App\Listeners;
 
 use App\Models\ApplicationLog;
 use Illuminate\Log\Events\MessageLogged;
 
-class LogToDatabase
+class
+LogToDatabase
 {
     /**
      * Create the event listener.

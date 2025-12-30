@@ -205,7 +205,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns object validation rules (fields validity).
+     * Return object validation rules (fields validity).
      *
      * @param  string  $class  Child class name for static use (optional)
      * @return array Validation rules (fields validity)
@@ -375,7 +375,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns the language related to the object or the default one if it doesn't exists
+     * Return the language related to the object or the default one if it doesn't exists
      *
      *
      * @throws PrestaShopDatabaseException
@@ -1220,7 +1220,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns field name translation.
+     * Return field name translation.
      *
      * @param  string  $field  Field name
      * @param  string  $class  ObjectModel class name
@@ -1311,7 +1311,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns webservice parameters of this object.
+     * Return webservice parameters of this object.
      *
      * @param  string|null  $ws_params_attribute_name
      * @return array
@@ -1409,7 +1409,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns webservice object list.
+     * Return webservice object list.
      *
      * @param  string  $sql_join
      * @param  string  $sql_filter
@@ -1488,7 +1488,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns an array of required fields.
+     * Return an array of required fields.
      *
      * @param  bool  $all  if true, returns required fields of all object classes
      * @return array|null
@@ -1504,7 +1504,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns true if required field exists.
+     * Return true if required field exists.
      *
      * @param  string  $field_name  to search
      * @param  bool  $all  if true, returns required fields of all object classes
@@ -1995,7 +1995,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Returns object definition.
+     * Return object definition.
      *
      * @param  string  $class  Name of object
      * @param  string|null  $field  Name of field if we want the definition of one field only

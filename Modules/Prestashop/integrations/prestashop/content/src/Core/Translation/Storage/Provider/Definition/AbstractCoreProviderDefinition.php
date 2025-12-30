@@ -38,7 +38,7 @@ abstract class AbstractCoreProviderDefinition implements ProviderDefinitionInter
     abstract public function getType(): string;
 
     /**
-     * Returns a list of patterns to filter catalogue files.
+     * Return a list of patterns to filter catalogue files.
      * Depends on the translation type.
      *
      * @return array<int, string>
@@ -46,7 +46,7 @@ abstract class AbstractCoreProviderDefinition implements ProviderDefinitionInter
     abstract public function getFilenameFilters(): array;
 
     /**
-     * Returns a list of patterns to filter translation domains.
+     * Return a list of patterns to filter translation domains.
      * Depends on the translation type.
      *
      * @return array<int, string>

@@ -124,7 +124,7 @@ class EntityRepository
     }
 
     /**
-     * Returns escaped+prefixed current table name.
+     * Return escaped+prefixed current table name.
      *
      * @return mixed
      */
@@ -134,7 +134,7 @@ class EntityRepository
     }
 
     /**
-     * Returns escaped DB table prefix.
+     * Return escaped DB table prefix.
      *
      * @return mixed
      */

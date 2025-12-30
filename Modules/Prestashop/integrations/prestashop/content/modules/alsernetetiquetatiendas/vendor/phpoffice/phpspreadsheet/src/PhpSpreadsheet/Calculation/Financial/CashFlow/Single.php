@@ -11,7 +11,7 @@ class Single
     /**
      * FVSCHEDULE.
      *
-     * Returns the future value of an initial principal after applying a series of compound interest rates.
+     * Return the future value of an initial principal after applying a series of compound interest rates.
      * Use FVSCHEDULE to calculate the future value of an investment with a variable or adjustable rate.
      *
      * Excel Function:

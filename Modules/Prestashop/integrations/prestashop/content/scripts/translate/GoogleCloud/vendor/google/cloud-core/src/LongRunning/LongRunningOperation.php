@@ -166,7 +166,7 @@ class LongRunningOperation
      *
      * The return type of this method is dictated by the type of Operation.
      *
-     * Returns null if the Operation is not yet complete, or if an error occurred.
+     * Return null if the Operation is not yet complete, or if an error occurred.
      *
      * If the Operation state is not available, a service request may be executed
      * by this method.
@@ -188,7 +188,7 @@ class LongRunningOperation
     /**
      * Get the Operation error.
      *
-     * Returns null if the Operation is not yet complete, or if no error occurred.
+     * Return null if the Operation is not yet complete, or if no error occurred.
      *
      * If the Operation state is not available, a service request may be executed
      * by this method.

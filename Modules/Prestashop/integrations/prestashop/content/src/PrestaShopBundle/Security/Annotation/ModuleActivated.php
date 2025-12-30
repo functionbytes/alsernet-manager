@@ -112,7 +112,7 @@ class ModuleActivated extends ConfigurationAnnotation
     }
 
     /**
-     * Returns the alias name for an annotated configuration.
+     * Return the alias name for an annotated configuration.
      *
      * @return string
      */
@@ -122,7 +122,7 @@ class ModuleActivated extends ConfigurationAnnotation
     }
 
     /**
-     * Returns the name of the module to check.
+     * Return the name of the module to check.
      *
      * @return string|null
      */
@@ -140,7 +140,7 @@ class ModuleActivated extends ConfigurationAnnotation
     }
 
     /**
-     * Returns whether multiple annotations of this type are allowed.
+     * Return whether multiple annotations of this type are allowed.
      *
      * @return bool
      */

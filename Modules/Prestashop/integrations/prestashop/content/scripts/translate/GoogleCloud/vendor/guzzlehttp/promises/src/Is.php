@@ -5,7 +5,7 @@ namespace GuzzleHttp\Promise;
 final class Is
 {
     /**
-     * Returns true if a promise is pending.
+     * Return true if a promise is pending.
      *
      * @return bool
      */
@@ -15,7 +15,7 @@ final class Is
     }
 
     /**
-     * Returns true if a promise is fulfilled or rejected.
+     * Return true if a promise is fulfilled or rejected.
      *
      * @return bool
      */
@@ -25,7 +25,7 @@ final class Is
     }
 
     /**
-     * Returns true if a promise is fulfilled.
+     * Return true if a promise is fulfilled.
      *
      * @return bool
      */
@@ -35,7 +35,7 @@ final class Is
     }
 
     /**
-     * Returns true if a promise is rejected.
+     * Return true if a promise is rejected.
      *
      * @return bool
      */

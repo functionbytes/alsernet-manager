@@ -13,7 +13,7 @@ class Standardize extends StatisticalValidations
     /**
      * STANDARDIZE.
      *
-     * Returns a normalized value from a distribution characterized by mean and standard_dev.
+     * Return a normalized value from a distribution characterized by mean and standard_dev.
      *
      * @param array|float $value Value to normalize
      *                      Or can be an array of values

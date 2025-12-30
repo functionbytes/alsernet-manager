@@ -141,7 +141,7 @@ class InlineStyleWrapper
     }
 
     /**
-     * Returns the DOMDocument as html
+     * Return the DOMDocument as html
      *
      * @return string the HTML
      */

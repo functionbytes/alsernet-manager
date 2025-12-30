@@ -7,7 +7,7 @@ class Boolean
     /**
      * TRUE.
      *
-     * Returns the boolean TRUE.
+     * Return the boolean TRUE.
      *
      * Excel Function:
      *        =TRUE()
@@ -22,7 +22,7 @@ class Boolean
     /**
      * FALSE.
      *
-     * Returns the boolean FALSE.
+     * Return the boolean FALSE.
      *
      * Excel Function:
      *        =FALSE()

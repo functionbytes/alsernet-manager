@@ -235,7 +235,7 @@
     },
 
     /**
-     * Returns the items added as tags
+     * Return the items added as tags
      */
     items: function() {
       return this.itemsArray;
@@ -495,14 +495,14 @@
     },
 
     /**
-     * Returns the internal input element
+     * Return the internal input element
      */
     input: function() {
       return this.$input;
     },
 
     /**
-     * Returns the element which is wrapped around the internal input. This
+     * Return the element which is wrapped around the internal input. This
      * is normally the $container, but typeahead.js moves the $input element.
      */
     findInputWrapper: function() {
@@ -591,7 +591,7 @@
   }
 
   /**
-   * Returns the position of the caret in the given input field
+   * Return the position of the caret in the given input field
    * http://flightschool.acylt.com/devnotes/caret-position-woes/
    */
   function doGetCaretPosition(oField) {
@@ -608,7 +608,7 @@
   }
 
   /**
-    * Returns boolean indicates whether user has pressed an expected key combination.
+    * Return boolean indicates whether user has pressed an expected key combination.
     * @param object keyPressEvent: JavaScript event object, refer
     *     http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
     * @param object lookupList: expected key combinations, as in:

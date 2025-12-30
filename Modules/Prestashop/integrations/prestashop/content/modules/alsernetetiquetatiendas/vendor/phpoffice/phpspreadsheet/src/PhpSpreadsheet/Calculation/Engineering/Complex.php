@@ -61,7 +61,7 @@ class Complex
     /**
      * IMAGINARY.
      *
-     * Returns the imaginary coefficient of a complex number in x + yi or x + yj text format.
+     * Return the imaginary coefficient of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMAGINARY(complexNumber)
@@ -92,7 +92,7 @@ class Complex
     /**
      * IMREAL.
      *
-     * Returns the real coefficient of a complex number in x + yi or x + yj text format.
+     * Return the real coefficient of a complex number in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMREAL(complexNumber)

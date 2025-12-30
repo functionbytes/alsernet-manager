@@ -14,7 +14,7 @@ class Operations
     /**
      * LOGICAL_AND.
      *
-     * Returns boolean TRUE if all its arguments are TRUE; returns FALSE if one or more argument is FALSE.
+     * Return boolean TRUE if all its arguments are TRUE; returns FALSE if one or more argument is FALSE.
      *
      * Excel Function:
      *        =AND(logical1[,logical2[, ...]])
@@ -55,7 +55,7 @@ class Operations
     /**
      * LOGICAL_OR.
      *
-     * Returns boolean TRUE if any argument is TRUE; returns FALSE if all arguments are FALSE.
+     * Return boolean TRUE if any argument is TRUE; returns FALSE if all arguments are FALSE.
      *
      * Excel Function:
      *        =OR(logical1[,logical2[, ...]])
@@ -95,7 +95,7 @@ class Operations
     /**
      * LOGICAL_XOR.
      *
-     * Returns the Exclusive Or logical operation for one or more supplied conditions.
+     * Return the Exclusive Or logical operation for one or more supplied conditions.
      * i.e. the Xor function returns TRUE if an odd number of the supplied conditions evaluate to TRUE,
      *      and FALSE otherwise.
      *
@@ -137,7 +137,7 @@ class Operations
     /**
      * NOT.
      *
-     * Returns the boolean inverse of the argument.
+     * Return the boolean inverse of the argument.
      *
      * Excel Function:
      *        =NOT(logical)

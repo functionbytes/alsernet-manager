@@ -15,7 +15,7 @@ class Week
     /**
      * WEEKNUM.
      *
-     * Returns the week of the year for a specified date.
+     * Return the week of the year for a specified date.
      * The WEEKNUM function considers the week containing January 1 to be the first week of the year.
      * However, there is a European standard that defines the first week as the one with the majority
      * of days (four or more) falling in the new year. This means that for years in which there are
@@ -92,7 +92,7 @@ class Week
     /**
      * ISOWEEKNUM.
      *
-     * Returns the ISO 8601 week number of the year for a specified date.
+     * Return the ISO 8601 week number of the year for a specified date.
      *
      * Excel Function:
      *        ISOWEEKNUM(dateValue)
@@ -131,7 +131,7 @@ class Week
     /**
      * WEEKDAY.
      *
-     * Returns the day of the week for a specified date. The day is given as an integer
+     * Return the day of the week for a specified date. The day is given as an integer
      * ranging from 0 to 7 (dependent on the requested style).
      *
      * Excel Function:

@@ -450,7 +450,7 @@ class SetCookie
     /**
      * Check if the cookie is valid according to RFC 6265.
      *
-     * @return bool|string Returns true if valid or an error message if invalid
+     * @return bool|string Return true if valid or an error message if invalid
      */
     public function validate()
     {

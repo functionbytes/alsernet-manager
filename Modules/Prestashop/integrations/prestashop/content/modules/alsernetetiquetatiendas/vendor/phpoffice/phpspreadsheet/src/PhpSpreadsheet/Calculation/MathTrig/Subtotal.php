@@ -77,7 +77,7 @@ class Subtotal
     /**
      * SUBTOTAL.
      *
-     * Returns a subtotal in a list or database.
+     * Return a subtotal in a list or database.
      *
      * @param mixed $functionType
      *            A number 1 to 11 that specifies which function to

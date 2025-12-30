@@ -158,7 +158,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Returns default Currency set in Configuration
+     * Return default Currency set in Configuration
      *
      * @return Currency
      */

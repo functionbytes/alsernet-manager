@@ -2,19 +2,19 @@
 
 namespace Modules\Subscriber\Http\Controllers\Api;
 
-use App\Jobs\Erp\SynchronizationSubscription;
-use Modules\Subscriber\Jobs\SubscriberCategoriesCheackatJob;
-use Modules\Subscriber\Jobs\SubscriberCategoriesJob;
-use Modules\Subscriber\Jobs\SubscriberCheckatJob;
 use App\Models\Lang;
-use Modules\Subscriber\Models\Subscriber;
-use Modules\Subscriber\Models\SubscriberList;
-use Modules\Subscriber\Models\SubscriberLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Erp\Jobs\Erp\SynchronizationSubscription;
+use Modules\Subscriber\Jobs\SubscriberCategoriesCheackatJob;
+use Modules\Subscriber\Jobs\SubscriberCategoriesJob;
+use Modules\Subscriber\Jobs\SubscriberCheckatJob;
+use Modules\Subscriber\Models\Subscriber;
+use Modules\Subscriber\Models\SubscriberList;
+use Modules\Subscriber\Models\SubscriberLog;
 
 class SubscribersController extends ApiController
 {

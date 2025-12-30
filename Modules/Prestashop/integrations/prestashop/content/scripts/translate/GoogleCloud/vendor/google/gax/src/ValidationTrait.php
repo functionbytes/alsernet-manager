@@ -39,7 +39,7 @@ trait ValidationTrait
     /**
      * @param array $arr Associative array
      * @param array $requiredKeys List of keys to check for in $arr
-     * @return array Returns $arr for fluent use
+     * @return array Return $arr for fluent use
      */
     public static function validate(array $arr, array $requiredKeys)
     {
@@ -49,7 +49,7 @@ trait ValidationTrait
     /**
      * @param array $arr Associative array
      * @param array $requiredKeys List of keys to check for in $arr
-     * @return array Returns $arr for fluent use
+     * @return array Return $arr for fluent use
      */
     public static function validateNotNull(array $arr, array $requiredKeys)
     {

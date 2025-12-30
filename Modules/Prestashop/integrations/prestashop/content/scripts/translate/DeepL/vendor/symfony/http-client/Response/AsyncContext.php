@@ -43,7 +43,7 @@ final class AsyncContext
     }
 
     /**
-     * Returns the HTTP status without consuming the response.
+     * Return the HTTP status without consuming the response.
      */
     public function getStatusCode(): int
     {
@@ -51,7 +51,7 @@ final class AsyncContext
     }
 
     /**
-     * Returns the headers without consuming the response.
+     * Return the headers without consuming the response.
      */
     public function getHeaders(): array
     {
@@ -109,7 +109,7 @@ final class AsyncContext
     }
 
     /**
-     * Returns the current info of the response.
+     * Return the current info of the response.
      */
     public function getInfo(?string $type = null)
     {
@@ -141,7 +141,7 @@ final class AsyncContext
     }
 
     /**
-     * Returns the currently processed response.
+     * Return the currently processed response.
      */
     public function getResponse(): ResponseInterface
     {

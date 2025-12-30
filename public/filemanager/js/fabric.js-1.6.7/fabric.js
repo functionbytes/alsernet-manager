@@ -300,7 +300,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns an array of children objects of this instance
+   * Return an array of children objects of this instance
    * Type parameter introduced in 1.3.10
    * @param {String} [type] When specified, only objects of this type are returned
    * @return {Array}
@@ -315,7 +315,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns object at specified index
+   * Return object at specified index
    * @param {Number} index
    * @return {Self} thisArg
    */
@@ -324,7 +324,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns true if collection contains no objects
+   * Return true if collection contains no objects
    * @return {Boolean} true if collection is empty
    */
   isEmpty: function () {
@@ -332,7 +332,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns a size of a collection (i.e: length of an array containing its objects)
+   * Return a size of a collection (i.e: length of an array containing its objects)
    * @return {Number} Collection size
    */
   size: function() {
@@ -340,7 +340,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns true if collection contains an object
+   * Return true if collection contains an object
    * @param {Object} object Object to check against
    * @return {Boolean} `true` if collection contains an object
    */
@@ -349,7 +349,7 @@ fabric.Collection = {
   },
 
   /**
-   * Returns number representation of a collection complexity
+   * Return number representation of a collection complexity
    * @return {Number} complexity
    */
   complexity: function () {
@@ -392,7 +392,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns random number between 2 specified ones.
+     * Return random number between 2 specified ones.
      * @static
      * @memberOf fabric.util
      * @param {Number} min lower limit
@@ -482,7 +482,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns coordinates of points's bounding rectangle (left, top, width, height)
+     * Return coordinates of points's bounding rectangle (left, top, width, height)
      * @param {Array} points 4 points array
      * @return {Object} Object with left, top, width, height properties
      */
@@ -534,7 +534,7 @@ fabric.Collection = {
 
     /**
      * Converts from attribute value to pixel value if applicable.
-     * Returns converted pixels or original value not converted.
+     * Return converted pixels or original value not converted.
      * @param {Number|String} value number to operate on
      * @param {Number} fontSize
      * @return {Number|String}
@@ -580,7 +580,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns klass "Class" object of given namespace
+     * Return klass "Class" object of given namespace
      * @memberOf fabric.util
      * @param {String} type Type of object (eg. 'circle')
      * @param {String} namespace Namespace to get klass "Class" object from
@@ -593,7 +593,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns object of given namespace
+     * Return object of given namespace
      * @memberOf fabric.util
      * @param {String} namespace Namespace string e.g. 'fabric.Image.filter' or 'fabric'
      * @return {Object} Object for given namespace (default fabric)
@@ -920,7 +920,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns string representation of function body
+     * Return string representation of function body
      * @param {Function} fn Function to get body of
      * @return {String} Function body
      */
@@ -929,7 +929,7 @@ fabric.Collection = {
     },
 
     /**
-     * Returns true if context has transparent pixel
+     * Return true if context has transparent pixel
      * at specified location (taking tolerance into account)
      * @param {CanvasRenderingContext2D} ctx context
      * @param {Number} x x coordinate
@@ -1342,7 +1342,7 @@ fabric.Collection = {
 
   if (!Array.prototype.map) {
     /**
-     * Returns a result of iterating over an array, invoking callback for each element
+     * Return a result of iterating over an array, invoking callback for each element
      * @param {Function} fn Callback to invoke for each element
      * @param {Object} [context] Context to invoke callback in
      * @return {Array}
@@ -1360,7 +1360,7 @@ fabric.Collection = {
 
   if (!Array.prototype.every) {
     /**
-     * Returns true if a callback returns truthy value for all elements in an array
+     * Return true if a callback returns truthy value for all elements in an array
      * @param {Function} fn Callback to invoke for each element
      * @param {Object} [context] Context to invoke callback in
      * @return {Boolean}
@@ -1377,7 +1377,7 @@ fabric.Collection = {
 
   if (!Array.prototype.some) {
     /**
-     * Returns true if a callback returns truthy value for at least one element in an array
+     * Return true if a callback returns truthy value for at least one element in an array
      * @param {Function} fn Callback to invoke for each element
      * @param {Object} [context] Context to invoke callback in
      * @return {Boolean}
@@ -1394,7 +1394,7 @@ fabric.Collection = {
 
   if (!Array.prototype.filter) {
     /**
-     * Returns the result of iterating over elements in an array
+     * Return the result of iterating over elements in an array
      * @param {Function} fn Callback to invoke for each element
      * @param {Object} [context] Context to invoke callback in
      * @return {Array}
@@ -1415,7 +1415,7 @@ fabric.Collection = {
 
   if (!Array.prototype.reduce) {
     /**
-     * Returns "folded" (reduced) result of iterating over elements in an array
+     * Return "folded" (reduced) result of iterating over elements in an array
      * @param {Function} fn Callback to invoke for each element
      * @return {*}
      */
@@ -2204,7 +2204,7 @@ fabric.Collection = {
   }
 
   /**
-   * Returns element scroll offsets
+   * Return element scroll offsets
    * @memberOf fabric.util
    * @param {HTMLElement} element Element to operate on
    * @return {Object} Object with left/top values
@@ -2246,7 +2246,7 @@ fabric.Collection = {
   }
 
   /**
-   * Returns offset for a given element
+   * Return offset for a given element
    * @function
    * @memberOf fabric.util
    * @param {HTMLElement} element Element to get offset for
@@ -2287,7 +2287,7 @@ fabric.Collection = {
   }
 
   /**
-   * Returns style attribute value of a given element
+   * Return style attribute value of a given element
    * @memberOf fabric.util
    * @param {HTMLElement} element Element to get style attribute for
    * @param {String} attr Style attribute to get for element
@@ -3779,7 +3779,7 @@ if (typeof console !== 'undefined') {
     },
 
     /**
-     * Returns an object of attributes' name/value, given element and an array of attribute names;
+     * Return an object of attributes' name/value, given element and an array of attribute names;
      * Parses parent "g" nodes recursively upwards.
      * @static
      * @memberOf fabric
@@ -3904,7 +3904,7 @@ if (typeof console !== 'undefined') {
     },
 
     /**
-     * Returns CSS rules for a given SVG document
+     * Return CSS rules for a given SVG document
      * @static
      * @function
      * @memberOf fabric
@@ -4365,7 +4365,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns true if this point is equal to another one
+     * Return true if this point is equal to another one
      * @param {fabric.Point} that
      * @return {Boolean}
      */
@@ -4374,7 +4374,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns true if this point is less than another one
+     * Return true if this point is less than another one
      * @param {fabric.Point} that
      * @return {Boolean}
      */
@@ -4383,7 +4383,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns true if this point is less than or equal to another one
+     * Return true if this point is less than or equal to another one
      * @param {fabric.Point} that
      * @return {Boolean}
      */
@@ -4393,7 +4393,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
 
     /**
 
-     * Returns true if this point is greater another one
+     * Return true if this point is greater another one
      * @param {fabric.Point} that
      * @return {Boolean}
      */
@@ -4402,7 +4402,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns true if this point is greater than or equal to another one
+     * Return true if this point is greater than or equal to another one
      * @param {fabric.Point} that
      * @return {Boolean}
      */
@@ -4411,7 +4411,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns new point which is the result of linear interpolation with this one and another one
+     * Return new point which is the result of linear interpolation with this one and another one
      * @param {fabric.Point} that
      * @param {Number} t , position of interpolation, between 0 and 1 default 0.5
      * @return {fabric.Point}
@@ -4425,7 +4425,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns distance from this point and another one
+     * Return distance from this point and another one
      * @param {fabric.Point} that
      * @return {Number}
      */
@@ -4436,7 +4436,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns the point between this point and another one
+     * Return the point between this point and another one
      * @param {fabric.Point} that
      * @return {fabric.Point}
      */
@@ -4445,7 +4445,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns a new point which is the min of this and another one
+     * Return a new point which is the min of this and another one
      * @param {fabric.Point} that
      * @return {fabric.Point}
      */
@@ -4454,7 +4454,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns a new point which is the max of this and another one
+     * Return a new point which is the max of this and another one
      * @param {fabric.Point} that
      * @return {fabric.Point}
      */
@@ -4463,7 +4463,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns string representation of this point
+     * Return string representation of this point
      * @return {String}
      */
     toString: function () {
@@ -4824,7 +4824,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns source of this color (where source is an array representation; ex: [200, 200, 100, 1])
+     * Return source of this color (where source is an array representation; ex: [200, 200, 100, 1])
      * @return {Array}
      */
     getSource: function() {
@@ -4840,7 +4840,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns color represenation in RGB format
+     * Return color represenation in RGB format
      * @return {String} ex: rgb(0-255,0-255,0-255)
      */
     toRgb: function() {
@@ -4849,7 +4849,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns color represenation in RGBA format
+     * Return color represenation in RGBA format
      * @return {String} ex: rgba(0-255,0-255,0-255,0-1)
      */
     toRgba: function() {
@@ -4858,7 +4858,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns color represenation in HSL format
+     * Return color represenation in HSL format
      * @return {String} ex: hsl(0-360,0%-100%,0%-100%)
      */
     toHsl: function() {
@@ -4869,7 +4869,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns color represenation in HSLA format
+     * Return color represenation in HSLA format
      * @return {String} ex: hsla(0-360,0%-100%,0%-100%,0-1)
      */
     toHsla: function() {
@@ -4880,7 +4880,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns color represenation in HEX format
+     * Return color represenation in HEX format
      * @return {String} ex: FF5555
      */
     toHex: function() {
@@ -5053,7 +5053,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   }
 
   /**
-   * Returns new color object, when given a color in RGB format
+   * Return new color object, when given a color in RGB format
    * @memberOf fabric.Color
    * @param {String} color Color value ex: rgb(0-255,0-255,0-255)
    * @return {fabric.Color}
@@ -5063,7 +5063,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns array representation (ex: [100, 100, 200, 1]) of a color that's in RGB or RGBA format
+   * Return array representation (ex: [100, 100, 200, 1]) of a color that's in RGB or RGBA format
    * @memberOf fabric.Color
    * @param {String} color Color value ex: rgb(0-255,0-255,0-255), rgb(0%-100%,0%-100%,0%-100%)
    * @return {Array} source
@@ -5085,7 +5085,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns new color object, when given a color in RGBA format
+   * Return new color object, when given a color in RGBA format
    * @static
    * @function
    * @memberOf fabric.Color
@@ -5095,7 +5095,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   fabric.Color.fromRgba = Color.fromRgb;
 
   /**
-   * Returns new color object, when given a color in HSL format
+   * Return new color object, when given a color in HSL format
    * @param {String} color Color value ex: hsl(0-260,0%-100%,0%-100%)
    * @memberOf fabric.Color
    * @return {fabric.Color}
@@ -5105,7 +5105,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns array representation (ex: [100, 100, 200, 1]) of a color that's in HSL or HSLA format.
+   * Return array representation (ex: [100, 100, 200, 1]) of a color that's in HSL or HSLA format.
    * Adapted from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>
    * @memberOf fabric.Color
    * @param {String} color Color value ex: hsl(0-360,0%-100%,0%-100%) or hsla(0-360,0%-100%,0%-100%, 0-1)
@@ -5144,7 +5144,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns new color object, when given a color in HSLA format
+   * Return new color object, when given a color in HSLA format
    * @static
    * @function
    * @memberOf fabric.Color
@@ -5154,7 +5154,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   fabric.Color.fromHsla = Color.fromHsl;
 
   /**
-   * Returns new color object, when given a color in HEX format
+   * Return new color object, when given a color in HEX format
    * @static
    * @memberOf fabric.Color
    * @param {String} color Color value ex: FF5555
@@ -5165,7 +5165,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns array representation (ex: [100, 100, 200, 1]) of a color that's in HEX format
+   * Return array representation (ex: [100, 100, 200, 1]) of a color that's in HEX format
    * @static
    * @memberOf fabric.Color
    * @param {String} color ex: FF5555 or FF5544CC (RGBa)
@@ -5191,7 +5191,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
   };
 
   /**
-   * Returns new color object, when given color in array representation (ex: [200, 100, 100, 0.5])
+   * Return new color object, when given color in array representation (ex: [200, 100, 100, 0.5])
    * @static
    * @memberOf fabric.Color
    * @param {Array} source
@@ -5352,7 +5352,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns object representation of a gradient
+     * Return object representation of a gradient
      * @return {Object}
      */
     toObject: function() {
@@ -5368,7 +5368,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an gradient
+     * Return SVG representation of an gradient
      * @param {Object} object Object to create a gradient for
      * @return {String} SVG representation of an gradient (linear/radial)
      */
@@ -5438,7 +5438,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     /* _TO_SVG_END_ */
 
     /**
-     * Returns an instance of CanvasGradient
+     * Return an instance of CanvasGradient
      * @param {CanvasRenderingContext2D} ctx Context to render on
      * @param {Object} object
      * @return {CanvasGradient}
@@ -5489,7 +5489,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
 
     /* _FROM_SVG_START_ */
     /**
-     * Returns {@link fabric.Gradient} instance from an SVG element
+     * Return {@link fabric.Gradient} instance from an SVG element
      * @static
      * @memberOf fabric.Gradient
      * @param {SVGGradientElement} el SVG gradient element
@@ -5576,7 +5576,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     /* _FROM_SVG_END_ */
 
     /**
-     * Returns {@link fabric.Gradient} instance from its object representation
+     * Return {@link fabric.Gradient} instance from its object representation
      * @static
      * @memberOf fabric.Gradient
      * @param {Object} obj
@@ -5709,7 +5709,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
   },
 
   /**
-   * Returns object representation of a pattern
+   * Return object representation of a pattern
    * @return {Object} Object representation of a pattern instance
    */
   toObject: function() {
@@ -5739,7 +5739,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
 
   /* _TO_SVG_START_ */
   /**
-   * Returns SVG representation of a pattern
+   * Return SVG representation of a pattern
    * @param {fabric.Object} object
    * @return {String} SVG representation of a pattern
    */
@@ -5778,7 +5778,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
   /* _TO_SVG_END_ */
 
   /**
-   * Returns an instance of CanvasPattern
+   * Return an instance of CanvasPattern
    * @param {CanvasRenderingContext2D} ctx Context to create pattern
    * @return {CanvasPattern}
    */
@@ -5904,9 +5904,9 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns a string representation of an instance
+     * Return a string representation of an instance
      * @see http://www.w3.org/TR/css-text-decor-3/#text-shadow
-     * @return {String} Returns CSS3 text-shadow declaration
+     * @return {String} Return CSS3 text-shadow declaration
      */
     toString: function() {
       return [this.offsetX, this.offsetY, this.blur, this.color].join('px ');
@@ -5914,7 +5914,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of a shadow
+     * Return SVG representation of a shadow
      * @param {fabric.Object} object
      * @return {String} SVG representation of a shadow
      */
@@ -5955,7 +5955,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     /* _TO_SVG_END_ */
 
     /**
-     * Returns object representation of a shadow
+     * Return object representation of a shadow
      * @return {Object} Object representation of a shadow instance
      */
     toObject: function() {
@@ -6508,7 +6508,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns canvas width (in px)
+     * Return canvas width (in px)
      * @return {Number}
      */
     getWidth: function () {
@@ -6516,7 +6516,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns canvas height (in px)
+     * Return canvas height (in px)
      * @return {Number}
      */
     getHeight: function () {
@@ -6635,7 +6635,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns canvas zoom level
+     * Return canvas zoom level
      * @return {Number}
      */
     getZoom: function () {
@@ -6719,7 +6719,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns &lt;canvas> element corresponding to this instance
+     * Return &lt;canvas> element corresponding to this instance
      * @return {HTMLCanvasElement}
      */
     getElement: function () {
@@ -6760,7 +6760,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns context of canvas where objects are drawn
+     * Return context of canvas where objects are drawn
      * @return {CanvasRenderingContext2D}
      */
     getContext: function () {
@@ -6892,7 +6892,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns coordinates of a center of canvas.
+     * Return coordinates of a center of canvas.
      * Returned value is an object with top and left properties
      * @return {Object} object with "top" and "left" number values
      */
@@ -7010,7 +7010,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns object representation of canvas
+     * Return object representation of canvas
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -7019,7 +7019,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns dataless object representation of canvas
+     * Return dataless object representation of canvas
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -7107,7 +7107,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     svgViewportTransformation: true,
 
     /**
-     * Returns SVG representation of canvas
+     * Return SVG representation of canvas
      * @function
      * @param {Object} [options] Options object for SVG output
      * @param {Boolean} [options.suppressPreamble=false] If true xml tag is not included
@@ -7503,7 +7503,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
     },
 
     /**
-     * Returns a string representation of an instance
+     * Return a string representation of an instance
      * @return {String} string representation of an instance
      */
     toString: function () {
@@ -7572,7 +7572,7 @@ fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ 
   });
 
   /**
-   * Returns JSON representation of canvas
+   * Return JSON representation of canvas
    * @function
    * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
    * @return {String} JSON string
@@ -8765,7 +8765,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns true if object is transparent at a certain location
+     * Return true if object is transparent at a certain location
      * @param {fabric.Object} target Object to check
      * @param {Number} x Left coordinate
      * @param {Number} y Top coordinate
@@ -9497,7 +9497,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns pointer coordinates without the effect of the viewport
+     * Return pointer coordinates without the effect of the viewport
      * @param {Object} pointer with "x" and "y" number values
      * @return {Object} object with "x" and "y" number values
      */
@@ -9509,7 +9509,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns pointer coordinates relative to canvas.
+     * Return pointer coordinates relative to canvas.
      * @param {Event} e
      * @param {Boolean} ignoreZoom
      * @return {Object} object with "x" and "y" number values
@@ -9631,7 +9631,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns context of canvas where object selection is drawn
+     * Return context of canvas where object selection is drawn
      * @return {CanvasRenderingContext2D}
      */
     getSelectionContext: function() {
@@ -9639,7 +9639,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns &lt;canvas> element on which object selection is drawn
+     * Return &lt;canvas> element on which object selection is drawn
      * @return {HTMLCanvasElement}
      */
     getSelectionElement: function () {
@@ -9674,7 +9674,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns currently active object
+     * Return currently active object
      * @return {fabric.Object} active object
      */
     getActiveObject: function () {
@@ -9749,7 +9749,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns currently active group
+     * Return currently active group
      * @return {fabric.Group} Current group
      */
     getActiveGroup: function () {
@@ -10983,7 +10983,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
      * @param {Number} [options.top] Cropping top offset. Introduced in v1.2.14
      * @param {Number} [options.width] Cropping width. Introduced in v1.2.14
      * @param {Number} [options.height] Cropping height. Introduced in v1.2.14
-     * @return {String} Returns a data: URL containing a representation of the object in the format specified by options.format
+     * @return {String} Return a data: URL containing a representation of the object in the format specified by options.format
      * @see {@link http://jsfiddle.net/fabricjs/NfZVb/|jsFiddle demo}
      * @example <caption>Generate jpeg dataURL with lower quality</caption>
      * var dataURL = canvas.toDataURL({
@@ -12181,7 +12181,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns an object representation of an instance
+     * Return an object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -12230,7 +12230,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns (dataless) object representation of an instance
+     * Return (dataless) object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -12263,7 +12263,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns a string representation of an instance
+     * Return a string representation of an instance
      * @return {String}
      */
     toString: function() {
@@ -12684,7 +12684,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @param {Number} [options.width] Cropping width. Introduced in v1.2.14
      * @param {Number} [options.height] Cropping height. Introduced in v1.2.14
      * @param {Boolean} [options.enableRetina] Enable retina scaling for clone image. Introduce in 1.6.4
-     * @return {String} Returns a data: URL containing a representation of the object in the format specified by options.format
+     * @return {String} Return a data: URL containing a representation of the object in the format specified by options.format
      */
     toDataURL: function(options) {
       options || (options = { });
@@ -12728,7 +12728,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns true if specified type is identical to the type of an instance
+     * Return true if specified type is identical to the type of an instance
      * @param {String} type Type to check against
      * @return {Boolean}
      */
@@ -12737,7 +12737,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -12745,7 +12745,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns a JSON representation of an instance
+     * Return a JSON representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} JSON
      */
@@ -12993,7 +12993,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns coordinates of a pointer relative to an object
+     * Return coordinates of a pointer relative to an object
      * @param {Event} e Event to operate upon
      * @param {Object} [pointer] Pointer to operate upon (instead of event)
      * @return {Object} Coordinates of a pointer (x, y)
@@ -13158,7 +13158,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns the real center coordinates of the object
+     * Return the real center coordinates of the object
      * @return {fabric.Point}
      */
     getCenterPoint: function() {
@@ -13167,7 +13167,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns the coordinates of the object based on center coordinates
+     * Return the coordinates of the object based on center coordinates
      * @param {fabric.Point} point The point which corresponds to the originX and originY params
      * @return {fabric.Point}
      */
@@ -13176,7 +13176,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     // },
 
     /**
-     * Returns the coordinates of the object as if it has a different origin
+     * Return the coordinates of the object as if it has a different origin
      * @param {String} originX Horizontal origin: 'left', 'center' or 'right'
      * @param {String} originY Vertical origin: 'top', 'center' or 'bottom'
      * @return {fabric.Point}
@@ -13187,7 +13187,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns the point in local coordinates
+     * Return the point in local coordinates
      * @param {fabric.Point} point The point relative to the global coordinate system
      * @param {String} originX Horizontal origin: 'left', 'center' or 'right'
      * @param {String} originY Vertical origin: 'top', 'center' or 'bottom'
@@ -13212,7 +13212,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns the point in global coordinates
+     * Return the point in global coordinates
      * @param {fabric.Point} The point relative to the local coordinate system
      * @return {fabric.Point}
      */
@@ -13495,7 +13495,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns width of an object's bounding rectangle
+     * Return width of an object's bounding rectangle
      * @deprecated since 1.0.4
      * @return {Number} width value
      */
@@ -13504,7 +13504,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns height of an object's bounding rectangle
+     * Return height of an object's bounding rectangle
      * @deprecated since 1.0.4
      * @return {Number} height value
      */
@@ -13513,7 +13513,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns coordinates of object's bounding rectangle (left, top, width, height)
+     * Return coordinates of object's bounding rectangle (left, top, width, height)
      * @return {Object} Object with left, top, width, height properties
      */
     getBoundingRect: function() {
@@ -13527,7 +13527,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns width of an object bounding box counting transformations
+     * Return width of an object bounding box counting transformations
      * @return {Number} width value
      */
     getWidth: function() {
@@ -13535,7 +13535,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     },
 
     /**
-     * Returns height of an object bounding box counting transformations
+     * Return height of an object bounding box counting transformations
      * to be renamed in 2.0
      * @return {Number} height value
      */
@@ -13819,7 +13819,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
   fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
     /**
-     * Returns styles-string for svg-export
+     * Return styles-string for svg-export
      * @param {Boolean} skipShadow a boolean to skip shadow filter output
      * @return {String}
      */
@@ -13853,7 +13853,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns filter for svg shadow
+     * Return filter for svg shadow
      * @return {String}
      */
     getSvgFilter: function() {
@@ -13861,7 +13861,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns id attribute for svg output
+     * Return id attribute for svg output
      * @return {String}
      */
     getSvgId: function() {
@@ -13869,7 +13869,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns transform-string for svg-export
+     * Return transform-string for svg-export
      * @return {String}
      */
     getSvgTransform: function() {
@@ -13920,7 +13920,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns transform-string for svg-export from the transform matrix of single elements
+     * Return transform-string for svg-export from the transform matrix of single elements
      * @return {String}
      */
     getSvgTransformMatrix: function() {
@@ -13996,7 +13996,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
 
     /**
-     * Returns true if object state (one of its state properties) was changed
+     * Return true if object state (one of its state properties) was changed
      * @return {Boolean} true if instance' state has changed since `{@link fabric.Object#saveState}` was called
      */
     hasStateChanged: function() {
@@ -14430,7 +14430,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns true if the specified control is visible, false otherwise.
+     * Return true if the specified control is visible, false otherwise.
      * @param {String} controlName The name of the control. Possible values are 'tl', 'tr', 'br', 'bl', 'ml', 'mt', 'mr', 'mb', 'mtr'.
      * @returns {Boolean} true if the specified control is visible, false otherwise
      */
@@ -14475,7 +14475,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns the instance of the control visibility set for this object.
+     * Return the instance of the control visibility set for this object.
      * @private
      * @returns {Object}
      */
@@ -14926,7 +14926,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @methd toObject
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
@@ -14957,7 +14957,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an instance
+     * Return SVG representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -14985,7 +14985,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity
      */
     complexity: function() {
@@ -15003,7 +15003,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Line.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('x1 y1 x2 y2'.split(' '));
 
   /**
-   * Returns fabric.Line instance from an SVG element
+   * Return fabric.Line instance from an SVG element
    * @static
    * @memberOf fabric.Line
    * @param {SVGElement} element Element to parse
@@ -15023,7 +15023,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns fabric.Line instance from an object representation
+   * Return fabric.Line instance from an object representation
    * @static
    * @memberOf fabric.Line
    * @param {Object} object Object to create an instance from
@@ -15146,7 +15146,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -15156,7 +15156,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -15218,7 +15218,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns horizontal radius of an object (according to how an object is scaled)
+     * Return horizontal radius of an object (according to how an object is scaled)
      * @return {Number}
      */
     getRadiusX: function() {
@@ -15226,7 +15226,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns vertical radius of an object (according to how an object is scaled)
+     * Return vertical radius of an object (according to how an object is scaled)
      * @return {Number}
      */
     getRadiusY: function() {
@@ -15243,7 +15243,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -15261,7 +15261,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Circle.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('cx cy r'.split(' '));
 
   /**
-   * Returns {@link fabric.Circle} instance from an SVG element
+   * Return {@link fabric.Circle} instance from an SVG element
    * @static
    * @memberOf fabric.Circle
    * @param {SVGElement} element Element to parse
@@ -15297,7 +15297,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns {@link fabric.Circle} instance from an object representation
+   * Return {@link fabric.Circle} instance from an object representation
    * @static
    * @memberOf fabric.Circle
    * @param {Object} object Object to create an instance from
@@ -15389,7 +15389,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an instance
+     * Return SVG representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -15417,7 +15417,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -15426,7 +15426,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   });
 
   /**
-   * Returns fabric.Triangle instance from an object representation
+   * Return fabric.Triangle instance from an object representation
    * @static
    * @memberOf fabric.Triangle
    * @param {Object} object Object to create an instance from
@@ -15524,7 +15524,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns horizontal radius of an object (according to how an object is scaled)
+     * Return horizontal radius of an object (according to how an object is scaled)
      * @return {Number}
      */
     getRx: function() {
@@ -15532,7 +15532,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns Vertical radius of an object (according to how an object is scaled)
+     * Return Vertical radius of an object (according to how an object is scaled)
      * @return {Number}
      */
     getRy: function() {
@@ -15540,7 +15540,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -15550,7 +15550,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -15597,7 +15597,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity
      */
     complexity: function() {
@@ -15615,7 +15615,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Ellipse.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('cx cy rx ry'.split(' '));
 
   /**
-   * Returns {@link fabric.Ellipse} instance from an SVG element
+   * Return {@link fabric.Ellipse} instance from an SVG element
    * @static
    * @memberOf fabric.Ellipse
    * @param {SVGElement} element Element to parse
@@ -15639,7 +15639,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns {@link fabric.Ellipse} instance from an object representation
+   * Return {@link fabric.Ellipse} instance from an object representation
    * @static
    * @memberOf fabric.Ellipse
    * @param {Object} object Object to create an instance from
@@ -15802,7 +15802,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -15812,7 +15812,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -15837,7 +15837,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity
      */
     complexity: function() {
@@ -15855,7 +15855,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Rect.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat('x y rx ry width height'.split(' '));
 
   /**
-   * Returns {@link fabric.Rect} instance from an SVG element
+   * Return {@link fabric.Rect} instance from an SVG element
    * @static
    * @memberOf fabric.Rect
    * @param {SVGElement} element Element to parse
@@ -15879,7 +15879,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns {@link fabric.Rect} instance from an object representation
+   * Return {@link fabric.Rect} instance from an object representation
    * @static
    * @memberOf fabric.Rect
    * @param {Object} object Object to create an instance from
@@ -15973,7 +15973,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -15983,7 +15983,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an instance
+     * Return SVG representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -16021,7 +16021,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -16039,7 +16039,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Polyline.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat();
 
   /**
-   * Returns fabric.Polyline instance from an SVG element
+   * Return fabric.Polyline instance from an SVG element
    * @static
    * @memberOf fabric.Polyline
    * @param {SVGElement} element Element to parse
@@ -16060,7 +16060,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns fabric.Polyline instance from an object representation
+   * Return fabric.Polyline instance from an object representation
    * @static
    * @memberOf fabric.Polyline
    * @param {Object} object Object to create an instance from
@@ -16168,7 +16168,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -16180,7 +16180,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -16257,7 +16257,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -16275,7 +16275,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   fabric.Polygon.ATTRIBUTE_NAMES = fabric.SHARED_ATTRIBUTES.concat();
 
   /**
-   * Returns {@link fabric.Polygon} instance from an SVG element
+   * Return {@link fabric.Polygon} instance from an SVG element
    * @static
    * @memberOf fabric.Polygon
    * @param {SVGElement} element Element to parse
@@ -16297,7 +16297,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns fabric.Polygon instance from an object representation
+   * Return fabric.Polygon instance from an object representation
    * @static
    * @memberOf fabric.Polygon
    * @param {Object} object Object to create an instance from
@@ -16774,7 +16774,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns string representation of an instance
+     * Return string representation of an instance
      * @return {String} string representation of an instance
      */
     toString: function() {
@@ -16783,7 +16783,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -16795,7 +16795,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns dataless object representation of an instance
+     * Return dataless object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -16810,7 +16810,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -16839,7 +16839,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns number representation of an instance complexity
+     * Return number representation of an instance complexity
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -17424,7 +17424,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of this path group
+     * Return object representation of this path group
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -17436,7 +17436,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns dataless object representation of this path group
+     * Return dataless object representation of this path group
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} dataless object representation of an instance
      */
@@ -17450,7 +17450,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -17476,7 +17476,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns a string representation of this path group
+     * Return a string representation of this path group
      * @return {String} string representation of an object
      */
     toString: function() {
@@ -17485,7 +17485,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns true if all paths in this group are of same color
+     * Return true if all paths in this group are of same color
      * @return {Boolean} true if all paths are of the same color (`fill`)
      */
     isSameColor: function() {
@@ -17501,7 +17501,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns number representation of object's complexity
+     * Return number representation of object's complexity
      * @return {Number} complexity
      */
     complexity: function() {
@@ -17511,7 +17511,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns all paths in this path group
+     * Return all paths in this path group
      * @return {Array} array of path objects included in this path group
      */
     getObjects: function() {
@@ -17700,7 +17700,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns string represenation of a group
+     * Return string represenation of a group
      * @return {String}
      */
     toString: function() {
@@ -17810,7 +17810,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
      */
@@ -18025,7 +18025,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns svg representation of an instance
+     * Return svg representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -18052,7 +18052,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns requested property
+     * Return requested property
      * @param {String} prop Property to get
      * @return {*}
      */
@@ -18080,7 +18080,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   });
 
   /**
-   * Returns {@link fabric.Group} instance from an object representation
+   * Return {@link fabric.Group} instance from an object representation
    * @static
    * @memberOf fabric.Group
    * @param {Object} object Object to create a group from
@@ -18235,7 +18235,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns image element which this instance if based on
+     * Return image element which this instance if based on
      * @return {HTMLImageElement} Image element
      */
     getElement: function() {
@@ -18293,7 +18293,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns original size of an image
+     * Return original size of an image
      * @return {Object} Object with "width" and "height" properties
      */
     getOriginalSize: function() {
@@ -18345,7 +18345,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -18384,7 +18384,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an instance
+     * Return SVG representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -18432,7 +18432,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     /* _TO_SVG_END_ */
 
     /**
-     * Returns source of an image
+     * Return source of an image
      * @param {Boolean} filtered indicates if the src is needed for svg
      * @return {String} Source of an image
      */
@@ -18461,7 +18461,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns string representation of an instance
+     * Return string representation of an instance
      * @return {String} String representation of an instance
      */
     toString: function() {
@@ -18697,7 +18697,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity of this instance
      */
     complexity: function() {
@@ -18760,7 +18760,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     fabric.SHARED_ATTRIBUTES.concat('x y width height preserveAspectRatio xlink:href'.split(' '));
 
   /**
-   * Returns {@link fabric.Image} instance from an SVG element
+   * Return {@link fabric.Image} instance from an SVG element
    * @static
    * @param {SVGElement} element Element to parse
    * @param {Function} callback Callback to execute when fabric.Image object is created
@@ -18933,7 +18933,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   },
 
   /**
-   * Returns object representation of an instance
+   * Return object representation of an instance
    * @return {Object} Object representation of an instance
    */
   toObject: function() {
@@ -18941,7 +18941,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   },
 
   /**
-   * Returns a JSON representation of an instance
+   * Return a JSON representation of an instance
    * @return {Object} JSON
    */
   toJSON: function() {
@@ -19014,7 +19014,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19025,7 +19025,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Brightness} Instance of fabric.Image.filters.Brightness
@@ -19173,7 +19173,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19185,7 +19185,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Convolute} Instance of fabric.Image.filters.Convolute
@@ -19260,7 +19260,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19271,7 +19271,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.GradientTransparency} Instance of fabric.Image.filters.GradientTransparency
@@ -19337,7 +19337,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @return {fabric.Image.filters.Grayscale} Instance of fabric.Image.filters.Grayscale
    */
@@ -19398,7 +19398,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @return {fabric.Image.filters.Invert} Instance of fabric.Image.filters.Invert
    */
@@ -19483,7 +19483,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19495,7 +19495,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @param {Function} [callback] Callback to invoke when a mask filter instance is created
@@ -19584,7 +19584,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19595,7 +19595,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Noise} Instance of fabric.Image.filters.Noise
@@ -19698,7 +19698,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19709,7 +19709,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Pixelate} Instance of fabric.Image.filters.Pixelate
@@ -19801,7 +19801,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -19813,7 +19813,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.RemoveWhite} Instance of fabric.Image.filters.RemoveWhite
@@ -19876,7 +19876,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @return {fabric.Image.filters.Sepia} Instance of fabric.Image.filters.Sepia
    */
@@ -19941,7 +19941,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @return {fabric.Image.filters.Sepia2} Instance of fabric.Image.filters.Sepia2
    */
@@ -20044,7 +20044,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20056,7 +20056,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Tint} Instance of fabric.Image.filters.Tint
@@ -20140,7 +20140,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20151,7 +20151,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Multiply} Instance of fabric.Image.filters.Multiply
@@ -20294,7 +20294,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20652,7 +20652,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20667,7 +20667,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @return {fabric.Image.filters.Resize} Instance of fabric.Image.filters.Resize
    */
@@ -20765,7 +20765,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20777,7 +20777,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.ColorMatrix} Instance of fabric.Image.filters.ColorMatrix
@@ -20852,7 +20852,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20863,7 +20863,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Contrast} Instance of fabric.Image.filters.Contrast
@@ -20939,7 +20939,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @return {Object} Object representation of an instance
      */
     toObject: function() {
@@ -20950,7 +20950,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns filter instance from an object representation
+   * Return filter instance from an object representation
    * @static
    * @param {Object} object Object to create an instance from
    * @return {fabric.Image.filters.Saturate} Instance of fabric.Image.filters.Saturate
@@ -21328,7 +21328,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns string representation of an instance
+     * Return string representation of an instance
      * @return {String} String representation of text object
      */
     toString: function() {
@@ -21512,7 +21512,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns true because text has no style
+     * Return true because text has no style
      */
     isEmptyStyles: function() {
       return true;
@@ -21822,7 +21822,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns the text as an array of lines.
+     * Return the text as an array of lines.
      * @returns {Array} Lines in the text
      */
     _splitTextIntoLines: function() {
@@ -21830,7 +21830,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} Object representation of an instance
      */
@@ -21852,7 +21852,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
 
     /* _TO_SVG_START_ */
     /**
-     * Returns SVG representation of an instance
+     * Return SVG representation of an instance
      * @param {Function} [reviver] Method for further parsing of svg representation.
      * @return {String} svg representation of an instance
      */
@@ -22057,7 +22057,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns complexity of an instance
+     * Return complexity of an instance
      * @return {Number} complexity
      */
     complexity: function() {
@@ -22083,7 +22083,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   fabric.Text.DEFAULT_SVG_FONT_SIZE = 16;
 
   /**
-   * Returns fabric.Text instance from an SVG element (<b>not yet implemented</b>)
+   * Return fabric.Text instance from an SVG element (<b>not yet implemented</b>)
    * @static
    * @memberOf fabric.Text
    * @param {SVGElement} element Element to parse
@@ -22159,7 +22159,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   /* _FROM_SVG_END_ */
 
   /**
-   * Returns fabric.Text instance from an object representation
+   * Return fabric.Text instance from an object representation
    * @static
    * @memberOf fabric.Text
    * @param {Object} object Object to create an instance from
@@ -22367,7 +22367,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns true if object has no styling
+     * Return true if object has no styling
      */
     isEmptyStyles: function() {
       if (!this.styles) {
@@ -22564,7 +22564,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
       ctx.clearRect(-width / 2, -height / 2, width, height);
     },
     /**
-     * Returns 2d representation (lineIndex and charIndex) of cursor (or selection start)
+     * Return 2d representation (lineIndex and charIndex) of cursor (or selection start)
      * @param {Number} [selectionStart] Optional index. When not given, current selectionStart is used.
      */
     get2DCursorLocation: function(selectionStart) {
@@ -22588,7 +22588,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns complete style of char at the current cursor
+     * Return complete style of char at the current cursor
      * @param {Number} lineIndex Line index
      * @param {Number} charIndex Char index
      * @return {Object} Character style
@@ -22610,7 +22610,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns fontSize of char at the current cursor
+     * Return fontSize of char at the current cursor
      * @param {Number} lineIndex Line index
      * @param {Number} charIndex Char index
      * @return {Number} Character font size
@@ -22621,7 +22621,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns color (fill) of char at the current cursor
+     * Return color (fill) of char at the current cursor
      * @param {Number} lineIndex Line index
      * @param {Number} charIndex Char index
      * @return {String} Character color (fill)
@@ -22632,7 +22632,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns cursor boundaries (left, top, leftOffset, topOffset)
+     * Return cursor boundaries (left, top, leftOffset, topOffset)
      * @private
      * @param {Array} chars Array of characters
      * @param {String} typeOfBoundaries
@@ -23319,7 +23319,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @method toObject
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
@@ -23332,7 +23332,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
   });
 
   /**
-   * Returns fabric.IText instance from an object representation
+   * Return fabric.IText instance from an object representation
    * @static
    * @memberOf fabric.IText
    * @param {Object} object Object to create an instance from
@@ -23541,7 +23541,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns selected text
+     * Return selected text
      * @return {String}
      */
     getSelectedText: function() {
@@ -23627,7 +23627,7 @@ fabric.Image.filters.BaseFilter = fabric.util.createClass(/** @lends fabric.Imag
     },
 
     /**
-     * Returns number of newlines in selected text
+     * Return number of newlines in selected text
      * @return {Number} Number of newlines in selected text
      */
     getNumNewLinesInSelectedText: function() {
@@ -24403,7 +24403,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
   },
 
   /**
-   * Returns index of a character corresponding to where an object was clicked
+   * Return index of a character corresponding to where an object was clicked
    * @param {Event} e Event object
    * @return {Number} Index of a character
    */
@@ -25597,7 +25597,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     },
 
     /**
-     * Returns 2d representation (lineIndex and charIndex) of cursor (or selection start).
+     * Return 2d representation (lineIndex and charIndex) of cursor (or selection start).
      * Overrides the superclass function to take into account text wrapping.
      *
      * @param {Number} [selectionStart] Optional index. When not given, current selectionStart is used.
@@ -25674,7 +25674,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     },
 
     /**
-     * Returns object representation of an instance
+     * Return object representation of an instance
      * @method toObject
      * @param {Array} [propertiesToInclude] Any properties that you might want to additionally include in the output
      * @return {Object} object representation of an instance
@@ -25684,7 +25684,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     }
   });
   /**
-   * Returns fabric.Textbox instance from an object representation
+   * Return fabric.Textbox instance from an object representation
    * @static
    * @memberOf fabric.Textbox
    * @param {Object} object Object to create an instance from
@@ -25697,7 +25697,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     return textbox;
   };
   /**
-   * Returns the default controls visibility required for Textboxes.
+   * Return the default controls visibility required for Textboxes.
    * @returns {Object}
    */
   fabric.Textbox.getTextboxControlVisibility = function() {

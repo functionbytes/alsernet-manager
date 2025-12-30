@@ -265,7 +265,7 @@ class DispatcherCore
     }
 
     /**
-     * Returns the request property.
+     * Return the request property.
      *
      * @return SymfonyRequest
      */

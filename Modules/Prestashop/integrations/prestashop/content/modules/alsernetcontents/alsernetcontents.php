@@ -1458,7 +1458,7 @@ class Alsernetcontents extends Module implements WidgetInterface
 
                             However, please note that some delays may occur during Black Friday. The volume of orders we manage is the highest of the year, and both manufacturers (for stock replenishment) and transport agencies may become saturated. We recommend placing your orders as early as possible. We will keep you informed at all times about the status of your shipment.
 
-                            <b>Returns: What is the period during Black Friday?</b>
+                            <b>Return: What is the period during Black Friday?</b>
 
                             We want you to take advantage of Black Friday to do your <b>Christmas shopping</b> with total peace of mind. Therefore, at Álvarez, we are <b>extending the returns period</b> for all orders placed during the campaign, <b>until January 31, 2026!</b>
 
@@ -1826,7 +1826,7 @@ class Alsernetcontents extends Module implements WidgetInterface
 
                             However, please note that some delays may occur during Black Friday. The volume of orders we manage is the highest of the year, and both manufacturers (for stock replenishment) and transport agencies may become saturated. We recommend placing your orders as early as possible. We will keep you informed at all times about the status of your shipment.
 
-                            <b>Returns: What is the period during Black Friday?</b>
+                            <b>Return: What is the period during Black Friday?</b>
 
                             We want you to take advantage of Black Friday to do your <b>Christmas shopping</b> with total peace of mind. Therefore, at Álvarez, we are <b>extending the returns period</b> for all orders placed during the campaign, <b>until January 31, 2026!</b>
 

@@ -2,10 +2,10 @@
 
 namespace Modules\Mail\Mail\Managers;
 
-use App\Models\Template\Template;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Campaign\Models\Template\Template;
 
 class mailmailablesend extends Mailable
 {

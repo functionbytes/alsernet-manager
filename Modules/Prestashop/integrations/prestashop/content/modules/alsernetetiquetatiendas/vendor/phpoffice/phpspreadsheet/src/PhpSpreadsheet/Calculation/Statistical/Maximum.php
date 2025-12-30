@@ -44,7 +44,7 @@ class Maximum extends MaxMinBase
     /**
      * MAXA.
      *
-     * Returns the greatest value in a list of arguments, including numbers, text, and logical values
+     * Return the greatest value in a list of arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        MAXA(value1[,value2[, ...]])

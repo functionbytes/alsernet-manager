@@ -407,7 +407,7 @@ Route::middleware(['auth', 'check.roles.permissions:callcenter'])->group(functio
         Route::get('/', [DashboardController::class, 'dashboard'])
             ->name('callcenter.dashboard');
 
-        // Módulo Returns (Devoluciones) - El más complejo
+        // Módulo Return (Devoluciones) - El más complejo
         Route::prefix('returns')->group(function () {
             // CRUD básico
             Route::get('/', [ReturnController::class, 'index']);

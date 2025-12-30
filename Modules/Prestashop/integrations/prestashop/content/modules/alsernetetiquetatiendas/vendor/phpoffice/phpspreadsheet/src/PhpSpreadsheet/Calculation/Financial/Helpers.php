@@ -12,7 +12,7 @@ class Helpers
     /**
      * daysPerYear.
      *
-     * Returns the number of days in a specified year, as defined by the "basis" value
+     * Return the number of days in a specified year, as defined by the "basis" value
      *
      * @param int|string $year The year against which we're testing
      * @param int|string $basis The type of day count:
@@ -47,7 +47,7 @@ class Helpers
     /**
      * isLastDayOfMonth.
      *
-     * Returns a boolean TRUE/FALSE indicating if this date is the last date of the month
+     * Return a boolean TRUE/FALSE indicating if this date is the last date of the month
      *
      * @param DateTimeInterface $date The date for testing
      */

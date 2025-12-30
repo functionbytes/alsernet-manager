@@ -12,7 +12,7 @@ class Angle
     /**
      * DEGREES.
      *
-     * Returns the result of builtin function rad2deg after validating args.
+     * Return the result of builtin function rad2deg after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *
@@ -38,7 +38,7 @@ class Angle
     /**
      * RADIANS.
      *
-     * Returns the result of builtin function deg2rad after validating args.
+     * Return the result of builtin function deg2rad after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *

@@ -160,7 +160,7 @@ class EntityTranslator implements EntityTranslatorInterface
     }
 
     /**
-     * Returns true if an id_shop field exists in database
+     * Return true if an id_shop field exists in database
      *
      * @param string $tableNameSql
      *

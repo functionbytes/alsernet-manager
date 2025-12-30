@@ -31,7 +31,7 @@ $success = $syncService->syncToPrestaShop($content);
 ```php
 $results = $syncService->syncBatchToPrestaShop([1, 2, 3, 4, 5]);
 
-// Returns:
+// Return:
 [
     'total' => 5,
     'success' => [1, 2, 3],
@@ -84,7 +84,7 @@ $success = $syncService->syncToErp($content);
 ```php
 $erpData = $syncService->mapContentToErpFormat($content);
 
-// Returns:
+// Return:
 [
     'reference' => 'REF-12345',
     'model_id' => 'MODEL-789',
@@ -108,7 +108,7 @@ $erpData = $syncService->mapContentToErpFormat($content);
 ```php
 $results = $syncService->syncImages($content);
 
-// Returns:
+// Return:
 [
     'success' => [
         [
@@ -152,7 +152,7 @@ $success = $syncService->uploadToPrestaShop(123, 'suppliers/1/images/product_1.j
 ```php
 $conflicts = $syncService->detectConflicts($content);
 
-// Returns array of conflicts:
+// Return array of conflicts:
 [
     [
         'type' => 'name_mismatch',
@@ -202,7 +202,7 @@ $syncService->rollbackPublication($content);
 ```php
 $history = $syncService->getPublicationHistory($content);
 
-// Returns:
+// Return:
 [
     [
         'action' => 'published',
@@ -244,7 +244,7 @@ $stats = $syncService->getSyncStatistics(
     $to = Carbon::now()
 );
 
-// Returns:
+// Return:
 [
     'total_content' => 150,
     'published' => 120,

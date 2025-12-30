@@ -38,7 +38,7 @@ interface CombinationCommandsBuilderInterface
      * @param CombinationId $combinationId
      * @param array $formData
      *
-     * @return array Returns empty array if the required data for the command is absent
+     * @return array Return empty array if the required data for the command is absent
      */
     public function buildCommands(CombinationId $combinationId, array $formData): array;
 }

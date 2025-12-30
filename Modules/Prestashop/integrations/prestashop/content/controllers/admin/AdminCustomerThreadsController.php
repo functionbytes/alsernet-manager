@@ -1030,7 +1030,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             return ['hasError' => true, 'errors' => ['Cannot connect to the mailbox :<br />' . ($str_errors)]];
         }
 
-        //Returns information about the current mailbox. Returns FALSE on failure.
+        //Return information about the current mailbox. Return FALSE on failure.
         $check = imap_check($mbox);
         if (!$check) {
             return ['hasError' => true, 'errors' => ['Fail to get information about the current mailbox']];

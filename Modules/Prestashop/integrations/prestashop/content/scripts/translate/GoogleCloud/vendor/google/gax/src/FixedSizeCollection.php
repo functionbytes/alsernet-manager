@@ -73,7 +73,7 @@ class FixedSizeCollection implements IteratorAggregate
     }
 
     /**
-     * Returns the number of elements in the collection. This will be
+     * Return the number of elements in the collection. This will be
      * equal to the collectionSize parameter used at construction
      * unless there are no elements remaining to be retrieved.
      *
@@ -89,7 +89,7 @@ class FixedSizeCollection implements IteratorAggregate
     }
 
     /**
-     * Returns true if there are more elements that can be retrieved
+     * Return true if there are more elements that can be retrieved
      * from the API.
      *
      * @return bool
@@ -100,7 +100,7 @@ class FixedSizeCollection implements IteratorAggregate
     }
 
     /**
-     * Returns a page token that can be passed into the API list
+     * Return a page token that can be passed into the API list
      * method to retrieve additional elements.
      *
      * @return string
@@ -123,7 +123,7 @@ class FixedSizeCollection implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over the elements of the collection.
+     * Return an iterator over the elements of the collection.
      *
      * @return Generator
      */
@@ -138,7 +138,7 @@ class FixedSizeCollection implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over FixedSizeCollections, starting with this
+     * Return an iterator over FixedSizeCollections, starting with this
      * and making API calls as required until all of the elements have
      * been retrieved.
      *

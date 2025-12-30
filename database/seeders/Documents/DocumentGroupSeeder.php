@@ -16,10 +16,10 @@ class DocumentGroupSeeder extends Seeder
      *
      * Predefined groups:
      * - Regulatory Documentation: Licenses, permits, certifications
-     * - Financial Documents: Invoices, receipts, contracts
+     * - Financial Document: Invoices, receipts, contracts
      * - Identity & Personal: IDs, passport copies, personal info
      * - Compliance & Audit: Audit reports, compliance certificates
-     * - Operational Documents: Purchase orders, shipping docs
+     * - Operational Document: Purchase orders, shipping docs
      *
      * Depends on: None (independent)
      */

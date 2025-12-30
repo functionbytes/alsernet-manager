@@ -3,9 +3,9 @@
 namespace Modules\Warehouse\Http\Controllers\Managers\Shops\Locations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Models\Product\Product;
 
 class BarcodeController extends Controller
 {

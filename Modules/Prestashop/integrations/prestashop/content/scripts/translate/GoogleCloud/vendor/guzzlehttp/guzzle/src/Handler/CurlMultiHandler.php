@@ -10,7 +10,7 @@ use GuzzleHttp\Utils;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Returns an asynchronous response using curl_multi_* functions.
+ * Return an asynchronous response using curl_multi_* functions.
  *
  * When using the CurlMultiHandler, custom curl options can be specified as an
  * associative array of curl option constants mapping to values in the

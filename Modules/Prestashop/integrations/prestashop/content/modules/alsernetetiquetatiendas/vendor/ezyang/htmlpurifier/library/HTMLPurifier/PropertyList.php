@@ -59,7 +59,7 @@ class HTMLPurifier_PropertyList
     }
 
     /**
-     * Returns true if a given key exists
+     * Return true if a given key exists
      * @param string $name
      * @return bool
      */
@@ -101,7 +101,7 @@ class HTMLPurifier_PropertyList
     }
 
     /**
-     * Returns the parent plist.
+     * Return the parent plist.
      * @return HTMLPurifier_PropertyList
      */
     public function getParent()

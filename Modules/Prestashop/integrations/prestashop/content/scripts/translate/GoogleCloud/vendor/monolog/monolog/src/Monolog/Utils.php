@@ -231,7 +231,7 @@ final class Utils
      * Converts a string with a valid 'memory_limit' format, to bytes.
      *
      * @param string|false $val
-     * @return int|false Returns an integer representing bytes. Returns FALSE in case of error.
+     * @return int|false Return an integer representing bytes. Return FALSE in case of error.
      */
     public static function expandIniShorthandBytes($val)
     {

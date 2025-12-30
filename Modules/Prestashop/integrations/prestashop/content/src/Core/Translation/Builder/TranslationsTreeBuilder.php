@@ -163,7 +163,7 @@ class TranslationsTreeBuilder
     }
 
     /**
-     * Returns the URL path to the translations from the given domain in the current context
+     * Return the URL path to the translations from the given domain in the current context
      *
      * @param string $fullName Domain name
      * @param array $routeParams

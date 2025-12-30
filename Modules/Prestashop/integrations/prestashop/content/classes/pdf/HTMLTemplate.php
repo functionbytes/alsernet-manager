@@ -56,7 +56,7 @@ abstract class HTMLTemplateCore
     public $shop;
 
     /**
-     * Returns the template's HTML header.
+     * Return the template's HTML header.
      *
      * @return string HTML header
      */
@@ -68,7 +68,7 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the template's HTML footer.
+     * Return the template's HTML footer.
      *
      * @return string HTML footer
      */
@@ -91,7 +91,7 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the shop address.
+     * Return the shop address.
      *
      * @return string
      */
@@ -108,7 +108,7 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the invoice logo.
+     * Return the invoice logo.
      *
      * @return string|null
      */
@@ -190,21 +190,21 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the template's HTML content.
+     * Return the template's HTML content.
      *
      * @return string HTML content
      */
     abstract public function getContent();
 
     /**
-     * Returns the template filename.
+     * Return the template filename.
      *
      * @return string filename
      */
     abstract public function getFilename();
 
     /**
-     * Returns the template filename when using bulk rendering.
+     * Return the template filename when using bulk rendering.
      *
      * @return string filename
      */
@@ -257,7 +257,7 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the template's HTML pagination block.
+     * Return the template's HTML pagination block.
      *
      * @return string HTML pagination block
      */

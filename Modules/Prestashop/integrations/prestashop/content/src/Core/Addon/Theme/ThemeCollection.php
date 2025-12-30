@@ -130,7 +130,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Returns true if the key is found in the collection.
+     * Return true if the key is found in the collection.
      *
      * @param mixed $key the key, can be integer or string
      *
@@ -142,7 +142,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Returns true if the addon is found in the collection.
+     * Return true if the addon is found in the collection.
      *
      * @param AddonTheme $addon the addon
      *

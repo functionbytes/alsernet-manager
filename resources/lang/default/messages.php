@@ -2131,7 +2131,7 @@ return [
     'retry' => 'Retry',
     'return_back' => 'Go back',
     'return_to_login' => 'Back to login',
-    'returns' => 'Returns',
+    'returns' => 'Return',
     'review_campaign_feeback' => 'Review the feedback below before sending your campaign.',
     'rss.close' => 'Close',
     'rss.display_options' => 'Display options',

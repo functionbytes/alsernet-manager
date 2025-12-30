@@ -170,7 +170,7 @@ DocumentCreated event
 
 // When reminder executes (after reminder_days)
 SendDocumentReminderJob (individual mode)
-  → If uploaded_documents.empty() → Keep "Awaiting Documents"
+  → If uploaded_documents.empty() → Keep "Awaiting Document"
   → Send Reminder email
   → Schedule next reminder (7 days later)
 

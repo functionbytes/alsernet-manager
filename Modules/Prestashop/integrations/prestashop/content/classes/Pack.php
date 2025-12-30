@@ -229,7 +229,7 @@ class PackCore extends Product
     }
 
     /**
-     * Returns the available quantity of a given pack (this method already have decreased inventaries in cart).
+     * Return the available quantity of a given pack (this method already have decreased inventaries in cart).
      *
      * @param  int  $id_product  Product id
      * @param  int  $id_product_attribute  Product attribute id (optional)
@@ -561,7 +561,7 @@ class PackCore extends Product
     }
 
     /**
-     * Returns Packs that contains the given product in the right declinaison.
+     * Return Packs that contains the given product in the right declinaison.
      *
      * @param  int  $id_item  Product item id that could be contained in a|many pack(s)
      * @param  int  $id_attribute_item  The declinaison of the product

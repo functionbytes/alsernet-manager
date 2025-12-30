@@ -236,7 +236,7 @@ class HTMLPurifier_ConfigSchema_Validator
     }
 
     /**
-     * Returns a formatted context string.
+     * Return a formatted context string.
      * @return string
      */
     protected function getFormattedContext()

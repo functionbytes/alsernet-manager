@@ -235,7 +235,7 @@ class HTMLPurifier_Config
     }
 
     /**
-     * Returns a SHA-1 signature of a segment of the configuration object
+     * Return a SHA-1 signature of a segment of the configuration object
      * that uniquely identifies that particular configuration
      *
      * @param string $namespace Namespace to get serial for
@@ -255,7 +255,7 @@ class HTMLPurifier_Config
     }
 
     /**
-     * Returns a SHA-1 signature for the entire configuration object
+     * Return a SHA-1 signature for the entire configuration object
      * that uniquely identifies that particular configuration
      *
      * @return string
@@ -653,7 +653,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('HTML', true, true);
     }
-    
+
     /**
      * @return HTMLPurifier_CSSDefinition|null
      */
@@ -661,7 +661,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('CSS', true, true);
     }
-    
+
     /**
      * @return HTMLPurifier_URIDefinition|null
      */
@@ -696,7 +696,7 @@ class HTMLPurifier_Config
     }
 
     /**
-     * Returns a list of array(namespace, directive) for all directives
+     * Return a list of array(namespace, directive) for all directives
      * that are allowed in a web-form context as per an allowed
      * namespaces/directives list.
      *
@@ -906,7 +906,7 @@ class HTMLPurifier_Config
     }
 
     /**
-     * Returns a serialized form of the configuration object that can
+     * Return a serialized form of the configuration object that can
      * be reconstituted.
      *
      * @return string

@@ -165,10 +165,10 @@ class GroupCore extends ObjectModel
     }
 
     /**
-     * Returns price display method for a group (i.e. price should be including tax or not).
+     * Return price display method for a group (i.e. price should be including tax or not).
      *
      * @param  int  $id_group
-     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     * @return int Return 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
     public static function getPriceDisplayMethod($id_group)
     {
@@ -185,11 +185,11 @@ class GroupCore extends ObjectModel
     }
 
     /**
-     * Returns default price display method, i.e. for the 'Customers' group.
+     * Return default price display method, i.e. for the 'Customers' group.
      *
      * @see getPriceDisplayMethod()
      *
-     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     * @return int Return 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
     public static function getDefaultPriceDisplayMethod()
     {

@@ -39,7 +39,7 @@ class DbPDOCore extends Db
     protected $result;
 
     /**
-     * Returns a new PDO object (database link).
+     * Return a new PDO object (database link).
      *
      * @deprecated use getPDO
      *
@@ -56,7 +56,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns a new PDO object (database link).
+     * Return a new PDO object (database link).
      *
      * @param  string  $host
      * @param  string  $user
@@ -163,7 +163,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns the next row from the result set.
+     * Return the next row from the result set.
      *
      * @see DbCore::nextRow()
      *
@@ -184,7 +184,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns all rows from the result set.
+     * Return all rows from the result set.
      *
      * @see DbCore::getAll()
      *
@@ -205,7 +205,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns row count from the result set.
+     * Return row count from the result set.
      *
      * @see DbCore::_numRows()
      *
@@ -218,7 +218,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns ID of the last inserted row.
+     * Return ID of the last inserted row.
      *
      * @see DbCore::Insert_ID()
      *
@@ -242,7 +242,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns error message.
+     * Return error message.
      *
      * @see DbCore::getMsgError()
      *
@@ -257,7 +257,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns error code.
+     * Return error code.
      *
      * @see DbCore::getNumberError()
      *
@@ -271,7 +271,7 @@ class DbPDOCore extends Db
     }
 
     /**
-     * Returns database server version.
+     * Return database server version.
      *
      * @see DbCore::getVersion()
      *

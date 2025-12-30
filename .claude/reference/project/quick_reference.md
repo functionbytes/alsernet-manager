@@ -422,7 +422,7 @@ public static function availableModules()
 ```php
 // Problem
 $sent = DocumentEmailFactory::sendByTemplateKey($doc, 'invalid_key');
-// Returns false, email not sent
+// Return false, email not sent
 
 // Solution
 $template = DocumentEmailFactory::getTemplate('invalid_key');

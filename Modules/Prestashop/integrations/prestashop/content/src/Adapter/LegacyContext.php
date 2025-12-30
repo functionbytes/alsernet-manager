@@ -127,7 +127,7 @@ class LegacyContext
     }
 
     /**
-     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     * Return the controller link in its legacy form, without trying to convert it in symfony url.
      *
      * @param string $controller
      * @param bool $withToken
@@ -245,7 +245,7 @@ class LegacyContext
     }
 
     /**
-     * Returns available languages. The first one is the employee default one.
+     * Return available languages. The first one is the employee default one.
      *
      * @param bool $active Select only active languages
      * @param int|bool $id_shop Shop ID
@@ -272,7 +272,7 @@ class LegacyContext
     }
 
     /**
-     * Returns language ISO code set for the current employee.
+     * Return language ISO code set for the current employee.
      *
      * @return string Languages
      */
@@ -282,7 +282,7 @@ class LegacyContext
     }
 
     /**
-     * Returns Currency set for the current employee.
+     * Return Currency set for the current employee.
      *
      * @return Currency|null
      */
@@ -339,7 +339,7 @@ class LegacyContext
     }
 
     /**
-     * @return array Returns both enabled and disabled languages
+     * @return array Return both enabled and disabled languages
      */
     public function getAvailableLanguages()
     {

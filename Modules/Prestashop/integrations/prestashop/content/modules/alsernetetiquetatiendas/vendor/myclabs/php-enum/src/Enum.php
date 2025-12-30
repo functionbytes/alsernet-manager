@@ -114,7 +114,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     }
 
     /**
-     * Returns the enum key (i.e. the constant name).
+     * Return the enum key (i.e. the constant name).
      *
      * @psalm-pure
      * @return string
@@ -136,7 +136,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
 
     /**
      * Determines if Enum should be considered equal with the variable passed as a parameter.
-     * Returns false if an argument is an object of different class or not an object.
+     * Return false if an argument is an object of different class or not an object.
      *
      * This method is final, for more information read https://github.com/myclabs/php-enum/issues/4
      *
@@ -152,7 +152,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     }
 
     /**
-     * Returns the names (keys) of all constants in the Enum class
+     * Return the names (keys) of all constants in the Enum class
      *
      * @psalm-pure
      * @psalm-return list<string>
@@ -164,7 +164,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     }
 
     /**
-     * Returns instances of the Enum class of all Enum constants
+     * Return instances of the Enum class of all Enum constants
      *
      * @psalm-pure
      * @psalm-return array<string, static>
@@ -184,7 +184,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     }
 
     /**
-     * Returns all possible values as an array
+     * Return all possible values as an array
      *
      * @psalm-pure
      * @psalm-suppress ImpureStaticProperty
@@ -279,7 +279,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     }
 
     /**
-     * Returns a value when called statically like so: MyEnum::SOME_VALUE() given SOME_VALUE is a class constant
+     * Return a value when called statically like so: MyEnum::SOME_VALUE() given SOME_VALUE is a class constant
      *
      * @param string $name
      * @param array  $arguments

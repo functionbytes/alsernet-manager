@@ -2514,7 +2514,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the adjusting factor to convert pixels to user units.
+	 * Return the adjusting factor to convert pixels to user units.
 	 * @return float adjusting factor to convert pixels to user units.
 	 * @author Nicola Asuni
 	 * @public
@@ -2525,7 +2525,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns an array of page dimensions:
+	 * Return an array of page dimensions:
 	 * <ul><li>$this->pagedim[$this->page]['w'] = page width in points</li><li>$this->pagedim[$this->page]['h'] = height in points</li><li>$this->pagedim[$this->page]['wk'] = page width in user units</li><li>$this->pagedim[$this->page]['hk'] = page height in user units</li><li>$this->pagedim[$this->page]['tm'] = top margin</li><li>$this->pagedim[$this->page]['bm'] = bottom margin</li><li>$this->pagedim[$this->page]['lm'] = left margin</li><li>$this->pagedim[$this->page]['rm'] = right margin</li><li>$this->pagedim[$this->page]['pb'] = auto page break</li><li>$this->pagedim[$this->page]['or'] = page orientation</li><li>$this->pagedim[$this->page]['olm'] = original left margin</li><li>$this->pagedim[$this->page]['orm'] = original right margin</li><li>$this->pagedim[$this->page]['Rotate'] = The number of degrees by which the page shall be rotated clockwise when displayed or printed. The value shall be a multiple of 90.</li><li>$this->pagedim[$this->page]['PZ'] = The page's preferred zoom (magnification) factor.</li><li>$this->pagedim[$this->page]['trans'] : the style and duration of the visual transition to use when moving from another page to the given page during a presentation<ul><li>$this->pagedim[$this->page]['trans']['Dur'] = The page's display duration (also called its advance timing): the maximum length of time, in seconds, that the page shall be displayed during presentations before the viewer application shall automatically advance to the next page.</li><li>$this->pagedim[$this->page]['trans']['S'] = transition style : Split, Blinds, Box, Wipe, Dissolve, Glitter, R, Fly, Push, Cover, Uncover, Fade</li><li>$this->pagedim[$this->page]['trans']['D'] = The duration of the transition effect, in seconds.</li><li>$this->pagedim[$this->page]['trans']['Dm'] = (Split and Blinds transition styles only) The dimension in which the specified transition effect shall occur: H = Horizontal, V = Vertical. Default value: H.</li><li>$this->pagedim[$this->page]['trans']['M'] = (Split, Box and Fly transition styles only) The direction of motion for the specified transition effect: I = Inward from the edges of the page, O = Outward from the center of the pageDefault value: I.</li><li>$this->pagedim[$this->page]['trans']['Di'] = (Wipe, Glitter, Fly, Cover, Uncover and Push transition styles only) The direction in which the specified transition effect shall moves, expressed in degrees counterclockwise starting from a left-to-right direction. If the value is a number, it shall be one of: 0 = Left to right, 90 = Bottom to top (Wipe only), 180 = Right to left (Wipe only), 270 = Top to bottom, 315 = Top-left to bottom-right (Glitter only). If the value is a name, it shall be None, which is relevant only for the Fly transition when the value of SS is not 1.0. Default value: 0.</li><li>$this->pagedim[$this->page]['trans']['SS'] = (Fly transition style only) The starting or ending scale at which the changes shall be drawn. If M specifies an inward transition, the scale of the changes drawn shall progress from SS to 1.0 over the course of the transition. If M specifies an outward transition, the scale of the changes drawn shall progress from 1.0 to SS over the course of the transition. Default: 1.0. </li><li>$this->pagedim[$this->page]['trans']['B'] = (Fly transition style only) If true, the area that shall be flown in is rectangular and opaque. Default: false.</li></ul></li><li>$this->pagedim[$this->page]['MediaBox'] : the boundaries of the physical medium on which the page shall be displayed or printed<ul><li>$this->pagedim[$this->page]['MediaBox']['llx'] = lower-left x coordinate in points</li><li>$this->pagedim[$this->page]['MediaBox']['lly'] = lower-left y coordinate in points</li><li>$this->pagedim[$this->page]['MediaBox']['urx'] = upper-right x coordinate in points</li><li>$this->pagedim[$this->page]['MediaBox']['ury'] = upper-right y coordinate in points</li></ul></li><li>$this->pagedim[$this->page]['CropBox'] : the visible region of default user space<ul><li>$this->pagedim[$this->page]['CropBox']['llx'] = lower-left x coordinate in points</li><li>$this->pagedim[$this->page]['CropBox']['lly'] = lower-left y coordinate in points</li><li>$this->pagedim[$this->page]['CropBox']['urx'] = upper-right x coordinate in points</li><li>$this->pagedim[$this->page]['CropBox']['ury'] = upper-right y coordinate in points</li></ul></li><li>$this->pagedim[$this->page]['BleedBox'] : the region to which the contents of the page shall be clipped when output in a production environment<ul><li>$this->pagedim[$this->page]['BleedBox']['llx'] = lower-left x coordinate in points</li><li>$this->pagedim[$this->page]['BleedBox']['lly'] = lower-left y coordinate in points</li><li>$this->pagedim[$this->page]['BleedBox']['urx'] = upper-right x coordinate in points</li><li>$this->pagedim[$this->page]['BleedBox']['ury'] = upper-right y coordinate in points</li></ul></li><li>$this->pagedim[$this->page]['TrimBox'] : the intended dimensions of the finished page after trimming<ul><li>$this->pagedim[$this->page]['TrimBox']['llx'] = lower-left x coordinate in points</li><li>$this->pagedim[$this->page]['TrimBox']['lly'] = lower-left y coordinate in points</li><li>$this->pagedim[$this->page]['TrimBox']['urx'] = upper-right x coordinate in points</li><li>$this->pagedim[$this->page]['TrimBox']['ury'] = upper-right y coordinate in points</li></ul></li><li>$this->pagedim[$this->page]['ArtBox'] : the extent of the page's meaningful content<ul><li>$this->pagedim[$this->page]['ArtBox']['llx'] = lower-left x coordinate in points</li><li>$this->pagedim[$this->page]['ArtBox']['lly'] = lower-left y coordinate in points</li><li>$this->pagedim[$this->page]['ArtBox']['urx'] = upper-right x coordinate in points</li><li>$this->pagedim[$this->page]['ArtBox']['ury'] = upper-right y coordinate in points</li></ul></li></ul>
 	 * @param int|null $pagenum page number (empty = current page)
 	 * @return array of page dimensions.
@@ -2541,7 +2541,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the page width in units.
+	 * Return the page width in units.
 	 * @param int|null $pagenum page number (empty = current page)
 	 * @return int|float page width.
 	 * @author Nicola Asuni
@@ -2557,7 +2557,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the page height in units.
+	 * Return the page height in units.
 	 * @param int|null $pagenum page number (empty = current page)
 	 * @return int|float page height.
 	 * @author Nicola Asuni
@@ -2573,7 +2573,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the page break margin.
+	 * Return the page break margin.
 	 * @param int|null $pagenum page number (empty = current page)
 	 * @return int|float page break margin.
 	 * @author Nicola Asuni
@@ -2589,7 +2589,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the scale factor (number of points in user unit).
+	 * Return the scale factor (number of points in user unit).
 	 * @return int scale factor.
 	 * @author Nicola Asuni
 	 * @public
@@ -3369,7 +3369,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns header data:
+	 * Return header data:
 	 * <ul><li>$ret['logo'] = logo image</li><li>$ret['logo_width'] = width of the image logo in user units</li><li>$ret['title'] = header title</li><li>$ret['string'] = header description string</li></ul>
 	 * @return array<string,mixed>
 	 * @public
@@ -3397,7 +3397,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns header margin in user units.
+	 * Return header margin in user units.
 	 * @return float
 	 * @since 4.0.012 (2008-07-24)
 	 * @public
@@ -3417,7 +3417,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns footer margin in user units.
+	 * Return footer margin in user units.
 	 * @return float
 	 * @since 4.0.012 (2008-07-24)
 	 * @public
@@ -3774,7 +3774,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current page number.
+	 * Return the current page number.
 	 * @return int page number
 	 * @public
 	 * @since 1.0
@@ -3785,7 +3785,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the array of spot colors.
+	 * Return the array of spot colors.
 	 * @return array Spot colors array.
 	 * @public
 	 * @since 6.0.038 (2013-09-30)
@@ -4112,7 +4112,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the length of a string in user unit. A font must be selected.<br>
+	 * Return the length of a string in user unit. A font must be selected.<br>
 	 * @param string $s The string whose length is to be computed
 	 * @param string $fontname Family font. It can be either a name defined by AddFont() or one of the standard families. It is also possible to pass an empty string, in that case, the current family is retained.
 	 * @param string $fontstyle Font style. Possible values are (case insensitive):<ul><li>empty string: regular</li><li>B: bold</li><li>I: italic</li><li>U: underline</li><li>D: line-through</li><li>O: overline</li></ul> or any combination. The default value is regular.
@@ -4129,7 +4129,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the string length of an array of chars in user unit or an array of characters widths. A font must be selected.<br>
+	 * Return the string length of an array of chars in user unit or an array of characters widths. A font must be selected.<br>
 	 * @param array $sa The array of chars whose total length is to be computed
 	 * @param string $fontname Family font. It can be either a name defined by AddFont() or one of the standard families. It is also possible to pass an empty string, in that case, the current family is retained.
 	 * @param string $fontstyle Font style. Possible values are (case insensitive):<ul><li>empty string: regular</li><li>B: bold</li><li>I: italic</li><li>U: underline</li><li>D: line through</li><li>O: overline</li></ul> or any combination. The default value is regular.
@@ -4172,7 +4172,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the length of the char in user unit for the current font considering current stretching and spacing (tracking).
+	 * Return the length of the char in user unit for the current font considering current stretching and spacing (tracking).
 	 * @param int $char The char code whose length is to be returned
 	 * @param boolean $notlast If false ignore the font-spacing.
 	 * @return float char width
@@ -4195,7 +4195,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the length of the char in user unit for the current font.
+	 * Return the length of the char in user unit for the current font.
 	 * @param int $char The char code whose length is to be returned
 	 * @return float char width
 	 * @author Nicola Asuni
@@ -4222,7 +4222,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the numbero of characters in a string.
+	 * Return the numbero of characters in a string.
 	 * @param string $s The input string.
 	 * @return int number of characters
 	 * @public
@@ -4600,7 +4600,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the bounding box of the current font in user units.
+	 * Return the bounding box of the current font in user units.
 	 * @return array
 	 * @public
 	 * @since 5.9.152 (2012-03-23)
@@ -4649,7 +4649,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the glyph bounding box of the specified character in the current font in user units.
+	 * Return the glyph bounding box of the specified character in the current font in user units.
 	 * @param int $char Input character code.
 	 * @return false|array array(xMin, yMin, xMax, yMax) or FALSE if not defined.
 	 * @since 5.9.186 (2012-09-13)
@@ -5193,7 +5193,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the PDF string code to print a cell (rectangular area) with optional borders, background color and character string. The upper-left corner of the cell corresponds to the current position. The text can be aligned or centered. After the call, the current position moves to the right or to the next line. It is possible to put a link on the text.<br />
+	 * Return the PDF string code to print a cell (rectangular area) with optional borders, background color and character string. The upper-left corner of the cell corresponds to the current position. The text can be aligned or centered. After the call, the current position moves to the right or to the next line. It is possible to put a link on the text.<br />
 	 * If automatic page breaking is enabled and the cell goes beyond the limit, a page break is done before outputting.
 	 * @param float $w Cell width. If 0, the cell extends up to the right margin.
 	 * @param float $h Cell height. Default value: 0.
@@ -5693,7 +5693,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the code to draw the cell border
+	 * Return the code to draw the cell border
 	 * @param float $x X coordinate.
 	 * @param float $y Y coordinate.
 	 * @param float $w Cell width.
@@ -6853,7 +6853,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the remaining width between the current position and margins.
+	 * Return the remaining width between the current position and margins.
 	 * @return float Return the remaining width
 	 * @protected
 	 */
@@ -7524,7 +7524,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the relative X value of current position.
+	 * Return the relative X value of current position.
 	 * The value is relative to the left border for LTR languages and to the right border for RTL languages.
 	 * @return float
 	 * @public
@@ -7541,7 +7541,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the absolute X value of current position.
+	 * Return the absolute X value of current position.
 	 * @return float
 	 * @public
 	 * @since 1.2
@@ -7552,7 +7552,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the ordinate of the current position.
+	 * Return the ordinate of the current position.
 	 * @return float
 	 * @public
 	 * @since 1.0
@@ -10392,7 +10392,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns document creation timestamp in seconds.
+	 * Return document creation timestamp in seconds.
 	 * @return int Creation timestamp in seconds.
 	 * @public
 	 * @since 5.9.152 (2012-03-23)
@@ -10402,7 +10402,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns document modification timestamp in seconds.
+	 * Return document modification timestamp in seconds.
 	 * @return int Modfication timestamp in seconds.
 	 * @public
 	 * @since 5.9.152 (2012-03-23)
@@ -10412,7 +10412,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns a formatted date for meta information
+	 * Return a formatted date for meta information
 	 * @param int $n Object ID.
 	 * @param int $timestamp Timestamp to convert.
 	 * @return string escaped date string.
@@ -10545,7 +10545,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the PDF data.
+	 * Return the PDF data.
 	 * @public
 	 */
 	public function getPDFData() {
@@ -11482,7 +11482,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current the line width.
+	 * Return the current the line width.
 	 * @return int Line width
 	 * @public
 	 * @since 2.1.000 (2008-01-07)
@@ -13772,7 +13772,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the string alias used right align page numbers.
+	 * Return the string alias used right align page numbers.
 	 * If the current font is unicode type, the returned string wil contain an additional open curly brace.
 	 * @return string
 	 * @since 5.9.099 (2011-06-27)
@@ -13797,7 +13797,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the string alias used for the total number of pages.
+	 * Return the string alias used for the total number of pages.
 	 * If the current font is unicode type, the returned string is surrounded by additional curly braces.
 	 * This alias will be replaced by the total number of pages in the document.
 	 * @return string
@@ -13812,7 +13812,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the string alias used for the page number.
+	 * Return the string alias used for the page number.
 	 * If the current font is unicode type, the returned string is surrounded by additional curly braces.
 	 * This alias will be replaced by the page number.
 	 * @return string
@@ -13867,7 +13867,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current group page number formatted as a string.
+	 * Return the current group page number formatted as a string.
 	 * @public
 	 * @since 4.3.003 (2008-11-18)
 	 * @see PaneNo(), formatPageNumber()
@@ -13877,7 +13877,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current page number formatted as a string.
+	 * Return the current page number formatted as a string.
 	 * @public
 	 * @since 4.2.005 (2008-11-06)
 	 * @see PaneNo(), formatPageNumber()
@@ -15922,7 +15922,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns an array containing current margins:
+	 * Return an array containing current margins:
 	 * <ul>
 			<li>$ret['left'] = left margin</li>
 			<li>$ret['right'] = right margin</li>
@@ -15958,7 +15958,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns an array containing original margins:
+	 * Return an array containing original margins:
 	 * <ul>
 			<li>$ret['left'] = left margin</li>
 			<li>$ret['right'] = right margin</li>
@@ -15976,7 +15976,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current font size.
+	 * Return the current font size.
 	 * @return float current font size
 	 * @public
 	 * @since 3.2.000 (2008-06-23)
@@ -15986,7 +15986,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current font size in points unit.
+	 * Return the current font size in points unit.
 	 * @return int current font size in points unit
 	 * @public
 	 * @since 3.2.000 (2008-06-23)
@@ -15996,7 +15996,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current font family name.
+	 * Return the current font family name.
 	 * @return string current font family name
 	 * @public
 	 * @since 4.3.008 (2008-12-05)
@@ -16006,7 +16006,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the current font style.
+	 * Return the current font style.
 	 * @return string current font style
 	 * @public
 	 * @since 4.3.008 (2008-12-05)
@@ -16032,7 +16032,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the border width from CSS property
+	 * Return the border width from CSS property
 	 * @param string $width border width
 	 * @return int with in user units
 	 * @protected
@@ -16052,7 +16052,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the border dash style from CSS property
+	 * Return the border dash style from CSS property
 	 * @param string $style border style to convert
 	 * @return int sash style (return -1 in case of none or hidden border)
 	 * @protected
@@ -16088,7 +16088,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the border style array from CSS border properties
+	 * Return the border style array from CSS border properties
 	 * @param string $cssborder border properties
 	 * @return array containing border properties
 	 * @protected
@@ -16286,7 +16286,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the letter-spacing value from CSS value
+	 * Return the letter-spacing value from CSS value
 	 * @param string $spacing letter-spacing value
 	 * @param float $parent font spacing (tracking) value of the parent element
 	 * @return float quantity to increases or decreases the space between characters in a text.
@@ -16317,7 +16317,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the percentage of font stretching from CSS value
+	 * Return the percentage of font stretching from CSS value
 	 * @param string $stretch stretch mode
 	 * @param float $parent stretch value of the parent element
 	 * @return float font stretching percentage
@@ -16445,7 +16445,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the HTML DOM array.
+	 * Return the HTML DOM array.
 	 * @param string $html html code
 	 * @return array
 	 * @protected
@@ -17266,7 +17266,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns the string used to find spaces
+	 * Return the string used to find spaces
 	 * @return string
 	 * @protected
 	 * @author Nicola Asuni
@@ -20867,7 +20867,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns current graphic variables as array.
+	 * Return current graphic variables as array.
 	 * @return array of graphic variables
 	 * @protected
 	 * @since 4.2.010 (2008-11-14)
@@ -22284,7 +22284,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns an array of chars containing soft hyphens.
+	 * Return an array of chars containing soft hyphens.
 	 * @param array $word array of chars
 	 * @param array $patterns Array of hypenation patterns.
 	 * @param array $dictionary Array of words to be returned without applying the hyphenation algorithm.
@@ -22364,7 +22364,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Returns text with soft hyphens.
+	 * Return text with soft hyphens.
 	 * @param string $text text to process
 	 * @param mixed $patterns Array of hypenation patterns or a TEX file containing hypenation patterns. TEX patterns can be downloaded from http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/
 	 * @param array $dictionary Array of words to be returned without applying the hyphenation algorithm.

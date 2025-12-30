@@ -13,7 +13,7 @@ class Cosecant
     /**
      * CSC.
      *
-     * Returns the cosecant of an angle.
+     * Return the cosecant of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *
@@ -39,7 +39,7 @@ class Cosecant
     /**
      * CSCH.
      *
-     * Returns the hyperbolic cosecant of an angle.
+     * Return the hyperbolic cosecant of an angle.
      *
      * @param array|float $angle Number, or can be an array of numbers
      *

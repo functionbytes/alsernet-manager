@@ -134,7 +134,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns the next row from the result set.
+     * Return the next row from the result set.
      *
      * @see DbCore::nextRow()
      *
@@ -155,7 +155,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns all rows from the result set.
+     * Return all rows from the result set.
      *
      * @see DbCore::getAll()
      *
@@ -186,7 +186,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns row count from the result set.
+     * Return row count from the result set.
      *
      * @see DbCore::_numRows()
      *
@@ -199,7 +199,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns ID of the last inserted row.
+     * Return ID of the last inserted row.
      *
      * @see DbCore::Insert_ID()
      *
@@ -223,7 +223,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns error message.
+     * Return error message.
      *
      * @see DbCore::getMsgError()
      *
@@ -236,7 +236,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns error code.
+     * Return error code.
      *
      * @see DbCore::getNumberError()
      *
@@ -248,7 +248,7 @@ class DbMySQLiCore extends Db
     }
 
     /**
-     * Returns database server version.
+     * Return database server version.
      *
      * @see DbCore::getVersion()
      *

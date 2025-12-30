@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Layout;
+namespace Modules\Campaign\Models\Layout;
 
 use app\Library\ExtendedSwiftMessage;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read string|null $subject
  * @property-read string|null $content
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Layout\LayoutTranslation> $translations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Models\Layout\LayoutTranslation> $translations
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Layout alias($alias)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Layout code($code)

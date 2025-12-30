@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Template;
+namespace Modules\Campaign\Models\Template;
 
 use Illuminate\Database\Eloquent\Model;
 

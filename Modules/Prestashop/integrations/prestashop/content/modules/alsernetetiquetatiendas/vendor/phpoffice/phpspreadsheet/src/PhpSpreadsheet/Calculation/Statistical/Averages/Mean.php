@@ -14,7 +14,7 @@ class Mean
     /**
      * GEOMEAN.
      *
-     * Returns the geometric mean of an array or range of positive data. For example, you
+     * Return the geometric mean of an array or range of positive data. For example, you
      *        can use GEOMEAN to calculate average growth rate given compound interest with
      *        variable rates.
      *
@@ -43,7 +43,7 @@ class Mean
     /**
      * HARMEAN.
      *
-     * Returns the harmonic mean of a data set. The harmonic mean is the reciprocal of the
+     * Return the harmonic mean of a data set. The harmonic mean is the reciprocal of the
      *        arithmetic mean of reciprocals.
      *
      * Excel Function:
@@ -85,7 +85,7 @@ class Mean
     /**
      * TRIMMEAN.
      *
-     * Returns the mean of the interior of a data set. TRIMMEAN calculates the mean
+     * Return the mean of the interior of a data set. TRIMMEAN calculates the mean
      *        taken by excluding a percentage of data points from the top and bottom tails
      *        of a data set.
      *

@@ -96,7 +96,7 @@ class HookExtension extends \Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
+     * Return the name of the extension.
      *
      * @return string The extension name
      */

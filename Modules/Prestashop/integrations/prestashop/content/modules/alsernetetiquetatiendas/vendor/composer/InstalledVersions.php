@@ -49,7 +49,7 @@ class InstalledVersions
     private static $installedByVendor = array();
 
     /**
-     * Returns a list of all package names which are present, either by being installed, replaced or provided
+     * Return a list of all package names which are present, either by being installed, replaced or provided
      *
      * @return string[]
      * @psalm-return list<string>
@@ -69,7 +69,7 @@ class InstalledVersions
     }
 
     /**
-     * Returns a list of all package names with a specific type e.g. 'library'
+     * Return a list of all package names with a specific type e.g. 'library'
      *
      * @param  string   $type
      * @return string[]
@@ -131,7 +131,7 @@ class InstalledVersions
     }
 
     /**
-     * Returns a version constraint representing all the range(s) which are installed for a given package
+     * Return a version constraint representing all the range(s) which are installed for a given package
      *
      * It is easier to use this via isInstalled() with the $constraint argument if you need to check
      * whether a given version of a package is installed, and not just whether it exists
@@ -258,7 +258,7 @@ class InstalledVersions
     }
 
     /**
-     * Returns the raw installed.php data for custom implementations
+     * Return the raw installed.php data for custom implementations
      *
      * @deprecated Use getAllRawData() instead which returns all datasets for all autoloaders present in the process. getRawData only returns the first dataset loaded, which may not be what you expect.
      * @return array[]
@@ -282,7 +282,7 @@ class InstalledVersions
     }
 
     /**
-     * Returns the raw data of all installed.php which are currently loaded for custom implementations
+     * Return the raw data of all installed.php which are currently loaded for custom implementations
      *
      * @return array[]
      * @psalm-return list<array{root: array{name: string, pretty_version: string, version: string, reference: string|null, type: string, install_path: string, aliases: string[], dev: bool}, versions: array<string, array{pretty_version?: string, version?: string, reference?: string|null, type?: string, install_path?: string, aliases?: string[], dev_requirement: bool, replaced?: string[], provided?: string[]}>}>

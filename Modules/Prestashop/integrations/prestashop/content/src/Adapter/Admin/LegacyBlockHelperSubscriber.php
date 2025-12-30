@@ -35,7 +35,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class LegacyBlockHelperSubscriber implements EventSubscriberInterface
 {
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * Return an array of event names this subscriber wants to listen to.
      *
      * @return array The listeners array
      */

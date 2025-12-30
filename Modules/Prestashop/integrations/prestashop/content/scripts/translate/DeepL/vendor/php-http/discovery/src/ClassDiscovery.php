@@ -140,7 +140,7 @@ abstract class ClassDiscovery
     }
 
     /**
-     * Returns the currently configured discovery strategies as fully qualified class names.
+     * Return the currently configured discovery strategies as fully qualified class names.
      *
      * @return string[]
      */

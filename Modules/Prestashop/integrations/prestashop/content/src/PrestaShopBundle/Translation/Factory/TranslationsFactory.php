@@ -33,7 +33,7 @@ use PrestaShopBundle\Translation\View\TreeBuilder;
 /**
  * This class returns a collection of translations, using a locale and an identifier.
  *
- * Returns MessageCatalogue object or Translation tree array.
+ * Return MessageCatalogue object or Translation tree array.
  */
 class TranslationsFactory implements TranslationsFactoryInterface
 {

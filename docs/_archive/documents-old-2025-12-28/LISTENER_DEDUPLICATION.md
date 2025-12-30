@@ -15,7 +15,7 @@ Se proporciona el trait `PreventsDuplicateEventExecution` que deduplicación aut
 
 namespace App\Listeners;
 
-use App\Traits\PreventsDuplicateEventExecution;
+use Modules\Documents\Traits\PreventsDuplicateEventExecution;
 
 class MyListener
 {
@@ -55,7 +55,7 @@ public function handle($event): void
 
 namespace App\Listeners\Documents;
 
-use App\Events\Document\DocumentUploaded;use App\Jobs\Documents\SendDocumentUploadedConfirmationJob;use App\Traits\PreventsDuplicateEventExecution;
+use App\Events\Document\DocumentUploaded;use App\Jobs\Documents\SendDocumentUploadedConfirmationJob;use Modules\Documents\Traits\PreventsDuplicateEventExecution;
 
 class SendDocumentUploadConfirmation
 {

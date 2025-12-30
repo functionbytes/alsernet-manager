@@ -28,7 +28,7 @@ class HTMLPurifier_StringHash extends ArrayObject
     }
 
     /**
-     * Returns a lookup array of all array indexes that have been accessed.
+     * Return a lookup array of all array indexes that have been accessed.
      * @return array in form array($index => true).
      */
     public function getAccessed()

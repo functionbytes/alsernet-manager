@@ -39,7 +39,7 @@ $document = Document::uid('doc-uuid-here');
 
 // Check required documents
 $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
-// Returns: ['dni_frontal' => 'DNI - Cara delantera', 'dni_trasera' => '...']
+// Return: ['dni_frontal' => 'DNI - Cara delantera', 'dni_trasera' => '...']
 
 // Check uploaded documents
 $uploadedDocs = [];
@@ -67,13 +67,13 @@ use App\Models\Document\Document;
 // Pending documents
 $pending = Document::where('proccess', 'pending')->get();
 
-// Documents without uploads
+// Document without uploads
 $noUploads = Document::filterByUploadStatus(0)->get();
 
-// Documents with uploads
+// Document with uploads
 $withUploads = Document::filterByUploadStatus(1)->get();
 
-// Documents created in last 7 days
+// Document created in last 7 days
 $recent = Document::where('created_at', '>=', now()->subDays(7))->get();
 
 // Search by customer
@@ -169,10 +169,10 @@ $first = $document->getFirstMedia('documents');
 
 // Get URLs
 $urls = $document->getAllDocumentsUrls();
-// Returns: ['https://...file1.pdf', 'https://...file2.jpg']
+// Return: ['https://...file1.pdf', 'https://...file2.jpg']
 
 $url = $document->getDocumentUrl();
-// Returns: 'https://...first_file.pdf'
+// Return: 'https://...first_file.pdf'
 
 // Get custom property
 foreach ($document->media as $media) {
@@ -212,12 +212,12 @@ $document = Document::uid('doc-uuid');
 
 // Get detected type
 $type = $document->detectDocumentType();
-// Returns: 'dni', 'escopeta', 'rifle', 'corta', or 'general'
+// Return: 'dni', 'escopeta', 'rifle', 'corta', or 'general'
 
 // Get required documents for type
 $required = $document->getRequiredDocuments();
 /*
-Returns for 'escopeta':
+Return for 'escopeta':
 [
     'dni_frontal' => 'DNI - Cara delantera',
     'dni_trasera' => 'DNI - Cara trasera',
@@ -228,7 +228,7 @@ Returns for 'escopeta':
 // Get document status
 $status = $document->getDocumentStatus();
 /*
-Returns:
+Return:
 [
     'total_required' => 3,
     'total_uploaded' => 1,

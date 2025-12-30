@@ -41,7 +41,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Returns the 3 layers of translation catalogues related to the Theme translations.
+ * Return the 3 layers of translation catalogues related to the Theme translations.
  * The default catalogue is extracted from Theme's templates
  * The file catalogue is extracted from Core's file (in any file starting with "Shop") and from theme directory themes/THEMENAME/translations
  * The user catalogue is stored in DB, domain starting with Shop and theme is equal to the desired theme.

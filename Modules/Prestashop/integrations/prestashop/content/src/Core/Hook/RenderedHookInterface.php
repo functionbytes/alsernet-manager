@@ -46,7 +46,7 @@ interface RenderedHookInterface
     public function getContent();
 
     /**
-     * Returns displayable content.
+     * Return displayable content.
      *
      * @return string
      */

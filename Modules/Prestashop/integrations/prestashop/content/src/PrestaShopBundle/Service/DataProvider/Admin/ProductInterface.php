@@ -74,7 +74,7 @@ interface ProductInterface
     public function combinePersistentCatalogProductFilter($paramsIn = [], $avoidPersistence = false);
 
     /**
-     * Returns a collection of inventaries, using default language, currency and others, from Context.
+     * Return a collection of inventaries, using default language, currency and others, from Context.
      *
      * @param int|string $offset an offset, or the 'last' token
      * @param int|string $limit a limit, or the 'last' token
@@ -107,14 +107,14 @@ interface ProductInterface
     public function getPaginationLimitChoices();
 
     /**
-     * Returns the last SQL query that was compiled on this Provider.
+     * Return the last SQL query that was compiled on this Provider.
      *
      * @return string The last SQL query that was compiled with $this->compileSqlQuery()
      */
     public function getLastCompiledSql();
 
     /**
-     * Returns default activation state for new product.
+     * Return default activation state for new product.
      *
      * Duplication process could be different since duplicated product is always deactivated after duplication.
      *

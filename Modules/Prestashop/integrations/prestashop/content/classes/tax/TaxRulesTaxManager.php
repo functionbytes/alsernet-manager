@@ -59,7 +59,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     }
 
     /**
-     * Returns true if this tax manager is available for this address.
+     * Return true if this tax manager is available for this address.
      *
      * @return bool
      */

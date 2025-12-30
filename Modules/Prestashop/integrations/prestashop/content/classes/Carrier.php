@@ -529,7 +529,7 @@ class CarrierCore extends ObjectModel
      *                                - CARRIERS_MODULE_NEED_RANGE
      *                                - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                                - ALL_CARRIERS
-     * @param  bool  $active  Returns only active carriers when true
+     * @param  bool  $active  Return only active carriers when true
      * @return array Carriers
      */
     public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
@@ -1296,7 +1296,7 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Returns the Tax rates associated to the Carrier.
+     * Return the Tax rates associated to the Carrier.
      *
      * @since 1.5
      *
@@ -1315,7 +1315,7 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Returns the taxes calculator associated to the carrier.
+     * Return the taxes calculator associated to the carrier.
      *
      * @since 1.5
      *

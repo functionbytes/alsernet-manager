@@ -36,7 +36,7 @@ interface LocalizationPackImporterInterface
      *
      * @param LocalizationPackImportConfig $config
      *
-     * @return array Returns errors if any or empty array otherwise
+     * @return array Return errors if any or empty array otherwise
      */
     public function import(LocalizationPackImportConfig $config);
 }

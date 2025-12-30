@@ -4,11 +4,11 @@ namespace Modules\Warehouse\Tests\Unit\Entities;
 
 use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\WarehouseFloor;
+use Modules\Warehouse\Entities\WarehouseInventorySlot;
 use Modules\Warehouse\Entities\WarehouseLocation;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
 use Modules\Warehouse\Entities\WarehouseLocationStyle;
-use Modules\Warehouse\Entities\WarehouseInventorySlot;
-use App\Models\Product\Product;
+use Modules\Warehouse\Models\Product\Product;
 use Tests\TestCase;
 
 class WarehouseInventorySlotTest extends TestCase

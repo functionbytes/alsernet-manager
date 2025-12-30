@@ -209,7 +209,7 @@ let requests = [
 $.when.apply($, requests).done(function(warehouses, returns, tickets) {
     console.log('All data loaded');
     console.log('Warehouses:', warehouses[0]);
-    console.log('Returns:', returns[0]);
+    console.log('Return:', returns[0]);
     console.log('Tickets:', tickets[0]);
 });
 ```

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Systems;
+namespace App\Services;
 
 use App\Models\Setting\Backup\SupervisorBackup;
 use Exception;

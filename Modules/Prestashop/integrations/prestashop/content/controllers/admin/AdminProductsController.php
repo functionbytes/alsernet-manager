@@ -3271,7 +3271,7 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * Returns in an homemade JSON with the content of a inventaries pack.
+     * Return in an homemade JSON with the content of a inventaries pack.
      */
     public function displayAjaxProductPackItems()
     {

@@ -77,7 +77,7 @@ class File
     }
 
     /**
-     * Returns canonicalized absolute pathname, also for ZIP archives.
+     * Return canonicalized absolute pathname, also for ZIP archives.
      */
     public static function realpath(string $filename): string
     {

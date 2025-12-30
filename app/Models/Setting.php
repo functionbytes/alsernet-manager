@@ -231,7 +231,7 @@ class Setting extends Model implements HasMedia
                 'type' => 'select',
                 'options' => array_map(function ($cap) {
                     return ['value' => $cap['id'], 'text' => $cap['title']];
-                }, \app\Library\Facades\Hook::execute('captcha_method')),
+                }, class_exists(\Modules\Campaign\Library\Facades\Hook::class) ? \Modules\Campaign\Library\Facades\Hook::execute('captcha_method') : []),
             ],
             'login_recaptcha' => [
                 'cat' => 'general',
@@ -887,7 +887,7 @@ class Setting extends Model implements HasMedia
                 function ($cap) {
                     return $cap['id'];
                 },
-                \app\Library\Facades\Hook::execute('captcha_method')
+                class_exists(\Modules\Campaign\Library\Facades\Hook::class) ? \Modules\Campaign\Library\Facades\Hook::execute('captcha_method') : []
             )
         )
         ) {

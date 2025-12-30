@@ -1115,7 +1115,7 @@ var Dropzone = function (_Emitter) {
     return _this;
   }
 
-  // Returns all files that have been accepted
+  // Return all files that have been accepted
 
 
   _createClass(Dropzone, [{
@@ -1128,7 +1128,7 @@ var Dropzone = function (_Emitter) {
       });
     }
 
-    // Returns all files that have been rejected
+    // Return all files that have been rejected
     // Not sure when that's going to be useful, but added for completeness.
 
   }, {
@@ -1150,7 +1150,7 @@ var Dropzone = function (_Emitter) {
       });
     }
 
-    // Returns all files that are in the queue
+    // Return all files that are in the queue
 
   }, {
     key: "getQueuedFiles",
@@ -1441,7 +1441,7 @@ var Dropzone = function (_Emitter) {
       return this.options.renameFile(file);
     }
 
-    // Returns a form that can be used as fallback if the browser does not support DragnDrop
+    // Return a form that can be used as fallback if the browser does not support DragnDrop
     //
     // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
     // This code has to pass in IE7 :(
@@ -1473,7 +1473,7 @@ var Dropzone = function (_Emitter) {
       return form != null ? form : fields;
     }
 
-    // Returns the fallback elements if they exist already
+    // Return the fallback elements if they exist already
     //
     // This code has to pass in IE7 :(
 
@@ -1572,7 +1572,7 @@ var Dropzone = function (_Emitter) {
       return this.setupEventListeners();
     }
 
-    // Returns a nicely formatted filesize
+    // Return a nicely formatted filesize
 
   }, {
     key: "filesize",
@@ -2371,7 +2371,7 @@ var Dropzone = function (_Emitter) {
       });
     }
 
-    /// Returns the right chunk for given file and xhr
+    /// Return the right chunk for given file and xhr
 
   }, {
     key: "_getChunk",
@@ -2882,7 +2882,7 @@ Dropzone.version = "5.5.0";
 //     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
 Dropzone.options = {};
 
-// Returns the options for an element or undefined if none available.
+// Return the options for an element or undefined if none available.
 Dropzone.optionsForElement = function (element) {
   // Get the `Dropzone.options.elementId` for this element if it exists
   if (element.getAttribute("id")) {
@@ -2895,7 +2895,7 @@ Dropzone.optionsForElement = function (element) {
 // Holds a list of all dropzone instances
 Dropzone.instances = [];
 
-// Returns the dropzone for given element if any
+// Return the dropzone for given element if any
 Dropzone.forElement = function (element) {
   if (typeof element === "string") {
     element = document.querySelector(element);
@@ -3044,7 +3044,7 @@ Dropzone.dataURItoBlob = function (dataURI) {
   return new Blob([ab], { type: mimeString });
 };
 
-// Returns an array without the rejected item
+// Return an array without the rejected item
 var without = function without(list, rejectedItem) {
   return list.filter(function (item) {
     return item !== rejectedItem;

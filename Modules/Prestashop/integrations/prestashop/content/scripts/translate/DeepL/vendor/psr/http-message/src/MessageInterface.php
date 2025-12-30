@@ -61,7 +61,7 @@ interface MessageInterface
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return string[][] Returns an associative array of the message's headers. Each
+     * @return string[][] Return an associative array of the message's headers. Each
      *     key MUST be a header name, and each value MUST be an array of strings
      *     for that header.
      */
@@ -71,8 +71,8 @@ interface MessageInterface
      * Checks if a header exists by the given case-insensitive name.
      *
      * @param string $name Case-insensitive header field name.
-     * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
+     * @return bool Return true if any header names match the given header
+     *     name using a case-insensitive string comparison. Return false if
      *     no matching header name is found in the message.
      */
     public function hasHeader(string $name): bool;
@@ -166,7 +166,7 @@ interface MessageInterface
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return StreamInterface Return the body as a stream.
      */
     public function getBody(): StreamInterface;
 

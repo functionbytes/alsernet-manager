@@ -88,7 +88,7 @@ class NumberCollection implements IteratorAggregate, Countable
     }
 
     /**
-     * Returns all Number specification items in this collection.
+     * Return all Number specification items in this collection.
      *
      * @return NumberSpecificationInterface[]
      *                                        An array of Number specification items

@@ -13,7 +13,7 @@ class Cosine
     /**
      * COS.
      *
-     * Returns the result of builtin function cos after validating args.
+     * Return the result of builtin function cos after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *
@@ -39,7 +39,7 @@ class Cosine
     /**
      * COSH.
      *
-     * Returns the result of builtin function cosh after validating args.
+     * Return the result of builtin function cosh after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *
@@ -65,7 +65,7 @@ class Cosine
     /**
      * ACOS.
      *
-     * Returns the arccosine of a number.
+     * Return the arccosine of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *
@@ -91,7 +91,7 @@ class Cosine
     /**
      * ACOSH.
      *
-     * Returns the arc inverse hyperbolic cosine of a number.
+     * Return the arc inverse hyperbolic cosine of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *

@@ -455,7 +455,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Returns the average Tax rate for all inventaries in the cart, as a multiplier.
+     * Return the average Tax rate for all inventaries in the cart, as a multiplier.
      *
      * The arguments are optional and only serve as return values in case caller needs the details.
      *
@@ -3920,7 +3920,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Returns useful raw information about the cart.
+     * Return useful raw information about the cart.
      * Products, Discounts, Prices ... are returned in an array without any modification.
      *
      *
@@ -5074,7 +5074,7 @@ class CartCore extends ObjectModel
     /**
      * Get all the IDs of the delivery Addresses without Carriers.
      *
-     * @param  bool  $return_collection  Returns sa collection
+     * @param  bool  $return_collection  Return sa collection
      * @param  array  &$error  Contains an error message if an error occurs
      * @return array Array of address id or of address object
      */

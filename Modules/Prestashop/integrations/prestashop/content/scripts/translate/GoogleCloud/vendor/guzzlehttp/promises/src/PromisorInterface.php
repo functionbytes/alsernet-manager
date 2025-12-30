@@ -8,7 +8,7 @@ namespace GuzzleHttp\Promise;
 interface PromisorInterface
 {
     /**
-     * Returns a promise.
+     * Return a promise.
      *
      * @return PromiseInterface
      */

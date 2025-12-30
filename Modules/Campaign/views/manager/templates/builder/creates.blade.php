@@ -14,9 +14,9 @@
     <div class="page-title">
         <ul class="breadcrumb breadcrumb-caret position-right">
             <li class="breadcrumb-item"><a
-                        href="{{ action("Admin\HomeController@index") }}">{{ trans('messages.home') }}</a></li>
+                    href="{{ action("Admin\HomeController@index") }}">{{ trans('messages.home') }}</a></li>
             <li class="breadcrumb-item"><a
-                        href="{{ action("Admin\TemplateController@index") }}">{{ trans('messages.templates') }}</a></li>
+                    href="{{ action("Admin\TemplateController@index") }}">{{ trans('messages.templates') }}</a></li>
         </ul>
         <h1>
             <span class="text-semibold">{{ trans('messages.template.new_template') }}</span>
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            @foreach (App\Models\Template\TemplateCategory::all() as $category)
+            @foreach (\Modules\Campaign\Models\Template\TemplateCategory::all() as $category)
                 @if ($category->templates()->count())
                     <div class="subsection pb-4">
                         <h2 class="font-weight-semibold mb-0">{{ $category->name }}</h2>
@@ -76,7 +76,8 @@
                                     <div class="me-auto">
                                         <div class="filter-box">
 											<span class="filter-group">
-												<span class="title text-semibold text-muted">{{ trans('messages.sort_by') }}</span>
+												<span
+                                                    class="title text-semibold text-muted">{{ trans('messages.sort_by') }}</span>
 												<select class="select" name="sort_order">
 													<option value="id">{{ trans('messages.default') }}</option>
 													<option value="name">{{ trans('messages.name') }}</option>

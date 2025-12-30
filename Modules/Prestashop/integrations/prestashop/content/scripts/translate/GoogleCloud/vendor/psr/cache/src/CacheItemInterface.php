@@ -24,7 +24,7 @@ namespace Psr\Cache;
 interface CacheItemInterface
 {
     /**
-     * Returns the key for the current cache item.
+     * Return the key for the current cache item.
      *
      * The key is loaded by the Implementing Library, but should be available to
      * the higher level callers when needed.

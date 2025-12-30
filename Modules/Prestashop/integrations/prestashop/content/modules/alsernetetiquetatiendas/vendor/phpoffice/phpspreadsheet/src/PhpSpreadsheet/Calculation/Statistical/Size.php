@@ -10,7 +10,7 @@ class Size
     /**
      * LARGE.
      *
-     * Returns the nth largest value in a data set. You can use this function to
+     * Return the nth largest value in a data set. You can use this function to
      *        select a value based on its relative standing.
      *
      * Excel Function:
@@ -45,7 +45,7 @@ class Size
     /**
      * SMALL.
      *
-     * Returns the nth smallest value in a data set. You can use this function to
+     * Return the nth smallest value in a data set. You can use this function to
      *        select a value based on its relative standing.
      *
      * Excel Function:

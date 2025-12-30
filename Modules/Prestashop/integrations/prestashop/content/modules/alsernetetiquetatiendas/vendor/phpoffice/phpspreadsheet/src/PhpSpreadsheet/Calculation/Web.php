@@ -10,7 +10,7 @@ class Web
     /**
      * WEBSERVICE.
      *
-     * Returns data from a web service on the Internet or Intranet.
+     * Return data from a web service on the Internet or Intranet.
      *
      * Excel Function:
      *        Webservice(url)

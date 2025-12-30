@@ -186,7 +186,7 @@ class ModuleDataProvider
     }
 
     /**
-     * Returns the Module Id
+     * Return the Module Id
      *
      * @param string $name The technical module name
      *

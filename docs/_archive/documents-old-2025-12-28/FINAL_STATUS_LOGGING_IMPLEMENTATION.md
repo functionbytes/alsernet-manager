@@ -220,7 +220,7 @@ DocumentActionService::logReminderEmail($document, $email);
 DocumentActionService::logMissingDocumentsEmail($document, $email, $missingDocs);
 DocumentActionService::logCustomEmail($document, $email, $subject, $content);
 
-// Documents
+// Document
 DocumentActionService::logDocumentUpload($document, $files);
 DocumentActionService::logAdminDocumentUpload($document, $files, $adminId);
 DocumentActionService::logDocumentDeletion($document, $fileName, $adminId);

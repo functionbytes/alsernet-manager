@@ -15,7 +15,7 @@ class Days
     /**
      * DAYS.
      *
-     * Returns the number of days between two dates
+     * Return the number of days between two dates
      *
      * Excel Function:
      *        DAYS(endDate, startDate)

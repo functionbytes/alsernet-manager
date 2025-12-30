@@ -95,7 +95,7 @@ class PagedListResponse implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over the full list of elements. If the
+     * Return an iterator over the full list of elements. If the
      * API response contains a (non-empty) next page token, then
      * the PagedListResponse object will make calls to the underlying
      * API to retrieve additional elements as required.
@@ -113,7 +113,7 @@ class PagedListResponse implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over the full list of elements. If the
+     * Return an iterator over the full list of elements. If the
      * API response contains a (non-empty) next page token, then
      * the PagedListResponse object will make calls to the underlying
      * API to retrieve additional elements as required.
@@ -142,7 +142,7 @@ class PagedListResponse implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over pages of results. The pages are
+     * Return an iterator over pages of results. The pages are
      * retrieved lazily from the underlying API.
      *
      * @return Page[]
@@ -154,7 +154,7 @@ class PagedListResponse implements IteratorAggregate
     }
 
     /**
-     * Returns a collection of elements with a fixed size set by
+     * Return a collection of elements with a fixed size set by
      * the collectionSize parameter. The collection will only contain
      * fewer than collectionSize elements if there are no more
      * pages to be retrieved from the server.
@@ -174,7 +174,7 @@ class PagedListResponse implements IteratorAggregate
     }
 
     /**
-     * Returns an iterator over fixed size collections of results.
+     * Return an iterator over fixed size collections of results.
      * The collections are retrieved lazily from the underlying API.
      *
      * Each collection will have collectionSize elements, with the

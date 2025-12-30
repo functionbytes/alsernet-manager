@@ -130,7 +130,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the white list.
+     * Return the white list.
      *
      * @return true[]
      */
@@ -140,7 +140,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the nested filters, indexed by $keyToKeep.
+     * Return the nested filters, indexed by $keyToKeep.
      *
      * @return FilterInterface[]
      */

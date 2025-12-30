@@ -220,7 +220,7 @@ class SortOrder
     }
 
     /**
-     * @return string Returns the order way using legacy prefix
+     * @return string Return the order way using legacy prefix
      */
     private function getLegacyPrefix()
     {

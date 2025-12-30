@@ -201,7 +201,7 @@ class CartRow
     }
 
     /**
-     * Returns the initial unit price (ie without applying cart rules).
+     * Return the initial unit price (ie without applying cart rules).
      *
      * @return AmountImmutable
      *
@@ -217,7 +217,7 @@ class CartRow
     }
 
     /**
-     * Returns the initial total price (ie without applying cart rules).
+     * Return the initial total price (ie without applying cart rules).
      *
      * @return AmountImmutable
      *

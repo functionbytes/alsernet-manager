@@ -13,7 +13,7 @@ class Yields
     /**
      * YIELDDISC.
      *
-     * Returns the annual yield of a security that pays interest at maturity.
+     * Return the annual yield of a security that pays interest at maturity.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security's settlement date is the date after the issue date when the security
@@ -74,7 +74,7 @@ class Yields
     /**
      * YIELDMAT.
      *
-     * Returns the annual yield of a security that pays interest at maturity.
+     * Return the annual yield of a security that pays interest at maturity.
      *
      * @param mixed $settlement The security's settlement date.
      *                              The security's settlement date is the date after the issue date when the security

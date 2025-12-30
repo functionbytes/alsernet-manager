@@ -74,7 +74,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns the template's HTML header.
+     * Return the template's HTML header.
      *
      * @return string HTML header
      */
@@ -87,7 +87,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns the template's HTML content.
+     * Return the template's HTML content.
      *
      * @return string HTML content
      */
@@ -185,7 +185,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns the template filename when using bulk rendering.
+     * Return the template filename when using bulk rendering.
      *
      * @return string filename
      */
@@ -195,7 +195,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns the template filename.
+     * Return the template filename.
      *
      * @return string filename
      */
@@ -205,7 +205,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns the tax tab content.
+     * Return the tax tab content.
      *
      * @return string Tax tab html content
      */
@@ -231,7 +231,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns different tax breakdown elements.
+     * Return different tax breakdown elements.
      *
      * @return array|bool Different tax breakdown elements
      */
@@ -307,7 +307,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     }
 
     /**
-     * Returns Shipping tax breakdown elements.
+     * Return Shipping tax breakdown elements.
      *
      * @return array Shipping tax breakdown elements
      */

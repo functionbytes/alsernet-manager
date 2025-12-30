@@ -12,7 +12,7 @@ class Month
     /**
      * EDATE.
      *
-     * Returns the serial number that represents the date that is the indicated number of months
+     * Return the serial number that represents the date that is the indicated number of months
      * before or after a specified date (the start_date).
      * Use EDATE to calculate maturity dates or due dates that fall on the same day of the month
      * as the date of issue.
@@ -56,7 +56,7 @@ class Month
     /**
      * EOMONTH.
      *
-     * Returns the date value for the last day of the month that is the indicated number of months
+     * Return the date value for the last day of the month that is the indicated number of months
      * before or after start_date.
      * Use EOMONTH to calculate maturity dates or due dates that fall on the last day of the month.
      *

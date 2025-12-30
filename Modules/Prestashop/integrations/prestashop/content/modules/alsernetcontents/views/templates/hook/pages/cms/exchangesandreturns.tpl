@@ -28,7 +28,7 @@
                     </ul>
                     {/if}
 
-                    <p>{l s='Returns of orders must be sent to the address of Álvarez, Polígono de Pocomaco, Primera Avenida, 81. Parcela C-13, 15190 Mesoiro, La Coruña. Once the buyer has exercised the right of withdrawal and once the merchandise has been received in our warehouses and its condition has been verified, Álvarez will act in the manner indicated by the buyer: refund of the amount or exchange of the merchandise. exchangesandreturns' mod='alsernetcontents'} </p>
+                    <p>{l s='Return of orders must be sent to the address of Álvarez, Polígono de Pocomaco, Primera Avenida, 81. Parcela C-13, 15190 Mesoiro, La Coruña. Once the buyer has exercised the right of withdrawal and once the merchandise has been received in our warehouses and its condition has been verified, Álvarez will act in the manner indicated by the buyer: refund of the amount or exchange of the merchandise. exchangesandreturns' mod='alsernetcontents'} </p>
                     <p>{l s='Videos, discs, video games or other inventaries susceptible to immediate copying may only be exchanged for another identical title. exchangesandreturns' mod='alsernetcontents'} </p>
                     <p>{l s='Electronic inventaries may only be returned if they have not been opened. For the return they must be perfectly sealed and not have been manipulated in any way. exchangesandreturns' mod='alsernetcontents'} </p>
 

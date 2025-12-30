@@ -53,7 +53,7 @@ class LookupRef
     /**
      * COLUMN.
      *
-     * Returns the column number of the given cell reference
+     * Return the column number of the given cell reference
      *     If the cell reference is a range of cells, COLUMN returns the column numbers of each column
      *        in the reference as a horizontal array.
      *     If cell reference is omitted, and the function is being called through the calculation engine,
@@ -80,7 +80,7 @@ class LookupRef
     /**
      * COLUMNS.
      *
-     * Returns the number of columns in an array or reference.
+     * Return the number of columns in an array or reference.
      *
      * Excel Function:
      *        =COLUMNS(cellAddress)
@@ -103,7 +103,7 @@ class LookupRef
     /**
      * ROW.
      *
-     * Returns the row number of the given cell reference
+     * Return the row number of the given cell reference
      *     If the cell reference is a range of cells, ROW returns the row numbers of each row in the reference
      *        as a vertical array.
      *     If cell reference is omitted, and the function is being called through the calculation engine,
@@ -130,7 +130,7 @@ class LookupRef
     /**
      * ROWS.
      *
-     * Returns the number of rows in an array or reference.
+     * Return the number of rows in an array or reference.
      *
      * Excel Function:
      *        =ROWS(cellAddress)
@@ -175,7 +175,7 @@ class LookupRef
     /**
      * INDIRECT.
      *
-     * Returns the reference specified by a text string.
+     * Return the reference specified by a text string.
      * References are immediately evaluated to display their contents.
      *
      * Excel Function:
@@ -201,7 +201,7 @@ class LookupRef
     /**
      * OFFSET.
      *
-     * Returns a reference to a range that is a specified number of rows and columns from a cell or range of cells.
+     * Return a reference to a range that is a specified number of rows and columns from a cell or range of cells.
      * The reference that is returned can be a single cell or a range of cells. You can specify the number of rows and
      * the number of columns to be returned.
      *

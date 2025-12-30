@@ -37,7 +37,7 @@ class Lcm
     /**
      * LCM.
      *
-     * Returns the lowest common multiplier of a series of numbers
+     * Return the lowest common multiplier of a series of numbers
      * The least common multiple is the smallest positive integer that is a multiple
      * of all integer arguments number1, number2, and so on. Use LCM to add fractions
      * with different denominators.

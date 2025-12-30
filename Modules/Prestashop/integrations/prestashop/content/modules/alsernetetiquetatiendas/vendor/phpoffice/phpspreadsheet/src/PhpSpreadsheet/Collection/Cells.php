@@ -459,7 +459,7 @@ class Cells
     }
 
     /**
-     * Returns all known cache keys.
+     * Return all known cache keys.
      *
      * @return Generator|string[]
      */

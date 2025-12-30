@@ -85,7 +85,7 @@ function exception_for($reason)
 }
 
 /**
- * Returns an iterator for the given value.
+ * Return an iterator for the given value.
  *
  * @param mixed $value
  *
@@ -102,7 +102,7 @@ function iter_for($value)
  * Synchronously waits on a promise to resolve and returns an inspection state
  * array.
  *
- * Returns a state associative array containing a "state" key mapping to a
+ * Return a state associative array containing a "state" key mapping to a
  * valid promise state. If the state of the promise is "fulfilled", the array
  * will contain a "value" key mapping to the fulfilled value of the promise. If
  * the promise is rejected, the array will contain a "reason" key mapping to
@@ -123,7 +123,7 @@ function inspect(PromiseInterface $promise)
  * Waits on all of the provided promises, but does not unwrap rejected promises
  * as thrown exception.
  *
- * Returns an array of inspection state arrays.
+ * Return an array of inspection state arrays.
  *
  * @see inspect for the inspection state array format.
  *
@@ -141,7 +141,7 @@ function inspect_all($promises)
 /**
  * Waits on all of the provided promises and returns the fulfilled values.
  *
- * Returns an array that contains the value of each promise (in the same order
+ * Return an array that contains the value of each promise (in the same order
  * the promises were provided). An exception is thrown if any of the promises
  * are rejected.
  *
@@ -218,7 +218,7 @@ function any($promises)
 }
 
 /**
- * Returns a promise that is fulfilled when all of the provided promises have
+ * Return a promise that is fulfilled when all of the provided promises have
  * been fulfilled or rejected.
  *
  * The returned promise is fulfilled with an array of inspection state arrays.
@@ -313,7 +313,7 @@ function each_limit_all(
 }
 
 /**
- * Returns true if a promise is fulfilled.
+ * Return true if a promise is fulfilled.
  *
  * @return bool
  *
@@ -325,7 +325,7 @@ function is_fulfilled(PromiseInterface $promise)
 }
 
 /**
- * Returns true if a promise is rejected.
+ * Return true if a promise is rejected.
  *
  * @return bool
  *
@@ -337,7 +337,7 @@ function is_rejected(PromiseInterface $promise)
 }
 
 /**
- * Returns true if a promise is fulfilled or rejected.
+ * Return true if a promise is fulfilled or rejected.
  *
  * @return bool
  *

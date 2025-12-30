@@ -317,7 +317,7 @@ database/seeders/
 
 ```json
 {
-    "name": "Returns",
+    "name": "Return",
     "alias": "returns",
     "description": "Módulo de gestión de devoluciones con sistema de garantías, inspecciones y comunicación",
     "keywords": ["returns", "warranty", "inspection", "communication", "refunds"],
@@ -423,9 +423,9 @@ Actualizar `composer.json`:
 {
     "autoload": {
         "psr-4": {
-            "Modules\\Returns\\": "Modules/Returns/app/",
-            "Modules\\Returns\\Database\\": "Modules/Returns/database/",
-            "Modules\\Returns\\Tests\\": "Modules/Returns/tests/"
+            "Modules\\Returns\\": "Modules/Return/app/",
+            "Modules\\Returns\\Database\\": "Modules/Return/database/",
+            "Modules\\Returns\\Tests\\": "Modules/Return/tests/"
         }
     }
 }
@@ -486,14 +486,14 @@ php artisan prestashop:sync-categories
 ### Ejecutar Tests del Módulo
 
 ```bash
-# Solo tests de Returns
-php artisan test Modules/Returns/tests
+# Solo tests de Return
+php artisan test Modules/Return/tests
 
 # Con cobertura
-php artisan test Modules/Returns/tests --coverage
+php artisan test Modules/Return/tests --coverage
 
 # Tests específicos
-php artisan test Modules/Returns/tests/Feature/ReturnCreationTest.php
+php artisan test Modules/Return/tests/Feature/ReturnCreationTest.php
 ```
 
 ### Estructura de Tests

@@ -2,7 +2,7 @@
 
 namespace Modules\Warehouse\Entities;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Database\Factories\Warehouse\WarehouseInventoryOperationFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

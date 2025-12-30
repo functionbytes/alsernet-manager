@@ -500,7 +500,7 @@ Route::prefix('documents')->group(function () {
 ### Paso 3: Crear Controlador (si es necesario)
 
 ```bash
-php artisan make:controller Accountings/Documents/DocumentTagController
+php artisan make:controller Accountings/Document/DocumentTagController
 ```
 
 ```php

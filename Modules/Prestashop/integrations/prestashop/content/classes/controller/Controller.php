@@ -260,7 +260,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Returns if the current request is an AJAX request.
+     * Return if the current request is an AJAX request.
      *
      * @return bool
      */

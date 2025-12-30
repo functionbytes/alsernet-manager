@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Template;
+namespace Modules\Campaign\Models\Template;
 
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 
 class TemplateCategory extends Model
@@ -23,6 +23,6 @@ class TemplateCategory extends Model
      */
     public function templates()
     {
-        return $this->belongsToMany('App\Models\Template\Template', 'templates_categories', 'category_id', 'template_id');
+        return $this->belongsToMany('Modules\Campaign\Models\Template\Template', 'templates_categories', 'category_id', 'template_id');
     }
 }

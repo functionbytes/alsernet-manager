@@ -146,10 +146,10 @@ Modules/Documents/
 
 ```bash
 # 1. Migrar base de datos
-php artisan migrate --path=Modules/Documents/database/migrations
+php artisan migrate --path=Modules/Document/database/migrations
 
 # 2. Seed de datos iniciales
-php artisan db:seed --class=Modules\\Documents\\database\\seeders\\DocumentsDatabaseSeeder
+php artisan db:seed --class=Modules\\Document\\database\\seeders\\DocumentsDatabaseSeeder
 
 # 3. Publicar assets (si es necesario)
 php artisan vendor:publish --tag=documents-config

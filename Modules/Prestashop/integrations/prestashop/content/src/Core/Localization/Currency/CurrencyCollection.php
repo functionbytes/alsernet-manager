@@ -78,7 +78,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
     }
 
     /**
-     * Returns all currencies in this collection.
+     * Return all currencies in this collection.
      *
      * @return Currency[]
      *                    An array of currencies

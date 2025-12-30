@@ -22,7 +22,7 @@ class Financial
     /**
      * ACCRINT.
      *
-     * Returns the accrued interest for a security that pays periodic interest.
+     * Return the accrued interest for a security that pays periodic interest.
      *
      * Excel Function:
      *        ACCRINT(issue,firstinterest,settlement,rate,par,frequency[,basis][,calc_method])
@@ -82,7 +82,7 @@ class Financial
     /**
      * ACCRINTM.
      *
-     * Returns the accrued interest for a security that pays interest at maturity.
+     * Return the accrued interest for a security that pays interest at maturity.
      *
      * Excel Function:
      *        ACCRINTM(issue,settlement,rate[,par[,basis]])
@@ -114,7 +114,7 @@ class Financial
     /**
      * AMORDEGRC.
      *
-     * Returns the depreciation for each accounting period.
+     * Return the depreciation for each accounting period.
      * This function is provided for the French accounting system. If an asset is purchased in
      * the middle of the accounting period, the prorated depreciation is taken into account.
      * The function is similar to AMORLINC, except that a depreciation coefficient is applied in
@@ -154,7 +154,7 @@ class Financial
     /**
      * AMORLINC.
      *
-     * Returns the depreciation for each accounting period.
+     * Return the depreciation for each accounting period.
      * This function is provided for the French accounting system. If an asset is purchased in
      * the middle of the accounting period, the prorated depreciation is taken into account.
      *
@@ -189,7 +189,7 @@ class Financial
     /**
      * COUPDAYBS.
      *
-     * Returns the number of days from the beginning of the coupon period to the settlement date.
+     * Return the number of days from the beginning of the coupon period to the settlement date.
      *
      * Excel Function:
      *        COUPDAYBS(settlement,maturity,frequency[,basis])
@@ -226,7 +226,7 @@ class Financial
     /**
      * COUPDAYS.
      *
-     * Returns the number of days in the coupon period that contains the settlement date.
+     * Return the number of days in the coupon period that contains the settlement date.
      *
      * Excel Function:
      *        COUPDAYS(settlement,maturity,frequency[,basis])
@@ -263,7 +263,7 @@ class Financial
     /**
      * COUPDAYSNC.
      *
-     * Returns the number of days from the settlement date to the next coupon date.
+     * Return the number of days from the settlement date to the next coupon date.
      *
      * Excel Function:
      *        COUPDAYSNC(settlement,maturity,frequency[,basis])
@@ -300,7 +300,7 @@ class Financial
     /**
      * COUPNCD.
      *
-     * Returns the next coupon date after the settlement date.
+     * Return the next coupon date after the settlement date.
      *
      * Excel Function:
      *        COUPNCD(settlement,maturity,frequency[,basis])
@@ -338,7 +338,7 @@ class Financial
     /**
      * COUPNUM.
      *
-     * Returns the number of coupons payable between the settlement date and maturity date,
+     * Return the number of coupons payable between the settlement date and maturity date,
      * rounded up to the nearest whole coupon.
      *
      * Excel Function:
@@ -376,7 +376,7 @@ class Financial
     /**
      * COUPPCD.
      *
-     * Returns the previous coupon date before the settlement date.
+     * Return the previous coupon date before the settlement date.
      *
      * Excel Function:
      *        COUPPCD(settlement,maturity,frequency[,basis])
@@ -414,7 +414,7 @@ class Financial
     /**
      * CUMIPMT.
      *
-     * Returns the cumulative interest paid on a loan between the start and end periods.
+     * Return the cumulative interest paid on a loan between the start and end periods.
      *
      * Excel Function:
      *        CUMIPMT(rate,nper,pv,start,end[,type])
@@ -444,7 +444,7 @@ class Financial
     /**
      * CUMPRINC.
      *
-     * Returns the cumulative principal paid on a loan between the start and end periods.
+     * Return the cumulative principal paid on a loan between the start and end periods.
      *
      * Excel Function:
      *        CUMPRINC(rate,nper,pv,start,end[,type])
@@ -474,7 +474,7 @@ class Financial
     /**
      * DB.
      *
-     * Returns the depreciation of an asset for a specified period using the
+     * Return the depreciation of an asset for a specified period using the
      * fixed-declining balance method.
      * This form of depreciation is used if you want to get a higher depreciation value
      * at the beginning of the depreciation (as opposed to linear depreciation). The
@@ -509,7 +509,7 @@ class Financial
     /**
      * DDB.
      *
-     * Returns the depreciation of an asset for a specified period using the
+     * Return the depreciation of an asset for a specified period using the
      * double-declining balance method or some other method you specify.
      *
      * Excel Function:
@@ -541,7 +541,7 @@ class Financial
     /**
      * DISC.
      *
-     * Returns the discount rate for a security.
+     * Return the discount rate for a security.
      *
      * Excel Function:
      *        DISC(settlement,maturity,price,redemption[,basis])
@@ -625,7 +625,7 @@ class Financial
     /**
      * EFFECT.
      *
-     * Returns the effective interest rate given the nominal rate and the number of
+     * Return the effective interest rate given the nominal rate and the number of
      *        compounding payments per year.
      *
      * Excel Function:
@@ -649,7 +649,7 @@ class Financial
     /**
      * FV.
      *
-     * Returns the Future Value of a cash flow with constant payments and interest rate (annuities).
+     * Return the Future Value of a cash flow with constant payments and interest rate (annuities).
      *
      * Excel Function:
      *        FV(rate,nper,pmt[,pv[,type]])
@@ -680,7 +680,7 @@ class Financial
     /**
      * FVSCHEDULE.
      *
-     * Returns the future value of an initial principal after applying a series of compound interest rates.
+     * Return the future value of an initial principal after applying a series of compound interest rates.
      * Use FVSCHEDULE to calculate the future value of an investment with a variable or adjustable rate.
      *
      * Excel Function:
@@ -704,7 +704,7 @@ class Financial
     /**
      * INTRATE.
      *
-     * Returns the interest rate for a fully invested security.
+     * Return the interest rate for a fully invested security.
      *
      * Excel Function:
      *        INTRATE(settlement,maturity,investment,redemption[,basis])
@@ -738,7 +738,7 @@ class Financial
     /**
      * IPMT.
      *
-     * Returns the interest payment for a given period for an investment based on periodic, constant payments
+     * Return the interest payment for a given period for an investment based on periodic, constant payments
      *         and a constant interest rate.
      *
      * Excel Function:
@@ -766,7 +766,7 @@ class Financial
     /**
      * IRR.
      *
-     * Returns the internal rate of return for a series of cash flows represented by the numbers in values.
+     * Return the internal rate of return for a series of cash flows represented by the numbers in values.
      * These cash flows do not have to be even, as they would be for an annuity. However, the cash flows must occur
      * at regular intervals, such as monthly or annually. The internal rate of return is the interest rate received
      * for an investment consisting of payments (negative values) and income (positive values) that occur at regular
@@ -796,7 +796,7 @@ class Financial
     /**
      * ISPMT.
      *
-     * Returns the interest payment for an investment based on an interest rate and a constant payment schedule.
+     * Return the interest payment for an investment based on an interest rate and a constant payment schedule.
      *
      * Excel Function:
      *     =ISPMT(interest_rate, period, number_payments, pv)
@@ -822,7 +822,7 @@ class Financial
     /**
      * MIRR.
      *
-     * Returns the modified internal rate of return for a series of periodic cash flows. MIRR considers both
+     * Return the modified internal rate of return for a series of periodic cash flows. MIRR considers both
      *        the cost of the investment and the interest received on reinvestment of cash.
      *
      * Excel Function:
@@ -849,7 +849,7 @@ class Financial
     /**
      * NOMINAL.
      *
-     * Returns the nominal interest rate given the effective rate and the number of compounding payments per year.
+     * Return the nominal interest rate given the effective rate and the number of compounding payments per year.
      *
      * Excel Function:
      *        NOMINAL(effect_rate, npery)
@@ -872,7 +872,7 @@ class Financial
     /**
      * NPER.
      *
-     * Returns the number of periods for a cash flow with constant periodic payments (annuities), and interest rate.
+     * Return the number of periods for a cash flow with constant periodic payments (annuities), and interest rate.
      *
      * @Deprecated 1.18.0
      *
@@ -895,7 +895,7 @@ class Financial
     /**
      * NPV.
      *
-     * Returns the Net Present Value of a cash flow series given a discount rate.
+     * Return the Net Present Value of a cash flow series given a discount rate.
      *
      * @Deprecated 1.18.0
      *
@@ -933,7 +933,7 @@ class Financial
     /**
      * PMT.
      *
-     * Returns the constant payment (annuity) for a cash flow with a constant interest rate.
+     * Return the constant payment (annuity) for a cash flow with a constant interest rate.
      *
      * @Deprecated 1.18.0
      *
@@ -956,7 +956,7 @@ class Financial
     /**
      * PPMT.
      *
-     * Returns the interest payment for a given period for an investment based on periodic, constant payments
+     * Return the interest payment for a given period for an investment based on periodic, constant payments
      *         and a constant interest rate.
      *
      * @Deprecated 1.18.0
@@ -981,7 +981,7 @@ class Financial
     /**
      * PRICE.
      *
-     * Returns the price per $100 face value of a security that pays periodic interest.
+     * Return the price per $100 face value of a security that pays periodic interest.
      *
      * @Deprecated 1.18.0
      *
@@ -1017,7 +1017,7 @@ class Financial
     /**
      * PRICEDISC.
      *
-     * Returns the price per $100 face value of a discounted security.
+     * Return the price per $100 face value of a discounted security.
      *
      * @Deprecated 1.18.0
      *
@@ -1048,7 +1048,7 @@ class Financial
     /**
      * PRICEMAT.
      *
-     * Returns the price per $100 face value of a security that pays interest at maturity.
+     * Return the price per $100 face value of a security that pays interest at maturity.
      *
      * @Deprecated 1.18.0
      *
@@ -1080,7 +1080,7 @@ class Financial
     /**
      * PV.
      *
-     * Returns the Present Value of a cash flow with constant payments and interest rate (annuities).
+     * Return the Present Value of a cash flow with constant payments and interest rate (annuities).
      *
      * @Deprecated 1.18.0
      *
@@ -1103,7 +1103,7 @@ class Financial
     /**
      * RATE.
      *
-     * Returns the interest rate per period of an annuity.
+     * Return the interest rate per period of an annuity.
      * RATE is calculated by iteration and can have zero or more solutions.
      * If the successive results of RATE do not converge to within 0.0000001 after 20 iterations,
      * RATE returns the #NUM! error value.
@@ -1142,7 +1142,7 @@ class Financial
     /**
      * RECEIVED.
      *
-     * Returns the amount received at maturity for a fully invested Security.
+     * Return the amount received at maturity for a fully invested Security.
      *
      * @Deprecated 1.18.0
      *
@@ -1194,7 +1194,7 @@ class Financial
     /**
      * SLN.
      *
-     * Returns the straight-line depreciation of an asset for one period
+     * Return the straight-line depreciation of an asset for one period
      *
      * @Deprecated 1.18.0
      *
@@ -1215,7 +1215,7 @@ class Financial
     /**
      * SYD.
      *
-     * Returns the sum-of-years' digits depreciation of an asset for a specified period.
+     * Return the sum-of-years' digits depreciation of an asset for a specified period.
      *
      * @Deprecated 1.18.0
      *
@@ -1237,7 +1237,7 @@ class Financial
     /**
      * TBILLEQ.
      *
-     * Returns the bond-equivalent yield for a Treasury bill.
+     * Return the bond-equivalent yield for a Treasury bill.
      *
      * @Deprecated 1.18.0
      *
@@ -1261,7 +1261,7 @@ class Financial
     /**
      * TBILLPRICE.
      *
-     * Returns the price per $100 face value for a Treasury bill.
+     * Return the price per $100 face value for a Treasury bill.
      *
      * @Deprecated 1.18.0
      *
@@ -1285,7 +1285,7 @@ class Financial
     /**
      * TBILLYIELD.
      *
-     * Returns the yield for a Treasury bill.
+     * Return the yield for a Treasury bill.
      *
      * @Deprecated 1.18.0
      *
@@ -1309,7 +1309,7 @@ class Financial
     /**
      * XIRR.
      *
-     * Returns the internal rate of return for a schedule of cash flows that is not necessarily periodic.
+     * Return the internal rate of return for a schedule of cash flows that is not necessarily periodic.
      *
      * Excel Function:
      *        =XIRR(values,dates,guess)
@@ -1336,7 +1336,7 @@ class Financial
     /**
      * XNPV.
      *
-     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     * Return the net present value for a schedule of cash flows that is not necessarily periodic.
      * To calculate the net present value for a series of cash flows that is periodic, use the NPV function.
      *
      * Excel Function:
@@ -1368,7 +1368,7 @@ class Financial
     /**
      * YIELDDISC.
      *
-     * Returns the annual yield of a security that pays interest at maturity.
+     * Return the annual yield of a security that pays interest at maturity.
      *
      * @Deprecated 1.18.0
      *
@@ -1399,7 +1399,7 @@ class Financial
     /**
      * YIELDMAT.
      *
-     * Returns the annual yield of a security that pays interest at maturity.
+     * Return the annual yield of a security that pays interest at maturity.
      *
      * @Deprecated 1.18.0
      *

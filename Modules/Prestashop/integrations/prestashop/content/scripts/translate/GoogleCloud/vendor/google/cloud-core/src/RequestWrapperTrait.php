@@ -204,7 +204,7 @@ trait RequestWrapperTrait
     }
 
     /**
-     * Returns application default credentials. Abstracted out for unit testing.
+     * Return application default credentials. Abstracted out for unit testing.
      *
      * @return FetchAuthTokenInterface
      * @throws \DomainException

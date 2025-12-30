@@ -54,7 +54,7 @@ class PuliBetaStrategy implements DiscoveryStrategy
     }
 
     /**
-     * Returns the Puli discovery layer.
+     * Return the Puli discovery layer.
      *
      * @return Discovery
      *

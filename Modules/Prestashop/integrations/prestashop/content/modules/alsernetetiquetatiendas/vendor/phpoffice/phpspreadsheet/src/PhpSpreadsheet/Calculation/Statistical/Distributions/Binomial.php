@@ -15,7 +15,7 @@ class Binomial
     /**
      * BINOMDIST.
      *
-     * Returns the individual term binomial distribution probability. Use BINOMDIST in problems with
+     * Return the individual term binomial distribution probability. Use BINOMDIST in problems with
      *        a fixed number of tests or trials, when the outcomes of any trial are only success or failure,
      *        when trials are independent, and when the probability of success is constant throughout the
      *        experiment. For example, BINOMDIST can calculate the probability that two of the next three
@@ -66,7 +66,7 @@ class Binomial
     /**
      * BINOM.DIST.RANGE.
      *
-     * Returns returns the Binomial Distribution probability for the number of successes from a specified number
+     * Return returns the Binomial Distribution probability for the number of successes from a specified number
      *     of trials falling into a specified range.
      *
      * @param mixed $trials Integer number of trials
@@ -121,7 +121,7 @@ class Binomial
     /**
      * NEGBINOMDIST.
      *
-     * Returns the negative binomial distribution. NEGBINOMDIST returns the probability that
+     * Return the negative binomial distribution. NEGBINOMDIST returns the probability that
      *        there will be number_f failures before the number_s-th success, when the constant
      *        probability of a success is probability_s. This function is similar to the binomial
      *        distribution, except that the number of successes is fixed, and the number of trials is
@@ -173,7 +173,7 @@ class Binomial
     /**
      * BINOM.INV.
      *
-     * Returns the smallest value for which the cumulative binomial distribution is greater
+     * Return the smallest value for which the cumulative binomial distribution is greater
      *        than or equal to a criterion value
      *
      * @param mixed $trials number of Bernoulli trials as an integer

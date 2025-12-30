@@ -259,7 +259,7 @@ var isNaN = Number.isNaN || WINDOW.isNaN;
 /**
  * Check if the given value is a number.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is a number, else `false`.
+ * @returns {boolean} Return `true` if the given value is a number, else `false`.
  */
 
 function isNumber(value) {
@@ -268,7 +268,7 @@ function isNumber(value) {
 /**
  * Check if the given value is a positive number.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is a positive number, else `false`.
+ * @returns {boolean} Return `true` if the given value is a positive number, else `false`.
  */
 
 var isPositiveNumber = function isPositiveNumber(value) {
@@ -277,7 +277,7 @@ var isPositiveNumber = function isPositiveNumber(value) {
 /**
  * Check if the given value is undefined.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is undefined, else `false`.
+ * @returns {boolean} Return `true` if the given value is undefined, else `false`.
  */
 
 function isUndefined(value) {
@@ -286,7 +286,7 @@ function isUndefined(value) {
 /**
  * Check if the given value is an object.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is an object, else `false`.
+ * @returns {boolean} Return `true` if the given value is an object, else `false`.
  */
 
 function isObject(value) {
@@ -296,7 +296,7 @@ var hasOwnProperty = Object.prototype.hasOwnProperty;
 /**
  * Check if the given value is a plain object.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is a plain object, else `false`.
+ * @returns {boolean} Return `true` if the given value is a plain object, else `false`.
  */
 
 function isPlainObject(value) {
@@ -315,7 +315,7 @@ function isPlainObject(value) {
 /**
  * Check if the given value is a function.
  * @param {*} value - The value to check.
- * @returns {boolean} Returns `true` if the given value is a function, else `false`.
+ * @returns {boolean} Return `true` if the given value is a function, else `false`.
  */
 
 function isFunction(value) {
@@ -325,7 +325,7 @@ var slice = Array.prototype.slice;
 /**
  * Convert array-like or iterable object to an array.
  * @param {*} value - The value to convert.
- * @returns {Array} Returns a new array.
+ * @returns {Array} Return a new array.
  */
 
 function toArray(value) {
@@ -385,7 +385,7 @@ var REGEXP_DECIMALS = /\.\d*(?:0|9){12}\d*$/;
  * Check out {@link http://0.30000000000000004.com/}
  * @param {number} value - The value to normalize.
  * @param {number} [times=100000000000] - The times for normalizing.
- * @returns {number} Returns the normalized number.
+ * @returns {number} Return the normalized number.
  */
 
 function normalizeDecimalNumber(value) {
@@ -413,7 +413,7 @@ function setStyle(element, styles) {
  * Check if the given element has a special class.
  * @param {Element} element - The element to check.
  * @param {string} value - The class to search.
- * @returns {boolean} Returns `true` if the special class was found.
+ * @returns {boolean} Return `true` if the special class was found.
  */
 
 function hasClass(element, value) {
@@ -719,7 +719,7 @@ var REGEXP_ORIGINS = /^(\w+:)\/\/([^:/?#]*):?(\d*)/i;
 /**
  * Check if the given URL is a cross origin URL.
  * @param {string} url - The target URL.
- * @returns {boolean} Returns `true` if the given URL is a cross origin URL, else `false`.
+ * @returns {boolean} Return `true` if the given URL is a cross origin URL, else `false`.
  */
 
 function isCrossOriginURL(url) {
@@ -3019,7 +3019,7 @@ var methods = {
     }
 
     var canvasData = this.canvasData;
-    var source = getSourceCanvas(this.image, this.imageData, canvasData, options); // Returns the source canvas if it is not cropped.
+    var source = getSourceCanvas(this.image, this.imageData, canvasData, options); // Return the source canvas if it is not cropped.
 
     if (!this.cropped) {
       return source;

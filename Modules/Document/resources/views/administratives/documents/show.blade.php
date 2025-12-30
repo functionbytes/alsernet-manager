@@ -129,7 +129,7 @@
                 </div>
             @endif
 
-            <!-- Uploaded Documents -->
+            <!-- Uploaded Document -->
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Documentos cargados</h5>

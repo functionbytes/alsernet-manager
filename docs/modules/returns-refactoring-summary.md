@@ -232,7 +232,7 @@ Route::prefix('api/returns')->group(function () {
 **`routes/callcenters.php`** (80+ endpoints organizados por categorías):
 ```php
 Route::prefix('callcenter/returns')->group(function () {
-    // Returns management
+    // Return management
     // Components management
     // Inspections management
     // Communications
@@ -361,7 +361,7 @@ public function products(): HasMany
 **Solución Propuesta**: Agregar entrada en `composer.json`:
 
 ```json
-"Modules\\Returns\\": "Modules/Returns/app/"
+"Modules\\Return\\": "Modules/Return/app/"
 ```
 
 Luego ejecutar:
@@ -465,7 +465,7 @@ $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library
 
 **Línea 38**: Comentar observador de Returns (cuando módulo está deshabilitado)
 ```php
-// TODO: Enable when Returns module is enabled
+// TODO: Enable when Return module is enabled
 // ReturnRequest::observe(ReturnObserver::class);
 ```
 
@@ -504,7 +504,7 @@ $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library
 
 1. **`composer.json`** - Agregar PSR-4 mapping:
    ```json
-   "Modules\\Returns\\": "Modules/Returns/app/"
+   "Modules\\Return\\": "Modules/Return/app/"
    ```
 
 2. **`bootstrap/providers.php`** - Registrar provider:
@@ -514,7 +514,7 @@ $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library
 
 3. **`modules_statuses.json`** - Cambiar estado:
    ```json
-   "Returns": true
+   "Return": true
    ```
 
 4. **Ejecutar Commands**:

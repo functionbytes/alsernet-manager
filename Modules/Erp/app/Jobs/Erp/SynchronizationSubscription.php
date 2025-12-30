@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Jobs\Erp;
+namespace Modules\Erp\Jobs\Erp;
 
-use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Modules\Subscriber\Models\Subscriber;
+use Modules\Supplier\Services\Integrations\ErpService;
 use Throwable;
 
 class SynchronizationSubscription implements ShouldQueue

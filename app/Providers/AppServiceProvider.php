@@ -2,8 +2,7 @@
 
 namespace App\Providers;
 
-use App\Library\Facades\Hook;
-use App\Models\Setting\Setting;
+use App\Models\Setting;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -18,7 +17,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('app.settings', fn () => $this->getSettings());
-        $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library\HookManager);
     }
 
     public function boot(): void
@@ -35,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $migrator->path(database_path('migrations/auth'));
         $migrator->path(database_path('migrations/core'));
 
-        // TODO: Enable when Returns module is enabled
+        // TODO: Enable when Return module is enabled
         // ReturnRequest::observe(ReturnObserver::class);
 
         Schema::defaultStringLength(191);
@@ -51,9 +49,12 @@ class AppServiceProvider extends ServiceProvider
             ]);
         }
 
-        foreach (Hook::execute('add_translation_file') as $source) {
-            if (! empty($source['translation_prefix']) && ! empty($source['translation_folder'])) {
-                $this->loadTranslationsFrom($source['translation_folder'], $source['translation_prefix']);
+        // Hook system available when Campaign module is enabled
+        if (class_exists(\Modules\Campaign\Library\Facades\Hook::class)) {
+            foreach (\Modules\Campaign\Library\Facades\Hook::execute('add_translation_file') as $source) {
+                if (! empty($source['translation_prefix']) && ! empty($source['translation_folder'])) {
+                    $this->loadTranslationsFrom($source['translation_folder'], $source['translation_prefix']);
+                }
             }
         }
 

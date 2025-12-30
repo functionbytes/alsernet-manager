@@ -28,7 +28,7 @@ use Countable;
  * @method bool fput() fput(string $remote_file, resource $handle, int $mode, int $startpos = 0) Uploads from an open file to the FTP server
  * @method mixed get_option() get_option(int $option) Retrieves various runtime behaviours of the current FTP stream
  * @method bool get() get(string $local_file, string $remote_file, int $mode, int $resumepos = 0) Downloads a file from the FTP server
- * @method int mdtm() mdtm(string $remote_file) Returns the last modified time of the given file
+ * @method int mdtm() mdtm(string $remote_file) Return the last modified time of the given file
  * @method int nb_continue() nb_continue() Continues retrieving/sending a file (non-blocking)
  * @method int nb_fget() nb_fget(resource $handle, string $remote_file, int $mode, int $resumepos = 0) Retrieves a file from the FTP server and writes it to an open file (non-blocking)
  * @method int nb_fput() nb_fput(string $remote_file, resource $handle, int $mode, int $startpos = 0) Stores a file from an open file to the FTP server (non-blocking)
@@ -36,14 +36,14 @@ use Countable;
  * @method int nb_put() nb_put(string $remote_file, string $local_file, int $mode, int $startpos = 0) Stores a file on the FTP server (non-blocking)
  * @method bool pasv() pasv(bool $pasv) Turns passive mode on or off
  * @method bool put() put(string $remote_file, string $local_file, int $mode, int $startpos = 0) Uploads a file to the FTP server
- * @method string pwd() pwd() Returns the current directory name
+ * @method string pwd() pwd() Return the current directory name
  * @method bool quit() quit() Closes an FTP connection
  * @method array raw() raw(string $command) Sends an arbitrary command to an FTP server
  * @method bool rename() rename(string $oldname, string $newname) Renames a file or a directory on the FTP server
  * @method bool set_option() set_option(int $option, mixed $value) Set miscellaneous runtime FTP options
  * @method bool site() site(string $command) Sends a SITE command to the server
- * @method int size() size(string $remote_file) Returns the size of the given file
- * @method string systype() systype() Returns the system type identifier of the remote FTP server
+ * @method int size() size(string $remote_file) Return the size of the given file
+ * @method string systype() systype() Return the system type identifier of the remote FTP server
  *
  * @author Nicolas Tallefourtane <dev@nicolab.net>
  */
@@ -219,7 +219,7 @@ class FtpClient implements Countable
     }
 
     /**
-     * Returns the last modified time of the given file.
+     * Return the last modified time of the given file.
      * Return -1 on error
      *
      * @param  string  $remoteFile
@@ -256,7 +256,7 @@ class FtpClient implements Countable
     }
 
     /**
-     * Returns a list of files in the given directory.
+     * Return a list of files in the given directory.
      *
      * @param  string  $directory  The directory, by default is "." the current directory
      * @param  bool  $recursive
@@ -517,7 +517,7 @@ class FtpClient implements Countable
     }
 
     /**
-     * Returns the total size of the given directory in bytes.
+     * Return the total size of the given directory in bytes.
      *
      * @param  string  $directory  The directory, by default is the current directory.
      * @param  bool  $recursive  true by default
@@ -653,7 +653,7 @@ class FtpClient implements Countable
     }
 
     /**
-     * Returns a detailed list of files in the given directory.
+     * Return a detailed list of files in the given directory.
      *
      * @see FtpClient::nlist()
      * @see FtpClient::scanDir()

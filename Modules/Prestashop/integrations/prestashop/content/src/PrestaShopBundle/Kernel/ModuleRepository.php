@@ -78,7 +78,7 @@ final class ModuleRepository
     }
 
     /**
-     * Returns installed module file paths.
+     * Return installed module file paths.
      *
      * @return array
      */

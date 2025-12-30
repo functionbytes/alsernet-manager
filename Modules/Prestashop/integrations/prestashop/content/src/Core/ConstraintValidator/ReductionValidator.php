@@ -88,7 +88,7 @@ final class ReductionValidator extends ConstraintValidator
     }
 
     /**
-     * Returns true if type is defined in allowed types, false otherwise
+     * Return true if type is defined in allowed types, false otherwise
      *
      * @param string $type
      *
@@ -100,7 +100,7 @@ final class ReductionValidator extends ConstraintValidator
     }
 
     /**
-     * Returns true is percentage is considered valid
+     * Return true is percentage is considered valid
      *
      * @param float $value
      *
@@ -112,7 +112,7 @@ final class ReductionValidator extends ConstraintValidator
     }
 
     /**
-     * Returns true if amount value is considered valid
+     * Return true if amount value is considered valid
      *
      * @param float $value
      *

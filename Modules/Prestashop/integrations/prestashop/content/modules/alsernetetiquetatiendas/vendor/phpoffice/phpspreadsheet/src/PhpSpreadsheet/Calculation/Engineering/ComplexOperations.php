@@ -15,7 +15,7 @@ class ComplexOperations
     /**
      * IMDIV.
      *
-     * Returns the quotient of two complex numbers in x + yi or x + yj text format.
+     * Return the quotient of two complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMDIV(complexDividend,complexDivisor)
@@ -45,7 +45,7 @@ class ComplexOperations
     /**
      * IMSUB.
      *
-     * Returns the difference of two complex numbers in x + yi or x + yj text format.
+     * Return the difference of two complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSUB(complexNumber1,complexNumber2)
@@ -75,7 +75,7 @@ class ComplexOperations
     /**
      * IMSUM.
      *
-     * Returns the sum of two or more complex numbers in x + yi or x + yj text format.
+     * Return the sum of two or more complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMSUM(complexNumber[,complexNumber[,...]])
@@ -105,7 +105,7 @@ class ComplexOperations
     /**
      * IMPRODUCT.
      *
-     * Returns the product of two or more complex numbers in x + yi or x + yj text format.
+     * Return the product of two or more complex numbers in x + yi or x + yj text format.
      *
      * Excel Function:
      *        IMPRODUCT(complexNumber[,complexNumber[,...]])

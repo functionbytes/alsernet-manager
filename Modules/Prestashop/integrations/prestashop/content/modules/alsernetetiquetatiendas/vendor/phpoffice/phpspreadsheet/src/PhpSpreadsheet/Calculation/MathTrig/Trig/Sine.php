@@ -13,7 +13,7 @@ class Sine
     /**
      * SIN.
      *
-     * Returns the result of builtin function sin after validating args.
+     * Return the result of builtin function sin after validating args.
      *
      * @param mixed $angle Should be numeric, or can be an array of numbers
      *
@@ -39,7 +39,7 @@ class Sine
     /**
      * SINH.
      *
-     * Returns the result of builtin function sinh after validating args.
+     * Return the result of builtin function sinh after validating args.
      *
      * @param mixed $angle Should be numeric, or can be an array of numbers
      *
@@ -65,7 +65,7 @@ class Sine
     /**
      * ASIN.
      *
-     * Returns the arcsine of a number.
+     * Return the arcsine of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *
@@ -91,7 +91,7 @@ class Sine
     /**
      * ASINH.
      *
-     * Returns the inverse hyperbolic sine of a number.
+     * Return the inverse hyperbolic sine of a number.
      *
      * @param array|float $number Number, or can be an array of numbers
      *

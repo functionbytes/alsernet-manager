@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 interface MessageFormatterInterface
 {
     /**
-     * Returns a formatted message string.
+     * Return a formatted message string.
      *
      * @param RequestInterface       $request  Request that was sent
      * @param ResponseInterface|null $response Response that was received

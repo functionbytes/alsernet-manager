@@ -281,7 +281,7 @@ class AccessToken
      *
      * @param string|array<mixed> $token The token (access token or a refresh token) that should be revoked.
      * @param array<mixed> $options [optional] Configuration options.
-     * @return bool Returns True if the revocation was successful, otherwise False.
+     * @return bool Return True if the revocation was successful, otherwise False.
      */
     public function revoke($token, array $options = [])
     {
@@ -308,7 +308,7 @@ class AccessToken
 
     /**
      * Gets federated sign-on certificates to use for verifying identity tokens.
-     * Returns certs as array structure, where keys are key ids, and values
+     * Return certs as array structure, where keys are key ids, and values
      * are PEM encoded certificates.
      *
      * @param string $location The location from which to retrieve certs.

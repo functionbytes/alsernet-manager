@@ -5,7 +5,7 @@ namespace GuzzleHttp\Promise;
 interface TaskQueueInterface
 {
     /**
-     * Returns true if the queue is empty.
+     * Return true if the queue is empty.
      *
      * @return bool
      */

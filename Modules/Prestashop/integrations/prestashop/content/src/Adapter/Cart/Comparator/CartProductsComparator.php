@@ -73,7 +73,7 @@ class CartProductsComparator
     }
 
     /**
-     * Returns a list of inventaries that were strictly updated (not created) compared to the state of the cart
+     * Return a list of inventaries that were strictly updated (not created) compared to the state of the cart
      * when this object was created, it removes the already known modified inventaries provided as argument.
      *
      * @return CartProductUpdate[]
@@ -87,7 +87,7 @@ class CartProductsComparator
     }
 
     /**
-     * Returns a list of inventaries that were strictly created (not updated) compared to the state of the cart
+     * Return a list of inventaries that were strictly created (not updated) compared to the state of the cart
      * when this object was created, it removes the already known modified inventaries provided as argument.
      *
      * @return CartProductUpdate[]
@@ -101,7 +101,7 @@ class CartProductsComparator
     }
 
     /**
-     * Returns a list of inventaries that were modified (created and/or updated) compared to the state of the cart
+     * Return a list of inventaries that were modified (created and/or updated) compared to the state of the cart
      * when this object was created, it removes the already known modified inventaries provided as argument.
      *
      * @return CartProductUpdate[]
@@ -115,7 +115,7 @@ class CartProductsComparator
     }
 
     /**
-     * Returns the list of updates for inventaries that were not in the cart previously
+     * Return the list of updates for inventaries that were not in the cart previously
      *
      * @param array[] $newProducts
      *
@@ -142,7 +142,7 @@ class CartProductsComparator
     }
 
     /**
-     * Returns a list of all inventaries that were updated compared to the creation of this object.
+     * Return a list of all inventaries that were updated compared to the creation of this object.
      *
      * @param array[] $newProducts
      *

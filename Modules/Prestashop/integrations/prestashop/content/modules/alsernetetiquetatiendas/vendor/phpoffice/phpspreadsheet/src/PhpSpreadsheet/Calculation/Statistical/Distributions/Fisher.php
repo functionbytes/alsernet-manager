@@ -13,7 +13,7 @@ class Fisher
     /**
      * FISHER.
      *
-     * Returns the Fisher transformation at x. This transformation produces a function that
+     * Return the Fisher transformation at x. This transformation produces a function that
      *        is normally distributed rather than skewed. Use this function to perform hypothesis
      *        testing on the correlation coefficient.
      *
@@ -46,7 +46,7 @@ class Fisher
     /**
      * FISHERINV.
      *
-     * Returns the inverse of the Fisher transformation. Use this transformation when
+     * Return the inverse of the Fisher transformation. Use this transformation when
      *        analyzing correlations between ranges or arrays of data. If y = FISHER(x), then
      *        FISHERINV(y) = x.
      *

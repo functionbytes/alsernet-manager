@@ -52,7 +52,7 @@ class CountryDataProvider
     }
 
     /**
-     * Returns list of countries IDs which need DNI
+     * Return list of countries IDs which need DNI
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class CountryDataProvider
     }
 
     /**
-     * Returns list of countries IDs which need Postcode
+     * Return list of countries IDs which need Postcode
      *
      * @return array
      *
@@ -90,7 +90,7 @@ class CountryDataProvider
     }
 
     /**
-     * Returns list of countries IDS which need a state
+     * Return list of countries IDS which need a state
      *
      * @return array
      *

@@ -28,7 +28,7 @@ use App\Models\Automation\Field;
 use App\Models\Automation\MailList;
 use App\Models\Automation\Subscriber;
 use App\Models\Automation\Timeline;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;

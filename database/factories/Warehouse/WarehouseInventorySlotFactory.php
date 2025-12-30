@@ -2,10 +2,10 @@
 
 namespace Database\Factories\Warehouse;
 
-use App\Models\Product\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Modules\Warehouse\Entities\WarehouseInventorySlot;
+use Modules\Warehouse\Models\Product\Product;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Warehouse\Entities\WarehouseInventorySlot>

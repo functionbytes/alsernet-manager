@@ -106,7 +106,7 @@ final class UriNormalizer
     public const SORT_QUERY_PARAMETERS = 128;
 
     /**
-     * Returns a normalized URI.
+     * Return a normalized URI.
      *
      * The scheme and host component are already normalized to lowercase per PSR-7 UriInterface.
      * This methods adds additional normalizations that can be configured with the $flags parameter.

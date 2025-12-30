@@ -2,9 +2,9 @@
 
 namespace Modules\Warehouse\Services;
 
-use App\Models\Product\Product;
 use App\Models\Warehouse\WarehouseInventoryMovement;
 use Illuminate\Support\Facades\Log;
+use Modules\Warehouse\Models\Product\Product;
 
 class BarcodeReadingService
 {

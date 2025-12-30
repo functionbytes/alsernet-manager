@@ -76,7 +76,7 @@ class ExcelError
     /**
      * NULL.
      *
-     * Returns the error value #NULL!
+     * Return the error value #NULL!
      *
      * @return string #NULL!
      */
@@ -88,7 +88,7 @@ class ExcelError
     /**
      * NaN.
      *
-     * Returns the error value #NUM!
+     * Return the error value #NUM!
      *
      * @return string #NUM!
      */
@@ -100,7 +100,7 @@ class ExcelError
     /**
      * REF.
      *
-     * Returns the error value #REF!
+     * Return the error value #REF!
      *
      * @return string #REF!
      */
@@ -115,7 +115,7 @@ class ExcelError
      * Excel Function:
      *        =NA()
      *
-     * Returns the error value #N/A
+     * Return the error value #N/A
      *        #N/A is the error value that means "no value is available."
      *
      * @return string #N/A!
@@ -128,7 +128,7 @@ class ExcelError
     /**
      * VALUE.
      *
-     * Returns the error value #VALUE!
+     * Return the error value #VALUE!
      *
      * @return string #VALUE!
      */
@@ -140,7 +140,7 @@ class ExcelError
     /**
      * NAME.
      *
-     * Returns the error value #NAME?
+     * Return the error value #NAME?
      *
      * @return string #NAME?
      */

@@ -325,7 +325,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     }
 
     /**
-     * Returns the product stock infos, it's important that the Product is fetched with stock data
+     * Return the product stock infos, it's important that the Product is fetched with stock data
      *
      * @param Product $product
      *

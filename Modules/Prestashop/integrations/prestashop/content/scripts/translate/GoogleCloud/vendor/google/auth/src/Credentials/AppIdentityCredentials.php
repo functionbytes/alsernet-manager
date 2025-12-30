@@ -159,7 +159,7 @@ class AppIdentityCredentials extends CredentialsLoader implements
     /**
      * Get the project ID from AppIdentityService.
      *
-     * Returns null if AppIdentityService is unavailable.
+     * Return null if AppIdentityService is unavailable.
      *
      * @param callable $httpHandler Not used by this type.
      * @return string|null

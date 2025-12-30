@@ -13,7 +13,7 @@ class BesselI
     /**
      * BESSELI.
      *
-     *    Returns the modified Bessel function In(x), which is equivalent to the Bessel function evaluated
+     *    Return the modified Bessel function In(x), which is equivalent to the Bessel function evaluated
      *        for purely imaginary arguments
      *
      *    Excel Function:

@@ -16,7 +16,7 @@ class Conditional
     /**
      * STATEMENT_IF.
      *
-     * Returns one value if a condition you specify evaluates to TRUE and another value if it evaluates to FALSE.
+     * Return one value if a condition you specify evaluates to TRUE and another value if it evaluates to FALSE.
      *
      * Excel Function:
      *        =IF(condition[,returnIfTrue[,returnIfFalse]])
@@ -63,7 +63,7 @@ class Conditional
     /**
      * STATEMENT_SWITCH.
      *
-     * Returns corresponding with first match (any data type such as a string, numeric, date, etc).
+     * Return corresponding with first match (any data type such as a string, numeric, date, etc).
      *
      * Excel Function:
      *        =SWITCH (expression, value1, result1, value2, result2, ... value_n, result_n [, default])

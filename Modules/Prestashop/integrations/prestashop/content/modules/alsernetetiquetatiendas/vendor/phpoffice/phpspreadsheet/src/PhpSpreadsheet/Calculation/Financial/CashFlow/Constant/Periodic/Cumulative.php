@@ -13,7 +13,7 @@ class Cumulative
     /**
      * CUMIPMT.
      *
-     * Returns the cumulative interest paid on a loan between the start and end periods.
+     * Return the cumulative interest paid on a loan between the start and end periods.
      *
      * Excel Function:
      *        CUMIPMT(rate,nper,pv,start,end[,type])
@@ -78,7 +78,7 @@ class Cumulative
     /**
      * CUMPRINC.
      *
-     * Returns the cumulative principal paid on a loan between the start and end periods.
+     * Return the cumulative principal paid on a loan between the start and end periods.
      *
      * Excel Function:
      *        CUMPRINC(rate,nper,pv,start,end[,type])

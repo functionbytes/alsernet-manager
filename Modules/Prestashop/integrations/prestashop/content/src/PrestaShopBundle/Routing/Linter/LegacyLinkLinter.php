@@ -35,7 +35,7 @@ final class LegacyLinkLinter implements RouteLinterInterface
 {
     /**
      * Checks if _legacy_link is configured to route.
-     * Returns true if configured, false if not.
+     * Return true if configured, false if not.
      *
      * {@inheritdoc}
      */

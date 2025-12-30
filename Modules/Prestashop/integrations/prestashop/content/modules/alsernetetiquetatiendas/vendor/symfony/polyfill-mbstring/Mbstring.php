@@ -15,7 +15,7 @@ namespace Symfony\Polyfill\Mbstring;
  * Partial mbstring implementation in PHP, iconv based, UTF-8 centric.
  *
  * Implemented:
- * - mb_chr                  - Returns a specific character from its Unicode code point
+ * - mb_chr                  - Return a specific character from its Unicode code point
  * - mb_convert_encoding     - Convert character encoding
  * - mb_convert_variables    - Convert character code in variable(s)
  * - mb_decode_mimeheader    - Decode string in MIME header field
@@ -28,8 +28,8 @@ namespace Symfony\Polyfill\Mbstring;
  * - mb_http_input           - Detect HTTP input character encoding
  * - mb_http_output          - Set/Get HTTP output character encoding
  * - mb_internal_encoding    - Set/Get internal character encoding
- * - mb_list_encodings       - Returns an array of all supported encodings
- * - mb_ord                  - Returns the Unicode code point of a character
+ * - mb_list_encodings       - Return an array of all supported encodings
+ * - mb_ord                  - Return the Unicode code point of a character
  * - mb_output_handler       - Callback function converts character encoding in output buffer
  * - mb_scrub                - Replaces ill-formed byte sequences with substitute characters
  * - mb_strlen               - Get string length
@@ -59,7 +59,7 @@ namespace Symfony\Polyfill\Mbstring;
  * - mb_ereg_*               - Regular expression with multibyte support
  * - mb_parse_str            - Parse GET/POST/COOKIE data and set global variable
  * - mb_preferred_mime_name  - Get MIME charset string
- * - mb_regex_encoding       - Returns current encoding for multibyte regex as string
+ * - mb_regex_encoding       - Return current encoding for multibyte regex as string
  * - mb_regex_set_options    - Set/Get the default options for mbregex functions
  * - mb_send_mail            - Send encoded mail
  * - mb_split                - Split multibyte string using regular expression

@@ -14,7 +14,7 @@ class Days360
     /**
      * DAYS360.
      *
-     * Returns the number of days between two dates based on a 360-day year (twelve 30-day months),
+     * Return the number of days between two dates based on a 360-day year (twelve 30-day months),
      * which is used in some accounting calculations. Use this function to help compute payments if
      * your accounting system is based on twelve 30-day months.
      *

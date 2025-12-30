@@ -182,7 +182,7 @@ class ModuleTabRegister
     }
 
     /**
-     * Returns a list of all detected controllers, either from admin/controllers folder
+     * Return a list of all detected controllers, either from admin/controllers folder
      * or from the routing file.
      *
      * @param string $moduleName

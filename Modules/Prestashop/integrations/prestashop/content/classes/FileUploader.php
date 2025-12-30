@@ -68,7 +68,7 @@ class FileUploaderCore
     }
 
     /**
-     * Returns array('success'=>true) or array('error'=>'error message').
+     * Return array('success'=>true) or array('error'=>'error message').
      */
     public function handleUpload()
     {

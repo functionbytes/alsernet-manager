@@ -327,7 +327,7 @@ class Comment implements IComparable
     }
 
     /**
-     * Returns background image.
+     * Return background image.
      */
     public function getBackgroundImage(): Drawing
     {

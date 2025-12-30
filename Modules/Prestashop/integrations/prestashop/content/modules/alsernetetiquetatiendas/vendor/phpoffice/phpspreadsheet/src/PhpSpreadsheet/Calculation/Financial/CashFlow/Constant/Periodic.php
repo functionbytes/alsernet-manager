@@ -13,7 +13,7 @@ class Periodic
     /**
      * FV.
      *
-     * Returns the Future Value of a cash flow with constant payments and interest rate (annuities).
+     * Return the Future Value of a cash flow with constant payments and interest rate (annuities).
      *
      * Excel Function:
      *        FV(rate,nper,pmt[,pv[,type]])
@@ -60,7 +60,7 @@ class Periodic
     /**
      * PV.
      *
-     * Returns the Present Value of a cash flow with constant payments and interest rate (annuities).
+     * Return the Present Value of a cash flow with constant payments and interest rate (annuities).
      *
      * @param mixed $rate Interest rate per period
      * @param mixed $numberOfPeriods Number of periods as an integer
@@ -104,7 +104,7 @@ class Periodic
     /**
      * NPER.
      *
-     * Returns the number of periods for a cash flow with constant periodic payments (annuities), and interest rate.
+     * Return the number of periods for a cash flow with constant periodic payments (annuities), and interest rate.
      *
      * @param mixed $rate Interest rate per period
      * @param mixed $payment Periodic payment (annuity)

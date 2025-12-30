@@ -8,11 +8,11 @@ use app\Library\Facades\Hook;
 use App\Models\Categorie;
 use App\Models\Jobs\JobMonitor;
 use App\Models\Lang;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Subscriber\Models\Subscriber;
 use Modules\Subscriber\Models\SubscriberImport;
+use Modules\Warehouse\Models\Product\Product;
 
 class SubscribersController extends Controller
 {

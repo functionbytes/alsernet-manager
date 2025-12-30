@@ -18,7 +18,7 @@ class Coupons
     /**
      * COUPDAYBS.
      *
-     * Returns the number of days from the beginning of the coupon period to the settlement date.
+     * Return the number of days from the beginning of the coupon period to the settlement date.
      *
      * Excel Function:
      *        COUPDAYBS(settlement,maturity,frequency[,basis])
@@ -81,7 +81,7 @@ class Coupons
     /**
      * COUPDAYS.
      *
-     * Returns the number of days in the coupon period that contains the settlement date.
+     * Return the number of days in the coupon period that contains the settlement date.
      *
      * Excel Function:
      *        COUPDAYS(settlement,maturity,frequency[,basis])
@@ -152,7 +152,7 @@ class Coupons
     /**
      * COUPDAYSNC.
      *
-     * Returns the number of days from the settlement date to the next coupon date.
+     * Return the number of days from the settlement date to the next coupon date.
      *
      * Excel Function:
      *        COUPDAYSNC(settlement,maturity,frequency[,basis])
@@ -217,7 +217,7 @@ class Coupons
     /**
      * COUPNCD.
      *
-     * Returns the next coupon date after the settlement date.
+     * Return the next coupon date after the settlement date.
      *
      * Excel Function:
      *        COUPNCD(settlement,maturity,frequency[,basis])
@@ -271,7 +271,7 @@ class Coupons
     /**
      * COUPNUM.
      *
-     * Returns the number of coupons payable between the settlement date and maturity date,
+     * Return the number of coupons payable between the settlement date and maturity date,
      * rounded up to the nearest whole coupon.
      *
      * Excel Function:
@@ -331,7 +331,7 @@ class Coupons
     /**
      * COUPPCD.
      *
-     * Returns the previous coupon date before the settlement date.
+     * Return the previous coupon date before the settlement date.
      *
      * Excel Function:
      *        COUPPCD(settlement,maturity,frequency[,basis])

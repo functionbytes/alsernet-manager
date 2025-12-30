@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 interface EntityInterface
 {
     /**
-     * Returns the name of the repository class for this entity.
+     * Return the name of the repository class for this entity.
      * If unspecified, a generic repository will be used for the entity.
      *
      * @return string or false value

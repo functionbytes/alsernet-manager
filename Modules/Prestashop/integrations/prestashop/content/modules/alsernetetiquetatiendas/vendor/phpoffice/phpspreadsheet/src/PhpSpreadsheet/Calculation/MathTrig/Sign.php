@@ -12,7 +12,7 @@ class Sign
     /**
      * SIGN.
      *
-     * Determines the sign of a number. Returns 1 if the number is positive, zero (0)
+     * Determines the sign of a number. Return 1 if the number is positive, zero (0)
      *        if the number is 0, and -1 if the number is negative.
      *
      * @param array|float $number Number to round, or can be an array of numbers

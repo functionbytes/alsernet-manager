@@ -64,7 +64,7 @@ final class TransferStats
     }
 
     /**
-     * Returns the response that was received (if any).
+     * Return the response that was received (if any).
      */
     public function getResponse(): ?ResponseInterface
     {
@@ -72,7 +72,7 @@ final class TransferStats
     }
 
     /**
-     * Returns true if a response was received.
+     * Return true if a response was received.
      */
     public function hasResponse(): bool
     {

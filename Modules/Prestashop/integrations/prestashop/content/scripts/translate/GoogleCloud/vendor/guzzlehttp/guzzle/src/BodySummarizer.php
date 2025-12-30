@@ -17,7 +17,7 @@ final class BodySummarizer implements BodySummarizerInterface
     }
 
     /**
-     * Returns a summarized message body.
+     * Return a summarized message body.
      */
     public function summarize(MessageInterface $message): ?string
     {

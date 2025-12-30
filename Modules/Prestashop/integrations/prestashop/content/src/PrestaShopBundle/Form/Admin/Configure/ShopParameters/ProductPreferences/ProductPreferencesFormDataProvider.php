@@ -113,7 +113,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Returns array of errors
+     * @return array Return array of errors
      */
     protected function validate(array $data)
     {

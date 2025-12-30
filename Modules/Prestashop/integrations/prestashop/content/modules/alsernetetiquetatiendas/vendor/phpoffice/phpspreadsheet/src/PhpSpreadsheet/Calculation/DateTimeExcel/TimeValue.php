@@ -15,7 +15,7 @@ class TimeValue
     /**
      * TIMEVALUE.
      *
-     * Returns a value that represents a particular time.
+     * Return a value that represents a particular time.
      * Use TIMEVALUE to convert a time represented by a text string to an Excel or PHP date/time stamp
      * value.
      *

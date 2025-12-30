@@ -28,7 +28,7 @@ class RowColumnInformation
     /**
      * COLUMN.
      *
-     * Returns the column number of the given cell reference
+     * Return the column number of the given cell reference
      *     If the cell reference is a range of cells, COLUMN returns the column numbers of each column
      *        in the reference as a horizontal array.
      *     If cell reference is omitted, and the function is being called through the calculation engine,
@@ -83,7 +83,7 @@ class RowColumnInformation
     /**
      * COLUMNS.
      *
-     * Returns the number of columns in an array or reference.
+     * Return the number of columns in an array or reference.
      *
      * Excel Function:
      *        =COLUMNS(cellAddress)
@@ -121,7 +121,7 @@ class RowColumnInformation
     /**
      * ROW.
      *
-     * Returns the row number of the given cell reference
+     * Return the row number of the given cell reference
      *     If the cell reference is a range of cells, ROW returns the row numbers of each row in the reference
      *        as a vertical array.
      *     If cell reference is omitted, and the function is being called through the calculation engine,
@@ -177,7 +177,7 @@ class RowColumnInformation
     /**
      * ROWS.
      *
-     * Returns the number of rows in an array or reference.
+     * Return the number of rows in an array or reference.
      *
      * Excel Function:
      *        =ROWS(cellAddress)

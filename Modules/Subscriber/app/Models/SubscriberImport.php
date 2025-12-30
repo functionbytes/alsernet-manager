@@ -3,11 +3,10 @@
 namespace Modules\Subscriber\Models;
 
 use App\Imports\SubscribersImport;
-use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use app\Library\StringHelper;
 use App\Library\Traits\QueryHelper;
 use App\Library\Traits\TrackJobs;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use League\Csv\Writer;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Campaign\Library\Traits\HasCache;
+use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use Modules\Subscriber\Jobs\Subscribers\ImportSubscribersJob;
 
 class SubscriberImport extends Model

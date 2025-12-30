@@ -118,7 +118,7 @@ class HandlerStack
     }
 
     /**
-     * Returns true if the builder has a handler.
+     * Return true if the builder has a handler.
      */
     public function hasHandler(): bool
     {

@@ -6688,7 +6688,7 @@ $({ global: true, forced: !USE_NATIVE_URL, sham: !DESCRIPTORS }, {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -6701,14 +6701,14 @@ $({ global: true, forced: !USE_NATIVE_URL, sham: !DESCRIPTORS }, {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
@@ -6721,7 +6721,7 @@ $({ global: true, forced: !USE_NATIVE_URL, sham: !DESCRIPTORS }, {
 /******/ 			}
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/global */
 /******/ 	!function() {
 /******/ 		__webpack_require__.g = (function() {
@@ -6733,12 +6733,12 @@ $({ global: true, forced: !USE_NATIVE_URL, sham: !DESCRIPTORS }, {
 /******/ 			}
 /******/ 		})();
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -6749,7 +6749,7 @@ $({ global: true, forced: !USE_NATIVE_URL, sham: !DESCRIPTORS }, {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -7988,7 +7988,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
     _this.init();
 
     return _this;
-  } // Returns all files that have been accepted
+  } // Return all files that have been accepted
 
 
   dropzone_createClass(Dropzone, [{
@@ -7999,7 +7999,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
       }).map(function (file) {
         return file;
       });
-    } // Returns all files that have been rejected
+    } // Return all files that have been rejected
     // Not sure when that's going to be useful, but added for completeness.
 
   }, {
@@ -8019,7 +8019,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
       }).map(function (file) {
         return file;
       });
-    } // Returns all files that are in the queue
+    } // Return all files that are in the queue
 
   }, {
     key: "getQueuedFiles",
@@ -8319,7 +8319,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
       }
 
       return this.options.renameFile(file);
-    } // Returns a form that can be used as fallback if the browser does not support DragnDrop
+    } // Return a form that can be used as fallback if the browser does not support DragnDrop
     //
     // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
     // This code has to pass in IE7 :(
@@ -8352,7 +8352,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
       }
 
       return form != null ? form : fields;
-    } // Returns the fallback elements if they exist already
+    } // Return the fallback elements if they exist already
     //
     // This code has to pass in IE7 :(
 
@@ -8444,7 +8444,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
         return element.classList.add("dz-clickable");
       });
       return this.setupEventListeners();
-    } // Returns a nicely formatted filesize
+    } // Return a nicely formatted filesize
 
   }, {
     key: "filesize",
@@ -9264,7 +9264,7 @@ var Dropzone = /*#__PURE__*/function (_Emitter) {
           _this14._uploadData(files, dataBlocks);
         }
       });
-    } /// Returns the right chunk for given file and xhr
+    } /// Return the right chunk for given file and xhr
 
   }, {
     key: "_getChunk",
@@ -9741,7 +9741,7 @@ Dropzone.version = "5.9.1"; // This is a map of options for your different dropz
 //
 //     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
 
-Dropzone.options = {}; // Returns the options for an element or undefined if none available.
+Dropzone.options = {}; // Return the options for an element or undefined if none available.
 
 Dropzone.optionsForElement = function (element) {
   // Get the `Dropzone.options.elementId` for this element if it exists
@@ -9753,7 +9753,7 @@ Dropzone.optionsForElement = function (element) {
 }; // Holds a list of all dropzone instances
 
 
-Dropzone.instances = []; // Returns the dropzone for given element if any
+Dropzone.instances = []; // Return the dropzone for given element if any
 
 Dropzone.forElement = function (element) {
   if (typeof element === "string") {
@@ -9906,7 +9906,7 @@ Dropzone.dataURItoBlob = function (dataURI) {
   return new Blob([ab], {
     type: mimeString
   });
-}; // Returns an array without the rejected item
+}; // Return an array without the rejected item
 
 
 var without = function without(list, rejectedItem) {

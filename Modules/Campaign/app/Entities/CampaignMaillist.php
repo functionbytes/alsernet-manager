@@ -3,15 +3,13 @@
 namespace Modules\Campaign\Entities;
 
 use App;
-use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;
-use Modules\Subscriber\Jobs\VerifyMailListJob;
 use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +26,8 @@ use Modules\Campaign\Library\StringHelper;
 use Modules\Campaign\Library\Traits\HasCache;
 use Modules\Campaign\Library\Traits\QueryHelper;
 use Modules\Campaign\Library\Traits\TrackJobs;
+use Modules\Subscriber\Jobs\ExportSubscribersJob;
+use Modules\Subscriber\Jobs\VerifyMailListJob;
 
 /**
  * @property int $id

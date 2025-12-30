@@ -103,7 +103,7 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
-     * Returns the columns formatted as array, adds an additional position handle
+     * Return the columns formatted as array, adds an additional position handle
      * column when needed.
      *
      * @param GridInterface $grid

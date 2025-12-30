@@ -199,7 +199,7 @@ In DevTools Network tab:
 ```bash
 php artisan tinker
 > \App\Models\Email\EmailTemplate::module('documents')->enabled()->count()
-# Returns: 15
+# Return: 15
 ```
 
 ### Check Global Settings

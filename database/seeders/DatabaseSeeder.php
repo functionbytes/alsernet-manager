@@ -45,7 +45,7 @@ use Database\Seeders\Helpdesk\HelpdeskTicketSlaPolicySeeder;
 use Database\Seeders\Helpdesk\HelpdeskCannedReplySeeder;
 use Database\Seeders\Helpdesk\HelpCenterSeeder;
 
-// Returns Seeders
+// Return Seeders
 use Database\Seeders\Returns\ReturnPolicySeeder;
 
 // Permissions & Optional Seeders

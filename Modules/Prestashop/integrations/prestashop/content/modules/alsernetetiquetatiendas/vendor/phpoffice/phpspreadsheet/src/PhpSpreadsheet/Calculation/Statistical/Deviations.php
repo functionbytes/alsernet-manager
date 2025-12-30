@@ -10,7 +10,7 @@ class Deviations
     /**
      * DEVSQ.
      *
-     * Returns the sum of squares of deviations of data points from their sample mean.
+     * Return the sum of squares of deviations of data points from their sample mean.
      *
      * Excel Function:
      *        DEVSQ(value1[,value2[, ...]])
@@ -52,7 +52,7 @@ class Deviations
     /**
      * KURT.
      *
-     * Returns the kurtosis of a data set. Kurtosis characterizes the relative peakedness
+     * Return the kurtosis of a data set. Kurtosis characterizes the relative peakedness
      * or flatness of a distribution compared with the normal distribution. Positive
      * kurtosis indicates a relatively peaked distribution. Negative kurtosis indicates a
      * relatively flat distribution.
@@ -97,7 +97,7 @@ class Deviations
     /**
      * SKEW.
      *
-     * Returns the skewness of a distribution. Skewness characterizes the degree of asymmetry
+     * Return the skewness of a distribution. Skewness characterizes the degree of asymmetry
      * of a distribution around its mean. Positive skewness indicates a distribution with an
      * asymmetric tail extending toward more positive values. Negative skewness indicates a
      * distribution with an asymmetric tail extending toward more negative values.

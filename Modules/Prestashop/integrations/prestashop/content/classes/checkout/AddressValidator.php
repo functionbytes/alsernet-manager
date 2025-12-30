@@ -34,7 +34,7 @@ class AddressValidatorCore
 {
     /**
      * Validates cart addresses
-     * Returns an array of invalid address IDs.
+     * Return an array of invalid address IDs.
      *
      * @param  Cart  $cart
      *                      The cart holding the addresses to be inspected
@@ -64,7 +64,7 @@ class AddressValidatorCore
 
     /**
      * Validates given customer's addresses
-     * Returns an array of invalid address IDs.
+     * Return an array of invalid address IDs.
      *
      * @param  Customer  $customer
      *                              The customer holding the addresses to be inspected

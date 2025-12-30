@@ -319,7 +319,7 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
             } else {
                 // Error en este archivo
                 $('#uploadProgress').hide();
-                $submitButton.prop('disabled', false).html("{l s='Upload Documents' mod='alsernetforms'}");
+                $submitButton.prop('disabled', false).html("{l s='Upload Document' mod='alsernetforms'}");
 
                 if (window.toastr) {
                     toastr.error("{l s='Error uploading' mod='alsernetforms'} \"" + fileData.file.name + "\": " + (response.message || "{l s='Unknown error' mod='alsernetforms'}"), "{l s='Error' mod='alsernetforms'}", {
@@ -334,7 +334,7 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
         },
         error: function (xhr, status, error) {
             $('#uploadProgress').hide();
-            $submitButton.prop('disabled', false).html("{l s='Upload Documents' mod='alsernetforms'}");
+            $submitButton.prop('disabled', false).html("{l s='Upload Document' mod='alsernetforms'}");
 
             let errorMsg = "{l s='Error uploading document. Please try again.' mod='alsernetforms'}";
             if (xhr.responseJSON && xhr.responseJSON.message) {

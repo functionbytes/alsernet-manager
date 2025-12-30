@@ -11,7 +11,7 @@
  * This service manages the lifecycle of documents including
  * upload, validation, approval, and archival.
  *
- * @package App\Services\Documents
+ * @package App\Services\Document
  * @author Alsernet Team
  */
 class DocumentService

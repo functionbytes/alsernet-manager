@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Modules\Subscriber\Jobs\ImportBlacklistJob;
 use App\Library\AutoBillingData;
 use App\Library\Facades\Billing;
 use App\Library\Facades\SubscriptionFacade;
@@ -10,8 +9,7 @@ use App\Library\Traits\TrackJobs;
 use App\Models\Role\RoleMapping;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionLog;
-use App\Models\Template\Template;
-use App\Models\Traits\HasUid;
+use App\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +19,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Campaign\Models\Template\Template;
+use Modules\Subscriber\Jobs\ImportBlacklistJob;
 use Modules\Subscriber\Models\Subscriber;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -181,7 +181,7 @@ class User extends Authenticatable
 
     public function sessions(): HasMany
     {
-        return $this->hasMany('App\Models\Setting\Session', 'user_id');
+        return $this->hasMany('App\Models\Session', 'user_id');
     }
 
     public function orders(): HasMany
@@ -197,7 +197,7 @@ class User extends Authenticatable
 
     public function session(): HasOne
     {
-        return $this->hasOne('App\Models\Setting\Session');
+        return $this->hasOne('App\Models\Session');
     }
 
     public function scopeValidationsEmail($query, $email)

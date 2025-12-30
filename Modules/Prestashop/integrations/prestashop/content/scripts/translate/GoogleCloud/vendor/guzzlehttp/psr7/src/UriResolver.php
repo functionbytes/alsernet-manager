@@ -105,7 +105,7 @@ final class UriResolver
     }
 
     /**
-     * Returns the target URI as a relative reference from the base URI.
+     * Return the target URI as a relative reference from the base URI.
      *
      * This method is the counterpart to resolve():
      *

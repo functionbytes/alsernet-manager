@@ -80,7 +80,7 @@
                     'rules' => ['name' => 'required']
                 ])
                 <hr>
-                @include('elements._tags', ['tags' => App\Models\Template\Template::tags()])
+                @include('elements._tags', ['tags' => \Modules\Campaign\Models\Template\Template::tags()])
             </div>
         </div>
     </form>
@@ -204,7 +204,7 @@
                                 }
                             });
 
-                            @foreach(App\Models\Template\Template::tags() as $tag)
+                            @foreach(\Modules\Campaign\Models\Template\Template::tags() as $tag)
                             items.push({
                                 type: 'menuitem',
                                 text: '{{ $tag["name"] }}',

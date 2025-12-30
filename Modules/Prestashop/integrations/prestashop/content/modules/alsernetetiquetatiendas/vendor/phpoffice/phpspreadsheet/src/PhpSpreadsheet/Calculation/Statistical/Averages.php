@@ -10,7 +10,7 @@ class Averages extends AggregateBase
     /**
      * AVEDEV.
      *
-     * Returns the average of the absolute deviations of data points from their mean.
+     * Return the average of the absolute deviations of data points from their mean.
      * AVEDEV is a measure of the variability in a data set.
      *
      * Excel Function:
@@ -60,7 +60,7 @@ class Averages extends AggregateBase
     /**
      * AVERAGE.
      *
-     * Returns the average (arithmetic mean) of the arguments
+     * Return the average (arithmetic mean) of the arguments
      *
      * Excel Function:
      *        AVERAGE(value1[,value2[, ...]])
@@ -99,7 +99,7 @@ class Averages extends AggregateBase
     /**
      * AVERAGEA.
      *
-     * Returns the average of its arguments, including numbers, text, and logical values
+     * Return the average of its arguments, including numbers, text, and logical values
      *
      * Excel Function:
      *        AVERAGEA(value1[,value2[, ...]])
@@ -139,7 +139,7 @@ class Averages extends AggregateBase
     /**
      * MEDIAN.
      *
-     * Returns the median of the given numbers. The median is the number in the middle of a set of numbers.
+     * Return the median of the given numbers. The median is the number in the middle of a set of numbers.
      *
      * Excel Function:
      *        MEDIAN(value1[,value2[, ...]])
@@ -173,7 +173,7 @@ class Averages extends AggregateBase
     /**
      * MODE.
      *
-     * Returns the most frequently occurring, or repetitive, value in an array or range of data
+     * Return the most frequently occurring, or repetitive, value in an array or range of data
      *
      * Excel Function:
      *        MODE(value1[,value2[, ...]])

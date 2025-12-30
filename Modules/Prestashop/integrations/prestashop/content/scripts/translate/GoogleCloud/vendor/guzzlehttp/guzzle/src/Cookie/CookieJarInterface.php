@@ -44,7 +44,7 @@ interface CookieJarInterface extends \Countable, \IteratorAggregate
      *
      * @param SetCookie $cookie Cookie to set.
      *
-     * @return bool Returns true on success or false on failure
+     * @return bool Return true on success or false on failure
      */
     public function setCookie(SetCookie $cookie): bool;
 

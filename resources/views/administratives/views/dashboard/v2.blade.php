@@ -155,7 +155,7 @@
             </div>
         </div>
 
-        {{-- Recent Documents Table --}}
+        {{-- Recent Document Table --}}
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">

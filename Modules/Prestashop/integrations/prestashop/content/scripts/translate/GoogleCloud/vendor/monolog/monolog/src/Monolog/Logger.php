@@ -700,7 +700,7 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * Returns the timezone to be used for the timestamp of log records.
+     * Return the timezone to be used for the timestamp of log records.
      */
     public function getTimezone(): DateTimeZone
     {

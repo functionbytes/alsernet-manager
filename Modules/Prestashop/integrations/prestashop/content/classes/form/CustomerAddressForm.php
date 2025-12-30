@@ -213,7 +213,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     /**
      * Performs validation on field values.
-     * Returns true if all field values are correct, false otherwise.
+     * Return true if all field values are correct, false otherwise.
      */
     private function validateFieldsValues(): bool
     {

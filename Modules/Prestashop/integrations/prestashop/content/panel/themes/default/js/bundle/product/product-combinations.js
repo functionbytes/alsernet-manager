@@ -84,7 +84,7 @@ window.combinations = (function () {
   }
 
   /**
-   * Returns a reference to the form for a specific combination
+   * Return a reference to the form for a specific combination
    * @param {String} attributeId
    * @return {jQuery}
    */
@@ -93,7 +93,7 @@ window.combinations = (function () {
   }
 
   /**
-   * Returns a reference to the row of a specific combination
+   * Return a reference to the row of a specific combination
    * @param {String} attributeId
    * @return {jQuery}
    */

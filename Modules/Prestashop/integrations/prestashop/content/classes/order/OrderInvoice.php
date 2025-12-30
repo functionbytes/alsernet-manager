@@ -413,7 +413,7 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * Returns the shipping taxes breakdown.
+     * Return the shipping taxes breakdown.
      *
      * @since 1.5
      *
@@ -485,7 +485,7 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * Returns the wrapping taxes breakdown.
+     * Return the wrapping taxes breakdown.
      *
      * @return array
      */
@@ -547,7 +547,7 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * Returns the ecotax taxes breakdown.
+     * Return the ecotax taxes breakdown.
      *
      * @since 1.5
      *
@@ -576,7 +576,7 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * Returns all the order invoice that match the date interval.
+     * Return all the order invoice that match the date interval.
      *
      * @since 1.5
      *

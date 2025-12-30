@@ -7484,7 +7484,7 @@ var __table_selector = function ( selector, a )
  *   should operate on. If not given, all tables in the current context are
  *   used. This can be given as a jQuery selector (for example `':gt(0)'`) to
  *   select multiple tables or as an integer to select a single table.
- * @returns {DataTable.Api} Returns a new API instance if a selector is given.
+ * @returns {DataTable.Api} Return a new API instance if a selector is given.
  */
 _api_register( 'tables()', function ( selector ) {
 	// A new instance is created if there was a selector specified
@@ -13678,7 +13678,7 @@ DataTable.models.oSettings = {
 	 * object with the following parameters:
 	 *   <ul>
 	 *     <li>function:fn - function to call. Takes two parameters, oSettings
-	 *       and the JSON string to save that has been thus far created. Returns
+	 *       and the JSON string to save that has been thus far created. Return
 	 *       a JSON string to be inserted into a json object
 	 *       (i.e. '"param": [ 0, 1, 2]')</li>
 	 *     <li>string:sName - name of callback</li>

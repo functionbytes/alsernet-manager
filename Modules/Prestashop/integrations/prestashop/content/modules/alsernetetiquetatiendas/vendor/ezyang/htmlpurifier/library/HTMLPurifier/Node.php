@@ -39,7 +39,7 @@ abstract class HTMLPurifier_Node
     public $dead = false;
 
     /**
-     * Returns a pair of start and end tokens, where the end token
+     * Return a pair of start and end tokens, where the end token
      * is null if it is not necessary. Does not include children.
      * @type array
      */

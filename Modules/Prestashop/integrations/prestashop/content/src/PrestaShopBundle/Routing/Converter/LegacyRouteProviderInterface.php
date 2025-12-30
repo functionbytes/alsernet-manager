@@ -35,14 +35,14 @@ use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 interface LegacyRouteProviderInterface
 {
     /**
-     * Returns the list of LegacyRoute based on what was set in the routing files.
+     * Return the list of LegacyRoute based on what was set in the routing files.
      *
      * @return LegacyRoute[]
      */
     public function getLegacyRoutes();
 
     /**
-     * Returns the list of controllers, their action and the associated route.
+     * Return the list of controllers, their action and the associated route.
      * e.g: $controllerActions = [
      *      'AdminPreferences' => [
      *          'index' => 'admin_preferences',

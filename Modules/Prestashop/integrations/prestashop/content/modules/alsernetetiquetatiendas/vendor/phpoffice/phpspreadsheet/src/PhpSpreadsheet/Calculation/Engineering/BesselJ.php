@@ -13,7 +13,7 @@ class BesselJ
     /**
      * BESSELJ.
      *
-     *    Returns the Bessel function
+     *    Return the Bessel function
      *
      *    Excel Function:
      *        BESSELJ(x,ord)

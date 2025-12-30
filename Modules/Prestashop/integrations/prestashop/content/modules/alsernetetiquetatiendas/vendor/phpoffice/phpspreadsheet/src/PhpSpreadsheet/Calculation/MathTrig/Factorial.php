@@ -14,7 +14,7 @@ class Factorial
     /**
      * FACT.
      *
-     * Returns the factorial of a number.
+     * Return the factorial of a number.
      * The factorial of a number is equal to 1*2*3*...* number.
      *
      * Excel Function:
@@ -57,7 +57,7 @@ class Factorial
     /**
      * FACTDOUBLE.
      *
-     * Returns the double factorial of a number.
+     * Return the double factorial of a number.
      *
      * Excel Function:
      *        FACTDOUBLE(factVal)
@@ -94,7 +94,7 @@ class Factorial
     /**
      * MULTINOMIAL.
      *
-     * Returns the ratio of the factorial of a sum of values to the product of factorials.
+     * Return the ratio of the factorial of a sum of values to the product of factorials.
      *
      * @param mixed[] $args An array of mixed values for the Data Series
      *

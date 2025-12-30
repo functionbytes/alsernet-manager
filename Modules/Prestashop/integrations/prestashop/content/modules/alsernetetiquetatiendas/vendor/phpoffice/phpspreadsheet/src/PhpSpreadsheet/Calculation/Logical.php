@@ -12,7 +12,7 @@ class Logical
     /**
      * TRUE.
      *
-     * Returns the boolean TRUE.
+     * Return the boolean TRUE.
      *
      * Excel Function:
      *        =TRUE()
@@ -32,7 +32,7 @@ class Logical
     /**
      * FALSE.
      *
-     * Returns the boolean FALSE.
+     * Return the boolean FALSE.
      *
      * Excel Function:
      *        =FALSE()
@@ -52,7 +52,7 @@ class Logical
     /**
      * LOGICAL_AND.
      *
-     * Returns boolean TRUE if all its arguments are TRUE; returns FALSE if one or more argument is FALSE.
+     * Return boolean TRUE if all its arguments are TRUE; returns FALSE if one or more argument is FALSE.
      *
      * Excel Function:
      *        =AND(logical1[,logical2[, ...]])
@@ -82,7 +82,7 @@ class Logical
     /**
      * LOGICAL_OR.
      *
-     * Returns boolean TRUE if any argument is TRUE; returns FALSE if all arguments are FALSE.
+     * Return boolean TRUE if any argument is TRUE; returns FALSE if all arguments are FALSE.
      *
      * Excel Function:
      *        =OR(logical1[,logical2[, ...]])
@@ -112,7 +112,7 @@ class Logical
     /**
      * LOGICAL_XOR.
      *
-     * Returns the Exclusive Or logical operation for one or more supplied conditions.
+     * Return the Exclusive Or logical operation for one or more supplied conditions.
      * i.e. the Xor function returns TRUE if an odd number of the supplied conditions evaluate to TRUE,
      *      and FALSE otherwise.
      *
@@ -144,7 +144,7 @@ class Logical
     /**
      * NOT.
      *
-     * Returns the boolean inverse of the argument.
+     * Return the boolean inverse of the argument.
      *
      * Excel Function:
      *        =NOT(logical)
@@ -173,7 +173,7 @@ class Logical
     /**
      * STATEMENT_IF.
      *
-     * Returns one value if a condition you specify evaluates to TRUE and another value if it evaluates to FALSE.
+     * Return one value if a condition you specify evaluates to TRUE and another value if it evaluates to FALSE.
      *
      * Excel Function:
      *        =IF(condition[,returnIfTrue[,returnIfFalse]])
@@ -214,7 +214,7 @@ class Logical
     /**
      * STATEMENT_SWITCH.
      *
-     * Returns corresponding with first match (any data type such as a string, numeric, date, etc).
+     * Return corresponding with first match (any data type such as a string, numeric, date, etc).
      *
      * Excel Function:
      *        =SWITCH (expression, value1, result1, value2, result2, ... value_n, result_n [, default])

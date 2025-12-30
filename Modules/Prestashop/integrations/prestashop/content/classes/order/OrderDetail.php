@@ -334,7 +334,7 @@ class OrderDetailCore extends ObjectModel
     }
 
     /**
-     * Returns the tax calculator associated to this order detail.
+     * Return the tax calculator associated to this order detail.
      *
      * @since 1.5.0.1
      *

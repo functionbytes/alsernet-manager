@@ -5,9 +5,9 @@ namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Templates;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Templates\App;
 use App\Http\Controllers\Managers\Templates\Setting;
-use App\Models\Template\Template;
-use App\Models\Template\TemplateCategory as TemplateCategoryAlias;
 use Illuminate\Http\Request;
+use Modules\Campaign\Models\Template\Template;
+use Modules\Campaign\Models\Template\TemplateCategory as TemplateCategoryAlias;
 
 class TemplatesController extends Controller
 {
@@ -136,7 +136,7 @@ class TemplatesController extends Controller
 
         if ($request->isMethod('post')) {
             foreach ($request->categories as $key => $value) {
-                $category = \App\Models\Template\TemplateCategory::findByUid($key);
+                $category = \Modules\Campaign\Models\Template\TemplateCategory::findByUid($key);
                 if ($value == 'true') {
                     $template->addCategory($category);
                 } else {

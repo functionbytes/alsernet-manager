@@ -15,7 +15,7 @@ class Compare
      *    Excel Function:
      *        DELTA(a[,b])
      *
-     *    Tests whether two values are equal. Returns 1 if number1 = number2; returns 0 otherwise.
+     *    Tests whether two values are equal. Return 1 if number1 = number2; returns 0 otherwise.
      *    Use this function to filter a set of values. For example, by summing several DELTA
      *        functions you calculate the count of equal pairs. This function is also known as the
      *        Kronecker Delta function.
@@ -51,7 +51,7 @@ class Compare
      *    Excel Function:
      *        GESTEP(number[,step])
      *
-     *    Returns 1 if number >= step; returns 0 (zero) otherwise
+     *    Return 1 if number >= step; returns 0 (zero) otherwise
      *    Use this function to filter a set of values. For example, by summing several GESTEP
      *        functions you calculate the count of values that exceed a threshold.
      *

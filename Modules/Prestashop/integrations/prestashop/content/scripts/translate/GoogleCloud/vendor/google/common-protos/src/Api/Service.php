@@ -312,7 +312,7 @@ class Service extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Returns the unboxed value from <code>getConfigVersion()</code>
+     * Return the unboxed value from <code>getConfigVersion()</code>
 
      * The semantic version of the service configuration. The config version
      * affects the interpretation of the service configuration. For example,

@@ -430,7 +430,7 @@ class TextData
     /**
      * REPT.
      *
-     * Returns the result of builtin function repeat after validating args.
+     * Return the result of builtin function repeat after validating args.
      *
      * @Deprecated 1.18.0
      *

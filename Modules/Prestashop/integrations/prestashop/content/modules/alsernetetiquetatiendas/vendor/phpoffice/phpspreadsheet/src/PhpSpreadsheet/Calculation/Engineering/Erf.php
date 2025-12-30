@@ -15,7 +15,7 @@ class Erf
     /**
      * ERF.
      *
-     * Returns the error function integrated between the lower and upper bound arguments.
+     * Return the error function integrated between the lower and upper bound arguments.
      *
      *    Note: In Excel 2007 or earlier, if you input a negative value for the upper or lower bound arguments,
      *            the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
@@ -56,7 +56,7 @@ class Erf
     /**
      * ERFPRECISE.
      *
-     * Returns the error function integrated between the lower and upper bound arguments.
+     * Return the error function integrated between the lower and upper bound arguments.
      *
      *    Excel Function:
      *        ERF.PRECISE(limit)

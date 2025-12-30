@@ -236,7 +236,7 @@ class Value
     /**
      * N.
      *
-     * Returns a value converted to a number
+     * Return a value converted to a number
      *
      * @param null|mixed $value The value you want converted
      *
@@ -277,7 +277,7 @@ class Value
     /**
      * TYPE.
      *
-     * Returns a number that identifies the type of a value
+     * Return a number that identifies the type of a value
      *
      * @param null|mixed $value The value you want tested
      *

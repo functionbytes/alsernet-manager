@@ -8,8 +8,8 @@ use app\Library\HtmlHandler\GenerateSpintax;
 use app\Library\HtmlHandler\MakeInlineCss;
 use app\Library\HtmlHandler\ParseRss;
 use app\Library\HtmlHandler\TransformWidgets;
-use App\Models\Template\Template;
 use League\Pipeline\PipelineBuilder;
+use Modules\Campaign\Models\Template\Template;
 use Modules\Mail\Models\MailLayout;
 use Modules\Mail\Models\MailTemplate;
 

@@ -305,7 +305,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
     }
 
     /**
-     * Returns the cached default catalogue
+     * Return the cached default catalogue
      *
      * @return MessageCatalogue
      */

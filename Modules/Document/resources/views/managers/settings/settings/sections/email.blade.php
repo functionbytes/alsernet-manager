@@ -113,7 +113,7 @@ Gracias por su colaboracion.
         </div>
     </div>
 
-    <!-- Missing Documents Email -->
+    <!-- Missing Document Email -->
     <div class="setting-section mb-4">
         <div class="card border">
             <div class="card-header bg-light py-3">

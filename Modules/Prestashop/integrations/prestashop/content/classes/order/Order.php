@@ -1925,7 +1925,7 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Returns the correct product taxes breakdown.
+     * Return the correct product taxes breakdown.
      *
      * Get all documents linked to the current order
      *
@@ -2133,7 +2133,7 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Returns the correct product taxes breakdown.
+     * Return the correct product taxes breakdown.
      *
      * @since 1.5.0.1
      *
@@ -2190,7 +2190,7 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Returns the shipping taxes breakdown.
+     * Return the shipping taxes breakdown.
      *
      * @since 1.5.0.1
      *
@@ -2213,7 +2213,7 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Returns the wrapping taxes breakdown.
+     * Return the wrapping taxes breakdown.
      *
      * @todo
      *
@@ -2229,7 +2229,7 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Returns the ecotax taxes breakdown.
+     * Return the ecotax taxes breakdown.
      *
      * @since 1.5.0.1
      *

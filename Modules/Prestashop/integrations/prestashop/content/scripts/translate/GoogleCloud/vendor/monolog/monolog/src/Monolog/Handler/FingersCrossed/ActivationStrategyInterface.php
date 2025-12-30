@@ -21,7 +21,7 @@ namespace Monolog\Handler\FingersCrossed;
 interface ActivationStrategyInterface
 {
     /**
-     * Returns whether the given record activates the handler.
+     * Return whether the given record activates the handler.
      *
      * @phpstan-param Record $record
      */

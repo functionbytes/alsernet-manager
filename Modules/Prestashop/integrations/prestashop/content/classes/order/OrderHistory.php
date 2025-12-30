@@ -434,7 +434,7 @@ class OrderHistoryCore extends ObjectModel
     }
 
     /**
-     * Returns the last order status.
+     * Return the last order status.
      *
      * @param  int  $id_order
      * @return OrderState|bool

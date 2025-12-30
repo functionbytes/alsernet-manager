@@ -149,7 +149,7 @@ abstract class AbstractObjectModelHandler
     }
 
     /**
-     * Calculates and returns image size in kb for provided image path. Returns null if image doesn't exist
+     * Calculates and returns image size in kb for provided image path. Return null if image doesn't exist
      *
      * @param string $imagePath
      *

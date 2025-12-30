@@ -148,8 +148,8 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'documents.delete' => 'Eliminar documentos',
             'documents.files.manage' => 'Gestionar archivos',
 
-            // Devoluciones (Returns)
-            // Devoluciones (Returns)
+            // Devoluciones (Return)
+            // Devoluciones (Return)
             'returns.view.own' => 'Ver sus propias devoluciones',
             'returns.view.assigned' => 'Ver devoluciones asignadas',
             'returns.view.all' => 'Ver todas las devoluciones',

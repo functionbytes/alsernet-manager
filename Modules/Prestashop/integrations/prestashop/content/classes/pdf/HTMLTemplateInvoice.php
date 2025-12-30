@@ -78,7 +78,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template's HTML header.
+     * Return the template's HTML header.
      *
      * @return string HTML header
      */
@@ -149,7 +149,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template's HTML content.
+     * Return the template's HTML content.
      *
      * @return string HTML content
      */
@@ -381,9 +381,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the tax tab content.
+     * Return the tax tab content.
      *
-     * @return string|array Tax tab html content (Returns an array if debug params used in request)
+     * @return string|array Tax tab html content (Return an array if debug params used in request)
      */
     public function getTaxTabContent()
     {
@@ -419,7 +419,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns different tax breakdown elements.
+     * Return different tax breakdown elements.
      *
      * @return array|bool Different tax breakdown elements
      */
@@ -459,7 +459,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the invoice template associated to the country iso_code.
+     * Return the invoice template associated to the country iso_code.
      *
      * @param  string  $iso_country
      * @return string
@@ -480,7 +480,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template filename when using bulk rendering.
+     * Return the template filename when using bulk rendering.
      *
      * @return string filename
      */
@@ -490,7 +490,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template filename.
+     * Return the template filename.
      *
      * @return string filename
      */

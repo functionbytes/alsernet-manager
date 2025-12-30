@@ -34,7 +34,7 @@ interface SignBlobInterface extends FetchAuthTokenInterface
     public function signBlob($stringToSign, $forceOpenssl = false);
 
     /**
-     * Returns the current Client Name.
+     * Return the current Client Name.
      *
      * @param callable $httpHandler callback which delivers psr7 request, if
      *     one is required to obtain a client name.

@@ -5,9 +5,9 @@ namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Products;
 use App\Http\Controllers\Controller;
 use App\Models\Faq\FaqCategorie;
 use App\Models\Faq\Template;
-use App\Models\Product\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Warehouse\Models\Product\Product;
 
 class BarcodeController extends Controller
 {

@@ -64,7 +64,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
     }
 
     /**
-     * Returns the list of found themes (non empty folders, in the mail themes
+     * Return the list of found themes (non empty folders, in the mail themes
      * folder).
      *
      * @throws FileNotFoundException

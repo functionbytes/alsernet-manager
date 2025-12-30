@@ -65,7 +65,7 @@ interface RequestInterface extends MessageInterface
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return string Returns the request method.
+     * @return string Return the request method.
      */
     public function getMethod();
 
@@ -92,13 +92,13 @@ interface RequestInterface extends MessageInterface
      * This method MUST return a UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     * @return UriInterface Returns a UriInterface instance
+     * @return UriInterface Return a UriInterface instance
      *     representing the URI of the request.
      */
     public function getUri();
 
     /**
-     * Returns an instance with the provided URI.
+     * Return an instance with the provided URI.
      *
      * This method MUST update the Host header of the returned request by
      * default if the URI contains a host component. If the URI does not

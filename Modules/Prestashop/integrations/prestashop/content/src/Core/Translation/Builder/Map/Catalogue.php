@@ -61,7 +61,7 @@ class Catalogue
         return $this;
     }
 
-    /** Returns a single Domain DTO.
+    /** Return a single Domain DTO.
      *
      * @param string $domainName
      *

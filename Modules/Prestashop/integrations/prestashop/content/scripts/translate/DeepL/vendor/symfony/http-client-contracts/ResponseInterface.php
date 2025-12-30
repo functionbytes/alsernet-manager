@@ -79,7 +79,7 @@ interface ResponseInterface
     public function cancel(): void;
 
     /**
-     * Returns info coming from the transport layer.
+     * Return info coming from the transport layer.
      *
      * This method SHOULD NOT throw any ExceptionInterface and SHOULD be non-blocking.
      * The returned info is "live": it can be empty and can change from one call to

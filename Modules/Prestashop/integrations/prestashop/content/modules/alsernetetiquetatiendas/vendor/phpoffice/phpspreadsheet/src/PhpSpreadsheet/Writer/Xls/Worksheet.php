@@ -668,7 +668,7 @@ class Worksheet extends BIFFwriter
      * An integer can be written as a double. Excel will display an
      * integer. $format is optional.
      *
-     * Returns  0 : normal termination
+     * Return  0 : normal termination
      *         -2 : row or column out of range
      *
      * @param int $row Zero indexed row
@@ -771,7 +771,7 @@ class Worksheet extends BIFFwriter
      * A blank cell without a format serves no purpose. Therefore, we don't write
      * a BLANK record unless a format is specified.
      *
-     * Returns  0 : normal termination (including no format)
+     * Return  0 : normal termination (including no format)
      *         -1 : insufficient number of arguments
      *         -2 : row or column out of range
      *
@@ -826,7 +826,7 @@ class Worksheet extends BIFFwriter
      * The textual representation of the formula is passed to the parser in
      * Parser.php which returns a packed binary string.
      *
-     * Returns  0 : WRITE_FORMULA_NORMAL  normal termination
+     * Return  0 : WRITE_FORMULA_NORMAL  normal termination
      *         -1 : WRITE_FORMULA_ERRORS formula errors (bad formula)
      *         -2 : WRITE_FORMULA_RANGE  row or column out of range
      *         -3 : WRITE_FORMULA_EXCEPTION parse raised exception, probably due to definedname

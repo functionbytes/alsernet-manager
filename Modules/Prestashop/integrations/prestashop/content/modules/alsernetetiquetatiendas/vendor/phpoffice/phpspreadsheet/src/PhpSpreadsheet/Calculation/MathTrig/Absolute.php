@@ -12,7 +12,7 @@ class Absolute
     /**
      * ABS.
      *
-     * Returns the result of builtin function abs after validating args.
+     * Return the result of builtin function abs after validating args.
      *
      * @param mixed $number Should be numeric, or can be an array of numbers
      *

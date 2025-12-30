@@ -3,15 +3,15 @@
 namespace Modules\Warehouse\Http\Controllers\Warehouses\Warehouses;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product\Product;
 use App\Models\Shop;
+use App\Services\Inventories\BarcodeReadingService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\WarehouseInventoryOperation;
 use Modules\Warehouse\Entities\WarehouseLocation;
 use Modules\Warehouse\Entities\WarehouseLocationSection;
-use App\Services\Inventories\BarcodeReadingService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Modules\Warehouse\Models\Product\Product;
 
 class LocationsController extends Controller
 {

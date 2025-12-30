@@ -180,7 +180,7 @@ class StateCore extends ObjectModel
     }
 
     /**
-     * Returns the number of utilisation of a state.
+     * Return the number of utilisation of a state.
      *
      * @return int count for this state
      */

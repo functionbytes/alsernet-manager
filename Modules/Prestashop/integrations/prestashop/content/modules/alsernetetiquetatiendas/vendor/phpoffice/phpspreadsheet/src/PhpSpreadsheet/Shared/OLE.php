@@ -209,7 +209,7 @@ class OLE
     }
 
     /**
-     * Returns a stream for use with fread() etc. External callers should
+     * Return a stream for use with fread() etc. External callers should
      * use \PhpOffice\PhpSpreadsheet\Shared\OLE\PPS\File::getStream().
      *
      * @param int|OLE\PPS $blockIdOrPps block id or PPS
@@ -492,7 +492,7 @@ class OLE
 
     /**
      * Utility function
-     * Returns a string for the OLE container with the date given.
+     * Return a string for the OLE container with the date given.
      *
      * @param float|int $date A timestamp
      *
@@ -527,7 +527,7 @@ class OLE
     }
 
     /**
-     * Returns a timestamp from an OLE container's date.
+     * Return a timestamp from an OLE container's date.
      *
      * @param string $oleTimestamp A binary string with the encoded date
      *

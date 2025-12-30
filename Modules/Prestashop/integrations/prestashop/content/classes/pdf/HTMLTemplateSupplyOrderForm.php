@@ -111,7 +111,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     }
 
     /**
-     * Returns the invoice logo.
+     * Return the invoice logo.
      *
      * @return string Logo path
      */

@@ -235,7 +235,7 @@ class Combination {
   }
 
   /**
-   * Returns the related input field in legacy form from
+   * Return the related input field in legacy form from
    * bulk form field
    *
    * @param bulkInput

@@ -8,8 +8,8 @@ use App\Listeners\Campaigns\SendNewUserNotification;
 use App\Listeners\Documents\LogDocumentStatusChange;
 use App\Listeners\Documents\SendDocumentUploadNotification;
 use App\Listeners\Documents\SendStageNotifications;
+use App\Listeners\LogToDatabase;
 use App\Listeners\Systems\Backups\BackupEventListener;
-use App\Listeners\Systems\LogToDatabase;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,7 +28,6 @@ class EventServiceProvider extends ServiceProvider
 
         Registered::class => [
             SendEmailVerificationNotification::class,
-            SendNewUserNotification::class,
         ],
 
         // GiftvoucherCreated::class => [

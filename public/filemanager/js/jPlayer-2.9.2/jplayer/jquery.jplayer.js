@@ -504,7 +504,7 @@
 			defaultPlaybackRate: 1,
 			minPlaybackRate: 0.5,
 			maxPlaybackRate: 4,
-			wmode: "opaque", // Valid wmode: window, transparent, opaque, direct, gpu. 
+			wmode: "opaque", // Valid wmode: window, transparent, opaque, direct, gpu.
 			backgroundColor: "#000000", // To define the jPlayer div and Flash background color.
 			cssSelectorAncestor: "#jp_container_1",
 			cssSelector: { // * denotes properties that should only be required when video media type required. _cssSelector() would require changes to enable splitting these into Audio and Video defaults.
@@ -814,9 +814,9 @@
 		},
 		_init: function() {
 			var self = this;
-			
+
 			this.element.empty();
-			
+
 			this.status = $.extend({}, this.status); // Copy static to unique instance.
 			this.internal = $.extend({}, this.internal); // Copy static to unique instance.
 
@@ -847,7 +847,7 @@
 			this.formats = []; // Array based on supplied string option. Order defines priority.
 			this.solutions = []; // Array based on solution string option. Order defines priority.
 			this.require = {}; // Which media types are required: video, audio.
-			
+
 			this.htmlElement = {}; // DOM elements created by jPlayer
 			this.html = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
 			this.html.audio = {};
@@ -856,7 +856,7 @@
 			this.aurora.formats = [];
 			this.aurora.properties = [];
 			this.flash = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
-			
+
 			this.css = {};
 			this.css.cs = {}; // Holds the css selector strings
 			this.css.jq = {}; // Holds jQuery selectors. ie., $(css.cs.method)
@@ -898,7 +898,7 @@
 					}
 				}
 			});
-				
+
 			// Create Aurora.js formats array
 			$.each(this.options.auroraFormats.toLowerCase().split(","), function(index1, value1) {
 				var format = value1.replace(/^\s+|\s+$/g, ""); //trim
@@ -1003,7 +1003,7 @@
 			this.internal.poster.jq.bind("click.jPlayer", function() {
 				self._trigger($.jPlayer.event.click);
 			});
-			
+
 			// Generate the required media elements
 			this.html.audio.available = false;
 			if(this.require.audio) { // If a supplied format is audio
@@ -1077,11 +1077,11 @@
 
 			// Set up the css selectors for the control and feedback entities.
 			this._cssSelectorAncestor(this.options.cssSelectorAncestor);
-			
+
 			// If neither html nor aurora nor flash are being used by this browser, then media playback is not possible. Trigger an error event.
 			if(!(this.html.used || this.aurora.used || this.flash.used)) {
 				this._error( {
-					type: $.jPlayer.error.NO_SOLUTION, 
+					type: $.jPlayer.error.NO_SOLUTION,
 					context: "{solution:'" + this.options.solution + "', supplied:'" + this.options.supplied + "'}",
 					message: $.jPlayer.errorMsg.NO_SOLUTION,
 					hint: $.jPlayer.errorHint.NO_SOLUTION
@@ -1101,7 +1101,7 @@
 				flashVars = 'jQuery=' + encodeURI(this.options.noConflict) + '&id=' + encodeURI(this.internal.self.id) + '&vol=' + this.options.volume + '&muted=' + this.options.muted;
 
 				// Code influenced by SWFObject 2.2: http://code.google.com/p/swfobject/
-				// Non IE browsers have an initial Flash size of 1 by 1 otherwise the wmode affected the Flash ready event. 
+				// Non IE browsers have an initial Flash size of 1 by 1 otherwise the wmode affected the Flash ready event.
 
 				if($.jPlayer.browser.msie && (Number($.jPlayer.browser.version) < 9 || $.jPlayer.browser.documentMode < 9)) {
 					var objStr = '<object id="' + this.internal.flash.id + '" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="0" height="0" tabindex="-1"></object>';
@@ -1121,7 +1121,7 @@
 				} else {
 					var createParam = function(el, n, v) {
 						var p = document.createElement("param");
-						p.setAttribute("name", n);	
+						p.setAttribute("name", n);
 						p.setAttribute("value", v);
 						el.appendChild(p);
 					};
@@ -1179,7 +1179,7 @@
 					});
 				}
 			}
-			
+
 			// Add the Aurora.js solution if being used.
 			if(this.aurora.used) {
 				// Aurora.js player need to be created for each media, see setMedia function.
@@ -1248,7 +1248,7 @@
 			this.element.removeData("jPlayer"); // Remove jPlayer data
 			this.element.unbind(".jPlayer"); // Remove all event handlers created by the jPlayer constructor
 			this.element.empty(); // Remove the inserted child elements
-			
+
 			delete this.instances[this.internal.instance]; // Clear the instance on the static instance object
 		},
 		destroyRemoved: function() { // Destroy any instances that have gone away.
@@ -1296,7 +1296,7 @@
 		},
 		_uaBlocklist: function(list) {
 			// list : object with properties that are all regular expressions. Property names are irrelevant.
-			// Returns true if the user agent is matched in list.
+			// Return true if the user agent is matched in list.
 			var	ua = navigator.userAgent.toLowerCase(),
 				block = false;
 
@@ -1347,7 +1347,7 @@
 			// Create the event listeners
 			// Only want the active entity to affect jPlayer and bubble events.
 			// Using entity.gate so that object is referenced and gate property always current
-			
+
 			mediaElement.addEventListener("progress", function() {
 				if(entity.gate) {
 					if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
@@ -1507,7 +1507,7 @@
 			// Create the event listeners
 			// Only want the active entity to affect jPlayer and bubble events.
 			// Using entity.gate so that object is referenced and gate property always current
-			
+
 			player.on("progress", function() {
 				if(entity.gate) {
 					if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
@@ -1587,7 +1587,7 @@
 				sp = 100;
 				cpr = cpa;
 			}
-			
+
 			if(override) {
 				ct = 0;
 				cpr = 0;
@@ -1623,7 +1623,7 @@
 				sp = 100;
 				cpr = cpa;
 			}
-			
+
 			if(override) {
 				ct = 0;
 				cpr = 0;
@@ -1691,7 +1691,7 @@
 
 							// Need to read original status before issuing the setMedia command.
 							var	currentTime = this.status.currentTime,
-								paused = this.status.paused; 
+								paused = this.status.paused;
 
 							this.setMedia(this.status.media);
 							this.volumeWorker(this.options.volume);
@@ -1943,7 +1943,7 @@
 			}
 		},
 		setMedia: function(media) {
-		
+
 			/*	media[format] = String: URL of format. Must contain all of the supplied option's video or audio formats.
 			 *	media.poster = String: Video poster URL.
 			 *	media.track = Array: Of objects defining the track element: kind, src, srclang, label, def.
@@ -2011,7 +2011,7 @@
 							}
 							self.status.video = false;
 						}
-						
+
 						supported = true;
 						return false; // Exit $.each
 					}
@@ -2387,7 +2387,7 @@
 					if(cssSel) { // Checks for empty string
 						this.css.jq[fn] = $(this.css.cs[fn]);
 					} else {
-						this.css.jq[fn] = []; // To comply with the css.jq[fn].length check before its use. As of jQuery 1.4 could have used $() for an empty set. 
+						this.css.jq[fn] = []; // To comply with the css.jq[fn].length check before its use. As of jQuery 1.4 could have used $() for an empty set.
 					}
 
 					if(this.css.jq[fn].length && this[fn]) {
@@ -2512,7 +2512,7 @@
 		option: function(key, value) {
 			var options = key;
 
-			 // Enables use: options().  Returns a copy of options object
+			 // Enables use: options().  Return a copy of options object
 			if ( arguments.length === 0 ) {
 				return $.extend( true, {}, this.options );
 			}
@@ -2520,7 +2520,7 @@
 			if(typeof key === "string") {
 				var keys = key.split(".");
 
-				 // Enables use: options("someOption")  Returns a copy of the option. Supports dot notation.
+				 // Enables use: options("someOption")  Return a copy of the option. Supports dot notation.
 				if(value === undefined) {
 
 					var opt = $.extend(true, {}, this.options);
@@ -2779,7 +2779,7 @@
 						//get the change from last position to this position
 						deltaX = self.internal.mouse.x - event.pageX;
 						deltaY = self.internal.mouse.y - event.pageY;
-						moved = (Math.floor(deltaX) > 0) || (Math.floor(deltaY)>0); 
+						moved = (Math.floor(deltaX) > 0) || (Math.floor(deltaY)>0);
 					} else {
 						moved = true;
 					}
@@ -3095,19 +3095,19 @@
 			}
 		},
 		_aurora_setAudio: function(media) {
-			var self = this;            
-			
+			var self = this;
+
 			// Always finds a format due to checks in setMedia()
 			$.each(this.formats, function(priority, format) {
 				if(self.aurora.support[format] && media[format]) {
 					self.status.src = media[format];
 					self.status.format[format] = true;
 					self.status.formatType = format;
-			
+
 					return false;
 				}
 			});
-			
+
 			this.aurora.player = new AV.Player.fromURL(this.status.src);
 			this._addAuroraEventListeners(this.aurora.player, this.aurora);
 
@@ -3141,7 +3141,7 @@
 			}
 			this.status.waitForLoad = false;
 			this._aurora_checkWaitForPlay();
-			
+
 			// No event from the player, update UI now.
 			this._updateButtons(true);
 			this._trigger($.jPlayer.event.play);
@@ -3151,11 +3151,11 @@
 				this.aurora.player.seek(time * 1000);
 			}
 			this.aurora.player.pause();
-			
+
 			if(time > 0) { // Avoids a setMedia() followed by stop() or pause(0) hiding the video play button.
 				this._aurora_checkWaitForPlay();
 			}
-			
+
 			// No event from the player, update UI now.
 			this._updateButtons(false);
 			this._trigger($.jPlayer.event.pause);
@@ -3165,7 +3165,7 @@
 				// The seek() sould be in milliseconds, but the only codec that works with seek (aac.js) uses seconds.
 				this.aurora.player.seek(percent * this.aurora.player.duration / 100); // Using seconds
 			}
-				
+
 			if(!this.status.waitForLoad) {
 				this._aurora_checkWaitForPlay();
 			}
@@ -3231,7 +3231,7 @@
 								break;
 							case "rtmpv":
 								self._getMovie().fl_setVideo_rtmp(media[format]);
-								break;		
+								break;
 						}
 						self.status.src = media[format];
 						self.status.format[format] = true;

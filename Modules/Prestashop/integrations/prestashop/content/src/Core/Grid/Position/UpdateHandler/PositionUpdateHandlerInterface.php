@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 interface PositionUpdateHandlerInterface
 {
     /**
-     * Returns the complete list of positions based on the PositionDefinitionInterface
+     * Return the complete list of positions based on the PositionDefinitionInterface
      * The expected return is an associative array with row IDs used as keys and positions
      * as values.
      *

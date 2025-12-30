@@ -82,7 +82,7 @@ trans('Brands & Suppliers', 'Admin.Navigation.Menu');
 trans('Brands', 'Admin.Navigation.Menu');
 trans('Marketing', 'Admin.Navigation.Menu');
 trans('Menus', 'Admin.Navigation.Menu');
-trans('Merchandise Returns', 'Admin.Navigation.Menu');
+trans('Merchandise Return', 'Admin.Navigation.Menu');
 trans('Modules', 'Admin.Navigation.Menu');
 trans('Monitoring', 'Admin.Navigation.Menu');
 trans('Multistore', 'Admin.Navigation.Menu');

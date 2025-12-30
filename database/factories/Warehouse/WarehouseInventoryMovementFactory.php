@@ -2,13 +2,13 @@
 
 namespace Database\Factories\Warehouse;
 
-use App\Models\Product\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\WarehouseInventoryMovement;
 use Modules\Warehouse\Entities\WarehouseInventorySlot;
+use Modules\Warehouse\Models\Product\Product;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Modules\Warehouse\Entities\WarehouseInventoryMovement>

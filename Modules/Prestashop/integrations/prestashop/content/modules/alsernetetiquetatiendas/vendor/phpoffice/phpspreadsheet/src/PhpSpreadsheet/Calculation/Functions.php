@@ -204,7 +204,7 @@ class Functions
     /**
      * NULL.
      *
-     * Returns the error value #NULL!
+     * Return the error value #NULL!
      *
      * @Deprecated 1.23.0
      *
@@ -221,7 +221,7 @@ class Functions
     /**
      * NaN.
      *
-     * Returns the error value #NUM!
+     * Return the error value #NUM!
      *
      * @Deprecated 1.23.0
      *
@@ -238,7 +238,7 @@ class Functions
     /**
      * REF.
      *
-     * Returns the error value #REF!
+     * Return the error value #REF!
      *
      * @Deprecated 1.23.0
      *
@@ -258,7 +258,7 @@ class Functions
      * Excel Function:
      *        =NA()
      *
-     * Returns the error value #N/A
+     * Return the error value #N/A
      *        #N/A is the error value that means "no value is available."
      *
      * @Deprecated 1.23.0
@@ -276,7 +276,7 @@ class Functions
     /**
      * VALUE.
      *
-     * Returns the error value #VALUE!
+     * Return the error value #VALUE!
      *
      * @Deprecated 1.23.0
      *
@@ -293,7 +293,7 @@ class Functions
     /**
      * NAME.
      *
-     * Returns the error value #NAME?
+     * Return the error value #NAME?
      *
      * @Deprecated 1.23.0
      *
@@ -512,7 +512,7 @@ class Functions
     /**
      * N.
      *
-     * Returns a value converted to a number
+     * Return a value converted to a number
      *
      * @Deprecated 1.23.0
      *
@@ -538,7 +538,7 @@ class Functions
     /**
      * TYPE.
      *
-     * Returns a number that identifies the type of a value
+     * Return a number that identifies the type of a value
      *
      * @Deprecated 1.23.0
      *

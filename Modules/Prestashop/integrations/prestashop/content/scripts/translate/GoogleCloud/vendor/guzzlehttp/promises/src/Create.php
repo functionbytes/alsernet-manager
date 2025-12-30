@@ -63,7 +63,7 @@ final class Create
     }
 
     /**
-     * Returns an iterator for the given value.
+     * Return an iterator for the given value.
      *
      * @param mixed $value
      *

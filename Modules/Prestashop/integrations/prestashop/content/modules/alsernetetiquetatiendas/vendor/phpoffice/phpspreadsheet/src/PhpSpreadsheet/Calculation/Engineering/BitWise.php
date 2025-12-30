@@ -26,7 +26,7 @@ class BitWise
     /**
      * BITAND.
      *
-     * Returns the bitwise AND of two integer values.
+     * Return the bitwise AND of two integer values.
      *
      * Excel Function:
      *        BITAND(number1, number2)
@@ -61,7 +61,7 @@ class BitWise
     /**
      * BITOR.
      *
-     * Returns the bitwise OR of two integer values.
+     * Return the bitwise OR of two integer values.
      *
      * Excel Function:
      *        BITOR(number1, number2)
@@ -97,7 +97,7 @@ class BitWise
     /**
      * BITXOR.
      *
-     * Returns the bitwise XOR of two integer values.
+     * Return the bitwise XOR of two integer values.
      *
      * Excel Function:
      *        BITXOR(number1, number2)
@@ -133,7 +133,7 @@ class BitWise
     /**
      * BITLSHIFT.
      *
-     * Returns the number value shifted left by shift_amount bits.
+     * Return the number value shifted left by shift_amount bits.
      *
      * Excel Function:
      *        BITLSHIFT(number, shift_amount)
@@ -171,7 +171,7 @@ class BitWise
     /**
      * BITRSHIFT.
      *
-     * Returns the number value shifted right by shift_amount bits.
+     * Return the number value shifted right by shift_amount bits.
      *
      * Excel Function:
      *        BITRSHIFT(number, shift_amount)

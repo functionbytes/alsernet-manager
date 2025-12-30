@@ -11,7 +11,7 @@ class InterestRate
     /**
      * EFFECT.
      *
-     * Returns the effective interest rate given the nominal rate and the number of
+     * Return the effective interest rate given the nominal rate and the number of
      *        compounding payments per year.
      *
      * Excel Function:
@@ -44,7 +44,7 @@ class InterestRate
     /**
      * NOMINAL.
      *
-     * Returns the nominal interest rate given the effective rate and the number of compounding payments per year.
+     * Return the nominal interest rate given the effective rate and the number of compounding payments per year.
      *
      * @param mixed $effectiveRate Effective interest rate as a float
      * @param mixed $periodsPerYear Integer number of compounding payments per year
