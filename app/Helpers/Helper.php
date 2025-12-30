@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Setting\Setting;
+use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

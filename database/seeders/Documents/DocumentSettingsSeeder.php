@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Documents;
 
-use App\Models\Setting\Setting;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class DocumentSettingsSeeder extends Seeder
