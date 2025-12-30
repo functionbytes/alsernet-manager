@@ -25,6 +25,7 @@ class NotificationServiceProvider extends ServiceProvider
     {
         // Load routes
         $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
 
         // Publish config
         $this->publishes([

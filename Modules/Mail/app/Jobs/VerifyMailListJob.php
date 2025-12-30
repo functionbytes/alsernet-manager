@@ -2,9 +2,9 @@
 
 namespace Modules\Mail\Jobs;
 
-use Modules\Campaign\Library\Traits\Trackable;
 use Exception;
 use Illuminate\Bus\Batchable;
+use Modules\Campaign\Library\Traits\Trackable;
 
 class VerifyMailListJob extends Base
 {

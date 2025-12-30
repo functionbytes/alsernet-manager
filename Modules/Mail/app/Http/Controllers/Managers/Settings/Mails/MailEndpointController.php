@@ -4,9 +4,9 @@ namespace Modules\Mail\Http\Controllers\Managers\Settings\Mails;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
+use Illuminate\Http\Request;
 use Modules\Mail\Models\MailEndpoint;
 use Modules\Mail\Models\MailTemplate;
-use Illuminate\Http\Request;
 
 class MailEndpointController extends Controller
 {

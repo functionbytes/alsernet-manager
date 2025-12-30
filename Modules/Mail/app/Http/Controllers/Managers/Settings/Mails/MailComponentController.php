@@ -4,9 +4,9 @@ namespace Modules\Mail\Http\Controllers\Managers\Settings\Mails;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
+use Illuminate\Http\Request;
 use Modules\Mail\Models\MailLayout;
 use Modules\Mail\Models\MailLayoutLang;
-use Illuminate\Http\Request;
 
 class MailComponentController extends Controller
 {

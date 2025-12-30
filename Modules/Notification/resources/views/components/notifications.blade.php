@@ -2,7 +2,7 @@
 <li class="nav-item nav-icon-hover-bg rounded-circle dropdown"
     id="notifications-dropdown"
     data-api-index-route="{{ route('api.notifications.index') }}"
-    data-api-read-route="{{ route('api.notifications.read', ['id' => '{id}']) }}"
+    data-api-read-route="{{ url('/api/notifications/{id}/read') }}"
     data-mark-all-read-route="{{ route('api.notifications.mark-all-read') }}"
     data-refresh-interval="60000"
     data-limit="4">
@@ -43,7 +43,7 @@
 
         <!-- Footer -->
         <div class="border-top p-3">
-            <a href="{{ route('manager.notifications.index') }}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+            <a href="{{ route('manager.notifications') }}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
                 <div class="text-start">
                     <div class="fw-semibold">Ver todas las notificaciones</div>
                 </div>

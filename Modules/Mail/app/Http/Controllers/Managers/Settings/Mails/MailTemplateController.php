@@ -4,10 +4,10 @@ namespace Modules\Mail\Http\Controllers\Managers\Settings\Mails;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
+use Illuminate\Http\Request;
 use Modules\Mail\Models\MailLayout;
 use Modules\Mail\Models\MailTemplate;
 use Modules\Mail\Models\MailTemplateLang;
-use Illuminate\Http\Request;
 
 class MailTemplateController extends Controller
 {

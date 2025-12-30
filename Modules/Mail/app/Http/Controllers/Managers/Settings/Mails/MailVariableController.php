@@ -4,8 +4,8 @@ namespace Modules\Mail\Http\Controllers\Managers\Settings\Mails;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
-use Modules\Mail\Models\MailVariable;
 use Illuminate\Http\Request;
+use Modules\Mail\Models\MailVariable;
 
 class MailVariableController extends Controller
 {

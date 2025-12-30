@@ -2,8 +2,6 @@
 
 namespace Modules\Mail\Jobs\Email;
 
-use Modules\Mail\Models\MailEndpoint;
-use Modules\Mail\Models\MailEndpointLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,6 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Modules\Mail\Models\MailEndpoint;
+use Modules\Mail\Models\MailEndpointLog;
 
 class SendEndpointEmailJob implements ShouldQueue
 {

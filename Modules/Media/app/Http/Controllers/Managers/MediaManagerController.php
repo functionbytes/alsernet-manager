@@ -3,13 +3,13 @@
 namespace Modules\Media\Http\Controllers\Managers;
 
 use App\Http\Controllers\Controller;
-use Modules\Media\Entities\MediaFile;
-use Modules\Media\Entities\MediaFolder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Modules\Media\Entities\MediaFile;
+use Modules\Media\Entities\MediaFolder;
 
 class MediaManagerController extends Controller
 {
@@ -114,7 +114,7 @@ class MediaManagerController extends Controller
             $breadcrumbs = [[
                 'id' => 0,
                 'name' => 'Todos los archivos',
-                'icon' => 'ti ti-folder-open',
+                'icon' => 'fas fa-folder-open',
             ]];
         }
 
@@ -164,7 +164,7 @@ class MediaManagerController extends Controller
                 'id' => $folder->id,
                 'uid' => $folder->uid,
                 'name' => $folder->name,
-                'icon' => 'ti ti-folder',
+                'icon' => 'fas fa-folder',
                 'color' => $folder->color,
                 'created_at' => $folder->created_at->format('Y-m-d H:i'),
                 'children_count' => $folder->children()->count(),
@@ -415,7 +415,7 @@ class MediaManagerController extends Controller
             array_unshift($breadcrumbs, [
                 'id' => $current->id,
                 'name' => $current->name,
-                'icon' => 'ti ti-folder',
+                'icon' => 'fas fa-folder',
             ]);
             $current = $current->parent_id ? $current->parent : null;
         }

@@ -3,11 +3,10 @@
 namespace Modules\Mail\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\Email\SendEndpointEmailJob;
-use Modules\Mail\Models\MailEndpoint;
-use Modules\Mail\Models\MailEndpointLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Mail\Models\MailEndpoint;
+use Modules\Mail\Models\MailEndpointLog;
 
 class EmailEndpointController extends Controller
 {

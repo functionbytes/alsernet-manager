@@ -20,4 +20,5 @@ Route::middleware(['web', 'auth'])->prefix('manager/media')->name('manager.media
     Route::put('/folder/{folder}/move', [MediaManagerController::class, 'moveFolder'])->name('folder.move');
     Route::post('/file/{file}/toggle-favorite', [MediaManagerController::class, 'toggleFavorite'])->name('file.toggle-favorite');
     Route::delete('/trash/empty', [MediaManagerController::class, 'emptyTrash'])->name('trash.empty');
+    Route::post('/set-disk', [MediaManagerController::class, 'setActiveDisk'])->name('set-disk');
 });

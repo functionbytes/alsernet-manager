@@ -1,0 +1,23 @@
+{
+    "name": "modules/mails-settings",
+    "description": "Email Configuration Settings Module",
+    "authors": [],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\MailsSettings\\": "app/",
+            "Modules\\MailsSettings\\Database\\Factories\\": "database/factories/",
+            "Modules\\MailsSettings\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\MailsSettings\\Tests\\": "tests/"
+        }
+    }
+}

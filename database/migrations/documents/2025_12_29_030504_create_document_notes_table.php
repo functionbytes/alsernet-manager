@@ -20,6 +20,7 @@ return new class extends Migration
                 ->constrained('documents')
                 ->cascadeOnDelete();
             $table->foreignId('created_by')
+                ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
             $table->longText('content')->comment('Contenido de la nota');

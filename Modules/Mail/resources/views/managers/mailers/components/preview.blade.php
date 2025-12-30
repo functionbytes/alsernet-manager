@@ -1,4 +1,4 @@
-@extends('managers.components.layout')
+@extends('layouts.managers')
 
 @section('page_title', 'Preview - ' . $component->subject)
 

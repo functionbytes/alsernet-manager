@@ -17,8 +17,10 @@ return new class extends Migration
     {
         Schema::create('document_validator_group_configurations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('validator_group_id')
-                ->constrained('document_validator_groups')
+            $table->unsignedBigInteger('validator_group_id');
+            $table->foreign('validator_group_id', 'dvgc_group_fk')
+                ->references('id')
+                ->on('document_validator_groups')
                 ->onDelete('cascade');
             $table->string('key')->comment('Configuration key (e.g., enable_auto_approval)');
             $table->string('label')->comment('Display label');

@@ -83,11 +83,10 @@ use App\Mail\Helpdesk\TicketCreatedMail;
 ```
 
 ### Después
+
 ```php
-use Modules\Mail\Models\MailTemplate;
-use Modules\Mail\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
 use Modules\Mail\Services\MailVariableService;
-use Modules\Mail\Mail\Helpdesk\TicketCreatedMail;
+
 ```
 
 **✅ Todas las referencias han sido actualizadas automáticamente en:**

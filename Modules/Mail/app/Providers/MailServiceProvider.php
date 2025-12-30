@@ -10,7 +10,7 @@ class MailServiceProvider extends ServiceProvider
     {
         // Merge module config
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/mail.php',
+            __DIR__.'/../../config/mail.php',
             'mail'
         );
     }
@@ -18,17 +18,17 @@ class MailServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/managers.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
 
         // Publish config
         $this->publishes([
-            __DIR__ . '/../../config/mail.php' => config_path('mail.php'),
+            __DIR__.'/../../config/mail.php' => config_path('mail.php'),
         ], 'mail-config');
 
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Load views
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'mail');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mail');
     }
 }
