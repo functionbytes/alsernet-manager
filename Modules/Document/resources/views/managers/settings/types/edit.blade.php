@@ -209,7 +209,7 @@
                                                     <div class="alert bg-warning-subtle border-warning">
                                                         <h6 class="mb-0 fw-semibold">No hay grupos validadores configurados</h6>
                                                         <p class="mb-0">
-                                                            <a href="{{ route('manager.settings.documents.groups') }}" class="alert-link">Crear grupos primero</a>
+                                                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="alert-link">Crear grupos primero</a>
                                                         </p>
                                                     </div>
                                                 @else
