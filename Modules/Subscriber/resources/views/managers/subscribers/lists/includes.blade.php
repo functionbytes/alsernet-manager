@@ -100,7 +100,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('manager.subscribers.lists.includes.update') }}",
+                        url: "{{ route('manager.subscribers.lists.components.update') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },

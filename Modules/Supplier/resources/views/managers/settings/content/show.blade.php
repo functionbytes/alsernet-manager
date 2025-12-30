@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Revisión de Contenido - ' . $content->product_name])
+    @include('managers.components.card', ['title' => 'Revisión de Contenido - ' . $content->product_name])
 
     <div class="widget-content searchable-container list">
 

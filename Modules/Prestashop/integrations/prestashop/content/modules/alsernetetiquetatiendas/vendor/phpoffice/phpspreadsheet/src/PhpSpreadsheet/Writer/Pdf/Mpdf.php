@@ -62,7 +62,7 @@ class Mpdf extends Pdf
 
         $html = $this->generateHTMLAll();
         $bodyLocation = strpos($html, Html::BODY_LINE);
-        // Make sure first data presented to Mpdf includes body tag
+        // Make sure first data presented to Mpdf components body tag
         //   so that Mpdf doesn't parse it as content. Issue 2432.
         if ($bodyLocation !== false) {
             $bodyLocation += strlen(Html::BODY_LINE);

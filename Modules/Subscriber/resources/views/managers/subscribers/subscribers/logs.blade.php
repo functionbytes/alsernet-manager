@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Historial de ' . Str::upper($subscriber->firstname . ' ' . $subscriber->lastname)])
+    @include('managers.components.card', ['title' => 'Historial de ' . Str::upper($subscriber->firstname . ' ' . $subscriber->lastname)])
 
     <div class="widget-content searchable-container list">
         <div class="card card-body">

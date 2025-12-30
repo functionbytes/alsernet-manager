@@ -116,8 +116,8 @@ Route::group(
             Route::get('/lists/{uid}/details', [SubscriberController::class, 'listsDetails'])->name('lists.details');
             Route::get('/lists/{uid}/categories', [SubscriberController::class, 'listsCategories'])->name('lists.categories');
             Route::post('/lists/{uid}/categories/update', [SubscriberController::class, 'listsCategoriesUpdate'])->name('lists.categories.update');
-            Route::get('/lists/{uid}/includes', [SubscriberController::class, 'listsIncludes'])->name('lists.includes');
-            Route::post('/lists/{uid}/includes/update', [SubscriberController::class, 'listsIncludesUpdate'])->name('lists.includes.update');
+            Route::get('/lists/{uid}/components', [SubscriberController::class, 'listsIncludes'])->name('lists.components');
+            Route::post('/lists/{uid}/components/update', [SubscriberController::class, 'listsIncludesUpdate'])->name('lists.components.update');
 
             // Subscriber list reports
             Route::get('/lists/reports', [SubscriberController::class, 'listsReports'])->name('lists.reports');

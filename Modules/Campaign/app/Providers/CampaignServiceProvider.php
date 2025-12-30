@@ -44,7 +44,7 @@ class CampaignServiceProvider extends ServiceProvider
     {
         // Register navigation composer for managers layout
         view()->composer(
-            'managers.includes.nav',
+            'managers.components.nav',
             \Modules\Campaign\Http\ViewComposers\NavigationComposer::class
         );
     }

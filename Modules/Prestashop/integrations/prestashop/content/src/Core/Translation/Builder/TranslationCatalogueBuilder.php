@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProv
  * This class provides the catalogue represented as an array.
  * The catalogue is composed by domains, subdomains and messages in each of them.
  * A message has 3 layers : the default wording, the translation extracted from XLF and the one made by the Admin.
- * The representation also includes metadata to summarize number of translations and missing ones for each domain.
+ * The representation also components metadata to summarize number of translations and missing ones for each domain.
  * The catalogue can be extracted for a specific domain and filtered by domain or terms.
  */
 class TranslationCatalogueBuilder

@@ -44,23 +44,23 @@ class OrderDetail extends OrderDetailCore
     /**
      * @deprecated since 1.5 Use unit_price_tax_excl instead
      *
-     * @var float Without taxes, includes ecotax
+     * @var float Without taxes, components ecotax
      */
     public $product_price;
 
     /** @var float */
     public $original_product_price;
 
-    /** @var float With taxes, includes ecotax */
+    /** @var float With taxes, components ecotax */
     public $unit_price_tax_incl;
 
-    /** @var float Without taxes, includes ecotax */
+    /** @var float Without taxes, components ecotax */
     public $unit_price_tax_excl;
 
-    /** @var float With taxes, includes ecotax */
+    /** @var float With taxes, components ecotax */
     public $total_price_tax_incl;
 
-    /** @var float Without taxes, includes ecotax */
+    /** @var float Without taxes, components ecotax */
     public $total_price_tax_excl;
 
     /** @var float */

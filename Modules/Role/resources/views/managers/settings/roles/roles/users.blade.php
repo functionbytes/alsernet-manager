@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Gestionar usuarios del rol'])
+    @include('managers.components.card', ['title' => 'Gestionar usuarios del rol'])
 
     @include('managers.components.alerts')
 

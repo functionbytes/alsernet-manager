@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Modules\Notification\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Importar suscripciones - '. $list->title])
+    @include('managers.components.card', ['title' => 'Importar suscripciones - '. $list->title])
 
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">

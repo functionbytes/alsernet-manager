@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Condiciones de validación'])
+    @include('managers.components.card', ['title' => 'Condiciones de validación'])
 
     <div class="widget-content searchable-container list">
 
@@ -207,7 +207,7 @@
         </div>
     </div>
 
-    @include('managers.includes.delete')
+    @include('managers.components.delete')
 
 @endsection
 

@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' =>  $pageTitle ])
+    @include('managers.components.card', ['title' =>  $pageTitle ])
 
     <!-- Form -->
     <div class="row g-3">

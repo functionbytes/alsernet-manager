@@ -1176,7 +1176,7 @@ class HookCore extends ObjectModel
     /**
      * Return all hook IDs, indexed by hook name.
      *
-     * @param  bool  $withAliases  [default=false] If true, includes hook aliases along their canonical hook id
+     * @param  bool  $withAliases  [default=false] If true, components hook aliases along their canonical hook id
      * @param  bool  $refreshCache  [default=false] Force cache refresh
      * @return int[]
      *

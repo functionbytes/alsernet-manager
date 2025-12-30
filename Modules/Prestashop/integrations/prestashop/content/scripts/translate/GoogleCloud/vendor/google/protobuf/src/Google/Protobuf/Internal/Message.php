@@ -1074,7 +1074,7 @@ class Message
     {
         if (!is_array($value)) {
             // In the case that $value is not an array, we do not want to
-            // attempt any conversion. Note that this includes the cases
+            // attempt any conversion. Note that this components the cases
             // when $value is a RepeatedField of MapField. In those cases,
             // we do not need to convert the elements, as they should
             // already be the correct types.

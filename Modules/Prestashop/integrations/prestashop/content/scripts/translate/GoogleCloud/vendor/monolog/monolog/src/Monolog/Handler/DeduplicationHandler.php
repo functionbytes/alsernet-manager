@@ -17,7 +17,7 @@ use Psr\Log\LogLevel;
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
  *
- * It also includes the BufferHandler functionality and will buffer
+ * It also components the BufferHandler functionality and will buffer
  * all messages until the end of the request or flush() is called.
  *
  * This works by storing all log records' messages above $deduplicationLevel

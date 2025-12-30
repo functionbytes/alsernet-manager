@@ -53,7 +53,7 @@ Responsable de:
 protected function registerViewComposers(): void
 {
     view()->composer(
-        'managers.includes.nav',
+        'managers.components.nav',
         \Modules\Documents\app\Http\ViewComposers\NavigationComposer::class
     );
 }
@@ -117,7 +117,7 @@ Otros módulos pueden implementar el mismo patrón:
 protected function registerViewComposers(): void
 {
     view()->composer(
-        'managers.includes.nav',
+        'managers.components.nav',
         \Modules\OtroModulo\app\Http\ViewComposers\NavigationComposer::class
     );
 }
@@ -181,7 +181,7 @@ class NavigationComposer
 protected function registerViewComposers(): void
 {
     view()->composer(
-        'managers.includes.nav',
+        'managers.components.nav',
         \Modules\MiModulo\app\Http\ViewComposers\NavigationComposer::class
     );
 }

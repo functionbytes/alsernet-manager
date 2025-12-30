@@ -1916,7 +1916,7 @@ class DocumentsController extends Controller
             $document->load('actions.performer');
 
             // Renderizar el componente de historial de acciones
-            $html = view('administratives.views.documents.includes.action-history', [
+            $html = view('administratives.views.documents.components.action-history', [
                 'document' => $document,
             ])->render();
 

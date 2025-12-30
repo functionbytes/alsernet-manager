@@ -248,7 +248,7 @@ trait MessageTrait
         // The regular expression intentionally does not support the obs-fold production, because as
         // per RFC 7230#3.2.4:
         //
-        // A sender MUST NOT generate a message that includes
+        // A sender MUST NOT generate a message that components
         // line folding (i.e., that has any field-value that contains a match to
         // the obs-fold rule) unless the message is intended for packaging
         // within the message/http media type.

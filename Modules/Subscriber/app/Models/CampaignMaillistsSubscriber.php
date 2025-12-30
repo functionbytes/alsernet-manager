@@ -5,7 +5,7 @@
  *
  * Model class for Subscriber
  *
- * LICENSE: This product includes software developed at
+ * LICENSE: This product components software developed at
  * the Acelle Co., Ltd. (http://acellemail.com/).
  *
  * @category   MVC Model

@@ -278,7 +278,7 @@ php artisan module:enable Prestashop
 ### 3. Run Migrations
 ```bash
 php artisan migrate
-# This includes the new product_blockades table migration
+# This components the new product_blockades table migration
 ```
 
 ### 4. Clear Cache

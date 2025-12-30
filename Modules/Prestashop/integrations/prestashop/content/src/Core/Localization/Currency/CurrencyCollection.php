@@ -38,7 +38,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
     protected $currencies = [];
 
     /**
-     * Gets the current CurrencyCollection as an Iterator that includes all currencies.
+     * Gets the current CurrencyCollection as an Iterator that components all currencies.
      *
      * @return iterable<Currency>|Traversable
      */

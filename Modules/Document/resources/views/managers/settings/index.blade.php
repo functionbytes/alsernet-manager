@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de Documentos'])
+    @include('managers.components.card', ['title' => 'Configuración de Documentos'])
 
 
         @if ($message = session('success'))

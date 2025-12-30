@@ -230,10 +230,10 @@ class HTMLPurifier_HTMLModule
     }
 
     /**
-     * Convenience function that merges a list of attribute includes into
+     * Convenience function that merges a list of attribute components into
      * an attribute array.
      * @param array $attr Reference to attr array to modify
-     * @param array $attr_includes Array of includes / string include to merge in
+     * @param array $attr_includes Array of components / string include to merge in
      */
     public function mergeInAttrIncludes(&$attr, $attr_includes)
     {

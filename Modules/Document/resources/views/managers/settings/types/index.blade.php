@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Tipos de Documentos'])
+    @include('managers.components.card', ['title' => 'Tipos de Documentos'])
 
     <div class="widget-content searchable-container list">
 
@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    @include('managers.includes.delete')
+    @include('managers.components.delete')
 
 @endsection
 

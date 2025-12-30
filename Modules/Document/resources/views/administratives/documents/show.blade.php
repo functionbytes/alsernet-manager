@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Ver Documento'])
+    @include('managers.components.card', ['title' => 'Ver Documento'])
 
     <div class="row">
         <div class="col-lg-8">

@@ -47,7 +47,7 @@ abstract class Abstraction
      * start - Variable offset position, level-2 operators start at 1
      *         (exclude operator itself, e.g. {?query})
      * first - If variables found, prepend this value to it
-     * named - Whether or not the expansion includes the variable or key name
+     * named - Whether or not the expansion components the variable or key name
      * reserved - union of (unreserved / reserved / pct-encoded)
      */
     public $id,

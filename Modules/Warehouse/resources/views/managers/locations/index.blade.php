@@ -1,7 +1,7 @@
 @extends('layouts.managers')
 
 @section('content')
-    @include('managers.includes.card', ['title' => "Estanterías piso - {$floor->name}"])
+    @include('managers.components.card', ['title' => "Estanterías piso - {$floor->name}"])
 
     <div class="widget-content searchable-container list">
 

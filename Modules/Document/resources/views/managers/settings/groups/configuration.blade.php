@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de Grupo: ' . $group->name])
+    @include('managers.components.card', ['title' => 'Configuración de Grupo: ' . $group->name])
 
     <div class="widget-content">
         @include('managers.components.alerts')

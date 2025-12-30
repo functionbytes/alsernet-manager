@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de acciones de email por etapa'])
+    @include('managers.components.card', ['title' => 'Configuración de acciones de email por etapa'])
 
     <div class="widget-content">
         @include('managers.components.alerts')

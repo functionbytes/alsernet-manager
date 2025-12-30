@@ -90,7 +90,7 @@ var getLoader = (function () {
 	}
 
 	/**
-	 * Creates a full dependencies map which includes all types of dependencies and their transitive dependencies.
+	 * Creates a full dependencies map which components all types of dependencies and their transitive dependencies.
 	 *
 	 * @param {EntryMap} entryMap
 	 * @returns {DependencyResolver}

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Tags de Conversaciones'])
+    @include('managers.components.card', ['title' => 'Tags de Conversaciones'])
 
     <div class="widget-content searchable-container list">
 

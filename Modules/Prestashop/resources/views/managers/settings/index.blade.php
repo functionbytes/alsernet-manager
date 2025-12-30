@@ -2,7 +2,7 @@
 
 @section('content')
 
-  @include('managers.includes.card', ['title' => 'Configuración PrestaShop'])
+  @include('managers.components.card', ['title' => 'Configuración PrestaShop'])
 
   <div class="widget-content searchable-container list">
 

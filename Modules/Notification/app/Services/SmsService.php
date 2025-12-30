@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Modules\Notification\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;

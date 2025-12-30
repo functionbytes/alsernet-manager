@@ -35,7 +35,7 @@ class HTMLPurifier_AttrCollections
                 }
                 foreach ($coll as $attr_i => $attr) {
                     if ($attr_i === 0 && isset($this->info[$coll_i][$attr_i])) {
-                        // merge in includes
+                        // merge in components
                         $this->info[$coll_i][$attr_i] = array_merge(
                             $this->info[$coll_i][$attr_i],
                             $attr

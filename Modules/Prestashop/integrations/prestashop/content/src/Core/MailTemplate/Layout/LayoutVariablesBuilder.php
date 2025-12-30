@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
  * MailLayoutVariablesBuilder is a basic implementation of MailLayoutVariablesBuilderInterface
  *  - it formats the variables for template
  *  - it is able to inject default fonts for specified languages
- *  - it includes default variables (set in the constructor)
+ *  - it components default variables (set in the constructor)
  *  - it dispatches a hook to allow overriding its output
  */
 class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface

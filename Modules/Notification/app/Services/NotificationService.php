@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Modules\Notification\Services;
 
 use App\Models\User;
 use Illuminate\Notifications\Notification;
@@ -20,9 +20,6 @@ class NotificationService
         $this->smsService = $smsService;
     }
 
-    /**
-     * Enviar notificación a un usuario específico
-     */
     public function sendToUser(User $user, Notification $notification, array $channels = ['database']): array
     {
         $results = [];
@@ -55,9 +52,6 @@ class NotificationService
         return $results;
     }
 
-    /**
-     * Enviar notificación a múltiples usuarios
-     */
     public function sendToUsers(array $users, Notification $notification, array $channels = ['database']): array
     {
         $results = [];
@@ -69,9 +63,6 @@ class NotificationService
         return $results;
     }
 
-    /**
-     * Enviar notificación push
-     */
     protected function sendPushNotification(User $user, Notification $notification): bool
     {
         $tokens = $user->getActivePushTokens();
@@ -89,9 +80,6 @@ class NotificationService
         return true;
     }
 
-    /**
-     * Enviar notificación SMS
-     */
     protected function sendSmsNotification(User $user, Notification $notification): bool
     {
         if (! $user->phone) {
@@ -103,9 +91,6 @@ class NotificationService
         return $this->smsService->send($user->phone, $message);
     }
 
-    /**
-     * Programar notificación para envío posterior
-     */
     public function scheduleNotification(User $user, Notification $notification, \Carbon\Carbon $sendAt, array $channels = ['database']): void
     {
         // Implementar usando queues

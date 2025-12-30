@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
+    @include('managers.components.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
 
     <div class="widget-content searchable-container list">
 

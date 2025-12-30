@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Exportar suscripciones - '. $list->title])
+    @include('managers.components.card', ['title' => 'Exportar suscripciones - '. $list->title])
 
 
 

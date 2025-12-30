@@ -5,7 +5,7 @@
  *
  * Implementation of the Roulette Wheel algorithm to pick up a delivery server
  *
- * LICENSE: This product includes software developed at
+ * LICENSE: This product components software developed at
  * the Acelle Co., Ltd. (http://acellemail.com/).
  *
  * @category   Acelle Library

@@ -676,7 +676,7 @@ var Prism = (function (_self) {
 		 * This is the heart of Prism, and the most low-level function you can use. It accepts a string of text as input
 		 * and the language definitions to use, and returns an array with the tokenized code.
 		 *
-		 * When the language definition includes nested tokens, the function is called recursively on each of these tokens.
+		 * When the language definition components nested tokens, the function is called recursively on each of these tokens.
 		 *
 		 * This method could be useful in other contexts as well, as a very crude parser.
 		 *

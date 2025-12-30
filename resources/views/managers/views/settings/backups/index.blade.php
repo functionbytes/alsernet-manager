@@ -1,4 +1,4 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
@@ -149,7 +149,7 @@
 
     </div>
 
-    @include('managers.includes.delete')
+    @include('managers.components.delete')
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

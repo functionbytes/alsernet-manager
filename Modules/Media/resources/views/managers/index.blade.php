@@ -1,4 +1,4 @@
-@extends('managers.includes.layout')
+@extends('managers.components.layout')
 
 @section('title', 'Gestor de Medios')
 
@@ -637,7 +637,7 @@
 @section('content')
 <div id="mediaManagerApp">
     {{-- Breadcrumb --}}
-    @include('managers.includes.card', [
+    @include('managers.components.card', [
         'title' => 'Gestor de Medios',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('manager.dashboard')],

@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Mantenimiento del sistema'])
+    @include('managers.components.card', ['title' => 'Mantenimiento del sistema'])
 
     @if ($message = session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

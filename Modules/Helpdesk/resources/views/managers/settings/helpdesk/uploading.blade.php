@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de Subida de Archivos'])
+    @include('managers.components.card', ['title' => 'Configuración de Subida de Archivos'])
 
     <div class="widget-content searchable-container list">
 

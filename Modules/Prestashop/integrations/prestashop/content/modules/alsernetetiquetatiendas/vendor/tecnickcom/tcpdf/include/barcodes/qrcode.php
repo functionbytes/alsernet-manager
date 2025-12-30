@@ -556,7 +556,7 @@ class QRcode {
 
 	/**
 	 * Array Positions of alignment patterns.
-	 * This array includes only the second and the third position of the alignment patterns. Rest of them can be calculated from the distance between them.
+	 * This array components only the second and the third position of the alignment patterns. Rest of them can be calculated from the distance between them.
 	 * See Table 1 in Appendix E (pp.71) of JIS X0510:2004.
 	 * @protected
 	 */

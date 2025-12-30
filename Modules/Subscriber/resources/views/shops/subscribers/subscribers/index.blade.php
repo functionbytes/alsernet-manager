@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Suscripciones'])
+    @include('managers.components.card', ['title' => 'Suscripciones'])
 
     <div class="widget-content searchable-container list">
 

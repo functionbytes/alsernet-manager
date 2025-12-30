@@ -28,7 +28,7 @@ import multiStoreRestrictionFieldMap from './multi-store-restriction-field-map';
 const {$} = window;
 
 /**
- * Enables multi store functionality for the page. It includes switch functionality and checkboxes
+ * Enables multi store functionality for the page. It components switch functionality and checkboxes
  */
 export default class MultiStoreRestrictionField {
   constructor() {

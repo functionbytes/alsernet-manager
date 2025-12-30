@@ -29,7 +29,7 @@ class BatchDocumentInputConfig extends \Google\Protobuf\Internal\Message
      *           `gs://translation-test/input.docx`) or a wildcard (for example,
      *           `gs://translation-test/&#42;`).
      *           File mime type is determined based on extension. Supported mime type
-     *           includes:
+     *           components:
      *           - `pdf`, application/pdf
      *           - `docx`,
      *           application/vnd.openxmlformats-officedocument.wordprocessingml.document
@@ -54,7 +54,7 @@ class BatchDocumentInputConfig extends \Google\Protobuf\Internal\Message
      * `gs://translation-test/input.docx`) or a wildcard (for example,
      * `gs://translation-test/&#42;`).
      * File mime type is determined based on extension. Supported mime type
-     * includes:
+     * components:
      * - `pdf`, application/pdf
      * - `docx`,
      * application/vnd.openxmlformats-officedocument.wordprocessingml.document
@@ -86,7 +86,7 @@ class BatchDocumentInputConfig extends \Google\Protobuf\Internal\Message
      * `gs://translation-test/input.docx`) or a wildcard (for example,
      * `gs://translation-test/&#42;`).
      * File mime type is determined based on extension. Supported mime type
-     * includes:
+     * components:
      * - `pdf`, application/pdf
      * - `docx`,
      * application/vnd.openxmlformats-officedocument.wordprocessingml.document

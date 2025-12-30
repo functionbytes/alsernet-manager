@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.includes.card', [
+    @include('managers.components.card', [
         'title' => 'Historial de emails',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],

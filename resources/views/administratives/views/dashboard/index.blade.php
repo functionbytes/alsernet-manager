@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.includes.card', ['title' => 'Dashboard'])
+    @include('managers.components.card', ['title' => 'Dashboard'])
 
     <div class="widget-content searchable-container list">
 

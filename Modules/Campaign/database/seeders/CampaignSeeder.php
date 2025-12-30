@@ -13,7 +13,7 @@ class CampaignSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample marketing campaigns for testing and development.
-     * Each campaign includes:
+     * Each campaign components:
      * - Unique identifier (uid)
      * - Campaign type (regular, automated, etc.)
      * - Email content (HTML and plain text)

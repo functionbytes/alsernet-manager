@@ -141,7 +141,7 @@ class HelpdeskServiceProvider extends ServiceProvider
     protected function registerViewComposers(): void
     {
         view()->composer(
-            'managers.includes.nav',
+            'managers.components.nav',
             \Modules\Helpdesk\Http\ViewComposers\NavigationComposer::class
         );
     }

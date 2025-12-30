@@ -106,7 +106,7 @@ use Google\LongRunning\Operation;
  * ```
  *
  * Many parameters require resource names to be formatted in a particular way. To
- * assist with these names, this class includes a format method for each type of
+ * assist with these names, this class components a format method for each type of
  * name, and additionally a parseName method to extract the individual identifiers
  * contained within formatted names that are returned by the API.
  */
@@ -453,7 +453,7 @@ class TranslationServiceGapicClient
      *           Map's key is the original mime_type. Map's value is the target mime_type of
      *           translated documents.
      *
-     *           Supported file format conversion includes:
+     *           Supported file format conversion components:
      *           - `application/pdf` to
      *           `application/vnd.openxmlformats-officedocument.wordprocessingml.document`
      *

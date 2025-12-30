@@ -263,8 +263,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/lists/view/{uid}', [SubscribersListsController::class, 'view'])->name('manager.subscribers.lists.view');
         Route::get('/lists/categories/{uid}', [SubscribersListsController::class, 'categories'])->name('manager.subscribers.lists.categories');
         Route::get('/lists/destroy/{uid}', [SubscribersListsController::class, 'destroy'])->name('manager.subscribers.lists.destroy');
-        Route::get('/lists/includes/{uid}', [SubscribersListsController::class, 'includes'])->name('manager.subscribers.lists.includes');
-        Route::post('/lists/includes/update', [SubscribersListsController::class, 'updateIncludes'])->name('manager.subscribers.lists.includes.update');
+        Route::get('/lists/components/{uid}', [SubscribersListsController::class, 'components'])->name('manager.subscribers.lists.components');
+        Route::post('/lists/components/update', [SubscribersListsController::class, 'updateIncludes'])->name('manager.subscribers.lists.components.update');
         Route::post('/lists/categories/update', [SubscribersListsController::class, 'updateCategories'])->name('manager.subscribers.lists.categories.update');
 
         Route::get('/lists/report/generate', [SubscribersReportController::class, 'generate'])->name('manager.subscribers.lists.reports.generate');

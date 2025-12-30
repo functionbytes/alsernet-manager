@@ -200,7 +200,7 @@ class ApiException extends Exception
     }
 
     /**
-     * Checks if decoded metadata includes errorInfo message.
+     * Checks if decoded metadata components errorInfo message.
      * If errorInfo is set, it will always contain `reason`, `domain`, and `metadata` keys.
      * @param array $decodedMetadata
      * @return array {
@@ -229,7 +229,7 @@ class ApiException extends Exception
 
     /**
      * Construct an ApiException with a useful message, including decoded metadata.
-     * If the decoded metadata includes an errorInfo message, then the domain, reason,
+     * If the decoded metadata components an errorInfo message, then the domain, reason,
      * and metadata fields from that message are hoisted directly into the error.
      *
      * @param string $basicMessage

@@ -1,4 +1,4 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('title', 'Agregar disco de almacenamiento')
 

@@ -585,7 +585,7 @@ class ContentGenerationService
             $score += 10;
         }
 
-        if (preg_match('/\b(specifications|features|benefits|warranty|includes)\b/i', $content)) {
+        if (preg_match('/\b(specifications|features|benefits|warranty|components)\b/i', $content)) {
             $score += 10;
         }
 

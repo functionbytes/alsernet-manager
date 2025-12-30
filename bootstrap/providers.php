@@ -18,6 +18,6 @@ return [
     //Modules\Mail\Providers\MailServiceProvider::class,
     //Modules\Faq\Providers\FaqServiceProvider::class,
     //Modules\Users\Providers\UsersServiceProvider::class,
-    //Modules\Notification\Providers\NotificationServiceProvider::class,
+    Modules\Notification\Providers\NotificationServiceProvider::class,
     //Modules\Backup\Providers\BackupServiceProvider::class,
 ];

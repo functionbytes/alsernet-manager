@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <!-- Header -->
-    @include('managers.includes.card', ['title' => 'Centro de Ayuda'])
+    @include('managers.components.card', ['title' => 'Centro de Ayuda'])
 
     <div class="widget-content searchable-container list">
 

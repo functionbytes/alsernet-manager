@@ -24,17 +24,11 @@ class NotificationPreference extends Model
         ];
     }
 
-    /**
-     * Usuario propietario de la preferencia
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Verificar si un canal está habilitado para un tipo de notificación
-     */
     public static function isEnabled(int $userId, string $channel, string $type): bool
     {
         $preference = static::where('user_id', $userId)
@@ -42,13 +36,9 @@ class NotificationPreference extends Model
             ->where('notification_type', $type)
             ->first();
 
-        // Si no existe preferencia, por defecto está habilitado
         return $preference ? $preference->is_enabled : true;
     }
 
-    /**
-     * Habilitar o deshabilitar un tipo de notificación
-     */
     public static function toggle(int $userId, string $channel, string $type, bool $enabled): void
     {
         static::updateOrCreate(
@@ -61,17 +51,11 @@ class NotificationPreference extends Model
         );
     }
 
-    /**
-     * Obtener todas las preferencias de un usuario
-     */
     public static function forUser(int $userId): array
     {
         return static::where('user_id', $userId)->get()->groupBy('channel')->toArray();
     }
 
-    /**
-     * Scopes
-     */
     public function scopeEnabled($query)
     {
         return $query->where('is_enabled', true);

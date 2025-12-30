@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Automatización de Proveedores'])
+    @include('managers.components.card', ['title' => 'Automatización de Proveedores'])
 
     <div class="widget-content searchable-container list">
 

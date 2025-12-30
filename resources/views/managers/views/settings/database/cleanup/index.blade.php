@@ -1,9 +1,9 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
     <div class="container-fluid">
 
-        @include('managers.includes.card', ['title' => 'Limpieza de Base de Datos'])
+        @include('managers.components.card', ['title' => 'Limpieza de Base de Datos'])
 
         @include('managers.components.alerts')
 

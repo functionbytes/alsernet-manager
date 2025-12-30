@@ -3,7 +3,7 @@
 @section('content')
 
 
-    @include('managers.includes.card', ['title' => 'Tipo de Campaña'. $campaign->type])
+    @include('managers.components.card', ['title' => 'Tipo de Campaña'. $campaign->type])
 
 
     <div class="row my-sm-5 my-4 select-types">

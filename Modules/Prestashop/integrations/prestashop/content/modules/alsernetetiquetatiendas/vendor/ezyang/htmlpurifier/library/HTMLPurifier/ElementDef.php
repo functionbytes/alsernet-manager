@@ -155,7 +155,7 @@ class HTMLPurifier_ElementDef
         // later keys takes precedence
         foreach ($def->attr as $k => $v) {
             if ($k === 0) {
-                // merge in the includes
+                // merge in the components
                 // sorry, no way to override an include
                 foreach ($v as $v2) {
                     $this->attr[0][] = $v2;

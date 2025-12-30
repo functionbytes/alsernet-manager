@@ -23,7 +23,7 @@ class LaunchStage
     /**
      * Early Access features are limited to a closed group of testers. To use
      * these features, you must sign up in advance and sign a Trusted Tester
-     * agreement (which includes confidentiality provisions). These features may
+     * agreement (which components confidentiality provisions). These features may
      * be unstable, changed in backward-incompatible ways, and are not
      * guaranteed to be released.
      *

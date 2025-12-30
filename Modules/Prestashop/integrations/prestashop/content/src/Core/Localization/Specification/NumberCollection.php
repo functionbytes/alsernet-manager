@@ -46,7 +46,7 @@ class NumberCollection implements IteratorAggregate, Countable
     protected $numberSpecifications = [];
 
     /**
-     * Gets the current NumberCollection as an Iterator that includes all Number specification items.
+     * Gets the current NumberCollection as an Iterator that components all Number specification items.
      *
      * It implements \IteratorAggregate.
      *

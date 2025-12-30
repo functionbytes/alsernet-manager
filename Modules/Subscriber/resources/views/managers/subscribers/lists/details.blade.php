@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Detalle suscripcion - '. $list->title])
+    @include('managers.components.card', ['title' => 'Detalle suscripcion - '. $list->title])
 
     <div class="widget-content searchable-container list">
 
@@ -26,7 +26,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href=" {{ route('manager.subscribers.lists.includes', $list->uid) }}" class="btn btn-primary">
+                                <a href=" {{ route('manager.subscribers.lists.components', $list->uid) }}" class="btn btn-primary">
                                     <i class="fa-duotone fa-plus"></i>
                                 </a>
                             </div>

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Grupos de Validación'])
+    @include('managers.components.card', ['title' => 'Grupos de Validación'])
 
     <div class="widget-content searchable-container list">
 
@@ -242,7 +242,7 @@
         </div>
     </div>
 
-    @include('managers.includes.delete')
+    @include('managers.components.delete')
 
 @endsection
 

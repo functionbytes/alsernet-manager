@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => isset($prompt) ? 'Editar Prompt' : 'Nuevo Prompt'])
+    @include('managers.components.card', ['title' => isset($prompt) ? 'Editar Prompt' : 'Nuevo Prompt'])
 
     <div class="widget-content searchable-container list">
 

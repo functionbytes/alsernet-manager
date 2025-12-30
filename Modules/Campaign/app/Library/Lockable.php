@@ -5,7 +5,7 @@
  *
  * Support concorrency-enabled classes
  *
- * LICENSE: This product includes software developed at
+ * LICENSE: This product components software developed at
  * the Acelle Co., Ltd. (http://acellemail.com/).
  *
  * @category   Acelle Library

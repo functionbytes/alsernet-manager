@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Importar desde PrestaShop'])
+    @include('managers.components.card', ['title' => 'Importar desde PrestaShop'])
 
     <div class="widget-content">
         <div class="card card-body">

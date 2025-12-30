@@ -109,7 +109,7 @@ class MetricDescriptor extends \Google\Protobuf\Internal\Message
      * * `Ti`    tebi    (2^40)
      * * `Pi`    pebi    (2^50)
      * **Grammar**
-     * The grammar also includes these connectors:
+     * The grammar also components these connectors:
      * * `/`    division or ratio (as an infix operator). For examples,
      *          `kBy/{email}` or `MiBy/10ms` (although you should almost never
      *          have `/s` in a metric `unit`; rates should always be computed at
@@ -253,7 +253,7 @@ class MetricDescriptor extends \Google\Protobuf\Internal\Message
      *           * `Ti`    tebi    (2^40)
      *           * `Pi`    pebi    (2^50)
      *           **Grammar**
-     *           The grammar also includes these connectors:
+     *           The grammar also components these connectors:
      *           * `/`    division or ratio (as an infix operator). For examples,
      *                    `kBy/{email}` or `MiBy/10ms` (although you should almost never
      *                    have `/s` in a metric `unit`; rates should always be computed at
@@ -510,7 +510,7 @@ class MetricDescriptor extends \Google\Protobuf\Internal\Message
      * * `Ti`    tebi    (2^40)
      * * `Pi`    pebi    (2^50)
      * **Grammar**
-     * The grammar also includes these connectors:
+     * The grammar also components these connectors:
      * * `/`    division or ratio (as an infix operator). For examples,
      *          `kBy/{email}` or `MiBy/10ms` (although you should almost never
      *          have `/s` in a metric `unit`; rates should always be computed at
@@ -602,7 +602,7 @@ class MetricDescriptor extends \Google\Protobuf\Internal\Message
      * * `Ti`    tebi    (2^40)
      * * `Pi`    pebi    (2^50)
      * **Grammar**
-     * The grammar also includes these connectors:
+     * The grammar also components these connectors:
      * * `/`    division or ratio (as an infix operator). For examples,
      *          `kBy/{email}` or `MiBy/10ms` (although you should almost never
      *          have `/s` in a metric `unit`; rates should always be computed at

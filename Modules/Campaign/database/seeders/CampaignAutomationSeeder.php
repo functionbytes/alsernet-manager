@@ -13,7 +13,7 @@ class CampaignAutomationSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample automation workflows for testing.
-     * Each automation includes:
+     * Each automation components:
      * - Unique identifier (uid)
      * - Name and timezone
      * - Automation flow data (trigger and email configuration)

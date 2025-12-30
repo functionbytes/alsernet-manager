@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Documentación REST API - Incoming Email'])
+    @include('managers.components.card', ['title' => 'Documentación REST API - Incoming Email'])
 
     <div class="widget-content searchable-container list">
 

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Prompts de IA'])
+    @include('managers.components.card', ['title' => 'Prompts de IA'])
 
     <div class="widget-content searchable-container list">
 
@@ -242,7 +242,7 @@
         </div>
     </div>
 
-    @include('managers.includes.delete')
+    @include('managers.components.delete')
 
 @endsection
 

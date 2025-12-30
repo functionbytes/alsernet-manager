@@ -5,7 +5,7 @@
  *
  * CLI interface for trigger email handling by cronjob (bounce, feedback)
  *
- * LICENSE: This product includes software developed at
+ * LICENSE: This product components software developed at
  * the Acelle Co., Ltd. (http://acellemail.com/).
  *
  * @category   Console App

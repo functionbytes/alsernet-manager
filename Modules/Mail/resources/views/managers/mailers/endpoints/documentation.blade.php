@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Documentación de Endpoints'])
+    @include('managers.components.card', ['title' => 'Documentación de Endpoints'])
 
     <div class="widget-content">
         @include('managers.components.alerts')

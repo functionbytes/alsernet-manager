@@ -156,7 +156,7 @@ class DocumentsServiceProvider extends ServiceProvider
     {
         // Register navigation composer for managers layout
         view()->composer(
-            'managers.includes.nav',
+            'managers.components.nav',
             NavigationComposer::class
         );
     }

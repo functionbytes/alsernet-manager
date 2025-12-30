@@ -148,17 +148,9 @@
                             </a>
                         </li>
 
-                        <!-- ------------------------------- -->
-                        <!-- start notification Dropdown -->
-                        <!-- ------------------------------- -->
-                        @include('managers.includes.notifications')
-                        <!-- ------------------------------- -->
-                        <!-- end notification Dropdown -->
-                        <!-- ------------------------------- -->
 
-                        <!-- ------------------------------- -->
-                        <!-- start language Dropdown -->
-                        <!-- ------------------------------- -->
+                        @include('notification::components.notifications')
+
                         <li class="nav-item dropdown nav-icon-hover-bg rounded-circle">
                             <a class="nav-link" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="../assets/images/flag/icon-flag-en.svg" alt="matdash-img" width="20px" height="20px" class="rounded-circle object-fit-cover round-20">
@@ -523,7 +515,7 @@
                         <!-- ------------------------------- -->
                         <!-- start notification Dropdown -->
                         <!-- ------------------------------- -->
-                        @include('managers.includes.notifications')
+                        @include('notification::components.notifications')
                         <!-- ------------------------------- -->
                         <!-- end notification Dropdown -->
                         <!-- ------------------------------- -->

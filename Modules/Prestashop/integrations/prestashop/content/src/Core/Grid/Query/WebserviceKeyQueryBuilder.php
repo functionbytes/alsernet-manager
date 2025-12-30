@@ -143,7 +143,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Gets modified order by which includes an alias for reserved keyword.
+     * Gets modified order by which components an alias for reserved keyword.
      *
      * @param string $orderBy - original order by value
      *

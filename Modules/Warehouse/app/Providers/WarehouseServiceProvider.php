@@ -203,7 +203,7 @@ class WarehouseServiceProvider extends ServiceProvider
     {
         // Register navigation composer for managers layout
         view()->composer(
-            'managers.includes.nav',
+            'managers.components.nav',
             \Modules\Warehouse\Http\ViewComposers\NavigationComposer::class
         );
     }

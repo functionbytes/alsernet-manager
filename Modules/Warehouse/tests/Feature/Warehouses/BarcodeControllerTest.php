@@ -41,7 +41,7 @@ class BarcodeControllerTest extends TestCase
     }
 
     /**
-     * Test all endpoint includes location details
+     * Test all endpoint components location details
      *
      * @skip This test requires RefreshDatabase - creates test data
      */

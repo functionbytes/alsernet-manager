@@ -30,7 +30,7 @@ import {NumberFormatter} from '@app/cldr';
 const {$} = window;
 
 /**
- * manages all product cancel actions, that includes all refund operations
+ * manages all product cancel actions, that components all refund operations
  */
 export default class OrderProductCancel {
   constructor() {

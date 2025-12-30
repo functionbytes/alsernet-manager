@@ -2,7 +2,7 @@
 
 @section('content')
 
-  @include('managers.includes.card', ['title' => 'Configuración ERP'])
+  @include('managers.components.card', ['title' => 'Configuración ERP'])
 
   <div class="widget-content searchable-container list">
 

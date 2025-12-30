@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Logs del Sistema de Automatización'])
+    @include('managers.components.card', ['title' => 'Logs del Sistema de Automatización'])
 
     <div class="widget-content searchable-container list">
 

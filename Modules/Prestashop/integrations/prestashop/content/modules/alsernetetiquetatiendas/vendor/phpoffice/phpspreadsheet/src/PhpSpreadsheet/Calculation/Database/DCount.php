@@ -26,7 +26,7 @@ class DCount extends DatabaseAbstract
      *                                        the first column, 2 for the second column, and so on.
      * @param mixed[] $criteria The range of cells that contains the conditions you specify.
      *                                        You can use any range for the criteria argument, as long as it
-     *                                        includes at least one column label and at least one cell below
+     *                                        components at least one column label and at least one cell below
      *                                        the column label in which you specify a condition for the
      *                                        column.
      *

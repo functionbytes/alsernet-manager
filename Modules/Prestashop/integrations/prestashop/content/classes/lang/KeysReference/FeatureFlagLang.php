@@ -26,6 +26,6 @@
  */
 trans('Experimental product page', 'Admin.Advparameters.Feature');
 trans(
-    'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
+    'This page benefits from increased performance and components new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
     'Admin.Advparameters.Help'
 );

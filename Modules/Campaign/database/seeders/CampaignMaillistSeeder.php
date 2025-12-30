@@ -12,7 +12,7 @@ class CampaignMaillistSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample mailing lists for testing campaigns.
-     * Each mailing list includes:
+     * Each mailing list components:
      * - Unique identifier (uid)
      * - Title and sender information
      * - Email configuration

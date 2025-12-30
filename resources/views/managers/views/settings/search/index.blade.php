@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de búsqueda'])
+    @include('managers.components.card', ['title' => 'Configuración de búsqueda'])
 
     <div class="widget-content searchable-container list">
 

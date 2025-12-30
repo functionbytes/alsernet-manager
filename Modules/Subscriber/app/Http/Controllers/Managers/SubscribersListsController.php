@@ -118,7 +118,7 @@ class SubscribersListsController extends Controller
         $itemsListIds = $list->subscribers->pluck('id');
         $subscribers = Subscriber::whereNotIn('id', $itemsListIds)->latest()->pluck('email', 'id');
 
-        return view('managers.views.subscribers.lists.includes')->with([
+        return view('managers.views.subscribers.lists.components')->with([
             'list' => $list,
             'subscribers' => $subscribers,
         ]);

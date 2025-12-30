@@ -1394,7 +1394,7 @@ class CategoryCore extends ObjectModel
      *
      * @param  int  $idLang  Language ID
      * @param  string  $query  Searched string
-     * @param  bool  $unrestricted  Allows search without lang and includes first category and exact match
+     * @param  bool  $unrestricted  Allows search without lang and components first category and exact match
      * @param  bool  $skipCache  Skip the Cache
      * @return array Corresponding categories
      *

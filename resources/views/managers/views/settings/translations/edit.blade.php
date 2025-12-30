@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', [
+    @include('managers.components.card', [
         'title' => 'Editar Traducciones',
         'subtitle' => $locale_label . ' - ' . $file_label
     ])

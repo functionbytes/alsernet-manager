@@ -315,7 +315,10 @@
       "Bash(__NEW_LINE__ git add Modules/Backup bootstrap/providers.php)",
       "Bash(git -C /Users/functionbytes/Function/Coding/manager log:*)",
       "Bash(git -C /Users/functionbytes/Function/Coding/manager ls-files:*)",
-      "Bash(git -C /Users/functionbytes/Function/Coding/manager show:*)"
+      "Bash(git -C /Users/functionbytes/Function/Coding/manager show:*)",
+      "Bash(if [ -f bootstrap/providers.php ])",
+      "Bash(then echo \"Laravel 11+ - Checking bootstrap/providers.php:\")",
+      "Bash(else echo \"Laravel 10 - Checking config/app.php:\")"
     ],
     "deny": [],
     "ask": []

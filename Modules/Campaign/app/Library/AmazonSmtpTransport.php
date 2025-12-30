@@ -6,7 +6,7 @@
  * This is the extended edition of the Swift_SmtpTransport
  * Extended feature supports a new method that helps record SMTP raw response
  *
- * LICENSE: This product includes software developed at
+ * LICENSE: This product components software developed at
  * the Acelle Co., Ltd. (http://acellemail.com/).
  *
  * @category   Extension

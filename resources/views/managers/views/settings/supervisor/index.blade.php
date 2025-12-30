@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Panel de Control - Supervisor'])
+    @include('managers.components.card', ['title' => 'Panel de Control - Supervisor'])
 
     <div class="widget-content searchable-container list">
 

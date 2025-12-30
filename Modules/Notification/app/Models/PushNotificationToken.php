@@ -6,15 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property-read User|null $user
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|PushNotificationToken query()
- *
- * @mixin \Eloquent
- */
 class PushNotificationToken extends Model
 {
     use HasFactory;
@@ -38,25 +29,16 @@ class PushNotificationToken extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Marcar token como usado
-     */
     public function markAsUsed(): void
     {
         $this->update(['last_used_at' => now()]);
     }
 
-    /**
-     * Desactivar token
-     */
     public function deactivate(): void
     {
         $this->update(['active' => false]);
     }
 
-    /**
-     * Obtener tokens activos para un usuario
-     */
     public static function getActiveTokensForUser(int $userId): \Illuminate\Database\Eloquent\Collection
     {
         return static::where('user_id', $userId)

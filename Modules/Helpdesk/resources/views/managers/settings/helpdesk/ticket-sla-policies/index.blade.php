@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Políticas SLA'])
+    @include('managers.components.card', ['title' => 'Políticas SLA'])
 
     <div class="widget-content searchable-container list">
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Modules\Notification\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\Notifications\NotificationPreference;
-use App\Models\Notifications\NotificationPushToken;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Notification\Models\NotificationPreference;
+use Modules\Notification\Models\NotificationPushToken;
 
 class NotificationController extends Controller
 {

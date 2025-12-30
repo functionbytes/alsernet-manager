@@ -49,7 +49,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This is the name of the Redis connection where Horizon will store the
-    | meta information required for it to function. It includes the list
+    | meta information required for it to function. It components the list
     | of supervisors, failed jobs, job metrics, and other information.
     |
     */

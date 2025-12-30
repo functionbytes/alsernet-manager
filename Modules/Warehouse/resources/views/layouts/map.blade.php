@@ -68,19 +68,19 @@
     >
 
 
-        @include ('managers.includes.nav')
+        @include ('managers.components.nav')
 
         <!-- Main wrapper -->
 
         <div class="body-wrapper">
 
-            @include ('managers.includes.header')
+            @include ('managers.components.header')
 
             <div class="container-fluid">
                 @yield('content')
             </div>
 
-            @include ('managers.includes.delete')
+            @include ('managers.components.delete')
 
         </div>
 
@@ -244,7 +244,7 @@
                 if (href && href !== 'javascript:void(0)' && href !== '#') {
                     // Try multiple matching strategies
                     const isMatch =
-                        currentUrl.includes(href) ||  // Full URL includes href
+                        currentUrl.includes(href) ||  // Full URL components href
                         currentPathname === href ||    // Exact path match
                         href === currentPathname + '/' || // Path with trailing slash
                         currentPathname === href + '/';    // Current path with trailing slash

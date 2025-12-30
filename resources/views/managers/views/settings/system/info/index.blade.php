@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Información del Sistema'])
+    @include('managers.components.card', ['title' => 'Información del Sistema'])
 
     <div class="widget-content searchable-container list">
         <!-- System Information Card - Alsernet Green (#90bb13) -->

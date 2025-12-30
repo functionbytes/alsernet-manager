@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración de Almacenamiento'])
+    @include('managers.components.card', ['title' => 'Configuración de Almacenamiento'])
 
     <!-- Mensajes de estado -->
     @if ($message = session('success'))

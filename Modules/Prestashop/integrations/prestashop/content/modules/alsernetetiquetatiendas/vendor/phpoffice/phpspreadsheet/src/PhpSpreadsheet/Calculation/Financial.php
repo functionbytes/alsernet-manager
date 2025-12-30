@@ -1119,7 +1119,7 @@ class Financial
      * @param mixed $nper The total number of payment periods in an annuity
      * @param mixed $pmt The payment made each period and cannot change over the life
      *                                    of the annuity.
-     *                                Typically, pmt includes principal and interest but no other
+     *                                Typically, pmt components principal and interest but no other
      *                                    fees or taxes.
      * @param mixed $pv The present value - the total amount that a series of future
      *                                    payments is worth now

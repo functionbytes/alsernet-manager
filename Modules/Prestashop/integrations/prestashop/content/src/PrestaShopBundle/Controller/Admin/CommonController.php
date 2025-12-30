@@ -55,7 +55,7 @@ class CommonController extends FrameworkBundleAdminController
 {
     /**
      * Get a summary of recent events on the shop.
-     * This includes:
+     * This components:
      * - Created orders
      * - Registered customers
      * - New messages.

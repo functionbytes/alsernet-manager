@@ -230,7 +230,7 @@ class TranslateClient
      *           [Language Support](https://cloud.google.com/translate/docs/languages)
      *           documentation.
      * }
-     * @return array A set of translation results. Each result includes a
+     * @return array A set of translation results. Each result components a
      *         `source` key containing the detected or provided language of the
      *         provided input, an `input` key containing the original string,
      *         and a `text` key containing the translated result.
@@ -323,7 +323,7 @@ class TranslateClient
      *
      * @param string $string The string to detect the language of.
      * @param array $options [optional] Configuration Options.
-     * @return array A set of results. Each result includes a `languageCode` key
+     * @return array A set of results. Each result components a `languageCode` key
      *         containing the detected ISO 639-1 language code, an `input` key
      *         containing the original string, and in most cases a `confidence`
      *         key containing a value between 0 - 1 signifying the confidence of
@@ -413,7 +413,7 @@ class TranslateClient
      *           for. Must be a valid ISO 639-1 language code. **Defaults to** the
      *           value assigned to the client (`"en"` by default).
      * }
-     * @return array A set of language results. Each result includes a `code`
+     * @return array A set of language results. Each result components a `code`
      *         key containing the ISO 639-1 code for the supported language and
      *         a `name` key containing the name of the language written in the
      *         target language.

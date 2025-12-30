@@ -176,7 +176,7 @@ class ReturnsServiceProvider extends ServiceProvider
     {
         // Register navigation composer for managers layout if needed
         // view()->composer(
-        //     'managers.includes.nav',
+        //     'managers.components.nav',
         //     \Modules\Return\Http\ViewComposers\NavigationComposer::class
         // );
     }

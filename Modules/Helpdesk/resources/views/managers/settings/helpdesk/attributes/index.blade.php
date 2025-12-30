@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Atributos Personalizados'])
+    @include('managers.components.card', ['title' => 'Atributos Personalizados'])
 
     <div class="widget-content searchable-container list">
 

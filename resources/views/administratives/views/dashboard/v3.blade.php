@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.includes.card', ['title' => 'Dashboard v3 - Minimal Style'])
+    @include('managers.components.card', ['title' => 'Dashboard v3 - Minimal Style'])
 
     {{-- Top Stats Row --}}
     <div class="row g-3 mb-4">

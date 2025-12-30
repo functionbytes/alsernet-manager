@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
+    @include('managers.components.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
 
     <div class="widget-content">
         @include('managers.components.alerts')

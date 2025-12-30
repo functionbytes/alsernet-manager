@@ -13,7 +13,7 @@ class CampaignTemplateSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample email campaign templates for testing.
-     * Each template includes:
+     * Each template components:
      * - Unique identifier (uid)
      * - HTML content
      * - Subject line and sender information

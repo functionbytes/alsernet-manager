@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Gestionar Documento'])
+    @include('managers.components.card', ['title' => 'Gestionar Documento'])
 
     @include('managers.components.alerts')
 
@@ -17,21 +17,21 @@
             ])
 
             <!-- Workflow Multi-Etapa -->
-            @include('administratives.views.documents.includes.validation-workflow-sidebar')
+            @include('administratives.views.documents.components.validation-workflow-sidebar')
 
             <!-- Document Notes -->
-            @include('administratives.views.documents.includes.document-notes-sidebar')
+            @include('administratives.views.documents.components.document-notes-sidebar')
 
             <!-- Action History -->
             <div id="actionHistoryContainer">
-                @include('administratives.views.documents.includes.action-history')
+                @include('administratives.views.documents.components.action-history')
             </div>
 
             <!-- Email History -->
-            @include('administratives.views.documents.includes.email-history')
+            @include('administratives.views.documents.components.email-history')
 
             <!-- Status Timeline -->
-            @include('administratives.views.documents.includes.status-timeline')
+            @include('administratives.views.documents.components.status-timeline')
 
         </div>
 
@@ -160,7 +160,7 @@
             </div>
 
             <!-- Additional Attachments Section -->
-            @include('administratives.views.documents.includes.additional-attachments')
+            @include('administratives.views.documents.components.additional-attachments')
 
         </div>
 

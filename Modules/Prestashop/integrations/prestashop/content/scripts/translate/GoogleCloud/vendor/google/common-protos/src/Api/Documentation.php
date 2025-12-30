@@ -50,7 +50,7 @@ use Google\Protobuf\Internal\GPBUtil;
  * <pre><code>&#40;-- internal comment --&#41;</code></pre>
  * A few directives are available in documentation. Note that
  * directives must appear on a single line to be properly
- * identified. The `include` directive includes a markdown file from
+ * identified. The `include` directive components a markdown file from
  * an external source:
  * <pre><code>&#40;== include path/to/file ==&#41;</code></pre>
  * The `resource_for` directive marks a message to be the resource of

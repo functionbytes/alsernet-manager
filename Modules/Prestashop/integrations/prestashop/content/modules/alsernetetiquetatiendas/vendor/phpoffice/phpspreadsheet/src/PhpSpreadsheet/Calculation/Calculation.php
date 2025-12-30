@@ -3954,7 +3954,7 @@ class Calculation
     private static $comparisonOperators = ['>' => true, '<' => true, '=' => true, '>=' => true, '<=' => true, '<>' => true];
 
     //    Operator Precedence
-    //    This list includes all valid operators, whether binary (including boolean) or unary (such as %)
+    //    This list components all valid operators, whether binary (including boolean) or unary (such as %)
     //    Array key is the operator, the value is its precedence
     private static $operatorPrecedence = [
         ':' => 9, //    Range

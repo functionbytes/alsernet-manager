@@ -556,7 +556,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @param  int  $id_lang  Language ID
      * @param  string  $query  Searched string
-     * @param  bool  $unrestricted  allows search without lang and includes first CMSCategory and exact match
+     * @param  bool  $unrestricted  allows search without lang and components first CMSCategory and exact match
      * @return array Corresponding categories
      */
     public static function searchByName($id_lang, $query, $unrestricted = false)

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Configuración Global de Documentos'])
+    @include('managers.components.card', ['title' => 'Configuración Global de Documentos'])
 
 
         <!-- Mensajes de estado -->

@@ -7,7 +7,7 @@
 @section('content')
     <div class="container-fluid note-has-grid">
 
-        @include('warehouses.includes.card', ['title' => 'Inventarios'])
+        @include('warehouses.components.card', ['title' => 'Inventarios'])
 
 
         <div class="tab-content">

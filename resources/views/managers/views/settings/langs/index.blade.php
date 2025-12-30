@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Idiomas'])
+    @include('managers.components.card', ['title' => 'Idiomas'])
 
     <div class="widget-content searchable-container list">
         <div class="card card-body">

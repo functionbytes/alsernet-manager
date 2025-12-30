@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Actividades'])
+    @include('managers.components.card', ['title' => 'Actividades'])
 
 
 

@@ -4,7 +4,7 @@
 <div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
-    @include('managers.includes.card', [
+    @include('managers.components.card', [
         'title' => 'Vista Previa de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],

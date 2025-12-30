@@ -140,7 +140,7 @@ class Interest
      *
      * @param mixed $numberOfPeriods The total number of payment periods in an annuity
      * @param mixed $payment The payment made each period and cannot change over the life of the annuity.
-     *                           Typically, pmt includes principal and interest but no other fees or taxes.
+     *                           Typically, pmt components principal and interest but no other fees or taxes.
      * @param mixed $presentValue The present value - the total amount that a series of future payments is worth now
      * @param mixed $futureValue The future value, or a cash balance you want to attain after the last payment is made.
      *                               If fv is omitted, it is assumed to be 0 (the future value of a loan,

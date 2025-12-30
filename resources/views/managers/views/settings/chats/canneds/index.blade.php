@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Estados'])
+    @include('managers.components.card', ['title' => 'Estados'])
 
     <div class="widget-content searchable-container list">
 

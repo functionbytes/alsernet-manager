@@ -1,8 +1,8 @@
-@extends('Modules.Campaign.views.manager.layouts.managers')
+@extends('layouts.managers')
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Listado de programación de copias'])
+    @include('managers.components.card', ['title' => 'Listado de programación de copias'])
 
     <div class="widget-content searchable-container list">
         @if ($message = Session::get('success'))

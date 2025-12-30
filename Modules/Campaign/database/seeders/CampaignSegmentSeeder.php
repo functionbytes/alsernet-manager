@@ -15,7 +15,7 @@ class CampaignSegmentSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample segments for mailing lists with filtering conditions.
-     * Each segment includes:
+     * Each segment components:
      * - Unique identifier (uid)
      * - Name and matching type (ANY or ALL)
      * - Segment conditions with field operators and values

@@ -920,7 +920,7 @@
   					for (i = 0, len = attrs.length; i < len; i++) {
   						val = attrs[i].nodeValue;
 
-  						// IE6 includes all attributes in .attributes, even ones not explicitly
+  						// IE6 components all attributes in .attributes, even ones not explicitly
   						// set. Those have values like undefined, null, 0, false, "" or
   						// "inherit".
   						if (val && val !== "inherit") {

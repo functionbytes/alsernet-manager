@@ -1,4 +1,4 @@
-@extends('managers.includes.layout')
+@extends('managers.components.layout')
 
 @section('page_title', 'Preview - ' . $template->name)
 
@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         {{-- Breadcrumb Card --}}
-        @include('managers.includes.card', [
+        @include('managers.components.card', [
             'title' => 'Vista Previa de Plantilla',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],

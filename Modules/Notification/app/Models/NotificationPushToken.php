@@ -27,17 +27,11 @@ class NotificationPushToken extends Model
         ];
     }
 
-    /**
-     * Usuario propietario del token
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Registrar o actualizar token de push notification
-     */
     public static function register(int $userId, string $token, array $metadata = []): self
     {
         return static::updateOrCreate(
@@ -56,9 +50,6 @@ class NotificationPushToken extends Model
         );
     }
 
-    /**
-     * Marcar token como activo
-     */
     public function activate(): void
     {
         $this->update([
@@ -67,17 +58,11 @@ class NotificationPushToken extends Model
         ]);
     }
 
-    /**
-     * Desactivar token
-     */
     public function deactivate(): void
     {
         $this->update(['is_active' => false]);
     }
 
-    /**
-     * Obtener tokens activos de un usuario
-     */
     public static function activeForUser(int $userId)
     {
         return static::where('user_id', $userId)
@@ -85,9 +70,6 @@ class NotificationPushToken extends Model
             ->get();
     }
 
-    /**
-     * Limpiar tokens inactivos o antiguos
-     */
     public static function cleanup(int $daysInactive = 90): int
     {
         return static::where('is_active', false)
@@ -95,9 +77,6 @@ class NotificationPushToken extends Model
             ->delete();
     }
 
-    /**
-     * Scopes
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

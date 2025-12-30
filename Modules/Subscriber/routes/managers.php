@@ -35,8 +35,8 @@ Route::prefix('lists')->name('lists.')->group(function () {
     Route::get('/details/{uid}', [SubscribersListsController::class, 'details'])->name('details');
     Route::get('/categories/{uid}', [SubscribersListsController::class, 'categories'])->name('categories');
     Route::post('/categories/update', [SubscribersListsController::class, 'updateCategories'])->name('categories.update');
-    Route::get('/includes/{uid}', [SubscribersListsController::class, 'includes'])->name('includes');
-    Route::post('/includes/update', [SubscribersListsController::class, 'updateIncludes'])->name('includes.update');
+    Route::get('/components/{uid}', [SubscribersListsController::class, 'includes'])->name('components');
+    Route::post('/components/update', [SubscribersListsController::class, 'updateIncludes'])->name('components.update');
     Route::get('/destroy/{uid}', [SubscribersListsController::class, 'destroy'])->name('destroy');
     Route::get('/{uid}', [SubscribersListsController::class, 'list'])->name('show');
 

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Email Endpoints API'])
+    @include('managers.components.card', ['title' => 'Email Endpoints API'])
 
     <div class="widget-content searchable-container list">
 

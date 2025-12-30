@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.includes.card', ['title' => 'Estadistica lista '. $list->title])
+    @include('managers.components.card', ['title' => 'Estadistica lista '. $list->title])
 
 @endsection
 

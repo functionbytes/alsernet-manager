@@ -38,11 +38,11 @@ class WordpressManager
             define('DB_HOST', config('database.connections.wordpress.host').':'.config('database.connections.wordpress.port'));
 
             require_once base_path().'/../wpbase/wp-load.php';
-            require_once base_path().'/../wpbase/wp-admin/includes/admin.php';
+            require_once base_path().'/../wpbase/wp-admin/components/admin.php';
 
             // // Load from customer wp source code
             // require_once config('wordpress.path') . '/wp-load.php';
-            // require_once config('wordpress.path') . '/wp-admin/includes/admin.php';
+            // require_once config('wordpress.path') . '/wp-admin/components/admin.php';
         }
     }
 

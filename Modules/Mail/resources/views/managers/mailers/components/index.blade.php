@@ -1,4 +1,4 @@
-@extends('managers.includes.layout')
+@extends('managers.components.layout')
 
 @section('page_title', 'Componentes de Email')
 
@@ -7,7 +7,7 @@
 <div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
-    @include('managers.includes.card', [
+    @include('managers.components.card', [
         'title' => 'Componentes de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],

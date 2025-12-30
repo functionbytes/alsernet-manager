@@ -14,7 +14,7 @@ class CampaignSubscriberSeeder extends Seeder
      * Run the database seeds.
      *
      * Creates sample subscribers for testing mailing lists and campaigns.
-     * Each subscriber includes:
+     * Each subscriber components:
      * - Unique identifier (uid)
      * - Association with mailing list
      * - Email verification status

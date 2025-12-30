@@ -7,7 +7,7 @@ var randomsetting="sessiononly" //"eachtime", "sessiononly", or "x days (replace
 
 //////No need to edit beyond here//////////////
 
-function getCookie(Name) { 
+function getCookie(Name) {
 var re=new RegExp(Name+"=[^;]+", "i"); //construct RE to search for target name/value pair
 if (document.cookie.match(re)) //if cookie found
 return document.cookie.match(re)[0].split("=")[1] //return its value
@@ -36,7 +36,7 @@ if(cacheobj.getAttribute("title") == title) //enable alternate stylesheet with t
 cacheobj.disabled = false //enable chosen style sheet
 }
 }
-if (typeof randomize!="undefined"){ //if second paramter is defined, randomly enable an alt style sheet (includes non)
+if (typeof randomize!="undefined"){ //if second paramter is defined, randomly enable an alt style sheet (components non)
 var randomnumber=Math.floor(Math.random()*altsheets.length)
 altsheets[randomnumber].disabled=false
 }
@@ -87,7 +87,7 @@ setCookie("mysheet_r_days", randomsetting, parseInt(randomsetting)) //Also remem
 }
 else
 setStylesheet(getCookie("mysheet_r")) //just activate random alt stylesheet stored in cookie
-} 
+}
 }
 
 function setCookie(name, value, days) {

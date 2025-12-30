@@ -662,20 +662,20 @@ var toIndexedObject = __webpack_require__(5656);
 var toLength = __webpack_require__(7466);
 var toAbsoluteIndex = __webpack_require__(1400);
 
-// `Array.prototype.{ indexOf, includes }` methods implementation
+// `Array.prototype.{ indexOf, components }` methods implementation
 var createMethod = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIndexedObject($this);
     var length = toLength(O.length);
     var index = toAbsoluteIndex(fromIndex, length);
     var value;
-    // Array#includes uses SameValueZero equality algorithm
+    // Array#components uses SameValueZero equality algorithm
     // eslint-disable-next-line no-self-compare -- NaN check
     if (IS_INCLUDES && el != el) while (length > index) {
       value = O[index++];
       // eslint-disable-next-line no-self-compare -- NaN check
       if (value != value) return true;
-    // Array#indexOf ignores holes, Array#includes - not
+    // Array#indexOf ignores holes, Array#components - not
     } else for (;length > index; index++) {
       if ((IS_INCLUDES || index in O) && O[index] === el) return IS_INCLUDES || index || 0;
     } return !IS_INCLUDES && -1;
@@ -683,7 +683,7 @@ var createMethod = function (IS_INCLUDES) {
 };
 
 module.exports = {
-  // `Array.prototype.includes` method
+  // `Array.prototype.components` method
   // https://tc39.es/ecma262/#sec-array.prototype.includes
   includes: createMethod(true),
   // `Array.prototype.indexOf` method
@@ -2625,7 +2625,7 @@ var getOwnPropertyNamesModule = __webpack_require__(8006);
 var getOwnPropertySymbolsModule = __webpack_require__(5181);
 var anObject = __webpack_require__(9670);
 
-// all object keys, includes non-enumerable and symbols
+// all object keys, components non-enumerable and symbols
 module.exports = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
   var keys = getOwnPropertyNamesModule.f(anObject(it));
   var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
@@ -4826,7 +4826,7 @@ var $includes = __webpack_require__(1318).includes;
 var aTypedArray = ArrayBufferViewCore.aTypedArray;
 var exportTypedArrayMethod = ArrayBufferViewCore.exportTypedArrayMethod;
 
-// `%TypedArray%.prototype.includes` method
+// `%TypedArray%.prototype.components` method
 // https://tc39.es/ecma262/#sec-%typedarray%.prototype.includes
 exportTypedArrayMethod('includes', function includes(searchElement /* , fromIndex */) {
   return $includes(aTypedArray(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
@@ -6816,7 +6816,7 @@ var es_typed_array_find = __webpack_require__(4345);
 var es_typed_array_find_index = __webpack_require__(7174);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.for-each.js
 var es_typed_array_for_each = __webpack_require__(2846);
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.includes.js
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.components.js
 var es_typed_array_includes = __webpack_require__(4731);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.index-of.js
 var es_typed_array_index_of = __webpack_require__(7209);
