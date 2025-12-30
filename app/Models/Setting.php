@@ -54,6 +54,17 @@ class Setting extends Model implements HasMedia
     }
 
     /**
+     * Get setting by key (static method for fluent API).
+     *
+     * @param string $key
+     * @return Setting|null
+     */
+    public static function key($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
+    /**
      * Check setting EQUAL.
      *
      * @return object
