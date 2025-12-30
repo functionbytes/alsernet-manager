@@ -16,6 +16,7 @@ use Database\Seeders\Warehouse\WarehouseSeedersV2;
 use Database\Seeders\Locations\Coruna1LocationsSeeder;
 
 // Document Seeders
+use Database\Seeders\Documents\CreateDocumentPermissionsSeeder;
 use Database\Seeders\Documents\DocumentConfigurationSeeder;
 use Database\Seeders\Documents\DocumentUploadTypeSeeder;
 use Database\Seeders\Documents\DocumentStatusSeeder;
@@ -157,8 +158,9 @@ class DatabaseSeeder extends Seeder
             SupplierAutomationSettingSeeder::class,
 
             // ========================================
-            // PHASE 7: ROLES & USERS
+            // PHASE 7: ROLES & PERMISSIONS
             // ========================================
+            CreateDocumentPermissionsSeeder::class,
             RolesAndUsersSeeder::class,
 
             // ========================================
