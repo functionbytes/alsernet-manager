@@ -17,13 +17,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         parent::boot();
-    }
 
-    /**
-     * Define the routes for the application.
-     */
-    public function map(): void
-    {
+        // Laravel 12: Call route mapping methods directly in boot
         $this->mapApiRoutes();
         $this->mapWebRoutes();
     }
