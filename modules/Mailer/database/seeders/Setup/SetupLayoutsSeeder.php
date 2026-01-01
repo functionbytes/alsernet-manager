@@ -19,9 +19,14 @@ class SetupLayoutsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Try to get a language, but don't fail if none exists
-        $defaultLang = \App\Models\Lang::where('available', true)->first() ?? \App\Models\Lang::first();
-        $defaultLangId = $defaultLang?->id;
+        // Get all available languages
+        $langs = \App\Models\Lang::where('available', true)->get();
+
+        if ($langs->isEmpty()) {
+            $this->command->warn('⚠ No languages found - skipping layout translations');
+
+            return;
+        }
 
         // HEADER Layout
         $headerLayout = MailerLayout::updateOrCreate(
@@ -35,9 +40,10 @@ class SetupLayoutsSeeder extends Seeder
             ]
         );
 
-        if ($defaultLangId) {
+        // Create translations for ALL languages
+        foreach ($langs as $lang) {
             MailerLayoutLang::updateOrCreate(
-                ['layout_id' => $headerLayout->id, 'lang_id' => $defaultLangId],
+                ['layout_id' => $headerLayout->id, 'lang_id' => $lang->id],
                 [
                     'subject' => 'Encabezado de plantilla de correo',
                     'content' => $this->getHeaderContent(),
@@ -57,9 +63,10 @@ class SetupLayoutsSeeder extends Seeder
             ]
         );
 
-        if ($defaultLangId) {
+        // Create translations for ALL languages
+        foreach ($langs as $lang) {
             MailerLayoutLang::updateOrCreate(
-                ['layout_id' => $footerLayout->id, 'lang_id' => $defaultLangId],
+                ['layout_id' => $footerLayout->id, 'lang_id' => $lang->id],
                 [
                     'subject' => 'Pie de página de plantilla de correo',
                     'content' => $this->getFooterContent(),
@@ -79,9 +86,10 @@ class SetupLayoutsSeeder extends Seeder
             ]
         );
 
-        if ($defaultLangId) {
+        // Create translations for ALL languages
+        foreach ($langs as $lang) {
             MailerLayoutLang::updateOrCreate(
-                ['layout_id' => $wrapperLayout->id, 'lang_id' => $defaultLangId],
+                ['layout_id' => $wrapperLayout->id, 'lang_id' => $lang->id],
                 [
                     'subject' => 'Plantilla completa de correo',
                     'content' => $this->getWrapperContent(),
@@ -93,9 +101,7 @@ class SetupLayoutsSeeder extends Seeder
         $this->command->info("  - Header (ID: {$headerLayout->id})");
         $this->command->info("  - Footer (ID: {$footerLayout->id})");
         $this->command->info("  - Wrapper (ID: {$wrapperLayout->id})");
-        if (! $defaultLangId) {
-            $this->command->line('  ⚠ Note: Language translations skipped (no languages found)');
-        }
+        $this->command->info("  ✓ Translations created for {$langs->count()} language(s)");
     }
 
     private function getHeaderContent(): string

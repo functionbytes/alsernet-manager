@@ -2,9 +2,10 @@
 
 namespace Modules\Mailer\Database\Seeders\Setup;
 
-use Modules\Mailer\Models\MailerVariable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Mailer\Models\MailerVariable;
+use Modules\Mailer\Models\MailerVariableLang;
 
 /**
  * SetupVariablesSeeder
@@ -216,9 +217,18 @@ class SetupVariablesSeeder extends Seeder
             ],
         ];
 
+        // Get all available languages
+        $langs = \App\Models\Lang::where('available', true)->get();
+
+        if ($langs->isEmpty()) {
+            $this->command->warn('⚠ No languages found - skipping variable translations');
+
+            return;
+        }
+
         $count = 0;
         foreach ($variables as $variable) {
-            MailerVariable::updateOrCreate(
+            $mailerVariable = MailerVariable::updateOrCreate(
                 ['key' => Str::lower(str_replace(' ', '_', $variable['name']))],
                 [
                     'uid' => (string) Str::ulid(),
@@ -226,14 +236,29 @@ class SetupVariablesSeeder extends Seeder
                     'description' => $variable['description'],
                     'example_value' => $variable['example_value'],
                     'category' => $variable['category'],
+                    'module' => 'core',
                     'is_system' => $variable['is_system'],
                     'is_enabled' => true,
                 ]
             );
+
+            // Create translations for ALL languages
+            foreach ($langs as $lang) {
+                MailerVariableLang::updateOrCreate(
+                    ['mailer_variable_id' => $mailerVariable->id, 'lang_id' => $lang->id],
+                    [
+                        'name' => $variable['name'],
+                        'description' => $variable['description'],
+                        'value' => $variable['example_value'], // Use example as default value
+                    ]
+                );
+            }
+
             $count++;
         }
 
         $this->command->info("✓ Setup variables seeded successfully ({$count} variables)");
+        $this->command->info("  ✓ Translations created for {$langs->count()} language(s)");
         $this->command->line('  Categories: user, site, company, date, links');
     }
 }
