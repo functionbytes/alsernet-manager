@@ -8,6 +8,9 @@ class MailerServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        // Register RouteServiceProvider to load routes with proper prefix/middleware
+        $this->app->register(RouteServiceProvider::class);
+
         // Merge module config
         $this->mergeConfigFrom(
             __DIR__.'/../../config/mailer.php',
@@ -17,9 +20,6 @@ class MailerServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Load routes
-        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-
         // Publish config
         $this->publishes([
             __DIR__.'/../../config/mailer.php' => config_path('mailer.php'),

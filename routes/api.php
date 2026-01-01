@@ -26,12 +26,15 @@ Route::prefix('email-endpoints')->group(function () {
 // Public Document Routes (Prestashop integration) - No authentication, only rate limiting
 
 // AI Prompt Selection API (for n8n integration)
+// TEMPORARILY COMMENTED - needs autoload fix
+/*
 Route::prefix('suppliers/prompts')->middleware('throttle:120,1')->group(function () {
-    Route::get('/health', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'health']);
-    Route::post('/select', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'select']);
-    Route::post('/batch-select', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'batchSelect']);
-    Route::get('/explain', [\App\Http\Controllers\Api\Suppliers\PromptSelectionApiController::class, 'explain']);
+    Route::get('/health', [\Modules\Supplier\Http\Controllers\Api\PromptSelectionApiController::class, 'health']);
+    Route::post('/select', [\Modules\Supplier\Http\Controllers\Api\PromptSelectionApiController::class, 'select']);
+    Route::post('/batch-select', [\Modules\Supplier\Http\Controllers\Api\PromptSelectionApiController::class, 'batchSelect']);
+    Route::get('/explain', [\Modules\Supplier\Http\Controllers\Api\PromptSelectionApiController::class, 'explain']);
 });
+*/
 
 Route::middleware('auth:sanctum')->group(function () {
 
