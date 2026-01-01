@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings/mailers')
             ->name('manager.settings.mailers.')
-            ->group(module_path($this->name, 'routes/managers.php'));
+            ->group(module_path($this->name, 'routes/web.php'));
     }
 
     /**

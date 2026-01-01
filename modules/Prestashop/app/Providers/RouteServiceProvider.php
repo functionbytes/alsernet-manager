@@ -36,7 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings')
             ->name('manager.settings.')
-            ->group(module_path('Prestashop', 'routes/managers.php'));
+            ->group(module_path('Prestashop', 'routes/web.php'));
     }
 
     /**

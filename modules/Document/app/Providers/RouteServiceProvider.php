@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
             ->name('manager.settings.')
             ->group(function () {
                 // Load view routes (GET)
-                require module_path($this->name, 'routes/managers.php');
+                require module_path($this->name, 'routes/web.php');
 
                 // Load API routes (POST, PUT, DELETE) - same prefix/name
                 require module_path($this->name, 'routes/api/settings.php');

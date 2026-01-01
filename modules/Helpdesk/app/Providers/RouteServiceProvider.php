@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings/helpdesk')
             ->name('manager.settings.helpdesk.')
-            ->group(module_path($this->name, 'routes/managers.php'));
+            ->group(module_path($this->name, 'routes/web.php'));
 
         // Agent routes
         Route::middleware(['web', 'auth', 'role:helpdesk-agent|super-admin'])

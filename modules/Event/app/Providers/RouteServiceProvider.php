@@ -31,6 +31,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth'])
             ->prefix('manager')
             ->name('manager.')
-            ->group(module_path('Event', 'routes/managers.php'));
+            ->group(module_path('Event', 'routes/web.php'));
     }
 }

@@ -5,7 +5,7 @@ namespace Modules\Mailer\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Mailer\Jobs\Email\SendEndpointEmailJob;
+use Modules\Mailer\Jobs\SendEndpointEmailJob;
 use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerEndpointLog;
 

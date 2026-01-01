@@ -1,63 +1,73 @@
-# Mail Module
+# Mailer Module
 
-Mail Configuration and Management module for Alsernet. Provides comprehensive email settings management including incoming/outgoing email configuration, mailers, templates, and email endpoints.
+Email template management and endpoint configuration module for Alsernet. Provides comprehensive email template management, variable definitions, layout components, and HTTP API endpoints for sending emails.
 
 ## Features
 
-- **Email Settings** - Configure primary email settings
-- **Incoming Email** - IMAP/POP email configuration
-- **Outgoing Email** - SMTP email configuration
-- **Mailers Management** - Configure multiple mailers
-- **Email Templates** - Email template management
-- **Email Endpoints** - Configure email webhooks and endpoints
-- **Stage Email Actions** - Configure email actions and workflows
+- **Email Templates** - Multi-language email template management with translations
+- **Template Variables** - System and custom variable definitions with categories
+- **Layout Components** - Reusable header, footer, and layout components
+- **Email Endpoints** - HTTP API endpoints for external email sending services
+- **Endpoint Logging** - Track and monitor all endpoint requests and delivery status
+- **Template Rendering** - Dynamic variable substitution and HTML rendering
+- **Variable Service** - Manage available variables by module and category
 
 ## Routes
 
-Manager Routes (`/manager/settings/email/`):
-- GET / - View email settings
-- POST /update - Update email settings
+**Manager Routes** (`/manager/settings/mailers/`):
+- Templates: `manager.settings.mailers.templates.*` - CRUD operations for email templates
+- Components: `manager.settings.mailers.components.*` - CRUD for layout components
+- Variables: `manager.settings.mailers.variables.*` - Manage email variables
+- Endpoints: `manager.settings.mailers.endpoints.*` - Configure API endpoints
 
-Manager Routes (`/manager/settings/incoming-email/`):
-- GET / - View incoming email settings
-- POST /update - Update incoming email settings
-
-Manager Routes (`/manager/settings/outgoing-email/`):
-- GET / - View outgoing email settings
-- POST /update - Update outgoing email settings
-
-Manager Routes (`/manager/settings/stage-email-action/`):
-- GET / - List email actions
-- POST /store - Create email action
-- POST /update - Update email action
-- DELETE /{id} - Delete email action
+**API Routes** (`/api/endpoints/`):
+- `POST /{slug}/send` - Send email via endpoint
+- `GET /{slug}/info` - Get endpoint information
+- `GET /{slug}/status` - Get endpoint status and statistics
 
 ## Architecture
 
 ```
-Modules/Mail/
+modules/Mailer/
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   └── Managers/Settings/
-│   │   │       ├── EmailSettingsController.php
-│   │   │       ├── IncomingEmailSettingsController.php
-│   │   │       ├── OutgoingEmailSettingsController.php
-│   │   │       ├── StageEmailActionController.php
-│   │   │       └── Mails/
-│   │   └── Requests/
+│   │   │   ├── Settings/
+│   │   │   │   ├── MailerTemplateController.php
+│   │   │   │   ├── MailerComponentController.php
+│   │   │   │   ├── MailerVariableController.php
+│   │   │   │   └── MailerEndpointController.php
+│   │   │   └── Api/
+│   │   │       └── EmailEndpointController.php
+│   ├── Models/
+│   │   ├── MailerTemplate.php
+│   │   ├── MailerTemplateLang.php
+│   │   ├── MailerLayout.php
+│   │   ├── MailerLayoutLang.php
+│   │   ├── MailerVariable.php
+│   │   ├── MailerVariableLang.php
+│   │   ├── MailerEndpoint.php
+│   │   └── MailerEndpointLog.php
+│   ├── Services/
+│   │   ├── MailerTemplateRendererService.php
+│   │   ├── MailerVariableService.php
+│   │   └── MailerVariableValueService.php
+│   ├── Jobs/
+│   │   └── SendEndpointEmailJob.php
 │   └── Providers/
-│       └── MailServiceProvider.php
+│       ├── MailerServiceProvider.php
+│       └── RouteServiceProvider.php
+├── database/
+│   ├── migrations/ - Database schema for all mailer tables
+│   └── seeders/ - Initial data and example seeders
 ├── config/
-│   └── mail.php
+│   └── mailer.php
 ├── routes/
-│   └── managers.php
-├── resources/views/
-│   └── managers/settings/
-│       ├── mailers/
-│       ├── email/
-│       └── etc.
-└── README.md
+│   ├── managers.php - Web UI routes
+│   └── api/
+│       └── endpoints.php - API routes
+└── resources/views/
+    └── mailers/ - Blade templates for UI
 ```
 
 ## License
