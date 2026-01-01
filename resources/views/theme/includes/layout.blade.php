@@ -1,1 +1,1 @@
-@extends('layouts.managers')
+@extends('layouts.theme')

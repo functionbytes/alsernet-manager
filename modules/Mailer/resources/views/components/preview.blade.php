@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         {{-- Breadcrumb Card --}}
-        @include('managers.components.card', [
+        @include('theme.components.card', [
             'title' => 'Vista Previa de Componente',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],

@@ -20,7 +20,7 @@
                     </a>
                 </div>
 
-                @include('managers.components.alerts')
+                @include('theme.components.alerts')
 
                 <div class="row">
 

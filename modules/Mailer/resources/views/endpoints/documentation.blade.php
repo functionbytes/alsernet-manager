@@ -4,10 +4,10 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Documentación de Endpoints'])
+    @include('theme.components.card', ['title' => 'Documentación de Endpoints'])
 
     <div class="widget-content">
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         {{-- Overview Section --}}
         <div class="card mb-3">

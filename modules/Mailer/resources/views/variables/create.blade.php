@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Crear Variable de Email'])
+    @include('theme.components.card', ['title' => 'Crear Variable de Email'])
 
     <div class="row">
         <div class="col-lg-12">

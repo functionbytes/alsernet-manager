@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="{{ url('theme/libs/daterangepicker/daterangepicker.css') }}">
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{ url('theme/libs/fontawesome/fontawesome.css') }}"
+    <link rel="stylesheet" href="{{ url('theme/libs/fontawesome/fontawesome.css') }}">
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ url('theme/css/style.css') }}">
