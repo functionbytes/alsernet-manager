@@ -54,7 +54,7 @@ class MailerComponentController extends Controller
         // Obtener idiomas disponibles
         $langs = Lang::available()->get();
 
-        return view('mailer::mailers.components.index', [
+        return view('mailer::components.index', [
             'components' => $components,
             'search' => $search,
             'type' => $type,
@@ -79,7 +79,7 @@ class MailerComponentController extends Controller
         // Obtener idiomas disponibles
         $langs = Lang::available()->get();
 
-        return view('mailer::mailers.components.create', [
+        return view('mailer::components.create', [
             'langId' => $langId,
             'langs' => $langs,
         ]);
@@ -207,7 +207,7 @@ class MailerComponentController extends Controller
             ->with('lang')
             ->get();
 
-        return view('mailer::mailers.components.edit', [
+        return view('mailer::components.edit', [
             'component' => $layout, // Keep 'component' for backwards compatibility with view
             'layout' => $layout,
             'translation' => $translation,
@@ -301,7 +301,7 @@ class MailerComponentController extends Controller
         // Reemplazar variables con datos de ejemplo
         $html = $this->replaceExampleVariables($translation->content);
 
-        return view('mailer::mailers.components.preview', [
+        return view('mailer::components.preview', [
             'component' => $layout, // Keep for backwards compatibility
             'layout' => $layout,
             'translation' => $translation,

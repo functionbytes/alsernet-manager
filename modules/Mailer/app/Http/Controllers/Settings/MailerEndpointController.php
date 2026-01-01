@@ -43,7 +43,7 @@ class MailerEndpointController extends Controller
         $sources = MailerEndpoint::distinct('source')->pluck('source');
         $types = MailerEndpoint::distinct('type')->pluck('type');
 
-        return view('mailer::mailers.endpoints.index', [
+        return view('mailer::endpoints.index', [
             'endpoints' => $endpoints,
             'sources' => $sources,
             'types' => $types,
@@ -61,7 +61,7 @@ class MailerEndpointController extends Controller
         $templates = MailerTemplate::where('is_enabled', true)->get();
         $languages = Lang::available()->get();
 
-        return view('mailer::mailers.endpoints.create', [
+        return view('mailer::endpoints.create', [
             'templates' => $templates,
             'languages' => $languages,
         ]);
@@ -101,7 +101,7 @@ class MailerEndpointController extends Controller
         $languages = Lang::available()->get();
         $logs = $emailEndpoint->logs()->latest()->paginate(10);
 
-        return view('mailer::mailers.endpoints.edit', [
+        return view('mailer::endpoints.edit', [
             'endpoint' => $emailEndpoint,
             'templates' => $templates,
             'languages' => $languages,
@@ -202,7 +202,7 @@ class MailerEndpointController extends Controller
         $total = $allLogs->count();
         $successRate = $total > 0 ? round(($successCount / $total) * 100, 1) : 0;
 
-        return view('mailer::mailers.endpoints.logs', [
+        return view('mailer::endpoints.logs', [
             'endpoint' => $emailEndpoint,
             'logs' => $logs,
             'search' => $search,
@@ -225,7 +225,7 @@ class MailerEndpointController extends Controller
 
         $appUrl = config('app.url');
 
-        return view('mailer::mailers.endpoints.documentation', [
+        return view('mailer::endpoints.documentation', [
             'endpoints' => $endpoints,
             'appUrl' => $appUrl,
         ]);

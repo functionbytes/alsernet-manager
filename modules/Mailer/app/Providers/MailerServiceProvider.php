@@ -18,7 +18,7 @@ class MailerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load routes
-        $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 
         // Publish config
         $this->publishes([

@@ -23,7 +23,7 @@ class MailerVariableController extends Controller
             ->orderBy('key')
             ->paginate(20);
 
-        return view('mailer::mailers.variables.index', compact(
+        return view('mailer::variables.index', compact(
             'pageTitle',
             'breadcrumb',
             'variables',
@@ -52,7 +52,7 @@ class MailerVariableController extends Controller
             'orders' => 'Pedidos',
         ];
 
-        return view('mailer::mailers.variables.create', compact(
+        return view('mailer::variables.create', compact(
             'pageTitle',
             'breadcrumb',
             'langs',
@@ -120,7 +120,7 @@ class MailerVariableController extends Controller
 
         $variable->load('translations');
 
-        return view('mailer::mailers.variables.edit', compact(
+        return view('mailer::variables.edit', compact(
             'pageTitle',
             'breadcrumb',
             'variable',

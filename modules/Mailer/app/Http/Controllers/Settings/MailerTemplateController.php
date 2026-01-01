@@ -47,7 +47,7 @@ class MailerTemplateController extends Controller
         // Obtener idiomas disponibles
         $langs = \App\Models\Lang::available()->get();
 
-        return view('mailer::mailers.templates.index', [
+        return view('mailer::templates.index', [
             'templates' => $templates,
             'search' => $search,
             'module' => $module,
@@ -87,7 +87,7 @@ class MailerTemplateController extends Controller
         // Obtener idiomas disponibles
         $langs = \App\Models\Lang::available()->get();
 
-        return view('mailer::mailers.templates.create', [
+        return view('mailer::templates.create', [
             'template' => $template,
             'layouts' => $layouts,
             'module' => $module,
@@ -228,7 +228,7 @@ class MailerTemplateController extends Controller
             ->with('lang')
             ->get();
 
-        return view('mailer::mailers.templates.edit', [
+        return view('mailer::templates.edit', [
             'template' => $template,
             'translation' => $translation,
             'currentLangId' => $langId,
@@ -326,7 +326,7 @@ class MailerTemplateController extends Controller
         $variables = $this->getPreviewVariables($template, $langId);
         $html = \Modules\Mailer\Services\MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-        return view('mailer::mailers.templates.preview', [
+        return view('mailer::templates.preview', [
             'template' => $template,
             'translation' => $translation,
             'html' => $html,
