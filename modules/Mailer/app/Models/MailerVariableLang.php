@@ -12,7 +12,7 @@ class MailerVariableLang extends Model
 
     protected $fillable = [
         'uid',
-        'mail_variable_id',
+        'mailer_variable_id',
         'lang_id',
         'name',
         'description',
