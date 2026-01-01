@@ -4,6 +4,7 @@ namespace Modules\Document\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Modules\Document\Commands\CreateSampleDocumentsFromPrestashop;
 use Modules\Document\Commands\InitializeDocumentWorkflows;
@@ -34,13 +35,13 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerViewComposers();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+
+        // Register routes directly (Laravel 12 compatible)
+        $this->registerRoutes();
     }
 
     public function register(): void
     {
-
-        $this->app->register(RouteServiceProvider::class);
-
         $this->app->singleton(
             PermissionService::class,
             fn ($app) => new PermissionService
@@ -61,6 +62,36 @@ class DocumentsServiceProvider extends ServiceProvider
                 DocumentPolicy::class
             );
         }
+    }
+
+    /**
+     * Register module routes
+     */
+    protected function registerRoutes(): void
+    {
+        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('manager/settings')
+            ->name('manager.settings.')
+            ->group(function () {
+                // Load view routes (GET)
+                require module_path($this->name, 'routes/web.php');
+
+                // Load API routes (POST, PUT, DELETE) - same prefix/name
+                require module_path($this->name, 'routes/api/settings.php');
+            });
+
+        // Administrative routes
+        Route::middleware(['web', 'auth', 'role:administrative|super-admin'])
+            ->prefix('administrative')
+            ->name('administrative.')
+            ->group(module_path($this->name, 'routes/administratives.php'));
+
+        // Public API routes
+        Route::middleware(['api'])
+            ->prefix('api/documents')
+            ->name('api.documents.')
+            ->group(module_path($this->name, 'routes/api.php'));
     }
 
     /**

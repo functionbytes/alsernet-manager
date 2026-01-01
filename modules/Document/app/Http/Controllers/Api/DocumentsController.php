@@ -2,6 +2,7 @@
 
 namespace Modules\Document\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,7 @@ use Modules\Document\Services\DocumentTypeService;
 use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class DocumentsController extends \App\Http\Controllers\Api\ApiController
+class DocumentsController extends Controller
 {
     /**
      * Sincroniza un documento con los datos de su orden e importa productos
