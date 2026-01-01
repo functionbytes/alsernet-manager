@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.components.card', ['title' => 'Dashboard v2 - Modernize Style'])
+    @include('theme.components.card', ['title' => 'Dashboard v2 - Modernize Style'])
 
     <div class="row g-3">
         {{-- Revenue Updates --}}
@@ -248,7 +248,7 @@
 </div>
 
 @push('scripts')
-<script src="{{ url('managers/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+<script src="{{ url('theme/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
 <script>
 $(function() {
     // Revenue Chart - Area

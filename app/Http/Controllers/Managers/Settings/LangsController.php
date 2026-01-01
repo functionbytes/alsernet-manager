@@ -27,7 +27,7 @@ class LangsController extends Controller
 
         $langs = $langs->paginate(paginationNumber());
 
-        return view('managers.views.settings.langs.index')->with([
+        return view('theme.views.settings.langs.index')->with([
             'langs' => $langs,
             'available' => $available,
             'searchKey' => $searchKey,
@@ -40,7 +40,7 @@ class LangsController extends Controller
 
         $categories = Categorie::orderBy('title', 'desc')->pluck('title', 'id');
 
-        return view('managers.views.settings.langs.create')->with([
+        return view('theme.views.settings.langs.create')->with([
             'categories' => $categories,
         ]);
 
@@ -51,7 +51,7 @@ class LangsController extends Controller
 
         $lang = Lang::uid($uid);
 
-        return view('managers.views.settings.langs.view')->with([
+        return view('theme.views.settings.langs.view')->with([
             'categorie' => $lang,
         ]);
 
@@ -64,7 +64,7 @@ class LangsController extends Controller
 
         $categories = Categorie::orderBy('title', 'desc')->pluck('title', 'id');
 
-        return view('managers.views.settings.langs.edit')->with([
+        return view('theme.views.settings.langs.edit')->with([
             'lang' => $lang,
             'categories' => $categories,
         ]);

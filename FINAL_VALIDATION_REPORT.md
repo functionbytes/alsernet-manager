@@ -84,17 +84,17 @@ Pattern: Modules\{ModuleName}\Console\Commands\{ClassName}
 Verified samples:
 
 ```php
-// Modules/Campaign/app/Console/Commands/TestCampaign.php
+// modules/Campaign/app/Console/Commands/TestCampaign.php
 namespace Modules\Campaign\Console\Commands;
 class TestCampaign extends Command { ... }
 ✅ VALID
 
-// Modules/Document/app/Console/Commands/MigrateTicketCategoriesToHelpdesk.php
+// modules/Document/app/Console/Commands/MigrateTicketCategoriesToHelpdesk.php
 namespace Modules\Documents\Console\Commands;
 class MigrateTicketCategoriesToHelpdesk extends Command { ... }
 ✅ VALID
 
-// Modules/Return/app/Console/Commands/SendReturnReminders.php
+// modules/Return/app/Console/Commands/SendReturnReminders.php
 namespace Modules\Returns\Console\Commands;
 class SendReturnReminders extends Command { ... }
 ✅ VALID
@@ -247,11 +247,11 @@ git rm app/Console/Commands/VerifySender.php
 git rm app/Console/Commands/SendReturnReminders.php
 
 # Add new module files
-git add Modules/Campaign/app/Console/Commands/
-git add Modules/Document/app/Console/Commands/
-git add Modules/Helpdesk/app/Console/Commands/
-git add Modules/Return/app/Console/Commands/
-git add Modules/Warehouse/app/Console/Commands/
+git add modules/Campaign/app/Console/Commands/
+git add modules/Document/app/Console/Commands/
+git add modules/Helpdesk/app/Console/Commands/
+git add modules/Return/app/Console/Commands/
+git add modules/Warehouse/app/Console/Commands/
 
 # Commit
 git commit -m "refactor: Move console commands to respective modules

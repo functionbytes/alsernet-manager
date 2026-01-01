@@ -89,7 +89,7 @@ class WarehouseController extends Controller
             $query->where('user_id', auth()->id());
         })->get();
 
-        return view('warehouse::managers.warehouses.index', compact('warehouses'));
+        return view('warehouse::theme.warehouses.index', compact('warehouses'));
     }
 
     public function show(Warehouse $warehouse)
@@ -97,7 +97,7 @@ class WarehouseController extends Controller
         // Check if user can view this specific warehouse
         $this->authorize('view', $warehouse);
 
-        return view('warehouse::managers.warehouses.show', compact('warehouse'));
+        return view('warehouse::theme.warehouses.show', compact('warehouse'));
     }
 
     public function create()
@@ -105,7 +105,7 @@ class WarehouseController extends Controller
         // Check if user can create warehouses
         $this->authorize('create', Warehouse::class);
 
-        return view('warehouse::managers.warehouses.create');
+        return view('warehouse::theme.warehouses.create');
     }
 
     public function update(Request $request, Warehouse $warehouse)
@@ -115,7 +115,7 @@ class WarehouseController extends Controller
 
         $warehouse->update($request->validated());
 
-        return redirect()->route('managers.warehouses.show', $warehouse)
+        return redirect()->route('theme.warehouses.show', $warehouse)
             ->with('success', 'Almacén actualizado correctamente');
     }
 
@@ -126,7 +126,7 @@ class WarehouseController extends Controller
 
         $warehouse->delete();
 
-        return redirect()->route('managers.warehouses.index')
+        return redirect()->route('theme.warehouses.index')
             ->with('success', 'Almacén eliminado correctamente');
     }
 }
@@ -153,7 +153,7 @@ class WarehouseUserController extends Controller
 
         $users = $warehouse->users()->with('roles', 'permissions')->get();
 
-        return view('warehouse::managers.warehouses.users.index', [
+        return view('warehouse::theme.warehouses.users.index', [
             'warehouse' => $warehouse,
             'users' => $users,
         ]);
@@ -175,7 +175,7 @@ class WarehouseUserController extends Controller
             'can_transfer' => $request->boolean('can_transfer'),
         ]);
 
-        return redirect()->route('managers.warehouses.users.index', $warehouse)
+        return redirect()->route('theme.warehouses.users.index', $warehouse)
             ->with('success', 'Usuario asignado correctamente');
     }
 
@@ -186,7 +186,7 @@ class WarehouseUserController extends Controller
 
         $warehouse->users()->detach($user->id);
 
-        return redirect()->route('managers.warehouses.users.index', $warehouse)
+        return redirect()->route('theme.warehouses.users.index', $warehouse)
             ->with('success', 'Usuario desasignado correctamente');
     }
 }
@@ -581,55 +581,55 @@ class WarehouseLocationResource extends JsonResource
 ### Example: Route Middleware
 
 ```php
-// Modules/Warehouse/routes/managers.php
+// modules/Warehouse/routes/theme.php
 
 Route::middleware(['auth', 'role:super-admin|warehouse-manager'])->prefix('warehouses')->group(function () {
 
     // Warehouse routes
-    Route::get('/', [WarehouseController::class, 'index'])->name('managers.warehouses.index');
-    Route::get('/create', [WarehouseController::class, 'create'])->name('managers.warehouses.create');
-    Route::post('/', [WarehouseController::class, 'store'])->name('managers.warehouses.store');
+    Route::get('/', [WarehouseController::class, 'index'])->name('theme.warehouses.index');
+    Route::get('/create', [WarehouseController::class, 'create'])->name('theme.warehouses.create');
+    Route::post('/', [WarehouseController::class, 'store'])->name('theme.warehouses.store');
 
     Route::get('/{warehouse}', [WarehouseController::class, 'show'])
-        ->name('managers.warehouses.show')
+        ->name('theme.warehouses.show')
         ->can('view', 'warehouse'); // Policy applied here
 
     Route::get('/{warehouse}/edit', [WarehouseController::class, 'edit'])
-        ->name('managers.warehouses.edit')
+        ->name('theme.warehouses.edit')
         ->can('update', 'warehouse');
 
     Route::put('/{warehouse}', [WarehouseController::class, 'update'])
-        ->name('managers.warehouses.update')
+        ->name('theme.warehouses.update')
         ->can('update', 'warehouse');
 
     Route::delete('/{warehouse}', [WarehouseController::class, 'destroy'])
-        ->name('managers.warehouses.destroy')
+        ->name('theme.warehouses.destroy')
         ->can('delete', 'warehouse');
 
     // Warehouse user management routes
     Route::get('/{warehouse}/users', [WarehouseUserController::class, 'index'])
-        ->name('managers.warehouses.users.index')
+        ->name('theme.warehouses.users.index')
         ->can('canManageUsers', 'warehouse'); // Custom policy method
 
     Route::post('/{warehouse}/users', [WarehouseUserController::class, 'attach'])
-        ->name('managers.warehouses.users.attach')
+        ->name('theme.warehouses.users.attach')
         ->can('canManageUsers', 'warehouse');
 
     Route::delete('/{warehouse}/users/{user}', [WarehouseUserController::class, 'detach'])
-        ->name('managers.warehouses.users.detach')
+        ->name('theme.warehouses.users.detach')
         ->can('canManageUsers', 'warehouse');
 
     // Inventory operation routes
     Route::post('/locations/{location}/inventory/add', [WarehouseInventoryController::class, 'addQuantity'])
-        ->name('managers.warehouses.inventory.add')
+        ->name('theme.warehouses.inventory.add')
         ->can('canAddQuantity', 'location');
 
     Route::post('/locations/{location}/inventory/subtract', [WarehouseInventoryController::class, 'subtractQuantity'])
-        ->name('managers.warehouses.inventory.subtract')
+        ->name('theme.warehouses.inventory.subtract')
         ->can('canSubtractQuantity', 'location');
 
     Route::post('/locations/{location}/inventory/transfer', [WarehouseInventoryController::class, 'transfer'])
-        ->name('managers.warehouses.inventory.transfer')
+        ->name('theme.warehouses.inventory.transfer')
         ->can('canTransferFrom', 'location');
 });
 ```

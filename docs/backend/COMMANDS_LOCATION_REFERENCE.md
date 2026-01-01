@@ -76,7 +76,7 @@ Modules/
 php artisan list
 
 # Example: Looking for "campaign:test"
-# File: Modules/Campaign/app/Console/Commands/TestCampaign.php
+# File: modules/Campaign/app/Console/Commands/TestCampaign.php
 ```
 
 ### Method 2: By Module
@@ -110,13 +110,13 @@ To create a new console command in a module:
 php artisan make:command {CommandName} --no-interaction
 
 # Move the generated file from app/Console/Commands/ to:
-# Modules/{ModuleName}/app/Console/Commands/
+# modules/{ModuleName}/app/Console/Commands/
 
 # Update namespace from:
 # namespace App\Console\Commands;
 
 # To:
-# namespace Modules\{ModuleName}\Console\Commands;
+# namespace modules\{ModuleName}\Console\Commands;
 ```
 
 Laravel 12 will automatically discover it in the module structure.

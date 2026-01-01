@@ -9,7 +9,7 @@ class PulseController extends Controller
     public function dashboard()
     {
 
-        return view('managers.views.pulse.dashboard')->with([
+        return view('theme.views.pulse.dashboard')->with([
         ]);
 
     }

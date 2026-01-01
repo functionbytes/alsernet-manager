@@ -30,7 +30,7 @@ class ContactsController extends Controller
 
         $contacts = $contacts->paginate(paginationNumber());
 
-        return view('managers.views.settings.contacts.index')->with([
+        return view('theme.views.settings.contacts.index')->with([
             'contacts' => $contacts,
             'reviewed' => $reviewed,
             'searchKey' => $searchKey,
@@ -50,7 +50,7 @@ class ContactsController extends Controller
 
         $revieweds = $revieweds->pluck('label', 'id');
 
-        return view('managers.views.settings.contacts.edit')->with([
+        return view('theme.views.settings.contacts.edit')->with([
             'contact' => $contact,
             'revieweds' => $revieweds,
         ]);

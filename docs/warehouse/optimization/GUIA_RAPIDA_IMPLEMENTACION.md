@@ -144,7 +144,7 @@ public function view($warehouse_uid, $location_id)
         'style',
     ])->find($location_id);
 
-    return view('managers.views.warehouse.locations.view', compact('location'));
+    return view('theme.views.warehouse.locations.view', compact('location'));
 }
 
 // index() - Actualizar
@@ -154,7 +154,7 @@ public function index($warehouse_uid)
         ->with(['sections', 'floor', 'style'])
         ->paginate(50);
 
-    return view('managers.views.warehouse.locations.index', compact('locations'));
+    return view('theme.views.warehouse.locations.index', compact('locations'));
 }
 ```
 
@@ -169,7 +169,7 @@ public function index(Request $request, $warehouse_id)
         ->orderBy('recorded_at', 'desc')
         ->paginate(50);
 
-    return view('managers.views.warehouse.history.index', compact('movements'));
+    return view('theme.views.warehouse.history.index', compact('movements'));
 }
 ```
 
@@ -184,7 +184,7 @@ public function dashboard($warehouse_uid)
         'users',
     ])->where('uid', $warehouse_uid)->first();
 
-    return view('managers.views.warehouse.dashboard', compact('warehouse'));
+    return view('theme.views.warehouse.dashboard', compact('warehouse'));
 }
 ```
 
@@ -267,7 +267,7 @@ class WarehouseLocationsController extends Controller
             abort(404);
         }
 
-        return view('managers.views.warehouse.locations.view', compact('location'));
+        return view('theme.views.warehouse.locations.view', compact('location'));
     }
 }
 ```

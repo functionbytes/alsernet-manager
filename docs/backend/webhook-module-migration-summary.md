@@ -284,7 +284,7 @@ public function campaignWebhooks()
  */
 public function campaignWebhooks()
 {
-    return $this->hasMany('Modules\Webhook\Models\Campaign\CampaignWebhook');
+    return $this->hasMany('modules\Webhook\Models\Campaign\CampaignWebhook');
 }
 ```
 
@@ -358,7 +358,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth'])
             ->prefix('webhooks')
             ->name('webhooks.')
-            ->group(__DIR__.'/../../routes/managers.php');
+            ->group(__DIR__.'/../../routes/theme.php');
 
         Route::middleware(['api'])
             ->prefix('api/webhooks')
@@ -823,7 +823,7 @@ WHERE table_schema = 'public' AND table_name LIKE 'webhook%';
 #### ✓ PHP Syntax
 All PHP files validated with no syntax errors:
 ```bash
-find Modules/Webhook -name "*.php" -exec php -l {} \;
+find modules/Webhook -name "*.php" -exec php -l {} \;
 # Result: No syntax errors detected
 ```
 
@@ -1308,7 +1308,7 @@ X-Signature: sha256=...
    - [ ] Run `composer dump-autoload`
    - [ ] Verify module files in place
    ```bash
-   ls -la Modules/Webhook/
+   ls -la modules/Webhook/
    ```
 
 2. **Database Migration**
@@ -1407,14 +1407,14 @@ php artisan tinker
 >>> $webhook->campaign;
 
 # 3. Test job dispatch
->>> use Modules\Webhook\Jobs\DeliverWebhookJob;
+>>> use modules\Webhook\Jobs\DeliverWebhookJob;
 >>> DeliverWebhookJob::dispatch(1, []);
 
 # 4. Test routes
 php artisan route:list | grep webhook
 
 # 5. Run test suite
-php artisan test tests/Modules/Webhook
+php artisan test tests/modules/Webhook
 ```
 
 ### 12.6 Monitoring
@@ -1482,7 +1482,7 @@ use Modules\Webhook\Models\Campaign\CampaignWebhook;
 
 **Verification:**
 ```bash
-grep -r "App\Models\CampaignWebhook" /Modules/Campaign/
+grep -r "App\Models\CampaignWebhook" /modules/Campaign/
 ```
 
 Should return 0 results after fix.
@@ -1683,7 +1683,7 @@ php artisan tinker
 #### Test webhook job dispatch
 ```bash
 php artisan tinker
->>> use Modules\Webhook\Jobs\DeliverWebhookJob;
+>>> use modules\Webhook\Jobs\DeliverWebhookJob;
 >>> DeliverWebhookJob::dispatch(1, ['test' => 'data']);
 ```
 

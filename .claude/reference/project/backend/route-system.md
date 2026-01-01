@@ -141,7 +141,7 @@ Users can access route (if authorized)
 
 1. **Developer adds a route:**
    ```php
-   // routes/managers.php
+   // routes/theme.php
    Route::resource('reports', ReportController::class);
    ```
 

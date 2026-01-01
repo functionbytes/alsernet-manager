@@ -25,7 +25,7 @@ The Prestashop module has been validated and is properly set up within the appli
     "keywords": ["prestashop", "ecommerce", "sync", "integration"],
     "priority": 0,
     "providers": [
-        "Modules\\Prestashop\\Providers\\PrestashopServiceProvider"
+        "modules\\Prestashop\\Providers\\PrestashopServiceProvider"
     ],
     "files": []
 }

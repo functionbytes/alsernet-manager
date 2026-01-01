@@ -395,7 +395,7 @@ return [
 ### Routes Verification
 ```bash
 php artisan route:list | grep subscribers
-# Should show all routes from Modules/Subscriber/routes/
+# Should show all routes from modules/Subscriber/routes/
 ```
 
 ### Autoloader Verification
@@ -462,7 +462,7 @@ php artisan queue:work
 
 # Verify models load correctly
 php artisan tinker
->>> Modules\Subscriber\Models\Subscriber::count()
+>>> modules\Subscriber\Models\Subscriber::count()
 # Should return subscriber count
 ```
 

@@ -368,7 +368,7 @@ php artisan module:list
 **Solution:** Run migrations
 ```bash
 php artisan migrate
-php artisan migrate --path=Modules/Prestashop/database/migrations
+php artisan migrate --path=modules/Prestashop/database/migrations
 ```
 
 ---

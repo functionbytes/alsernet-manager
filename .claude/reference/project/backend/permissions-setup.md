@@ -323,7 +323,7 @@ class UserController extends Controller
     }
 }
 
-// En routes/managers.php
+// En routes/theme.php
 Route::resource('users', UserController::class)
     ->middleware('can:users.index|users.create|users.edit|users.delete');
 ```

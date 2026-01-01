@@ -423,9 +423,9 @@ Actualizar `composer.json`:
 {
     "autoload": {
         "psr-4": {
-            "Modules\\Returns\\": "Modules/Return/app/",
-            "Modules\\Returns\\Database\\": "Modules/Return/database/",
-            "Modules\\Returns\\Tests\\": "Modules/Return/tests/"
+            "Modules\\Returns\\": "modules/Return/app/",
+            "Modules\\Returns\\Database\\": "modules/Return/database/",
+            "Modules\\Returns\\Tests\\": "modules/Return/tests/"
         }
     }
 }
@@ -487,13 +487,13 @@ php artisan prestashop:sync-categories
 
 ```bash
 # Solo tests de Return
-php artisan test Modules/Return/tests
+php artisan test modules/Return/tests
 
 # Con cobertura
-php artisan test Modules/Return/tests --coverage
+php artisan test modules/Return/tests --coverage
 
 # Tests específicos
-php artisan test Modules/Return/tests/Feature/ReturnCreationTest.php
+php artisan test modules/Return/tests/Feature/ReturnCreationTest.php
 ```
 
 ### Estructura de Tests

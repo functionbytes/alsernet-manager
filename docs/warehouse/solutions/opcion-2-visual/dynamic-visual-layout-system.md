@@ -698,7 +698,7 @@ class WarehouseMapController extends Controller
 ```php
 // routes/web.php
 
-Route::prefix('managers/warehouse/{warehouse_uid}')
+Route::prefix('theme/warehouse/{warehouse_uid}')
     ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('/map', [WarehouseMapController::class, 'map']);

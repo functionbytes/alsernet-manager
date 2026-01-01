@@ -129,23 +129,23 @@ CampaignSubscriberSeeder (15 subscribers × mailing lists)
 
 ```bash
 # Run all Campaign seeders
-php artisan db:seed --class=Modules\\Campaign\\Database\\Seeders\\CampaignDatabaseSeeder
+php artisan db:seed --class=modules\\Campaign\\Database\\Seeders\\CampaignDatabaseSeeder
 ```
 
 ### Individual Seeders
 
 ```bash
 # Mailing lists only
-php artisan db:seed --class=Modules\\Campaign\\Database\\Seeders\\CampaignMaillistSeeder
+php artisan db:seed --class=modules\\Campaign\\Database\\Seeders\\CampaignMaillistSeeder
 
 # Campaigns only
-php artisan db:seed --class=Modules\\Campaign\\Database\\Seeders\\CampaignSeeder
+php artisan db:seed --class=modules\\Campaign\\Database\\Seeders\\CampaignSeeder
 
 # Segments only
-php artisan db:seed --class=Modules\\Campaign\\Database\\Seeders\\CampaignSegmentSeeder
+php artisan db:seed --class=modules\\Campaign\\Database\\Seeders\\CampaignSegmentSeeder
 
 # Subscribers only
-php artisan db:seed --class=Modules\\Campaign\\Database\\Seeders\\CampaignSubscriberSeeder
+php artisan db:seed --class=modules\\Campaign\\Database\\Seeders\\CampaignSubscriberSeeder
 ```
 
 ### Database Refresh

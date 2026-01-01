@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Library\AutoBillingData;
 use App\Library\Facades\Billing;
 use App\Library\Facades\SubscriptionFacade;
-use App\Library\Traits\TrackJobs;
 use App\Models\Role\RoleMapping;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionLog;
@@ -491,7 +490,7 @@ class User extends Authenticatable
 
     public function lists()
     {
-        return $this->hasMany('Modules\Mail\ModelsList');
+        return $this->hasMany('modules\Mail\ModelsList');
     }
 
     public function templates()
@@ -511,7 +510,7 @@ class User extends Authenticatable
 
     public function subscribers()
     {
-        return $this->hasManyThrough('App\Models\Subscriber', 'Modules\Mail\ModelsList');
+        return $this->hasManyThrough('App\Models\Subscriber', 'modules\Mail\ModelsList');
     }
 
     public function logs()

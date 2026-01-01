@@ -438,7 +438,7 @@ public function edit(string $uid)
 
 **Middleware-Based Authorization:**
 ```php
-// routes/managers.php
+// routes/theme.php
 Route::middleware(['auth', 'role:manager|super-admin'])->group(function () {
     // Manager routes
 });
@@ -455,13 +455,13 @@ Route::middleware(['auth', 'check.roles.permissions:warehouse'])->group(function
 
 **Legacy Manager Routes (app/routes/managers.php):**
 ```php
-// DEPRECATED: Migrated to Modules/Warehouse/routes/managers.php
+// DEPRECATED: Migrated to modules/Warehouse/routes/theme.php
 // Route::group(['prefix' => 'warehouse'], function () { ... });
 ```
 
 **Legacy Worker Routes (app/routes/workers.php):**
 ```php
-// DEPRECATED: Migrated to Modules/Warehouse/routes/warehouses.php
+// DEPRECATED: Migrated to modules/Warehouse/routes/warehouses.php
 // Route::group(['prefix' => 'warehouse'], function () { ... });
 ```
 
@@ -1018,27 +1018,27 @@ tests/
 
 **Run All Warehouse Tests:**
 ```bash
-php artisan test Modules/Warehouse/tests
+php artisan test modules/Warehouse/tests
 ```
 
 **Run Unit Tests Only:**
 ```bash
-php artisan test Modules/Warehouse/tests/Unit
+php artisan test modules/Warehouse/tests/Unit
 ```
 
 **Run Feature Tests Only:**
 ```bash
-php artisan test Modules/Warehouse/tests/Feature
+php artisan test modules/Warehouse/tests/Feature
 ```
 
 **Run Specific Test File:**
 ```bash
-php artisan test Modules/Warehouse/tests/Unit/Entities/WarehouseTest.php
+php artisan test modules/Warehouse/tests/Unit/Entities/WarehouseTest.php
 ```
 
 **Run with Coverage:**
 ```bash
-php artisan test Modules/Warehouse/tests --coverage
+php artisan test modules/Warehouse/tests --coverage
 ```
 
 ### Test Data Factories
@@ -1115,13 +1115,13 @@ App\Policies\Warehouse\WarehousePolicy      → Modules\Warehouse\Policies\Wareh
 
 **Manager Routes:**
 ```php
-// OLD: routes/managers.php
+// OLD: routes/theme.php
 Route::group(['prefix' => 'warehouse', 'as' => 'warehouse.'], function () {
     Route::get('/', [WarehouseController::class, 'index'])->name('index');
     // ... more routes
 });
 
-// NEW: Modules/Warehouse/routes/managers.php
+// NEW: modules/Warehouse/routes/theme.php
 // Applied prefix: /manager/warehouse
 // Applied name prefix: manager.warehouse.
 Route::get('/', [WarehouseController::class, 'index'])->name('index');
@@ -1135,7 +1135,7 @@ Route::group(['prefix' => 'warehouse'], function () {
     Route::get('/', [WarehousesController::class, 'index']);
 });
 
-// NEW: Modules/Warehouse/routes/warehouses.php
+// NEW: modules/Warehouse/routes/warehouses.php
 // Applied prefix: /warehouse
 // Applied name prefix: warehouse.
 Route::get('/', [WarehousesController::class, 'index'])->name('dashboard');
@@ -1158,7 +1158,7 @@ Modules/Warehouse/resources/views/warehouses/dashboard/index.blade.php
 **View Rendering:**
 ```php
 // Controllers automatically resolve to module views
-return view('warehouse::managers.warehouses.index', $data);
+return view('warehouse::theme.warehouses.index', $data);
 return view('warehouse::warehouses.dashboard.index', $data);
 ```
 
@@ -1189,7 +1189,7 @@ return view('warehouse::warehouses.dashboard.index', $data);
 {
     "autoload": {
         "psr-4": {
-            "Modules\\Warehouse\\": "Modules/Warehouse/app/"
+            "Modules\\Warehouse\\": "modules/Warehouse/app/"
         }
     }
 }
@@ -1624,10 +1624,10 @@ The module is now production-ready pending final QA approval and deployment.
 
 ```bash
 # Run all tests
-php artisan test Modules/Warehouse/tests
+php artisan test modules/Warehouse/tests
 
 # Run specific test file
-php artisan test Modules/Warehouse/tests/Unit/Entities/WarehouseTest.php
+php artisan test modules/Warehouse/tests/Unit/Entities/WarehouseTest.php
 
 # Generate warehouse
 php artisan warehouse:create

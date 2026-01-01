@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// @deprecated Warehouse routes moved to Modules/Warehouse/routes/warehouses.php
+// @deprecated Warehouse routes moved to modules/Warehouse/routes/warehouses.php
 // The following legacy controller imports are no longer used:
 // use App\Http\Controllers\Managers\Users\UsersController;
 // use App\Http\Controllers\Warehouses\Locations\BarcodeController as LocationsBarcodesController;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\Warehouses\Warehouses\WarehousesController;
 
 /*
-// @deprecated All warehouse routes moved to Modules/Warehouse/routes/warehouses.php
+// @deprecated All warehouse routes moved to modules/Warehouse/routes/warehouses.php
 
 Route::group(['prefix' => 'warehouse', 'middleware' => ['auth', 'check.roles.permissions:warehouse']], function () {
 

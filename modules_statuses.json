@@ -8,5 +8,6 @@
     "Helpdesk": false,
     "Subscriber": false,
     "Return": false,
-    "Campaign": false
+    "Campaign": false,
+    "Mailer": true
 }

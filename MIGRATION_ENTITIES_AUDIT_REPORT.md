@@ -671,7 +671,7 @@ Si existe `document_validation_history` (singular), renombrar a `document_valida
    ```
 4. **Validar modelos Eloquent:**
    ```bash
-   php artisan model:show Modules\\Document\\Entities\\Document
+   php artisan model:show modules\\Document\\Entities\\Document
    ```
 
 ---

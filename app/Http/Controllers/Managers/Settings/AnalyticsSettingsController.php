@@ -9,7 +9,7 @@ class AnalyticsSettingsController extends Controller
 {
     public function index()
     {
-        return view('managers.views.settings.analytics.index')->with([
+        return view('theme.views.settings.analytics.index')->with([
         ]);
 
     }

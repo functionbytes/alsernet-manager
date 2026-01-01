@@ -123,8 +123,8 @@ bash NOTIFICATION_CONSOLIDATION_COMMANDS.sh
 Option B (Manual):
 ```bash
 # Delete unused models
-rm Modules/Notification/app/Models/PushNotificationToken.php
-rm Modules/Notification/app/Models/NotificationSetting.php
+rm modules/Notification/app/Models/PushNotificationToken.php
+rm modules/Notification/app/Models/NotificationSetting.php
 rm database/migrations/2025_12_29_054242_create_notification_settings_table.php
 
 # Create new migrations (see NOTIFICATION_CONSOLIDATION_COMMANDS.sh for details)

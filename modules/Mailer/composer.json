@@ -1,0 +1,23 @@
+{
+    "name": "modules/mailer",
+    "description": "Mailer Management Module",
+    "authors": [],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Mailer\\": "app/",
+            "Modules\\Mailer\\Database\\Factories\\": "database/factories/",
+            "Modules\\Mailer\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Mailer\\Tests\\": "tests/"
+        }
+    }
+}

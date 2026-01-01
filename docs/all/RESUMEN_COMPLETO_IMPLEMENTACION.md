@@ -282,7 +282,7 @@ class StatusesController extends Controller
     public function index()
     {
         $statuses = ConversationStatus::orderBy('order')->get();
-        return view('managers.views.settings.helpdesk.statuses.index', compact('statuses'));
+        return view('theme.views.settings.helpdesk.statuses.index', compact('statuses'));
     }
 
     public function store(Request $request)
@@ -489,12 +489,12 @@ class ViewsController extends Controller
         $publicViews = ConversationView::getPublicViews();
         $userViews = ConversationView::getUserViews(auth()->id());
 
-        return view('managers.views.helpdesk.views.index', compact('publicViews', 'userViews'));
+        return view('theme.views.helpdesk.views.index', compact('publicViews', 'userViews'));
     }
 
     public function create()
     {
-        return view('managers.views.helpdesk.views.create');
+        return view('theme.views.helpdesk.views.create');
     }
 
     public function store(Request $request)
@@ -524,7 +524,7 @@ class ViewsController extends Controller
             abort(403);
         }
 
-        return view('managers.views.helpdesk.views.edit', compact('view'));
+        return view('theme.views.helpdesk.views.edit', compact('view'));
     }
 
     public function update(Request $request, $id)

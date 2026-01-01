@@ -40,7 +40,7 @@ class CategoryController extends Controller
             'leaves' => Category::leaves()->count(),
         ];
 
-        return view('managers.views.settings.categories.index', compact('categories', 'stats'));
+        return view('theme.views.settings.categories.index', compact('categories', 'stats'));
     }
 
     /**
@@ -61,7 +61,7 @@ class CategoryController extends Controller
                 ];
             });
 
-        return view('managers.views.settings.categories.create', compact('parentOptions'));
+        return view('theme.views.settings.categories.create', compact('parentOptions'));
     }
 
     /**
@@ -140,7 +140,7 @@ class CategoryController extends Controller
             ];
         }
 
-        return view('managers.views.settings.categories.edit', compact('category', 'parentOptions', 'syncInfo'));
+        return view('theme.views.settings.categories.edit', compact('category', 'parentOptions', 'syncInfo'));
     }
 
     /**
@@ -295,7 +295,7 @@ class CategoryController extends Controller
             ->latestAttempts()
             ->paginate(20);
 
-        return view('managers.views.settings.categories.conflicts', compact('mappings'));
+        return view('theme.views.settings.categories.conflicts', compact('mappings'));
     }
 
     /**

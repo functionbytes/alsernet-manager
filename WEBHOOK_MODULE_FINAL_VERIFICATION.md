@@ -441,8 +441,8 @@ DELETE /api/webhooks/{webhook}     → WebhookApiController@destroy
   "active": 1,
   "order": 0,
   "providers": [
-    "Modules\\Webhook\\app\\Providers\\WebhookServiceProvider",
-    "Modules\\Webhook\\app\\Providers\\RouteServiceProvider"
+    "modules\\Webhook\\app\\Providers\\WebhookServiceProvider",
+    "modules\\Webhook\\app\\Providers\\RouteServiceProvider"
   ]
 }
 ```
@@ -485,7 +485,7 @@ php artisan route:list | grep webhook
 
 # 2. Verificar modelos accesibles
 php artisan tinker
->>> Modules\Webhook\Models\Webhook::count()
+>>> modules\Webhook\Models\Webhook::count()
 # Resultado esperado: Número de webhooks registrados
 
 # 3. Verificar servicios disponibles
@@ -493,7 +493,7 @@ php artisan tinker
 # Resultado esperado: Instancia del servicio
 
 # 4. Verificar jobs
->>> Modules\Webhook\Jobs\DeliverWebhookJob::dispatch($webhook);
+>>> modules\Webhook\Jobs\DeliverWebhookJob::dispatch($webhook);
 # Resultado esperado: Job despachado sin errores
 
 # 5. Verificar configuración
@@ -622,7 +622,7 @@ php artisan tinker  # Verificar
 
 **Solución:**
 ```bash
-php artisan migrate --path=Modules/Webhook/database/migrations
+php artisan migrate --path=modules/Webhook/database/migrations
 ```
 
 ### Problema: Servicios no disponibles
@@ -817,17 +817,17 @@ php artisan migrate
 
 # Verificar modelos
 php artisan tinker
->>> Modules\Webhook\Models\Webhook::count()
+>>> modules\Webhook\Models\Webhook::count()
 ```
 
 ### Fase 2: Validación de Integración
 ```bash
 # Campaign webhooks
 php artisan tinker
->>> Modules\Webhook\Models\Campaign\CampaignWebhook::count()
+>>> modules\Webhook\Models\Campaign\CampaignWebhook::count()
 
 # Supplier webhooks
->>> Modules\Webhook\Models\SupplierSourceWebhook::count()
+>>> modules\Webhook\Models\SupplierSourceWebhook::count()
 ```
 
 ### Fase 3: Testing de Jobs
@@ -837,7 +837,7 @@ php artisan queue:work
 
 # Despachar job de prueba
 php artisan tinker
->>> Modules\Webhook\Jobs\DeliverWebhookJob::dispatch($webhook);
+>>> modules\Webhook\Jobs\DeliverWebhookJob::dispatch($webhook);
 ```
 
 ### Fase 4: Monitoreo Post-Deploy

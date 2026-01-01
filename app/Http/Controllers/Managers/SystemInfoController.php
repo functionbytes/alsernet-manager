@@ -21,7 +21,7 @@ class SystemInfoController extends Controller
     {
         $systemInfo = $this->systemInfoService->getAllSystemInfo();
 
-        return view('managers.views.settings.system.info.index', [
+        return view('theme.views.settings.system.info.index', [
             'environment' => $systemInfo['environment'],
             'server' => $systemInfo['server'],
             'extensions' => $systemInfo['php_extensions'],

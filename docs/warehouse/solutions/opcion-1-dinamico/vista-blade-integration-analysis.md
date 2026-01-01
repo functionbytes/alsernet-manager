@@ -209,7 +209,7 @@ public function getLayoutSpec($warehouse_uid, Request $request): JsonResponse
 ```php
 // routes/web.php (o routes/api.php)
 
-Route::prefix('managers/warehouse/{warehouse_uid}/map')
+Route::prefix('theme/warehouse/{warehouse_uid}/map')
     ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('/', [WarehouseMapController::class, 'map'])->name('warehouse.map');

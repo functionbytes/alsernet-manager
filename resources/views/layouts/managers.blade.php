@@ -29,20 +29,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Library CSS -->
-    <link rel="stylesheet" href="{{ url('managers/libs/taginput/bootstrap-tagsinput.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/quill/dist/quill.snow.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/toastr/toastr.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/dropzone/dist/min/dropzone.min.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/libs/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/taginput/bootstrap-tagsinput.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/quill/dist/quill.snow.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/toastr/toastr.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/dropzone/dist/min/dropzone.min.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/libs/daterangepicker/daterangepicker.css') }}">
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{ url('managers/libs/fontawesome/fontawesome.css') }}"
+    <link rel="stylesheet" href="{{ url('theme/libs/fontawesome/fontawesome.css') }}"
 
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="{{ url('managers/css/style.css') }}">
-    <link rel="stylesheet" href="{{ url('managers/css/extra.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/css/extra.css') }}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
 
@@ -69,19 +69,19 @@
     >
 
 
-        @include ('managers.includes.nav')
+        @include ('theme.includes.nav')
 
         <!-- Main wrapper -->
 
         <div class="body-wrapper">
 
-            @include ('managers.includes.header')
+            @include ('theme.includes.header')
 
             <div class="container-fluid">
                 @yield('content')
             </div>
 
-            @include ('managers.components.delete')
+            @include ('theme.components.delete')
 
         </div>
 
@@ -90,26 +90,26 @@
 </div>
 
 <!-- Core Libraries -->
-<script src="{{ url('managers/libs/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ url('managers/libs/simplebar/dist/simplebar.min.js') }}"></script>
-<script src="{{ url('managers/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url('theme/libs/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ url('theme/libs/simplebar/dist/simplebar.min.js') }}"></script>
+<script src="{{ url('theme/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ url('core/tooltipster/js/tooltipster.bundle.min.js') }}"></script>
 
 <!-- Form/Input Libraries -->
-<script src="{{ url('managers/libs/taginput/bootstrap-tagsinput.js') }}"></script>
-<script src="{{ url('managers/libs/bootstrap-material-datetimepicker/node_modules/moment/moment.js') }}"></script>
-<script src="{{ url('managers/libs/select2/dist/js/select2.min.js') }}"></script>
-<script src="{{ url('managers/libs/jquery-validation/dist/jquery.validate.min.js') }}"></script>
-<script src="{{ url('managers/libs/dropzone/dist/dropzone.js') }}"></script>
-<script src="{{ url('managers/libs/toastr/toastr.min.js') }}"></script>
-<script src="{{ url('managers/libs/quill/dist/quill.min.js') }}"></script>
+<script src="{{ url('theme/libs/taginput/bootstrap-tagsinput.js') }}"></script>
+<script src="{{ url('theme/libs/bootstrap-material-datetimepicker/node_modules/moment/moment.js') }}"></script>
+<script src="{{ url('theme/libs/select2/dist/js/select2.min.js') }}"></script>
+<script src="{{ url('theme/libs/jquery-validation/dist/jquery.validate.min.js') }}"></script>
+<script src="{{ url('theme/libs/dropzone/dist/dropzone.js') }}"></script>
+<script src="{{ url('theme/libs/toastr/toastr.min.js') }}"></script>
+<script src="{{ url('theme/libs/quill/dist/quill.min.js') }}"></script>
 
 <!-- Theme & App Scripts -->
-<script src="{{ url('managers/js/theme/theme.js') }}"></script>
+<script src="{{ url('theme/js/theme/theme.js') }}"></script>
 
 <!-- Form Initializers -->
-<script src="{{ url('managers/js/forms/select2.init.js') }}"></script>
-<script src="{{ url('managers/js/forms/quill-init.js') }}"></script>
+<script src="{{ url('theme/js/forms/select2.init.js') }}"></script>
+<script src="{{ url('theme/js/forms/quill-init.js') }}"></script>
 
 <!-- Core App Scripts -->
 <script src="{{ url('core/js/functions.js') }}"></script>

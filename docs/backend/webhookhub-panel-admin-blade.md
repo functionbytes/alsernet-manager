@@ -134,7 +134,7 @@ class WebhookIntegrationController extends Controller
 
         $integrations = $query->orderByDesc('created_at')->paginate(15);
 
-        return view('managers.views.settings.webhooks.integrations.index', compact(
+        return view('theme.views.settings.webhooks.integrations.index', compact(
             'integrations',
             'pageTitle',
             'breadcrumb',
@@ -152,7 +152,7 @@ class WebhookIntegrationController extends Controller
         $pageTitle = 'Nueva Integración Webhook';
         $breadcrumb = 'Configuración / Webhooks / Integraciones / Crear';
 
-        return view('managers.views.settings.webhooks.integrations.create', compact(
+        return view('theme.views.settings.webhooks.integrations.create', compact(
             'pageTitle',
             'breadcrumb'
         ));
@@ -208,7 +208,7 @@ class WebhookIntegrationController extends Controller
             'active_subscriptions' => $integration->subscriptions()->where('is_active', true)->count(),
         ];
 
-        return view('managers.views.settings.webhooks.integrations.edit', compact(
+        return view('theme.views.settings.webhooks.integrations.edit', compact(
             'integration',
             'pageTitle',
             'breadcrumb',
@@ -292,7 +292,7 @@ class WebhookIntegrationController extends Controller
 
         $apiKeys = $integration->apiKeys()->latest()->paginate(15);
 
-        return view('managers.views.settings.webhooks.integrations.api-keys', compact(
+        return view('theme.views.settings.webhooks.integrations.api-keys', compact(
             'integration',
             'apiKeys',
             'pageTitle',
@@ -413,7 +413,7 @@ class WebhookSubscriptionController extends Controller
         $subscriptions = $query->orderByDesc('created_at')->paginate(15);
         $integrations = WebhookIntegration::where('status', 'active')->get();
 
-        return view('managers.views.settings.webhooks.subscriptions.index', compact(
+        return view('theme.views.settings.webhooks.subscriptions.index', compact(
             'subscriptions',
             'integrations',
             'pageTitle',
@@ -435,7 +435,7 @@ class WebhookSubscriptionController extends Controller
         $integrations = WebhookIntegration::where('status', 'active')->get();
         $eventCatalog = \App\Models\Webhook\WebhookEventCatalog::where('is_active', true)->get();
 
-        return view('managers.views.settings.webhooks.subscriptions.create', compact(
+        return view('theme.views.settings.webhooks.subscriptions.create', compact(
             'pageTitle',
             'breadcrumb',
             'integrations',
@@ -499,7 +499,7 @@ class WebhookSubscriptionController extends Controller
             'dead' => $subscription->deliveries()->where('status', 'dead')->count(),
         ];
 
-        return view('managers.views.settings.webhooks.subscriptions.edit', compact(
+        return view('theme.views.settings.webhooks.subscriptions.edit', compact(
             'subscription',
             'integrations',
             'eventCatalog',

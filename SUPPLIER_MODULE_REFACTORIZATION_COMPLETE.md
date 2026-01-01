@@ -344,7 +344,7 @@ php artisan route:list | grep supplier
 
 ### 5. Run Tests
 ```bash
-php artisan test Modules/Supplier/tests/
+php artisan test modules/Supplier/tests/
 ```
 
 ---
@@ -390,7 +390,7 @@ tests/
 
 Run tests with:
 ```bash
-php artisan test Modules/Supplier/tests/
+php artisan test modules/Supplier/tests/
 ```
 
 ---
@@ -405,8 +405,8 @@ php artisan test Modules/Supplier/tests/
     "keywords": ["supplier", "automation", "content", "ai", "extraction"],
     "priority": 0,
     "providers": [
-        "Modules\\Supplier\\Providers\\SupplierServiceProvider",
-        "Modules\\Supplier\\Providers\\RouteServiceProvider"
+        "modules\\Supplier\\Providers\\SupplierServiceProvider",
+        "modules\\Supplier\\Providers\\RouteServiceProvider"
     ]
 }
 ```

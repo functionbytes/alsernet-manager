@@ -142,7 +142,7 @@ Rol callcenters tiene 63 permisos asignados
 
 **Asignar un rol a usuario:**
 ```bash
-php artisan roles:assign usuario@email.com managers
+php artisan roles:assign usuario@email.com theme
 ```
 
 **Cambiar rol de usuario:**
@@ -341,7 +341,7 @@ php artisan permissions:create --assign
 ### Roles
 ```bash
 # Asignar rol a usuario
-php artisan roles:assign usuario@email.com managers
+php artisan roles:assign usuario@email.com theme
 ```
 
 ### Cache

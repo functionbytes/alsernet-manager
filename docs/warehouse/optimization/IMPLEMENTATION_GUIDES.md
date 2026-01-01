@@ -228,7 +228,7 @@ class QueryOptimizationService
 public function view($warehouse_uid, $location_id)
 {
     $location = WarehouseLocation::find($location_id);
-    return view('managers.views.warehouse.locations.view', compact('location'));
+    return view('theme.views.warehouse.locations.view', compact('location'));
     // Problem: Loading location triggers N+1 when accessing sections/slots/inventaries
 }
 
@@ -241,7 +241,7 @@ public function view($warehouse_uid, $location_id)
         'style',
     ])->find($location_id);
 
-    return view('managers.views.warehouse.locations.view', compact('location'));
+    return view('theme.views.warehouse.locations.view', compact('location'));
     // Solution: All relationships loaded in 1 query
 }
 ```
@@ -350,7 +350,7 @@ class WarehouseHistoryController extends Controller
             ->orderBy('recorded_at', 'desc')
             ->paginate($this->getPageSize($perPage));
 
-        return view('managers.views.warehouse.history.index', [
+        return view('theme.views.warehouse.history.index', [
             'movements' => $movements,
             'warehouse_id' => $warehouse_id,
         ]);
@@ -564,7 +564,7 @@ class WarehouseLocationsController extends Controller
             abort(404);
         }
 
-        return view('managers.views.warehouse.locations.view', compact('location'));
+        return view('theme.views.warehouse.locations.view', compact('location'));
     }
 }
 ```

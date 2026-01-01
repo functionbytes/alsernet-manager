@@ -60,8 +60,8 @@ Modules/Campaign/
   "alias": "campaign",
   "description": "Campaign Management Module",
   "providers": [
-    "Modules\\Campaign\\Providers\\CampaignServiceProvider",
-    "Modules\\Campaign\\Providers\\RouteServiceProvider"
+    "modules\\Campaign\\Providers\\CampaignServiceProvider",
+    "modules\\Campaign\\Providers\\RouteServiceProvider"
   ]
 }
 ```
@@ -146,7 +146,7 @@ protected function mapManagerRoutes(): void
     Route::middleware(['web', 'auth'])
         ->prefix('manager')
         ->name('manager.')
-        ->group(base_path('Modules/Campaign/routes/managers.php'));
+        ->group(base_path('modules/Campaign/routes/theme.php'));
 }
 ```
 

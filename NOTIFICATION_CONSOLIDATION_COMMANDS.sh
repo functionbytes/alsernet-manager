@@ -65,7 +65,7 @@ print_section "PHASE 2: Deleting Unused Models"
 
 echo "Removing PushNotificationToken.php..."
 if [ -f "Modules/Notification/app/Models/PushNotificationToken.php" ]; then
-    rm Modules/Notification/app/Models/PushNotificationToken.php
+    rm modules/Notification/app/Models/PushNotificationToken.php
     echo -e "${GREEN}✓${NC} Deleted: Modules/Notification/app/Models/PushNotificationToken.php"
 else
     echo -e "${RED}✗${NC} File not found: Modules/Notification/app/Models/PushNotificationToken.php"
@@ -74,7 +74,7 @@ fi
 echo ""
 echo "Removing NotificationSetting.php..."
 if [ -f "Modules/Notification/app/Models/NotificationSetting.php" ]; then
-    rm Modules/Notification/app/Models/NotificationSetting.php
+    rm modules/Notification/app/Models/NotificationSetting.php
     echo -e "${GREEN}✓${NC} Deleted: Modules/Notification/app/Models/NotificationSetting.php"
 else
     echo -e "${RED}✗${NC} File not found: Modules/Notification/app/Models/NotificationSetting.php"

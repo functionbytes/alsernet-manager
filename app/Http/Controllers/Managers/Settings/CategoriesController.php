@@ -26,7 +26,7 @@ class CategoriesController extends Controller
 
         $categories = $categories->paginate(paginationNumber());
 
-        return view('managers.views.settings.categories.index')->with([
+        return view('theme.views.settings.categories.index')->with([
             'categories' => $categories,
             'available' => $available,
             'searchKey' => $searchKey,
@@ -37,7 +37,7 @@ class CategoriesController extends Controller
     public function create()
     {
 
-        return view('managers.views.settings.categories.create')->with([
+        return view('theme.views.settings.categories.create')->with([
 
         ]);
 
@@ -48,7 +48,7 @@ class CategoriesController extends Controller
 
         $categorie = Categorie::uid($uid);
 
-        return view('managers.views.settings.categories.view')->with([
+        return view('theme.views.settings.categories.view')->with([
             'categorie' => $categorie,
         ]);
 
@@ -59,7 +59,7 @@ class CategoriesController extends Controller
 
         $categorie = Categorie::uid($uid);
 
-        return view('managers.views.settings.categories.edit')->with([
+        return view('theme.views.settings.categories.edit')->with([
             'categorie' => $categorie,
         ]);
 

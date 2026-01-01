@@ -110,7 +110,7 @@ Modules\Mail\Providers\MailServiceProvider::class,
 // ✅ COMENTADAS las rutas:
 // Route::group(['prefix' => 'mailers'], function () { ... });
 //
-// Ahora manejadas por: Modules/Mail/routes/managers.php
+// Ahora manejadas por: modules/Mail/routes/theme.php
 ```
 
 ### `routes/api.php`
@@ -118,7 +118,7 @@ Modules\Mail\Providers\MailServiceProvider::class,
 // ✅ COMENTADAS las rutas:
 // Route::prefix('email-endpoints')->group(function () { ... });
 //
-// Ahora manejadas por: Modules/Mail/routes/api.php
+// Ahora manejadas por: modules/Mail/routes/api.php
 ```
 
 ---

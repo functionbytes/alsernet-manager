@@ -1,0 +1,1479 @@
+<?php
+
+namespace Modules\Document\Http\Controllers\Api;
+
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentLoad;
+use Modules\Document\Entities\DocumentSource;
+use Modules\Document\Entities\DocumentStatus;
+use Modules\Document\Entities\DocumentSync;
+use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Events\DocumentCreated;
+use Modules\Document\Jobs\MailTemplateJob;
+use Modules\Document\Services\DocumentEmailService;
+use Modules\Document\Services\DocumentTypeService;
+use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class DocumentsController extends \App\Http\Controllers\Api\ApiController
+{
+    /**
+     * Sincroniza un documento con los datos de su orden e importa productos
+     * Método helper reutilizable para sincronización de datos y productos
+     */
+    private function syncDocumentWithOrder(Document $document, PrestashopOrder $order): bool
+    {
+        // Obtener el cliente
+        $customer = $order->customer;
+
+        if (! $customer) {
+            return false;
+        }
+
+        // Llenar los datos desnormalizados de la orden y cliente
+        $document->order_reference = $order->reference ?? $document->order_reference;
+        $document->order_date = $order->date_add ?? $document->order_date;
+
+        // Obtener dirección de envío
+        $deliveryAddress = $order->deliveryAddress;
+
+        $document->customer_id = $customer->id_customer;
+        // Nombre y apellido vienen de la dirección de envío
+        $document->customer_firstname = $deliveryAddress?->firstname ?? $customer->firstname;
+        $document->customer_lastname = $deliveryAddress?->lastname ?? $customer->lastname;
+        $document->customer_email = $customer->email;
+        // DNI/SIRET vienen de la dirección de envío
+        $document->customer_dni = $deliveryAddress?->dni ?? $deliveryAddress?->vat_number ?? null;
+        // Empresa viene de la dirección de envío
+        $document->customer_company = $deliveryAddress?->company ?? null;
+        // Teléfono celular viene de la dirección de envío
+        $document->customer_cellphone = $deliveryAddress?->phone_mobile ?? null;
+
+        $document->save();
+
+        // Importar productos del carrito
+        $document->captureProducts();
+
+        return true;
+    }
+
+    public function process(Request $request)
+    {
+        $action = $request->input('action');
+
+        $data = $request->all();
+
+        switch ($action) {
+            case 'verification':
+                return $this->documentVerification($data);
+            case 'validate':
+                return $this->documentValidates($data);
+            case 'request':
+                return $this->documentRequests($data);
+            case 'upload':
+                return $this->documentUpload($request);
+            case 'delete':
+                return $this->documentDelete($data);
+            default:
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'Invalid action type',
+                ], 400);
+        }
+    }
+
+    public function documentRequests($data)
+    {
+        try {
+            // Obtener order_id (compatible con múltiples formatos)
+            $orderId = $data['order_id'] ?? $data['order'] ?? null;
+
+            // Validar que existe order_id
+            if (! $orderId) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Missing order_id parameter',
+                ], 400);
+            }
+
+            // Validar que no existe un documento duplicado
+            $existingDocument = Document::where('order_id', $orderId)->first();
+            if ($existingDocument) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "Order {$orderId} already has a document request",
+                    'data' => [
+                        'uid' => $existingDocument->uid,
+                    ],
+                ], 409);  // Conflict
+            }
+
+            // ===== Language Mapping Logic =====
+            $langId = null;
+
+            // If iso_code is provided, map to Laravel lang_id
+            if (isset($data['iso_code']) && ! empty($data['iso_code'])) {
+                $isoCode = strtolower(trim($data['iso_code']));
+
+                // Find Laravel language by iso_code
+                $laravelLang = \App\Models\Lang::iso($isoCode);
+
+                if ($laravelLang) {
+                    $langId = $laravelLang->id;
+                    \Log::info("Language mapped: PrestaShop iso_code '{$isoCode}' → Laravel lang_id {$langId}");
+                } else {
+                    // Log warning and fallback to default
+                    \Log::warning("Language mapping failed: iso_code '{$isoCode}' not found in Laravel langs table");
+                    $defaultLang = \App\Models\Lang::iso('es');
+                    $langId = $defaultLang ? $defaultLang->id : null;
+                }
+            }
+
+            $document = new Document;
+            $document->order_id = $orderId;
+            $document->type = $data['type'] ?? 'general';
+
+            $apiSource = DocumentSource::where('key', 'api')->first();
+            $document->source_id = $apiSource?->id;
+
+            $apiLoad = DocumentLoad::where('key', 'api')->first();
+            $document->load_id = $apiLoad?->id;
+
+            $automaticSync = DocumentSync::where('key', 'automatic')->first();
+            $document->sync_id = $automaticSync?->id;
+
+            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $automaticUpload?->id;
+
+            $document->proccess = 0;    // Estado inicial: pendiente
+            $document->lang_id = $langId;  // Assign language
+
+            if (isset($data['customer']) && is_array($data['customer'])) {
+                $document->customer_id = $data['customer']['id_customer'] ?? $data['customer']['id'] ?? null;
+                $document->customer_firstname = $data['customer']['firstname'] ?? null;
+                $document->customer_lastname = $data['customer']['lastname'] ?? null;
+                $document->customer_email = $data['customer']['email'] ?? null;
+                // DNI/SIRET viene de la dirección en Prestashop
+                $document->customer_dni = $data['customer']['siret'] ?? $data['customer']['document_type'] ?? null;
+                $document->customer_company = $data['customer']['company'] ?? null;
+                // Teléfono viene de la dirección de envío
+                $document->customer_cellphone = $data['customer']['phone_mobile'] ?? $data['customer']['phone'] ?? null;
+            }
+
+            // Obtener datos de la orden
+            $document->cart_id = $data['cart_id'] ?? $data['cart'] ?? null;
+            $document->order_reference = $data['reference'] ?? null;
+            $document->order_date = $data['date_add'] ?? null;
+
+            // Set initial status to "pending"
+            $document->status_id = DocumentStatus::where('key', 'pending')->first()?->id;
+
+            // Save document FIRST (required for relationships)
+            $document->save();
+
+            // Process and create products AFTER document is saved
+            $productsCount = 0;
+            if (isset($data['products']) && is_array($data['products'])) {
+                foreach ($data['products'] as $product) {
+                    // Mapear campos de Prestashop correctamente
+                    $productId = $product['product_id'] ?? $product['id'] ?? null;
+                    $productName = $product['product_name'] ?? $product['name'] ?? null;
+                    $productReference = $product['product_reference'] ?? $product['reference'] ?? null;
+                    $quantity = (int) ($product['product_quantity'] ?? $product['quantity'] ?? 0);
+                    $price = (float) ($product['unit_price_tax_incl'] ?? $product['price'] ?? 0);
+
+                    if ($productId && $productName) {
+                        $document->products()->create([
+                            'product_id' => $productId,
+                            'product_name' => $productName,
+                            'product_reference' => $productReference,
+                            'quantity' => $quantity,
+                            'price' => $price,
+                        ]);
+                        $productsCount++;
+                    }
+                }
+            }
+
+            // Detectar tipo de documento basado en los productos
+            if ($productsCount > 0) {
+                $detectedType = $document->detectDocumentType();
+                if ($detectedType && $detectedType !== $document->type) {
+                    $document->type = $detectedType;
+                    $document->save();
+                }
+            }
+
+            // Refresh para obtener los datos más recientes
+            $document->refresh();
+
+            // Disparar evento SOLO UNA VEZ al final después de toda la configuración
+            Log::info('Dispatching DocumentCreated event', [
+                'document_uid' => $document->uid,
+                'document_id' => $document->id,
+                'order_id' => $document->order_id,
+                'method' => 'documentRequests',
+            ]);
+            DocumentCreated::dispatch($document);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Document request created successfully for order {$orderId}",
+                'data' => [
+                    'uid' => $document->uid,
+                    'order_id' => $document->order_id,
+                    'type' => $document->type,
+                    'lang_id' => $document->lang_id,
+                    'iso_code' => $data['iso_code'] ?? null,
+                    'synced' => 1,
+                    'products_count' => $productsCount,
+                    'customer_name' => trim(($document->customer_firstname ?? '').' '.($document->customer_lastname ?? '')) ?: 'N/A',
+                ],
+            ], 201);
+
+        } catch (\Exception $e) {
+            \Log::error('Error creating document request: '.$e->getMessage(), [
+                'exception' => $e,
+                'data' => $data,
+            ]);
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Error creating document request: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function documentVerification($data)
+    {
+
+        $document = Document::orders($data['order']);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'You have document from general emails.',
+            'data' => [
+                'uid' => $document->uid,
+                'reference' => $document->label,
+                'type' => $document->type,
+            ],
+
+        ], 200);
+
+    }
+
+    public function documentValidates($data)
+    {
+        $uid = $data['uid'] ?? null;
+
+        if (! $uid) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Missing uid parameter',
+            ], 400);
+        }
+
+        $document = Document::uid($uid)->first();
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Document not found',
+            ], 404);
+        }
+
+        // Validar que el documento está en un estado que permite carga de archivos
+        $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+        $currentStatusKey = $document->status?->key;
+
+        if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
+                'data' => [
+                    'uid' => $document->uid,
+                    'current_status' => $currentStatusKey,
+                    'allowed_statuses' => $allowedStatusKeys,
+                ],
+            ], 409);
+        }
+
+        //        if (! $document->source_id) {
+        //            $apiSource = DocumentSource::where('key', 'api')->first();
+        //            $document->source_id = $apiSource?->id;
+        //        }
+        //
+        //        if (! $document->load_id) {
+        //            $apiLoad = DocumentLoad::where('key', 'api')->first();
+        //            $document->load_id = $apiLoad?->id;
+        //        }
+        //
+        //        if (! $document->sync_id) {
+        //            $automaticSync = DocumentSync::where('key', 'automatic')->first();
+        //            $document->sync_id = $automaticSync?->id;
+        //        }
+        //
+        //        if (! $document->upload_id) {
+        //            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+        //            $document->upload_id = $automaticUpload?->id;
+        //        }
+        //
+        //        $document->save();
+
+        // Actualizar JSON de documentos requeridos si no existe
+        if (empty($document->required_documents)) {
+            $document->updateRequiredDocumentsJson();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Document validation successful',
+            'data' => [
+                'uid' => $document->uid,
+                'type' => $document->type ?? 'general',
+                'label' => $document->order_reference ?? $document->order_id,
+                'current_status' => $currentStatusKey,
+                'can_upload' => is_null($document->confirmed_at) && in_array($currentStatusKey, $allowedStatusKeys),
+                'required_documents' => $document->getRequiredDocumentsWithLabels(),
+                'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
+                'missing_documents' => $document->getMissingDocuments(),
+                'is_complete' => $document->hasAllRequiredDocuments(),
+            ],
+        ], 200);
+    }
+
+    public function documentUpload(Request $request)
+    {
+        try {
+            $uid = $request->input('uid');
+
+            if (! $uid) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Missing uid parameter',
+                ], 400);
+            }
+
+            $document = Document::uid($uid)->first();
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Document not found',
+                ], 404);
+            }
+
+            // Validar que el documento está en un estado que permite carga de archivos
+            $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+            $currentStatusKey = $document->status?->key;
+
+            if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
+                    'data' => [
+                        'uid' => $document->uid,
+                        'current_status' => $currentStatusKey,
+                        'allowed_statuses' => $allowedStatusKeys,
+                    ],
+                ], 409);
+            }
+
+            // Obtener archivos y tipos de documento
+            $files = $request->file('file');
+            $documentTypes = $request->input('document_types', []);
+
+            if (! $files) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'No files provided',
+                ], 400);
+            }
+
+            // Convertir a array si es archivo único
+            if (! is_array($files)) {
+                $files = [$files];
+                $documentTypes = is_array($documentTypes) ? $documentTypes : [$documentTypes];
+            }
+
+            // Validar que hay tipos para cada archivo
+            if (count($files) !== count($documentTypes)) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Each file must have a document type specified',
+                ], 400);
+            }
+
+            // Procesar cada archivo con su tipo
+            foreach ($files as $index => $file) {
+                // Validar que el archivo es válido
+                if (! $file || ! $file->isValid()) {
+                    $errorMessage = 'Invalid file provided at index '.$index;
+
+                    // Agregar detalles del error para debugging
+                    if ($file) {
+                        $errorMessage .= ' - Error: '.$file->getError();
+                        $errorMessage .= ' - Name: '.$file->getClientOriginalName();
+                        $errorMessage .= ' - Size: '.$file->getSize();
+                    } else {
+                        $errorMessage .= ' - File is null';
+                    }
+
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => $errorMessage,
+                    ], 400);
+                }
+
+                $docType = $documentTypes[$index] ?? 'documento';
+
+                // Validar tamaño del archivo (máximo 10MB)
+                $maxSize = 10 * 1024 * 1024; // 10MB
+                if ($file->getSize() > $maxSize) {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'File "'.$file->getClientOriginalName().'" is too large. Maximum size is 10MB.',
+                    ], 400);
+                }
+
+                // Eliminar archivo previo del mismo tipo si existe
+                $existingMedia = $document->getMedia('documents')
+                    ->filter(fn ($media) => $media->getCustomProperty('document_type') === $docType)
+                    ->first();
+
+                if ($existingMedia) {
+                    $existingMedia->delete();
+                }
+
+                // Subir nuevo archivo con tipo identificado
+                $document->addMedia($file)
+                    ->withCustomProperties(['document_type' => $docType])
+                    ->toMediaCollection('documents');
+            }
+
+            // Refrescar el documento para obtener los medios recién subidos
+            $document->refresh();
+
+            // Actualizar JSON de documentos subidos
+            $document->syncUploadedDocumentsJson();
+
+            // Update status based on document completion
+            if ($document->hasAllRequiredDocuments()) {
+                // All documents uploaded - set to "incomplete" status
+                $document->status_id = DocumentStatus::where('key', 'incomplete')->first()?->id;
+                if (! $document->confirmed_at) {
+                    $document->confirmed_at = Carbon::now()->setTimezone('Europe/Madrid');
+                }
+            } else {
+                // Partial upload - set to "received" status
+                $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
+            }
+
+            // Set source_id to 'api', load_id to 'api', sync_id to 'automatic' and upload_id to 'automatic'
+            // $apiSource = DocumentSource::where('key', 'api')->first();
+            // $document->source_id = $apiSource?->id;
+
+            // $apiLoad = DocumentLoad::where('key', 'api')->first();
+            // $document->load_id = $apiLoad?->id;
+
+            // $automaticSync = DocumentSync::where('key', 'automatic')->first();
+            // $document->sync_id = $automaticSync?->id;
+
+            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
+            $document->upload_id = $automaticUpload?->id;
+
+            $document->save();
+
+            // Refrescar nuevamente para obtener los datos actualizados
+            $document->refresh();
+
+            // Obtener documentos subidos para respuesta
+            $uploadedDocs = $document->getUploadedDocumentsWithDetails();
+
+            // Disparar evento SOLO cuando todos los documentos estén completos
+            // Usa UPDATE atómico para prevenir múltiples disparos
+            $isComplete = $document->hasAllRequiredDocuments();
+
+            if ($isComplete) {
+                // Usar UPDATE atómico para asegurar que solo se marca una vez
+                $updated = \DB::table('documents')
+                    ->where('id', $document->id)
+                    ->whereNull('uploaded_confirmation_sent_at')
+                    ->update([
+                        'uploaded_confirmation_sent_at' => Carbon::now()->setTimezone('Europe/Madrid'),
+                        'updated_at' => Carbon::now()->setTimezone('Europe/Madrid'),
+                    ]);
+
+                // Si se actualizó, procesar upload: cambiar status a "received" y enviar confirmación
+                if ($updated === 1) {
+                    $document->refresh();
+                    app(DocumentEmailService::class)->processDocumentUpload($document);
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document uploaded successfully',
+                'data' => [
+                    'uploaded_documents' => $uploadedDocs,
+                    'missing_documents' => $document->getMissingDocuments(),
+                    'is_complete' => $document->hasAllRequiredDocuments(),
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Error uploading documents: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function documentDelete($data)
+    {
+        try {
+            $uid = $data['uid'] ?? null;
+            $docType = $data['doc_type'] ?? null;
+
+            if (! $uid || ! $docType) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Missing uid or doc_type parameter',
+                ], 400);
+            }
+
+            $document = Document::uid($uid)->first();
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Document not found',
+                ], 404);
+            }
+
+            // Encontrar y eliminar archivo del tipo especificado
+            $mediaToDelete = $document->getMedia('documents')
+                ->filter(fn ($media) => $media->getCustomProperty('document_type') === $docType)
+                ->first();
+
+            if (! $mediaToDelete) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Document type not found',
+                ], 404);
+            }
+
+            // Eliminar el archivo
+            $mediaToDelete->delete();
+
+            // Actualizar JSON de documentos subidos
+            $document->syncUploadedDocumentsJson();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document deleted successfully',
+                'data' => [
+                    'uploaded_documents' => $document->uploaded_documents,
+                    'missing_documents' => $document->getMissingDocuments(),
+                    'is_complete' => $document->hasAllRequiredDocuments(),
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Error deleting document: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function resendDocumentReminder(Request $request)
+    {
+        $request->validate([
+            'uid' => 'required|string',
+        ]);
+
+        $document = Document::uid($request->input('uid'))->first();
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'No document found with this UID.',
+            ], 404);
+        }
+
+        MailTemplateJob::dispatch($document, 'reminder');
+
+        $document->reminder_at = now();
+        $document->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Document reminder email sent successfully.',
+        ], 200);
+    }
+
+    public function confirmDocumentUpload(Request $request)
+    {
+        $request->validate([
+            'uid' => 'required|string',
+        ]);
+
+        $document = Document::uid($request->input('uid'))->first();
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'No document found with this UID.',
+            ], 404);
+        }
+
+        if (! $document->confirmed_at || $document->media->count() === 0) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Document has not been uploaded yet.',
+            ], 400);
+        }
+
+        $document->confirmed_at = now();
+        $document->proccess = 1;
+        $document->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Document upload confirmed successfully.',
+        ], 200);
+    }
+
+    /**
+     * Obtiene datos de la orden y cliente para llenar el documento
+     * Consulta los datos en Prestashop y los devuelve para desnormalización
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderData(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+        ]);
+
+        $orderId = $request->input('order_id');
+
+        // Obtener la orden de Prestashop
+        $order = PrestashopOrder::find($orderId);
+
+        if (! $order) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Order not found in Prestashop.',
+            ], 404);
+        }
+
+        // Obtener el cliente
+        $customer = $order->customer;
+
+        if (! $customer) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Customer associated with order not found.',
+            ], 404);
+        }
+
+        // Retornar todos los datos necesarios para desnormalización
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order data retrieved successfully.',
+            'data' => [
+                // Datos de la orden
+                'order_id' => $order->id_order,
+                'order_reference' => $order->reference,
+                'order_date' => $order->date_add,
+                'order_cart_id' => $order->id_cart,
+
+                // Datos del cliente
+                'customer_id' => $customer->id_customer,
+                'customer_firstname' => $order->deliveryAddress?->firstname ?? $customer->firstname,
+                'customer_lastname' => $order->deliveryAddress?->lastname ?? $customer->lastname,
+                'customer_email' => $customer->email,
+                'customer_dni' => $order->deliveryAddress?->dni ?? $order->deliveryAddress?->vat_number ?? null,
+                'customer_company' => $order->deliveryAddress?->company ?? null,
+                'customer_cellphone' => $order->deliveryAddress?->phone_mobile ?? null,
+            ],
+        ], 200);
+    }
+
+    /**
+     * Llena automáticamente los datos desnormalizados de un documento
+     * usando los datos de la orden y cliente de Prestashop
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function fillDocumentWithOrderData(Request $request)
+    {
+        $request->validate([
+            'uid' => 'required|string',
+            'order_id' => 'required|integer',
+        ]);
+
+        $uid = $request->input('uid');
+        $orderId = $request->input('order_id');
+
+        // Obtener el documento
+        $document = Document::uid($uid)->first();
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Document not found.',
+            ], 404);
+        }
+
+        // Obtener la orden
+        $order = PrestashopOrder::find($orderId);
+
+        if (! $order) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Order not found in Prestashop.',
+            ], 404);
+        }
+
+        // Obtener el cliente
+        $customer = $order->customer;
+
+        if (! $customer) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Customer not found.',
+            ], 404);
+        }
+
+        // Llenar los datos desnormalizados
+        $document->order_reference = $order->reference;
+        $document->order_id = $order->id_order;
+        $document->order_date = $order->date_add;
+
+        // Obtener dirección de envío
+        $deliveryAddress = $order->deliveryAddress;
+
+        $document->customer_id = $customer->id_customer;
+        // Nombre y apellido vienen de la dirección de envío
+        $document->customer_firstname = $deliveryAddress?->firstname ?? $customer->firstname;
+        $document->customer_lastname = $deliveryAddress?->lastname ?? $customer->lastname;
+        $document->customer_email = $customer->email;
+        // DNI/SIRET vienen de la dirección de envío
+        $document->customer_dni = $deliveryAddress?->dni ?? $deliveryAddress?->vat_number ?? null;
+        // Empresa viene de la dirección de envío
+        $document->customer_company = $deliveryAddress?->company ?? null;
+        // Teléfono celular viene de la dirección de envío
+        $document->customer_cellphone = $deliveryAddress?->phone_mobile ?? null;
+
+        $document->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Document filled with order data successfully.',
+            'data' => [
+                'uid' => $document->uid,
+                'order_reference' => $document->order_reference,
+                'customer_name' => "{$document->customer_firstname} {$document->customer_lastname}",
+                'customer_email' => $document->customer_email,
+            ],
+        ], 200);
+    }
+
+    /**
+     * Sincroniza todos los documentos existentes con los datos de sus órdenes
+     * Busca documentos sin datos desnormalizados y los llena desde Prestashop
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncAllDocumentsWithOrders()
+    {
+        try {
+            $synced = 0;
+            $failed = 0;
+            $errors = [];
+
+            // Obtener documentos sin datos desnormalizados
+            $documents = Document::get();
+
+            if ($documents->isEmpty()) {
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'No documents need synchronization.',
+                    'data' => [
+                        'synced' => 0,
+                        'failed' => 0,
+                        'total' => 0,
+                    ],
+                ], 200);
+            }
+
+            foreach ($documents as $document) {
+                try {
+                    // Obtener la orden
+                    $order = PrestashopOrder::find($document->order_id);
+
+                    if (! $order) {
+                        $failed++;
+                        $errors[] = [
+                            'uid' => $document->uid,
+                            'order_id' => $document->order_id,
+                            'reason' => 'Order not found in Prestashop',
+                        ];
+
+                        continue;
+                    }
+
+                    // Sincronizar datos de la orden y productos usando el helper
+                    if (! $this->syncDocumentWithOrder($document, $order)) {
+                        $failed++;
+                        $errors[] = [
+                            'uid' => $document->uid,
+                            'order_id' => $document->order_id,
+                            'reason' => 'Customer not found',
+                        ];
+
+                        continue;
+                    }
+
+                    $synced++;
+
+                } catch (\Exception $e) {
+                    $failed++;
+                    $errors[] = [
+                        'uid' => $document->uid,
+                        'order_id' => $document->order_id,
+                        'reason' => $e->getMessage(),
+                    ];
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Synchronization completed. {$synced} documents synced, {$failed} failed.",
+                'data' => [
+                    'synced' => $synced,
+                    'failed' => $failed,
+                    'total' => $documents->count(),
+                    'errors' => $failed > 0 ? $errors : [],
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Synchronization failed: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sincroniza documentos de una orden específica por query parameter
+     * Recibe order_id como parámetro query e importa todos los datos y productos
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncDocumentsByOrderQuery(Request $request)
+    {
+        $orderId = $request->query('id_order');
+
+        if (! $orderId) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Missing required query parameter: id_order',
+            ], 400);
+        }
+
+        try {
+            // Obtener documentos asociados a la orden
+            $documents = Document::where('order_id', $orderId)
+                ->get();
+
+            if ($documents->isEmpty()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'No documents found for this order ID.',
+                ], 404);
+            }
+
+            // Obtener la orden
+            $order = PrestashopOrder::find($orderId);
+
+            if (! $order) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Order not found in Prestashop.',
+                ], 404);
+            }
+
+            $synced = 0;
+            $failed = 0;
+            $errors = [];
+
+            // Sincronizar todos los documentos de esta orden
+            foreach ($documents as $document) {
+                try {
+                    if (! $this->syncDocumentWithOrder($document, $order)) {
+                        $failed++;
+                        $errors[] = [
+                            'uid' => $document->uid,
+                            'reason' => 'Customer not found',
+                        ];
+
+                        continue;
+                    }
+                    $synced++;
+                } catch (\Exception $e) {
+                    $failed++;
+                    $errors[] = [
+                        'uid' => $document->uid,
+                        'reason' => $e->getMessage(),
+                    ];
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Successfully synced {$synced} document(s) for order {$orderId}.",
+                'data' => [
+                    'order_id' => $orderId,
+                    'synced' => $synced,
+                    'failed' => $failed,
+                    'total' => $documents->count(),
+                    'order_reference' => $order->reference,
+                    'customer_name' => $order->customer ? "{$order->customer->firstname} {$order->customer->lastname}" : null,
+                    'errors' => $failed > 0 ? $errors : [],
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Synchronization failed: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sincroniza un documento específico con los datos de su orden
+     * Busca por order_id y llena todos los datos desnormalizados
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncDocumentByOrderId(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+        ]);
+
+        $orderId = $request->input('order_id');
+
+        try {
+            // Obtener documentos asociados a la orden
+            $documents = Document::where('order_id', $orderId)
+                ->get();
+
+            if ($documents->isEmpty()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'No documents found for this order ID.',
+                ], 404);
+            }
+
+            // Obtener la orden
+            $order = PrestashopOrder::find($orderId);
+
+            if (! $order) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Order not found in Prestashop.',
+                ], 404);
+            }
+
+            // Obtener el cliente
+            $customer = $order->customer;
+
+            if (! $customer) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Customer not found.',
+                ], 404);
+            }
+
+            $synced = 0;
+
+            // Sincronizar todos los documentos de esta orden
+            foreach ($documents as $document) {
+                $document->order_reference = $order->reference ?? $document->order_reference;
+                $document->order_date = $order->date_add ?? $document->order_date;
+
+                // Obtener dirección de envío
+                $deliveryAddress = $order->deliveryAddress;
+
+                $document->customer_id = $customer->id_customer;
+                // Nombre y apellido vienen de la dirección de envío
+                $document->customer_firstname = $deliveryAddress?->firstname ?? $customer->firstname;
+                $document->customer_lastname = $deliveryAddress?->lastname ?? $customer->lastname;
+                $document->customer_email = $customer->email;
+                // DNI/SIRET vienen de la dirección de envío
+                $document->customer_dni = $deliveryAddress?->dni ?? $deliveryAddress?->vat_number ?? null;
+                // Empresa viene de la dirección de envío
+                $document->customer_company = $deliveryAddress?->company ?? null;
+                // Teléfono celular viene de la dirección de envío
+                $document->customer_cellphone = $deliveryAddress?->phone_mobile ?? null;
+
+                $document->save();
+                $synced++;
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Successfully synced {$synced} document(s) for order {$orderId}.",
+                'data' => [
+                    'order_id' => $orderId,
+                    'synced' => $synced,
+                    'order_reference' => $order->reference,
+                    'customer_name' => "{$customer->firstname} {$customer->lastname}",
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Synchronization failed: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function orderPaid(Request $request)
+    {
+        $payload = $request->validate([
+            'order_id' => 'required|integer',
+            'document_type' => 'nullable|string|max:100',
+            'force_reminder' => 'sometimes|boolean',
+        ]);
+
+        $order = PrestashopOrder::find($payload['order_id']);
+
+        if (! $order) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Order not found in Prestashop database.',
+            ], 404);
+        }
+
+        $document = Document::firstOrNew(['order_id' => $order->id_order]);
+        $document->customer_id = $document->customer_id ?? $order->id_customer;
+        $document->cart_id = $document->cart_id ?? $order->id_cart;
+        $document->type = $payload['document_type'] ?? $document->type ?? 'general';
+        $document->reference = $order->reference ?? $document->reference;
+
+        if (! $document->exists) {
+            $document->save();
+        } else {
+            $document->save();
+        }
+
+        if ($document->confirmed_at) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document already uploaded. No further action needed.',
+                'data' => [
+                    'uid' => $document->uid,
+                    'order_id' => $document->order_id,
+                ],
+            ], 200);
+        }
+
+        $forceReminder = (bool) ($payload['force_reminder'] ?? false);
+
+        if (! $forceReminder && $document->reminder_at) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Reminder already sent previously.',
+                'data' => [
+                    'uid' => $document->uid,
+                    'order_id' => $document->order_id,
+                ],
+            ], 200);
+        }
+
+        MailTemplateJob::dispatch($document, 'reminder');
+
+        $document->reminder_at = now();
+        $document->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Document reminder queued successfully.',
+            'data' => [
+                'uid' => $document->uid,
+                'order_id' => $document->order_id,
+            ],
+        ], 200);
+    }
+
+    /**
+     * Sincroniza campos de documentos requeridos/subidos desde el tipo de documento
+     */
+    public function syncAllDocumentFields(Request $request)
+    {
+        try {
+            $type = $request->query('type');
+            $force = $request->query('force', false);
+
+            if ($type) {
+                $documents = Document::where('type', $type)->get();
+            } else {
+                $documents = Document::all();
+            }
+
+            if ($documents->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron documentos para sincronizar',
+                ], 404);
+            }
+
+            $synced = 0;
+            $skipped = 0;
+
+            foreach ($documents as $document) {
+                // Si ya está sincronizado y no es force, omitir
+                if (! $force && ! empty($document->required_documents) && ! empty($document->uploaded_documents)) {
+                    $skipped++;
+
+                    continue;
+                }
+
+                // 1. Establecer tipo por defecto si no existe
+                if (! $document->type) {
+                    $document->type = 'general';
+                }
+
+                // 2. Generar required_documents desde DocumentTypeService
+                $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+                $document->required_documents = $requiredDocs;
+
+                // 3. Generar uploaded_documents desde media actual
+                $uploadedDocs = [];
+                foreach ($document->getMedia('documents') as $media) {
+                    $docType = $media->getCustomProperty('document_type', 'documento');
+                    $uploadedDocs[$docType] = [
+                        'id' => $media->id,
+                        'file_name' => $media->file_name,
+                        'size' => $media->size,
+                        'url' => $media->getUrl(),
+                        'created_at' => $media->created_at->format('Y-m-d H:i:s'),
+                    ];
+                }
+                $document->uploaded_documents = $uploadedDocs;
+
+                // 4. Guardar el documento
+                $document->save();
+
+                $synced++;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Sincronización completada: {$synced} sincronizados, {$skipped} omitidos",
+                'data' => [
+                    'total_documents' => $documents->count(),
+                    'synced' => $synced,
+                    'skipped' => $skipped,
+                    'type_filter' => $type ?? 'todos',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sincronizando documentos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtiene el estado completo del documento en formato JSON
+     */
+    public function getDocumentState($uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Obtener documentos requeridos y faltantes desde el modelo
+            $requiredDocuments = $document->getRequiredDocuments();
+            $missingDocuments = $document->getMissingDocuments();
+            $uploadedDocuments = $document->uploaded_documents ?? [];
+            $uploadedDocumentsDetails = $document->getUploadedDocumentsWithDetails();
+
+            return response()->json([
+                'success' => true,
+                'document' => [
+                    'uid' => $document->uid,
+                    'type' => $document->type,
+                    'confirmed_at' => $document->confirmed_at?->format('d/m/Y H:i'),
+                ],
+                'required_documents' => $requiredDocuments,
+                'uploaded_documents' => $uploadedDocuments,
+                'uploaded_documents_details' => $uploadedDocumentsDetails,
+                'missing_documents' => $missingDocuments,
+                'all_uploaded' => empty($missingDocuments),
+                'stats' => [
+                    'total_required' => count($requiredDocuments),
+                    'total_uploaded' => count($uploadedDocuments),
+                    'total_missing' => count($missingDocuments),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener estado del documento: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Elimina un archivo específico de un documento
+     */
+    public function deleteSingleDocument(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $mediaId = $request->input('media_id');
+
+            if (! $mediaId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID de media no proporcionado',
+                ], 400);
+            }
+
+            $media = Media::find($mediaId);
+
+            if (! $media || $media->model_id !== $document->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Archivo no encontrado o no pertenece a este documento',
+                ], 404);
+            }
+
+            $media->delete();
+
+            // Sincronizar JSON de documentos subidos
+            $document->syncUploadedDocumentsJson();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento eliminado correctamente',
+                'uploaded_documents' => $document->uploaded_documents,
+                'missing_documents' => $document->getMissingDocuments(),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar documento: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sube un archivo al documento
+     */
+    public function storeFiles(Request $request, $uid)
+    {
+        // Validación de archivo
+        $request->validate([
+            'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx',
+        ]);
+
+        $document = Document::findByUid($uid);
+
+        if (! $document) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Documento no encontrado.',
+            ], 404);
+        }
+
+        $type = 'documents';
+
+        $document->clearMediaCollection($type);
+
+        // Sanitizar nombre de archivo
+        $file = $request->file('file');
+        $sanitizedName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+
+        $media = $document->addMediaFromRequest('file')
+            ->usingFileName($sanitizedName)
+            ->toMediaCollection($type);
+
+        // Asegurar que el archivo es accesible al servidor web
+        $mediaPath = $media->getPath();
+        if (file_exists($mediaPath)) {
+            @chmod($mediaPath, 0644);
+        }
+        $mediaDir = dirname($mediaPath);
+        if (is_dir($mediaDir)) {
+            @chmod($mediaDir, 0755);
+        }
+
+        // Procesar upload: cambiar status a "received" y enviar confirmación
+        app(DocumentEmailService::class)->processDocumentUpload($document);
+
+        return response()->json([
+            'status' => 'success',
+            'statement_id' => $document->id,
+            'media' => [
+                'id' => $media->id,
+                'uuid' => $media->uuid,
+                'file' => $media->file_name,
+                'size' => $media->size,
+                'path' => $media->getUrl(),
+            ],
+        ]);
+    }
+
+    /**
+     * Obtiene los archivos de un documento
+     */
+    public function getFiles($id)
+    {
+        $media = Media::find($id);
+
+        if (! $media) {
+            return response()->json([], 404);
+        }
+
+        // Verificar que el media pertenece a un documento
+        if ($media->model_type !== Document::class) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Acceso no autorizado.',
+            ], 403);
+        }
+
+        return response()->json([[
+            'id' => $media->id,
+            'uuid' => $media->uuid,
+            'file' => $media->file_name,
+            'size' => $media->size,
+            'path' => $media->getUrl(),
+        ]]);
+    }
+
+    /**
+     * Elimina un archivo por su ID
+     */
+    public function deleteFiles($id)
+    {
+        $media = Media::find($id);
+
+        if (! $media) {
+            return response()->json(['status' => 'not_found'], 404);
+        }
+
+        // Verificar que el media pertenece a un documento
+        if ($media->model_type !== Document::class) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Acceso no autorizado.',
+            ], 403);
+        }
+
+        // Verificar que el documento existe
+        $document = Document::find($media->model_id);
+        if (! $document) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Documento asociado no encontrado.',
+            ], 404);
+        }
+
+        $media->delete();
+
+        return response()->json(['status' => 'deleted']);
+    }
+
+    /**
+     * Handle Prestashop webhook for paid orders
+     * Creates or updates documents when an order is marked as paid in Prestashop
+     */
+    public function prestashopOrderPaid(Request $request)
+    {
+        try {
+            $orderId = $request->input('order_id') ?? $request->input('id_order');
+
+            if (! $orderId) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order ID is required',
+                ], 400);
+            }
+
+            // Fetch order from Prestashop
+            $order = PrestashopOrder::find($orderId);
+            if (! $order) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order not found in Prestashop',
+                ], 404);
+            }
+
+            // Create document for this order if it doesn't exist
+            $document = Document::where('order_id', $orderId)->first();
+            if (! $document) {
+                $document = Document::create([
+                    'order_id' => $orderId,
+                    'customer_id' => $order->id_customer,
+                    'document_status_id' => DocumentStatus::where('slug', 'pending')->first()?->id,
+                    'source_id' => DocumentSource::where('slug', 'prestashop')->first()?->id,
+                ]);
+            }
+
+            Log::info('Prestashop order paid webhook processed', [
+                'order_id' => $orderId,
+                'document_id' => $document->id,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document created/updated for paid order',
+                'document_id' => $document->id,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error processing Prestashop order paid webhook', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process webhook',
+            ], 500);
+        }
+    }
+}

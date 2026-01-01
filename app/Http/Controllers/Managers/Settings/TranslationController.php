@@ -75,7 +75,7 @@ class TranslationController extends Controller
 
         $searchQuery = $request->input('search', '');
 
-        return view('managers.views.settings.translations.index', [
+        return view('theme.views.settings.translations.index', [
             'translationsByFile' => $translationsByFile,
             'locales' => $this->availableLocales,
             'availableFiles' => $availableFiles,
@@ -104,7 +104,7 @@ class TranslationController extends Controller
         // Detectar todas las claves disponibles desde el locale base
         $baseContent = File::getRequire(resource_path("lang/es/{$file}.php"));
 
-        return view('managers.views.settings.translations.edit', [
+        return view('theme.views.settings.translations.edit', [
             'locale' => $locale,
             'locale_label' => $this->getLocaleLabel($locale),
             'file' => $file,

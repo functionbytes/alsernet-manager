@@ -77,8 +77,8 @@ Model expects:          Migration has:
 ### DELETE (3 files, 2 minutes)
 
 ```bash
-rm Modules/Notification/app/Models/PushNotificationToken.php
-rm Modules/Notification/app/Models/NotificationSetting.php
+rm modules/Notification/app/Models/PushNotificationToken.php
+rm modules/Notification/app/Models/NotificationSetting.php
 rm database/migrations/2025_12_29_054242_create_notification_settings_table.php
 ```
 
@@ -191,7 +191,7 @@ $user->notificationPreferences()    ✅ Works
 ### Before Consolidation (Verify current state)
 ```bash
 # Should see 4 models
-find Modules/Notification/app/Models -name "*.php" | wc -l
+find modules/Notification/app/Models -name "*.php" | wc -l
 
 # Should see schema mismatches (using tinker)
 php artisan tinker
@@ -201,7 +201,7 @@ php artisan tinker
 ### After Consolidation (Verify fixes)
 ```bash
 # Should see 2 models
-find Modules/Notification/app/Models -name "*.php" | wc -l
+find modules/Notification/app/Models -name "*.php" | wc -l
 
 # Should work correctly
 php artisan migrate

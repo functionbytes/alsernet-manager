@@ -26,7 +26,7 @@ class HoursSettingsController extends Controller
         $bussiness7 = Hour::where('no_id', '7')->first();
         $data['bussiness7'] = $bussiness7;
 
-        return view('managers.views.settings.hours.setting')->with($data);
+        return view('theme.views.settings.hours.setting')->with($data);
 
     }
 

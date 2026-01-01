@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        return view('managers.views.dashboard.index')->with([
+        return view('theme.views.dashboard.index')->with([
         ]);
 
     }

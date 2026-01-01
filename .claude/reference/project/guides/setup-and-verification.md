@@ -118,11 +118,11 @@ Waiting for changes...
 1. **In a new terminal window**, modify a route file:
 
 ```bash
-# Example: Add a new route to routes/managers.php
+# Example: Add a new route to routes/theme.php
 echo "
 // Test route
 Route::get('test-route', function() { return 'test'; })->name('test.route');
-" >> routes/managers.php
+" >> routes/theme.php
 ```
 
 2. **In the watch terminal**, you should see:
@@ -141,7 +141,7 @@ Route::get('test-route', function() { return 'test'; })->name('test.route');
 3. **Clean up** the test route:
 
 ```bash
-# Remove the test route from routes/managers.php
+# Remove the test route from routes/theme.php
 ```
 
 4. **Verify detection** in watch mode - you should see the deletion:

@@ -18,7 +18,7 @@ Se corrigieron múltiples inconsistencias en el módulo de **fuentes de proveedo
 
 **Solución:**
 ```php
-// routes/managers.php
+// routes/theme.php
 Route::prefix('{supplierUid}/sources')->name('manager.settings.suppliers.sources.')->group(function () {
     Route::get('/', [SupplierSourcesController::class, 'index'])->name('index');
     Route::get('/data', [SupplierSourcesController::class, 'getData'])->name('data'); // ✅ AGREGADA

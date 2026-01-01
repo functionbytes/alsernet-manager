@@ -19,7 +19,7 @@ class SearchSettingsController extends Controller
         // Get search settings from database
         $settings = Setting::getSearchSettings();
 
-        return view('managers.views.settings.search.index', compact(
+        return view('theme.views.settings.search.index', compact(
             'pageTitle',
             'breadcrumb',
             'settings'

@@ -17,7 +17,7 @@ class DatabaseCleanupController extends Controller
         $cleanupEnabled = env('CMS_ENABLED_CLEANUP_DATABASE', false);
 
         if (! $cleanupEnabled) {
-            return view('managers.views.settings.database.cleanup.disabled', [
+            return view('theme.views.settings.database.cleanup.disabled', [
                 'pageTitle' => 'Limpieza de Base de Datos',
                 'breadcrumb' => 'Configuración / Limpieza de Base de Datos',
             ]);
@@ -28,7 +28,7 @@ class DatabaseCleanupController extends Controller
             $pageTitle = 'Limpieza de Base de Datos';
             $breadcrumb = 'Configuración / Limpieza de Base de Datos';
 
-            return view('managers.views.settings.database.cleanup.index', compact(
+            return view('theme.views.settings.database.cleanup.index', compact(
                 'tables',
                 'pageTitle',
                 'breadcrumb',

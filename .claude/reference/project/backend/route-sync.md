@@ -253,7 +253,7 @@ When you add new routes in any profile file:
 
 **Before:**
 ```php
-// routes/managers.php
+// routes/theme.php
 Route::group(['prefix' => 'manager'], function () {
     // existing routes...
 });
@@ -261,7 +261,7 @@ Route::group(['prefix' => 'manager'], function () {
 
 **After:**
 ```php
-// routes/managers.php
+// routes/theme.php
 Route::group(['prefix' => 'manager'], function () {
     // existing routes...
 

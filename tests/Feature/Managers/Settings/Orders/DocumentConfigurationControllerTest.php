@@ -18,7 +18,7 @@ class DocumentConfigurationControllerTest extends TestCase
         $response = $this->get(route('manager.settings.documents.configurations.global'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('managers.views.settings.documents.configurations.index');
+        $response->assertViewIs('theme.views.settings.documents.configurations.index');
         $response->assertViewHas('globalSettings');
     }
 

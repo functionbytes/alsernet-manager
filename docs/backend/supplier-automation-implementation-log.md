@@ -695,7 +695,7 @@ resources/views/managers/views/settings/suppliers/
 ### Rutas Registradas
 
 ```php
-// routes/managers.php
+// routes/theme.php
 
 Route::prefix('suppliers')->group(function () {
     // CRUD suppliers

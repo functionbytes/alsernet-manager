@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.components.card', ['title' => 'Dashboard'])
+    @include('theme.components.card', ['title' => 'Dashboard'])
 
     <div class="widget-content searchable-container list">
 
@@ -281,7 +281,7 @@
 </div>
 
 @push('scripts')
-<script src="{{ url('managers/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+<script src="{{ url('theme/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
 <script>
     $(function () {
         var chart = {

@@ -35,7 +35,7 @@ Run these commands to create the remaining files based on the patterns establish
 ### 1. SLA Policies Index
 
 ```bash
-cat > /Users/functionbytes/Function/Coding/alsernet/resources/views/managers/views/settings/helpdesk/ticket-sla-policies/index.blade.php << 'EOF'
+cat > /Users/functionbytes/Function/Coding/alsernet/resources/views/theme/views/settings/helpdesk/ticket-sla-policies/index.blade.php << 'EOF'
 @extends('layouts.managers')
 
 @section('title', 'Políticas SLA')

@@ -210,11 +210,11 @@ php artisan route:list | grep subscribers
 
 # Verificar modelos
 php artisan tinker
->>> Modules\Subscriber\Models\Subscriber::count()
+>>> modules\Subscriber\Models\Subscriber::count()
 # Resultado: 1234 (ejemplo - devuelve número de suscriptores)
 
 # Verificar jobs
->>> Modules\Subscriber\Jobs\ImportSubscribersJob::dispatch($import);
+>>> modules\Subscriber\Jobs\ImportSubscribersJob::dispatch($import);
 # Resultado: Job despachado exitosamente
 
 # Verificar autoloader

@@ -70,7 +70,7 @@ The Route Synchronization System is a comprehensive solution for automatically m
 **Design Pattern:** Grouped by user role/profile.
 
 ```php
-// Example: routes/managers.php
+// Example: routes/theme.php
 Route::middleware(['auth', 'check.roles.permissions:manager'])
     ->group(function () {
         Route::resource('users', UserController::class);
@@ -619,7 +619,7 @@ user=www-data
 
 ### Step 1: File Changes
 ```php
-// routes/managers.php
+// routes/theme.php
 Route::resource('reports', ReportController::class); // NEW
 ```
 

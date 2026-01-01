@@ -3,7 +3,7 @@
 /**
  * Shared User Management Routes
  *
- * These routes are included in each profile route file (managers, callcenters, shops, etc.)
+ * These routes are included in each profile route file (theme, callcenters, shops, etc.)
  * to provide user management functionality with appropriate middleware and permissions.
  *
  * This file provides 3 approaches to access control:
@@ -59,7 +59,7 @@ use Illuminate\Support\Facades\Route;
  * - Code duplication across profiles
  * - Harder to maintain consistency
  *
- * Implementation: Create separate route groups in managers.php, callcenters.php, etc.
+ * Implementation: Create separate route groups in theme.php, callcenters.php, etc.
  * Example:
  *
  * Route::group(['prefix' => 'users', 'name' => 'users.'], function () {
@@ -113,7 +113,7 @@ use Illuminate\Support\Facades\Route;
  *
  * How to include this file in your profile route files:
  *
- * // In routes/managers.php:
+ * // In routes/theme.php:
  * Route::group(['prefix' => 'manager', 'middleware' => 'auth'], function () {
  *     require __DIR__ . '/shared/user-routes.php';
  *     // ... other routes

@@ -306,7 +306,7 @@ docs/warehouse/
 ### Rutas Relacionadas
 
 ```php
-Route::get('/managers/warehouse/{uid}/map', 'WarehouseMapController@map');
+Route::get('/theme/warehouse/{uid}/map', 'WarehouseMapController@map');
 // Agregar:
 Route::get('/api/warehouse/{uid}/map/config', 'WarehouseMapController@getWarehouseConfig');
 Route::get('/api/warehouse/{uid}/map/layout', 'WarehouseMapController@getLayoutSpec');

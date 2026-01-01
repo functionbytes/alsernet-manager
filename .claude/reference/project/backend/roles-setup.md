@@ -262,7 +262,7 @@ $roles = $user->getRoleNames(); // Collection
 El middleware `CheckRolesAndPermissions` automáticamente valida:
 
 ```php
-// En routes/managers.php
+// En routes/theme.php
 Route::middleware(['auth', 'check.roles.permissions:manager'])
     ->group(function () {
         // Solo usuarios con roles: super-admin, admin, o manager

@@ -10,7 +10,7 @@ class PixelSettingsController extends Controller
     public function index()
     {
 
-        return view('managers.views.settings.pixel.setting')->with([
+        return view('theme.views.settings.pixel.setting')->with([
         ]);
 
     }

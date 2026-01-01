@@ -53,11 +53,11 @@ php artisan routes:sync
 php artisan routes:watch --interval=5
 
 # Terminal 2: Make a change
-echo "Route::get('test', fn() => 'test')->name('test.route');" >> routes/managers.php
+echo "Route::get('test', fn() => 'test')->name('test.route');" >> routes/theme.php
 
 # Terminal 1: Should detect change
 📝 Changes detected at [timestamp]
-✓ Modified: routes/managers.php
+✓ Modified: routes/theme.php
 🔄 Syncing changes...
 ✅ Sync completed!
 ```
@@ -68,11 +68,11 @@ echo "Route::get('test', fn() => 'test')->name('test.route');" >> routes/manager
 
 ```bash
 # Remove test route
-# Edit routes/managers.php and delete the test route
+# Edit routes/theme.php and delete the test route
 
 # Watch should detect deletion
 📝 Changes detected at [timestamp]
-✓ Modified: routes/managers.php
+✓ Modified: routes/theme.php
 🔄 Syncing changes...
 ✅ Sync completed!
 ```

@@ -26,7 +26,7 @@ class LocalizationSettingsController extends Controller
         // Get other localization settings
         $settings = Setting::getLocalizationSettings();
 
-        return view('managers.views.settings.localization.index', compact(
+        return view('theme.views.settings.localization.index', compact(
             'pageTitle',
             'breadcrumb',
             'languages',

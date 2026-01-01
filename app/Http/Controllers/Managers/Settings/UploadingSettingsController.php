@@ -27,7 +27,7 @@ class UploadingSettingsController extends Controller
             'memory_limit' => ini_get('memory_limit'),
         ];
 
-        return view('managers.views.settings.uploading.index', compact(
+        return view('theme.views.settings.uploading.index', compact(
             'pageTitle',
             'breadcrumb',
             'settings',

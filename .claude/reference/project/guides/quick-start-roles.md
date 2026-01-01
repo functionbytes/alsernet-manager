@@ -10,7 +10,7 @@ php artisan tinker
 > Role::all()->pluck('name')
 
 # Asignar rol
-php artisan roles:assign email@usuario.com managers
+php artisan roles:assign email@usuario.com theme
 
 # Cambiar rol
 php artisan roles:assign email@usuario.com callcenters
@@ -116,7 +116,7 @@ php artisan tinker
 ### Verificar permisos de rol
 ```bash
 php artisan tinker
-> $role = Role::where('name', 'managers')->first()
+> $role = Role::where('name', 'theme')->first()
 > $role->permissions->count()  # 728
 ```
 
@@ -147,7 +147,7 @@ php artisan tinker
 **Soluciones:**
 ```bash
 # 1. Asignar rol correcto
-php artisan roles:assign usuario@email.com managers
+php artisan roles:assign usuario@email.com theme
 
 # 2. Verificar en BD
 php artisan tinker
@@ -170,7 +170,7 @@ php artisan cache:clear
 **Soluciones:**
 ```bash
 # 1. Asignar rol
-php artisan roles:assign usuario@email.com managers
+php artisan roles:assign usuario@email.com theme
 
 # 2. Verificar profile_routes
 php artisan tinker
@@ -217,9 +217,9 @@ ID | Email                      | Rol              | Acceso a
 ### Asignar mismo rol a múltiples usuarios
 
 ```bash
-# Script que asigna managers a varios usuarios
+# Script que asigna theme a varios usuarios
 for email in user1@email.com user2@email.com user3@email.com; do
-    php artisan roles:assign $email managers
+    php artisan roles:assign $email theme
 done
 ```
 

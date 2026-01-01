@@ -240,7 +240,7 @@ Para encontrar iconos de Tabler en el código:
 grep -r "ti ti-" resources/views/
 
 # Buscar en un archivo específico
-grep "ti ti-" resources/views/managers/views/settings/system/index.blade.php
+grep "ti ti-" resources/views/theme/views/settings/system/index.blade.php
 ```
 
 ## Última actualización

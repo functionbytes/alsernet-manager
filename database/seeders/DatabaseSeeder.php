@@ -7,57 +7,54 @@ use Database\Seeders\Core\CountrySeeder;
 use Database\Seeders\Core\LangSeeder;
 use Database\Seeders\Core\MailVariableSeeder;
 use Database\Seeders\Core\MediaFolderSeeder;
+use Illuminate\Database\Seeder;
+use Modules\Document\Database\Seeders\CreateDocumentPermissionsSeeder;
+use Modules\Document\Database\Seeders\DocumentConfigurationSeeder;
+use Modules\Document\Database\Seeders\DocumentGroupSeeder;
+use Modules\Document\Database\Seeders\DocumentLoadSeeder;
+use Modules\Document\Database\Seeders\DocumentSourceSeeder;
+use Modules\Document\Database\Seeders\DocumentStatusSeeder;
+use Modules\Document\Database\Seeders\DocumentStatusTransitionSeeder;
+use Modules\Document\Database\Seeders\DocumentSyncSeeder;
+use Modules\Document\Database\Seeders\DocumentUploadTypeSeeder;
+use Modules\Document\Database\Seeders\DocumentValidatorGroupConfigurationSeeder;
+use Modules\Document\Database\Seeders\DocumentValidatorGroupSeeder;
+use Modules\Document\Database\Seeders\StageEmailActionSeeder;
+use Modules\Helpdesk\Database\Seeders\HelpCenterSeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskCannedReplySeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskConversationStatusSeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskGroupSeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskTicketCategorySeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskTicketSlaPolicySeeder;
+use Modules\Helpdesk\Database\Seeders\HelpdeskTicketStatusSeeder;
+use Modules\Warehouse\Database\Seeders\Coruna1LocationsSeeder;
+use Modules\Warehouse\Database\Seeders\WarehouseExampleSeeder;
+use Modules\Warehouse\Database\Seeders\WarehouseLocationConditionSeeder;
+use Modules\Warehouse\Database\Seeders\WarehouseLocationStyleSeeder;
+use Modules\Warehouse\Database\Seeders\WarehouseSeedersV2;
+use Modules\Webhook\Database\Seeders\WebhookEventCatalogSeeder;
+use seeders\ReturnPolicySeeder;
+use seeders\RolesAndUsersSeeder;
+use seeders\SupplierAutomationSettingSeeder;
+use seeders\SupplierPromptSeeder;
+use seeders\SupplierSeeder;
+use seeders\SupplierSourceOptionSeeder;
+use seeders\SupplierSourceSeeder;
+use seeders\SupplierSourceTemplateSeeder;
 
 // Warehouse Seeders
-use Database\Seeders\Warehouse\WarehouseLocationStyleSeeder;
-use Database\Seeders\Warehouse\WarehouseLocationConditionSeeder;
-use Database\Seeders\Warehouse\WarehouseExampleSeeder;
-use Database\Seeders\Warehouse\WarehouseSeedersV2;
-use Database\Seeders\Locations\Coruna1LocationsSeeder;
 
 // Document Seeders
-use Database\Seeders\Documents\CreateDocumentPermissionsSeeder;
-use Database\Seeders\Documents\DocumentConfigurationSeeder;
-use Database\Seeders\Documents\DocumentUploadTypeSeeder;
-use Database\Seeders\Documents\DocumentStatusSeeder;
-use Database\Seeders\Documents\DocumentSourceSeeder;
-use Database\Seeders\Documents\DocumentLoadSeeder;
-use Database\Seeders\Documents\DocumentSyncSeeder;
-use Database\Seeders\Documents\DocumentGroupSeeder;
-use Database\Seeders\Documents\DocumentStatusTransitionSeeder;
-use Database\Seeders\Documents\DocumentValidatorGroupSeeder;
-use Database\Seeders\Documents\DocumentValidatorGroupConfigurationSeeder;
-use Database\Seeders\Documents\StageEmailActionSeeder;
 
 // Supplier Seeders
-use Database\Seeders\Suppliers\SupplierSeeder;
-use Database\Seeders\Suppliers\SupplierSourceSeeder;
-use Database\Seeders\Suppliers\SupplierSourceOptionSeeder;
-use Database\Seeders\Suppliers\SupplierSourceTemplateSeeder;
-use Database\Seeders\Suppliers\SupplierPromptSeeder;
-use Database\Seeders\Suppliers\SupplierAutomationSettingSeeder;
 
 // Helpdesk Seeders
-use Database\Seeders\Helpdesk\HelpdeskTicketStatusSeeder;
-use Database\Seeders\Helpdesk\HelpdeskConversationStatusSeeder;
-use Database\Seeders\Helpdesk\HelpdeskTicketCategorySeeder;
-use Database\Seeders\Helpdesk\HelpdeskGroupSeeder;
-use Database\Seeders\Helpdesk\HelpdeskTicketSlaPolicySeeder;
-use Database\Seeders\Helpdesk\HelpdeskCannedReplySeeder;
-use Database\Seeders\Helpdesk\HelpCenterSeeder;
 
 // Return Seeders
-use Database\Seeders\Returns\ReturnPolicySeeder;
 
 // Permissions & Optional Seeders
-use Database\Seeders\Permissions\CompleteRolesAndPermissionsSeeder;
-use Database\Seeders\Permissions\RolesAndUsersSeeder;
-use Database\Seeders\Campaigns\CampaignSeeder;
 
 // Webhooks
-use Modules\Webhook\Database\Seeders\WebhookEventCatalogSeeder;
-
-use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {

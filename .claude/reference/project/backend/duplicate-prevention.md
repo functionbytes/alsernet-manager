@@ -209,7 +209,7 @@ php artisan routes:sync
 # ✅ updateOrCreate maneja concurrencia
 
 # Cambiar path y ejecutar sync
-# Edita routes/managers.php
+# Edita routes/theme.php
 php artisan routes:sync
 # ✅ Actualiza automáticamente
 ```

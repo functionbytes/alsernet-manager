@@ -361,7 +361,7 @@ public function products(): HasMany
 **Solución Propuesta**: Agregar entrada en `composer.json`:
 
 ```json
-"Modules\\Return\\": "Modules/Return/app/"
+"modules\\Return\\": "modules/Return/app/"
 ```
 
 Luego ejecutar:
@@ -426,7 +426,7 @@ public function __construct(?CategorySyncService $syncService = null)
 2. **Autoloading Manual**: Verificadas todas las clases
    ```bash
    php artisan tinker
-   >>> class_exists('Modules\Returns\Models\ReturnRequest')
+   >>> class_exists('modules\Returns\Models\ReturnRequest')
    => true
    ```
 
@@ -504,7 +504,7 @@ $this->app->singleton(\App\Library\HookManager::class, fn () => new \App\Library
 
 1. **`composer.json`** - Agregar PSR-4 mapping:
    ```json
-   "Modules\\Return\\": "Modules/Return/app/"
+   "modules\\Return\\": "modules/Return/app/"
    ```
 
 2. **`bootstrap/providers.php`** - Registrar provider:

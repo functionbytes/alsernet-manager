@@ -151,7 +151,7 @@ public function index(Request $request): View
         ->orderBy('name', 'asc')
         ->paginate(15);
 
-    return view('managers.views.settings.suppliers.index',
+    return view('theme.views.settings.suppliers.index',
         compact('suppliers', 'searchKey', 'is_active', 'pageTitle', 'breadcrumb'));
 }
 ```

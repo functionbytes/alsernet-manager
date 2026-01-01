@@ -20,7 +20,7 @@ class StorageController extends Controller
         $storageData = $this->getStorageData();
         $statistics = $this->getStorageStatistics($storageData);
 
-        return view('managers.views.settings.storage.index', [
+        return view('theme.views.settings.storage.index', [
             'storageData' => $storageData,
             'statistics' => $statistics,
         ]);
@@ -252,7 +252,7 @@ class StorageController extends Controller
     {
         $storageData = $this->getStorageData();
 
-        return view('managers.views.settings.storage.create', [
+        return view('theme.views.settings.storage.create', [
             'driverOptions' => $storageData['driver_options'],
         ]);
     }
@@ -367,7 +367,7 @@ class StorageController extends Controller
         $disk = $storageData['custom_disks'][$index];
         $isFromConfig = $disk['from_config'] ?? false;
 
-        return view('managers.views.settings.storage.edit', [
+        return view('theme.views.settings.storage.edit', [
             'disk' => $disk,
             'diskIndex' => $index,
             'isFromConfig' => $isFromConfig,

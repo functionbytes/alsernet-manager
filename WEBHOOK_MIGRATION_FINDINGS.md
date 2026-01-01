@@ -50,7 +50,7 @@ class CampaignWebhook extends Model {
 
 **Modules/Campaign CampaignsController:**
 ```php
-// File: /Modules/Campaign/app/Http/Controllers/Managers/CampaignsController.php
+// File: /modules/Campaign/app/Http/Controllers/Managers/CampaignsController.php
 // Line 26
 use Modules\Campaign\Entities\CampaignWebhook;
 
@@ -177,8 +177,8 @@ use Modules\Webhook\Models\Campaign\CampaignWebhook;  // ✗ Never imported
 
 **Content:**
 ```php
-// @deprecated Webhook routes now handled by Modules\Webhook
-// See: Modules/Webhook/routes/api.php
+// @deprecated Webhook routes now handled by modules\Webhook
+// See: modules/Webhook/routes/api.php
 // Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
 ```
 
@@ -264,8 +264,8 @@ use Modules\Webhook\Models\Campaign\CampaignWebhook;  // ✗ Never imported
 ```bash
 # Remove old/unused copies
 rm /app/Models/Campaign/CampaignWebhook.php
-rm /Modules/Webhook/app/Models/Campaign/CampaignWebhook.php
-rm /Modules/Supplier/app/Jobs/ProcessWebhookPayloadJob.php
+rm /modules/Webhook/app/Models/Campaign/CampaignWebhook.php
+rm /modules/Supplier/app/Jobs/ProcessWebhookPayloadJob.php
 ```
 
 ### Priority 2: VERIFY SUPPLIER MODULE

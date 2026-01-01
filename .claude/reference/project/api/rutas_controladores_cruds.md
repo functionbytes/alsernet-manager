@@ -690,7 +690,7 @@ class ResourceController extends Controller
             )
             ->paginate(paginationNumber());
 
-        return view('managers.views.resource.index', [
+        return view('theme.views.resource.index', [
             'resources' => $resources
         ]);
     }
@@ -701,7 +701,7 @@ class ResourceController extends Controller
      */
     public function create()
     {
-        return view('managers.views.resource.create');
+        return view('theme.views.resource.create');
     }
 
     /**
@@ -758,7 +758,7 @@ class ResourceController extends Controller
     {
         $resource = Resource::where('uid', $uid)->findOrFail();
 
-        return view('managers.views.resource.edit', [
+        return view('theme.views.resource.edit', [
             'resource' => $resource
         ]);
     }
@@ -1509,14 +1509,14 @@ class CarrierController extends Controller
             )
             ->paginate(paginationNumber());
 
-        return view('managers.views.carriers.index', [
+        return view('theme.views.carriers.index', [
             'carriers' => $carriers
         ]);
     }
 
     public function create()
     {
-        return view('managers.views.carriers.create');
+        return view('theme.views.carriers.create');
     }
 
     public function store(Request $request)
@@ -1556,7 +1556,7 @@ class CarrierController extends Controller
     public function edit($uid)
     {
         $carrier = Carrier::where('uid', $uid)->firstOrFail();
-        return view('managers.views.carriers.edit', ['carrier' => $carrier]);
+        return view('theme.views.carriers.edit', ['carrier' => $carrier]);
     }
 
     public function update(Request $request)
@@ -1590,7 +1590,7 @@ class CarrierController extends Controller
 #### Paso 4: Agregar Rutas
 
 ```php
-// routes/managers.php
+// routes/theme.php
 
 Route::group(['prefix' => 'carriers'], function () {
     Route::get('/', [CarrierController::class, 'index'])

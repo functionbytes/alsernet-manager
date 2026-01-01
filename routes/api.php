@@ -13,8 +13,8 @@ Route::prefix('health')->group(function () {
     Route::get('detailed', [HealthCheckController::class, 'detailed']);   // Detallado (solo debug)
 });
 
-// Email Endpoint routes are now handled by Modules\Mail
-// See: Modules/Mail/routes/api.php
+// Email Endpoint routes are now handled by modules\Mail
+// See: modules/Mail/routes/api.php
 /*
 Route::prefix('email-endpoints')->group(function () {
     Route::post('{slug}/send', [EmailEndpointController::class, 'send']);
@@ -57,6 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    // Notifications API Routes - Handled by Modules\Notification
-    // See: Modules/Notification/routes/api.php
+    // Notifications API Routes - Handled by modules\Notification
+    // See: modules/Notification/routes/api.php
 });

@@ -14,7 +14,7 @@ class MantenanceSettingsController extends Controller
 
         $secret = Str::random(20);
 
-        return view('managers.views.settings.maintenance.index')->with([
+        return view('theme.views.settings.maintenance.index')->with([
             'secret' => $secret,
         ]);
 

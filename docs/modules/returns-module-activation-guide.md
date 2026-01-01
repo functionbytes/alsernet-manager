@@ -50,10 +50,10 @@ Abrir `/composer.json` y ubicar la sección `autoload`:
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\Documents\\": "Modules/Document/app/",
-            "Modules\\Mail\\": "Modules/Mail/app/",
+            "Modules\\Documents\\": "modules/Document/app/",
+            "Modules\\Mail\\": "modules/Mail/app/",
             // AGREGAR ESTA LÍNEA:
-            "Modules\\Returns\\": "Modules/Return/app/"
+            "Modules\\Returns\\": "modules/Return/app/"
         }
     }
 }
@@ -61,19 +61,19 @@ Abrir `/composer.json` y ubicar la sección `autoload`:
 
 **Línea a agregar**:
 ```json
-"Modules\\Return\\": "Modules/Return/app/"
+"modules\\Return\\": "modules/Return/app/"
 ```
 
 ### 1.2 Ubicación Exacta
 
 Después de esta línea:
 ```json
-"Modules\\Document\\": "Modules/Document/app/",
+"modules\\Document\\": "modules/Document/app/",
 ```
 
 Agregar:
 ```json
-"Modules\\Return\\": "Modules/Return/app/",
+"modules\\Return\\": "modules/Return/app/",
 ```
 
 **Archivo Completo de Referencia**:
@@ -91,13 +91,13 @@ Agregar:
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\Campaign\\": "Modules/Campaign/app/",
-            "Modules\\Documents\\": "Modules/Document/app/",
-            "Modules\\Mail\\": "Modules/Mail/app/",
-            "Modules\\Prestashop\\": "Modules/Prestashop/app/",
-            "Modules\\Returns\\": "Modules/Return/app/",
-            "Modules\\Subscriber\\": "Modules/Subscriber/app/",
-            "Modules\\Warehouse\\": "Modules/Warehouse/app/"
+            "Modules\\Campaign\\": "modules/Campaign/app/",
+            "Modules\\Documents\\": "modules/Document/app/",
+            "Modules\\Mail\\": "modules/Mail/app/",
+            "Modules\\Prestashop\\": "modules/Prestashop/app/",
+            "Modules\\Returns\\": "modules/Return/app/",
+            "Modules\\Subscriber\\": "modules/Subscriber/app/",
+            "Modules\\Warehouse\\": "modules/Warehouse/app/"
         }
     }
 }
@@ -245,8 +245,8 @@ php artisan migrate --path=database/migrations/returns
 
 ```bash
 # Seeders específicos de Return
-php artisan db:seed --class=Modules\\Return\\Database\\Seeders\\ReturnStatusSeeder
-php artisan db:seed --class=Modules\\Return\\Database\\Seeders\\ReturnReasonSeeder
+php artisan db:seed --class=modules\\Return\\Database\\Seeders\\ReturnStatusSeeder
+php artisan db:seed --class=modules\\Return\\Database\\Seeders\\ReturnReasonSeeder
 ```
 
 ---
@@ -258,10 +258,10 @@ php artisan db:seed --class=Modules\\Return\\Database\\Seeders\\ReturnReasonSeed
 ```bash
 php artisan tinker
 
->>> class_exists('Modules\\Return\\Models\\ReturnRequest')
+>>> class_exists('modules\\Return\\Models\\ReturnRequest')
 => true
 
->>> class_exists('Modules\\Return\\Services\\ReturnService')
+>>> class_exists('modules\\Return\\Services\\ReturnService')
 => true
 
 >>> exit
@@ -298,7 +298,7 @@ GET|HEAD        manager/settings/returns/rules  ...
 ### 8.1 Tests del Módulo Returns
 
 ```bash
-php artisan test Modules/Return/tests
+php artisan test modules/Return/tests
 ```
 
 ### 8.2 Tests Completos
@@ -350,7 +350,7 @@ php artisan config:cache
 **Solución**:
 ```bash
 # 1. Verificar ruta en ReturnsServiceProvider
-grep -n "RouteServiceProvider" Modules/Return/app/Providers/ReturnsServiceProvider.php
+grep -n "RouteServiceProvider" modules/Return/app/Providers/ReturnsServiceProvider.php
 
 # 2. Limpiar cache de rutas
 php artisan route:clear
@@ -426,7 +426,7 @@ Si necesitas desactivar el módulo temporalmente:
 
 ### 2. Comentar en bootstrap/providers.php
 ```php
-// \Modules\Return\Providers\ReturnsServiceProvider::class,
+// \modules\Return\Providers\ReturnsServiceProvider::class,
 ```
 
 ### 3. Limpiar Cache

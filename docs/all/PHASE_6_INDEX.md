@@ -114,7 +114,7 @@ public function newSettingIndex()
         'option1' => 'default',
         'option2' => false,
     ]);
-    return view('managers.views.helpdesk.settings.new_setting', ['settings' => $settings]);
+    return view('theme.views.helpdesk.settings.new_setting', ['settings' => $settings]);
 }
 
 public function newSettingUpdate(Request $request)

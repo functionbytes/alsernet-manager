@@ -124,8 +124,8 @@ config/
   "keywords": ["campaigns", "notifications", "automation", "templates"],
   "priority": 0,
   "providers": [
-    "Modules\\Campaign\\Providers\\CampaignServiceProvider",
-    "Modules\\Campaign\\Providers\\RouteServiceProvider"
+    "modules\\Campaign\\Providers\\CampaignServiceProvider",
+    "modules\\Campaign\\Providers\\RouteServiceProvider"
   ],
   "aliases": {},
   "files": [],
@@ -204,7 +204,7 @@ namespace Modules\Campaign\Providers;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected $namespace = 'Modules\Campaign\Http\Controllers';
+    protected $namespace = 'modules\Campaign\Http\Controllers';
 
     public function map(): void
     {
@@ -545,8 +545,8 @@ Library/
 
 ```json
 "providers": [
-  "Modules\\Campaign\\Providers\\CampaignServiceProvider",
-  "Modules\\Campaign\\Providers\\RouteServiceProvider"
+  "modules\\Campaign\\Providers\\CampaignServiceProvider",
+  "modules\\Campaign\\Providers\\RouteServiceProvider"
 ]
 ```
 

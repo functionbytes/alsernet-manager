@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('managers.components.card', ['title' => 'Dashboard'])
+    @include('theme.components.card', ['title' => 'Dashboard'])
 
     {{-- Top Stats Row - White Background --}}
     <div class="row g-3 mb-4">
@@ -556,7 +556,7 @@
 </style>
 
 @push('scripts')
-<script src="{{ url('managers/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+<script src="{{ url('theme/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
 <script>
 $(function() {
     // Revenue Chart (from v1) - Area with gradient

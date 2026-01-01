@@ -346,9 +346,9 @@ public function register(): void
 ### ✅ PHP Syntax Validation (Pint)
 
 ```bash
-vendor/bin/pint Modules/Warehouse/app/Policies/WarehousePolicy.php \
-    Modules/Warehouse/app/Policies/WarehouseLocationPolicy.php \
-    Modules/Warehouse/app/Providers/WarehouseServiceProvider.php
+vendor/bin/pint modules/Warehouse/app/Policies/WarehousePolicy.php \
+    modules/Warehouse/app/Policies/WarehouseLocationPolicy.php \
+    modules/Warehouse/app/Providers/WarehouseServiceProvider.php
 ```
 
 **Result**: ✅ PASS - All 3 files
@@ -522,7 +522,7 @@ public function test_authorized_user_can_access_warehouse_users_management()
     $warehouse->users()->attach($user->id);
 
     $response = $this->actingAs($user)
-        ->get(route('managers.warehouses.users.index', $warehouse));
+        ->get(route('theme.warehouses.users.index', $warehouse));
 
     $response->assertOk();
 }

@@ -677,7 +677,7 @@ getSlotColorByOccupancy($slot): string
 ### Rutas de Manager (Autenticadas)
 
 ```php
-Route::group(['prefix' => 'managers/warehouse'], ...) {
+Route::group(['prefix' => 'theme/warehouse'], ...) {
     Route::group(['prefix' => 'slots'], ...) {
         GET    /                               → index()
         GET    /create                         → create()

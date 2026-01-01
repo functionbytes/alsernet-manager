@@ -355,7 +355,7 @@ DocumentAction::create([
     'document_id' => $document->id,
     'action_type' => 'status_changed',
     'description' => "Status changed from pending to approved",
-    'performed_by' => auth('managers')->id(),
+    'performed_by' => auth('theme')->id(),
     'metadata' => [
         'from_status' => 'pending',
         'to_status' => 'approved',

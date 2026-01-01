@@ -17,7 +17,7 @@ class DatabaseSettingsController extends Controller
         $pageTitle = 'Configuración de base de Datos';
         $breadcrumb = 'Configuración / base de Datos';
 
-        return view('managers.views.settings.database.index', compact('settings', 'pageTitle', 'breadcrumb'));
+        return view('theme.views.settings.database.index', compact('settings', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -30,7 +30,7 @@ class DatabaseSettingsController extends Controller
         $pageTitle = 'Editar Base de Datos';
         $breadcrumb = 'Configuración / Base de Datos';
 
-        return view('managers.views.settings.database.edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
+        return view('theme.views.settings.database.edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
     }
 
     /**

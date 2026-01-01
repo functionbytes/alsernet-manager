@@ -227,7 +227,7 @@ php artisan tinker
 
 1. **Restringir acceso al panel**: Agregar autenticación/autorización
    ```php
-   // En routes/managers.php
+   // En routes/theme.php
    Route::middleware(['auth', 'admin'])->group(function () {
        // Rutas de supervisor
    });

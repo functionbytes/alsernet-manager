@@ -1,7 +1,7 @@
 <?php
 
-// Campaign routes are now handled by Modules\Campaign
-// See: Modules/Campaign/routes/managers.php
+// Campaign routes are now handled by modules\Campaign
+// See: modules/Campaign/routes/theme.php
 use App\Http\Controllers\Managers\DashboardController;
 use App\Http\Controllers\Managers\Faqs\CategoriesController as FaqsCategoriesController;
 use App\Http\Controllers\Managers\Faqs\FaqsController;
@@ -39,21 +39,21 @@ use App\Http\Controllers\Managers\Settings\HoursSettingsController;
 use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\LangsController;
 use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
-// Mail controller imports are now handled by Modules\Mail
+// Mail controller imports are now handled by modules\Mail
 // use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
 use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
 use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
-// Role and Permission routes are now handled by Modules\Role
-// See: Modules/Role/routes/managers.php
+// Role and Permission routes are now handled by modules\Role
+// See: modules/Role/routes/theme.php
 use App\Http\Controllers\Managers\Settings\SearchSettingsController;
 use App\Http\Controllers\Managers\Settings\ServerAccessController;
 use App\Http\Controllers\Managers\Settings\SettingsController;
 use App\Http\Controllers\Managers\Settings\StorageController;
 use App\Http\Controllers\Managers\Settings\SupervisorController;
-// @deprecated Supplier controllers moved to Modules/Supplier
+// @deprecated Supplier controllers moved to modules/Supplier
 // use App\Http\Controllers\Managers\Settings\Suppliers\PromptTemplatesController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SupplierCategoriesController;
@@ -72,14 +72,14 @@ use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ReportControll
 use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\BarcodeController as LocationsBarcodesController;
 use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\LocationsController as ShopsLocationsController;
 use Modules\Warehouse\Http\Controllers\Managers\Shops\Shops\ShopsController;
-// @deprecated Subscriber controllers moved to Modules/Subscriber
+// @deprecated Subscriber controllers moved to modules/Subscriber
 // use App\Http\Controllers\Managers\Subscribers\SubscribersConditionsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersListsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersReportController;
 use App\Http\Controllers\Managers\SystemInfoController;
 use App\Http\Controllers\Managers\Users\UsersController;
-// @deprecated Warehouse routes moved to Modules/Warehouse/routes/managers.php
+// @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
 // use App\Http\Controllers\Managers\Warehouses\WarehouseController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseDashboardController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseFloorsController;
@@ -231,8 +231,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/categories', [LangsController::class, 'getCategories'])->name('manager.langs.categories');
     });
 
-    // @deprecated Subscriber routes are now handled by Modules\Subscriber
-    // See: Modules/Subscriber/routes/managers.php
+    // @deprecated Subscriber routes are now handled by modules\Subscriber
+    // See: modules/Subscriber/routes/theme.php
     /*
     Route::group(['prefix' => 'subscribers'], function () {
 
@@ -319,8 +319,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::post('/conflicts/{mapping}/resolve', [CategoryController::class, 'resolveConflict'])->name('manager.settings.categories.conflicts.resolve');
         });
 
-        // Mailer routes are now handled by Modules\Mail
-        // See: Modules/Mail/routes/managers.php
+        // Mailer routes are now handled by modules\Mail
+        // See: modules/Mail/routes/theme.php
         /*
         Route::group(['prefix' => 'mailers'], function () { ... });
         */
@@ -348,8 +348,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         //     Route::post('/toggle', [ErpIntegrationSettingsController::class, 'toggle'])->name('manager.settings.erp-integration.toggle');
         // });
 
-        // @deprecated Supplier routes moved to Modules/Supplier/routes/managers.php
-        // See: Modules/Supplier/routes/managers.php
+        // @deprecated Supplier routes moved to modules/Supplier/routes/theme.php
+        // See: modules/Supplier/routes/theme.php
 
         Route::group(['prefix' => 'email'], function () {
             // Main selection page
@@ -536,15 +536,15 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::get('/{processName}/logs', [SupervisorController::class, 'getLogs'])->name('manager.settings.supervisor.logs');
         });
 
-        // Role and Permission routes are now handled by Modules\Role
-        // See: Modules/Role/routes/managers.php
+        // Role and Permission routes are now handled by modules\Role
+        // See: modules/Role/routes/theme.php
         /*
         Route::group(['prefix' => 'roles'], function () {
-            // Routes moved to Modules/Role/routes/managers.php
+            // Routes moved to modules/Role/routes/theme.php
         });
 
         Route::group(['prefix' => 'permissions'], function () {
-            // Routes moved to Modules/Role/routes/managers.php
+            // Routes moved to modules/Role/routes/theme.php
         });
         */
 
@@ -612,8 +612,8 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     });
 
-    // Campaign routes are now handled by Modules\Campaign
-    // See: Modules/Campaign/routes/managers.php
+    // Campaign routes are now handled by modules\Campaign
+    // See: modules/Campaign/routes/theme.php
 
     Route::group(['prefix' => 'notifications'], function () {
         Route::get('/', [NotificationController::class, 'index'])->name('manager.notifications.index');
@@ -622,10 +622,10 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::post('/listing', [NotificationController::class, 'listing'])->name('manager.notifications.listing');
     });
 
-    // Layout routes are now handled by Modules\Campaign
-    // See: Modules/Campaign/routes/managers.php
+    // Layout routes are now handled by modules\Campaign
+    // See: modules/Campaign/routes/theme.php
 
-    // @deprecated Warehouse routes moved to Modules/Warehouse/routes/managers.php
+    // @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
     // Route::group(['prefix' => 'warehouse'], function () {
     /*
         // Warehouse Map (Visual Floor Plan)
@@ -1145,11 +1145,11 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         });
     });
 
-    // @deprecated Media Manager routes are now handled by Modules\Media
-    // See: Modules/Media/routes/managers.php
+    // @deprecated Media Manager routes are now handled by modules\Media
+    // See: modules/Media/routes/theme.php
 
-    // @deprecated Webhook routes are now handled by Modules\Webhook
-    // See: Modules/Webhook/routes/managers.php
+    // @deprecated Webhook routes are now handled by modules\Webhook
+    // See: modules/Webhook/routes/theme.php
     /*
     // Webhooks Management
     Route::prefix('settings/webhooks')->name('manager.settings.webhooks.')->group(function () {

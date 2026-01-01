@@ -318,7 +318,18 @@
       "Bash(git -C /Users/functionbytes/Function/Coding/manager show:*)",
       "Bash(if [ -f bootstrap/providers.php ])",
       "Bash(then echo \"Laravel 11+ - Checking bootstrap/providers.php:\")",
-      "Bash(else echo \"Laravel 10 - Checking config/app.php:\")"
+      "Bash(else echo \"Laravel 10 - Checking config/app.php:\")",
+      "Bash(git mv:*)",
+      "Bash(/Users/functionbytes/Function/Coding/manager/database/seeders/Email/EmailTemplateSeeder.php )",
+      "Bash(/Users/functionbytes/Function/Coding/manager/database/seeders/Email/MailVariableSeeder.php )",
+      "Bash(/Users/functionbytes/Function/Coding/manager/database/seeders/Email/MigrateDocumentEmailTemplatesSeeder.php )",
+      "Bash(/Users/functionbytes/Function/Coding/manager/database/seeders/Email/MigrateEmailTemplateTranslationsSeeder.php)",
+      "Bash(modules/Mailer/app/Jobs/SendConfirmationEmailJob.php )",
+      "Bash(modules/Mailer/app/Jobs/UpdateMailerListJob.php )",
+      "Bash(modules/Mailer/app/Jobs/SendSMS.php )",
+      "Bash(modules/Mailer/app/Jobs/MailerSend.php )",
+      "Bash(modules/Mailer/app/Jobs/VerifyMailerListJob.php )",
+      "Bash(modules/Mailer/app/Jobs/SendEmails.php)"
     ],
     "deny": [],
     "ask": []

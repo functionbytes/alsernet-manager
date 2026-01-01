@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Helpdesk\Http\Controllers\Api\TicketsController;
 
-// @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php
+// @deprecated Subscriber routes now in modules/Subscriber/routes/api.php
 // Route::group(['prefix' => 'subscribers'], function () {
 //     Route::post('/', [SubscribersController::class, 'process']);
 //     Route::put('/replace', [SubscribersController::class, 'replace']);
@@ -16,7 +16,7 @@ use Modules\Helpdesk\Http\Controllers\Api\TicketsController;
 //     Route::post('campaigns', [SubscribersController::class, 'campaigns']);
 // });
 
-// @deprecated Subscriber routes now in Modules/Subscriber/routes/api.php
+// @deprecated Subscriber routes now in modules/Subscriber/routes/api.php
 // Route::group(['prefix' => 'subscribers'], function () {
 //     Route::post('/', [SubscribersController::class, 'process']);
 //     Route::put('/replace', [SubscribersController::class, 'replace']);
@@ -28,8 +28,8 @@ use Modules\Helpdesk\Http\Controllers\Api\TicketsController;
 
 Route::group(['prefix' => 'documents'], function () {
     Route::post('/', [DocumentsController::class, 'process']);
-    // @deprecated Webhook routes are now handled by Modules\Webhook
-    // See: Modules/Webhook/routes/api.php
+    // @deprecated Webhook routes are now handled by modules\Webhook
+    // See: modules/Webhook/routes/api.php
     // Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid']);
     Route::post('/resend-reminder', [DocumentsController::class, 'resendDocumentReminder']);
     Route::post('/confirm-upload', [DocumentsController::class, 'confirmDocumentUpload']);

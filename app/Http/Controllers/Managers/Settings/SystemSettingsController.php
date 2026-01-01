@@ -25,7 +25,7 @@ class SystemSettingsController extends Controller
         // Get websockets configuration
         $websocketsSettings = $this->getWebsocketsSettings();
 
-        return view('managers.views.settings.system.index', compact(
+        return view('theme.views.settings.system.index', compact(
             'pageTitle',
             'breadcrumb',
             'activeTab',

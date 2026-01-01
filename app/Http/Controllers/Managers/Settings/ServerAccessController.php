@@ -43,7 +43,7 @@ class ServerAccessController extends Controller
             })->toArray();
         }
 
-        return view('managers.views.settings.server.access.index', [
+        return view('theme.views.settings.server.access.index', [
             'logs' => $logs,
             'limit' => $limit,
             'total' => $total,
@@ -166,7 +166,7 @@ class ServerAccessController extends Controller
             'uptime' => $this->getServerUptime(),
         ];
 
-        return view('managers.views.settings.server.stats.index', [
+        return view('theme.views.settings.server.stats.index', [
             'stats' => $stats,
         ]);
     }

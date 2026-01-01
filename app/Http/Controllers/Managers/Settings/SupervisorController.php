@@ -25,14 +25,14 @@ class SupervisorController extends Controller
             $pageTitle = 'Panel de Control - Supervisor';
             $breadcrumb = 'Configuración / Sistema / Supervisor';
 
-            return view('managers.views.settings.supervisor.index', compact(
+            return view('theme.views.settings.supervisor.index', compact(
                 'processes',
                 'alsarnetProcesses',
                 'pageTitle',
                 'breadcrumb'
             ));
         } catch (\Exception $e) {
-            return view('managers.views.settings.supervisor.index', [
+            return view('theme.views.settings.supervisor.index', [
                 'error' => 'Error al conectar con Supervisor: '.$e->getMessage(),
                 'processes' => [],
                 'alsarnetProcesses' => [],
@@ -62,7 +62,7 @@ class SupervisorController extends Controller
             $pageTitle = 'Detalles del Proceso - '.$processName;
             $breadcrumb = 'Configuración / Sistema / Supervisor / '.$processName;
 
-            return view('managers.views.settings.supervisor.show', compact(
+            return view('theme.views.settings.supervisor.show', compact(
                 'processName',
                 'processStatus',
                 'logs',

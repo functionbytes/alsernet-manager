@@ -81,11 +81,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\Document\\": "Modules/Document/app/",
-            "Modules\\Mail\\": "Modules/Mail/app/",
-            "Modules\\Notification\\": "Modules/Notification/app/",
-            "Modules\\Prestashop\\": "Modules/Prestashop/app/",
-            "Modules\\Warehouse\\": "Modules/Warehouse/app/"
+            "Modules\\Document\\": "modules/Document/app/",
+            "Modules\\Mail\\": "modules/Mail/app/",
+            "Modules\\Notification\\": "modules/Notification/app/",
+            "Modules\\Prestashop\\": "modules/Prestashop/app/",
+            "Modules\\Warehouse\\": "modules/Warehouse/app/"
         },
         "files": [
             "app/Helpers/Helper.php",
@@ -149,7 +149,7 @@
         },
         "merge-plugin": {
             "include": [
-                "Modules/*/composer.json"
+                "modules/*/composer.json"
             ],
             "recurse": true,
             "replace": false,
