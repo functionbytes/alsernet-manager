@@ -8,18 +8,15 @@ use Illuminate\Http\Request;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerTemplateLang;
-use Modules\Mailer\Traits\AuthorizesMailerActions;
 
 class MailerTemplateController extends Controller
 {
-    use AuthorizesMailerActions;
-
     /**
      * Listar todos los templates de email (únicos por key, no por idioma)
      */
     public function index(Request $request)
     {
-        $this->authorizeMailerAction('mailer.templates.view');
+        $this->authorize('viewAny', MailerTemplate::class);
         $search = $request->input('search');
         $module = $request->input('module');
         $langId = $request->input('lang_id', 1); // Default to first language for preview
@@ -66,7 +63,7 @@ class MailerTemplateController extends Controller
      */
     public function create(Request $request)
     {
-        $this->authorizeMailerAction('mailer.templates.create');
+        $this->authorize('create', MailerTemplate::class);
         $template = new MailerTemplate;
         $layouts = MailerLayout::where('type', 'layout')
             ->where('is_enabled', true)
@@ -109,7 +106,7 @@ class MailerTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorizeMailerAction('mailer.templates.create');
+        $this->authorize('create', MailerTemplate::class);
 
         // Validar datos
         $validated = $request->validate([
@@ -193,8 +190,8 @@ class MailerTemplateController extends Controller
      */
     public function edit(Request $request, $uid, $translation_uid = null)
     {
-        $this->authorizeMailerAction('mailer.templates.update');
         $template = MailerTemplate::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $template);
 
         // Si viene translation_uid, cargar por UID de traducción
         if ($translation_uid) {
@@ -253,8 +250,8 @@ class MailerTemplateController extends Controller
      */
     public function update(Request $request, $uid)
     {
-        $this->authorizeMailerAction('mailer.templates.update');
         $template = MailerTemplate::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $template);
 
         // Validar datos
         $validated = $request->validate([
@@ -476,8 +473,8 @@ class MailerTemplateController extends Controller
      */
     public function destroy($uid)
     {
-        $this->authorizeMailerAction('mailer.templates.delete');
         $template = MailerTemplate::where('uid', $uid)->firstOrFail();
+        $this->authorize('delete', $template);
 
         // Verificar si el template está protegido
         if ($template->is_protected) {
