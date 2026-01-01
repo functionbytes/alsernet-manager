@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Lang;
 use Illuminate\Http\Request;
 use Modules\Mailer\Models\MailerVariable;
+use Modules\Mailer\Traits\AuthorizesMailerActions;
 
 class MailerVariableController extends Controller
 {
+    use AuthorizesMailerActions;
     /**
      * Display a listing of email variables
      */

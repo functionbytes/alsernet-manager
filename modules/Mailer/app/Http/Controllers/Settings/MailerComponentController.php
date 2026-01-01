@@ -7,9 +7,11 @@ use App\Models\Lang;
 use Illuminate\Http\Request;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerLayoutLang;
+use Modules\Mailer\Traits\AuthorizesMailerActions;
 
 class MailerComponentController extends Controller
 {
+    use AuthorizesMailerActions;
     /**
      * Listar todos los componentes de email (header, footer, etc.)
      */

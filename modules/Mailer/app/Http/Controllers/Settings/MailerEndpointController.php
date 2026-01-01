@@ -7,9 +7,11 @@ use App\Models\Lang;
 use Illuminate\Http\Request;
 use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerTemplate;
+use Modules\Mailer\Traits\AuthorizesMailerActions;
 
 class MailerEndpointController extends Controller
 {
+    use AuthorizesMailerActions;
     /**
      * Display list of email endpoints
      */
