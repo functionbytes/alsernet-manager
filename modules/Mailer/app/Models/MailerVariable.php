@@ -35,7 +35,7 @@ class MailerVariable extends Model
      */
     public function translations(): HasMany
     {
-        return $this->hasMany(MailerVariableLang::class, 'mail_variable_id');
+        return $this->hasMany(MailerVariableLang::class, 'mailer_variable_id');
     }
 
     /**

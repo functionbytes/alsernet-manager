@@ -24,7 +24,7 @@ class MailerVariableLang extends Model
      */
     public function mailVariable(): BelongsTo
     {
-        return $this->belongsTo(MailerVariable::class, 'mail_variable_id');
+        return $this->belongsTo(MailerVariable::class, 'mailer_variable_id');
     }
 
     /**
