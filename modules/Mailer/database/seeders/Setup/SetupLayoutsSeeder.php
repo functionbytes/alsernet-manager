@@ -27,7 +27,7 @@ class SetupLayoutsSeeder extends Seeder
         $headerLayout = MailerLayout::updateOrCreate(
             ['alias' => 'email_template_header'],
             [
-                'group_name' => 'email_templates',
+                'group_name' => 'mail_templates',
                 'code' => 'email_header',
                 'type' => 'partial',
                 'is_protected' => true,
@@ -49,7 +49,7 @@ class SetupLayoutsSeeder extends Seeder
         $footerLayout = MailerLayout::updateOrCreate(
             ['alias' => 'email_template_footer'],
             [
-                'group_name' => 'email_templates',
+                'group_name' => 'mail_templates',
                 'code' => 'email_footer',
                 'type' => 'partial',
                 'is_protected' => true,
@@ -71,7 +71,7 @@ class SetupLayoutsSeeder extends Seeder
         $wrapperLayout = MailerLayout::updateOrCreate(
             ['alias' => 'email_template_wrapper'],
             [
-                'group_name' => 'email_templates',
+                'group_name' => 'mail_templates',
                 'code' => 'email_wrapper',
                 'type' => 'layout',
                 'is_protected' => true,
