@@ -3,6 +3,7 @@
 namespace Modules\Role\Providers;
 
 use App\Services\NavService;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class RoleServiceProvider extends ServiceProvider
@@ -33,7 +34,16 @@ class RoleServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('settings')
+            ->name('manager.settings.')
+            ->group(function (): void {
+                // Load view routes (GET)
+                require __DIR__.'/../../routes/web.php';
+
+                // Load API routes (POST, PUT, DELETE) - same prefix/name
+                require __DIR__.'/../../routes/api.php';
+            });
     }
 
     /**
@@ -53,8 +63,8 @@ class RoleServiceProvider extends ServiceProvider
         NavService::registerSidebar('roles', [
             'title' => 'Roles y Permisos',
             'items' => [
-                ['label' => 'Roles', 'route' => 'roles'],
-                ['label' => 'Permisos', 'route' => 'permissions'],
+                ['label' => 'Roles', 'route' => 'manager.settings.roles.index'],
+                ['label' => 'Permisos', 'route' => 'manager.settings.permissions.index'],
             ],
         ]);
     }

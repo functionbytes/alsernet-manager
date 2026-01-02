@@ -25,7 +25,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('permissions.create') }}" class="btn btn-primary">
+                                <a href="{{ route('manager.settings.permissions.create') }}" class="btn btn-primary">
                                     <i class="fa-duotone fa-plus"></i>
                                 </a>
                             </div>
@@ -58,7 +58,7 @@
                                     <ul class="dropdown-menu">
                                         @can('permissions.edit')
                                             <li>
-                                                <a href="{{ route('permissions.edit', $permission->id) }}" class="dropdown-item">
+                                                <a href="{{ route('manager.settings.permissions.edit', $permission->id) }}" class="dropdown-item">
                                                     Editar
                                                 </a>
                                             </li>
@@ -67,7 +67,7 @@
                                         @can('permissions.delete')
                                             <li>
                                                 <a href="javascript:void(0);" class="dropdown-item confirm-delete"
-                                                   data-href="{{ route('permissions.destroy', $permission->id) }}">
+                                                   data-href="{{ route('manager.settings.permissions.destroy', $permission->id) }}">
                                                     Eliminar
                                                 </a>
                                             </li>

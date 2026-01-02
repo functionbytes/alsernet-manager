@@ -102,7 +102,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('permissions.update') }}",
+                        url: "{{ route('manager.settings.permissions.update') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -122,7 +122,7 @@
                                     positionClass: "toast-bottom-right",
                                     timeOut: 1000,
                                     onHidden: function () {
-                                        window.location.href = "{{ route('permissions.index') }}";
+                                        window.location.href = "{{ route('manager.settings.permissions.index') }}";
                                     }
                                 });
 

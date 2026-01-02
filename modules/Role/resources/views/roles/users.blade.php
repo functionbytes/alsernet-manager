@@ -29,11 +29,11 @@
                 <div class="col-12">
                     <div class="d-flex flex-wrap gap-2">
                         @if($search)
-                            <a href="{{ route('roles.show.users', $role->id) }}" class="btn btn-outline-secondary btn-sm">
+                            <a href="{{ route('manager.settings.roles.show.users', $role->id) }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fas fa-times me-2"></i>Limpiar filtros
                             </a>
                         @endif
-                        <a href="{{ route('roles.show', $role->id) }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ route('manager.settings.roles.show', $role->id) }}" class="btn btn-outline-primary btn-sm">
                             <i class="fas fa-arrow-left me-2"></i>Volver al rol
                         </a>
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#assignUsersModal">
@@ -86,7 +86,7 @@
             <!-- Search & Filter Section -->
             <div class="row mb-4 pb-3 border-bottom">
                 <div class="col-12">
-                    <form class="position-relative form-search" action="{{ route('roles.show.users', $role->id) }}" method="GET">
+                    <form class="position-relative form-search" action="{{ route('manager.settings.roles.show.users', $role->id) }}" method="GET">
                         <div class="row g-2">
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
@@ -208,7 +208,7 @@
                 <div class="text-center py-5">
                     <i class="fas fa-search fa-3x text-muted mb-3"></i>
                     <p class="text-muted">No se encontraron usuarios con los criterios de búsqueda</p>
-                    <a href="{{ route('roles.show.users', $role->id) }}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route('manager.settings.roles.show.users', $role->id) }}" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-times me-2"></i>Limpiar búsqueda
                     </a>
                 </div>
@@ -237,7 +237,7 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="assignUsersForm" method="POST" action="{{ route('roles.assign.users') }}">
+                <form id="assignUsersForm" method="POST" action="{{ route('manager.settings.roles.assign.users') }}">
                     @csrf
                     <input type="hidden" name="role_id" value="{{ $role->id }}">
 
@@ -357,7 +357,7 @@
 
                 if (confirm('¿Estás seguro de que deseas remover a ' + userName + ' de este rol?')) {
                     $.ajax({
-                        url: '{{ route("roles.remove.user") }}',
+                        url: '{{ route("manager.settings.roles.remove.user") }}',
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

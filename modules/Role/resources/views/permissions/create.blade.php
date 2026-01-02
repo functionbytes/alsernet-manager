@@ -96,7 +96,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('permissions.store') }}",
+                        url: "{{ route('manager.settings.permissions.store') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },

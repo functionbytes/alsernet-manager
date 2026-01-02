@@ -73,7 +73,7 @@
                 $submitBtn.prop('disabled', true);
 
                 $.ajax({
-                    url: "{{ route('roles.update.permissions', $role->id) }}",
+                    url: "{{ route('manager.settings.roles.update.permissions', $role->id) }}",
                     type: 'POST',
                     data: formData,
                     success: function(response) {

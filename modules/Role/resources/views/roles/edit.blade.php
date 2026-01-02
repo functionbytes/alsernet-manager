@@ -15,10 +15,10 @@
                                 <p class="card-subtitle mb-0 mt-2">Actualiza la información del rol en el sistema.</p>
                             </div>
                             <div class="btn-group" role="group">
-                                <a href="{{ route('roles.show.permissions', $role->id) }}" class="btn btn-sm btn-warning" title="Gestionar permisos">
+                                <a href="{{ route('manager.settings.roles.show.permissions', $role->id) }}" class="btn btn-sm btn-warning" title="Gestionar permisos">
                                     <i class="fa-duotone fa-lock"></i> Permisos
                                 </a>
-                                <a href="{{ route('roles.show.users', $role->id) }}" class="btn btn-sm btn-info" title="Ver usuarios asignados">
+                                <a href="{{ route('manager.settings.roles.show.users', $role->id) }}" class="btn btn-sm btn-info" title="Ver usuarios asignados">
                                     <i class="fa-duotone fa-users"></i> Usuarios
                                 </a>
                                 @can('roles.delete')
@@ -144,7 +144,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('roles.update', $role->id) }}",
+                        url: "{{ route('manager.settings.roles.update', $role->id) }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -198,7 +198,7 @@
                 $button.prop('disabled', true).html('<i class="fa-duotone fa-spinner"></i> Eliminando...');
 
                 $.ajax({
-                    url: "{{ route('roles.destroy', $role->id) }}",
+                    url: "{{ route('manager.settings.roles.destroy', $role->id) }}",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
