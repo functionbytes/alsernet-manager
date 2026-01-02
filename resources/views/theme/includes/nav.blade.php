@@ -100,116 +100,72 @@
 
 <!-- Sidebar End -->
 
-@push('styles')
-<style>
-    /* Asegurar que d-none funcione correctamente para sidebars */
-    .sidebarmenu {
-        display: block !important;
-    }
-
-    .sidebarmenu .sidebar-nav {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        height: auto !important;
-        width: auto !important;
-        max-width: none !important;
-        overflow: visible !important;
-    }
-
-    .sidebarmenu .sidebar-nav.d-none {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        opacity: 0 !important;
-    }
-
-    /* Extra fallback */
-    .sidebar-nav.d-none,
-    nav.sidebar-nav.d-none {
-        display: none !important;
-        visibility: hidden !important;
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
     /**
-     * Alternar visibilidad de sidebars y guardar preferencia
+     * Alternar visibilidad de sidebars y guardar preferencia del usuario
+     * @param {string} sidebarId - ID del sidebar a mostrar (sin prefijo 'menu-right-')
+     * @param {string} miniNavId - ID del mini-nav item (sin prefijo 'mini-')
      */
     function toggleSidebar(sidebarId, miniNavId) {
-        console.log('toggleSidebar called with:', sidebarId, miniNavId);
+        // Obtener elementos del DOM
+        const targetSidebar = document.getElementById('menu-right-' + sidebarId);
+        const targetMiniNav = document.getElementById('mini-' + miniNavId);
 
-        const sidebar = document.getElementById('menu-right-' + sidebarId);
-        const miniNav = document.getElementById('mini-' + miniNavId);
+        if (!targetSidebar || !targetMiniNav) {
+            console.warn('toggleSidebar: Missing elements', { sidebarId, miniNavId, targetSidebar, targetMiniNav });
+            return;
+        }
 
-        console.log('Sidebar element:', sidebar);
-        console.log('MiniNav element:', miniNav);
-
-        // Obtener todos los sidebars y mini-nav items
-        const allSidebars = document.querySelectorAll('.sidebar-nav');
-        const allMiniItems = document.querySelectorAll('.mini-nav-item');
-
-        console.log('All sidebars found:', allSidebars.length);
-        console.log('All mini items found:', allMiniItems.length);
-
-        // Ocultar todos los sidebars y quitar clase selected
-        allSidebars.forEach(s => {
-            s.classList.add('d-none');
-            console.log('Hiding sidebar:', s.id);
+        // Ocultar todos los sidebars y quitar clase selected de todos los mini-nav items
+        document.querySelectorAll('.sidebar-nav').forEach(sidebar => {
+            sidebar.classList.add('d-none');
         });
-        allMiniItems.forEach(m => m.classList.remove('selected'));
+        document.querySelectorAll('.mini-nav-item').forEach(item => {
+            item.classList.remove('selected');
+        });
 
-        // Mostrar el sidebar seleccionado y agregar clase selected al mini-nav
-        if (sidebar) {
-            sidebar.classList.remove('d-none');
-            console.log('Showing sidebar:', sidebar.id);
-        } else {
-            console.error('Sidebar not found: menu-right-' + sidebarId);
+        // Mostrar el sidebar seleccionado y marcar el mini-nav como activo
+        targetSidebar.classList.remove('d-none');
+        targetMiniNav.classList.add('selected');
+
+        // Guardar preferencia del usuario en localStorage
+        try {
+            localStorage.setItem('activeSidebar', sidebarId);
+            localStorage.setItem('activeMiniNav', miniNavId);
+        } catch (e) {
+            console.warn('localStorage not available:', e);
         }
-
-        if (miniNav) {
-            miniNav.classList.add('selected');
-            console.log('Added selected to mini-nav:', miniNav.id);
-        } else {
-            console.error('MiniNav not found: mini-' + miniNavId);
-        }
-
-        // Guardar preferencia en localStorage
-        localStorage.setItem('activeSidebar', sidebarId);
-        localStorage.setItem('activeMiniNav', miniNavId);
     }
 
-    // Restaurar sidebar abierto al cargar la página
+    /**
+     * Inicializar el sidebar activo cuando se carga la página
+     */
     document.addEventListener('DOMContentLoaded', function() {
+        // Intentar restaurar desde localStorage (usuarios que regresan)
         const savedSidebar = localStorage.getItem('activeSidebar');
         const savedMiniNav = localStorage.getItem('activeMiniNav');
 
-        console.log('Page loaded. Saved sidebar:', savedSidebar, 'Saved miniNav:', savedMiniNav);
-
         if (savedSidebar && savedMiniNav) {
-            // Restaurar desde localStorage (returning user)
             toggleSidebar(savedSidebar, savedMiniNav);
-        } else {
-            // First-time visitor: find the currently selected mini-nav item and show its sidebar
-            const selectedMiniNav = document.querySelector('.mini-nav-item.selected');
-            if (selectedMiniNav) {
-                const miniNavId = selectedMiniNav.id.replace('mini-', '');
-                console.log('No saved preference. Using currently selected mini-nav:', miniNavId);
-                toggleSidebar(miniNavId, miniNavId);
-            } else {
-                // Fallback: show first sidebar if no selection found
-                const firstMiniNav = document.querySelector('.mini-nav-item');
-                const firstSidebar = document.querySelector('[id^="menu-right-"]');
-                if (firstMiniNav && firstSidebar) {
-                    const firstMiniNavId = firstMiniNav.id.replace('mini-', '');
-                    const firstSidebarId = firstSidebar.id.replace('menu-right-', '');
-                    console.log('No selected mini-nav found. Using first:', firstSidebarId);
-                    toggleSidebar(firstSidebarId, firstMiniNavId);
-                }
-            }
+            return;
+        }
+
+        // Buscar el mini-nav item que tiene la clase 'selected' (establecido por Blade)
+        const selectedMiniNav = document.querySelector('.mini-nav-item.selected');
+        if (selectedMiniNav) {
+            const miniNavId = selectedMiniNav.id.replace('mini-', '');
+            toggleSidebar(miniNavId, miniNavId);
+            return;
+        }
+
+        // Fallback: mostrar el primer sidebar si no hay nada seleccionado
+        const firstMiniNav = document.querySelector('.mini-nav-item');
+        const firstSidebar = document.querySelector('[id^="menu-right-"]');
+        if (firstMiniNav && firstSidebar) {
+            const firstMiniNavId = firstMiniNav.id.replace('mini-', '');
+            const firstSidebarId = firstSidebar.id.replace('menu-right-', '');
+            toggleSidebar(firstSidebarId, firstMiniNavId);
         }
     });
 </script>
