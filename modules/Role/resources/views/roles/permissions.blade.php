@@ -73,13 +73,13 @@
                 $submitBtn.prop('disabled', true);
 
                 $.ajax({
-                    url: "{{ route('manager.settings.roles.update.permissions', $role->id) }}",
+                    url: "{{ route('settings.roles.update.permissions', $role->id) }}",
                     type: 'POST',
                     data: formData,
                     success: function(response) {
                         if (response.success) {
                             toastr.success(response.message, 'Éxito', { positionClass: 'toast-bottom-right' });
-                            setTimeout(() => window.location.href = "{{ route('manager.settings.roles.index') }}", 1500);
+                            setTimeout(() => window.location.href = "{{ route('settings.roles.index') }}", 1500);
                         } else {
                             toastr.error(response.message, 'Error', { positionClass: 'toast-bottom-right' });
                         }

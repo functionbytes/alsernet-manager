@@ -41,7 +41,7 @@ class RoleServiceProvider extends ServiceProvider
         // Manager settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings')
-            ->name('manager.settings.')
+            ->name('settings.')
             ->group(function () {
                 // Load view routes (GET)
                 require module_path($this->name, 'routes/web.php');
@@ -70,8 +70,8 @@ class RoleServiceProvider extends ServiceProvider
         NavService::registerSidebar('roles', [
             'title' => 'Roles y Permisos',
             'items' => [
-                ['label' => 'Roles', 'route' => 'manager.settings.roles.index'],
-                ['label' => 'Permisos', 'route' => 'manager.settings.permissions.index'],
+                ['label' => 'Roles', 'route' => 'settings.roles.index'],
+                ['label' => 'Permisos', 'route' => 'settings.permissions.index'],
             ],
         ]);
     }

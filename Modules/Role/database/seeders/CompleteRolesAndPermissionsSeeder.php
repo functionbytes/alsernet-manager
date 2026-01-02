@@ -98,14 +98,14 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'permissions.edit' => 'Editar permisos',
             'permissions.delete' => 'Eliminar permisos',
 
-            'manager.langs' => 'Gestionar idiomas del manager', // Added description
-            'manager.langs.create' => 'Crear idiomas del manager', // Added description
-            'manager.langs.store' => 'Almacenar idiomas del manager', // Added description
-            'manager.langs.update' => 'Actualizar idiomas del manager', // Added description
-            'manager.langs.edit' => 'Editar idiomas del manager', // Added description
-            'manager.langs.view' => 'Ver idiomas del manager', // Added description
-            'manager.langs.destroy' => 'Eliminar idiomas del manager', // Added description
-            'manager.langs.categories' => 'Gestionar categorías de idiomas del manager', // Added description
+            'settings.langs' => 'Gestionar idiomas del manager', // Added description
+            'settings.langs.create' => 'Crear idiomas del manager', // Added description
+            'settings.langs.store' => 'Almacenar idiomas del manager', // Added description
+            'settings.langs.update' => 'Actualizar idiomas del manager', // Added description
+            'settings.langs.edit' => 'Editar idiomas del manager', // Added description
+            'settings.langs.view' => 'Ver idiomas del manager', // Added description
+            'settings.langs.destroy' => 'Eliminar idiomas del manager', // Added description
+            'settings.langs.categories' => 'Gestionar categorías de idiomas del manager', // Added description
 
             // FAQs
             'faqs.view' => 'Ver FAQs',

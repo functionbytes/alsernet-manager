@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('manager.roles.edit', $role) }}" class="btn btn-primary">
+                        <a href="{{ route('settings.roles.edit', $role) }}" class="btn btn-primary">
                             <i class="fas fa-pen me-1"></i> Editar
                         </a>
                         <div class="dropdown">
@@ -53,25 +53,25 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('manager.roles.show.permissions', $role) }}">
+                                    <a class="dropdown-item" href="{{ route('settings.roles.show.permissions', $role) }}">
                                         <i class="fas fa-lock me-2"></i> Gestionar permisos
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('manager.roles.show.users', $role) }}">
+                                    <a class="dropdown-item" href="{{ route('settings.roles.show.users', $role) }}">
                                         <i class="fas fa-users me-2"></i> Ver usuarios
                                     </a>
                                 </li>
                                 @if(!in_array($role->name, ['super-admin', 'customer']))
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('manager.roles.duplicate', $role) }}">
+                                        <a class="dropdown-item" href="{{ route('settings.roles.duplicate', $role) }}">
                                             <i class="fas fa-copy me-2"></i> Duplicar rol
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item text-danger confirm-delete"
-                                           data-href="{{ route('manager.roles.destroy', $role) }}">
+                                           data-href="{{ route('settings.roles.destroy', $role) }}">
                                             <i class="fas fa-trash me-2"></i> Eliminar rol
                                         </a>
                                     </li>
@@ -204,7 +204,7 @@
                         <h6 class="fw-bold">Permisos asignados</h6>
                         <p class="text-muted small mb-0">Lista de permisos otorgados a este rol</p>
                     </div>
-                    <a href="{{ route('manager.roles.show.permissions', $role) }}" class="btn btn-sm btn-warning">
+                    <a href="{{ route('settings.roles.show.permissions', $role) }}" class="btn btn-sm btn-warning">
                         <i class="fas fa-edit me-1"></i> Gestionar
                     </a>
                 </div>
@@ -252,7 +252,7 @@
                         </div>
                         <h6 class="mb-1">Sin permisos asignados</h6>
                         <p class="text-muted mb-3 small">Este rol no tiene ningún permiso asignado</p>
-                        <a href="{{ route('manager.roles.show.permissions', $role) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ route('settings.roles.show.permissions', $role) }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus me-1"></i> Asignar permisos
                         </a>
                     </div>
@@ -287,7 +287,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{{ route('manager.roles') }}" class="btn btn-primary w-100">
+                <a href="{{ route('settings.roles') }}" class="btn btn-primary w-100">
                     <i class="fas fa-arrow-left me-1"></i> Volver a la lista
                 </a>
             </div>

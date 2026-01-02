@@ -25,7 +25,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('manager.settings.roles.create') }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Crear nuevo rol">
+                                <a href="{{ route('settings.roles.create') }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Crear nuevo rol">
                                     <i class="fa-duotone fa-plus"></i> Crear rol
                                 </a>
                             </div>
@@ -69,7 +69,7 @@
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <a href="{{ route('manager.settings.roles.edit', $role->id) }}" class="dropdown-item edit-role"
+                                                <a href="{{ route('settings.roles.edit', $role->id) }}" class="dropdown-item edit-role"
                                                    data-role-id="{{ $role->id }}"
                                                    data-role-name="{{ $role->name }}">
                                                     <i class="fa fa-pen-to-square"></i> Editar
@@ -77,7 +77,7 @@
                                             </li>
 
                                             <li>
-                                                <a href="{{ route('manager.settings.roles.show.permissions', $role->id) }}" class="dropdown-item manage-permissions"
+                                                <a href="{{ route('settings.roles.show.permissions', $role->id) }}" class="dropdown-item manage-permissions"
                                                    data-role-id="{{ $role->id }}"
                                                    data-role-name="{{ $role->name }}">
                                                     <i class="fa fa-shield></i> Gestionar permisos
@@ -86,7 +86,7 @@
 
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
-                                                   data-href="{{ route('manager.settings.roles.destroy', $role->id) }}">
+                                                   data-href="{{ route('settings.roles.destroy', $role->id) }}">
                                                     <i class="fa fa-trash"></i> Eliminar
                                                 </a>
                                             </li>
