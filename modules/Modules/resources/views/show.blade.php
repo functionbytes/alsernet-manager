@@ -1,5 +1,7 @@
 @extends('layouts.theme')
 
+@section('title', 'Detalles del módulo: ' . $module['name'])
+
 @section('content')
 <div class="container-fluid">
     {{-- Header Section --}}

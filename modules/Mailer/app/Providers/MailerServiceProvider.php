@@ -3,8 +3,10 @@
 namespace Modules\Mailer\Providers;
 
 use App\Services\NavService;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Mailer\Policies\MailerSettingsPolicy;
 
 class MailerServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,9 @@ class MailerServiceProvider extends ServiceProvider
         // Register navigation menus
         $this->registerMenus();
 
+        // Register authorization gates
+        $this->registerGates();
+
         // Publish config
         $this->publishes([
             __DIR__.'/../../config/mailer.php' => config_path('mailer.php'),
@@ -42,13 +47,19 @@ class MailerServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Web routes for manager settings
+        // Manager settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings/mailers')
             ->name('manager.settings.mailers.')
-            ->group(module_path('Mailer', 'routes/web.php'));
+            ->group(function () {
+                // Load view routes (GET)
+                require module_path('Mailer', 'routes/web.php');
 
-        // API routes
+                // Load API routes (POST, PUT, DELETE) - same prefix/name
+                require module_path('Mailer', 'routes/api/settings.php');
+            });
+
+        // Public API routes (email sending endpoints)
         Route::middleware(['api', 'throttle:60,1'])
             ->prefix('api/email-endpoints')
             ->name('api.email-endpoints.')
@@ -78,5 +89,21 @@ class MailerServiceProvider extends ServiceProvider
                 ['label' => 'Puntos de envío', 'route' => 'manager.settings.mailers.endpoints.index'],
             ],
         ]);
+    }
+
+    /**
+     * Register authorization gates for mailer settings
+     */
+    protected function registerGates(): void
+    {
+        $settingsPolicy = new MailerSettingsPolicy;
+
+        // Configure mailer settings gates
+        Gate::define('configure-mailers', fn ($user) => $settingsPolicy->configure($user));
+        Gate::define('view-mailer-settings', fn ($user) => $settingsPolicy->viewSettings($user));
+        Gate::define('manage-mailer-templates', fn ($user) => $settingsPolicy->manageTemplates($user));
+        Gate::define('manage-mailer-components', fn ($user) => $settingsPolicy->manageComponents($user));
+        Gate::define('manage-mailer-variables', fn ($user) => $settingsPolicy->manageVariables($user));
+        Gate::define('manage-mailer-endpoints', fn ($user) => $settingsPolicy->manageEndpoints($user));
     }
 }

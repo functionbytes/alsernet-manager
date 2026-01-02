@@ -1,5 +1,7 @@
 @extends('layouts.theme')
 
+@section('title', 'Instalar nuevo módulo')
+
 @section('content')
 <div class="container-fluid">
     {{-- Header Section --}}
