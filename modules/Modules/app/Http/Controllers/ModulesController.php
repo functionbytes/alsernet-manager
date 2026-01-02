@@ -28,7 +28,7 @@ class ModulesController extends Controller
                 'disabled' => $module->isDisabled(),
                 'priority' => $moduleConfig['priority'] ?? 0,
                 'path' => $module->getPath(),
-                'namespace' => $module->getNamespace(),
+                'namespace' => $moduleConfig['namespace'] ?? 'Modules\\'.ucfirst($module->getName()),
             ];
         }
 
@@ -67,11 +67,12 @@ class ModulesController extends Controller
             'version' => $moduleConfig['version'] ?? '1.0.0',
             'enabled' => $module->isEnabled(),
             'disabled' => $module->isDisabled(),
-            'priority' => $module->getPriority(),
+            'priority' => $moduleConfig['priority'] ?? 0,
             'path' => $module->getPath(),
-            'namespace' => $module->getNamespace(),
-            'providers' => $module->getProviders(),
-            'aliases' => $module->getAliases(),
+            'namespace' => $moduleConfig['namespace'] ?? 'Modules\\'.ucfirst($module->getName()),
+            'providers' => $moduleConfig['providers'] ?? [],
+            'aliases' => $moduleConfig['aliases'] ?? [],
+            'keywords' => $moduleConfig['keywords'] ?? [],
         ];
 
         return view('modules::show', ['module' => $moduleData]);
