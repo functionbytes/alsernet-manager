@@ -12,7 +12,7 @@
                                 <h5 class="mb-0">Crear nuevo rol</h5>
                                 <p class="card-subtitle mb-0 mt-2">Complete la información para registrar un nuevo rol en el sistema.</p>
                             </div>
-                            <a href="{{ route('settings.roles') }}" class="btn btn-light">
+                            <a href="{{ route('settings.roles.index') }}" class="btn btn-light">
                                 <i class="fa-duotone fa-arrow-left"></i> Atrás
                             </a>
                         </div>
@@ -57,7 +57,7 @@
                                     <button type="submit" class="btn btn-info px-4 waves-effect waves-light">
                                         <i class="fa-duotone fa-save"></i> Crear rol
                                     </button>
-                                    <a href="{{ route('settings.roles') }}" class="btn btn-light px-4">
+                                    <a href="{{ route('settings.roles.index') }}" class="btn btn-light px-4">
                                         Cancelar
                                     </a>
                                 </div>
@@ -122,7 +122,7 @@
                                     positionClass: "toast-bottom-right",
                                     timeOut: 1500,
                                     onHidden: function () {
-                                        window.location.href = "{{ route('settings.roles') }}";
+                                        window.location.href = "{{ route('settings.roles.index') }}";
                                     }
                                 });
                             } else {

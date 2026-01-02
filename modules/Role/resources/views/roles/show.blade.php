@@ -287,7 +287,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{{ route('settings.roles') }}" class="btn btn-primary w-100">
+                <a href="{{ route('settings.roles.index') }}" class="btn btn-primary w-100">
                     <i class="fas fa-arrow-left me-1"></i> Volver a la lista
                 </a>
             </div>
