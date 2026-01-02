@@ -2,6 +2,7 @@
 
 namespace Modules\Mailer\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,9 @@ class MailerServiceProvider extends ServiceProvider
     {
         // Load routes with proper prefix and middleware
         $this->registerRoutes();
+
+        // Register navigation menus
+        $this->registerMenus();
 
         // Publish config
         $this->publishes([
@@ -42,12 +46,37 @@ class MailerServiceProvider extends ServiceProvider
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('manager/settings/mailers')
             ->name('manager.settings.mailers.')
-            ->group(base_path('modules/Mailer/routes/web.php'));
+            ->group(module_path('Mailer', 'routes/web.php'));
 
         // API routes
         Route::middleware(['api', 'throttle:60,1'])
             ->prefix('api/email-endpoints')
             ->name('api.email-endpoints.')
-            ->group(base_path('modules/Mailer/routes/api.php'));
+            ->group(module_path('Mailer', 'routes/api.php'));
+    }
+
+    /**
+     * Register navigation menus for the Mailer module
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item for Mailers
+        NavService::registerMiniItem('mailers', [
+            'icon' => 'fa-envelope',
+            'tooltip' => 'Emails',
+            'sidebar_id' => 'mailers',
+            'order' => 25,
+        ]);
+
+        // Sidebar with menu items
+        NavService::registerSidebar('mailers', [
+            'title' => 'Emails',
+            'items' => [
+                ['label' => 'Plantillas', 'route' => 'manager.settings.mailers.templates.index'],
+                ['label' => 'Componentes', 'route' => 'manager.settings.mailers.components.index'],
+                ['label' => 'Variables', 'route' => 'manager.settings.mailers.variables.index'],
+                ['label' => 'Puntos de envío', 'route' => 'manager.settings.mailers.endpoints.index'],
+            ],
+        ]);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\HealthCheckController;
-use App\Http\Controllers\Managers\Helpdesk\ConversationMessagesController;
+use Modules\Helpdesk\Http\Controllers\Managers\ConversationMessagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

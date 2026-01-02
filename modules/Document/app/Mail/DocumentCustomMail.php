@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Document\Entities\Document;
-use Modules\Mail\Models\MailTemplate;
-use Modules\Mail\Services\Mails\MailTemplateRendererService;
+use Modules\Mailer\Models\MailerTemplate;
+use Modules\Mailer\Services\Mails\MailerTemplateRendererService;
 
 class DocumentCustomMail extends Mailable
 {
@@ -27,7 +27,7 @@ class DocumentCustomMail extends Mailable
         Document $document,
         ?string $subject = null,
         ?string $content = null,
-        ?MailTemplate $emailTemplate = null
+        ?MailerTemplate $emailTemplate = null
     ) {
         $this->document = $document;
         $this->emailSubject = $subject;
@@ -64,7 +64,7 @@ class DocumentCustomMail extends Mailable
     public function build()
     {
         // Determinar si usar template de BD o contenido personalizado
-        if ($this->emailTemplate instanceof MailTemplate) {
+        if ($this->emailTemplate instanceof MailerTemplate) {
             return $this->buildFromTemplate();
         } else {
             return $this->buildFromCustomContent();
@@ -79,13 +79,13 @@ class DocumentCustomMail extends Mailable
     private function buildFromTemplate(): self
     {
         // Renderizar template con variables
-        $htmlContent = MailTemplateRendererService::renderEmailTemplate(
+        $htmlContent = MailerTemplateRendererService::renderEmailTemplate(
             $this->emailTemplate,
             $this->templateVariables
         );
 
         // Obtener asunto (puede tener variables también)
-        $subject = MailTemplateRendererService::replaceVariables(
+        $subject = MailerTemplateRendererService::replaceVariables(
             $this->emailTemplate->subject,
             $this->templateVariables
         );
@@ -105,7 +105,7 @@ class DocumentCustomMail extends Mailable
         $content = $this->emailContent;
 
         if ($content) {
-            $content = MailTemplateRendererService::replaceVariables(
+            $content = MailerTemplateRendererService::replaceVariables(
                 $content,
                 $this->templateVariables
             );
@@ -125,7 +125,7 @@ class DocumentCustomMail extends Mailable
      *
      * @return $this
      */
-    public function setTemplate(MailTemplate $template): self
+    public function setTemplate(MailerTemplate $template): self
     {
         $this->emailTemplate = $template;
 

@@ -10,7 +10,7 @@
         'title' => 'Plantillas de email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.settings')],
+            ['label' => 'Configuración', 'url' => ''],
             ['label' => 'Plantillas de correo', 'active' => true]
         ]
     ])

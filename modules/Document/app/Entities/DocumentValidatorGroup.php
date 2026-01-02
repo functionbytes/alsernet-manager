@@ -58,7 +58,7 @@ class DocumentValidatorGroup extends Model
     {
         return $this->belongsToMany(
             User::class,
-            'validator_group_user',
+            'document_validator_group_user',
             'validator_group_id',
             'user_id'
         )->withPivot('priority', 'created_at');

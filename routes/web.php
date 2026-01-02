@@ -14,7 +14,14 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/register', [LoginController::class, 'showRegisterForm'])->name('register');
-    Route::get('/home', [PagesController::class, 'home'])->name('home');
+
+    // Protected routes - require authentication
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/home', [PagesController::class, 'home'])->name('home');
+
+        // Manager routes
+        require __DIR__.'/managers.php';
+    });
 
     Route::get('/clear', function () {
         Artisan::call('dump-autoload');

@@ -6,8 +6,8 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentMail;
-use Modules\Mail\Models\MailTemplate;
-use Modules\Mail\Services\Mails\MailTemplateRendererService;
+use Modules\Mailer\Models\MailerTemplate;
+use Modules\Mailer\Services\Mails\MailerTemplateRendererService;
 
 class DocumentEmailTemplateService
 {
@@ -40,8 +40,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -101,8 +101,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -150,8 +150,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -191,14 +191,14 @@ class DocumentEmailTemplateService
             $langId = $document->lang_id ?? 1;
 
             // Procesar contenido del usuario (reemplazar variables que el usuario haya puesto)
-            $userContent = MailTemplateRendererService::replaceVariables($content, $variables);
+            $userContent = MailerTemplateRendererService::replaceVariables($content, $variables);
 
             // Agregar el contenido del usuario como variable especial
             $variables['custom_content'] = $userContent;
             $variables['CUSTOM_CONTENT'] = $userContent;
 
             // Procesar asunto (reemplazar variables del usuario)
-            $processedSubject = MailTemplateRendererService::replaceVariables($subject, $variables);
+            $processedSubject = MailerTemplateRendererService::replaceVariables($subject, $variables);
 
             // Obtener plantilla configurada para correo personalizado
             $template = self::resolveTemplate('documents.mail_template_custom_email_id', 'document_custom_email');
@@ -220,7 +220,7 @@ class DocumentEmailTemplateService
 
                 // Usar renderEmailTemplate para aplicar layouts y reemplazar todas las variables
                 // Esto es igual que los demás métodos (sendInitialRequest, sendReminder, etc.)
-                $finalContent = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+                $finalContent = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
             }
 
             Mail::html($finalContent, function ($message) use ($processedSubject, $recipient) {
@@ -275,8 +275,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -325,8 +325,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -384,8 +384,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $subject = MailTemplateRendererService::replaceVariables($translation->subject, $variables);
-            $content = MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
+            $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             Mail::html($content, function ($message) use ($subject, $recipient) {
                 $message->to($recipient)
@@ -590,21 +590,21 @@ class DocumentEmailTemplateService
      * @param  string  $fallbackKey  Clave por defecto si no hay configuración (ej: document_reminder)
      * @param  array<string>  $alternativeKeys  Claves alternativas si la principal no existe
      */
-    private static function resolveTemplate(string $settingKey, string $fallbackKey, array $alternativeKeys = []): ?MailTemplate
+    private static function resolveTemplate(string $settingKey, string $fallbackKey, array $alternativeKeys = []): ?MailerTemplate
     {
         // Intentar obtener ID de plantilla configurado
         $configuredTemplateId = Setting::get($settingKey);
 
         if ($configuredTemplateId) {
             // Buscar por ID configurado
-            $template = MailTemplate::find($configuredTemplateId);
+            $template = MailerTemplate::find($configuredTemplateId);
             if ($template && $template->is_enabled) {
                 return $template;
             }
         }
 
         // Fallback: buscar por clave principal
-        $template = MailTemplate::where('key', $fallbackKey)
+        $template = MailerTemplate::where('key', $fallbackKey)
             ->where('is_enabled', true)
             ->first();
 
@@ -614,7 +614,7 @@ class DocumentEmailTemplateService
 
         // Si no encontró, intentar con claves alternativas
         foreach ($alternativeKeys as $key) {
-            $template = MailTemplate::where('key', $key)
+            $template = MailerTemplate::where('key', $key)
                 ->where('is_enabled', true)
                 ->first();
 
@@ -634,7 +634,7 @@ class DocumentEmailTemplateService
         string $emailType,
         string $subject,
         string $content,
-        ?MailTemplate $template = null,
+        ?MailerTemplate $template = null,
         array $metadata = [],
         bool $success = true,
         ?string $errorMessage = null

@@ -2,6 +2,7 @@
 
 namespace Modules\Document\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,7 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerViewComposers();
+        $this->registerMenus();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
 
         // Register routes directly (Laravel 12 compatible)
@@ -81,17 +83,13 @@ class DocumentsServiceProvider extends ServiceProvider
                 require module_path($this->name, 'routes/api/settings.php');
             });
 
-        // Administrative routes
-        Route::middleware(['web', 'auth', 'role:administrative|super-admin'])
-            ->prefix('administrative')
-            ->name('administrative.')
-            ->group(module_path($this->name, 'routes/administratives.php'));
-
         // Public API routes
         Route::middleware(['api'])
             ->prefix('api/documents')
             ->name('api.documents.')
-            ->group(module_path($this->name, 'routes/api.php'));
+            ->group(function () {
+                require module_path($this->name, 'routes/api.php');
+            });
     }
 
     /**
@@ -190,6 +188,34 @@ class DocumentsServiceProvider extends ServiceProvider
             'theme.components.nav',
             NavigationComposer::class
         );
+    }
+
+    /**
+     * Registrar menús del módulo Document
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Documentos
+        NavService::registerMiniItem('documents', [
+            'icon' => 'fa-file-pdf',
+            'tooltip' => 'Documentos',
+            'sidebar_id' => 'documents',
+            'order' => 20,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('documents', [
+            'title' => 'Documentos',
+            'items' => [
+                ['label' => 'Configuración Global', 'route' => 'manager.settings.documents.configurations.global'],
+                ['label' => 'Tipos de Documento', 'route' => 'manager.settings.documents.types.index'],
+                ['label' => 'Condiciones de Validación', 'route' => 'manager.settings.documents.conditions.index'],
+                ['label' => 'Políticas SLA', 'route' => 'manager.settings.documents.sla-policies.index'],
+                ['label' => 'Grupos de Validadores', 'route' => 'manager.settings.documents.groups.index'],
+                ['label' => 'Configuración de Documentos', 'route' => 'manager.settings.documents.settings.index'],
+                ['label' => 'Bloqueos de Productos', 'route' => 'manager.settings.documents.blockades.index'],
+            ],
+        ]);
     }
 
     public function provides(): array

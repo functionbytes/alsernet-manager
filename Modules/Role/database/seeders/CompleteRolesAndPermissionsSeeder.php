@@ -83,12 +83,20 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'tickets.groups.manage' => 'Gestionar grupos',
             'tickets.canneds.manage' => 'Gestionar respuestas predefinidas',
 
-            'manager.permissions' => 'Gestionar permisos del manager', // Added description
-            'manager.permissions.create' => 'Crear permisos del manager', // Added description
-            'manager.permissions.store' => 'Almacenar permisos del manager', // Added description
-            'manager.permissions.edit' => 'Editar permisos del manager', // Added description
-            'manager.permissions.update' => 'Actualizar permisos del manager', // Added description
-            'manager.permissions.destroy' => 'Eliminar permisos del manager', // Added description
+            // Roles y Permisos
+            'roles.view' => 'Ver roles',
+            'roles.create' => 'Crear roles',
+            'roles.edit' => 'Editar roles',
+            'roles.delete' => 'Eliminar roles',
+            'roles.show.permissions' => 'Ver permisos del rol',
+            'roles.update.permissions' => 'Actualizar permisos del rol',
+            'roles.show.users' => 'Ver usuarios del rol',
+            'roles.assign.users' => 'Asignar usuarios al rol',
+
+            'permissions.view' => 'Ver permisos',
+            'permissions.create' => 'Crear permisos',
+            'permissions.edit' => 'Editar permisos',
+            'permissions.delete' => 'Eliminar permisos',
 
             'manager.langs' => 'Gestionar idiomas del manager', // Added description
             'manager.langs.create' => 'Crear idiomas del manager', // Added description

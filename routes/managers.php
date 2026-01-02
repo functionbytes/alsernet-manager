@@ -5,16 +5,62 @@
 use App\Http\Controllers\Managers\DashboardController;
 use App\Http\Controllers\Managers\Faqs\CategoriesController as FaqsCategoriesController;
 use App\Http\Controllers\Managers\Faqs\FaqsController;
+use Modules\Notification\Http\Controllers\Managers\NotificationController;
+use App\Http\Controllers\Managers\PulseController;
+use App\Http\Controllers\Managers\Settings\BackupController;
+use App\Http\Controllers\Managers\Settings\BackupScheduleController;
+use App\Http\Controllers\Managers\Settings\CategoriesController;
+use App\Http\Controllers\Managers\Settings\CategoryController;
+use App\Http\Controllers\Managers\Settings\DatabaseCleanupController;
+use App\Http\Controllers\Managers\Settings\DatabaseSettingsController;
+use App\Http\Controllers\Managers\Settings\EmailSettingsController;
+use App\Http\Controllers\Managers\Settings\HoursSettingsController;
+use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
+use App\Http\Controllers\Managers\Settings\LangsController;
+use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
+use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
+use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
+use App\Http\Controllers\Managers\Settings\SearchSettingsController;
+use App\Http\Controllers\Managers\Settings\ServerAccessController;
+use App\Http\Controllers\Managers\Settings\SettingsController;
+use App\Http\Controllers\Managers\Settings\StorageController;
+use App\Http\Controllers\Managers\Settings\SupervisorController;
+use App\Http\Controllers\Managers\Settings\SystemCacheController;
+use App\Http\Controllers\Managers\Settings\SystemSettingsController;
+use App\Http\Controllers\Managers\Settings\TranslationController;
+use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
+use App\Http\Controllers\Managers\SystemInfoController;
+use App\Http\Controllers\Managers\Users\UsersController;
+use Illuminate\Support\Facades\Route;
+use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
+use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ProductsController;
+use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ReportController;
+use Modules\Erp\Http\Controllers\Managers\ErpSettingsController;
 use Modules\Helpdesk\Http\Controllers\Managers\AiAgentFlowsController;
 use Modules\Helpdesk\Http\Controllers\Managers\AiAgentSettingsController;
 use Modules\Helpdesk\Http\Controllers\Managers\CampaignsController as HelpdeskCampaignsController;
+// Mail controller imports are now handled by modules\Mail
+// use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
+// use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
 use Modules\Helpdesk\Http\Controllers\Managers\ConversationsController as HelpdeskConversationsController;
 use Modules\Helpdesk\Http\Controllers\Managers\CustomersController as HelpdeskCustomersController;
+// Role and Permission routes are now handled by modules\Role
+// See: modules/Role/routes/theme.php
 use Modules\Helpdesk\Http\Controllers\Managers\HelpCenterController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\AttributesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\SettingsController as SettingsHelpdeskController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\StatusesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TagsController;
+// @deprecated Supplier controllers moved to modules/Supplier
+// use App\Http\Controllers\Managers\Settings\Suppliers\PromptTemplatesController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierCategoriesController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierContentController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierPromptsController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SuppliersController;
+// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierSourcesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TeamController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketCannedRepliesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketCategoriesController;
@@ -25,60 +71,13 @@ use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketViewsController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketCommentsController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketNotesController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketsController as HelpdeskTicketsController;
-use App\Http\Controllers\Managers\NotificationController;
-use App\Http\Controllers\Managers\PulseController;
-use App\Http\Controllers\Managers\Settings\BackupController;
-use App\Http\Controllers\Managers\Settings\BackupScheduleController;
-use App\Http\Controllers\Managers\Settings\CategoriesController;
-use App\Http\Controllers\Managers\Settings\CategoryController;
-use App\Http\Controllers\Managers\Settings\DatabaseCleanupController;
-use App\Http\Controllers\Managers\Settings\DatabaseSettingsController;
-use App\Http\Controllers\Managers\Settings\EmailSettingsController;
-use Modules\Erp\Http\Controllers\Managers\ErpSettingsController;
-use App\Http\Controllers\Managers\Settings\HoursSettingsController;
-use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
-use App\Http\Controllers\Managers\Settings\LangsController;
-use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
-// Mail controller imports are now handled by modules\Mail
-// use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
-// use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
-// use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
-// use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
-use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
-use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
-// Role and Permission routes are now handled by modules\Role
-// See: modules/Role/routes/theme.php
-use App\Http\Controllers\Managers\Settings\SearchSettingsController;
-use App\Http\Controllers\Managers\Settings\ServerAccessController;
-use App\Http\Controllers\Managers\Settings\SettingsController;
-use App\Http\Controllers\Managers\Settings\StorageController;
-use App\Http\Controllers\Managers\Settings\SupervisorController;
-// @deprecated Supplier controllers moved to modules/Supplier
-// use App\Http\Controllers\Managers\Settings\Suppliers\PromptTemplatesController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierCategoriesController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierContentController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierPromptsController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SuppliersController;
-// use App\Http\Controllers\Managers\Settings\Suppliers\SupplierSourcesController;
-use App\Http\Controllers\Managers\Settings\SystemCacheController;
-use App\Http\Controllers\Managers\Settings\SystemSettingsController;
-use App\Http\Controllers\Managers\Settings\TranslationController;
-use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
-use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ProductsController;
-use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
-use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\LocationsController as CampaignLocationsController;
-use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ReportController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\BarcodeController as LocationsBarcodesController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\LocationsController as ShopsLocationsController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Shops\ShopsController;
 // @deprecated Subscriber controllers moved to modules/Subscriber
 // use App\Http\Controllers\Managers\Subscribers\SubscribersConditionsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersListsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersReportController;
-use App\Http\Controllers\Managers\SystemInfoController;
-use App\Http\Controllers\Managers\Users\UsersController;
+use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\BarcodeController as LocationsBarcodesController;
+use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\LocationsController as ShopsLocationsController;
 // @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
 // use App\Http\Controllers\Managers\Warehouses\WarehouseController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseDashboardController;
@@ -90,21 +89,13 @@ use App\Http\Controllers\Managers\Users\UsersController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseLocationStylesController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseMapController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseReportsController;
-use Illuminate\Support\Facades\Route;
+use Modules\Warehouse\Http\Controllers\Managers\Shops\Shops\ShopsController;
 
 // use App\Http\Controllers\Managers\Settings\ErpIntegrationSettingsController; // TODO: Controller doesn't exist
 
 Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'dashboard'])->name('manager.dashboard');
-
-    // User Notification Routes (Laravel Native Notifications)
-    Route::prefix('notifications')->name('notifications')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Managers\NotificationsController::class, 'index'])->name('index');
-        Route::post('/{id}/read', [\App\Http\Controllers\Managers\NotificationsController::class, 'markAsRead'])->name('mark-as-read');
-        Route::post('/mark-all-read', [\App\Http\Controllers\Managers\NotificationsController::class, 'markAllAsRead'])->name('mark-all-read');
-        Route::delete('/{id}', [\App\Http\Controllers\Managers\NotificationsController::class, 'destroy'])->name('destroy');
-    });
 
     // User Management Routes (APPROACH 1: Middleware-Based)
     // These routes are protected by CheckRolesAndPermissions middleware
@@ -621,6 +612,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::post('/delete', [NotificationController::class, 'delete'])->name('manager.notifications.delete');
         Route::post('/listing', [NotificationController::class, 'listing'])->name('manager.notifications.listing');
     });
+
+    // Alias para manager.notifications (sin .index)
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('manager.notifications');
 
     // Layout routes are now handled by modules\Campaign
     // See: modules/Campaign/routes/theme.php

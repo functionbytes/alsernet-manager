@@ -53,17 +53,22 @@ class NavigationService
      */
     protected function getDashboardNav(): array
     {
+        $items = [];
+
+        $url = $this->safeRoute('manager.dashboard');
+        if ($url) {
+            $items[] = [
+                'label' => 'Dashboard',
+                'url' => $url,
+                'active' => Route::currentRouteName() === 'manager.dashboard',
+            ];
+        }
+
         return [
             'id' => 'dashboard',
             'icon' => 'fa-chart-line',
             'title' => 'Dashboard',
-            'items' => [
-                [
-                    'label' => 'Dashboard',
-                    'url' => route('manager.dashboard'),
-                    'active' => Route::currentRouteName() === 'manager.dashboard',
-                ],
-            ],
+            'items' => $items,
         ];
     }
 

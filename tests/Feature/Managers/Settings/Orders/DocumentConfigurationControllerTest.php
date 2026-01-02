@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Managers\Settings\Orders;
 
-use Modules\Mail\Models\MailTemplate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Mailer\Models\MailerTemplate;
 use Tests\TestCase;
 
 class DocumentConfigurationControllerTest extends TestCase
@@ -28,13 +28,13 @@ class DocumentConfigurationControllerTest extends TestCase
     public function test_search_templates_returns_all_templates(): void
     {
         // Crear algunas plantillas de prueba
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Solicitud Inicial',
             'module' => 'documents',
             'is_enabled' => true,
         ]);
 
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Recordatorio de Documentos',
             'module' => 'documents',
             'is_enabled' => true,
@@ -62,13 +62,13 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_search_templates_filters_by_search_term(): void
     {
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Solicitud Inicial de Documentos',
             'module' => 'documents',
             'is_enabled' => true,
         ]);
 
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Aprobación de Documentos',
             'module' => 'documents',
             'is_enabled' => true,
@@ -101,13 +101,13 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_search_templates_only_returns_enabled(): void
     {
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Plantilla Habilitada',
             'module' => 'documents',
             'is_enabled' => true,
         ]);
 
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Plantilla Deshabilitada',
             'module' => 'documents',
             'is_enabled' => false,
@@ -132,13 +132,13 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_search_templates_only_returns_documents_module(): void
     {
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Plantilla de Documentos',
             'module' => 'documents',
             'is_enabled' => true,
         ]);
 
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Plantilla de Órdenes',
             'module' => 'orders',
             'is_enabled' => true,
@@ -163,7 +163,7 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_search_templates_includes_language_info(): void
     {
-        $template = MailTemplate::factory()->create([
+        $template = MailerTemplate::factory()->create([
             'name' => 'Plantilla con Idioma',
             'module' => 'documents',
             'is_enabled' => true,
@@ -199,7 +199,7 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_search_templates_returns_select2_format(): void
     {
-        MailTemplate::factory()->create([
+        MailerTemplate::factory()->create([
             'name' => 'Test Template',
             'module' => 'documents',
             'is_enabled' => true,

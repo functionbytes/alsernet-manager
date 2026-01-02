@@ -3,6 +3,7 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
+    App\Providers\MenuServiceProvider::class,
     App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
     // modules\Campaign\Providers\CampaignServiceProvider::class, // DISABLED
@@ -12,7 +13,7 @@ return [
     // modules\Webhook\Providers\WebhookServiceProvider::class,
     // modules\Supplier\Providers\SupplierServiceProvider::class,
     // modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
-    // modules\Role\Providers\RoleServiceProvider::class,
+    Modules\Role\Providers\RoleServiceProvider::class,
     Modules\Media\Providers\MediaServiceProvider::class,
     // modules\Event\Providers\EventServiceProvider::class,
     Modules\Mailer\Providers\MailerServiceProvider::class,

@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\Mail\Models\MailTemplate;
+use Modules\Mailer\Models\MailerTemplate;
 
 class DocumentMail extends Model
 {
@@ -61,7 +61,7 @@ class DocumentMail extends Model
      */
     public function template(): BelongsTo
     {
-        return $this->belongsTo(MailTemplate::class, 'template_id');
+        return $this->belongsTo(MailerTemplate::class, 'template_id');
     }
 
     /**

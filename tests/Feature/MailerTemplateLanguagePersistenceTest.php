@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Lang;
-use Modules\Mail\Models\MailTemplate;
-use Modules\Mail\Models\MailTemplateTranslation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Mailer\Models\MailerTemplate;
+use Modules\Mailer\Models\MailerTemplateLang;
 use Tests\TestCase;
 
 /**
@@ -41,7 +41,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
         ]);
 
         // Create a test email template
-        $template = MailTemplate::create([
+        $template = MailerTemplate::create([
             'key' => 'test.language.persistence',
             'name' => 'Test Language Persistence Template',
             'module' => 'core',
@@ -50,14 +50,14 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
         ]);
 
         // Create translations for both languages
-        MailTemplateTranslation::create([
+        MailerTemplateLang::create([
             'email_template_id' => $template->id,
             'lang_id' => $spanishLang->id,
             'subject' => 'Asunto en Español',
             'content' => '<p>Contenido en Español</p>',
         ]);
 
-        MailTemplateTranslation::create([
+        MailerTemplateLang::create([
             'email_template_id' => $template->id,
             'lang_id' => $englishLang->id,
             'subject' => 'Subject in English',
@@ -137,20 +137,20 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
             'is_enabled' => true,
         ]);
 
-        $template = MailTemplate::create([
+        $template = MailerTemplate::create([
             'key' => 'test.language.switch',
             'name' => 'Test Language Switch',
             'module' => 'core',
         ]);
 
-        MailTemplateTranslation::create([
+        MailerTemplateLang::create([
             'email_template_id' => $template->id,
             'lang_id' => $spanishLang->id,
             'subject' => 'Asunto ES',
             'content' => '<p>ES</p>',
         ]);
 
-        MailTemplateTranslation::create([
+        MailerTemplateLang::create([
             'email_template_id' => $template->id,
             'lang_id' => $englishLang->id,
             'subject' => 'Subject EN',

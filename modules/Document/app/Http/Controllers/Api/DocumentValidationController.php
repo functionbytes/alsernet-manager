@@ -471,7 +471,7 @@ class DocumentValidationController extends Controller
      */
     public function getCustomEmailTemplate(): JsonResponse
     {
-        $template = \Modules\Mail\Models\MailTemplate::where('key', 'custom_document')->first();
+        $template = \Modules\Mailer\Models\MailerTemplate::where('key', 'custom_document')->first();
 
         if (! $template) {
             return response()->json([

@@ -5,7 +5,7 @@ namespace Modules\Document\Factories;
 use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
 use Modules\Document\Mail\DocumentCustomMail;
-use Modules\Mail\Models\MailTemplate;
+use Modules\Mailer\Models\MailerTemplate;
 
 class DocumentEmailFactory
 {
@@ -14,7 +14,7 @@ class DocumentEmailFactory
         string $templateKey,
         array $additionalVariables = []
     ): bool {
-        $template = MailTemplate::where('key', $templateKey)
+        $template = MailerTemplate::where('key', $templateKey)
             ->where('is_enabled', true)
             ->where('module', 'documents')
             ->first();
