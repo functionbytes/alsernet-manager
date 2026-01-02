@@ -16,8 +16,8 @@ class RoleServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Register routes with manager prefix
-        $this->registerRoutes();
+        // Routes are now loaded from routes/managers.php
+        // See: routes/managers.php line 531-532
 
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'role');
 
@@ -27,23 +27,6 @@ class RoleServiceProvider extends ServiceProvider
 
         // Register navigation menus
         $this->registerMenus();
-    }
-
-    /**
-     * Register Role module routes
-     */
-    protected function registerRoutes(): void
-    {
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings')
-            ->name('manager.settings.')
-            ->group(function (): void {
-                // Load view routes (GET)
-                require __DIR__.'/../../routes/web.php';
-
-                // Load API routes (POST, PUT, DELETE) - same prefix/name
-                require __DIR__.'/../../routes/api.php';
-            });
     }
 
     /**

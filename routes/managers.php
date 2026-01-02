@@ -527,16 +527,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         });
 
         // Role and Permission routes are now handled by modules\Role
-        // See: modules/Role/routes/theme.php
-        /*
-        Route::group(['prefix' => 'roles'], function () {
-            // Routes moved to modules/Role/routes/theme.php
-        });
-
-        Route::group(['prefix' => 'permissions'], function () {
-            // Routes moved to modules/Role/routes/theme.php
-        });
-        */
+        // Loaded from module files
+        require module_path('Role', 'routes/web.php');
+        require module_path('Role', 'routes/api.php');
 
         Route::group(['prefix' => 'translations'], function () {
             Route::get('/', [TranslationController::class, 'index'])->name('manager.settings.translations.index');
