@@ -23,41 +23,49 @@
 
                 {{-- Module Information Section --}}
                 <div class="mb-4">
-                    <h6 class="mb-3 text-uppercase fw-bold">
-                        <i class="fas fa-info-circle me-2"></i>Información general
+                    <h6 class="mb-3 fw-bold border-bottom pb-2">
+                        Información general
                     </h6>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small">Alias</label>
-                            <div class="fw-bold">
-                                <code class="text-primary">{{ $module['alias'] }}</code>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-1">Alias</label>
+                                <div class="fw-bold">
+                                    <code class="text-primary fs-6">{{ $module['alias'] }}</code>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small">Versión</label>
-                            <div>
-                                <span class="badge bg-info">{{ $module['version'] }}</span>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-1">Versión</label>
+                                <div>
+                                    <span class="badge bg-light text-dark border fs-6">v{{ $module['version'] }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small">Prioridad</label>
-                            <div>
-                                <span class="badge bg-secondary">{{ $module['priority'] }}</span>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-1">Prioridad</label>
+                                <div>
+                                    <span class="badge bg-primary fs-6">{{ $module['priority'] }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small">Estado</label>
-                            <div>
-                                @if($module['enabled'])
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check-circle me-1"></i>Activo
-                                    </span>
-                                @else
-                                    <span class="badge bg-secondary">
-                                        <i class="fas fa-times-circle me-1"></i>Inactivo
-                                    </span>
-                                @endif
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-1">Estado</label>
+                                <div>
+                                    @if($module['enabled'])
+                                        <span class="badge bg-success-subtle text-success border border-success fs-6">
+                                            <i class="fas fa-circle fa-2xs me-1"></i>Activo
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary fs-6">
+                                            <i class="fas fa-circle fa-2xs me-1"></i>Inactivo
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -67,45 +75,53 @@
                 <hr class="my-4">
 
                 <div class="mb-4">
-                    <h6 class="mb-3 text-uppercase fw-bold">
-                        <i class="fas fa-code me-2"></i>Información técnica
+                    <h6 class="mb-3 fw-bold border-bottom pb-2">
+                        Información técnica
                     </h6>
 
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <label class="form-label text-muted small">Ruta</label>
-                            <div class="bg-light p-2 rounded small text-break">
-                                <code>{{ $module['path'] }}</code>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-2">Ruta del módulo</label>
+                                <div class="text-break">
+                                    <code class="text-dark">{{ $module['path'] }}</code>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 mb-3">
-                            <label class="form-label text-muted small">Namespace</label>
-                            <div class="bg-light p-2 rounded small">
-                                <code>{{ $module['namespace'] }}</code>
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded">
+                                <label class="form-label text-muted small mb-2">Namespace</label>
+                                <div>
+                                    <code class="text-dark">{{ $module['namespace'] }}</code>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     @if(!empty($module['providers']))
                     <div class="mt-3">
-                        <label class="form-label text-muted small">Service Providers</label>
-                        <div class="bg-light p-2 rounded">
-                            @foreach($module['providers'] as $provider)
-                                <div class="small mb-2">
-                                    <code class="text-dark">{{ $provider }}</code>
-                                </div>
-                            @endforeach
+                        <div class="p-3 bg-light rounded">
+                            <label class="form-label text-muted small mb-2">Service Providers</label>
+                            <div class="d-flex flex-column gap-2">
+                                @foreach($module['providers'] as $provider)
+                                    <div class="badge bg-white text-dark border text-start">
+                                        <code class="text-dark">{{ $provider }}</code>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     @endif
 
                     @if(!empty($module['keywords']))
                     <div class="mt-3">
-                        <label class="form-label text-muted small">Keywords</label>
-                        <div class="mb-2">
-                            @foreach($module['keywords'] as $keyword)
-                                <span class="badge bg-light text-dark">{{ $keyword }}</span>
-                            @endforeach
+                        <div class="p-3 bg-light rounded">
+                            <label class="form-label text-muted small mb-2">Keywords</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach($module['keywords'] as $keyword)
+                                    <span class="badge bg-primary-subtle text-primary border border-primary">{{ $keyword }}</span>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -115,14 +131,19 @@
                 <hr class="my-4">
 
                 <div class="mb-3">
-                    <h6 class="mb-3 text-uppercase fw-bold">
-                        <i class="fas fa-cogs me-2"></i>Acciones
+                    <h6 class="mb-3 fw-bold border-bottom pb-2">
+                        Acciones disponibles
                     </h6>
 
-                    <div class="btn-group" role="group">
+                    <div class="d-flex gap-2 flex-wrap">
+                        {{-- Edit Button --}}
+                        <a href="{{ route('modules.edit', $module['alias']) }}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Editar configuración
+                        </a>
+
                         @if(!in_array($module['name'], ['Role', 'Modules']))
                             @if($module['enabled'])
-                                <form action="{{ route('modules.disable', $module['alias']) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('modules.disable', $module['alias']) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-warning"
                                             onclick="return confirm('¿Deshabilitar {{ $module['name'] }}?')">
@@ -130,7 +151,7 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('modules.enable', $module['alias']) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('modules.enable', $module['alias']) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-success">
                                         <i class="fas fa-play me-2"></i>Habilitar
@@ -138,16 +159,17 @@
                                 </form>
                             @endif
 
-                            <form action="{{ route('modules.uninstall', $module['alias']) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('modules.uninstall', $module['alias']) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger"
                                         onclick="return confirm('¿Desinstalar {{ $module['name'] }}? Esta acción es irreversible.')">
-                                    <i class="fas fa-trash me-2"></i>Desinstalar
+                                    <i class="fas fa-trash-alt me-2"></i>Desinstalar
                                 </button>
                             </form>
                         @else
-                            <div class="alert alert-info mb-0">
-                                <i class="fas fa-lock me-2"></i>Este módulo está protegido y no puede ser modificado.
+                            <div class="alert alert-warning mb-0 d-inline-flex align-items-center">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                <span>Este módulo está protegido y no puede ser deshabilitado o desinstalado.</span>
                             </div>
                         @endif
                     </div>

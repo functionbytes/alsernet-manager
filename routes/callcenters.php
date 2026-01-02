@@ -5,7 +5,7 @@ use App\Http\Controllers\Callcenters\Faqs\CategoriesController as FaqsCategories
 use App\Http\Controllers\Callcenters\Faqs\FaqsController;
 use App\Http\Controllers\Callcenters\Tickets\CommentsController as TicketCommentsController;
 use App\Http\Controllers\Callcenters\Tickets\TicketsController;
-use App\Http\Controllers\Managers\Users\UsersController;
+use Modules\User\Http\Controllers\Managers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Modules\Returns\Http\Controllers\Callcenters\ReturnsController as ReturnController;
 

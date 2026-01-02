@@ -24,24 +24,33 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(): void
     {
+        $this->mapManagerSettingsRoutes();
         $this->mapApiRoutes();
-        $this->mapWebRoutes();
     }
 
     /**
-     * Define the "web" routes for the application.
+     * Define the manager settings routes (web + API).
      *
-     * These routes all receive session state, CSRF protection, etc.
+     * These routes are protected with manager/super-admin role requirement.
      */
-    protected function mapWebRoutes(): void
+    protected function mapManagerSettingsRoutes(): void
     {
-        Route::middleware('web')->group(module_path($this->name, '/routes/web.php'));
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('settings/modules')
+            ->name('modules.')
+            ->group(function (): void {
+                // Load view routes (GET)
+                require module_path($this->name, 'routes/web.php');
+
+                // Load API routes (POST, PUT, DELETE) - same prefix/name
+                require module_path($this->name, 'routes/api/settings.php');
+            });
     }
 
     /**
      * Define the "api" routes for the application.
      *
-     * These routes are typically stateless.
+     * These routes are typically stateless and public.
      */
     protected function mapApiRoutes(): void
     {

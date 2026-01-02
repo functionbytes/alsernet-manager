@@ -103,70 +103,213 @@
 @push('scripts')
 <script>
     /**
-     * Alternar visibilidad de sidebars y guardar preferencia del usuario
-     * @param {string} sidebarId - ID del sidebar a mostrar (sin prefijo 'menu-right-')
-     * @param {string} miniNavId - ID del mini-nav item (sin prefijo 'mini-')
+     * Sistema de Navegación - Detección automática de rutas y submenús
      */
-    function toggleSidebar(sidebarId, miniNavId) {
-        // Obtener elementos del DOM
-        const targetSidebar = document.getElementById('menu-right-' + sidebarId);
-        const targetMiniNav = document.getElementById('mini-' + miniNavId);
+    (function() {
+        'use strict';
 
-        if (!targetSidebar || !targetMiniNav) {
-            console.warn('toggleSidebar: Missing elements', { sidebarId, miniNavId, targetSidebar, targetMiniNav });
-            return;
+        /**
+         * Alternar visibilidad de sidebars
+         */
+        function toggleSidebar(sidebarId, miniNavId) {
+            const targetSidebar = document.getElementById('menu-right-' + sidebarId);
+            const targetMiniNav = document.getElementById('mini-' + miniNavId);
+
+            if (!targetSidebar || !targetMiniNav) {
+                console.warn('toggleSidebar: Missing elements', { sidebarId, miniNavId });
+                return;
+            }
+
+            // Ocultar todos los sidebars y quitar clase selected
+            document.querySelectorAll('.sidebar-nav').forEach(sidebar => {
+                sidebar.classList.add('d-none');
+            });
+            document.querySelectorAll('.mini-nav-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Mostrar el sidebar seleccionado
+            targetSidebar.classList.remove('d-none');
+            targetMiniNav.classList.add('selected');
+
+            // Dispatch event para reinicializar tooltips
+            document.dispatchEvent(new CustomEvent('sidebarChanged', {
+                detail: { sidebarId, miniNavId }
+            }));
+
+            // Guardar preferencia
+            try {
+                localStorage.setItem('activeSidebar', sidebarId);
+                localStorage.setItem('activeMiniNav', miniNavId);
+            } catch (e) {
+                console.warn('localStorage not available:', e);
+            }
         }
 
-        // Ocultar todos los sidebars y quitar clase selected de todos los mini-nav items
-        document.querySelectorAll('.sidebar-nav').forEach(sidebar => {
-            sidebar.classList.add('d-none');
+        /**
+         * Detectar y marcar el link activo basándose en la URL actual
+         */
+        function detectActiveLink() {
+            const currentPath = window.location.pathname;
+            const currentUrl = window.location.href;
+            let activeLinkFound = false;
+            let activeSidebarId = null;
+
+            // Buscar en todos los sidebars
+            document.querySelectorAll('.sidebar-nav').forEach(sidebar => {
+                const sidebarId = sidebar.id.replace('menu-right-', '');
+
+                // Buscar links dentro de este sidebar
+                sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+                    const href = link.getAttribute('href');
+
+                    if (!href || href === '#' || href === 'javascript:void(0)') {
+                        return;
+                    }
+
+                    // Comparar URLs de diferentes formas
+                    const linkUrl = new URL(href, window.location.origin);
+                    const isActive =
+                        currentPath === linkUrl.pathname ||
+                        currentPath.startsWith(linkUrl.pathname + '/') ||
+                        currentUrl === href;
+
+                    if (isActive) {
+                        // Marcar este link como activo
+                        link.classList.add('active');
+                        activeLinkFound = true;
+                        activeSidebarId = sidebarId;
+
+                        // Si el link está dentro de un submenú, expandirlo
+                        const parentSubmenu = link.closest('ul.collapse');
+                        if (parentSubmenu) {
+                            parentSubmenu.classList.add('show');
+                            const parentToggle = parentSubmenu.previousElementSibling;
+                            if (parentToggle && parentToggle.classList.contains('has-arrow')) {
+                                parentToggle.setAttribute('aria-expanded', 'true');
+                                parentToggle.closest('.sidebar-item')?.classList.add('open');
+                            }
+                        }
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            });
+
+            return { found: activeLinkFound, sidebarId: activeSidebarId };
+        }
+
+        /**
+         * Inicialización del sidebar
+         */
+        function initializeSidebar() {
+            // 1. Detectar link activo basándose en la URL
+            const activeDetection = detectActiveLink();
+
+            // 2. Buscar mini-nav item marcado por Blade (basado en route)
+            const selectedMiniNav = document.querySelector('.mini-nav-item.selected');
+
+            // 3. Determinar qué sidebar mostrar
+            let sidebarToShow = null;
+            let miniNavToSelect = null;
+
+            if (selectedMiniNav) {
+                // Blade ya detectó el sidebar correcto basándose en la ruta
+                miniNavToSelect = selectedMiniNav.id.replace('mini-', '');
+                const onclick = selectedMiniNav.getAttribute('onclick');
+                sidebarToShow = onclick ? onclick.match(/'([^']+)'/)[1] : miniNavToSelect;
+            } else if (activeDetection.found && activeDetection.sidebarId) {
+                // Se encontró un link activo, usar ese sidebar
+                sidebarToShow = activeDetection.sidebarId;
+
+                // Buscar el mini-nav correspondiente
+                const miniNav = document.querySelector(`[onclick*="'${sidebarToShow}'"]`);
+                if (miniNav) {
+                    miniNavToSelect = miniNav.id.replace('mini-', '');
+                }
+            } else {
+                // Intentar restaurar desde localStorage
+                const savedSidebar = localStorage.getItem('activeSidebar');
+                const savedMiniNav = localStorage.getItem('activeMiniNav');
+
+                if (savedSidebar && savedMiniNav) {
+                    sidebarToShow = savedSidebar;
+                    miniNavToSelect = savedMiniNav;
+                }
+            }
+
+            // 4. Fallback: mostrar el primer sidebar
+            if (!sidebarToShow || !miniNavToSelect) {
+                const firstMiniNav = document.querySelector('.mini-nav-item');
+                const firstSidebar = document.querySelector('[id^="menu-right-"]');
+
+                if (firstMiniNav && firstSidebar) {
+                    miniNavToSelect = firstMiniNav.id.replace('mini-', '');
+                    sidebarToShow = firstSidebar.id.replace('menu-right-', '');
+                }
+            }
+
+            // 5. Activar el sidebar seleccionado
+            if (sidebarToShow && miniNavToSelect) {
+                toggleSidebar(sidebarToShow, miniNavToSelect);
+            }
+        }
+
+        /**
+         * Manejar clicks en submenús (has-arrow)
+         */
+        function handleSubmenuClicks() {
+            document.addEventListener('click', function(e) {
+                const hasArrowLink = e.target.closest('.sidebar-link.has-arrow');
+
+                if (hasArrowLink) {
+                    e.preventDefault();
+
+                    const parentItem = hasArrowLink.closest('.sidebar-item');
+                    const submenu = hasArrowLink.nextElementSibling;
+
+                    if (parentItem && submenu) {
+                        parentItem.classList.toggle('open');
+
+                        if (submenu.classList.contains('show')) {
+                            submenu.classList.remove('show');
+                            hasArrowLink.setAttribute('aria-expanded', 'false');
+                        } else {
+                            submenu.classList.add('show');
+                            hasArrowLink.setAttribute('aria-expanded', 'true');
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Sidebar collapse toggle (hamburger)
+         */
+        function initializeSidebarToggle() {
+            const sidebarToggler = document.getElementById('headerCollapse');
+            if (sidebarToggler) {
+                sidebarToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.body.classList.toggle('mini-sidebar');
+                });
+            }
+        }
+
+        /**
+         * Hacer toggleSidebar global para los onclick en Blade
+         */
+        window.toggleSidebar = toggleSidebar;
+
+        /**
+         * Iniciar cuando el DOM esté listo
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSidebar();
+            handleSubmenuClicks();
+            initializeSidebarToggle();
         });
-        document.querySelectorAll('.mini-nav-item').forEach(item => {
-            item.classList.remove('selected');
-        });
 
-        // Mostrar el sidebar seleccionado y marcar el mini-nav como activo
-        targetSidebar.classList.remove('d-none');
-        targetMiniNav.classList.add('selected');
-
-        // Guardar preferencia del usuario en localStorage
-        try {
-            localStorage.setItem('activeSidebar', sidebarId);
-            localStorage.setItem('activeMiniNav', miniNavId);
-        } catch (e) {
-            console.warn('localStorage not available:', e);
-        }
-    }
-
-    /**
-     * Inicializar el sidebar activo cuando se carga la página
-     */
-    document.addEventListener('DOMContentLoaded', function() {
-        // Intentar restaurar desde localStorage (usuarios que regresan)
-        const savedSidebar = localStorage.getItem('activeSidebar');
-        const savedMiniNav = localStorage.getItem('activeMiniNav');
-
-        if (savedSidebar && savedMiniNav) {
-            toggleSidebar(savedSidebar, savedMiniNav);
-            return;
-        }
-
-        // Buscar el mini-nav item que tiene la clase 'selected' (establecido por Blade)
-        const selectedMiniNav = document.querySelector('.mini-nav-item.selected');
-        if (selectedMiniNav) {
-            const miniNavId = selectedMiniNav.id.replace('mini-', '');
-            toggleSidebar(miniNavId, miniNavId);
-            return;
-        }
-
-        // Fallback: mostrar el primer sidebar si no hay nada seleccionado
-        const firstMiniNav = document.querySelector('.mini-nav-item');
-        const firstSidebar = document.querySelector('[id^="menu-right-"]');
-        if (firstMiniNav && firstSidebar) {
-            const firstMiniNavId = firstMiniNav.id.replace('mini-', '');
-            const firstSidebarId = firstSidebar.id.replace('menu-right-', '');
-            toggleSidebar(firstSidebarId, firstMiniNavId);
-        }
-    });
+    })();
 </script>
 @endpush

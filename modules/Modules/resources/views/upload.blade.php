@@ -34,23 +34,34 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold">
-                            <i class="fas fa-file-archive me-2"></i>Seleccionar archivo ZIP del módulo
+                        <label class="form-label fw-semibold mb-3">
+                            Archivo del módulo
                         </label>
-                        <div class="custom-file-upload border-2 border-dashed rounded p-4 text-center bg-light"
-                             style="cursor: pointer; transition: all 0.3s ease;"
+                        <div class="custom-file-upload border-3 border-dashed rounded-3 p-5 text-center bg-primary-subtle position-relative"
+                             style="cursor: pointer; transition: all 0.3s ease; min-height: 200px;"
                              id="fileDropZone">
                             <input type="file" id="module_file" name="module_file" accept=".zip" class="d-none" required>
-                            <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-primary d-block"></i>
-                            <p class="mb-2"><strong>Arrastra un archivo ZIP aquí</strong></p>
-                            <p class="text-muted small mb-0">o haz clic para seleccionar</p>
+                            <div class="upload-placeholder">
+                                <div class="mb-3">
+                                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mx-auto" style="width: 64px; height: 64px;">
+                                        <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                                    </div>
+                                </div>
+                                <h6 class="mb-2">Arrastra tu archivo ZIP aquí</h6>
+                                <p class="text-muted mb-3">o haz clic para seleccionar desde tu ordenador</p>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('module_file').click();">
+                                    <i class="fas fa-folder-open me-2"></i>Seleccionar archivo
+                                </button>
+                            </div>
                         </div>
-                        <small class="form-text text-muted d-block mt-2">
-                            ✓ Solo archivos ZIP | ✓ Debe contener module.json | ✓ Tamaño máximo 50MB
-                        </small>
+                        <div class="d-flex gap-3 mt-3 text-muted small">
+                            <span><i class="fas fa-check-circle text-success me-1"></i>Solo archivos ZIP</span>
+                            <span><i class="fas fa-check-circle text-success me-1"></i>Debe contener module.json</span>
+                            <span><i class="fas fa-check-circle text-success me-1"></i>Tamaño máximo 50MB</span>
+                        </div>
                         @error('module_file')
-                            <div class="invalid-feedback d-block mt-2">
-                                {{ $message }}
+                            <div class="alert alert-danger mt-3">
+                                <i class="fas fa-exclamation-circle me-2"></i>{{ $message }}
                             </div>
                         @enderror
                     </div>
@@ -59,12 +70,12 @@
                     <hr class="my-4">
 
                     <div class="mb-4">
-                        <h6 class="mb-3 text-uppercase fw-bold">
-                            <i class="fas fa-cube me-2"></i>Estructura esperada del módulo
+                        <h6 class="mb-3 fw-bold border-bottom pb-2">
+                            Estructura esperada del módulo
                         </h6>
-                        <p class="text-muted small mb-2">El archivo ZIP debe contener la siguiente estructura:</p>
-                        <div class="bg-light p-3 rounded">
-                            <pre class="mb-0 text-muted" style="font-size: 0.85rem;"><code>ModuleName/
+                        <p class="text-muted mb-3">El archivo ZIP debe contener la siguiente estructura de directorios:</p>
+                        <div class="bg-dark text-white p-4 rounded-3">
+                            <pre class="mb-0 text-white" style="font-size: 0.875rem; line-height: 1.6;"><code>ModuleName/
 ├── app/
 │   ├── Http/Controllers/
 │   ├── Models/
@@ -83,11 +94,14 @@
 
                     {{-- Module.json Template --}}
                     <div class="mb-4">
-                        <h6 class="mb-3 text-uppercase fw-bold">
-                            <i class="fas fa-code me-2"></i>Contenido mínimo de module.json
+                        <h6 class="mb-3 fw-bold border-bottom pb-2">
+                            Contenido mínimo de module.json
                         </h6>
-                        <div class="bg-light p-3 rounded">
-                            <pre class="mb-0 text-muted" style="font-size: 0.85rem;"><code>{
+                        <div class="bg-dark text-white p-4 rounded-3 position-relative">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success">Requerido</span>
+                            </div>
+                            <pre class="mb-0 text-white" style="font-size: 0.875rem; line-height: 1.6;"><code>{
     "name": "MyModule",
     "alias": "mymodule",
     "description": "Descripción del módulo",
@@ -101,28 +115,34 @@
                     </div>
 
                     {{-- Submit Button --}}
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
+                    <div class="d-flex gap-2 align-items-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
                             <i class="fas fa-upload me-2"></i>Instalar módulo
                         </button>
+                        <a href="{{ route('modules.index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
                     </div>
                 </form>
 
                 {{-- Instructions Section --}}
                 <hr class="my-4">
 
-                <div>
-                    <h6 class="mb-3 text-uppercase fw-bold">
-                        <i class="fas fa-question-circle me-2"></i>¿Necesitas crear un módulo?
-                    </h6>
-                    <p class="text-muted mb-2">Puedes crear un nuevo módulo con el siguiente comando:</p>
-                    <div class="bg-light p-2 rounded mb-3">
-                        <code class="text-dark">php artisan module:make YourModuleName</code>
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="mb-3 fw-bold">
+                            ¿Necesitas crear un módulo?
+                        </h6>
+                        <p class="text-muted mb-3">Puedes crear un nuevo módulo usando el comando de Artisan:</p>
+                        <div class="bg-dark text-white p-3 rounded-3 mb-3">
+                            <code class="text-success">php artisan module:make YourModuleName</code>
+                        </div>
+                        <p class="small text-muted mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Para más información sobre cómo desarrollar módulos, consulta la
+                            <a href="{{ route('modules.index') }}" class="text-decoration-none">lista de módulos instalados</a>.
+                        </p>
                     </div>
-                    <p class="small text-muted mb-0">
-                        Para más información sobre cómo crear módulos, consulta la
-                        <a href="{{ route('modules.index') }}">documentación de módulos</a>.
-                    </p>
                 </div>
             </div>
         </div>
@@ -138,41 +158,66 @@
     const fileInput = document.getElementById('module_file');
 
     if (fileDropZone && fileInput) {
-        // Click to select file
-        fileDropZone.addEventListener('click', () => fileInput.click());
+        // Click to select file (except when clicking the button)
+        fileDropZone.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                fileInput.click();
+            }
+        });
 
-        // Drag and drop
+        // Drag and drop events
         fileDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            fileDropZone.style.borderColor = '#0d6efd';
-            fileDropZone.style.backgroundColor = '#e7f1ff';
+            fileDropZone.classList.add('border-primary');
+            fileDropZone.classList.remove('border-3');
+            fileDropZone.classList.add('border-4');
         });
 
         fileDropZone.addEventListener('dragleave', () => {
-            fileDropZone.style.borderColor = '#dee2e6';
-            fileDropZone.style.backgroundColor = '#f8f9fa';
+            fileDropZone.classList.remove('border-primary', 'border-4');
+            fileDropZone.classList.add('border-3');
         });
 
         fileDropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            fileDropZone.style.borderColor = '#dee2e6';
-            fileDropZone.style.backgroundColor = '#f8f9fa';
+            fileDropZone.classList.remove('border-primary', 'border-4');
+            fileDropZone.classList.add('border-3');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;
+                updateFileDisplay(files[0]);
             }
         });
 
         // Show selected file name
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                const fileName = e.target.files[0].name;
-                fileDropZone.innerHTML = `<i class="fas fa-check-circle fa-2x mb-3 text-success d-block"></i>
-                                         <p class="mb-2"><strong>${fileName}</strong></p>
-                                         <p class="text-muted small mb-0">Listo para instalar</p>`;
+                updateFileDisplay(e.target.files[0]);
             }
         });
+
+        function updateFileDisplay(file) {
+            const fileName = file.name;
+            const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+
+            fileDropZone.classList.remove('bg-primary-subtle');
+            fileDropZone.classList.add('bg-success-subtle', 'border-success');
+
+            fileDropZone.innerHTML = `
+                <div class="mb-3">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mx-auto" style="width: 64px; height: 64px;">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                </div>
+                <h6 class="mb-2 text-success">Archivo seleccionado</h6>
+                <p class="mb-1"><strong>${fileName}</strong></p>
+                <p class="text-muted small mb-3">Tamaño: ${fileSize} MB</p>
+                <button type="button" class="btn btn-outline-success btn-sm" onclick="document.getElementById('module_file').click();">
+                    <i class="fas fa-sync-alt me-2"></i>Cambiar archivo
+                </button>
+            `;
+        }
     }
 </script>
 @endpush

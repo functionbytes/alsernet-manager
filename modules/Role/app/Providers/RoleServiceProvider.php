@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 
 class RoleServiceProvider extends ServiceProvider
 {
+    protected string $name = 'Role';
+
     public function register()
     {
         // Register PermissionBladeServiceProvider
@@ -16,9 +18,6 @@ class RoleServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Routes are now loaded from routes/managers.php
-        // See: routes/managers.php line 531-532
-
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'role');
 
         $this->publishes([
@@ -27,6 +26,31 @@ class RoleServiceProvider extends ServiceProvider
 
         // Register navigation menus
         $this->registerMenus();
+
+        // Register routes after all providers have booted
+        $this->booted(function () {
+            $this->registerRoutes();
+        });
+    }
+
+    /**
+     * Register routes for the Role module
+     */
+    protected function registerRoutes(): void
+    {
+        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('settings')
+            ->name('manager.settings.')
+            ->group(function () {
+                // Load view routes (GET)
+                require module_path($this->name, 'routes/web.php');
+
+                // Load API routes (POST, PUT, DELETE) if exists
+                if (file_exists(module_path($this->name, 'routes/api.php'))) {
+                    require module_path($this->name, 'routes/api.php');
+                }
+            });
     }
 
     /**

@@ -6,8 +6,8 @@
         <nav class="navbar navbar-expand-lg p-0">
             <ul class="navbar-nav">
                 <li class="nav-item d-flex d-xl-none">
-                    <a class="nav-link nav-icon-hover-bg rounded-circle  sidebartoggler " id="headerCollapse" href="javascript:void(0)">
-                        <iconify-icon icon="solar:hamburger-menu-line-duotone" class="fs-6"></iconify-icon>
+                    <a class="nav-link nav-icon-hover-bg rounded-circle sidebartoggler" id="headerCollapse" href="javascript:void(0)">
+                        <i class="fa fa-bars fs-6"></i>
                     </a>
                 </li>
                 <li class="nav-item d-none d-xl-flex nav-icon-hover-bg rounded-circle">

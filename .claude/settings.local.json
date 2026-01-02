@@ -344,7 +344,8 @@
       "Bash(__NEW_LINE__ find modules/Role/resources/views -name \"*.blade.php\")",
       "Bash(do sed -i \"\" \"s/route\\(''''manager\\\\.roles/route\\(''''roles/g\" \"$f\" sed -i \"\" \"s/route\\(''''manager\\\\.permissions/route\\(''''permissions/g\" \"$f\" done)",
       "mcp__context7__query-docs",
-      "Bash(mcp__claude-in-chrome__tabs_context_mcp)"
+      "Bash(mcp__claude-in-chrome__tabs_context_mcp)",
+      "WebFetch(domain:bootstrapdemos.adminmart.com)"
     ],
     "deny": [],
     "ask": []

@@ -92,7 +92,7 @@ class DocumentsServiceProvider extends ServiceProvider
     {
         // Manager settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('manager/settings')
+            ->prefix('settings')
             ->name('manager.settings.')
             ->group(function () {
                 // Load view routes (GET)

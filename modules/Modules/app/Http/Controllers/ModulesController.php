@@ -79,6 +79,82 @@ class ModulesController extends Controller
     }
 
     /**
+     * Show the edit form for a module.
+     */
+    public function edit(string $moduleAlias)
+    {
+        $module = Module::find($moduleAlias);
+
+        if (! $module) {
+            return redirect()->route('modules.index')
+                ->with('error', "Module '{$moduleAlias}' not found.");
+        }
+
+        $moduleConfig = $this->getModuleConfig($module);
+
+        $moduleData = [
+            'name' => $module->getName(),
+            'alias' => $moduleConfig['alias'] ?? strtolower($module->getName()),
+            'description' => $moduleConfig['description'] ?? '',
+            'version' => $moduleConfig['version'] ?? '1.0.0',
+            'enabled' => $module->isEnabled(),
+            'disabled' => $module->isDisabled(),
+            'priority' => $moduleConfig['priority'] ?? 0,
+            'path' => $module->getPath(),
+            'namespace' => $moduleConfig['namespace'] ?? 'Modules\\'.ucfirst($module->getName()),
+            'providers' => $moduleConfig['providers'] ?? [],
+            'aliases' => $moduleConfig['aliases'] ?? [],
+            'keywords' => $moduleConfig['keywords'] ?? [],
+        ];
+
+        return view('modules::edit', ['module' => $moduleData]);
+    }
+
+    /**
+     * Update a module's configuration.
+     */
+    public function update(Request $request, string $moduleAlias)
+    {
+        $module = Module::find($moduleAlias);
+
+        if (! $module) {
+            return redirect()->route('modules.index')
+                ->with('error', "Module '{$moduleAlias}' not found.");
+        }
+
+        // Validate input
+        $validated = $request->validate([
+            'priority' => 'required|integer|min:0|max:999',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Update module.json with new priority and description
+            $configPath = $module->getPath().DIRECTORY_SEPARATOR.'module.json';
+
+            if (file_exists($configPath)) {
+                $config = json_decode(file_get_contents($configPath), true);
+
+                $config['priority'] = (int) $validated['priority'];
+                if (! empty($validated['description'])) {
+                    $config['description'] = $validated['description'];
+                }
+
+                file_put_contents($configPath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+                return redirect()->route('modules.show', $module->getName())
+                    ->with('success', "Module '{$module->getName()}' updated successfully.");
+            } else {
+                return redirect()->route('modules.edit', $module->getName())
+                    ->with('error', 'Module configuration file not found.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('modules.edit', $module->getName())
+                ->with('error', "Error updating module: {$e->getMessage()}");
+        }
+    }
+
+    /**
      * Enable a module.
      */
     public function enable(string $moduleAlias)

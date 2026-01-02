@@ -45,8 +45,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapManagerRoutes(): void
     {
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('manager/warehouse')
-            ->name('manager.warehouse.')
+            ->prefix('settings/warehouse')
+            ->name('warehouse.')
             ->group(module_path($this->name, 'routes/web.php'));
     }
 

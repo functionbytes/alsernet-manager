@@ -3,17 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Modules\Http\Controllers\ModulesController;
 
-Route::middleware(['auth', 'verified'])->prefix('modules')->group(function () {
-    // Modules management routes
-    Route::get('/', [ModulesController::class, 'index'])->name('modules.index');
-    Route::get('/{moduleAlias}', [ModulesController::class, 'show'])->name('modules.show');
+/*
+|--------------------------------------------------------------------------
+| Modules Settings Web Routes
+|--------------------------------------------------------------------------
+|
+| Rutas para la gestión de vistas de configuración de módulos
+| URL: /settings/modules (aplicado por RouteServiceProvider)
+| Middleware: web, auth, role:manager|super-admin (aplicado por RouteServiceProvider)
+| SOLO GET para renderizar vistas. POST, PUT, DELETE están en routes/api/settings.php
+|
+*/
 
-    // Enable/Disable operations
-    Route::post('/{moduleAlias}/enable', [ModulesController::class, 'enable'])->name('modules.enable');
-    Route::post('/{moduleAlias}/disable', [ModulesController::class, 'disable'])->name('modules.disable');
-
-    // Install/Uninstall operations
-    Route::get('/upload/form', [ModulesController::class, 'uploadForm'])->name('modules.uploadForm');
-    Route::post('/install', [ModulesController::class, 'install'])->name('modules.install');
-    Route::post('/{moduleAlias}/uninstall', [ModulesController::class, 'uninstall'])->name('modules.uninstall');
-});
+// Modules management routes (Views)
+Route::get('/', [ModulesController::class, 'index'])->name('index');
+Route::get('/{moduleAlias}', [ModulesController::class, 'show'])->name('show');
+Route::get('/{moduleAlias}/edit', [ModulesController::class, 'edit'])->name('edit');
+Route::get('/upload/form', [ModulesController::class, 'uploadForm'])->name('uploadForm');

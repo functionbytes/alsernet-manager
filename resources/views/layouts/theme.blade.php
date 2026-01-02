@@ -148,63 +148,11 @@
     });
 </script>
 
-<!-- Sidebar Mini-Nav and Menu Interaction -->
+<!-- Sidebar Navigation & Utilities -->
 <script>
     "use strict";
     $(function () {
-        // Sidebar Mini-Nav functionality
-        const miniNavItems = $('.mini-nav-item');
-        const navMenus = $('.sidebarmenu nav');
-
-        // Handle mini-nav-item click
-        miniNavItems.on('click', 'a', function (e) {
-            e.preventDefault();
-
-            const miniNavItem = $(this).closest('.mini-nav-item');
-            const miniId = miniNavItem.attr('id'); // e.g., "mini-1"
-            const menuNumber = miniId.replace('mini-', ''); // e.g., "1"
-            const targetMenu = '#menu-right-mini-' + menuNumber;
-
-            // Remove selected class from all mini-nav-items
-            miniNavItems.removeClass('selected');
-
-            // Add selected class to clicked mini-nav-item
-            miniNavItem.addClass('selected');
-
-            // Hide all menus
-            navMenus.removeClass('d-block').addClass('d-none');
-
-            // Show target menu
-            $(targetMenu).removeClass('d-none').addClass('d-block');
-
-            // Initialize tooltips
-            initializeTooltips();
-        });
-
-        // Handle sidebar-link has-arrow click
-        $(document).on('click', '.sidebar-link.has-arrow', function (e) {
-            e.preventDefault();
-
-            // Find which menu contains this link
-            const parentNav = $(this).closest('nav');
-            const menuId = parentNav.attr('id'); // e.g., "menu-right-mini-1"
-            const menuNumber = menuId.replace('menu-right-mini-', ''); // e.g., "1"
-            const miniItem = '#mini-' + menuNumber;
-
-            // Mark corresponding mini-nav-item as selected
-            miniNavItems.removeClass('selected');
-            $(miniItem).addClass('selected');
-
-            // Make sure target menu is visible
-            navMenus.removeClass('d-block').addClass('d-none');
-            parentNav.removeClass('d-none').addClass('d-block');
-
-            // Toggle submenu
-            $(this).parent().toggleClass('open');
-            $(this).next('ul').slideToggle();
-        });
-
-        // Initialize tooltips for mini-nav
+        // Initialize Bootstrap tooltips
         function initializeTooltips() {
             if (typeof bootstrap !== 'undefined') {
                 // Remove old tooltip elements from DOM
@@ -223,93 +171,28 @@
             }
         }
 
-        // Initialize on page load
+        // Initialize tooltips on page load
         initializeTooltips();
 
-        // Function to highlight active sidebar-item and its mini-nav
-        function highlightActiveSidebarItem() {
-            const currentUrl = window.location.href;
-            const currentPathname = window.location.pathname;
-            let activeLink = null;
+        // Reinitialize tooltips when sidebar changes (dispatched from nav.blade.php)
+        document.addEventListener('sidebarChanged', function() {
+            initializeTooltips();
+        });
 
-            // Find sidebar-link that matches current URL
-            const sidebarLinks = document.querySelectorAll('.sidebarmenu .sidebar-link');
-
-            sidebarLinks.forEach(link => {
-                const href = link.getAttribute('href');
-
-                if (href && href !== 'javascript:void(0)' && href !== '#') {
-                    // Try multiple matching strategies
-                    const isMatch =
-                        currentUrl.includes(href) ||  // Full URL components href
-                        currentPathname === href ||    // Exact path match
-                        href === currentPathname + '/' || // Path with trailing slash
-                        currentPathname === href + '/';    // Current path with trailing slash
-
-                    if (isMatch) {
-                        activeLink = link;
-                    }
-                }
-            });
-
-            if (activeLink) {
-                // Remove active class from all sidebar-links
-                document.querySelectorAll('.sidebar-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                // Add active class to current link
-                activeLink.classList.add('active');
-
-                // Find the parent nav menu
-                const parentNav = activeLink.closest('nav[id^="menu-right-mini-"]');
-                if (parentNav) {
-                    const navId = parentNav.id;
-                    const miniNumber = navId.replace('menu-right-mini-', '');
-                    const miniItem = document.getElementById(`mini-${miniNumber}`);
-
-                    if (miniItem) {
-                        // Remove selected from all mini-nav-items
-                        miniNavItems.removeClass('selected');
-                        // Add selected to the active one
-                        $(miniItem).addClass('selected');
-
-                        // Hide all menus
-                        navMenus.removeClass('d-block').addClass('d-none');
-                        // Show the active menu
-                        parentNav.classList.remove('d-none');
-                        parentNav.classList.add('d-block');
-
-                        // Reinitialize tooltips
-                        initializeTooltips();
-                    }
-                }
-            } else {
-                // If no active link found, show first menu by default
-                $('.mini-nav-item').first().addClass('selected');
-                $('#menu-right-mini-1').removeClass('d-none').addClass('d-block');
-                navMenus.not('#menu-right-mini-1').removeClass('d-block').addClass('d-none');
-            }
-        }
-
-        // Check active sidebar item on page load
-        highlightActiveSidebarItem();
-        scrollToActiveSidebarLink();
-
-        deleteConfirmation();
-
-        // scroll to active sidebar link instantly
+        // Scroll to active sidebar link
         function scrollToActiveSidebarLink() {
             const activeLink = document.querySelector('.sidebar-link.active');
             if (activeLink) {
-                const sidebarNav = document.querySelector('.sidebar-nav');
-                if (sidebarNav) {
-                    // Scroll directly without animation
-                    activeLink.scrollIntoView(false);
-                }
+                setTimeout(() => {
+                    activeLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
             }
         }
 
-        // delete confirmation
+        // Scroll to active link on page load
+        scrollToActiveSidebarLink();
+
+        // Delete confirmation modal
         function deleteConfirmation() {
             $(".confirm-delete").click(function (e) {
                 e.preventDefault();
@@ -318,6 +201,8 @@
                 $("#delete-form").attr("action", url);
             });
         }
+
+        deleteConfirmation();
     });
 </script>
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Managers\Users\UsersController;
+use Modules\User\Http\Controllers\Managers\UsersController;
 use App\Http\Controllers\Shops\DashboardController;
 use App\Http\Controllers\Shops\Settings\SettingsController;
 // @deprecated Subscriber controller moved to modules/Subscriber

@@ -49,7 +49,7 @@ class MailerServiceProvider extends ServiceProvider
     {
         // Manager settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('manager/settings/mailers')
+            ->prefix('settings/mailers')
             ->name('manager.settings.mailers.')
             ->group(function () {
                 // Load view routes (GET)

@@ -4,14 +4,15 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Warehouse Manager Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Routes for warehouse management by managers
+| Prefix: /manager/settings/warehouse (applied by RouteServiceProvider)
+| Middleware: auth, role:manager|super-admin (applied by RouteServiceProvider)
+| Name prefix: manager.settings.warehouse. (applied by RouteServiceProvider)
 |
 */
 
-// Routes are loaded dynamically via RouteServiceProvider
-// See routes/theme.php and routes/warehouses.php
+// Load manager routes
+require __DIR__.'/managers.php';

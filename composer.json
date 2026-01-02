@@ -85,6 +85,8 @@
             "Modules\\Mail\\": "modules/Mail/app/",
             "Modules\\Notification\\": "modules/Notification/app/",
             "Modules\\Prestashop\\": "modules/Prestashop/app/",
+            "Modules\\Role\\": "modules/Role/app/",
+            "Modules\\User\\": "modules/User/app/",
             "Modules\\Warehouse\\": "modules/Warehouse/app/"
         },
         "files": [

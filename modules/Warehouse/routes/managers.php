@@ -18,9 +18,9 @@ use Modules\Warehouse\Http\Controllers\Managers\WarehouseReportsController;
 |--------------------------------------------------------------------------
 |
 | Routes for warehouse theme to configure and manage warehouse operations
-| Prefix: /manager/warehouse (applied by RouteServiceProvider)
+| Prefix: /settings/warehouse (applied by RouteServiceProvider)
 | Middleware: auth, role:manager|super-admin (applied by RouteServiceProvider)
-| Name prefix: manager.warehouse. (applied by RouteServiceProvider)
+| Name prefix: warehouse. (applied by RouteServiceProvider)
 |
 */
 

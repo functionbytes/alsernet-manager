@@ -29,7 +29,7 @@ use App\Http\Controllers\Managers\Settings\SystemSettingsController;
 use App\Http\Controllers\Managers\Settings\TranslationController;
 use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
 use App\Http\Controllers\Managers\SystemInfoController;
-use App\Http\Controllers\Managers\Users\UsersController;
+use Modules\User\Http\Controllers\Managers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ProductsController;
@@ -527,9 +527,7 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         });
 
         // Role and Permission routes are now handled by modules\Role
-        // Loaded from module files
-        require module_path('Role', 'routes/web.php');
-        require module_path('Role', 'routes/api.php');
+        // See: modules/Role/app/Providers/RouteServiceProvider.php
 
         Route::group(['prefix' => 'translations'], function () {
             Route::get('/', [TranslationController::class, 'index'])->name('manager.settings.translations.index');
