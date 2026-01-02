@@ -38070,6 +38070,11 @@ pre.code-view code.hljs {
     z-index: 1
 }
 
+.side-mini-panel .sidebarmenu {
+    position: relative;
+    height: 100%;
+}
+
 .side-mini-panel .sidebarmenu .sidebar-nav {
     position: absolute;
     height: calc(100vh - 72px);
@@ -46061,6 +46066,7 @@ html[dir=rtl] .slide-animation2 {
         transform: translateZ(0)
     }
 }
+
 
 @media (min-width: 1300px) {
     html[dir=rtl][data-layout=vertical] .page-wrapper {
