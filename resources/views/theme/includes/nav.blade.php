@@ -190,7 +190,26 @@
         console.log('Page loaded. Saved sidebar:', savedSidebar, 'Saved miniNav:', savedMiniNav);
 
         if (savedSidebar && savedMiniNav) {
+            // Restaurar desde localStorage (returning user)
             toggleSidebar(savedSidebar, savedMiniNav);
+        } else {
+            // First-time visitor: find the currently selected mini-nav item and show its sidebar
+            const selectedMiniNav = document.querySelector('.mini-nav-item.selected');
+            if (selectedMiniNav) {
+                const miniNavId = selectedMiniNav.id.replace('mini-', '');
+                console.log('No saved preference. Using currently selected mini-nav:', miniNavId);
+                toggleSidebar(miniNavId, miniNavId);
+            } else {
+                // Fallback: show first sidebar if no selection found
+                const firstMiniNav = document.querySelector('.mini-nav-item');
+                const firstSidebar = document.querySelector('[id^="menu-right-"]');
+                if (firstMiniNav && firstSidebar) {
+                    const firstMiniNavId = firstMiniNav.id.replace('mini-', '');
+                    const firstSidebarId = firstSidebar.id.replace('menu-right-', '');
+                    console.log('No selected mini-nav found. Using first:', firstSidebarId);
+                    toggleSidebar(firstSidebarId, firstMiniNavId);
+                }
+            }
         }
     });
 </script>
