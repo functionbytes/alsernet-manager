@@ -26,7 +26,7 @@ class ModulesController extends Controller
                 'version' => $moduleConfig['version'] ?? '1.0.0',
                 'enabled' => $module->isEnabled(),
                 'disabled' => $module->isDisabled(),
-                'priority' => $module->getPriority(),
+                'priority' => $moduleConfig['priority'] ?? 0,
                 'path' => $module->getPath(),
                 'namespace' => $module->getNamespace(),
             ];
