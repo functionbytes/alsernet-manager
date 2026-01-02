@@ -14,6 +14,7 @@ use Modules\Document\Commands\SyncDocumentFields;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
+use Modules\Document\Policies\SettingsPolicy;
 use Modules\Document\Services\PermissionService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
@@ -36,6 +37,7 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerViewComposers();
         $this->registerMenus();
+        $this->registerGates();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
 
         // Register routes directly (Laravel 12 compatible)
@@ -64,6 +66,23 @@ class DocumentsServiceProvider extends ServiceProvider
                 DocumentPolicy::class
             );
         }
+    }
+
+    /**
+     * Registrar gates para autorización de settings
+     */
+    protected function registerGates(): void
+    {
+        $settingsPolicy = new SettingsPolicy;
+
+        // Configure settings gate
+        Gate::define('configure-documents', fn ($user) => $settingsPolicy->configure($user));
+        Gate::define('view-document-settings', fn ($user) => $settingsPolicy->viewSettings($user));
+        Gate::define('manage-document-types', fn ($user) => $settingsPolicy->manageTypes($user));
+        Gate::define('manage-document-conditions', fn ($user) => $settingsPolicy->manageConditions($user));
+        Gate::define('manage-document-sla-policies', fn ($user) => $settingsPolicy->manageSLAPolicies($user));
+        Gate::define('manage-document-groups', fn ($user) => $settingsPolicy->manageGroups($user));
+        Gate::define('manage-document-blockades', fn ($user) => $settingsPolicy->manageBlockades($user));
     }
 
     /**

@@ -17,11 +17,13 @@ class ModulesController extends Controller
         $modules = [];
 
         foreach (Module::all() as $module) {
+            $moduleConfig = $this->getModuleConfig($module);
+
             $modules[] = [
                 'name' => $module->getName(),
-                'alias' => $module->getAlias(),
-                'description' => $module->getDescription(),
-                'version' => $module->getVersion() ?? '1.0.0',
+                'alias' => $moduleConfig['alias'] ?? strtolower($module->getName()),
+                'description' => $moduleConfig['description'] ?? '',
+                'version' => $moduleConfig['version'] ?? '1.0.0',
                 'enabled' => $module->isEnabled(),
                 'disabled' => $module->isDisabled(),
                 'priority' => $module->getPriority(),
@@ -56,11 +58,13 @@ class ModulesController extends Controller
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
+        $moduleConfig = $this->getModuleConfig($module);
+
         $moduleData = [
             'name' => $module->getName(),
-            'alias' => $module->getAlias(),
-            'description' => $module->getDescription(),
-            'version' => $module->getVersion() ?? '1.0.0',
+            'alias' => $moduleConfig['alias'] ?? strtolower($module->getName()),
+            'description' => $moduleConfig['description'] ?? '',
+            'version' => $moduleConfig['version'] ?? '1.0.0',
             'enabled' => $module->isEnabled(),
             'disabled' => $module->isDisabled(),
             'priority' => $module->getPriority(),
@@ -263,5 +267,22 @@ class ModulesController extends Controller
         }
 
         return @rmdir($path);
+    }
+
+    /**
+     * Get module configuration from module.json.
+     */
+    private function getModuleConfig($module): array
+    {
+        try {
+            $configPath = $module->getPath().DIRECTORY_SEPARATOR.'module.json';
+            if (file_exists($configPath)) {
+                return json_decode(file_get_contents($configPath), true) ?? [];
+            }
+        } catch (\Exception $e) {
+            // Return empty array if config cannot be read
+        }
+
+        return [];
     }
 }

@@ -9,5 +9,6 @@
     "Subscriber": false,
     "Return": false,
     "Campaign": false,
-    "Mailer": true
+    "Mailer": true,
+    "Modules": true
 }

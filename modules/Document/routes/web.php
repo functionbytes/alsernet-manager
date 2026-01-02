@@ -67,7 +67,7 @@ Route::prefix('documents')->name('documents.')->group(function () {
 
 });
 
-Route::prefix('documents')->name('documents.')->group(function () {
+Route::middleware('can:view-document-settings')->prefix('documents')->name('documents.')->group(function () {
 
     Route::get('/', [DocumentConfigurationController::class, 'index'])->name('configurations');
 
@@ -81,7 +81,7 @@ Route::prefix('documents')->name('documents.')->group(function () {
         Route::get('/storage/history', [DocumentConfigurationController::class, 'getStorageConfigurationHistory'])->name('storage.history');
     });
 
-    Route::prefix('types')->name('types.')->group(function () {
+    Route::middleware('can:manage-document-types')->prefix('types')->name('types.')->group(function () {
         Route::get('/', [DocumentTypeController::class, 'index'])->name('index');
         Route::get('/create', [DocumentTypeController::class, 'create'])->name('create');
         Route::get('/edit/{documentType}', [DocumentTypeController::class, 'edit'])->name('edit');
@@ -89,14 +89,14 @@ Route::prefix('documents')->name('documents.')->group(function () {
     });
 
     // Validation Conditions
-    Route::prefix('conditions')->name('conditions.')->group(function () {
+    Route::middleware('can:manage-document-conditions')->prefix('conditions')->name('conditions.')->group(function () {
         Route::get('/', [DocumentValidationConditionController::class, 'index'])->name('index');
         Route::get('/create', [DocumentValidationConditionController::class, 'create'])->name('create');
         Route::get('/edit/{condition}', [DocumentValidationConditionController::class, 'edit'])->name('edit');
     });
 
     // SLA Policies
-    Route::prefix('sla-policies')->name('sla-policies.')->group(function () {
+    Route::middleware('can:manage-document-sla-policies')->prefix('sla-policies')->name('sla-policies.')->group(function () {
         Route::get('/', [DocumentSlaPoliciesController::class, 'index'])->name('index');
         Route::get('create', [DocumentSlaPoliciesController::class, 'create'])->name('create');
         Route::get('{policy}', [DocumentSlaPoliciesController::class, 'show'])->name('show');
@@ -104,7 +104,7 @@ Route::prefix('documents')->name('documents.')->group(function () {
     });
 
     // Document Groups (Validator Groups)
-    Route::prefix('groups')->name('groups.')->group(function () {
+    Route::middleware('can:manage-document-groups')->prefix('groups')->name('groups.')->group(function () {
         Route::get('/', [DocumentGroupsController::class, 'index'])->name('index');
         Route::get('create', [DocumentGroupsController::class, 'create'])->name('create');
         Route::get('{group}/edit', [DocumentGroupsController::class, 'edit'])->name('edit');
@@ -118,7 +118,7 @@ Route::prefix('documents')->name('documents.')->group(function () {
     });
 
     // Product Blockades
-    Route::prefix('blockades')->name('blockades.')->group(function () {
+    Route::middleware('can:manage-document-blockades')->prefix('blockades')->name('blockades.')->group(function () {
         Route::get('/', [DocumentProductBlockadeController::class, 'index'])->name('index');
         Route::get('/status', [DocumentProductBlockadeController::class, 'status'])->name('status');
     });

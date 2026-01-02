@@ -28,12 +28,16 @@ class ModulesStatusCommand extends Command
                 $disabledCount++;
             }
 
+            $moduleConfig = $this->getModuleConfig($module);
+            $version = $moduleConfig['version'] ?? '1.0.0';
+            $priority = $moduleConfig['priority'] ?? 0;
+
             $modules[] = [
                 $module->getName(),
-                $module->getAlias(),
+                strtolower($module->getName()),
                 $isEnabled ? 'Enabled' : 'Disabled',
-                $module->getPriority(),
-                $module->getVersion() ?? '1.0.0',
+                $priority,
+                $version,
             ];
         }
 
@@ -48,5 +52,22 @@ class ModulesStatusCommand extends Command
         $this->line("  <fg=yellow>Disabled:</> {$disabledCount}");
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Get module configuration from module.json.
+     */
+    private function getModuleConfig($module): array
+    {
+        try {
+            $configPath = $module->getPath().DIRECTORY_SEPARATOR.'module.json';
+            if (file_exists($configPath)) {
+                return json_decode(file_get_contents($configPath), true) ?? [];
+            }
+        } catch (\Exception $e) {
+            // Return empty array if config cannot be read
+        }
+
+        return [];
     }
 }

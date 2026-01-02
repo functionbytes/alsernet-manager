@@ -342,7 +342,9 @@
       "Bash(__NEW_LINE__ find /Users/functionbytes/Function/Coding/manager/modules/Role/resources/views -name \"*.blade.php\" -type f)",
       "Bash(do perl -i -pe \"s/route\\\\\\(''''manager\\\\.roles/route\\(''''roles/g; s/route\\\\\\(''''manager\\\\.permissions/route\\(''''permissions/g\" \"$file\" done)",
       "Bash(__NEW_LINE__ find modules/Role/resources/views -name \"*.blade.php\")",
-      "Bash(do sed -i \"\" \"s/route\\(''''manager\\\\.roles/route\\(''''roles/g\" \"$f\" sed -i \"\" \"s/route\\(''''manager\\\\.permissions/route\\(''''permissions/g\" \"$f\" done)"
+      "Bash(do sed -i \"\" \"s/route\\(''''manager\\\\.roles/route\\(''''roles/g\" \"$f\" sed -i \"\" \"s/route\\(''''manager\\\\.permissions/route\\(''''permissions/g\" \"$f\" done)",
+      "mcp__context7__query-docs",
+      "Bash(mcp__claude-in-chrome__tabs_context_mcp)"
     ],
     "deny": [],
     "ask": []
