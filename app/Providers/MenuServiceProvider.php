@@ -54,7 +54,8 @@ class MenuServiceProvider extends ServiceProvider
         NavService::registerSidebar('settings', [
             'title' => 'Configuración',
             'items' => [
-                ['label' => 'Principal', 'route' => 'manager.settings'],
+                ['label' => 'Principal', 'route' => 'manager.settings', 'icon' => 'fa-cog'],
+                ['label' => 'Módulos', 'route' => 'modules.index', 'icon' => 'fa-cube'],
                 ['label' => 'Categorías', 'route' => 'manager.settings.categories.index'],
                 ['label' => 'Búsqueda', 'route' => 'manager.settings.search.index'],
                 ['label' => 'Localización', 'route' => 'manager.settings.localization.index'],
