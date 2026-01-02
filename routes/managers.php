@@ -5,7 +5,6 @@
 use App\Http\Controllers\Managers\DashboardController;
 use App\Http\Controllers\Managers\Faqs\CategoriesController as FaqsCategoriesController;
 use App\Http\Controllers\Managers\Faqs\FaqsController;
-use Modules\Notification\Http\Controllers\Managers\NotificationController;
 use App\Http\Controllers\Managers\PulseController;
 use App\Http\Controllers\Managers\Settings\BackupController;
 use App\Http\Controllers\Managers\Settings\BackupScheduleController;
@@ -547,24 +546,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     });
 
-    Route::group(['prefix' => 'faqs'], function () {
-
-        Route::get('/', [FaqsController::class, 'index'])->name('manager.faqs');
-        Route::get('/create', [FaqsController::class, 'create'])->name('manager.faqs.create');
-        Route::post('/store', [FaqsController::class, 'store'])->name('manager.faqs.store');
-        Route::post('/update', [FaqsController::class, 'update'])->name('manager.faqs.update');
-        Route::get('/edit/{uid}', [FaqsController::class, 'edit'])->name('manager.faqs.edit');
-        Route::get('/destroy/{uid}', [FaqsController::class, 'destroy'])->name('manager.faqs.destroy');
-
-        Route::get('/categories', [FaqsCategoriesController::class, 'index'])->name('manager.faqs.categories');
-        Route::get('/categories/create', [FaqsCategoriesController::class, 'create'])->name('manager.faqs.categories.create');
-        Route::post('/categories/store', [FaqsCategoriesController::class, 'store'])->name('manager.faqs.categories.store');
-        Route::post('/categories/update', [FaqsCategoriesController::class, 'update'])->name('manager.faqs.categories.update');
-        Route::get('/categories/edit/{uid}', [FaqsCategoriesController::class, 'edit'])->name('manager.faqs.categories.edit');
-        Route::get('/categories/destroy/{uid}', [FaqsCategoriesController::class, 'destroy'])->name('manager.faqs.categories.destroy');
-
-    });
-
     Route::group(['prefix' => 'templates'], function () {
 
         Route::get('/', [TemplatesController::class, 'index'])->name('manager.templates');
@@ -603,21 +584,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     });
 
-    // Campaign routes are now handled by modules\Campaign
-    // See: modules/Campaign/routes/theme.php
-
-    Route::group(['prefix' => 'notifications'], function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('manager.notifications.index');
-        Route::get('/popup', [NotificationController::class, 'popup'])->name('manager.notifications.popup');
-        Route::post('/delete', [NotificationController::class, 'delete'])->name('manager.notifications.delete');
-        Route::post('/listing', [NotificationController::class, 'listing'])->name('manager.notifications.listing');
-    });
-
-    // Alias para manager.notifications (sin .index)
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('manager.notifications');
-
-    // Layout routes are now handled by modules\Campaign
-    // See: modules/Campaign/routes/theme.php
 
     // @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
     // Route::group(['prefix' => 'warehouse'], function () {
