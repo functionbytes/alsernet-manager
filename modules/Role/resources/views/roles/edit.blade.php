@@ -71,7 +71,7 @@
                                     <button type="submit" class="btn btn-info px-4 waves-effect waves-light">
                                         <i class="fa-duotone fa-save"></i> Guardar cambios
                                     </button>
-                                    <a href="{{ route('roles') }}" class="btn btn-light px-4">
+                                    <a href="{{ route('manager.settings.roles.index') }}" class="btn btn-light px-4">
                                         Cancelar
                                     </a>
                                 </div>
@@ -160,7 +160,7 @@
                                     positionClass: "toast-bottom-right",
                                     timeOut: 1500,
                                     onHidden: function () {
-                                        window.location.href = "{{ route('roles') }}";
+                                        window.location.href = "{{ route('manager.settings.roles.index') }}";
                                     }
                                 });
                             } else {
@@ -211,7 +211,7 @@
                                 positionClass: "toast-bottom-right",
                                 timeOut: 1500,
                                 onHidden: function () {
-                                    window.location.href = "{{ route('roles') }}";
+                                    window.location.href = "{{ route('manager.settings.roles.index') }}";
                                 }
                             });
                         } else {

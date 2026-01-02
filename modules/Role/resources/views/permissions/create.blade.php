@@ -116,7 +116,7 @@
                                     positionClass: "toast-bottom-right",
                                     timeOut: 1000,
                                     onHidden: function () {
-                                        window.location.href = "{{ route('permissions') }}";
+                                        window.location.href = "{{ route('manager.settings.permissions.index') }}";
                                     }
                                 });
 
