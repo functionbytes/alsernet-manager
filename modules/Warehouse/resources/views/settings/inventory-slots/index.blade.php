@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Posiciones de Inventario (Inventory Slots)'])
+    @include('theme.components.card', ['title' => 'Posiciones de Inventario (Inventory Slots)'])
 
     <div class="widget-content searchable-container list">
 
@@ -104,13 +104,16 @@
                                         <i data-feather="more-vertical"></i>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $loop->index }}">
-                                        <a class="dropdown-item" href="{{ route('settings.warehouse.slots.view', $slot->uid) }}">
+                                        <a class="dropdown-item"
+                                           href="{{ route('settings.warehouse.slots.view', $slot->uid) }}">
                                             <i class="fa-duotone fa-eye"></i> Ver
                                         </a>
-                                        <a class="dropdown-item" href="{{ route('settings.warehouse.slots.edit', $slot->uid) }}">
+                                        <a class="dropdown-item"
+                                           href="{{ route('settings.warehouse.slots.edit', $slot->uid) }}">
                                             <i class="fa-duotone fa-pencil"></i> Editar
                                         </a>
-                                        <a class="dropdown-item" href="{{ route('settings.warehouse.slots.destroy', $slot->uid) }}"
+                                        <a class="dropdown-item"
+                                           href="{{ route('settings.warehouse.slots.destroy', $slot->uid) }}"
                                            onclick="return confirm('¿Eliminar esta posición?')">
                                             <i class="fa-duotone fa-trash text-danger"></i> Eliminar
                                         </a>

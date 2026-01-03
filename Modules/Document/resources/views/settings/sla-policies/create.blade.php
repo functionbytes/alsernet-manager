@@ -6,7 +6,7 @@
 
     <div class="card w-100">
 
-        <form id="formSlaPolicy" method="POST" action="{{ route('manager.settings.documents.sla-policies.store') }}">
+        <form id="formSlaPolicy" method="POST" action="{{ route('settings.documents.sla-policies.store') }}">
 
             {{ csrf_field() }}
 
@@ -195,7 +195,7 @@
                 <button type="submit" class="btn btn-primary w-100 mb-1">
                     Guardar
                 </button>
-                <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-secondary  w-100">
+                <a href="{{ route('settings.documents.sla-policies.index') }}" class="btn btn-secondary  w-100">
                     Volver
                 </a>
             </div>

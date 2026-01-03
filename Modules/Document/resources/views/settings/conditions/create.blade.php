@@ -4,7 +4,7 @@
 
     <div class="card w-100">
 
-        <form id="formValidationCondition" method="POST" action="{{ route('manager.settings.documents.conditions.store') }}">
+        <form id="formValidationCondition" method="POST" action="{{ route('settings.documents.conditions.store') }}">
 
             {{ csrf_field() }}
 
@@ -283,7 +283,7 @@
                 <button type="submit" class="btn btn-info px-4 w-100 mb-1">
                     Guardar
                 </button>
-                <a href="{{ route('manager.settings.documents.conditions.index') }}" class="btn btn-light px-4 w-100">
+                <a href="{{ route('settings.documents.conditions.index') }}" class="btn btn-light px-4 w-100">
                     Cancelar
                 </a>
             </div>

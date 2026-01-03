@@ -66,7 +66,7 @@
             modal.hide();
 
             $.ajax({
-                url: "{{ route('administrative.documents.update', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                url: "{{ route('documents.update', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                 type: 'POST',
                 data: configFormData,
                 success: function(response) {

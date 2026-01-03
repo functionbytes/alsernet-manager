@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    <a href="{{ route('administrative.documents.import.api') }}" class="btn btn-primary w-100">
+                    <a href="{{ route('documents.import.api') }}" class="btn btn-primary w-100">
                         <i class="fas fa-arrow-right me-2"></i> Importar desde prestashop
                     </a>
                 </div>
@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    <a href="{{ route('administrative.documents.import.erp') }}" class="btn btn-primary w-100">
+                    <a href="{{ route('documents.import.erp') }}" class="btn btn-primary w-100">
                         <i class="fas fa-arrow-right me-2"></i> Importar desde gestion
                     </a>
                 </div>
@@ -154,7 +154,7 @@
 
                 </div>
                 <div class="col-md-4 text-end">
-                    <a href="{{ route('administrative.documents.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('documents.index') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-2"></i> Volver a documentos
                     </a>
                 </div>

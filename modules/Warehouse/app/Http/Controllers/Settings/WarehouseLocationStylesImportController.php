@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class WarehouseLocationStylesImportController extends Controller
      */
     public function showForm($warehouse_uid = null)
     {
-        return view('warehouse::theme.styles.import', [
+        return view('warehouse::settings.styles.import', [
             'warehouse_uid' => $warehouse_uid,
         ]);
     }

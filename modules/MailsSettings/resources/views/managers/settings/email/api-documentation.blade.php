@@ -2,13 +2,13 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Documentación REST API - Incoming Email'])
+    @include('theme.components.card', ['title' => 'Documentación REST API - Incoming Email'])
 
     <div class="widget-content searchable-container list">
 
         <!-- Back Button -->
         <div class="mb-3">
-            <a href="{{ route('manager.settings.email.incoming.index') }}" class="btn btn-outline-primary">
+            <a href="{{ route('settings.incoming-email.index') }}" class="btn btn-outline-primary">
                 &larr; Volver a configuración de correo entrante
             </a>
         </div>

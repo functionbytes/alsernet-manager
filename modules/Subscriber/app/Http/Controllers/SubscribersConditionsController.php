@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Subscriber\Http\Controllers\Managers;
+namespace Modules\Subscriber\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Subscriber\Models\SubscriberCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Subscriber\Models\SubscriberCondition;
 
 class SubscribersConditionsController extends Controller
 {

@@ -8,10 +8,10 @@
             ]
         },
         "chrome-devtools": {
-            "command": "npx",
+            "command": "/tmp/chrome-devtools-wrapper.sh",
             "args": [
-                "-y",
-                "chrome-devtools-mcp"
+                "--browserUrl",
+                "http://127.0.0.1:9222"
             ]
         },
         "laravel-boost": {

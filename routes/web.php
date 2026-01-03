@@ -1,19 +1,16 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Pages\PagesController;
 use App\Http\Controllers\RoleManagementController;
+use Modules\Auth\Http\Controllers\LoginController;
 
 Route::group(['middleware' => ['web']], function () {
 
+    // Redirect root to login
     Route::get('/', [LoginController::class, 'showLoginForm'])->name('index');
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('auth.login');
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/register', [LoginController::class, 'showRegisterForm'])->name('register');
+    // Legacy login route alias for Laravel compatibility (redirects to auth.login)
+    Route::get('/login', fn () => redirect()->route('auth.login'))->name('login');
 
     // Protected routes - require authentication
     Route::middleware(['auth'])->group(function () {
@@ -32,14 +29,6 @@ Route::group(['middleware' => ['web']], function () {
         Artisan::call('config:cache');
 
         return '<h1>Cache Borrado</h1>';
-    });
-
-    Route::group(['prefix' => 'password'], function () {
-        Route::get('/confirm', [ForgotPasswordController::class, 'showLinkRequest'])->name('password.confirm');
-        Route::get('/reset', [ForgotPasswordController::class, 'showLinkRequest'])->name('password.reset');
-        Route::post('/reset', [ResetPasswordController::class, 'reset']);
-        Route::post('/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-        Route::get('/reset/{slack}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset.token');
     });
 
     Route::get('/files/{uid}/{name?}', [function ($uid, $name) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -16,13 +16,24 @@ class WarehouseMapController extends Controller
     /**
      * Display the warehouse interactive map
      */
-    public function map($warehouse_uid)
+    public function map($warehouse_uid = null)
     {
+        if (!$warehouse_uid) {
+            // Redirect to warehouse list if no warehouse specified
+            return redirect()->route('settings.warehouse.index')
+                ->with('info', 'Por favor, seleccione un almacén para ver el mapa');
+        }
+
         $warehouse = Warehouse::uid($warehouse_uid);
+
+        if (!$warehouse) {
+            abort(404, 'Almacén no encontrado');
+        }
+
         $floors = WarehouseFloor::where('warehouse_id', $warehouse->id)->available()->ordered()->with('locations')->get();
         $standStyles = WarehouseLocationStyle::available()->with('locations')->get();
 
-        return view('warehouse::theme.map.index', [
+        return view('warehouse::settings.map.index', [
             'warehouse' => $warehouse,
             'warehouse_uid' => $warehouse_uid,
             'floors' => $floors,

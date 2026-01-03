@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Media\Http\Controllers\Managers;
+namespace Modules\Media\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -70,7 +70,7 @@ class MediaManagerController extends Controller
 
     public function index(): View
     {
-        return view('media::theme.index', [
+        return view('media::index', [
             'activeDisk' => $this->getActiveDisk(),
             'availableDisks' => $this->getAvailableDisks(),
         ]);

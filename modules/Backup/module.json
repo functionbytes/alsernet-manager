@@ -4,6 +4,6 @@
     "description": "Backup Module - Handles database backups, backup scheduling, and backup management",
     "keywords": ["backup", "database-backup", "schedules", "disaster-recovery"],
     "priority": 12,
-    "providers": ["Modules\\Backup\\Providers\\BackupServiceProvider"],
+    "providers": [],
     "files": []
 }

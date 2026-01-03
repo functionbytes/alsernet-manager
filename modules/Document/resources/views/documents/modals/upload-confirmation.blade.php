@@ -34,7 +34,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
             $.ajax({
-                url: "{{ route('administrative.documents.send-upload-confirmation', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                url: "{{ route('documents.send-upload-confirmation', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                 method: 'POST',
                 data: { notes: notes },
                 success: function(response) {

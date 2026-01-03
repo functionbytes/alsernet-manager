@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class WarehouseLocationSectionsController extends Controller
             ->orderBy('level', 'asc')
             ->paginate(20);
 
-        return view('warehouse::theme.sections.index', [
+        return view('warehouse::settings.sections.index', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -48,7 +48,7 @@ class WarehouseLocationSectionsController extends Controller
         // Get next available level
         $nextLevel = $location->sections()->max('level') + 1 ?? 1;
 
-        return view('warehouse::theme.sections.create', [
+        return view('warehouse::settings.sections.create', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -101,7 +101,7 @@ class WarehouseLocationSectionsController extends Controller
             ]);
         }
 
-        return redirect()->route('manager.warehouse.sections', [
+        return redirect()->route('settings.warehouse.sections', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,
@@ -120,7 +120,7 @@ class WarehouseLocationSectionsController extends Controller
 
         $slots = $section->slots()->with('product')->paginate(20);
 
-        return view('warehouse::theme.sections.view', [
+        return view('warehouse::settings.sections.view', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -139,7 +139,7 @@ class WarehouseLocationSectionsController extends Controller
         $location = WarehouseLocation::where('uid', $location_uid)->where('floor_id', $floor->id)->firstOrFail();
         $section = WarehouseLocationSection::where('uid', $section_uid)->where('location_id', $location->id)->firstOrFail();
 
-        return view('warehouse::theme.sections.edit', [
+        return view('warehouse::settings.sections.edit', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -166,7 +166,7 @@ class WarehouseLocationSectionsController extends Controller
 
         $section->update($validated);
 
-        return redirect()->route('manager.warehouse.section.view', [
+        return redirect()->route('settings.warehouse.section.view', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,
@@ -191,7 +191,7 @@ class WarehouseLocationSectionsController extends Controller
 
         $section->delete();
 
-        return redirect()->route('manager.warehouse.sections', [
+        return redirect()->route('settings.warehouse.sections', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,

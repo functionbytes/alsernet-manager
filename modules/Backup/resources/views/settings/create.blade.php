@@ -7,7 +7,7 @@
 
             <div class="card border shadow-none w-100">
 
-                <form method="POST" action="{{ route('manager.settings.backups.create') }}">
+                <form method="POST" action="{{ route('settings.backups.store') }}">
 
                     {{ csrf_field() }}
 
@@ -18,7 +18,7 @@
                             la base de datos o ambos.
                         </p>
 
-                        @include('managers.components.alerts')
+                        @include('theme.components.alerts')
 
                         <div>
                             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -172,7 +172,7 @@
                                 <button type="submit" class="btn btn-primary px-4 w-100 mb-2">
                                     Crear
                                 </button>
-                                <a href="{{ route('manager.settings.backups.index') }}"
+                                <a href="{{ route('settings.backups.index') }}"
                                    class="btn btn-secondary px-4 w-100">
                                     Volver
                                 </a>

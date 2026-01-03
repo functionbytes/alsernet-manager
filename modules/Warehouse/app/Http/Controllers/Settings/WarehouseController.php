@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class WarehouseController extends Controller
 
         $warehouses = $warehouses->paginate(paginationNumber());
 
-        return view('warehouse::theme.warehouses.index')->with([
+        return view('warehouse::settings.warehouses.index')->with([
             'warehouses' => $warehouses,
             'available' => $available,
             'searchKey' => $searchKey,
@@ -43,7 +43,7 @@ class WarehouseController extends Controller
     public function create()
     {
 
-        return view('warehouse::theme.warehouses.create')->with([
+        return view('warehouse::settings.warehouses.create')->with([
         ]);
     }
 
@@ -70,7 +70,7 @@ class WarehouseController extends Controller
             ->event('created')
             ->log('Almacén creado: '.$warehouse->name);
 
-        return redirect()->route('manager.warehouse.index')->with('success', 'Almacén creado exitosamente');
+        return redirect()->route('settings.warehouse.index')->with('success', 'Almacén creado exitosamente');
 
     }
 
@@ -81,7 +81,7 @@ class WarehouseController extends Controller
     {
         $warehouse = Warehouse::uid($uid);
 
-        return view('warehouse::theme.warehouses.edit')->with([
+        return view('warehouse::settings.warehouses.edit')->with([
             'warehouse' => $warehouse,
         ]);
     }
@@ -116,7 +116,7 @@ class WarehouseController extends Controller
             ->withProperties(['old' => $oldData, 'attributes' => $warehouse->getChanges()])
             ->log('Almacén actualizado: '.$warehouse->name);
 
-        return redirect()->route('manager.warehouse.index')->with('success', 'Almacén actualizado correctamente');
+        return redirect()->route('settings.warehouse.index')->with('success', 'Almacén actualizado correctamente');
     }
 
     /**
@@ -136,7 +136,7 @@ class WarehouseController extends Controller
             'occupied_slots' => 0, // Calcular dinámicamente si es necesario
         ];
 
-        return view('warehouse::theme.warehouses.view')->with([
+        return view('warehouse::settings.warehouses.view')->with([
             'warehouse' => $warehouse,
             'summary' => $summary,
         ]);
@@ -175,7 +175,7 @@ class WarehouseController extends Controller
         // Eliminar el almacén (sin floors ni locations)
         $warehouse->delete();
 
-        return redirect()->route('manager.warehouse.index')->with('success', 'Almacén eliminado exitosamente');
+        return redirect()->route('settings.warehouse.index')->with('success', 'Almacén eliminado exitosamente');
     }
 
     /**

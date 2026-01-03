@@ -21,11 +21,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search') || request('status'))
-                            <a href="{{ route('manager.settings.documents.types.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('settings.documents.types.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.settings.documents.types.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.documents.types.create') }}" class="btn btn-primary">
                             Nuevo tipo
                         </a>
                     </div>
@@ -34,7 +34,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.documents.types.index') }}">
+                <form method="GET" action="{{ route('settings.documents.types.index') }}">
                     <div class="row align-items-center g-2">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -152,12 +152,12 @@
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
                                                         <a class="dropdown-item"
-                                                           href="{{ route('manager.settings.documents.types.edit', $type->slug) }}">
+                                                           href="{{ route('settings.documents.types.edit', $type->slug) }}">
                                                             Editar
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('manager.settings.documents.types.toggle-active', $type->slug) }}"
+                                                        <form action="{{ route('settings.documents.types.toggle-active', $type->slug) }}"
                                                               method="POST" class="d-inline">
                                                             @csrf
                                                             <button type="submit" class="dropdown-item">
@@ -175,7 +175,7 @@
                                                                 class="dropdown-item text-success delete-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#delete-modal"
-                                                                data-url="{{ route('manager.settings.documents.types.destroy', $type->slug) }}"
+                                                                data-url="{{ route('settings.documents.types.destroy', $type->slug) }}"
                                                                 data-title="Eliminar tipo: {{ $type->getLabel() }}">
                                                             Eliminar
                                                         </a>
@@ -204,7 +204,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.settings.documents.types.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('settings.documents.types.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fa fa-plus"></i> Crear Primer Tipo
                                 </a>
                             @endif

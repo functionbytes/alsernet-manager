@@ -64,7 +64,7 @@ class SupplierContentController extends Controller
             'rejected' => SupplierAiContent::where('status', 'rejected')->count(),
         ];
 
-        return view('theme.views.settings.suppliers.content.index', compact('pageTitle', 'breadcrumb', 'contents', 'suppliers', 'stats'));
+        return view('supplier::settings.content.index', compact('pageTitle', 'breadcrumb', 'contents', 'suppliers', 'stats'));
     }
 
     /**
@@ -241,7 +241,7 @@ class SupplierContentController extends Controller
         $pageTitle = "Revisión de Contenido: {$content->title}";
         $breadcrumb = 'Configuración / Proveedores / Contenido / Detalle';
 
-        return view('theme.views.settings.suppliers.content.show', compact('content', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.content.show', compact('content', 'pageTitle', 'breadcrumb'));
     }
 
     /**

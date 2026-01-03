@@ -2,6 +2,7 @@
 
 namespace Modules\MailsSettings\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
 
 class MailsSettingsServiceProvider extends ServiceProvider
@@ -17,8 +18,11 @@ class MailsSettingsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Load routes
-        $this->loadRoutesFrom(__DIR__.'/../../routes/managers.php');
+        // Register routes
+        $this->registerRoutes();
+
+        // Register navigation
+        $this->registerMenus();
 
         // Publish config
         $this->publishes([
@@ -27,5 +31,32 @@ class MailsSettingsServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mails-settings');
+    }
+
+    protected function registerRoutes(): void
+    {
+        $modulePath = dirname(__DIR__, 2);
+
+        // Load routes directly without wrapping (routes already have their own groups)
+        require $modulePath.'/routes/web.php';
+    }
+
+    protected function registerMenus(): void
+    {
+        NavService::registerMiniItem('email-settings', [
+            'icon' => 'fa-envelope-circle-check',
+            'tooltip' => 'Configuración de Email',
+            'sidebar_id' => 'email-settings',
+            'order' => 50,
+        ]);
+
+        NavService::registerSidebar('email-settings', [
+            'title' => 'Configuración de Email',
+            'items' => [
+                ['label' => 'Configuración general', 'route' => 'settings.email.index'],
+                ['label' => 'Email entrante', 'route' => 'settings.incoming-email.index'],
+                ['label' => 'Email saliente', 'route' => 'settings.outgoing-email.index'],
+            ],
+        ]);
     }
 }

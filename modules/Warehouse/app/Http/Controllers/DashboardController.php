@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Warehouses;
+namespace Modules\Warehouse\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 

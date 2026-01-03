@@ -1,7 +1,7 @@
 @extends('layouts.theme')
 
 @section('content')
-    @include('managers.components.card', ['title' => "Estanterías piso - {$floor->name}"])
+    @include('theme.components.card', ['title' => "Estanterías piso - {$floor->name}"])
 
     <div class="widget-content searchable-container list">
 
@@ -13,8 +13,11 @@
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
                                     <div class="input-group">
-                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i data-feather="search"></i></span>
-                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar por código o barcode" @isset($search) value="{{ $search }}" @endisset>
+                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i
+                                                    data-feather="search"></i></span>
+                                        <input class="form-control rounded-start w-100" type="text" id="search"
+                                               name="search" placeholder="Buscar por código o barcode"
+                                               @isset($search) value="{{ $search }}" @endisset>
                                     </div>
                                 </div>
                             </div>
@@ -25,17 +28,20 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('settings.warehouse.locations.print-all', [$warehouse->uid, $floor->uid]) }}" class="btn btn-info" title="Imprimir todos los códigos de barras del piso">
+                                <a href="{{ route('settings.warehouse.locations.print-all', [$warehouse->uid, $floor->uid]) }}"
+                                   class="btn btn-info" title="Imprimir todos los códigos de barras del piso">
                                     <i class="fa-duotone fa-barcode"></i>
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('settings.warehouse.locations.transfer.bulk', [$warehouse->uid, $floor->uid]) }}" class="btn btn-primary" title="Trasladar múltiples ubicaciones a otro piso">
+                                <a href="{{ route('settings.warehouse.locations.transfer.bulk', [$warehouse->uid, $floor->uid]) }}"
+                                   class="btn btn-primary" title="Trasladar múltiples ubicaciones a otro piso">
                                     <i class="fa-duotone fa-arrow-right"></i>
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('settings.warehouse.locations.create', [$warehouse->uid, $floor->uid]) }}" class="btn btn-info">
+                                <a href="{{ route('settings.warehouse.locations.create', [$warehouse->uid, $floor->uid]) }}"
+                                   class="btn btn-info">
                                     <i class="fa-duotone fa-plus"></i>
                                 </a>
                             </div>
@@ -94,22 +100,27 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.locations.view', [$warehouse->uid, $floor->uid, $location->uid]) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.locations.view', [$warehouse->uid, $floor->uid, $location->uid]) }}">
                                                 Ver
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.locations.edit', [$warehouse->uid, $floor->uid, $location->uid] ) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.locations.edit', [$warehouse->uid, $floor->uid, $location->uid] ) }}">
                                                 Editar
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.locations.print', [$warehouse->uid, $floor->uid, $location->uid]) }}" target="_blank">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.locations.print', [$warehouse->uid, $floor->uid, $location->uid]) }}"
+                                               target="_blank">
                                                 Imprimir códigos
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.locations.transfer', [$warehouse->uid, $floor->uid, $location->uid]) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.locations.transfer', [$warehouse->uid, $floor->uid, $location->uid]) }}">
                                                 Trasladar a otro piso
                                             </a>
                                         </li>
@@ -117,7 +128,8 @@
                                             <hr class="dropdown-divider">
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('settings.warehouse.locations.destroy', [$warehouse->uid, $floor->uid, $location->uid]) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
+                                               data-href="{{ route('settings.warehouse.locations.destroy', [$warehouse->uid, $floor->uid, $location->uid]) }}">
                                                 Eliminar
                                             </a>
                                         </li>
@@ -140,7 +152,8 @@
             @if ($locations->hasPages())
                 <div class="d-flex justify-content-between align-items-center mt-4">
                     <div>
-                        Mostrando {{ $locations->firstItem() }} a {{ $locations->lastItem() }} de {{ $locations->total() }} estanterías
+                        Mostrando {{ $locations->firstItem() }} a {{ $locations->lastItem() }}
+                        de {{ $locations->total() }} estanterías
                     </div>
                     <div>
                         {{ $locations->links() }}
@@ -156,7 +169,7 @@
 @push('scripts')
     <script>
         document.querySelectorAll('.confirm-delete').forEach(el => {
-            el.addEventListener('click', function(e) {
+            el.addEventListener('click', function (e) {
                 e.preventDefault();
                 if (confirm('¿Está seguro de que desea eliminar esta estantería? Debe estar vacía.')) {
                     window.location.href = this.dataset.href;

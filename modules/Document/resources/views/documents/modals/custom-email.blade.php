@@ -34,7 +34,7 @@
                             <div>
                                 <h6 class="mb-1 fw-semibold">Sin plantilla configurada</h6>
                                 <p class="mb-0 small">
-                                    No hay plantilla de correo personalizado configurada. <a href="{{ route('manager.settings.documents.configurations') }}" class="text-decoration-none">Configura una plantilla aquí</a>
+                                    No hay plantilla de correo personalizado configurada. <a href="{{ route('settings.documents.configurations') }}" class="text-decoration-none">Configura una plantilla aquí</a>
                                 </p>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
             // Enviar directamente
             console.log('Enviando correo personalizado:', { subject, content });
             $.ajax({
-                url: "{{ route('administrative.documents.send-custom-email', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                url: "{{ route('documents.send-custom-email', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

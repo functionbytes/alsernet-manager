@@ -90,13 +90,20 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        // Document operational routes (day-to-day document management)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings')
-            ->name('manager.settings.')
+            ->prefix('documents')
+            ->name('documents.')
             ->group(function () {
-                // Load view routes (GET)
                 require module_path($this->name, 'routes/web.php');
+            });
+
+        // Document configuration routes (system settings)
+        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('settings/documents')
+            ->name('settings.documents.')
+            ->group(function () {
+                require module_path($this->name, 'routes/settings.php');
 
                 // Load API routes (POST, PUT, DELETE) - same prefix/name
                 require module_path($this->name, 'routes/api/settings.php');
@@ -226,13 +233,15 @@ class DocumentsServiceProvider extends ServiceProvider
         NavService::registerSidebar('documents', [
             'title' => 'Documentos',
             'items' => [
-                ['label' => 'Configuración Global', 'route' => 'manager.settings.documents.configurations.global'],
-                ['label' => 'Tipos de Documento', 'route' => 'manager.settings.documents.types.index'],
-                ['label' => 'Condiciones de Validación', 'route' => 'manager.settings.documents.conditions.index'],
-                ['label' => 'Políticas SLA', 'route' => 'manager.settings.documents.sla-policies.index'],
-                ['label' => 'Grupos de Validadores', 'route' => 'manager.settings.documents.groups.index'],
-                ['label' => 'Configuración de Documentos', 'route' => 'manager.settings.documents.settings.index'],
-                ['label' => 'Bloqueos de Productos', 'route' => 'manager.settings.documents.blockades.index'],
+                ['label' => 'Listado de documentos', 'route' => 'documents.index'],
+                ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
+                ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
+                ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
+                ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],
+                ['label' => 'Grupos de validadores', 'route' => 'settings.documents.groups.index'],
+                ['label' => 'Configuración de documentos', 'route' => 'settings.documents.settings.index'],
+                ['label' => 'Bloqueos de productos', 'route' => 'settings.documents.blockades.index'],
+                ['label' => 'Acciones de email por etapa', 'route' => 'settings.documents.stage-email-actions.index'],
             ],
         ]);
     }

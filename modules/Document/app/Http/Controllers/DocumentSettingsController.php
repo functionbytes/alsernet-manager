@@ -271,7 +271,7 @@ class DocumentSettingsController extends Controller
             }
 
             return redirect()
-                ->route('manager.settings.documents.settings.index')
+                ->route('settings.documents.settings.index')
                 ->with('success', 'Configuraciones actualizadas correctamente ('.count($updatedSettings).' cambios)');
 
         } catch (\Exception $e) {

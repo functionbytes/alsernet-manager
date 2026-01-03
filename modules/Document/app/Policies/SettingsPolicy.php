@@ -15,7 +15,7 @@ class SettingsPolicy
 
         // Managers pueden configurar documentos
         if ($user->hasRole('manager')) {
-            return $user->can('manager.documents.configure');
+            return $user->can('documents.configure');
         }
 
         return false;
@@ -32,7 +32,7 @@ class SettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.documents.manage-types');
+        return $user->hasRole('manager') && $user->can('documents.manage-types');
     }
 
     public function manageConditions(User $user): bool
@@ -41,7 +41,7 @@ class SettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.documents.manage-conditions');
+        return $user->hasRole('manager') && $user->can('documents.manage-conditions');
     }
 
     public function manageSLAPolicies(User $user): bool
@@ -50,7 +50,7 @@ class SettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.documents.manage-sla-policies');
+        return $user->hasRole('manager') && $user->can('documents.manage-sla-policies');
     }
 
     public function manageGroups(User $user): bool
@@ -59,7 +59,7 @@ class SettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.documents.manage-groups');
+        return $user->hasRole('manager') && $user->can('documents.manage-groups');
     }
 
     public function manageBlockades(User $user): bool
@@ -68,6 +68,6 @@ class SettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.documents.manage-blockades');
+        return $user->hasRole('manager') && $user->can('documents.manage-blockades');
     }
 }

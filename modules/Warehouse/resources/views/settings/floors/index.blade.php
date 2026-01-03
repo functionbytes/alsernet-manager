@@ -2,7 +2,15 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Pisos'])
+    @include('theme.components.card', ['title' => 'Pisos'])
+
+    @if(!$warehouse)
+        <div class="alert alert-info">
+            <i class="fa fa-info-circle me-2"></i>
+            Esta es la vista global de pisos. Para gestionar los pisos de un almacén específico, acceda desde el
+            <a href="{{ route('settings.warehouse.index') }}" class="alert-link">listado de almacenes</a>.
+        </div>
+    @endif
 
     <div class="widget-content searchable-container list">
 
@@ -28,11 +36,14 @@
                                     <i class="fa-duotone fa-magnifying-glass"></i>
                                 </button>
                             </div>
-                            <div class="col-auto">
-                                <a href="{{ route('settings.warehouse.floors.create' , $warehouse->uid) }}" class="btn btn-primary">
-                                    <i class="fa-duotone fa-plus"></i>
-                                </a>
-                            </div>
+                            @if($warehouse)
+                                <div class="col-auto">
+                                    <a href="{{ route('settings.warehouse.detail.floors.create', $warehouse->uid) }}"
+                                       class="btn btn-primary">
+                                        <i class="fa-duotone fa-plus"></i>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -81,33 +92,41 @@
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
-                                               href="{{ route('settings.warehouse.locations', [$warehouse->uid, $floor->uid,]) }}">
-                                                Ubicaciones
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
-                                               href="{{ route('settings.warehouse.floors.view', [$warehouse->uid, $floor->uid]) }}">
-                                                Ver
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
-                                               href="{{ route('settings.warehouse.floors.edit' ,[$warehouse->uid, $floor->uid]) }}">
-                                                Editar
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('settings.warehouse.floors.destroy', [$warehouse->uid, $floor->uid]) }}">
-                                                Eliminar
-                                            </a>
-                                        </li>
+                                        @if($warehouse)
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3"
+                                                   href="{{ route('settings.warehouse.detail.locations', [$warehouse->uid, $floor->uid]) }}">
+                                                    Ubicaciones
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3"
+                                                   href="{{ route('settings.warehouse.detail.floors.view', [$warehouse->uid, $floor->uid]) }}">
+                                                    Ver
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3"
+                                                   href="{{ route('settings.warehouse.detail.floors.edit', [$warehouse->uid, $floor->uid]) }}">
+                                                    Editar
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
+                                                   data-href="{{ route('settings.warehouse.detail.floors.destroy', [$warehouse->uid, $floor->uid]) }}">
+                                                    Eliminar
+                                                </a>
+                                            </li>
+                                        @else
+                                            <li>
+                                                <span class="dropdown-item text-muted">
+                                                    Seleccione un almacén
+                                                </span>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>

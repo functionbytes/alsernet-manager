@@ -8,7 +8,7 @@
         <div class="card card-body">
             <div class="row">
                 <div class="col-md-12 col-xl-12">
-                    <form class="form-search" action="{{ route('administrative.documents.index') }}" method="GET">
+                    <form class="form-search" action="{{ route('documents.index') }}" method="GET">
                         <div class="row justify-content-between g-2 ">
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
@@ -57,12 +57,12 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('administrative.documents.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Limpiar filtros">
+                                <a href="{{ route('documents.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Limpiar filtros">
                                     <i class="fa-duotone fa-xmark"></i>
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('administrative.documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
+                                <a href="{{ route('documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
                                     <i class="fa-duotone fa-file-import"></i>
                                 </a>
                             </div>
@@ -121,19 +121,19 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.show', $document->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.show', $document->uid) }}">
                                                 Ver
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.manage', $document->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
                                                 Gestionar
                                             </a>
                                         </li>
                                         @if($document->mails()->count() > 0)
                                             <li class="border-top my-2"></li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.emails', $document->uid) }}">
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.emails', $document->uid) }}">
                                                     Ver emails
                                                 </a>
                                             </li>

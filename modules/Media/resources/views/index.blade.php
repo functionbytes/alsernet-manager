@@ -1770,7 +1770,7 @@
             async loadMedia(folderId = 0, page = 1) {
                 this.loading = true;
                 try {
-                    const response = await fetch(`{{ route('manager.media.list') }}?folder_id=${folderId}&page=${page}&search=${this.searchQuery}`);
+                    const response = await fetch(`{{ route('media.list') }}?folder_id=${folderId}&page=${page}&search=${this.searchQuery}`);
                     const data = await response.json();
 
                     this.folders = data.folders || [];
@@ -1791,7 +1791,7 @@
             },
             async changeActiveDisk() {
                 try {
-                    const response = await fetch('{{ route('manager.media.set-disk') }}', {
+                    const response = await fetch('{{ route('media.set-disk') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1846,7 +1846,7 @@
                         }
                         formData.append('file', file);
 
-                        const response = await fetch('{{ route("manager.media.upload") }}', {
+                        const response = await fetch('{{ route("media.upload") }}', {
                             method: 'POST',
                             body: formData,
                             headers: {
@@ -1875,7 +1875,7 @@
                 if (!this.newFolderName.trim()) return;
 
                 try {
-                    const response = await fetch('{{ route("manager.media.folder.create") }}', {
+                    const response = await fetch('{{ route("media.folder.create") }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -2354,7 +2354,7 @@
             async loadTrash() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`{{ route('manager.media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=trash`);
+                    const response = await fetch(`{{ route('media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=trash`);
                     const data = await response.json();
 
                     this.folders = data.folders || [];
@@ -2370,7 +2370,7 @@
             async loadRecent() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`{{ route('manager.media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=recent`);
+                    const response = await fetch(`{{ route('media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=recent`);
                     const data = await response.json();
 
                     this.folders = data.folders || [];
@@ -2386,7 +2386,7 @@
             async loadFavorites() {
                 this.loading = true;
                 try {
-                    const response = await fetch(`{{ route('manager.media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=favorites`);
+                    const response = await fetch(`{{ route('media.list') }}?folder_id=0&page=1&search=${this.searchQuery}&view=favorites`);
                     const data = await response.json();
 
                     this.folders = data.folders || [];
@@ -2405,7 +2405,7 @@
                 }
 
                 try {
-                    const response = await fetch('{{ route("manager.media.trash.empty") }}', {
+                    const response = await fetch('{{ route("media.trash.empty") }}', {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
@@ -2493,7 +2493,7 @@
                 if (!this.uploadUrlData.url.trim()) return;
 
                 try {
-                    const response = await fetch('{{ route("manager.media.upload-url") }}', {
+                    const response = await fetch('{{ route("media.upload-url") }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -2641,7 +2641,7 @@
                             reject(new Error('Network error during upload'));
                         });
 
-                        xhr.open('POST', '{{ route("manager.media.upload") }}');
+                        xhr.open('POST', '{{ route("media.upload") }}');
                         xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
                         xhr.send(formData);
                     });

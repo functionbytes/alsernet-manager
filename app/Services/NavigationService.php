@@ -306,7 +306,6 @@ class NavigationService
             ['name' => 'manager.settings.search.index', 'label' => 'Búsqueda', 'key' => 'settings.search'],
             ['name' => 'manager.settings.localization.index', 'label' => 'Localización', 'key' => 'settings.localization'],
             ['name' => 'manager.settings.translations.index', 'label' => 'Traducciones', 'key' => 'settings.translations'],
-            ['name' => 'manager.settings.uploading.index', 'label' => 'Carga de archivos', 'key' => 'settings.uploading'],
             ['name' => 'manager.media.index', 'label' => 'Gestor de Medios', 'key' => 'media.index'],
         ];
 
@@ -332,7 +331,7 @@ class NavigationService
 
         // Email/Comunicaciones
         $email_routes = [
-            ['name' => 'manager.settings.email.index', 'label' => 'Email/SMTP', 'key' => 'settings.email'],
+            ['name' => 'settings.email.index', 'label' => 'Email/SMTP', 'key' => 'settings.email'],
             ['name' => 'manager.settings.mailers.templates.index', 'label' => 'Plantillas de correo', 'key' => 'settings.mailers'],
             ['name' => 'manager.settings.mailers.components.index', 'label' => 'Componentes de correo', 'key' => false],
             ['name' => 'manager.settings.mailers.variables.index', 'label' => 'Variables de correo', 'key' => false],

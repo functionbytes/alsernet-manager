@@ -1,4 +1,4 @@
-@extends('layouts.map')
+@extends('warehouse::layouts.map')
 
 @section('content')
 <!DOCTYPE html>

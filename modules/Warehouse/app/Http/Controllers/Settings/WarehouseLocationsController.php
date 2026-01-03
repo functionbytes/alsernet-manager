@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Services\Warehouses\BarcodeService;
@@ -37,7 +37,7 @@ class WarehouseLocationsController extends Controller
 
         $locations = $locations->with(['floor', 'style', 'sections'])->paginate(paginationNumber());
 
-        return view('warehouse::theme.locations.index')->with([
+        return view('warehouse::settings.locations.index')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'locations' => $locations,
@@ -64,7 +64,7 @@ class WarehouseLocationsController extends Controller
             'occupancy_percentage' => $location->getOccupancyPercentage(),
         ];
 
-        return view('warehouse::theme.locations.view')->with([
+        return view('warehouse::settings.locations.view')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -84,7 +84,7 @@ class WarehouseLocationsController extends Controller
 
         $styles = WarehouseLocationStyle::available()->pluck('name', 'id');
 
-        return view('warehouse::theme.locations.create')->with([
+        return view('warehouse::settings.locations.create')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'styles' => $styles,
@@ -172,7 +172,7 @@ class WarehouseLocationsController extends Controller
             ->event('created')
             ->log('Ubicación creada: '.$location->code);
 
-        return redirect()->route('manager.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación creada exitosamente');
+        return redirect()->route('settings.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación creada exitosamente');
     }
 
     /**
@@ -186,7 +186,7 @@ class WarehouseLocationsController extends Controller
         $location = WarehouseLocation::uid($location_uid);
         $styles = WarehouseLocationStyle::available()->pluck('name', 'id');
 
-        return view('warehouse::theme.locations.edit')->with([
+        return view('warehouse::settings.locations.edit')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -303,7 +303,7 @@ class WarehouseLocationsController extends Controller
             ->withProperties(['old' => $oldData, 'attributes' => $location->getChanges()])
             ->log('Ubicación actualizada: '.$location->code);
 
-        return redirect()->route('manager.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación actualizada exitosamente');
+        return redirect()->route('settings.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación actualizada exitosamente');
     }
 
     /**
@@ -329,7 +329,7 @@ class WarehouseLocationsController extends Controller
 
         $location->delete();
 
-        return redirect()->route('manager.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación eliminada exitosamente');
+        return redirect()->route('settings.warehouse.locations', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid])->with('success', 'Ubicación eliminada exitosamente');
     }
 
     /**
@@ -356,7 +356,7 @@ class WarehouseLocationsController extends Controller
 
         $slot->delete();
 
-        return redirect()->route('manager.warehouse.locations.view', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid, 'location_uid' => $location->uid])->with('success', 'Slot eliminado exitosamente');
+        return redirect()->route('settings.warehouse.locations.view', ['warehouse_uid' => $warehouse->uid, 'floor_uid' => $floor->uid, 'location_uid' => $location->uid])->with('success', 'Slot eliminado exitosamente');
     }
 
     /**
@@ -423,7 +423,7 @@ class WarehouseLocationsController extends Controller
         // Get all sections for this location
         $sections = $location->sections()->get();
 
-        return view('warehouse::theme.locations.print-barcodes')->with([
+        return view('warehouse::settings.locations.print-barcodes')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -443,7 +443,7 @@ class WarehouseLocationsController extends Controller
         // Get all sections for all locations in this floor
         $locations = $floor->locations()->with('sections')->get();
 
-        return view('warehouse::theme.locations.print-all-barcodes')->with([
+        return view('warehouse::settings.locations.print-all-barcodes')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'locations' => $locations,
@@ -467,7 +467,7 @@ class WarehouseLocationsController extends Controller
             ->ordered()
             ->get();
 
-        return view('warehouse::theme.locations.transfer')->with([
+        return view('warehouse::settings.locations.transfer')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -522,7 +522,7 @@ class WarehouseLocationsController extends Controller
             ])
             ->log('Ubicación trasladada: '.$location->code.' de '.$floor->name.' a '.$targetFloor->name);
 
-        return redirect()->route('manager.warehouse.locations', [
+        return redirect()->route('settings.warehouse.locations', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $targetFloor->uid,
         ])->with('success', "Ubicación '{$location->code}' trasladada exitosamente a ".$targetFloor->name);
@@ -571,7 +571,7 @@ class WarehouseLocationsController extends Controller
             ->ordered()
             ->get();
 
-        return view('warehouse::theme.locations.transfer-bulk')->with([
+        return view('warehouse::settings.locations.transfer-bulk')->with([
             'warehouse' => $warehouse,
             'floor' => $floor,
             'availableFloors' => $availableFloors,
@@ -649,7 +649,7 @@ class WarehouseLocationsController extends Controller
             $messageType = $successCount > 0 ? 'warning' : 'error';
         }
 
-        return redirect()->route('manager.warehouse.locations', [
+        return redirect()->route('settings.warehouse.locations', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $targetFloor->uid,
         ])->with($messageType, $message);

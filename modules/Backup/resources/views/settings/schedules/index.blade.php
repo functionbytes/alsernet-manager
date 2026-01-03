@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Listado de programación de copias'])
+    @include('theme.components.card', ['title' => 'Listado de programación de copias'])
 
     <div class="widget-content searchable-container list">
         @if ($message = Session::get('success'))
@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('manager.settings.backup-schedules.create-form') }}"
+                                <a href="{{ route('settings.backup-schedules.create') }}"
                                    class="btn btn-primary">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -71,7 +71,7 @@
             <div class="card card-body text-center py-5">
                 <i class="fa fa-calendar-xmark fa-3x text-muted mb-3"></i>
                 <p class="text-muted">No hay schedules de backup configurados.</p>
-                <a href="{{ route('manager.settings.backup-schedules.create-form') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('settings.backup-schedules.create') }}" class="btn btn-primary btn-sm">
                     Crear el Primero
                 </a>
             </div>
@@ -145,7 +145,7 @@
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3"
-                                                   href="{{ route('manager.settings.backup-schedules.edit-form', $schedule->id) }}">Editar</a>
+                                                   href="{{ route('settings.backup-schedules.edit', $schedule->id) }}">Editar</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3 toggle-schedule"
@@ -185,7 +185,7 @@
                     deleteLink.href = '#';
                     deleteLink.onclick = function (e) {
                         e.preventDefault();
-                        fetch(`/manager/settings/backups/schedules/${scheduleId}`, {
+                        fetch(`/settings/backup-schedules/${scheduleId}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -217,7 +217,7 @@
                     e.preventDefault();
                     const scheduleId = this.dataset.id;
 
-                    fetch(`/manager/settings/backups/schedules/${scheduleId}/toggle`, {
+                    fetch(`/settings/backup-schedules/${scheduleId}/toggle`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

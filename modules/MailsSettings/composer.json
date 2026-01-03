@@ -1,7 +1,17 @@
 {
     "name": "modules/mails-settings",
-    "description": "Email Configuration Settings Module",
-    "authors": [],
+    "description": "Mail Settings Module - SMTP configuration, IMAP integration, incoming/outgoing email management",
+    "keywords": ["mail", "smtp", "imap", "email", "settings"],
+    "authors": [
+        {
+            "name": "Alsernet Development",
+            "email": "dev@alsernet.com"
+        }
+    ],
+    "require": {
+        "webklex/laravel-imap": "*",
+        "phpmailer/phpmailer": "^6.9"
+    },
     "extra": {
         "laravel": {
             "providers": [],

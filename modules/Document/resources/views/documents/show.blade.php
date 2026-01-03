@@ -174,7 +174,7 @@
                         </div>
                         @if($document->media->count() > 1)
                             <div class="border-top p-3">
-                                <a href="{{ route('administrative.documents.summary', $document->uid) }}" target="_blank" class="btn btn-primary w-100">
+                                <a href="{{ route('documents.summary', $document->uid) }}" target="_blank" class="btn btn-primary w-100">
                                     <i class="fas fa-file-archive me-2"></i> Ver todos los documentos
                                 </a>
                             </div>
@@ -270,16 +270,16 @@
                     <h5 class="mb-1 fw-bold">Acciones</h5>
                 </div>
                 <div class="card-body">
-                    <a href="{{ route('administrative.documents.manage', $document->uid) }}" class="btn btn-primary w-100 mb-2">
+                    <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary w-100 mb-2">
                         Gestionar
                     </a>
                     @if($document->mails()->count() > 0)
-                    <a href="{{ route('administrative.documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
+                    <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
                        Ver emails enviados
                        <span class="badge bg-black ms-1">{{ $document->mails()->count() }}</span>
                     </a>
                     @endif
-                    <a href="{{ route('administrative.documents.index') }}" class="btn btn-secondary w-100">
+                    <a href="{{ route('documents.index') }}" class="btn btn-secondary w-100">
                         <i class="fas fa-arrow-left me-1"></i> Volver a documentos
                     </a>
                 </div>

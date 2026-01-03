@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,13 +35,11 @@
 class ImageManager extends ImageManagerCore
 {
     /**
-     * @param string $filename
-     *
      * @return string|bool
      */
     public static function getMimeType(string $filename)
     {
-        if (!file_exists($filename)) {
+        if (! file_exists($filename)) {
             return false;
         }
         $mimeType = false;
@@ -52,27 +51,26 @@ class ImageManager extends ImageManagerCore
             }
         }
         // Try with FileInfo
-        if (!$mimeType && function_exists('finfo_open')) {
+        if (! $mimeType && function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filename);
             finfo_close($finfo);
         }
         // Try with Mime
-        if (!$mimeType && function_exists('mime_content_type')) {
+        if (! $mimeType && function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filename);
         }
         // Try with exec command and file binary
-        if (!$mimeType && function_exists('exec')) {
-            $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
-            if (!$mimeType) {
-                $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
+        if (! $mimeType && function_exists('exec')) {
+            $mimeType = trim(exec('file -b --mime-type '.escapeshellarg($filename)));
+            if (! $mimeType) {
+                $mimeType = trim(exec('file --mime '.escapeshellarg($filename)));
             }
-            if (!$mimeType) {
-                $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
+            if (! $mimeType) {
+                $mimeType = trim(exec('file -bi '.escapeshellarg($filename)));
             }
         }
 
         return $mimeType;
     }
-
 }

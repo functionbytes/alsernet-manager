@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Media\Http\Controllers\Managers\MediaManagerController;
+use Modules\Media\Http\Controllers\MediaManagerController;
 
-Route::middleware(['web', 'auth'])->prefix('manager/media')->name('manager.media.')->group(function () {
+Route::middleware(['web', 'auth'])->prefix('media')->name('media.')->group(function () {
     Route::get('/', [MediaManagerController::class, 'index'])->name('index');
     Route::get('/list', [MediaManagerController::class, 'getList'])->name('list');
     Route::post('/upload', [MediaManagerController::class, 'uploadFile'])->name('upload');

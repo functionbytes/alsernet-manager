@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Prestashop\Http\Controllers\Managers\Settings;
+namespace Modules\Prestashop\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;

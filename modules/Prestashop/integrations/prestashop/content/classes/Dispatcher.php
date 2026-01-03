@@ -396,7 +396,7 @@ class DispatcherCore
                         if (file_exists(
                             _PS_OVERRIDE_DIR_."modules/$module_name/controllers/front/{$this->controller}.php"
                         )) {
-                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
+                            include_once _PS_OVERRIDE_DIR_."modules/$module_name/controllers/front/{$this->controller}.php";
                             $controller_class = $module_name.$this->controller.'ModuleFrontControllerOverride';
                         } else {
                             $controller_class = $module_name.$this->controller.'ModuleFrontController';
@@ -441,7 +441,7 @@ class DispatcherCore
                             if (file_exists(
                                 _PS_OVERRIDE_DIR_."modules/{$tab->module}/controllers/admin/$controller_name.php"
                             )) {
-                                include_once _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php";
+                                include_once _PS_OVERRIDE_DIR_."modules/{$tab->module}/controllers/admin/$controller_name.php";
                                 $controller_class = $controller_name.(
                                     strpos($controller_name, 'Controller') ? 'Override' : 'ControllerOverride'
                                 );

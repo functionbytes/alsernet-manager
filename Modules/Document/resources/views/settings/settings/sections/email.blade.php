@@ -622,7 +622,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-1"></i> Enviando...');
 
         $.ajax({
-            url: '{{ route("manager.settings.documents.settings.test-email") }}',
+            url: '{{ route("settings.documents.settings.test-email") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -649,7 +649,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-1"></i> Enviando...');
 
         $.ajax({
-            url: '{{ route("manager.settings.documents.settings.test-email") }}',
+            url: '{{ route("settings.documents.settings.test-email") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

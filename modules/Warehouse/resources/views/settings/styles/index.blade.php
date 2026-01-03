@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Estilos de estanterías'])
+    @include('theme.components.card', ['title' => 'Estilos de estanterías'])
 
     <div class="widget-content searchable-container list">
 
@@ -83,7 +83,8 @@
 
                             <td class="text-left">
                                 <div class="dropdown dropstart">
-                                    <a href="#" class="text-muted" id="dropdownMenuButton{{ $loop->index }}" data-bs-toggle="dropdown"
+                                    <a href="#" class="text-muted" id="dropdownMenuButton{{ $loop->index }}"
+                                       data-bs-toggle="dropdown"
                                        aria-expanded="false">
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>

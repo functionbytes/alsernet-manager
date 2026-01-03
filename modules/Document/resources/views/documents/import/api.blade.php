@@ -35,7 +35,7 @@
                             <button type="button" class="btn btn-primary  mb-2 w-100" id="import-btn" disabled>
                                 Importar
                             </button>
-                            <a href="{{ route('administrative.documents.import') }}" class="btn btn-secondary  w-100">
+                            <a href="{{ route('documents.import') }}" class="btn btn-secondary  w-100">
                                 Volver
                             </a>
                         </div>
@@ -51,7 +51,7 @@
             <h5 class="mb-4">Resultados de importación</h5>
             <div id="results-content"></div>
             <div class="mt-4">
-                <a href="{{ route('administrative.documents.index') }}" class="btn btn-primary w-100">
+                <a href="{{ route('documents.index') }}" class="btn btn-primary w-100">
                     Volver
                 </a>
             </div>

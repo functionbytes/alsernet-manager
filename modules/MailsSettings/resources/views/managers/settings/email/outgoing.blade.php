@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Configuración de Correo Saliente'])
+    @include('theme.components.card', ['title' => 'Configuración de Correo Saliente'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Outgoing Email Settings Card -->
         <div class="card">
@@ -16,7 +16,7 @@
                 <div class="mb-4 border-bottom pb-3">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <a href="{{ route('manager.settings.email.outgoing.edit') }}" class="btn btn-primary w-100">
+                            <a href="{{ route('settings.outgoing-email.edit') }}" class="btn btn-primary w-100">
                                 Editar configuración
                             </a>
                         </div>
@@ -31,7 +31,7 @@
                             </button>
                         </div>
                         <div class="col-md-3">
-                            <a href="{{ route('manager.settings.email.index') }}" class="btn btn-outline-primary w-100">
+                            <a href="{{ route('settings.email.index') }}" class="btn btn-outline-primary w-100">
                                 Volver
                             </a>
                         </div>
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Probando...';
 
-            fetch('{{ route("manager.settings.email.outgoing.test-connection") }}', {
+            fetch('{{ route("settings.outgoing-email.test-connection") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sendTestEmailBtn.disabled = true;
             sendTestEmailBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Enviando...';
 
-            fetch('{{ route("manager.settings.email.outgoing.send-test") }}', {
+            fetch('{{ route("settings.outgoing-email.send-test") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

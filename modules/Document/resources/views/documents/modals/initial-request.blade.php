@@ -40,7 +40,7 @@
             $btn.html('Enviando...');
 
             $.ajax({
-                url: "{{ route('administrative.documents.send-notification', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                url: "{{ route('documents.send-notification', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                 type: 'POST',
                 success: function(response) {
                     if (response.success) {

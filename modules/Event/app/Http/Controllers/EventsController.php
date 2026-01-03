@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Event\Http\Controllers\Managers\Events;
+namespace Modules\Event\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +19,7 @@ class EventsController extends Controller
         $events = Event::descending();
 
         if ($searchKey) {
-            $events->when(!strpos($searchKey, '-'), function ($query) use ($searchKey) {
+            $events->when(! strpos($searchKey, '-'), function ($query) use ($searchKey) {
                 $query->where('title', 'like', '%'.$searchKey.'%');
             });
         }
@@ -66,7 +66,7 @@ class EventsController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $event = new Event();
+        $event = new Event;
         $event->uid = Str::uuid()->toString();
         $event->title = Str::upper($request->title);
         $event->color_flag = $request->color_flag;

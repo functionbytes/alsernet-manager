@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -50,7 +50,7 @@ class WarehouseInventorySlotsController extends Controller
         $slots = $query->orderBy('created_at', 'desc')->paginate(20);
         $products = Product::available()->get();
 
-        return view('warehouse::theme.inventory-slots.index', [
+        return view('warehouse::settings.inventory-slots.index', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -73,7 +73,7 @@ class WarehouseInventorySlotsController extends Controller
 
         $products = Product::available()->get();
 
-        return view('warehouse::theme.inventory-slots.create', [
+        return view('warehouse::settings.inventory-slots.create', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -117,7 +117,7 @@ class WarehouseInventorySlotsController extends Controller
 
         WarehouseInventorySlot::create($validated);
 
-        return redirect()->route('manager.warehouse.section.slots', [
+        return redirect()->route('settings.warehouse.section.slots', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,
@@ -137,7 +137,7 @@ class WarehouseInventorySlotsController extends Controller
         $slot = WarehouseInventorySlot::where('uid', $slot_uid)->where('section_id', $section->id)
             ->with(['section.location.floor', 'product', 'lastSection', 'movements'])->firstOrFail();
 
-        return view('warehouse::theme.inventory-slots.view', [
+        return view('warehouse::settings.inventory-slots.view', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -159,7 +159,7 @@ class WarehouseInventorySlotsController extends Controller
 
         $products = Product::available()->get();
 
-        return view('warehouse::theme.inventory-slots.edit', [
+        return view('warehouse::settings.inventory-slots.edit', [
             'warehouse' => $warehouse,
             'floor' => $floor,
             'location' => $location,
@@ -189,7 +189,7 @@ class WarehouseInventorySlotsController extends Controller
 
         $slot->update($validated);
 
-        return redirect()->route('manager.warehouse.section.slots', [
+        return redirect()->route('settings.warehouse.section.slots', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,
@@ -210,7 +210,7 @@ class WarehouseInventorySlotsController extends Controller
 
         $slot->delete();
 
-        return redirect()->route('manager.warehouse.section.slots', [
+        return redirect()->route('settings.warehouse.section.slots', [
             'warehouse_uid' => $warehouse->uid,
             'floor_uid' => $floor->uid,
             'location_uid' => $location->uid,

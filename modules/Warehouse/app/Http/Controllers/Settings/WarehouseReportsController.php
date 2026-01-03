@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -20,7 +20,7 @@ class WarehouseReportsController extends Controller
         $warehouses = Warehouse::available()->pluck('title', 'id');
         $warehouses->prepend('Todos', '0');
 
-        return view('warehouse::theme.reports.index')->with([
+        return view('warehouse::settings.reports.index')->with([
             'warehouses' => $warehouses,
         ]);
     }

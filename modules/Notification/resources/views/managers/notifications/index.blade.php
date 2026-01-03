@@ -15,21 +15,21 @@
                     <ul class="nav nav-pills mb-4" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
-                               href="{{ route('manager.notifications', ['filter' => 'all']) }}">
+                               href="{{ route('notifications.index', ['filter' => 'all']) }}">
                                 <i class="fa fa-bell me-1"></i> Todas
                                 <span class="badge bg-secondary rounded-pill ms-1">{{ $notifications->total() }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ $filter === 'unread' ? 'active' : '' }}"
-                               href="{{ route('manager.notifications', ['filter' => 'unread']) }}">
+                               href="{{ route('notifications.index', ['filter' => 'unread']) }}">
                                 <i class="fa fa-envelope me-1"></i> No leídas
                                 <span class="badge bg-primary rounded-pill ms-1">{{ $unreadCount }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ $filter === 'read' ? 'active' : '' }}"
-                               href="{{ route('manager.notifications', ['filter' => 'read']) }}">
+                               href="{{ route('notifications.index', ['filter' => 'read']) }}">
                                 <i class="fa fa-envelope-open me-1"></i> Leídas
                             </a>
                         </li>

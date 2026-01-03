@@ -60,9 +60,10 @@ class MenuServiceProvider extends ServiceProvider
                 ['label' => 'Búsqueda', 'route' => 'manager.settings.search.index'],
                 ['label' => 'Localización', 'route' => 'manager.settings.localization.index'],
                 ['label' => 'Traducciones', 'route' => 'manager.settings.translations.index'],
-                ['label' => 'Carga de archivos', 'route' => 'manager.settings.uploading.index'],
-                ['label' => 'Email/SMTP', 'route' => 'manager.settings.email.index'],
+                ['label' => 'Email/SMTP', 'route' => 'settings.email.index'],
                 ['label' => 'Almacenamiento', 'route' => 'manager.settings.storage'],
+                ['label' => 'Base de datos', 'route' => 'manager.settings.database.index'],
+                ['label' => 'Limpieza de BD', 'route' => 'manager.settings.database.cleanup.index'],
             ],
         ]);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers\Shops\Locations;
+namespace Modules\Warehouse\Http\Controllers\Settings\Shops\Locations;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

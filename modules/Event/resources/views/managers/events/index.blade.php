@@ -5,7 +5,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Eventos</h5>
-            <a href="{{ route('manager.events.create') }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus me-2"></i>Nuevo evento
             </a>
         </div>
@@ -45,7 +45,7 @@
                         @forelse($events as $event)
                             <tr>
                                 <td>
-                                    <a href="{{ route('manager.events.view', $event->uid) }}" class="text-decoration-none">
+                                    <a href="{{ route('events.view', $event->uid) }}" class="text-decoration-none">
                                         {{ $event->title }}
                                     </a>
                                 </td>
@@ -59,10 +59,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('manager.events.edit', $event->uid) }}" class="btn btn-sm btn-info" title="Editar">
+                                    <a href="{{ route('events.edit', $event->uid) }}" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ route('manager.events.destroy', $event->uid) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')" title="Eliminar">
+                                    <a href="{{ route('events.destroy', $event->uid) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')" title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>

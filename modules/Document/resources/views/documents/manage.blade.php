@@ -524,7 +524,7 @@
                 console.log('[reloadDocumentsSection] Iniciando recarga para uid:', uid);
 
                 $.ajax({
-                    url: "{{ route('administrative.documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
+                    url: "{{ route('documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -590,7 +590,7 @@
                 console.log('[reloadActionHistory] Iniciando recarga para uid:', uid);
 
                 $.ajax({
-                    url: "{{ route('administrative.documents.refresh-action-history', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
+                    url: "{{ route('documents.refresh-action-history', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -816,7 +816,7 @@
                 $uploadStatus.text('Cargando documentos...');
 
                 $.ajax({
-                    url: "{{ route('administrative.documents.admin-upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('documents.admin-upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                     type: 'POST',
                     data: formData,
                     contentType: false,

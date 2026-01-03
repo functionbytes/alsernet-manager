@@ -7,8 +7,7 @@
   "active": 1,
   "order": 0,
   "providers": [
-    "Modules\\Webhook\\app\\Providers\\WebhookServiceProvider",
-    "Modules\\Webhook\\app\\Providers\\RouteServiceProvider"
+    "Modules\\Webhook\\Providers\\WebhookServiceProvider"
   ],
   "aliases": {},
   "files": [],

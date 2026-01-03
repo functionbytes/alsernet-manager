@@ -3,10 +3,8 @@
 namespace Modules\Event\Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Modules\Event\Models\Event;
-use Modules\Event\Models\EventCategory;
-use Modules\Event\Models\EventBanner;
+use Tests\TestCase;
 
 class EventModelTest extends TestCase
 {

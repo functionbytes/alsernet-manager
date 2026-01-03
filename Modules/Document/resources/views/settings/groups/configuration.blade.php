@@ -13,7 +13,7 @@
 
             <!-- Main Content -->
             <div class="col-lg-8">
-                <form method="POST" action="{{ route('manager.settings.documents.groups.update-configuration', $group->uid) }}">
+                <form method="POST" action="{{ route('settings.documents.groups.update-configuration', $group->uid) }}">
                     @csrf
 
                     @if($configurations->isNotEmpty())
@@ -85,7 +85,7 @@
                                     <button type="submit" class="btn btn-primary w-100 mb-1">
                                         Guardar
                                     </button>
-                                    <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-secondary w-100">
+                                    <a href="{{ route('settings.documents.groups.index') }}" class="btn btn-secondary w-100">
                                         Cancelar
                                     </a>
                                 </div>
@@ -230,10 +230,10 @@
                         <p class="small mb-0 text-muted">Opciones disponibles</p>
                     </div>
                     <div class="card-body">
-                            <a href="{{ route('manager.settings.documents.groups.edit', $group->uid) }}" class="btn btn-primary w-100 mb-1">
+                            <a href="{{ route('settings.documents.groups.edit', $group->uid) }}" class="btn btn-primary w-100 mb-1">
                                 Editar
                             </a>
-                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-secondary  w-100">
+                            <a href="{{ route('settings.documents.groups.index') }}" class="btn btn-secondary  w-100">
                                 Volver
                             </a>
                     </div>

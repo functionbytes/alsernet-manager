@@ -44,9 +44,7 @@ class RoleController extends BaseManagerController
      */
     public function create()
     {
-        $permissions = $this->getAvailablePermissions();
-
-        return view('role::roles.create', compact('permissions'));
+        return view('role::roles.create');
     }
 
     /**

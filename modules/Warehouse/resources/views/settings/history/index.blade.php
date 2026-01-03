@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Histórico de Movimientos'])
+    @include('theme.components.card', ['title' => 'Histórico de Movimientos'])
 
     <div class="widget-content searchable-container list">
 
@@ -14,14 +14,18 @@
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
                                     <div class="input-group">
-                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i data-feather="search"></i></span>
-                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar" @isset($searchKey) value="{{ $searchKey }}" @endisset>
+                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i
+                                                    data-feather="search"></i></span>
+                                        <input class="form-control rounded-start w-100" type="text" id="search"
+                                               name="search" placeholder="Buscar"
+                                               @isset($searchKey) value="{{ $searchKey }}" @endisset>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Buscar">
+                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-original-title="Buscar">
                                     <i class="fa-duotone fa-magnifying-glass"></i>
                                 </button>
                             </div>
@@ -40,16 +44,16 @@
             <div class="table-responsive">
                 <table class="table search-table align-middle text-nowrap">
                     <thead class="header-item">
-                        <tr>
-                            <th>Ubicación</th>
-                            <th>Producto</th>
-                            <th>Tipo Movimiento</th>
-                            <th>Cantidad</th>
-                            <th>Peso</th>
-                            <th>Fecha</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
+                    <tr>
+                        <th>Ubicación</th>
+                        <th>Producto</th>
+                        <th>Tipo Movimiento</th>
+                        <th>Cantidad</th>
+                        <th>Peso</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
                     <tbody>
 
                     @foreach ($movements as $key => $movement)
@@ -75,12 +79,14 @@
 
                             <td class="text-left">
                                 <div class="dropdown dropstart">
-                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.history.view', $movement->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.history.view', $movement->uid) }}">
                                                 Ver Detalles
                                             </a>
                                         </li>

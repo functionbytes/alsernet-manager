@@ -1,4 +1,4 @@
-@extends('layouts.manager')
+@extends('layouts.theme')
 
 @section('content')
 <div class="container-fluid mt-4">

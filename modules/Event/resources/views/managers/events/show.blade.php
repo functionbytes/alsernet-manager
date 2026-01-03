@@ -6,7 +6,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ $event->title }}</h5>
             <div class="gap-2">
-                <a href="{{ route('manager.events.edit', $event->uid) }}" class="btn btn-sm btn-info">
+                <a href="{{ route('events.edit', $event->uid) }}" class="btn btn-sm btn-info">
                     <i class="fas fa-edit me-2"></i>Editar
                 </a>
                 <a href="{{ route('manager.events') }}" class="btn btn-sm btn-secondary">

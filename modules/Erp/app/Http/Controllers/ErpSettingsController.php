@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Erp\Http\Controllers\Managers;
+namespace Modules\Erp\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
-use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Modules\Supplier\Services\Integrations\ErpService;
 
 class ErpSettingsController extends Controller
 {

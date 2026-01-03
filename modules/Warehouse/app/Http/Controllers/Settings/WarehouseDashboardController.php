@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -13,25 +13,23 @@ class WarehouseDashboardController extends Controller
     /**
      * Vista principal del dashboard de almacén
      */
-    public function dashboard(Request $request)
+    public function dashboard($warehouse_uid)
     {
-        $warehouseId = $request->warehouse_id ?? null;
-
         // Obtener almacenes
         $warehouses = Warehouse::available()->get();
-        $selectedWarehouse = null;
 
-        if ($warehouseId) {
-            $selectedWarehouse = Warehouse::find($warehouseId);
-        } elseif ($warehouses->count() > 0) {
-            $selectedWarehouse = $warehouses->first();
+        // Obtener almacén seleccionado por UID
+        $selectedWarehouse = Warehouse::uid($warehouse_uid);
+
+        if (!$selectedWarehouse) {
+            abort(404, 'Almacén no encontrado');
         }
 
         $statistics = $this->getWarehouseStatistics($selectedWarehouse);
         $recentMovements = $this->getRecentMovements($selectedWarehouse);
         $alerts = $this->getAlerts($selectedWarehouse);
 
-        return view('warehouse::theme.dashboard')->with([
+        return view('warehouse::settings.dashboard')->with([
             'warehouses' => $warehouses,
             'selectedWarehouse' => $selectedWarehouse,
             'statistics' => $statistics,
@@ -55,7 +53,7 @@ class WarehouseDashboardController extends Controller
         $warehouses = Warehouse::available()->pluck('title', 'id');
         $warehouses->prepend('Todos', '0');
 
-        return view('warehouse::theme.resume.index')->with([
+        return view('warehouse::settings.resume.index')->with([
             'warehouses' => $warehouses,
             'filters' => $filters,
         ]);
@@ -118,7 +116,7 @@ class WarehouseDashboardController extends Controller
             'occupancy_percentage' => round(($query->where('is_occupied', true)->count() / max($query->count(), 1)) * 100, 2),
         ];
 
-        return view('warehouse::theme.resume.resume')->with([
+        return view('warehouse::settings.resume.resume')->with([
             'slots' => $slots,
             'summary' => $summary,
             'filters' => $filters,

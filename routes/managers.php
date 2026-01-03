@@ -3,8 +3,6 @@
 // Campaign routes are now handled by modules\Campaign
 // See: modules/Campaign/routes/theme.php
 use App\Http\Controllers\Managers\DashboardController;
-use App\Http\Controllers\Managers\Faqs\CategoriesController as FaqsCategoriesController;
-use App\Http\Controllers\Managers\Faqs\FaqsController;
 use App\Http\Controllers\Managers\PulseController;
 use App\Http\Controllers\Managers\Settings\BackupController;
 use App\Http\Controllers\Managers\Settings\BackupScheduleController;
@@ -17,41 +15,41 @@ use App\Http\Controllers\Managers\Settings\HoursSettingsController;
 use App\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\LangsController;
 use App\Http\Controllers\Managers\Settings\LocalizationSettingsController;
-use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
 use App\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
 use App\Http\Controllers\Managers\Settings\SearchSettingsController;
-use App\Http\Controllers\Managers\Settings\ServerAccessController;
 use App\Http\Controllers\Managers\Settings\SettingsController;
 use App\Http\Controllers\Managers\Settings\StorageController;
-use App\Http\Controllers\Managers\Settings\SupervisorController;
-use App\Http\Controllers\Managers\Settings\SystemCacheController;
-use App\Http\Controllers\Managers\Settings\SystemSettingsController;
 use App\Http\Controllers\Managers\Settings\TranslationController;
-use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
-use App\Http\Controllers\Managers\SystemInfoController;
-use Modules\User\Http\Controllers\Managers\UsersController;
+// @deprecated System module controllers moved to modules/System
+// use App\Http\Controllers\Managers\Settings\MantenanceSettingsController;
+// use App\Http\Controllers\Managers\Settings\ServerAccessController;
+// use App\Http\Controllers\Managers\Settings\SupervisorController;
+// use App\Http\Controllers\Managers\Settings\SystemCacheController;
+// use App\Http\Controllers\Managers\Settings\SystemSettingsController;
+// use App\Http\Controllers\Managers\Settings\UploadingSettingsController;
+// use App\Http\Controllers\Managers\SystemInfoController;
 use Illuminate\Support\Facades\Route;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\BarcodeController as ProductsBarcodesController;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ProductsController;
 use Modules\Campaign\Http\Controllers\Managers\Campaigns\Products\ReportController;
-use Modules\Erp\Http\Controllers\Managers\ErpSettingsController;
 use Modules\Helpdesk\Http\Controllers\Managers\AiAgentFlowsController;
 use Modules\Helpdesk\Http\Controllers\Managers\AiAgentSettingsController;
 use Modules\Helpdesk\Http\Controllers\Managers\CampaignsController as HelpdeskCampaignsController;
+use Modules\Helpdesk\Http\Controllers\Managers\ConversationsController as HelpdeskConversationsController;
 // Mail controller imports are now handled by modules\Mail
 // use App\Http\Controllers\Managers\Settings\Mail\MailVariableController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailComponentController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailEndpointController;
 // use App\Http\Controllers\Managers\Settings\Mails\MailTemplateController;
-use Modules\Helpdesk\Http\Controllers\Managers\ConversationsController as HelpdeskConversationsController;
 use Modules\Helpdesk\Http\Controllers\Managers\CustomersController as HelpdeskCustomersController;
+use Modules\Helpdesk\Http\Controllers\Managers\HelpCenterController;
 // Role and Permission routes are now handled by modules\Role
 // See: modules/Role/routes/theme.php
-use Modules\Helpdesk\Http\Controllers\Managers\HelpCenterController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\AttributesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\SettingsController as SettingsHelpdeskController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\StatusesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TagsController;
+use Modules\Helpdesk\Http\Controllers\Managers\Settings\TeamController;
 // @deprecated Supplier controllers moved to modules/Supplier
 // use App\Http\Controllers\Managers\Settings\Suppliers\PromptTemplatesController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SupplierAutomationController;
@@ -60,7 +58,6 @@ use Modules\Helpdesk\Http\Controllers\Managers\Settings\TagsController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SupplierPromptsController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SuppliersController;
 // use App\Http\Controllers\Managers\Settings\Suppliers\SupplierSourcesController;
-use Modules\Helpdesk\Http\Controllers\Managers\Settings\TeamController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketCannedRepliesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketCategoriesController;
 use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketGroupsController;
@@ -70,13 +67,14 @@ use Modules\Helpdesk\Http\Controllers\Managers\Settings\TicketViewsController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketCommentsController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketNotesController;
 use Modules\Helpdesk\Http\Controllers\Managers\TicketsController as HelpdeskTicketsController;
+use Modules\User\Http\Controllers\UsersController;
 // @deprecated Subscriber controllers moved to modules/Subscriber
 // use App\Http\Controllers\Managers\Subscribers\SubscribersConditionsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersListsController;
 // use App\Http\Controllers\Managers\Subscribers\SubscribersReportController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\BarcodeController as LocationsBarcodesController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\LocationsController as ShopsLocationsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\BarcodeController as LocationsBarcodesController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsController as ShopsLocationsController;
 // @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
 // use App\Http\Controllers\Managers\Warehouses\WarehouseController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseDashboardController;
@@ -88,7 +86,7 @@ use Modules\Warehouse\Http\Controllers\Managers\Shops\Locations\LocationsControl
 // use App\Http\Controllers\Managers\Warehouses\WarehouseLocationStylesController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseMapController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseReportsController;
-use Modules\Warehouse\Http\Controllers\Managers\Shops\Shops\ShopsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
 
 // use App\Http\Controllers\Managers\Settings\ErpIntegrationSettingsController; // TODO: Controller doesn't exist
 
@@ -112,93 +110,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/{uid}/destroy', [UsersController::class, 'destroy'])->name('destroy');
     });
 
-    Route::group(['prefix' => 'pulse'], function () {
-        Route::get('/', [PulseController::class, 'dashboard'])->name('manager.pulse');
-    });
-
-    Route::group(['prefix' => 'shops'], function () {
-
-        Route::get('/', [ShopsController::class, 'index'])->name('manager.shops');
-        Route::get('/create', [ShopsController::class, 'create'])->name('manager.shops.create');
-        Route::post('/update', [ShopsController::class, 'update'])->name('manager.shops.update');
-        Route::get('/edit/{uid}', [ShopsController::class, 'edit'])->name('manager.shops.edit');
-        Route::get('/view/{uid}', [ShopsController::class, 'view'])->name('manager.shops.view');
-        Route::get('/destroy/{uid}', [ShopsController::class, 'destroy'])->name('manager.shops.destroy');
-        Route::get('/locations/{uid}', [ShopsLocationsController::class, 'index'])->name('manager.shops.locations');
-
-        Route::post('/locations/store', [ShopsLocationsController::class, 'store'])->name('manager.shops.locations.store');
-        Route::post('/locations/update', [ShopsLocationsController::class, 'update'])->name('manager.shops.locations.update');
-        Route::get('/locations/create/{uid}', [ShopsLocationsController::class, 'create'])->name('manager.shops.locations.create');
-        Route::get('/locations/edit/{uid}', [ShopsLocationsController::class, 'edit'])->name('manager.shops.locations.edit');
-        Route::get('/locations/view/{uid}', [ShopsLocationsController::class, 'view'])->name('manager.shops.locations.view');
-        Route::get('/locations/exists/{uid}', [ShopsLocationsController::class, 'exists'])->name('manager.shops.locations.exists');
-        Route::get('/locations/destroy/{uid}', [ShopsLocationsController::class, 'destroy'])->name('manager.shops.locations.destroy');
-        Route::get('/locations/all/barcode', [LocationsBarcodesController::class, 'index'])->name('manager.shops.locations.barcodes.all');
-        Route::get('/locations/single/barcode/{uid}', [LocationsBarcodesController::class, 'destroy'])->name('manager.shops.locations.barcodes.single');
-        Route::get('/locations/historys/{uid}', [ShopsLocationsController::class, 'history'])->name('manager.shops.locations.history');
-        Route::post('/locations/exists/validate', [ShopsLocationsController::class, 'checkLocationExists'])->name('manager.shops.locations.exists.validate');
-
-    });
-
-    Route::group(['prefix' => 'inventaries'], function () {
-
-        Route::get('/validate', [ProductsController::class, 'validate'])->name('manager.inventaries.validate');
-        Route::get('/validate/inventaries', [ProductsController::class, 'validateProductShop'])->name('manager.inventaries.shop');
-        Route::get('/validate/productss', [ProductsController::class, 'validateProductShops'])->name('manager.inventaries.shops');
-        Route::get('/validate/apps', [ProductsController::class, 'validateManagement'])->name('manager.inventaries.apps');
-
-        Route::get('/', [ProductsController::class, 'index'])->name('manager.inventaries');
-        Route::get('/all/barcode', [ProductsBarcodesController::class, 'index'])->name('manager.inventaries.barcodes.all');
-        Route::get('/reporte/generate/inventary', [ReportController::class, 'generateInventary'])->name('manager.inventaries.generate.inventary');
-        Route::get('/reporte/generate/kardex', [ReportController::class, 'generateKardex'])->name('manager.inventaries.generate.kardex');
-        Route::get('/create', [ProductsController::class, 'create'])->name('manager.inventaries.create');
-        Route::post('/store', [ProductsController::class, 'store'])->name('manager.inventaries.store');
-        Route::post('/update', [ProductsController::class, 'update'])->name('manager.inventaries.update');
-        Route::get('/edit/{uid}', [ProductsController::class, 'edit'])->name('manager.inventaries.edit');
-        Route::get('/view/{uid}', [ProductsController::class, 'view'])->name('manager.locations.view');
-        Route::get('/destroy/{uid}', [ProductsController::class, 'destroy'])->name('manager.inventaries.destroy');
-
-        Route::get('/locations/{uid}', [ProductsController::class, 'locations'])->name('manager.inventaries.locations');
-        Route::get('/locations/details/{uid}', [ProductsController::class, 'details'])->name('manager.inventaries.locations.details');
-
-        Route::get('/single/barcode/{uid}', [ProductsBarcodesController::class, 'destroy'])->name('manager.inventaries.barcodes.single');
-    });
-
-    Route::group(['prefix' => 'inventaries'], function () {
-        // Redirigir a warehouse
-        Route::get('/', [WarehouseController::class, 'index'])->name('manager.inventaries');
-        Route::get('/create', [WarehouseController::class, 'create'])->name('warehouses.create');
-        Route::post('/update', [WarehouseController::class, 'update'])->name('warehouses.update');
-        Route::get('/edit/{uid}', [WarehouseController::class, 'edit'])->name('warehouses.edit');
-        Route::get('/view/{uid}', [WarehouseController::class, 'view'])->name('warehouses.view');
-        Route::get('/destroy/{uid}', [WarehouseController::class, 'destroy'])->name('warehouses.destroy');
-
-        // Rutas de ubicaciones (consolidadas)
-        Route::get('/locations/{uid}', [WarehouseLocationsController::class, 'index'])->name('warehouses.locations');
-        Route::get('/locations/view/{uid}', [WarehouseLocationsController::class, 'view'])->name('warehouses.locations.details');
-        Route::get('/locations/edit/{uid}', [WarehouseLocationsController::class, 'edit'])->name('warehouses.locations.edit');
-        Route::get('/locations/destroy/{uid}', [WarehouseLocationsController::class, 'destroy'])->name('warehouses.locations.destroy');
-        Route::post('/locations/update', [WarehouseLocationsController::class, 'update'])->name('warehouses.locations.update');
-
-        // Rutas de histórico (consolidadas)
-        Route::get('/history', [WarehouseHistoryController::class, 'index'])->name('warehouses.history');
-        Route::get('/history/{uid}', [WarehouseHistoryController::class, 'view'])->name('warehouses.history.view');
-        Route::get('/history/edit/{uid}', [WarehouseHistoryController::class, 'edit'])->name('warehouses.history.edit');
-        Route::post('/history/update', [WarehouseHistoryController::class, 'update'])->name('warehouses.history.update');
-
-        // Rutas de reportes
-        Route::get('/report', [WarehouseReportsController::class, 'report'])->name('warehouses.report');
-    });
-
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('/', [UsersController::class, 'index'])->name('manager.users');
-        Route::get('/create', [UsersController::class, 'create'])->name('manager.users.create');
-        Route::post('/store', [UsersController::class, 'store'])->name('manager.users.store');
-        Route::post('/update', [UsersController::class, 'update'])->name('manager.users.update');
-        Route::get('/edit/{uid}', [UsersController::class, 'edit'])->name('manager.users.edit');
-        Route::get('/view/{uid}', [UsersController::class, 'view'])->name('manager.users.view');
-        Route::get('/destroy/{uid}', [UsersController::class, 'destroy'])->name('manager.users.destroy');
-    });
 
     Route::group(['prefix' => 'categories'], function () {
         Route::get('/', [CategoriesController::class, 'index'])->name('manager.categories');
@@ -221,54 +132,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/categories', [LangsController::class, 'getCategories'])->name('manager.langs.categories');
     });
 
-    // @deprecated Subscriber routes are now handled by modules\Subscriber
-    // See: modules/Subscriber/routes/theme.php
-    /*
-    Route::group(['prefix' => 'subscribers'], function () {
-
-        Route::get('/', [SubscribersController::class, 'index'])->name('manager.subscribers');
-        Route::get('/create', [SubscribersController::class, 'create'])->name('manager.subscribers.create');
-        Route::post('/update', [SubscribersController::class, 'update'])->name('manager.subscribers.update');
-        Route::get('/edit/{uid}', [SubscribersController::class, 'edit'])->name('manager.subscribers.edit');
-        Route::get('/view/{uid}', [SubscribersController::class, 'view'])->name('manager.subscribers.view');
-        Route::get('/destroy/{uid}', [SubscribersController::class, 'destroy'])->name('manager.subscribers.destroy');
-        Route::get('/logs/{slack}', [SubscribersController::class, 'logs'])->name('manager.subscribers.logs');
-
-        Route::get('/imports/create', [SubscribersController::class, 'createImport'])->name('manager.subscribers.imports.create');
-        Route::get('/imports/{import_uid}', [SubscribersController::class, 'createImports'])->name('manager.subscribers.import');
-        Route::post('/imports/{import_uid}/dispatch', [SubscribersController::class, 'dispatchImportListsJobs'])->name('manager.subscribers.import.dispatch');
-        Route::get('/imports/{job_uid}/progress', [SubscribersController::class, 'importListsProgress'])->name('manager.subscribers.import.progress');
-        Route::get('/imports/{job_uid}/log/download', [SubscribersController::class, 'downloadImportListsLog'])->name('manager.subscribers.import.log.download');
-        Route::post('/imports/{job_uid}/cancel', [SubscribersController::class, 'cancelImportLists'])->name('manager.subscribers.import.cancel');
-
-        Route::get('/lists', [SubscribersListsController::class, 'index'])->name('manager.subscribers.lists');
-        Route::get('/list/{uid}', [SubscribersListsController::class, 'list'])->name('manager.subscribers.list');
-        Route::get('/lists/report', [SubscribersListsController::class, 'report'])->name('manager.subscribers.lists.report');
-        Route::get('/lists/create', [SubscribersListsController::class, 'create'])->name('manager.subscribers.lists.create');
-        Route::post('/lists/update', [SubscribersListsController::class, 'update'])->name('manager.subscribers.lists.update');
-        Route::post('/lists/store', [SubscribersListsController::class, 'store'])->name('manager.subscribers.lists.store');
-        Route::get('/lists/reports', [SubscribersReportController::class, 'report'])->name('manager.subscribers.lists.reports');
-        Route::get('/lists/details/{uid}', [SubscribersListsController::class, 'details'])->name('manager.subscribers.lists.details');
-        Route::get('/lists/edit/{uid}', [SubscribersListsController::class, 'edit'])->name('manager.subscribers.lists.edit');
-        Route::get('/lists/view/{uid}', [SubscribersListsController::class, 'view'])->name('manager.subscribers.lists.view');
-        Route::get('/lists/categories/{uid}', [SubscribersListsController::class, 'categories'])->name('manager.subscribers.lists.categories');
-        Route::get('/lists/destroy/{uid}', [SubscribersListsController::class, 'destroy'])->name('manager.subscribers.lists.destroy');
-        Route::get('/lists/components/{uid}', [SubscribersListsController::class, 'components'])->name('manager.subscribers.lists.components');
-        Route::post('/lists/components/update', [SubscribersListsController::class, 'updateIncludes'])->name('manager.subscribers.lists.components.update');
-        Route::post('/lists/categories/update', [SubscribersListsController::class, 'updateCategories'])->name('manager.subscribers.lists.categories.update');
-
-        Route::get('/lists/report/generate', [SubscribersReportController::class, 'generate'])->name('manager.subscribers.lists.reports.generate');
-
-        Route::get('/conditions', [SubscribersConditionsController::class, 'index'])->name('manager.subscribers.conditions');
-        Route::get('/conditions/create', [SubscribersConditionsController::class, 'create'])->name('manager.subscribers.conditions.create');
-        Route::post('/conditions/store', [SubscribersConditionsController::class, 'store'])->name('manager.subscribers.conditions.store');
-        Route::post('/conditions/update', [SubscribersConditionsController::class, 'update'])->name('manager.subscribers.conditions.update');
-        Route::get('/conditions/edit/{uid}', [SubscribersConditionsController::class, 'edit'])->name('manager.subscribers.conditions.edit');
-        Route::get('/conditions/view/{uid}', [SubscribersConditionsController::class, 'view'])->name('manager.subscribers.conditions.view');
-        Route::get('/conditions/destroy/{uid}', [SubscribersConditionsController::class, 'destroy'])->name('manager.subscribers.conditions.destroy');
-
-    });
-    */
 
     Route::group(['prefix' => 'settings'], function () {
 
@@ -283,8 +146,9 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::get('/delete/logo/{id}', [SettingsController::class, 'deleteLogo'])->name('manager.settings.logo.delete');
         Route::get('/get/logo/{id}', [SettingsController::class, 'getLogo'])->name('manager.settings.logo.get');
 
-        Route::get('/maintenance', [MantenanceSettingsController::class, 'index'])->name('manager.settings.maintenance');
-        Route::post('/maintenance/update', [MantenanceSettingsController::class, 'update'])->name('manager.settings.maintenance.update');
+        // @deprecated Maintenance routes moved to modules/System/routes/web.php
+        // Route::get('/maintenance', [MantenanceSettingsController::class, 'index'])->name('manager.settings.maintenance');
+        // Route::post('/maintenance/update', [MantenanceSettingsController::class, 'update'])->name('manager.settings.maintenance.update');
 
         Route::get('/hours', [HoursSettingsController::class, 'index'])->name('manager.settings.hours');
         Route::post('/hours/update', [HoursSettingsController::class, 'update'])->name('manager.settings.hours.update');
@@ -315,165 +179,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
         Route::group(['prefix' => 'mailers'], function () { ... });
         */
 
-        Route::group(['prefix' => 'erp'], function () {
-
-            Route::get('/', [ErpSettingsController::class, 'index'])->name('manager.settings.erp.index');
-            Route::get('/edit', [ErpSettingsController::class, 'edit'])->name('manager.settings.erp.edit');
-            Route::put('/update', [ErpSettingsController::class, 'update'])->name('manager.settings.erp.update');
-
-            // AJAX Endpoints
-            Route::post('/check-connection', [ErpSettingsController::class, 'checkConnection'])->name('manager.settings.erp.check-connection');
-            Route::post('/toggle-active', [ErpSettingsController::class, 'toggleActive'])->name('manager.settings.erp.toggle-active');
-            Route::post('/clear-cache', [ErpSettingsController::class, 'clearCache'])->name('manager.settings.erp.clear-cache');
-            Route::post('/reset-stats', [ErpSettingsController::class, 'resetStats'])->name('manager.settings.erp.reset-stats');
-            Route::get('/get-stats', [ErpSettingsController::class, 'getStats'])->name('manager.settings.erp.get-stats');
-            Route::post('/test-sync', [ErpSettingsController::class, 'testSync'])->name('manager.settings.erp.test-sync');
-        });
-
-        // TODO: ErpIntegrationSettingsController doesn't exist - needs to be created
-        // Route::group(['prefix' => 'erp-integration'], function () {
-        //     Route::get('/', [ErpIntegrationSettingsController::class, 'index'])->name('manager.settings.erp-integration.index');
-        //     Route::get('/edit', [ErpIntegrationSettingsController::class, 'edit'])->name('manager.settings.erp-integration.edit');
-        //     Route::put('/update', [ErpIntegrationSettingsController::class, 'update'])->name('manager.settings.erp-integration.update');
-        //     Route::post('/toggle', [ErpIntegrationSettingsController::class, 'toggle'])->name('manager.settings.erp-integration.toggle');
-        // });
-
-        // @deprecated Supplier routes moved to modules/Supplier/routes/theme.php
-        // See: modules/Supplier/routes/theme.php
-
-        Route::group(['prefix' => 'email'], function () {
-            // Main selection page
-            Route::get('/', [EmailSettingsController::class, 'index'])->name('manager.settings.email.index');
-
-            // Outgoing Email (SMTP)
-            Route::prefix('outgoing')->group(function () {
-                Route::get('/', [OutgoingEmailSettingsController::class, 'index'])->name('manager.settings.email.outgoing.index');
-                Route::get('/edit', [OutgoingEmailSettingsController::class, 'edit'])->name('manager.settings.email.outgoing.edit');
-                Route::put('/update', [OutgoingEmailSettingsController::class, 'update'])->name('manager.settings.email.outgoing.update');
-
-                // AJAX Endpoints
-                Route::post('/test-connection', [OutgoingEmailSettingsController::class, 'testConnection'])->name('manager.settings.email.outgoing.test-connection');
-                Route::post('/send-test', [OutgoingEmailSettingsController::class, 'sendTestEmail'])->name('manager.settings.email.outgoing.send-test');
-            });
-
-            // Incoming Email (IMAP, Pipe, API, etc.)
-            Route::prefix('incoming')->group(function () {
-                Route::get('/', [IncomingEmailSettingsController::class, 'index'])->name('manager.settings.email.incoming.index');
-
-                // IMAP Connections
-                Route::post('/imap/store', [IncomingEmailSettingsController::class, 'storeImapConnection'])->name('manager.settings.email.incoming.imap.store');
-                Route::delete('/imap/{id}', [IncomingEmailSettingsController::class, 'deleteImapConnection'])->name('manager.settings.email.incoming.imap.delete');
-                Route::post('/imap/test', [IncomingEmailSettingsController::class, 'testImapConnection'])->name('manager.settings.email.incoming.imap.test');
-
-                // Pipe Handler
-                Route::put('/pipe/update', [IncomingEmailSettingsController::class, 'updatePipe'])->name('manager.settings.email.incoming.pipe.update');
-
-                // REST API Handler
-                Route::put('/api/update', [IncomingEmailSettingsController::class, 'updateApi'])->name('manager.settings.email.incoming.api.update');
-                Route::post('/api/generate-key', [IncomingEmailSettingsController::class, 'generateApiKey'])->name('manager.settings.email.incoming.api.generate-key');
-                Route::get('/api/documentation', [IncomingEmailSettingsController::class, 'apiDocumentation'])->name('manager.settings.email.incoming.api.documentation');
-
-                // Gmail API Handler
-                Route::put('/gmail/update', [IncomingEmailSettingsController::class, 'updateGmail'])->name('manager.settings.email.incoming.gmail.update');
-                Route::get('/gmail/authorize', [IncomingEmailSettingsController::class, 'gmailAuthorize'])->name('manager.settings.email.incoming.gmail.authorize');
-                Route::get('/gmail/callback', [IncomingEmailSettingsController::class, 'gmailCallback'])->name('manager.settings.email.incoming.gmail.callback');
-                Route::delete('/gmail/{id}', [IncomingEmailSettingsController::class, 'deleteGmailConnection'])->name('manager.settings.email.incoming.gmail.delete');
-
-                // Mailgun Handler
-                Route::put('/mailgun/update', [IncomingEmailSettingsController::class, 'updateMailgun'])->name('manager.settings.email.incoming.mailgun.update');
-
-                // phpList Handler
-                Route::put('/phplist/update', [IncomingEmailSettingsController::class, 'updatePhplist'])->name('manager.settings.email.incoming.phplist.update');
-                Route::post('/phplist/test', [IncomingEmailSettingsController::class, 'testPhplistConnection'])->name('manager.settings.email.incoming.phplist.test');
-                Route::get('/phplist/lists', [IncomingEmailSettingsController::class, 'getPhplistLists'])->name('manager.settings.email.incoming.phplist.lists');
-                Route::post('/phplist/subscribe', [IncomingEmailSettingsController::class, 'phplistSubscribe'])->name('manager.settings.email.incoming.phplist.subscribe');
-            });
-
-            // Legacy routes for backward compatibility
-            Route::get('/edit', [OutgoingEmailSettingsController::class, 'edit'])->name('manager.settings.email.edit');
-            Route::put('/update', [OutgoingEmailSettingsController::class, 'update'])->name('manager.settings.email.update');
-            Route::post('/test-connection', [OutgoingEmailSettingsController::class, 'testConnection'])->name('manager.settings.email.test-connection');
-            Route::post('/send-test', [OutgoingEmailSettingsController::class, 'sendTestEmail'])->name('manager.settings.email.send-test');
-        });
-
-        Route::group(['prefix' => 'database'], function () {
-            Route::get('/', [DatabaseSettingsController::class, 'index'])->name('manager.settings.database.index');
-            Route::get('/edit', [DatabaseSettingsController::class, 'edit'])->name('manager.settings.database.edit');
-            Route::put('/update', [DatabaseSettingsController::class, 'update'])->name('manager.settings.database.update');
-
-            // AJAX Endpoints
-            Route::post('/check-connection', [DatabaseSettingsController::class, 'checkConnection'])->name('manager.settings.database.check-connection');
-
-            // Database Cleanup Routes
-            Route::group(['prefix' => 'cleanup'], function () {
-                Route::get('/', [DatabaseCleanupController::class, 'index'])->name('manager.settings.database.cleanup.index');
-                Route::post('/truncate', [DatabaseCleanupController::class, 'truncate'])->name('manager.settings.database.cleanup.truncate');
-                Route::post('/get-table-count', [DatabaseCleanupController::class, 'getTableCount'])->name('manager.settings.database.cleanup.table-count');
-            });
-        });
-
-        Route::group(['prefix' => 'backups'], function () {
-            Route::get('/', [BackupController::class, 'index'])->name('manager.settings.backups.index');
-            Route::get('/create', [BackupController::class, 'createForm'])->name('manager.settings.backups.createForm');
-            Route::post('/create', [BackupController::class, 'create'])->name('manager.settings.backups.create');
-            Route::get('/download/{filename}', [BackupController::class, 'download'])->name('manager.settings.backups.download');
-            Route::delete('/delete/{filename}', [BackupController::class, 'delete'])->name('manager.settings.backups.delete');
-
-            // AJAX Endpoints
-            Route::get('/status', [BackupController::class, 'getStatus'])->name('manager.settings.backups.status');
-
-            // Backup Schedules
-            Route::group(['prefix' => 'schedules'], function () {
-                Route::get('/', [BackupScheduleController::class, 'index'])->name('manager.settings.backup-schedules.index');
-                Route::get('/create', [BackupScheduleController::class, 'createForm'])->name('manager.settings.backup-schedules.create-form');
-                Route::post('/create', [BackupScheduleController::class, 'create'])->name('manager.settings.backup-schedules.create');
-                Route::get('/{id}/edit', [BackupScheduleController::class, 'editForm'])->name('manager.settings.backup-schedules.edit-form');
-                Route::put('/{id}', [BackupScheduleController::class, 'update'])->name('manager.settings.backup-schedules.update');
-                Route::delete('/{id}', [BackupScheduleController::class, 'delete'])->name('manager.settings.backup-schedules.delete');
-                Route::post('/{id}/toggle', [BackupScheduleController::class, 'toggle'])->name('manager.settings.backup-schedules.toggle');
-                Route::get('/{id}/details', [BackupScheduleController::class, 'getScheduleDetails'])->name('manager.settings.backup-schedules.details');
-            });
-        });
-
-        Route::group(['prefix' => 'system'], function () {
-            // Main System Settings with Queue and WebSockets tabs
-            Route::get('/', [SystemSettingsController::class, 'index'])->name('manager.settings.system.index');
-
-            // Queue Settings
-            Route::put('/queue/update', [SystemSettingsController::class, 'updateQueue'])->name('manager.settings.system.queue.update');
-            Route::post('/queue/test', [SystemSettingsController::class, 'testQueue'])->name('manager.settings.system.queue.test');
-            Route::post('/queue/restart', [SystemSettingsController::class, 'restartQueue'])->name('manager.settings.system.queue.restart');
-
-            // WebSockets Settings
-            Route::put('/websockets/update', [SystemSettingsController::class, 'updateWebsockets'])->name('manager.settings.system.websockets.update');
-
-            // System Information
-            Route::group(['prefix' => 'info'], function () {
-                Route::get('/', [SystemInfoController::class, 'index'])->name('manager.settings.system.info.index');
-                Route::get('/api', [SystemInfoController::class, 'api'])->name('manager.settings.system.info.api');
-            });
-
-            Route::group(['prefix' => 'cache'], function () {
-                Route::get('/', [SystemCacheController::class, 'index'])->name('manager.settings.system.cache.index');
-                Route::get('/debug', [SystemCacheController::class, 'debug'])->name('manager.settings.system.cache.debug');
-                Route::post('/clear-cache', [SystemCacheController::class, 'clearCache'])->name('manager.settings.system.cache.clear-cache');
-                Route::post('/clear-config-cache', [SystemCacheController::class, 'clearConfigCache'])->name('manager.settings.system.cache.clear-config-cache');
-                Route::post('/cache-config', [SystemCacheController::class, 'cacheConfig'])->name('manager.settings.system.cache.cache-config');
-                Route::post('/clear-route-cache', [SystemCacheController::class, 'clearRouteCache'])->name('manager.settings.system.cache.clear-route-cache');
-                Route::post('/clear-view-cache', [SystemCacheController::class, 'clearViewCache'])->name('manager.settings.system.cache.clear-view-cache');
-                Route::post('/clear-optimization', [SystemCacheController::class, 'clearOptimization'])->name('manager.settings.system.cache.clear-optimization');
-                Route::post('/composer-dump-autoload', [SystemCacheController::class, 'composerDumpAutoload'])->name('manager.settings.system.cache.composer-dump-autoload');
-                Route::post('/execute-all', [SystemCacheController::class, 'executeAll'])->name('manager.settings.system.cache.execute-all');
-            });
-
-            // Server Access & Logs
-            Route::group(['prefix' => 'access'], function () {
-                Route::get('/', [ServerAccessController::class, 'index'])->name('manager.settings.system.access.index');
-                Route::get('/stats', [ServerAccessController::class, 'stats'])->name('manager.settings.system.access.stats');
-                Route::post('/clear', [ServerAccessController::class, 'clearLogs'])->name('manager.settings.system.access.clear');
-                Route::get('/download', [ServerAccessController::class, 'downloadLogs'])->name('manager.settings.system.access.download');
-            });
-        });
 
         // Search Settings
         Route::group(['prefix' => 'search'], function () {
@@ -487,48 +192,6 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
             Route::put('/update', [LocalizationSettingsController::class, 'update'])->name('manager.settings.localization.update');
         });
 
-        // Uploading Settings
-        Route::group(['prefix' => 'uploading'], function () {
-            Route::get('/', [UploadingSettingsController::class, 'index'])->name('manager.settings.uploading.index');
-            Route::put('/update', [UploadingSettingsController::class, 'update'])->name('manager.settings.uploading.update');
-        });
-
-        Route::group(['prefix' => 'supervisor'], function () {
-            // Non-parameterized routes first
-            Route::get('/', [SupervisorController::class, 'index'])->name('manager.settings.supervisor.index');
-            Route::post('/reload', [SupervisorController::class, 'reload'])->name('manager.settings.supervisor.reload');
-            Route::post('/restart', [SupervisorController::class, 'restartSupervisor'])->name('manager.settings.supervisor.restart-service');
-            Route::get('/status/ajax', [SupervisorController::class, 'getStatusAjax'])->name('manager.settings.supervisor.status-ajax');
-
-            // Scheduled Jobs & Artisan Commands
-            Route::get('/api/scheduled-jobs', [SupervisorController::class, 'getScheduledJobs'])->name('manager.settings.supervisor.scheduled-jobs');
-            Route::post('/api/run-scheduler', [SupervisorController::class, 'runScheduler'])->name('manager.settings.supervisor.run-scheduler');
-            Route::post('/api/run-command', [SupervisorController::class, 'runCommand'])->name('manager.settings.supervisor.run-command');
-            Route::get('/api/list-commands', [SupervisorController::class, 'listCommands'])->name('manager.settings.supervisor.list-commands');
-
-            // Backup & Restore Routes
-            Route::get('/backups/list', [SupervisorController::class, 'listBackups'])->name('manager.settings.supervisor.backups-list');
-            Route::post('/backups/create', [SupervisorController::class, 'createBackup'])->name('manager.settings.supervisor.backup-create');
-            Route::post('/backups/{backupId}/restore', [SupervisorController::class, 'restoreBackup'])->name('manager.settings.supervisor.backup-restore');
-            Route::delete('/backups/{backupId}/delete', [SupervisorController::class, 'deleteBackup'])->name('manager.settings.supervisor.backup-delete');
-            Route::get('/backups/{backupId}/download', [SupervisorController::class, 'downloadBackup'])->name('manager.settings.supervisor.backup-download');
-
-            // Configuration Routes
-            Route::get('/config/files', [SupervisorController::class, 'listConfigFiles'])->name('manager.settings.supervisor.config-files');
-            Route::get('/config/file', [SupervisorController::class, 'getConfigFile'])->name('manager.settings.supervisor.config-file');
-            Route::post('/config/file/update', [SupervisorController::class, 'updateConfigFile'])->name('manager.settings.supervisor.config-update');
-
-            // Parameterized routes last
-            Route::get('/{processName}/show', [SupervisorController::class, 'show'])->name('manager.settings.supervisor.show');
-            Route::post('/{processName}/start', [SupervisorController::class, 'start'])->name('manager.settings.supervisor.start');
-            Route::post('/{processName}/stop', [SupervisorController::class, 'stop'])->name('manager.settings.supervisor.stop');
-            Route::post('/{processName}/restart', [SupervisorController::class, 'restart'])->name('manager.settings.supervisor.restart');
-            Route::get('/{processName}/logs', [SupervisorController::class, 'getLogs'])->name('manager.settings.supervisor.logs');
-        });
-
-        // Role and Permission routes are now handled by modules\Role
-        // See: modules/Role/app/Providers/RouteServiceProvider.php
-
         Route::group(['prefix' => 'translations'], function () {
             Route::get('/', [TranslationController::class, 'index'])->name('manager.settings.translations.index');
             Route::get('/edit/{locale}/{file}', [TranslationController::class, 'edit'])->name('manager.settings.translations.edit');
@@ -537,619 +200,5 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
     });
 
-    Route::group(['prefix' => 'templates'], function () {
-
-        Route::get('/', [TemplatesController::class, 'index'])->name('manager.templates');
-        Route::get('/create', [TemplatesController::class, 'create'])->name('manager.templates.create');
-        Route::get('/chat', [TemplatesController::class, 'chat'])->name('manager.templates.chat');
-        Route::post('/store', [TemplatesController::class, 'store'])->name('manager.templates.store');
-        Route::post('/upload', [TemplatesController::class, 'uploadTemplate'])->name('manager.templates.uploadTemplate');
-        Route::post('/update', [TemplatesController::class, 'update'])->name('manager.templates.update');
-        Route::get('/delete', [TemplatesController::class, 'delete'])->name('manager.templates.delete');
-        Route::get('/edit/{uid}', [TemplatesController::class, 'edit'])->name('manager.templates.edit');
-        Route::get('/view/{uid}', [TemplatesController::class, 'view'])->name('manager.templates.view');
-        Route::get('/destroy/{uid}', [TemplatesController::class, 'destroy'])->name('manager.templates.destroy');
-        Route::get('/preview/{uid}', [TemplatesController::class, 'preview'])->name('manager.templates.preview');
-        Route::get('/edit/{uid}', [TemplatesController::class, 'edit'])->name('manager.templates.uid.edit');
-        Route::post('/copy/{uid}', [TemplatesController::class, 'copy'])->name('manager.templates.copy.create');
-        Route::get('/copy/{uid}', [TemplatesController::class, 'copy'])->name('manager.templates.copy.show');
-        Route::post('/export/{uid}', [TemplatesController::class, 'export'])->name('manager.templates.export');
-        Route::patch('/update/{uid}', [TemplatesController::class, 'update'])->name('manager.templates.uid.update');
-
-        Route::get('/rss/parse', [TemplatesController::class, 'parseRss'])->name('manager.templates.parseRss');
-
-        Route::get('/listing/{page?}', [TemplatesController::class, 'listing'])->name('manager.templates.listing');
-        Route::get('/choosing/{campaign_uid}/{page?}', [TemplatesController::class, 'choosing'])->name('manager.templates.choosing');
-
-        Route::match(['get', 'post'], '/builder/create', [TemplatesController::class, 'builderCreate'])->name('manager.templates.builder.create');
-        Route::match(['get', 'post'], '/{uid}/change-name', [TemplatesController::class, 'changeName'])->name('manager.templates.changemame');
-        Route::match(['get', 'post'], '/{uid}/categories', [TemplatesController::class, 'categories'])->name('manager.templates.categories');
-        Route::match(['get', 'post'], '/{uid}/update-thumb-url', [TemplatesController::class, 'updateThumbUrl'])->name('manager.templates.update.thumburl');
-        Route::match(['get', 'post'], '/{uid}/update-thumb', [TemplatesController::class, 'updateThumb'])->name('manager.templates.update.thumb');
-        Route::match(['get', 'post'], '/{uid}/builder/edit', [TemplatesController::class, 'builderEdit'])->name('manager.templates.builder.edit');
-
-        Route::get('/builder/templates/{category_uid?}', [TemplatesController::class, 'builderTemplates'])->name('manager.templates.builder.templates');
-        Route::post('/{uid}/builder/edit/asset', [TemplatesController::class, 'uploadTemplateAssets'])->name('manager.templates.upload.template.assets');
-        Route::get('/{uid}/builder/edit/content', [TemplatesController::class, 'builderEditContent'])->name('manager.templates.builder.edit.content');
-        Route::get('/{uid}/builder/change-template/{change_uid}', [TemplatesController::class, 'builderChangeTemplate'])->name('manager.templates.builder.change.template');
-
-    });
-
-
-    // @deprecated Warehouse routes moved to modules/Warehouse/routes/theme.php
-    // Route::group(['prefix' => 'warehouse'], function () {
-    /*
-        // Warehouse Map (Visual Floor Plan)
-        Route::get('/map', [WarehouseMapController::class, 'map'])->name('map');
-        Route::get('/api/layout-spec', [WarehouseMapController::class, 'getLayoutSpec'])->name('manager.warehouse.api.layout');
-        Route::get('/api/config', [WarehouseMapController::class, 'getWarehouseConfig'])->name('manager.warehouse.api.config');
-        Route::get('/api/slot/{uid}', [WarehouseMapController::class, 'getSlotDetails'])->name('manager.warehouse.api.slot');
-
-        // Visual editing endpoints (Opción 2)
-        Route::put('/location/{location_uid}/visual-config', [WarehouseMapController::class, 'updateVisualConfig'])->name('manager.warehouse.location.visual.update');
-        Route::post('/location/{location_uid}/reset-visual', [WarehouseMapController::class, 'resetVisualConfig'])->name('manager.warehouse.location.visual.reset');
-
-        // Floors Routes
-        Route::group(['prefix' => 'floors'], function () {
-            Route::get('/', [WarehouseFloorsController::class, 'index'])->name('floors');
-            Route::get('/create', [WarehouseFloorsController::class, 'create'])->name('manager.warehouse.floors.create');
-            Route::post('/store', [WarehouseFloorsController::class, 'store'])->name('manager.warehouse.floors.store');
-            Route::post('/update', [WarehouseFloorsController::class, 'update'])->name('manager.warehouse.floors.update');
-            Route::get('/edit/{uid}', [WarehouseFloorsController::class, 'edit'])->name('manager.warehouse.floors.edit');
-            Route::get('/view/{uid}', [WarehouseFloorsController::class, 'view'])->name('manager.warehouse.floors.view');
-            Route::get('/destroy/{uid}', [WarehouseFloorsController::class, 'destroy'])->name('manager.warehouse.floors.destroy');
-        });
-
-        // Stand Styles Routes
-        Route::group(['prefix' => 'styles'], function () {
-            Route::get('/', [WarehouseLocationStylesController::class, 'index'])->name('manager.warehouse.styles.index');
-            Route::get('/create', [WarehouseLocationStylesController::class, 'create'])->name('manager.warehouse.styles.create');
-            Route::post('/store', [WarehouseLocationStylesController::class, 'store'])->name('manager.warehouse.styles.store');
-            Route::post('/update', [WarehouseLocationStylesController::class, 'update'])->name('manager.warehouse.styles.update');
-            Route::get('/edit/{uid}', [WarehouseLocationStylesController::class, 'edit'])->name('manager.warehouse.styles.edit');
-            Route::get('/view/{uid}', [WarehouseLocationStylesController::class, 'view'])->name('manager.warehouse.styles.view');
-            Route::get('/destroy/{uid}', [WarehouseLocationStylesController::class, 'destroy'])->name('manager.warehouse.styles.destroy');
-        });
-
-        // Stands Routes (Consolidated with Locations)
-        Route::group(['prefix' => 'stands'], function () {
-            Route::get('/', [WarehouseLocationsController::class, 'index'])->name('stands');
-            Route::get('/create', [WarehouseLocationsController::class, 'create'])->name('manager.warehouse.stands.create');
-            Route::post('/store', [WarehouseLocationsController::class, 'store'])->name('manager.warehouse.stands.store');
-            Route::post('/update', [WarehouseLocationsController::class, 'update'])->name('manager.warehouse.stands.update');
-            Route::get('/edit/{uid}', [WarehouseLocationsController::class, 'edit'])->name('manager.warehouse.stands.edit');
-            Route::get('/view/{uid}', [WarehouseLocationsController::class, 'view'])->name('manager.warehouse.stands.view');
-            Route::get('/destroy/{uid}', [WarehouseLocationsController::class, 'destroy'])->name('manager.warehouse.stands.destroy');
-        });
-
-        // Inventory Slots Routes
-        Route::group(['prefix' => 'slots'], function () {
-            Route::get('/', [WarehouseInventorySlotsController::class, 'index'])->name('slots');
-            Route::get('/create', [WarehouseInventorySlotsController::class, 'create'])->name('manager.warehouse.slots.create');
-            Route::post('/store', [WarehouseInventorySlotsController::class, 'store'])->name('manager.warehouse.slots.store');
-            Route::post('/update', [WarehouseInventorySlotsController::class, 'update'])->name('manager.warehouse.slots.update');
-            Route::get('/edit/{uid}', [WarehouseInventorySlotsController::class, 'edit'])->name('manager.warehouse.slots.edit');
-            Route::get('/view/{uid}', [WarehouseInventorySlotsController::class, 'view'])->name('manager.warehouse.slots.view');
-            Route::get('/destroy/{uid}', [WarehouseInventorySlotsController::class, 'destroy'])->name('manager.warehouse.slots.destroy');
-
-            // Inventory operations
-            Route::post('/{uid}/add-quantity', [WarehouseInventorySlotsController::class, 'addQuantity'])->name('manager.warehouse.slots.add-quantity');
-            Route::post('/{uid}/subtract-quantity', [WarehouseInventorySlotsController::class, 'subtractQuantity'])->name('manager.warehouse.slots.subtract-quantity');
-            Route::post('/{uid}/add-weight', [WarehouseInventorySlotsController::class, 'addWeight'])->name('manager.warehouse.slots.add-weight');
-            Route::post('/{uid}/clear', [WarehouseInventorySlotsController::class, 'clear'])->name('manager.warehouse.slots.clear');
-        });
-        // ===== WAREHOUSE CRUD =====
-        Route::group(['prefix' => 'warehouses'], function () {
-
-            Route::get('/', [WarehouseController::class, 'index'])->name('manager.warehouse.index');
-            Route::get('/create', [WarehouseController::class, 'create'])->name('manager.warehouse.create');
-            Route::post('/store', [WarehouseController::class, 'store'])->name('manager.warehouse.store');
-            Route::get('/{uid}', [WarehouseController::class, 'view'])->name('manager.warehouse.view');
-            Route::get('/{uid}/edit', [WarehouseController::class, 'edit'])->name('manager.warehouse.edit');
-            Route::post('/{uid}/update', [WarehouseController::class, 'update'])->name('manager.warehouse.update');
-            Route::get('/{uid}/destroy', [WarehouseController::class, 'destroy'])->name('manager.warehouse.destroy');
-            Route::get('/{uid}/summary', [WarehouseController::class, 'getSummary'])->name('manager.warehouse.summary');
-
-            // ===== WAREHOUSE RESOURCES (scoped to warehouse) =====
-            Route::group(['prefix' => '{warehouse_uid}'], function () {
-
-                // Dashboard del warehouse
-                Route::get('/dashboard', [WarehouseDashboardController::class, 'dashboard'])->name('manager.warehouse.dashboard.index');
-                Route::get('/api/floors', [WarehouseDashboardController::class, 'getFloors'])->name('manager.warehouse.api.floors');
-
-                // Mapa del warehouse
-                Route::get('/map', [WarehouseMapController::class, 'map'])->name('manager.warehouse.detail.map');
-                Route::get('/api/layout-spec', [WarehouseMapController::class, 'getLayoutSpec'])->name('manager.warehouse.detail.api.layout');
-                Route::get('/api/config', [WarehouseMapController::class, 'getWarehouseConfig'])->name('manager.warehouse.detail.api.config');
-                Route::get('/api/slot/{slot_uid}', [WarehouseMapController::class, 'getSlotDetails'])->name('manager.warehouse.detail.api.slot');
-
-                // Old map API endpoints (legacy support for warehouse map views)
-                Route::get('/map/locations', [WarehouseLocationsController::class, 'getByWarehouse'])->name('manager.warehouse.map.locations');
-                Route::post('/map/create', [WarehouseLocationsController::class, 'store'])->name('manager.warehouse.map.create');
-                Route::post('/map/update', [WarehouseLocationsController::class, 'update'])->name('manager.warehouse.map.update');
-                Route::delete('/map/delete/{location_uid}', [WarehouseLocationsController::class, 'destroy'])->name('manager.warehouse.map.delete');
-
-                // Location sections routes (legacy support with alias)
-                Route::get('/locations/{location_uid}/sections', [WarehouseLocationSectionsController::class, 'index'])->name('manager.warehouse.locations.sections.index');
-
-                // Visual editing endpoints (Opción 2)
-                Route::put('/location/{location_uid}/visual-config', [WarehouseMapController::class, 'updateVisualConfig'])->name('manager.warehouse.detail.location.visual.update');
-                Route::post('/location/{location_uid}/reset-visual', [WarehouseMapController::class, 'resetVisualConfig'])->name('manager.warehouse.detail.location.visual.reset');
-
-                // Historial del warehouse
-                Route::group(['prefix' => 'history'], function () {
-                    Route::get('/', [WarehouseHistoryController::class, 'index'])->name('manager.warehouse.history');
-                    Route::get('/{uid}', [WarehouseHistoryController::class, 'view'])->name('manager.warehouse.history.view');
-                    Route::get('/{uid}/edit', [WarehouseHistoryController::class, 'edit'])->name('manager.warehouse.history.edit');
-                    Route::post('/update', [WarehouseHistoryController::class, 'update'])->name('manager.warehouse.history.update');
-                    Route::get('/api/slot/{slot_uid}', [WarehouseHistoryController::class, 'getSlotHistory'])->name('manager.warehouse.history.api.slot');
-                    Route::post('/api/filter', [WarehouseHistoryController::class, 'filterByDateRange'])->name('manager.warehouse.history.api.filter');
-                    Route::get('/api/statistics', [WarehouseHistoryController::class, 'getStatistics'])->name('manager.warehouse.history.api.statistics');
-                });
-
-                // Reportes del warehouse
-                Route::group(['prefix' => 'reports'], function () {
-                    Route::get('/', [WarehouseReportsController::class, 'report'])->name('manager.warehouse.reports');
-                    Route::post('/inventory', [WarehouseReportsController::class, 'generateInventory'])->name('manager.warehouse.reports.inventory');
-                    Route::post('/movements', [WarehouseReportsController::class, 'generateMovements'])->name('manager.warehouse.reports.movements');
-                    Route::post('/occupancy', [WarehouseReportsController::class, 'generateOccupancy'])->name('manager.warehouse.reports.occupancy');
-                    Route::post('/capacity', [WarehouseReportsController::class, 'generateCapacity'])->name('manager.warehouse.reports.capacity');
-                });
-
-                // Pisos del warehouse
-                Route::group(['prefix' => 'floors'], function () {
-
-                    Route::get('/', [WarehouseFloorsController::class, 'index'])->name('manager.warehouse.detail.floors');
-                    Route::get('/create', [WarehouseFloorsController::class, 'create'])->name('manager.warehouse.detail.floors.create');
-                    Route::post('/store', [WarehouseFloorsController::class, 'store'])->name('manager.warehouse.detail.floors.store');
-                    Route::get('/{floor_uid}', [WarehouseFloorsController::class, 'view'])->name('manager.warehouse.detail.floors.view');
-                    Route::get('/{floor_uid}/edit', [WarehouseFloorsController::class, 'edit'])->name('manager.warehouse.detail.floors.edit');
-                    Route::post('/update', [WarehouseFloorsController::class, 'update'])->name('manager.warehouse.detail.floors.update');
-                    Route::get('/{floor_uid}/destroy', [WarehouseFloorsController::class, 'destroy'])->name('manager.warehouse.detail.floors.destroy');
-
-                    // Locaciones dentro del piso
-                    Route::group(['prefix' => '{floor_uid}/locations'], function () {
-                        Route::get('/', [WarehouseLocationsController::class, 'index'])->name('manager.warehouse.detail.locations');
-                        Route::get('/create', [WarehouseLocationsController::class, 'create'])->name('manager.warehouse.detail.locations.create');
-                        Route::post('/store', [WarehouseLocationsController::class, 'store'])->name('manager.warehouse.detail.locations.store');
-                        Route::get('/{location_uid}', [WarehouseLocationsController::class, 'view'])->name('manager.warehouse.detail.locations.view');
-                        Route::get('/{location_uid}/edit', [WarehouseLocationsController::class, 'edit'])->name('manager.warehouse.detail.locations.edit');
-                        Route::post('/update', [WarehouseLocationsController::class, 'update'])->name('manager.warehouse.detail.locations.update');
-                        Route::get('/{location_uid}/destroy', [WarehouseLocationsController::class, 'destroy'])->name('manager.warehouse.detail.locations.destroy');
-                        Route::get('/api/warehouse', [WarehouseLocationsController::class, 'getByWarehouse'])->name('manager.warehouse.detail.locations.api.warehouse');
-                        Route::get('/api/barcode/{barcode}', [WarehouseLocationsController::class, 'getByBarcode'])->name('manager.warehouse.detail.locations.api.barcode');
-                        Route::get('/{location_uid}/api/details', [WarehouseLocationsController::class, 'getLocationDetails'])->name('manager.warehouse.detail.locations.api.details');
-                        Route::get('/{location_uid}/sections/{section_uid}/api/details', [WarehouseLocationsController::class, 'getSectionDetails'])->name('manager.warehouse.detail.sections.api.details');
-
-                        // Print barcodes routes
-                        Route::get('/print-all-barcodes', [WarehouseLocationsController::class, 'printAllBarcodes'])->name('manager.warehouse.detail.locations.print-all');
-                        Route::get('/{location_uid}/print-barcodes', [WarehouseLocationsController::class, 'printBarcodes'])->name('manager.warehouse.detail.locations.print');
-
-                        // Transferir múltiples ubicaciones (bulk)
-                        Route::get('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkForm'])->name('manager.warehouse.detail.locations.transfer.bulk');
-                        Route::post('/transfer/bulk', [WarehouseLocationsController::class, 'transferBulkSubmit'])->name('manager.warehouse.detail.locations.transfer.bulk.store');
-
-                        // Transferir ubicación individual
-                        Route::group(['prefix' => '{location_uid}/transfer'], function () {
-                            Route::get('/', [WarehouseLocationsController::class, 'transfer'])->name('manager.warehouse.detail.locations.transfer');
-                            Route::post('/store', [WarehouseLocationsController::class, 'transferSubmit'])->name('manager.warehouse.detail.locations.transfer.store');
-                            Route::get('/api/available-floors', [WarehouseLocationsController::class, 'getAvailableFloorsForTransfer'])->name('manager.warehouse.detail.locations.transfer.api.available-floors');
-                        });
-
-                        // Secciones dentro de la locación
-                        Route::group(['prefix' => '{location_uid}/sections'], function () {
-                            Route::get('/', [WarehouseLocationSectionsController::class, 'index'])->name('manager.warehouse.detail.sections');
-                            Route::get('/create', [WarehouseLocationSectionsController::class, 'create'])->name('manager.warehouse.detail.sections.create');
-                            Route::post('/store', [WarehouseLocationSectionsController::class, 'store'])->name('manager.warehouse.detail.sections.store');
-                            Route::get('/{section_uid}', [WarehouseLocationSectionsController::class, 'view'])->name('manager.warehouse.detail.section.view');
-                            Route::get('/{section_uid}/edit', [WarehouseLocationSectionsController::class, 'edit'])->name('manager.warehouse.detail.section.edit');
-                            Route::post('/update', [WarehouseLocationSectionsController::class, 'update'])->name('manager.warehouse.detail.section.update');
-                            Route::get('/{section_uid}/destroy', [WarehouseLocationSectionsController::class, 'destroy'])->name('manager.warehouse.detail.section.destroy');
-                            Route::get('/api/list/{location_id}', [WarehouseLocationSectionsController::class, 'getSectionsList'])->name('manager.warehouse.detail.sections.api.list');
-                            Route::post('/quick-create', [WarehouseLocationSectionsController::class, 'quickCreate'])->name('manager.warehouse.detail.sections.quick-create');
-
-                            // Inventory Slots dentro de la sección
-                            Route::group(['prefix' => '{section_uid}/slots'], function () {
-                                Route::get('/', [WarehouseInventorySlotsController::class, 'index'])->name('manager.warehouse.detail.section.slots');
-                                Route::get('/create', [WarehouseInventorySlotsController::class, 'create'])->name('manager.warehouse.detail.section.slots.create');
-                                Route::post('/store', [WarehouseInventorySlotsController::class, 'store'])->name('manager.warehouse.detail.section.slots.store');
-                                Route::get('/{slot_uid}', [WarehouseInventorySlotsController::class, 'view'])->name('manager.warehouse.detail.section.slots.view');
-                                Route::get('/{slot_uid}/edit', [WarehouseInventorySlotsController::class, 'edit'])->name('manager.warehouse.detail.section.slots.edit');
-                                Route::post('/update', [WarehouseInventorySlotsController::class, 'update'])->name('manager.warehouse.detail.section.slots.update');
-                                Route::get('/{slot_uid}/destroy', [WarehouseInventorySlotsController::class, 'destroy'])->name('manager.warehouse.detail.section.slots.destroy');
-
-                                // Inventory operations
-                                Route::post('/{slot_uid}/add-quantity', [WarehouseInventorySlotsController::class, 'addQuantity'])->name('manager.warehouse.detail.section.slots.add-quantity');
-                                Route::post('/{slot_uid}/subtract-quantity', [WarehouseInventorySlotsController::class, 'subtractQuantity'])->name('manager.warehouse.detail.section.slots.subtract-quantity');
-                                Route::post('/{slot_uid}/clear', [WarehouseInventorySlotsController::class, 'clear'])->name('manager.warehouse.detail.section.slots.clear');
-                                Route::post('/{slot_uid}/move-to', [WarehouseInventorySlotsController::class, 'moveTo'])->name('manager.warehouse.detail.section.slots.move-to');
-                            });
-                        });
-                    });
-                });
-            });
-        });
-
-        // ===== WAREHOUSE LOCATION STYLES (GLOBAL, NOT WAREHOUSE-SPECIFIC) =====
-        Route::group(['prefix' => 'styles'], function () {
-            Route::get('/', [WarehouseLocationStylesController::class, 'index'])->name('manager.warehouse.styles');
-            Route::get('/create', [WarehouseLocationStylesController::class, 'create'])->name('manager.warehouse.styles.create');
-            Route::post('/store', [WarehouseLocationStylesController::class, 'store'])->name('manager.warehouse.styles.store');
-            Route::get('/{style_uid}', [WarehouseLocationStylesController::class, 'view'])->name('manager.warehouse.styles.view');
-            Route::get('/{style_uid}/edit', [WarehouseLocationStylesController::class, 'edit'])->name('manager.warehouse.styles.edit');
-            Route::post('/update', [WarehouseLocationStylesController::class, 'update'])->name('manager.warehouse.styles.update');
-            Route::get('/{style_uid}/destroy', [WarehouseLocationStylesController::class, 'destroy'])->name('manager.warehouse.styles.destroy');
-        });
-
-        // ===== WAREHOUSE API ROUTES =====
-        Route::get('/api/styles', [WarehouseLocationStylesController::class, 'apiGetAllStyles'])->name('manager.warehouse.api.styles.all');
-        Route::get('/api/styles/{style_id}', [WarehouseLocationsController::class, 'getStyleDetails'])->name('manager.warehouse.api.style.details');
-
-    */
-    // });
-
-    Route::group(['prefix' => 'helpdesk'], function () {
-
-        // Main Helpdesk Index
-        Route::get('/', [HelpdeskCustomersController::class, 'index'])->name('manager.helpdesk');
-
-        // Customers
-        Route::get('/customers', [HelpdeskCustomersController::class, 'index'])->name('manager.helpdesk.customers.index');
-        Route::get('/customers/create', [HelpdeskCustomersController::class, 'create'])->name('manager.helpdesk.customers.create');
-        Route::post('/customers', [HelpdeskCustomersController::class, 'store'])->name('manager.helpdesk.customers.store');
-        Route::get('/customers/{customer}', [HelpdeskCustomersController::class, 'show'])->name('manager.helpdesk.customers.show');
-        Route::get('/customers/{customer}/edit', [HelpdeskCustomersController::class, 'edit'])->name('manager.helpdesk.customers.edit');
-        Route::put('/customers/{customer}', [HelpdeskCustomersController::class, 'update'])->name('manager.helpdesk.customers.update');
-        Route::delete('/customers/{customer}', [HelpdeskCustomersController::class, 'destroy'])->name('manager.helpdesk.customers.destroy');
-        Route::post('/customers/{customer}/restore', [HelpdeskCustomersController::class, 'restore'])->name('manager.helpdesk.customers.restore');
-        Route::delete('/customers/{customer}/force-delete', [HelpdeskCustomersController::class, 'forceDelete'])->name('manager.helpdesk.customers.forceDelete');
-        Route::post('/customers/{customer}/ban', [HelpdeskCustomersController::class, 'ban'])->name('manager.helpdesk.customers.ban');
-        Route::post('/customers/{customer}/unban', [HelpdeskCustomersController::class, 'unban'])->name('manager.helpdesk.customers.unban');
-
-        // Conversations
-        Route::get('/conversations', [HelpdeskConversationsController::class, 'index'])->name('manager.helpdesk.conversations.index');
-        Route::get('/conversations/create', [HelpdeskConversationsController::class, 'create'])->name('manager.helpdesk.conversations.create');
-        Route::post('/conversations', [HelpdeskConversationsController::class, 'store'])->name('manager.helpdesk.conversations.store');
-        Route::get('/conversations/{conversation}', [HelpdeskConversationsController::class, 'show'])->name('manager.helpdesk.conversations.show');
-        Route::get('/conversations/{conversation}/edit', [HelpdeskConversationsController::class, 'edit'])->name('manager.helpdesk.conversations.edit');
-        Route::put('/conversations/{conversation}', [HelpdeskConversationsController::class, 'update'])->name('manager.helpdesk.conversations.update');
-        Route::delete('/conversations/{conversation}', [HelpdeskConversationsController::class, 'destroy'])->name('manager.helpdesk.conversations.destroy');
-        Route::post('/conversations/{conversation}/restore', [HelpdeskConversationsController::class, 'restore'])->name('manager.helpdesk.conversations.restore');
-        Route::delete('/conversations/{conversation}/force-delete', [HelpdeskConversationsController::class, 'forceDelete'])->name('manager.helpdesk.conversations.forceDelete');
-        Route::post('/conversations/{conversation}/close', [HelpdeskConversationsController::class, 'close'])->name('manager.helpdesk.conversations.close');
-        Route::post('/conversations/{conversation}/reopen', [HelpdeskConversationsController::class, 'reopen'])->name('manager.helpdesk.conversations.reopen');
-        Route::post('/conversations/{conversation}/archive', [HelpdeskConversationsController::class, 'archive'])->name('manager.helpdesk.conversations.archive');
-        Route::post('/conversations/{conversation}/unarchive', [HelpdeskConversationsController::class, 'unarchive'])->name('manager.helpdesk.conversations.unarchive');
-        Route::post('/conversations/{conversation}/messages', [HelpdeskConversationsController::class, 'storeMessage'])->name('manager.helpdesk.conversations.messages.store');
-
-        // Tickets
-        Route::get('/tickets', [HelpdeskTicketsController::class, 'index'])->name('manager.helpdesk.tickets.index');
-        Route::get('/tickets/create', [HelpdeskTicketsController::class, 'create'])->name('manager.helpdesk.tickets.create');
-        Route::post('/tickets', [HelpdeskTicketsController::class, 'store'])->name('manager.helpdesk.tickets.store');
-        Route::get('/tickets/{ticket}', [HelpdeskTicketsController::class, 'show'])->name('manager.helpdesk.tickets.show');
-        Route::get('/tickets/{ticket}/edit', [HelpdeskTicketsController::class, 'edit'])->name('manager.helpdesk.tickets.edit');
-        Route::put('/tickets/{ticket}', [HelpdeskTicketsController::class, 'update'])->name('manager.helpdesk.tickets.update');
-        Route::delete('/tickets/{ticket}', [HelpdeskTicketsController::class, 'destroy'])->name('manager.helpdesk.tickets.destroy');
-        Route::post('/tickets/{ticket}/close', [HelpdeskTicketsController::class, 'close'])->name('manager.helpdesk.tickets.close');
-        Route::post('/tickets/{ticket}/resolve', [HelpdeskTicketsController::class, 'resolve'])->name('manager.helpdesk.tickets.resolve');
-        Route::post('/tickets/{ticket}/reopen', [HelpdeskTicketsController::class, 'reopen'])->name('manager.helpdesk.tickets.reopen');
-        Route::post('/tickets/{ticket}/archive', [HelpdeskTicketsController::class, 'archive'])->name('manager.helpdesk.tickets.archive');
-        Route::post('/tickets/{ticket}/messages', [HelpdeskTicketsController::class, 'storeMessage'])->name('manager.helpdesk.tickets.messages.store');
-
-        // Ticket Comments
-        Route::get('/tickets/{ticket}/comments', [TicketCommentsController::class, 'index'])->name('manager.helpdesk.tickets.comments.index');
-        Route::post('/tickets/{ticket}/comments', [TicketCommentsController::class, 'store'])->name('manager.helpdesk.tickets.comments.store');
-        Route::get('/tickets/{ticket}/comments/{comment}', [TicketCommentsController::class, 'show'])->name('manager.helpdesk.tickets.comments.show');
-        Route::put('/tickets/{ticket}/comments/{comment}', [TicketCommentsController::class, 'update'])->name('manager.helpdesk.tickets.comments.update');
-        Route::delete('/tickets/{ticket}/comments/{comment}', [TicketCommentsController::class, 'destroy'])->name('manager.helpdesk.tickets.comments.destroy');
-        Route::post('/tickets/{ticket}/comments/{comment}/restore', [TicketCommentsController::class, 'restore'])->name('manager.helpdesk.tickets.comments.restore');
-
-        // Ticket Notes
-        Route::get('/tickets/{ticket}/notes', [TicketNotesController::class, 'index'])->name('manager.helpdesk.tickets.notes.index');
-        Route::post('/tickets/{ticket}/notes', [TicketNotesController::class, 'store'])->name('manager.helpdesk.tickets.notes.store');
-        Route::get('/tickets/{ticket}/notes/{note}', [TicketNotesController::class, 'show'])->name('manager.helpdesk.tickets.notes.show');
-        Route::put('/tickets/{ticket}/notes/{note}', [TicketNotesController::class, 'update'])->name('manager.helpdesk.tickets.notes.update');
-        Route::delete('/tickets/{ticket}/notes/{note}', [TicketNotesController::class, 'destroy'])->name('manager.helpdesk.tickets.notes.destroy');
-        Route::post('/tickets/{ticket}/notes/{note}/pin', [TicketNotesController::class, 'pin'])->name('manager.helpdesk.tickets.notes.pin');
-        Route::post('/tickets/{ticket}/notes/{note}/color', [TicketNotesController::class, 'changeColor'])->name('manager.helpdesk.tickets.notes.color');
-        Route::post('/tickets/{ticket}/notes/{note}/restore', [TicketNotesController::class, 'restore'])->name('manager.helpdesk.tickets.notes.restore');
-
-        // Campaigns
-        Route::get('/campaigns', [HelpdeskCampaignsController::class, 'index'])->name('manager.helpdesk.campaigns.index');
-        Route::get('/campaigns/templates', [HelpdeskCampaignsController::class, 'templates'])->name('manager.helpdesk.campaigns.templates');
-        Route::get('/campaigns/create', [HelpdeskCampaignsController::class, 'create'])->name('manager.helpdesk.campaigns.create');
-        Route::post('/campaigns', [HelpdeskCampaignsController::class, 'store'])->name('manager.helpdesk.campaigns.store');
-        Route::get('/campaigns/{campaign}', [HelpdeskCampaignsController::class, 'show'])->name('manager.helpdesk.campaigns.show');
-        Route::get('/campaigns/{campaign}/edit', [HelpdeskCampaignsController::class, 'edit'])->name('manager.helpdesk.campaigns.edit');
-        Route::put('/campaigns/{campaign}', [HelpdeskCampaignsController::class, 'update'])->name('manager.helpdesk.campaigns.update');
-        Route::delete('/campaigns/{campaign}', [HelpdeskCampaignsController::class, 'destroy'])->name('manager.helpdesk.campaigns.destroy');
-        Route::post('/campaigns/{campaign}/publish', [HelpdeskCampaignsController::class, 'publish'])->name('manager.helpdesk.campaigns.publish');
-        Route::post('/campaigns/{campaign}/pause', [HelpdeskCampaignsController::class, 'pause'])->name('manager.helpdesk.campaigns.pause');
-        Route::post('/campaigns/{campaign}/resume', [HelpdeskCampaignsController::class, 'resume'])->name('manager.helpdesk.campaigns.resume');
-        Route::post('/campaigns/{campaign}/end', [HelpdeskCampaignsController::class, 'end'])->name('manager.helpdesk.campaigns.end');
-        Route::get('/campaigns/{campaign}/statistics', [HelpdeskCampaignsController::class, 'statistics'])->name('manager.helpdesk.campaigns.statistics');
-        Route::post('/campaigns/{campaign}/duplicate', [HelpdeskCampaignsController::class, 'duplicate'])->name('manager.helpdesk.campaigns.duplicate');
-
-        // AI Agent
-        Route::prefix('ai')->group(function () {
-            // Settings
-            Route::get('settings', [AiAgentSettingsController::class, 'index'])->name('manager.helpdesk.ai.settings');
-            Route::put('settings', [AiAgentSettingsController::class, 'update'])->name('manager.helpdesk.ai.settings.update');
-            Route::post('settings/test-connection', [AiAgentSettingsController::class, 'testConnection'])->name('manager.helpdesk.ai.settings.test');
-            Route::post('settings/get-models', [AiAgentSettingsController::class, 'getModels'])->name('manager.helpdesk.ai.settings.get-models');
-            Route::get('settings/statistics', [AiAgentSettingsController::class, 'statistics'])->name('manager.helpdesk.ai.settings.statistics');
-
-            // Tags
-            Route::get('tags', [AiAgentSettingsController::class, 'tagsIndex'])->name('manager.helpdesk.ai.tags.index');
-            Route::post('tags', [AiAgentSettingsController::class, 'tagsStore'])->name('manager.helpdesk.ai.tags.store');
-            Route::put('tags/{tag}', [AiAgentSettingsController::class, 'tagsUpdate'])->name('manager.helpdesk.ai.tags.update');
-            Route::delete('tags/{tag}', [AiAgentSettingsController::class, 'tagsDestroy'])->name('manager.helpdesk.ai.tags.destroy');
-            Route::post('tags/{tag}/toggle', [AiAgentSettingsController::class, 'tagsToggle'])->name('manager.helpdesk.ai.tags.toggle');
-
-            // Tools
-            Route::get('tools', [AiAgentSettingsController::class, 'toolsIndex'])->name('manager.helpdesk.ai.tools.index');
-            Route::post('tools', [AiAgentSettingsController::class, 'toolsStore'])->name('manager.helpdesk.ai.tools.store');
-            Route::put('tools/{tool}', [AiAgentSettingsController::class, 'toolsUpdate'])->name('manager.helpdesk.ai.tools.update');
-            Route::delete('tools/{tool}', [AiAgentSettingsController::class, 'toolsDestroy'])->name('manager.helpdesk.ai.tools.destroy');
-            Route::post('tools/{tool}/toggle', [AiAgentSettingsController::class, 'toolsToggle'])->name('manager.helpdesk.ai.tools.toggle');
-
-            // Knowledge Base
-            Route::get('knowledge', [AiAgentSettingsController::class, 'knowledgeIndex'])->name('manager.helpdesk.ai.knowledge.index');
-            Route::post('knowledge', [AiAgentSettingsController::class, 'knowledgeStore'])->name('manager.helpdesk.ai.knowledge.store');
-            Route::put('knowledge/{knowledge}', [AiAgentSettingsController::class, 'knowledgeUpdate'])->name('manager.helpdesk.ai.knowledge.update');
-            Route::delete('knowledge/{knowledge}', [AiAgentSettingsController::class, 'knowledgeDestroy'])->name('manager.helpdesk.ai.knowledge.destroy');
-            Route::post('knowledge/{knowledge}/toggle', [AiAgentSettingsController::class, 'knowledgeToggle'])->name('manager.helpdesk.ai.knowledge.toggle');
-            Route::post('knowledge/{knowledge}/generate-embedding', [AiAgentSettingsController::class, 'knowledgeGenerateEmbedding'])->name('manager.helpdesk.ai.knowledge.generate-embedding');
-
-            // Flows
-            Route::get('/', [AiAgentFlowsController::class, 'index'])->name('manager.helpdesk.ai.flows.index');
-            Route::get('/create', [AiAgentFlowsController::class, 'create'])->name('manager.helpdesk.ai.flows.create');
-            Route::post('/', [AiAgentFlowsController::class, 'store'])->name('manager.helpdesk.ai.flows.store');
-            Route::get('/{flow}', [AiAgentFlowsController::class, 'show'])->name('manager.helpdesk.ai.flows.show');
-            Route::get('/{flow}/edit', [AiAgentFlowsController::class, 'edit'])->name('manager.helpdesk.ai.flows.edit');
-            Route::put('/{flow}', [AiAgentFlowsController::class, 'update'])->name('manager.helpdesk.ai.flows.update');
-            Route::delete('/{flow}', [AiAgentFlowsController::class, 'destroy'])->name('manager.helpdesk.ai.flows.destroy');
-            Route::post('flows/{flow}/publish', [AiAgentFlowsController::class, 'publish'])->name('manager.helpdesk.ai.flows.publish');
-            Route::post('flows/{flow}/archive', [AiAgentFlowsController::class, 'archive'])->name('manager.helpdesk.ai.flows.archive');
-            Route::post('flows/{flow}/duplicate', [AiAgentFlowsController::class, 'duplicate'])->name('manager.helpdesk.ai.flows.duplicate');
-
-            // Flow Nodes
-            Route::post('flows/{flow}/nodes', [AiAgentFlowsController::class, 'storeNode'])->name('manager.helpdesk.ai.flows.nodes.store');
-            Route::put('flows/{flow}/nodes/{node}', [AiAgentFlowsController::class, 'updateNode'])->name('manager.helpdesk.ai.flows.nodes.update');
-            Route::delete('flows/{flow}/nodes/{node}', [AiAgentFlowsController::class, 'deleteNode'])->name('manager.helpdesk.ai.flows.nodes.delete');
-
-            // Flow Structure
-            Route::put('flows/{flow}/structure', [AiAgentFlowsController::class, 'updateStructure'])->name('manager.helpdesk.ai.flows.structure');
-        });
-
-        // Settings
-        Route::prefix('settings')->name('manager.helpdesk.settings.')->group(function () {
-            // Tickets Settings
-            Route::get('tickets', [SettingsHelpdeskController::class, 'ticketsIndex'])->name('tickets');
-            Route::put('tickets', [SettingsHelpdeskController::class, 'ticketsUpdate'])->name('tickets.update');
-
-            // LiveChat Settings (New Helpdesk Widget)
-            Route::get('livechat', [SettingsHelpdeskController::class, 'livechatIndex'])->name('livechat');
-            Route::put('livechat', [SettingsHelpdeskController::class, 'livechatUpdate'])->name('livechat.update');
-
-            // AI Settings
-            Route::get('ai', [SettingsHelpdeskController::class, 'aiIndex'])->name('ai');
-            Route::put('ai', [SettingsHelpdeskController::class, 'aiUpdate'])->name('ai.update');
-
-            // Uploading Settings
-            Route::get('uploading', [SettingsHelpdeskController::class, 'uploadingIndex'])->name('uploading');
-            Route::put('uploading', [SettingsHelpdeskController::class, 'uploadingUpdate'])->name('uploading.update');
-
-            // Customers Settings (link to existing customers routes)
-            Route::get('customers', [HelpdeskCustomersController::class, 'index'])->name('customers');
-
-            // Tickets Settings
-            Route::prefix('tickets')->name('tickets.')->group(function () {
-                // Categories
-                Route::prefix('categories')->name('categories.')->group(function () {
-                    Route::get('/', [TicketCategoriesController::class, 'index'])->name('index');
-                    Route::get('create', [TicketCategoriesController::class, 'create'])->name('create');
-                    Route::post('/', [TicketCategoriesController::class, 'store'])->name('store');
-                    Route::get('{category}/edit', [TicketCategoriesController::class, 'edit'])->name('edit');
-                    Route::put('{category}', [TicketCategoriesController::class, 'update'])->name('update');
-                    Route::patch('{category}/toggle', [TicketCategoriesController::class, 'toggle'])->name('toggle');
-                    Route::delete('{category}', [TicketCategoriesController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [TicketCategoriesController::class, 'reorder'])->name('reorder');
-                });
-
-                // Groups
-                Route::prefix('groups')->name('groups.')->group(function () {
-                    Route::get('/', [TicketGroupsController::class, 'index'])->name('index');
-                    Route::get('create', [TicketGroupsController::class, 'create'])->name('create');
-                    Route::post('/', [TicketGroupsController::class, 'store'])->name('store');
-                    Route::get('{group}/edit', [TicketGroupsController::class, 'edit'])->name('edit');
-                    Route::put('{group}', [TicketGroupsController::class, 'update'])->name('update');
-                    Route::patch('{group}/toggle', [TicketGroupsController::class, 'toggle'])->name('toggle');
-                    Route::delete('{group}', [TicketGroupsController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [TicketGroupsController::class, 'reorder'])->name('reorder');
-                });
-
-                // Canned Replies
-                Route::prefix('canned-replies')->name('canned-replies.')->group(function () {
-                    Route::get('/', [TicketCannedRepliesController::class, 'index'])->name('index');
-                    Route::get('create', [TicketCannedRepliesController::class, 'create'])->name('create');
-                    Route::post('/', [TicketCannedRepliesController::class, 'store'])->name('store');
-                    Route::get('{reply}/edit', [TicketCannedRepliesController::class, 'edit'])->name('edit');
-                    Route::put('{reply}', [TicketCannedRepliesController::class, 'update'])->name('update');
-                    Route::delete('{reply}', [TicketCannedRepliesController::class, 'destroy'])->name('destroy');
-                });
-
-                // Statuses
-                Route::prefix('statuses')->name('statuses.')->group(function () {
-                    Route::get('/', [TicketStatusesController::class, 'index'])->name('index');
-                    Route::get('create', [TicketStatusesController::class, 'create'])->name('create');
-                    Route::post('/', [TicketStatusesController::class, 'store'])->name('store');
-                    Route::get('{status}/edit', [TicketStatusesController::class, 'edit'])->name('edit');
-                    Route::put('{status}', [TicketStatusesController::class, 'update'])->name('update');
-                    Route::delete('{status}', [TicketStatusesController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [TicketStatusesController::class, 'reorder'])->name('reorder');
-                });
-
-                // SLA Policies
-                Route::prefix('sla-policies')->name('sla-policies.')->group(function () {
-                    Route::get('/', [TicketSlaPoliciesController::class, 'index'])->name('index');
-                    Route::get('create', [TicketSlaPoliciesController::class, 'create'])->name('create');
-                    Route::post('/', [TicketSlaPoliciesController::class, 'store'])->name('store');
-                    Route::get('{policy}/edit', [TicketSlaPoliciesController::class, 'edit'])->name('edit');
-                    Route::put('{policy}', [TicketSlaPoliciesController::class, 'update'])->name('update');
-                    Route::patch('{policy}/toggle', [TicketSlaPoliciesController::class, 'toggle'])->name('toggle');
-                    Route::delete('{policy}', [TicketSlaPoliciesController::class, 'destroy'])->name('destroy');
-                });
-
-                // Views
-                Route::prefix('views')->name('views.')->group(function () {
-                    Route::get('/', [TicketViewsController::class, 'index'])->name('index');
-                    Route::get('create', [TicketViewsController::class, 'create'])->name('create');
-                    Route::post('/', [TicketViewsController::class, 'store'])->name('store');
-                    Route::get('{view}/edit', [TicketViewsController::class, 'edit'])->name('edit');
-                    Route::put('{view}', [TicketViewsController::class, 'update'])->name('update');
-                    Route::delete('{view}', [TicketViewsController::class, 'destroy'])->name('destroy');
-                    Route::post('reorder', [TicketViewsController::class, 'reorder'])->name('reorder');
-                });
-
-                // Team Settings
-                Route::prefix('team')->name('team.')->group(function () {
-                    // Members
-                    Route::get('members', [TeamController::class, 'membersIndex'])->name('members');
-                    Route::get('members/{id}/edit', [TeamController::class, 'memberEdit'])->name('member.edit');
-                    Route::put('members/{id}', [TeamController::class, 'memberUpdate'])->name('member.update');
-
-                    // Groups
-                    Route::get('groups', [TeamController::class, 'groupsIndex'])->name('groups');
-                    Route::get('groups/create', [TeamController::class, 'groupCreate'])->name('group.create');
-                    Route::post('groups', [TeamController::class, 'groupStore'])->name('group.store');
-                    Route::get('groups/{id}/edit', [TeamController::class, 'groupEdit'])->name('group.edit');
-                    Route::put('groups/{id}', [TeamController::class, 'groupUpdate'])->name('group.update');
-                    Route::delete('groups/{id}', [TeamController::class, 'groupDestroy'])->name('group.destroy');
-                });
-
-                // Attributes Settings
-                Route::prefix('attributes')->name('attributes.')->group(function () {
-                    Route::get('/', [AttributesController::class, 'index'])->name('index');
-                    Route::get('create', [AttributesController::class, 'create'])->name('create');
-                    Route::post('/', [AttributesController::class, 'store'])->name('store');
-                    Route::get('{id}/edit', [AttributesController::class, 'edit'])->name('edit');
-                    Route::put('{id}', [AttributesController::class, 'update'])->name('update');
-                    Route::delete('{id}', [AttributesController::class, 'destroy'])->name('destroy');
-                    Route::patch('{id}/toggle', [AttributesController::class, 'toggleActive'])->name('toggle');
-                });
-
-                // Tags Settings
-                Route::prefix('tags')->name('tags.')->group(function () {
-                    Route::get('/', [TagsController::class, 'index'])->name('index');
-                    Route::get('create', [TagsController::class, 'create'])->name('create');
-                    Route::post('/', [TagsController::class, 'store'])->name('store');
-                    Route::get('{tag}/edit', [TagsController::class, 'edit'])->name('edit');
-                    Route::put('{tag}', [TagsController::class, 'update'])->name('update');
-                    Route::delete('{tag}', [TagsController::class, 'destroy'])->name('destroy');
-                });
-
-                // Conversation Statuses Settings
-                Route::prefix('statuses')->name('statuses.')->group(function () {
-                    Route::get('/', [StatusesController::class, 'index'])->name('index');
-                    Route::get('create', [StatusesController::class, 'create'])->name('create');
-                    Route::post('/', [StatusesController::class, 'store'])->name('store');
-                    Route::get('{status}/edit', [StatusesController::class, 'edit'])->name('edit');
-                    Route::put('{status}', [StatusesController::class, 'update'])->name('update');
-                    Route::delete('{status}', [StatusesController::class, 'destroy'])->name('destroy');
-                    Route::post('{status}/toggle', [StatusesController::class, 'toggle'])->name('toggle');
-                    Route::post('reorder', [StatusesController::class, 'reorder'])->name('reorder');
-                });
-            });
-        });
-
-        // Help Center Manager
-        Route::prefix('helpcenter')->group(function () {
-            // Main Index
-            Route::get('/', [HelpCenterController::class, 'index'])->name('manager.helpdesk.helpcenter.index');
-
-            // Categories
-            Route::get('/categories', [HelpCenterController::class, 'index'])->name('manager.helpdesk.helpcenter.categories');
-            Route::get('/categories/create', [HelpCenterController::class, 'create'])->name('manager.helpdesk.helpcenter.categories.create');
-            Route::post('/categories/store', [HelpCenterController::class, 'store'])->name('manager.helpdesk.helpcenter.categories.store');
-            Route::get('/categories/{id}', [HelpCenterController::class, 'showCategory'])->name('manager.helpdesk.helpcenter.categories.show');
-            Route::get('/categories/edit/{id}', [HelpCenterController::class, 'edit'])->name('manager.helpdesk.helpcenter.categories.edit');
-            Route::post('/categories/update', [HelpCenterController::class, 'update'])->name('manager.helpdesk.helpcenter.categories.update');
-            Route::get('/categories/destroy/{id}', [HelpCenterController::class, 'destroy'])->name('manager.helpdesk.helpcenter.categories.destroy');
-
-            // Sections
-            Route::get('/sections/create', [HelpCenterController::class, 'createSection'])->name('manager.helpdesk.helpcenter.sections.create');
-            Route::post('/sections/store', [HelpCenterController::class, 'storeSection'])->name('manager.helpdesk.helpcenter.sections.store');
-            Route::get('/sections/{id}', [HelpCenterController::class, 'showSection'])->name('manager.helpdesk.helpcenter.sections.show');
-            Route::get('/sections/{id}/edit', [HelpCenterController::class, 'editSection'])->name('manager.helpdesk.helpcenter.sections.edit');
-            Route::post('/sections/update', [HelpCenterController::class, 'updateSection'])->name('manager.helpdesk.helpcenter.sections.update');
-            Route::get('/sections/{id}/destroy', [HelpCenterController::class, 'destroySection'])->name('manager.helpdesk.helpcenter.sections.destroy');
-            Route::get('/sections/{id}/articles/create', [HelpCenterController::class, 'createArticleInSection'])->name('manager.helpdesk.helpcenter.sections.articles.create');
-
-            // Articles
-            Route::get('/articles', [HelpCenterController::class, 'articlesIndex'])->name('manager.helpdesk.helpcenter.articles');
-            Route::get('/articles/create', [HelpCenterController::class, 'createArticle'])->name('manager.helpdesk.helpcenter.articles.create');
-            Route::post('/articles/store', [HelpCenterController::class, 'storeArticle'])->name('manager.helpdesk.helpcenter.articles.store');
-            Route::get('/articles/edit/{id}', [HelpCenterController::class, 'editArticle'])->name('manager.helpdesk.helpcenter.articles.edit');
-            Route::post('/articles/update', [HelpCenterController::class, 'updateArticle'])->name('manager.helpdesk.helpcenter.articles.update');
-            Route::get('/articles/destroy/{id}', [HelpCenterController::class, 'destroyArticle'])->name('manager.helpdesk.helpcenter.articles.destroy');
-        });
-    });
-
-    // @deprecated Media Manager routes are now handled by modules\Media
-    // See: modules/Media/routes/theme.php
-
-    // @deprecated Webhook routes are now handled by modules\Webhook
-    // See: modules/Webhook/routes/theme.php
-    /*
-    // Webhooks Management
-    Route::prefix('settings/webhooks')->name('manager.settings.webhooks.')->group(function () {
-
-        // Integrations
-        Route::prefix('integrations')->name('integrations.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'index'])->name('index');
-            Route::get('/create', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'store'])->name('store');
-            Route::get('/{integration}/edit', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'edit'])->name('edit');
-            Route::put('/{integration}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'update'])->name('update');
-            Route::delete('/{integration}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'destroy'])->name('destroy');
-            Route::post('/{integration}/toggle', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'toggle'])->name('toggle');
-
-            // API Keys sub-routes
-            Route::get('/{integration}/api-keys', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'apiKeys'])->name('api-keys');
-            Route::post('/{integration}/api-keys', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'storeApiKey'])->name('api-keys.store');
-            Route::delete('/api-keys/{apiKey}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'destroyApiKey'])->name('api-keys.destroy');
-            Route::post('/api-keys/{apiKey}/revoke', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookIntegrationController::class, 'revokeApiKey'])->name('api-keys.revoke');
-        });
-
-        // Subscriptions
-        Route::prefix('subscriptions')->name('subscriptions.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'index'])->name('index');
-            Route::get('/create', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'store'])->name('store');
-            Route::get('/{subscription}/edit', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'edit'])->name('edit');
-            Route::put('/{subscription}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'update'])->name('update');
-            Route::delete('/{subscription}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'destroy'])->name('destroy');
-            Route::post('/{subscription}/toggle', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'toggle'])->name('toggle');
-            Route::post('/{subscription}/test', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'test'])->name('test');
-            Route::post('/{subscription}/rotate-secret', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookSubscriptionController::class, 'rotateSecret'])->name('rotate-secret');
-        });
-
-        // Deliveries
-        Route::prefix('deliveries')->name('deliveries.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'index'])->name('index');
-            Route::get('/{delivery}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'show'])->name('show');
-            Route::post('/{delivery}/retry', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'retry'])->name('retry');
-            Route::post('/bulk-retry', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookDeliveryController::class, 'bulkRetry'])->name('bulk-retry');
-        });
-
-        // Events
-        Route::prefix('events')->name('events.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'index'])->name('index');
-            Route::get('/{event}', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'show'])->name('show');
-            Route::post('/{event}/replay', [\App\Http\Controllers\Managers\Settings\Webhooks\WebhookEventController::class, 'replay'])->name('replay');
-        });
-    });
-    */
 
 });

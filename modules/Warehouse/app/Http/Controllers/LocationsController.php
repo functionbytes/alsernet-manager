@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Warehouses\Warehouses;
+namespace Modules\Warehouse\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
-use App\Services\Inventories\BarcodeReadingService;
+use Modules\Warehouse\Services\BarcodeReadingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Warehouse\Entities\Warehouse;

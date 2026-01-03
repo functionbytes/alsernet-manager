@@ -5,7 +5,7 @@
   @include('managers.components.card', ['title' => 'Editar Configuración ERP'])
 
   <div class="widget-content searchable-container list">
-      <form action="{{ route('manager.settings.erp.update') }}" method="POST">
+      <form action="{{ route('settings.erp.update') }}" method="POST">
 
         <div class="card">
               <div class="card-body">
@@ -270,7 +270,7 @@
                       <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                           Guardar
                       </button>
-                      <a href="{{ route('manager.settings.erp.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                      <a href="{{ route('settings.erp.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                           Volver
                       </a>
               </div>

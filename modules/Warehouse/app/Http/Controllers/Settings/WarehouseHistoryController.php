@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -39,7 +39,7 @@ class WarehouseHistoryController extends Controller
 
         $movements = $movements->paginate(paginationNumber());
 
-        return view('warehouse::theme.history.index')->with([
+        return view('warehouse::settings.history.index')->with([
             'movements' => $movements,
             'searchKey' => $searchKey,
         ]);
@@ -54,7 +54,7 @@ class WarehouseHistoryController extends Controller
             ->with(['slot', 'product', 'warehouse', 'user'])
             ->firstOrFail();
 
-        return view('warehouse::theme.history.view')->with([
+        return view('warehouse::settings.history.view')->with([
             'movement' => $movement,
         ]);
     }
@@ -71,7 +71,7 @@ class WarehouseHistoryController extends Controller
         $conditions = WarehouseLocationCondition::available()->get();
         $conditions = $conditions->pluck('title', 'id');
 
-        return view('warehouse::theme.history.edit')->with([
+        return view('warehouse::settings.history.edit')->with([
             'movement' => $movement,
             'conditions' => $conditions,
         ]);

@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Subscriber\Http\Controllers\Managers\SubscribersConditionsController;
-use Modules\Subscriber\Http\Controllers\Managers\SubscribersController;
-use Modules\Subscriber\Http\Controllers\Managers\SubscribersListsController;
-use Modules\Subscriber\Http\Controllers\Managers\SubscribersReportController;
+use Modules\Subscriber\Http\Controllers\SubscribersConditionsController;
+use Modules\Subscriber\Http\Controllers\SubscribersController;
+use Modules\Subscriber\Http\Controllers\SubscribersListsController;
+use Modules\Subscriber\Http\Controllers\SubscribersReportController;
 
 // Subscribers CRUD
 Route::get('/', [SubscribersController::class, 'index'])->name('index');

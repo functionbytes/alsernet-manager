@@ -7,9 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Document\Entities\DocumentValidatorGroup;
-use Modules\Document\Http\Controllers\Managers\Settings\ValidatorGroup;
-use Modules\Document\Http\Controllers\Managers\Settings\ValidatorGroupConfiguration;
-use Modules\Document\Http\Controllers\Managers\Settings\ValidatorGroupConfigurationHistory;
+use Modules\Document\Entities\DocumentValidatorGroupConfiguration;
+use Modules\Document\Entities\DocumentValidatorGroupConfigurationHistory;
 
 class DocumentGroupsController extends Controller
 {
@@ -101,7 +100,7 @@ class DocumentGroupsController extends Controller
             $group->users()->attach($usersData);
         }
 
-        return redirect()->route('manager.settings.documents.groups.index')
+        return redirect()->route('settings.documents.groups.index')
             ->with('success', 'Grupo de validación creado exitosamente.');
     }
 
@@ -161,7 +160,7 @@ class DocumentGroupsController extends Controller
             $group->users()->sync($usersData);
         }
 
-        return redirect()->route('manager.settings.documents.groups.index')
+        return redirect()->route('settings.documents.groups.index')
             ->with('success', 'Grupo de validación actualizado exitosamente.');
     }
 
@@ -194,7 +193,7 @@ class DocumentGroupsController extends Controller
 
         $group->delete();
 
-        return redirect()->route('manager.settings.documents.groups.index')
+        return redirect()->route('settings.documents.groups.index')
             ->with('success', 'Grupo de documentos eliminado exitosamente.');
     }
 
@@ -261,7 +260,7 @@ class DocumentGroupsController extends Controller
         ]);
 
         // Get all configurations for this group
-        $allConfigs = ValidatorGroupConfiguration::where('validator_group_id', $group->id)->get();
+        $allConfigs = DocumentValidatorGroupConfiguration::where('validator_group_id', $group->id)->get();
 
         // Get submitted configuration IDs (only checked checkboxes are submitted)
         $submittedConfigIds = array_keys($request->input('configurations', []));
@@ -275,7 +274,7 @@ class DocumentGroupsController extends Controller
 
             // Only log and update if value actually changed
             if ((bool) $oldValue !== (bool) $newValue) {
-                ValidatorGroupConfigurationHistory::create([
+                DocumentValidatorGroupConfigurationHistory::create([
                     'validator_group_id' => $group->id,
                     'configuration_id' => $config->id,
                     'user_id' => Auth::id(),

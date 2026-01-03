@@ -19,7 +19,7 @@
       <div class="row g-2">
         <!-- Configuración -->
         <div class="col-md-3">
-          <a href="{{ route('manager.settings.erp.edit') }}" class="btn btn-primary w-100">
+          <a href="{{ route('settings.erp.edit') }}" class="btn btn-primary w-100">
             Configurar
           </a>
         </div>
@@ -234,7 +234,7 @@ $(document).ready(function() {
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: '{{ route("manager.settings.erp.check-connection") }}',
+            url: '{{ route("settings.erp.check-connection") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -267,7 +267,7 @@ $(document).ready(function() {
     // Toggle servicio activo
     $('#toggleServiceBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.settings.erp.toggle-active") }}',
+            url: '{{ route("settings.erp.toggle-active") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -297,7 +297,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("manager.settings.erp.clear-cache") }}',
+            url: '{{ route("settings.erp.clear-cache") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -320,7 +320,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("manager.settings.erp.reset-stats") }}',
+            url: '{{ route("settings.erp.reset-stats") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -345,7 +345,7 @@ $(document).ready(function() {
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ route("manager.settings.erp.test-sync") }}',
+            url: '{{ route("settings.erp.test-sync") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -370,7 +370,7 @@ $(document).ready(function() {
     // Refrescar estadísticas
     $('#refreshBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.settings.erp.get-stats") }}',
+            url: '{{ route("settings.erp.get-stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {

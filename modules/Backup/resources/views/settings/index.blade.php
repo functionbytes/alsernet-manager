@@ -19,11 +19,11 @@
                             </div>
 
                             <div class="ms-auto d-flex gap-2">
-                                <a href="{{ route('manager.settings.backup-schedules.index') }}"
+                                <a href="{{ route('settings.backup-schedules.index') }}"
                                    class="btn btn-outline-primary waves-effect waves-light">
                                     Copias programados
                                 </a>
-                                <a href="{{ route('manager.settings.backups.createForm') }}"
+                                <a href="{{ route('settings.backups.create') }}"
                                    class="btn btn-primary waves-effect waves-light">
                                     Crear copia
                                 </a>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
 
-                    @include('managers.components.alerts')
+                    @include('theme.components.alerts')
 
                     <!-- Backup Status Cards -->
                     <div class="row">
@@ -100,14 +100,14 @@
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3"
-                                                       href="{{ route('manager.settings.backups.download', $backup['name']) }}"
+                                                       href="{{ route('settings.backups.download', $backup['name']) }}"
                                                        title="Descargar backup">
                                                         Descargar
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
-                                                       data-href="{{ route('manager.settings.backups.delete', $backup['name']) }}"
+                                                       data-href="{{ route('settings.backups.destroy', $backup['name']) }}"
                                                        title="Eliminar backup">
                                                         Eliminar
                                                     </a>
@@ -149,12 +149,12 @@
 
     </div>
 
-    @include('managers.components.delete')
+    @include('theme.components.delete')
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Load backup status
-            fetch('{{ route("manager.settings.backups.status") }}')
+            fetch('{{ route("settings.backups.status") }}')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {

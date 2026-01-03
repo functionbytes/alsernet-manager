@@ -38,17 +38,19 @@ class RoleServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
+        $modulePath = dirname(__DIR__, 2);
+
         // Manager settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings')
             ->name('settings.')
-            ->group(function () {
+            ->group(function () use ($modulePath) {
                 // Load view routes (GET)
-                require module_path($this->name, 'routes/web.php');
+                require $modulePath.'/routes/web.php';
 
                 // Load API routes (POST, PUT, DELETE) if exists
-                if (file_exists(module_path($this->name, 'routes/api.php'))) {
-                    require module_path($this->name, 'routes/api.php');
+                if (file_exists($modulePath.'/routes/api.php')) {
+                    require $modulePath.'/routes/api.php';
                 }
             });
     }

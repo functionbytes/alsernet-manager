@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Warehouses\Locations;
+namespace Modules\Warehouse\Http\Controllers\Locations;
 
 use App\Http\Controllers\Controller;
 use App\Models\Location;

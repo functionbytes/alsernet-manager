@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Configuración de Email'])
+    @include('theme.components.card', ['title' => 'Configuración de Email'])
 
         @if ($message = session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="card-footer border-top">
-                        <a href="{{ route('manager.settings.email.outgoing.index') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.outgoing-email.index') }}" class="btn btn-primary w-100">
                             <i class="fa fa-arrow-right me-2"></i> Configurar correo saliente
                         </a>
                     </div>
@@ -141,7 +141,7 @@
                     </div>
 
                     <div class="card-footer border-top">
-                        <a href="{{ route('manager.settings.email.incoming.index') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.incoming-email.index') }}" class="btn btn-primary w-100">
                             <i class="fa fa-arrow-right me-2"></i> Configurar correo entrante
                         </a>
                     </div>

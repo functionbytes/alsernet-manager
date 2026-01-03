@@ -18,5 +18,6 @@
     "Auth": true,
     "HealthCheck": true,
     "Database": true,
-    "System": true
+    "System": true,
+    "Analytics": true
 }

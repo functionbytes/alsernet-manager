@@ -2,6 +2,7 @@
 
 namespace Modules\Prestashop\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -26,6 +27,7 @@ class PrestashopServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerMenus();
     }
 
     /**
@@ -147,5 +149,29 @@ class PrestashopServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Registrar menús del módulo Prestashop
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Prestashop
+        NavService::registerMiniItem('prestashop', [
+            'icon' => 'fa-store',
+            'tooltip' => 'PrestaShop',
+            'sidebar_id' => 'prestashop',
+            'order' => 60,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('prestashop', [
+            'title' => 'PrestaShop',
+            'items' => [
+                ['label' => 'Dashboard', 'route' => 'prestashop.index', 'icon' => 'fa-tachometer-alt'],
+                ['label' => 'Estadísticas', 'route' => 'prestashop.stats', 'icon' => 'fa-chart-line'],
+                ['label' => 'Configuración', 'route' => 'prestashop.edit', 'icon' => 'fa-cog'],
+            ],
+        ]);
     }
 }

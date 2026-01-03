@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Configuración de Correo Entrante'])
+    @include('theme.components.card', ['title' => 'Configuración de Correo Entrante'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Incoming Email Settings Card -->
         <div class="card">
@@ -16,7 +16,7 @@
                 <div class="mb-4 border-bottom pb-3">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <a href="{{ route('manager.settings.email.index') }}" class="btn btn-outline-primary w-100">
+                            <a href="{{ route('settings.email.index') }}" class="btn btn-outline-primary w-100">
                                 Volver
                             </a>
                         </div>
@@ -102,24 +102,24 @@
                         <div class="card-body">
                             <p class="text-muted mb-3">Reciba correos electrónicos en Alsernet desde cPanel u otro panel de control utilizado por su proveedor de alojamiento.</p>
 
-                            <form method="POST" action="{{ route('manager.settings.email.incoming.pipe.update') }}">
+                            <form method="POST" action="{{ route('settings.incoming-email.pipe.update') }}">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="pipeEnabled" name="pipe_enabled" value="1" {{ $settings['pipe']['enabled'] ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="pipeEnabled" name="pipe_enabled" value="1" {{ ($settings['pipe']['enabled'] ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="pipeEnabled">Habilitar Pipe Handler</label>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="pipeEmailAddress" class="form-label fw-semibold">Dirección de email</label>
-                                    <input type="email" class="form-control" id="pipeEmailAddress" name="pipe_email_address" value="{{ $settings['pipe']['email_address'] }}" placeholder="support@Alsernet.com">
+                                    <input type="email" class="form-control" id="pipeEmailAddress" name="pipe_email_address" value="{{ ($settings['pipe']['email_address'] ?? '') }}" placeholder="support@Alsernet.com">
                                     <small class="text-muted">Email de destino que reenviará correos al sistema</small>
                                 </div>
 
                                 <div class="alert alert-info mb-3">
                                     <strong class="mb-1">Ruta del script:</strong><br>
-                                    <code>{{ $settings['pipe']['script_path'] }}</code>
+                                    <code>{{ ($settings['pipe']['script_path'] ?? '') }}</code>
                                     <p class="mb-0 mt-2 small">Configure esta ruta en su panel de control de email (cPanel, Plesk, etc.)</p>
                                 </div>
 
@@ -145,19 +145,19 @@
                         <div class="card-body">
                             <p class="text-muted mb-3">Envíe correos electrónicos a Alsernet desde una aplicación de terceros o un sitio web diferente usando la API REST.</p>
 
-                            <form method="POST" action="{{ route('manager.settings.email.incoming.api.update') }}">
+                            <form method="POST" action="{{ route('settings.incoming-email.api.update') }}">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="apiEnabled" name="api_enabled" value="1" {{ $settings['api']['enabled'] ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="apiEnabled" name="api_enabled" value="1" {{ ($settings['api']['enabled'] ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="apiEnabled">Habilitar REST API Handler</label>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="apiKey" class="form-label fw-semibold">API Key</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control font-monospace" id="apiKey" name="api_key" value="{{ $settings['api']['api_key'] }}" readonly>
+                                        <input type="text" class="form-control font-monospace" id="apiKey" name="api_key" value="{{ ($settings['api']['api_key'] ?? '') }}" readonly>
                                         <button type="button" class="btn btn-outline-secondary" onclick="copyToClipboard('apiKey')">
                                             <i class="fa fa-copy"></i>
                                         </button>
@@ -170,18 +170,18 @@
 
                                 <div class="alert alert-info mb-3">
                                     <strong>Endpoint URL:</strong><br>
-                                    <code>{{ $settings['api']['api_url'] }}</code>
+                                    <code>{{ ($settings['api']['api_url'] ?? '') }}</code>
                                     <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="copyToClipboard('apiUrl')">
                                         <i class="fa fa-copy"></i> Copiar URL
                                     </button>
-                                    <input type="hidden" id="apiUrl" value="{{ $settings['api']['api_url'] }}">
+                                    <input type="hidden" id="apiUrl" value="{{ ($settings['api']['api_url'] ?? '') }}">
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">
                                     Guardar
                                 </button>
 
-                                <a href="{{ route('manager.settings.email.incoming.api.documentation') }}" class="btn btn-outline-info ms-2" target="_blank">
+                                <a href="{{ route('settings.incoming-email.api.documentation') }}" class="btn btn-outline-info ms-2" target="_blank">
                                     <i class="fa fa-book"></i> Ver documentación completa
                                 </a>
                             </form>
@@ -203,31 +203,31 @@
                         <div class="card-body">
                             <p class="text-muted mb-3">Conecte cuentas de Gmail directamente usando la API de Gmail con OAuth2.</p>
 
-                            <form method="POST" action="{{ route('manager.settings.email.incoming.gmail.update') }}">
+                            <form method="POST" action="{{ route('settings.incoming-email.gmail.update') }}">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="gmailEnabled" name="gmail_enabled" value="1" {{ $settings['gmail']['enabled'] ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="gmailEnabled" name="gmail_enabled" value="1" {{ ($settings['gmail']['enabled'] ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="gmailEnabled">Habilitar Gmail Handler</label>
                                 </div>
 
                                 <div class="alert alert-info mb-3">
                                     <i class="fa fa-info-circle"></i> <strong>Configuración OAuth2</strong>
                                     <p class="mb-0 mt-2 small">Necesita crear credenciales OAuth2 en <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a> y configurar el Redirect URI autorizado:</p>
-                                    <code class="mt-1 d-block">{{ route('manager.settings.email.incoming.gmail.callback') }}</code>
+                                    <code class="mt-1 d-block">{{ route('settings.incoming-email.gmail.callback') }}</code>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="gmailClientId" class="form-label fw-semibold">Client ID</label>
-                                        <input type="text" class="form-control font-monospace" id="gmailClientId" name="gmail_client_id" value="{{ $settings['gmail']['client_id'] }}" placeholder="xxx.apps.googleusercontent.com">
+                                        <input type="text" class="form-control font-monospace" id="gmailClientId" name="gmail_client_id" value="{{ ($settings['gmail']['client_id'] ?? '') }}" placeholder="xxx.apps.googleusercontent.com">
                                         <small class="text-muted">Client ID de Google Cloud Console</small>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="gmailClientSecret" class="form-label fw-semibold">Client Secret</label>
-                                        <input type="password" class="form-control font-monospace" id="gmailClientSecret" name="gmail_client_secret" value="{{ $settings['gmail']['client_secret'] }}">
+                                        <input type="password" class="form-control font-monospace" id="gmailClientSecret" name="gmail_client_secret" value="{{ ($settings['gmail']['client_secret'] ?? '') }}">
                                         <small class="text-muted">Client Secret de Google Cloud Console</small>
                                     </div>
                                 </div>
@@ -270,10 +270,10 @@
                                 <p class="text-muted small mb-3">No hay cuentas de Gmail conectadas</p>
                             @endif
 
-                            <a href="{{ route('manager.settings.email.incoming.gmail.authorize') }}" class="btn btn-success btn-sm" {{ empty($settings['gmail']['client_id']) || empty($settings['gmail']['client_secret']) ? 'disabled' : '' }}>
+                            <a href="{{ route('settings.incoming-email.gmail.authorize') }}" class="btn btn-success btn-sm" {{ empty(($settings['gmail']['client_id'] ?? '')) || empty(($settings['gmail']['client_secret'] ?? '')) ? 'disabled' : '' }}>
                                 <i class="fa-brands fa-google"></i> Conectar cuenta Gmail
                             </a>
-                            @if(empty($settings['gmail']['client_id']) || empty($settings['gmail']['client_secret']))
+                            @if(empty(($settings['gmail']['client_id'] ?? '')) || empty(($settings['gmail']['client_secret'] ?? '')))
                                 <small class="text-danger d-block mt-2">Configure primero Client ID y Client Secret</small>
                             @endif
                         </div>
@@ -294,34 +294,34 @@
                         <div class="card-body">
                             <p class="text-muted mb-3">Reciba correos electrónicos a través de webhooks de Mailgun.</p>
 
-                            <form method="POST" action="{{ route('manager.settings.email.incoming.mailgun.update') }}">
+                            <form method="POST" action="{{ route('settings.incoming-email.mailgun.update') }}">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="mailgunEnabled" name="mailgun_enabled" value="1" {{ $settings['mailgun']['enabled'] ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="mailgunEnabled" name="mailgun_enabled" value="1" {{ ($settings['mailgun']['enabled'] ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="mailgunEnabled">Habilitar Mailgun Handler</label>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="mailgunApiKey" class="form-label fw-semibold">Mailgun API Key</label>
-                                    <input type="password" class="form-control font-monospace" id="mailgunApiKey" name="mailgun_api_key" value="{{ $settings['mailgun']['api_key'] }}" placeholder="key-xxxxxxxxxxxxxxxxxxxxxxxx">
+                                    <input type="password" class="form-control font-monospace" id="mailgunApiKey" name="mailgun_api_key" value="{{ ($settings['mailgun']['api_key'] ?? '') }}" placeholder="key-xxxxxxxxxxxxxxxxxxxxxxxx">
                                     <small class="text-muted">API Key de su cuenta de Mailgun</small>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="mailgunDomain" class="form-label fw-semibold">Mailgun Domain</label>
-                                    <input type="text" class="form-control" id="mailgunDomain" name="mailgun_domain" value="{{ $settings['mailgun']['domain'] }}" placeholder="mg.Alsernet.com">
+                                    <input type="text" class="form-control" id="mailgunDomain" name="mailgun_domain" value="{{ ($settings['mailgun']['domain'] ?? '') }}" placeholder="mg.Alsernet.com">
                                     <small class="text-muted">Dominio configurado en Mailgun</small>
                                 </div>
 
                                 <div class="alert alert-info mb-3">
                                     <strong>Webhook URL:</strong><br>
-                                    <code>{{ $settings['mailgun']['webhook_url'] }}</code>
+                                    <code>{{ ($settings['mailgun']['webhook_url'] ?? '') }}</code>
                                     <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="copyToClipboard('mailgunWebhookUrl')">
                                         <i class="fa fa-copy"></i> Copiar URL
                                     </button>
-                                    <input type="hidden" id="mailgunWebhookUrl" value="{{ $settings['mailgun']['webhook_url'] }}">
+                                    <input type="hidden" id="mailgunWebhookUrl" value="{{ ($settings['mailgun']['webhook_url'] ?? '') }}">
                                     <p class="mb-0 mt-2 small">Configure esta URL en Mailgun Dashboard → Sending → Webhooks</p>
                                 </div>
 
@@ -347,19 +347,19 @@
                         <div class="card-body">
                             <p class="text-muted mb-3">Conecte con su instalación de phpList para gestionar listas de correo y suscripciones.</p>
 
-                            <form method="POST" action="{{ route('manager.settings.email.incoming.phplist.update') }}">
+                            <form method="POST" action="{{ route('settings.incoming-email.phplist.update') }}">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="phplistEnabled" name="phplist_enabled" value="1" {{ $settings['phplist']['enabled'] ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" id="phplistEnabled" name="phplist_enabled" value="1" {{ ($settings['phplist']['enabled'] ?? false) ? 'checked' : '' }}>
                                     <label class="form-check-label fw-semibold" for="phplistEnabled">Habilitar phpList Handler</label>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-8 mb-3">
                                         <label for="phplistApiUrl" class="form-label fw-semibold">API URL</label>
-                                        <input type="url" class="form-control" id="phplistApiUrl" name="phplist_api_url" value="{{ $settings['phplist']['api_url'] }}" placeholder="https://phplist.example.com/api">
+                                        <input type="url" class="form-control" id="phplistApiUrl" name="phplist_api_url" value="{{ ($settings['phplist']['api_url'] ?? '') }}" placeholder="https://phplist.example.com/api">
                                         <small class="text-muted">URL de la API de phpList</small>
                                     </div>
 
@@ -429,7 +429,7 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('manager.settings.email.incoming.imap.store') }}">
+                <form method="POST" action="{{ route('settings.incoming-email.imap.store') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generando...';
 
-            fetch('{{ route("manager.settings.email.incoming.api.generate-key") }}', {
+            fetch('{{ route("settings.incoming-email.api.generate-key") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Probando...';
 
-            fetch('{{ route("manager.settings.email.incoming.phplist.test") }}', {
+            fetch('{{ route("settings.incoming-email.phplist.test") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando...';
 
-            fetch('{{ route("manager.settings.email.incoming.phplist.lists") }}', {
+            fetch('{{ route("settings.incoming-email.phplist.lists") }}', {
                 method: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

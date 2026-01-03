@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Event\Http\Controllers\Managers\Events;
+namespace Modules\Event\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;

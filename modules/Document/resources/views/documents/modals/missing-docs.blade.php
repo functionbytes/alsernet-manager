@@ -80,7 +80,7 @@
 
             // Enviar directamente
             $.ajax({
-                url: "{{ route('administrative.documents.send-missing', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                url: "{{ route('documents.send-missing', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                 type: 'POST',
                 data: {
                     missing_docs: selectedDocs,

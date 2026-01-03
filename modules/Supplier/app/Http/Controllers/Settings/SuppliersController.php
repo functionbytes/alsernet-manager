@@ -3,8 +3,6 @@
 namespace Modules\Supplier\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierRequest;
-use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +40,7 @@ class SuppliersController extends Controller
             ->orderBy('name', 'asc')
             ->paginate(15);
 
-        return view('theme.views.settings.suppliers.index', compact('suppliers', 'searchKey', 'is_active', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.index', compact('suppliers', 'searchKey', 'is_active', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -128,13 +126,13 @@ class SuppliersController extends Controller
         $pageTitle = 'Crear Proveedor';
         $breadcrumb = 'Configuración / Proveedores / Crear';
 
-        return view('theme.views.settings.suppliers.create', compact('pageTitle', 'breadcrumb'));
+        return view('supplier::settings.create', compact('pageTitle', 'breadcrumb'));
     }
 
     /**
      * Store new supplier
      */
-    public function store(StoreSupplierRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $supplier = Supplier::create([
@@ -172,13 +170,13 @@ class SuppliersController extends Controller
         $pageTitle = 'Editar Proveedor';
         $breadcrumb = 'Configuración / Proveedores / Editar';
 
-        return view('theme.views.settings.suppliers.edit', compact('supplier', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.edit', compact('supplier', 'pageTitle', 'breadcrumb'));
     }
 
     /**
      * Update supplier
      */
-    public function update(UpdateSupplierRequest $request, string $uid): JsonResponse
+    public function update(Request $request, string $uid): JsonResponse
     {
         try {
             $supplier = Supplier::where('uid', $uid)->firstOrFail();

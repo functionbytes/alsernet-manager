@@ -11,6 +11,28 @@ class DocumentStageEmailAction extends Model
 
     protected $table = 'document_stage_email_actions';
 
+    /**
+     * Available validation stages for documents
+     */
+    public const AVAILABLE_STAGES = [
+        'pending' => 'Pendiente',
+        'in_review' => 'En Revisión',
+        'approved' => 'Aprobado',
+        'rejected' => 'Rechazado',
+        'completed' => 'Completado',
+    ];
+
+    /**
+     * Available email actions
+     */
+    public const AVAILABLE_ACTIONS = [
+        'notify_creator' => 'Notificar al creador',
+        'notify_reviewer' => 'Notificar al revisor',
+        'notify_approver' => 'Notificar al aprobador',
+        'notify_team' => 'Notificar al equipo',
+        'send_summary' => 'Enviar resumen',
+    ];
+
     protected $fillable = [
         'uid',
         'validation_stage',

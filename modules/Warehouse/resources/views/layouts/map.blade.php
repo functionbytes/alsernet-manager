@@ -4,25 +4,27 @@
 
     <!DOCTYPE html>
 
-<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="green" data-layout="vertical" data-boxed-layout="boxed" data-card="shadow">
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="green" data-layout="vertical"
+      data-boxed-layout="boxed" data-card="shadow">
 
 <head>
 
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta charset="utf-8"/>
     <title>INOQUALAB - E-Learning</title>
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
     <link rel="apple-touch-icon" href="pages/ico/60.png">
     <link rel="apple-touch-icon" sizes="76x76" href="pages/ico/76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="pages/ico/120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta content="Meet pages - The simplest and fastest way to build web UI for your dashboard or app." name="description" />
-    <meta content="Ace" name="author" />
+    <meta content="Meet pages - The simplest and fastest way to build web UI for your dashboard or app."
+          name="description"/>
+    <meta content="Ace" name="author"/>
 
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -47,7 +49,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
 
     <link rel="stylesheet" href="{{ url('core/tooltipster/css/tooltipster.bundle.min.css') }}">
-    <link rel="stylesheet" href="{{ url('core/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('core/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
     <link rel="stylesheet" href="{{ url('core/css/google-font-icon.css') }}">
 
 
@@ -68,19 +71,19 @@
     >
 
 
-        @include ('managers.components.nav')
+        @include ('theme.includes.nav')
 
         <!-- Main wrapper -->
 
         <div class="body-wrapper">
 
-            @include ('managers.components.header')
+            @include ('theme.includes.header')
 
             <div class="container-fluid">
                 @yield('content')
             </div>
 
-            @include ('managers.components.delete')
+            @include ('theme.components.delete')
 
         </div>
 
@@ -129,7 +132,7 @@
 <script src="{{ url('core/js/app.js') }}"></script>
 
 <script>
-    $(function() {
+    $(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'

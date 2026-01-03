@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">
             <div class="card w-100">
-                <form id="formDocumentType" action="{{ route('manager.settings.documents.types.store') }}" method="POST">
+                <form id="formDocumentType" action="{{ route('settings.documents.types.store') }}" method="POST">
                     @csrf
                     <div class="card-header border-bottom p-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -209,7 +209,7 @@
                                                     <div class="alert bg-warning-subtle border-warning">
                                                         <h6 class="mb-0 fw-semibold">No hay grupos validadores configurados</h6>
                                                         <p class="mb-0">
-                                                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="alert-link">Crear grupos primero</a>
+                                                            <a href="{{ route('settings.documents.groups.index') }}" class="alert-link">Crear grupos primero</a>
                                                         </p>
                                                     </div>
                                                 @else
@@ -321,7 +321,7 @@
                             <button type="submit" class="btn btn-primary w-100 mb-1">
                                 Crear
                             </button>
-                            <a href="{{ route('manager.settings.documents.types.index') }}" class="btn btn-secondary w-100">
+                            <a href="{{ route('settings.documents.types.index') }}" class="btn btn-secondary w-100">
                                 Cancelar
                             </a>
                         </div>
@@ -357,7 +357,7 @@ $(document).ready(function() {
             <div class="alert bg-warning-subtle border-warning mb-0">
                 <h6 class="mb-0 fw-semibold">No hay condiciones configuradas</h6>
                 <p class="mb-0">
-                    <a href="{{ route('manager.settings.documents.conditions.index') }}" class="alert-link">Crear condiciones</a>
+                    <a href="{{ route('settings.documents.conditions.index') }}" class="alert-link">Crear condiciones</a>
                 </p>
             </div>
         @else

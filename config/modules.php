@@ -29,7 +29,7 @@ return [
         'files' => [
             'routes/web' => 'routes/web.php',
             'routes/api' => 'routes/api.php',
-            'views/index' => 'resources/views/index.blade.php',
+            'views/index' => 'resources/views/v5.blade.php',
             'views/master' => 'resources/views/components/layouts/master.blade.php',
             'scaffold/config' => 'config/config.php',
             'composer' => 'composer.json',

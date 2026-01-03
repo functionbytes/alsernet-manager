@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\User\Http\Controllers\Managers;
+namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Shop;
+// use App\Models\Shop; // Removed
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,7 +51,7 @@ class UsersController extends Controller
 
         $users = $users->paginate(paginationNumber());
 
-        return view('theme.views.users.users.index')->with([
+        return view('user::users.index')->with([
             'users' => $users,
             'roleFilter' => $roleFilter,
             'searchKey' => $searchKey,
@@ -61,12 +61,11 @@ class UsersController extends Controller
 
     public function create()
     {
-        $shops = Shop::get()->pluck('title', 'id');
+        // Shop references removed
         // Get all roles from Spatie
         $roles = SpatieRole::orderBy('name')->pluck('name', 'id');
 
-        return view('theme.views.users.users.create')->with([
-            'shops' => $shops,
+        return view('user::users.create')->with([
             'roles' => $roles,
             'rolesRequiringAssignment' => $this->rolesRequiringAssignment,
         ]);
@@ -82,7 +81,7 @@ class UsersController extends Controller
             'password' => 'required|string|min:6',
             'available' => 'required|boolean',
             'role' => 'required|numeric|exists:roles,id',
-            'shop' => 'nullable|numeric|exists:shops,id',
+            // 'shop' validation removed,
         ], [
             'email.unique' => 'El correo electrónico ya está registrado en el sistema.',
             'email.required' => 'El correo electrónico es requerido.',
@@ -135,12 +134,11 @@ class UsersController extends Controller
             abort(404, 'Usuario no encontrado');
         }
 
-        $shops = Shop::get()->pluck('title', 'id');
+        // Shop references removed
         $roles = SpatieRole::orderBy('name')->pluck('name', 'id');
 
-        return view('theme.views.users.users.view')->with([
+        return view('user::users.view')->with([
             'user' => $user,
-            'shops' => $shops,
             'roles' => $roles,
             'userRoles' => $user->getRoleNames()->toArray(),
             'rolesRequiringAssignment' => $this->rolesRequiringAssignment,
@@ -155,12 +153,11 @@ class UsersController extends Controller
             abort(404, 'Usuario no encontrado');
         }
 
-        $shops = Shop::get()->pluck('title', 'id');
+        // Shop references removed
         $roles = SpatieRole::orderBy('name')->pluck('name', 'id');
 
-        return view('theme.views.users.users.edit')->with([
+        return view('user::users.edit')->with([
             'user' => $user,
-            'shops' => $shops,
             'roles' => $roles,
             'userRoles' => $user->getRoleNames()->toArray(),
             'rolesRequiringAssignment' => $this->rolesRequiringAssignment,
@@ -185,7 +182,7 @@ class UsersController extends Controller
             'email' => "required|email|unique:users,email,{$user->id}",
             'available' => 'required|boolean',
             'role' => 'required|numeric|exists:roles,id',
-            'shop' => 'nullable|numeric|exists:shops,id',
+            // 'shop' validation removed,
             'password' => 'nullable|string|min:6',
         ], [
             'email.unique' => 'El correo electrónico ya está registrado en otro usuario.',

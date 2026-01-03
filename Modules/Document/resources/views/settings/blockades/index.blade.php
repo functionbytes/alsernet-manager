@@ -11,7 +11,7 @@
                     <h4 class="mb-1 fw-bold">Bloqueos de Productos</h4>
                     <p class="text-muted mb-0">Gestiona los bloqueos de productos por tipo de documento</p>
                 </div>
-                <a href="{{ route('manager.settings.documents.configurations') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('settings.documents.configurations') }}" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Volver
                 </a>
             </div>
@@ -513,7 +513,7 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-            url: '{{ route('manager.settings.documents.blockades.store-bulk') }}',
+            url: '{{ route('settings.documents.blockades.store-bulk') }}',
             method: 'POST',
             data: {
                 blockades: blockades,
@@ -580,7 +580,7 @@ $(document).ready(function() {
         const labels = labelsArray.join(',');
 
         $.ajax({
-            url: '{{ route('manager.settings.documents.blockades.save-labels') }}',
+            url: '{{ route('settings.documents.blockades.save-labels') }}',
             method: 'POST',
             data: {
                 labels: labels,
@@ -627,7 +627,7 @@ $(document).ready(function() {
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ route('manager.settings.documents.blockades.sync') }}',
+            url: '{{ route('settings.documents.blockades.sync') }}',
             method: 'POST',
             data: {
                 fresh: fresh,
@@ -678,7 +678,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route('manager.settings.documents.blockades.store') }}',
+            url: '{{ route('settings.documents.blockades.store') }}',
             method: 'POST',
             data: formData,
             success: function(response) {

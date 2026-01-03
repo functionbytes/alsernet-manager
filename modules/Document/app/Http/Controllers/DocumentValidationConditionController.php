@@ -113,7 +113,7 @@ class DocumentValidationConditionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.conditions')
+                ->route('settings.documents.conditions')
                 ->with('success', "Condición de validación '{$validated['name']}' creada exitosamente.");
         } catch (\Exception $e) {
             DB::rollBack();
@@ -214,7 +214,7 @@ class DocumentValidationConditionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.conditions')
+                ->route('settings.documents.conditions')
                 ->with('success', 'Condición de validación actualizada exitosamente.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -249,7 +249,7 @@ class DocumentValidationConditionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.conditions')
+                ->route('settings.documents.conditions')
                 ->with('success', 'Condición de validación eliminada exitosamente.');
         } catch (\Exception $e) {
             DB::rollBack();

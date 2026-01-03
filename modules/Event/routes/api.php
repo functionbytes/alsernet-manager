@@ -8,6 +8,6 @@ Route::middleware(['api', 'auth:sanctum'])
     ->name('api.')
     ->group(function () {
         Route::apiResource('events', EventApiController::class)->parameters([
-            'events' => 'uid'
+            'events' => 'uid',
         ]);
     });

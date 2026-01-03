@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="card-footer  border-top">
-                        <a href="{{ route('manager.settings.documents.configurations.global') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.documents.configurations.global') }}" class="btn btn-primary w-100">
                             Ir a configuración global
                         </a>
                     </div>
@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="card-footer  border-top">
-                        <a href="{{ route('manager.settings.documents.types.index') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.documents.types.index') }}" class="btn btn-primary w-100">
                             Ir a tipos de documentos
                         </a>
                     </div>
@@ -174,7 +174,7 @@
                     </div>
 
                     <div class="card-footer border-top">
-                        <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.documents.groups.index') }}" class="btn btn-primary w-100">
                             Ir a grupos de documentos
                         </a>
                     </div>
@@ -227,7 +227,7 @@
                     </div>
 
                     <div class="card-footer border-top">
-                        <a href="{{ route('manager.settings.documents.configurations.storage') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('settings.documents.configurations.storage') }}" class="btn btn-primary w-100">
                             Ir a configuración de almacenamiento
                         </a>
                     </div>

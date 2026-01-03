@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Prestashop\Http\Controllers\Managers\Settings\PrestashopSettingsController;
+use Modules\Prestashop\Http\Controllers\PrestashopSettingsController;
 
 Route::prefix('prestashop')->name('prestashop.')->group(function () {
     // Dashboard

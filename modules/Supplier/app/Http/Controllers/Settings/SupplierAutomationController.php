@@ -32,7 +32,7 @@ class SupplierAutomationController extends Controller
             'pending_executions' => SupplierAutomationExecution::where('status', 'pending')->count(),
         ];
 
-        return view('theme.views.settings.suppliers.automation.index', compact('pageTitle', 'breadcrumb', 'stats'));
+        return view('supplier::settings.automation.index', compact('pageTitle', 'breadcrumb', 'stats'));
     }
 
     /**
@@ -363,7 +363,7 @@ class SupplierAutomationController extends Controller
         $pageTitle = 'Crear Workflow de Automatización';
         $breadcrumb = 'Configuración / Proveedores / Automatización / Crear';
 
-        return view('theme.views.settings.suppliers.automation.create', compact('pageTitle', 'breadcrumb'));
+        return view('supplier::settings.automation.create', compact('pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -417,7 +417,7 @@ class SupplierAutomationController extends Controller
         $pageTitle = 'Editar Workflow de Automatización';
         $breadcrumb = 'Configuración / Proveedores / Automatización / Editar';
 
-        return view('theme.views.settings.suppliers.automation.edit', compact('pageTitle', 'breadcrumb', 'workflow'));
+        return view('supplier::settings.automation.edit', compact('pageTitle', 'breadcrumb', 'workflow'));
     }
 
     /**
@@ -597,7 +597,7 @@ class SupplierAutomationController extends Controller
      */
     public function logsPage()
     {
-        return view('theme.views.settings.suppliers.automation.logs');
+        return view('supplier::settings.automation.logs');
     }
 
     /**

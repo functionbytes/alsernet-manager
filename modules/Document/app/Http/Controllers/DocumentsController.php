@@ -3,7 +3,6 @@
 namespace Modules\Document\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Managers\Settings\Documents\DocumentConfigurationController;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,11 +17,10 @@ use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentUploadType;
 use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Events\DocumentStatusChanged;
-use Modules\Document\Http\Controllers\Administratives\DocumentMailService;
-use Modules\Document\Http\Controllers\Administratives\Exception;
 use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
+use Modules\Document\Services\DocumentMailService;
 use Modules\Document\Services\DocumentTypeService;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
@@ -555,7 +553,7 @@ class DocumentsController extends Controller
             // 🛡️ Verificamos y preparamos la imagen
             try {
                 $safePath = $this->prepareImageForPDF($path); // <- helper que normaliza a PNG válido
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Si hay error, saltamos la imagen
                 $pdf->AddPage();
                 $pdf->Cell(0, 10, 'Error con imagen: '.basename($path));
@@ -1037,13 +1035,13 @@ class DocumentsController extends Controller
         $document = Document::findByUid($uid);
 
         if (! $document) {
-            return redirect()->route('administrative.documents.index')
+            return redirect()->route('documents.index')
                 ->with('error', 'Documento no encontrado.');
         }
 
         $document->delete();
 
-        return redirect()->route('administrative.documents.index')
+        return redirect()->route('documents.index')
             ->with('success', 'Documento eliminado correctamente.');
     }
 
@@ -2847,7 +2845,7 @@ class DocumentsController extends Controller
 
         if (! $document) {
             return redirect()
-                ->route('administrative.documents.index')
+                ->route('documents.index')
                 ->with('error', 'Documento no encontrado');
         }
 

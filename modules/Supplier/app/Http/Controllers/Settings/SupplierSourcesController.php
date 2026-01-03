@@ -3,8 +3,6 @@
 namespace Modules\Supplier\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierSourceRequest;
-use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierSourceRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +50,7 @@ class SupplierSourcesController extends Controller
         $pageTitle = "Fuentes de {$supplier->name}";
         $breadcrumb = "Configuración / Proveedores / {$supplier->name} / Fuentes";
 
-        return view('theme.views.settings.suppliers.sources.index', compact('supplier', 'sources', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.sources.index', compact('supplier', 'sources', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -180,7 +178,7 @@ class SupplierSourcesController extends Controller
         $pageTitle = "Crear Fuente para {$supplier->name}";
         $breadcrumb = "Configuración / Proveedores / {$supplier->name} / Fuentes / Crear";
 
-        return view('theme.views.settings.suppliers.sources.create', compact('supplier', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.sources.create', compact('supplier', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -232,13 +230,13 @@ class SupplierSourcesController extends Controller
         $pageTitle = "Editar Fuente: {$source->label}";
         $breadcrumb = "Configuración / Proveedores / {$supplier->name} / Fuentes / Editar";
 
-        return view('theme.views.settings.suppliers.sources.edit', compact('supplier', 'source', 'pageTitle', 'breadcrumb'));
+        return view('supplier::settings.sources.edit', compact('supplier', 'source', 'pageTitle', 'breadcrumb'));
     }
 
     /**
      * Update source
      */
-    public function update(UpdateSupplierSourceRequest $request, string $supplierUid, string $sourceUid): JsonResponse
+    public function update(Request $request, string $supplierUid, string $sourceUid): JsonResponse
     {
         try {
             $supplier = Supplier::where('uid', $supplierUid)->firstOrFail();

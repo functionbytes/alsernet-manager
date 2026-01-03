@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Warehouses\Locations;
+namespace Modules\Warehouse\Http\Controllers\Locations;
 
 use App\Http\Controllers\Controller;
-use App\Services\Inventories\BarcodeReadingService;
+use Modules\Warehouse\Services\BarcodeReadingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Warehouse\Entities\WarehouseInventorySlot;

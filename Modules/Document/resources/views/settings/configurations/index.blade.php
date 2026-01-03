@@ -34,7 +34,7 @@
 
 
 
-                <form action="{{ route('manager.settings.documents.configurations.update') }}"
+                <form action="{{ route('settings.documents.configurations.update') }}"
                       method="POST" class="needs-validation" novalidate>
                     @csrf
 
@@ -320,7 +320,7 @@
                                 <button type="submit" class="btn btn-primary w-100 mb-1">
                                     Guardar
                                 </button>
-                                <a href="{{ route('manager.settings.documents.configurations.global') }}" class="btn btn-secondary w-100">
+                                <a href="{{ route('settings.documents.configurations.global') }}" class="btn btn-secondary w-100">
                                     Volver
                                 </a>
                         </div>
@@ -380,7 +380,7 @@
         allowClear: true,
         width: '100%',
         ajax: {
-            url: '{{ route("manager.settings.documents.configurations.search-templates") }}',
+            url: '{{ route("settings.documents.configurations.search-templates") }}',
             dataType: 'json',
             delay: 250,
             headers: {

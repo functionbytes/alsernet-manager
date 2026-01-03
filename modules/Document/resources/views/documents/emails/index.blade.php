@@ -7,8 +7,8 @@
         'title' => 'Historial de emails',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],
-            ['label' => 'Documentos', 'url' => route('administrative.documents.index')],
-            ['label' => 'Documento #' . $document->order_id, 'url' => route('administrative.documents.manage', $document->uid)],
+            ['label' => 'Documentos', 'url' => route('documents.index')],
+            ['label' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)],
             ['label' => 'Emails', 'active' => true]
         ]
     ])
@@ -25,7 +25,7 @@
                         <p class="small mb-0 text-muted">Historial de correos electrónicos enviados al cliente de este documento</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('administrative.documents.manage', $document->uid) }}" class="btn btn-secondary">
+                        <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Volver al documento
                         </a>
                     </div>
@@ -133,7 +133,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('administrative.documents.emails.preview', $mail->uid) }}" target="_blank">
+                                                    <a class="dropdown-item" href="{{ route('documents.emails.preview', $mail->uid) }}" target="_blank">
                                                         Vista previa
                                                     </a>
                                                 </li>
@@ -189,7 +189,7 @@
                     <p class="text-muted mb-4">
                         Aún no se han enviado correos electrónicos para este documento.
                     </p>
-                    <a href="{{ route('administrative.documents.manage', $document->uid) }}" class="btn btn-primary">
+                    <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary">
                         <i class="fas fa-paper-plane me-2"></i>Enviar notificación
                     </a>
                 </div>

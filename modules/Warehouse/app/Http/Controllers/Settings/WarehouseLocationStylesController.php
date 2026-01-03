@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class WarehouseLocationStylesController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('warehouse::theme.styles.index', [
+        return view('warehouse::settings.styles.index', [
             'styles' => $styles,
         ]);
     }
@@ -40,7 +40,7 @@ class WarehouseLocationStylesController extends Controller
 
         $types = ['row' => 'Pasillo', 'island' => 'Isla', 'wall' => 'Pared'];
 
-        return view('warehouse::theme.styles.create', [
+        return view('warehouse::settings.styles.create', [
             'faces' => $faces,
             'types' => $types,
         ]);
@@ -78,7 +78,7 @@ class WarehouseLocationStylesController extends Controller
             ->event('created')
             ->log('Estilo de ubicación creado: '.$style->name);
 
-        return redirect()->route('manager.warehouse.styles')->with('success', 'Estilo de ubicación creado exitosamente');
+        return redirect()->route('settings.warehouse.styles')->with('success', 'Estilo de ubicación creado exitosamente');
     }
 
     /**
@@ -94,7 +94,7 @@ class WarehouseLocationStylesController extends Controller
             'active_locations' => $style->locations()->where('available', true)->count(),
         ];
 
-        return view('warehouse::theme.styles.view', [
+        return view('warehouse::settings.styles.view', [
             'style' => $style,
             'summary' => $summary,
         ]);
@@ -117,7 +117,7 @@ class WarehouseLocationStylesController extends Controller
         ];
         $types = ['row' => 'Pasillo', 'island' => 'Isla', 'wall' => 'Pared'];
 
-        return view('warehouse::theme.styles.edit', [
+        return view('warehouse::settings.styles.edit', [
             'style' => $style,
             'faces' => $faces,
             'types' => $types,
@@ -159,7 +159,7 @@ class WarehouseLocationStylesController extends Controller
             ->withProperties(['old' => $oldData, 'attributes' => $style->getChanges()])
             ->log('Estilo actualizado: '.$style->name);
 
-        return redirect()->route('manager.warehouse.styles')->with('success', 'Estilo actualizado exitosamente');
+        return redirect()->route('settings.warehouse.styles')->with('success', 'Estilo actualizado exitosamente');
     }
 
     /**
@@ -172,7 +172,7 @@ class WarehouseLocationStylesController extends Controller
 
         // Check if style has associated locations
         if ($style->locations()->count() > 0) {
-            return redirect()->route('manager.warehouse.styles')->with('error', 'No se puede eliminar un estilo que contiene ubicaciones');
+            return redirect()->route('settings.warehouse.styles')->with('error', 'No se puede eliminar un estilo que contiene ubicaciones');
         }
 
         // Registrar en activity log
@@ -184,7 +184,7 @@ class WarehouseLocationStylesController extends Controller
 
         $style->delete();
 
-        return redirect()->route('manager.warehouse.styles')->with('success', 'Estilo eliminado exitosamente');
+        return redirect()->route('settings.warehouse.styles')->with('success', 'Estilo eliminado exitosamente');
     }
 
     /**

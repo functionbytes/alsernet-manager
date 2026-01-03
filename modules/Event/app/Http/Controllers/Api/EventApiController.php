@@ -5,11 +5,11 @@ namespace Modules\Event\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Modules\Event\Models\Event;
-use Modules\Event\Http\Resources\EventResource;
-use Modules\Event\Http\Resources\EventCollection;
 use Modules\Event\Http\Requests\Events\StoreEventRequest;
 use Modules\Event\Http\Requests\Events\UpdateEventRequest;
+use Modules\Event\Http\Resources\EventCollection;
+use Modules\Event\Http\Resources\EventResource;
+use Modules\Event\Models\Event;
 
 class EventApiController extends Controller
 {
@@ -25,7 +25,7 @@ class EventApiController extends Controller
 
     public function store(StoreEventRequest $request)
     {
-        $event = new Event();
+        $event = new Event;
         $event->uid = Str::uuid()->toString();
         $event->fill($request->validated());
         $event->save();

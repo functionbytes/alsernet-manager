@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Subscriber\Http\Controllers\Managers;
+namespace Modules\Subscriber\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\UpdateSubscriberCategoriesJob;

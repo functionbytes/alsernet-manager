@@ -1094,6 +1094,7 @@ $location = WarehouseLocation::factory()->create([
 ### Namespace Migration
 
 **Old Namespace → New Namespace:**
+
 ```php
 // Models
 App\Models\Warehouse\Warehouse              → Modules\Warehouse\Entities\Warehouse
@@ -1102,7 +1103,7 @@ App\Models\Warehouse\WarehouseLocation      → Modules\Warehouse\Entities\Wareh
 
 // Controllers
 App\Http\Controllers\Managers\Warehouse\WarehouseController
-    → Modules\Warehouse\Http\Controllers\Managers\WarehouseController
+    → Modules\Warehouse\Http\Controllers\Settings\WarehouseController
 
 App\Http\Controllers\Warehouses\WarehousesController
     → Modules\Warehouse\Http\Controllers\Warehouses\Warehouses\WarehousesController

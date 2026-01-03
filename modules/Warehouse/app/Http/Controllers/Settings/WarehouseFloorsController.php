@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Managers;
+namespace Modules\Warehouse\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Modules\Warehouse\Entities\Warehouse;
@@ -29,7 +29,7 @@ class WarehouseFloorsController extends Controller
 
         $floors = $query->paginate(15);
 
-        return view('warehouse::theme.floors.index', [
+        return view('warehouse::settings.floors.index', [
             'floors' => $floors,
             'warehouse_uid' => $warehouse_uid,
             'warehouse' => $warehouse,
@@ -47,7 +47,7 @@ class WarehouseFloorsController extends Controller
             abort(404, 'Almacén no encontrado');
         }
 
-        return view('warehouse::theme.floors.create')->with([
+        return view('warehouse::settings.floors.create')->with([
             'warehouse' => $warehouse,
             'warehouse_uid' => $warehouse_uid,
         ]);
@@ -87,7 +87,7 @@ class WarehouseFloorsController extends Controller
             ->event('created')
             ->log('Piso creado: '.$floor->name);
 
-        return redirect()->route('manager.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso creado exitosamente');
+        return redirect()->route('settings.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso creado exitosamente');
     }
 
     /**
@@ -108,7 +108,7 @@ class WarehouseFloorsController extends Controller
             abort(404, 'Piso no encontrado');
         }
 
-        return view('warehouse::theme.floors.view', [
+        return view('warehouse::settings.floors.view', [
             'warehouse' => $warehouse,
             'floor' => $floor,
         ]);
@@ -132,7 +132,7 @@ class WarehouseFloorsController extends Controller
             abort(404, 'Piso no encontrado');
         }
 
-        return view('warehouse::theme.floors.edit', [
+        return view('warehouse::settings.floors.edit', [
             'warehouse' => $warehouse,
             'floor' => $floor,
         ]);
@@ -179,7 +179,7 @@ class WarehouseFloorsController extends Controller
             ->withProperties(['old' => $oldData, 'attributes' => $floor->getChanges()])
             ->log('Piso actualizado: '.$floor->name);
 
-        return redirect()->route('manager.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso actualizado exitosamente');
+        return redirect()->route('settings.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso actualizado exitosamente');
     }
 
     /**
@@ -207,7 +207,7 @@ class WarehouseFloorsController extends Controller
             ->sum('slots_count');
 
         if ($totalSlots > 0) {
-            return redirect()->route('manager.warehouse.floors', ['warehouse_uid' => $warehouse->uid])
+            return redirect()->route('settings.warehouse.floors', ['warehouse_uid' => $warehouse->uid])
                 ->with('error', 'No se puede eliminar un piso que contiene espacios de inventario. Primero debe vaciar o eliminar todos los espacios.');
         }
 
@@ -222,6 +222,6 @@ class WarehouseFloorsController extends Controller
         $floor->locations()->delete();
         $floor->delete();
 
-        return redirect()->route('manager.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso eliminado exitosamente');
+        return redirect()->route('settings.warehouse.floors', ['warehouse_uid' => $warehouse->uid])->with('success', 'Piso eliminado exitosamente');
     }
 }

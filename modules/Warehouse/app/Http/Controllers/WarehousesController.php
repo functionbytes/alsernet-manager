@@ -1,12 +1,13 @@
 <?php
 
-namespace Modules\Warehouse\Http\Controllers\Warehouses\Warehouses;
+namespace Modules\Warehouse\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Warehouse\Entities\Warehouse;
 use Illuminate\Http\Request;
+use Modules\Warehouse\Entities\Warehouse;
 
-class WarehousesController extends Controller
+class
+WarehousesController extends Controller
 {
     public function index(Request $request)
     {

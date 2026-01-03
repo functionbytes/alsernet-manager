@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Subscriber\Http\Controllers\Managers;
+namespace Modules\Subscriber\Http\Controllers;
 
 use App\Exports\Managers\Newsletters\NewsletterListExport;
 use App\Http\Controllers\Controller;
-use Modules\Subscriber\Models\SubscriberList;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Subscriber\Models\SubscriberList;
 
 class SubscribersReportController extends Controller
 {

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Almacenes'])
+    @include('theme.components.card', ['title' => 'Almacenes'])
 
     <div class="widget-content searchable-container list">
 
@@ -14,22 +14,32 @@
                             <div class="col-auto flex-grow-1">
                                 <div class="tt-search-box">
                                     <div class="input-group">
-                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i data-feather="search"></i></span>
-                                        <input class="form-control rounded-start w-100" type="text" id="search" name="search" placeholder="Buscar" @isset($searchKey) value="{{ $searchKey }}" @endisset>
+                                        <span class="position-absolute top-50 start-0 translate-middle-y ms-2"> <i
+                                                    data-feather="search"></i></span>
+                                        <input class="form-control rounded-start w-100" type="text" id="search"
+                                               name="search" placeholder="Buscar"
+                                               @isset($searchKey) value="{{ $searchKey }}" @endisset>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="available" data-minimum-results-for-search="Infinity">
+                                    <select class="form-select select2" name="available"
+                                            data-minimum-results-for-search="Infinity">
                                         <option value="">Seleccionar estado</option>
-                                        <option value="1" @isset($available) @if ($available==1) selected @endif @endisset>  Publico</option>
-                                        <option value="0" @isset($available) @if ($available==0) selected  @endif @endisset>  Oculto</option>
+                                        <option value="1"
+                                                @isset($available) @if ($available==1) selected @endif @endisset>
+                                            Publico
+                                        </option>
+                                        <option value="0"
+                                                @isset($available) @if ($available==0) selected @endif @endisset> Oculto
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Buscar">
+                                <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-original-title="Buscar">
                                     <i class="fa-duotone fa-magnifying-glass"></i>
                                 </button>
                             </div>
@@ -60,7 +70,8 @@
                     @foreach ($warehouses as $key => $warehouse)
                         <tr class="search-items">
                             <td>
-                                <a href="{{ route('settings.warehouse.view', $warehouse->uid) }}" class="usr-email-addr text-decoration-none text-dark">{{ $warehouse->name  }}</a>
+                                <a href="{{ route('settings.warehouse.view', $warehouse->uid) }}"
+                                   class="usr-email-addr text-decoration-none text-dark">{{ $warehouse->name  }}</a>
                             </td>
                             <td>
                                 <span class="badge {{ $warehouse->available == 1 ? 'bg-light-secondary  text-primary' : 'bg-light-secondary  text-primary' }}  rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1">
@@ -68,46 +79,53 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="usr-ph-no" >{{ date('Y-m-d', strtotime($warehouse->created_at)) }}</span>
+                                <span class="usr-ph-no">{{ date('Y-m-d', strtotime($warehouse->created_at)) }}</span>
                             </td>
                             <td>
-                                <span class="usr-ph-no" >
+                                <span class="usr-ph-no">
                                       {{ date('Y-m-d', strtotime($warehouse->updated_at)) }}
                                 </span>
                             </td>
                             <td class="text-left">
                                 <div class="dropdown dropstart">
-                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.dashboard.index', $warehouse->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.dashboard.index', $warehouse->uid) }}">
                                                 Dashboard
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.floors', $warehouse->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.detail.floors', $warehouse->uid) }}">
                                                 Pisos
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.map', $warehouse->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.detail.map', $warehouse->uid) }}">
                                                 Mapa
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.history', $warehouse->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.history', $warehouse->uid) }}">
                                                 Histórico
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.warehouse.edit', $warehouse->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                               href="{{ route('settings.warehouse.edit', $warehouse->uid) }}">
                                                 Editar
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete" data-href="{{ route('settings.warehouse.destroy', $warehouse->uid) }}">Eliminar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3 confirm-delete"
+                                               data-href="{{ route('settings.warehouse.destroy', $warehouse->uid) }}">Eliminar</a>
                                         </li>
                                     </ul>
                                 </div>

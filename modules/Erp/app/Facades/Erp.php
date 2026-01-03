@@ -2,8 +2,8 @@
 
 namespace Modules\Erp\Facades;
 
-use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Support\Facades\Facade;
+use Modules\Supplier\Services\Integrations\ErpService;
 
 class Erp extends Facade
 {

@@ -3,8 +3,8 @@
 namespace Modules\Event\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Modules\Event\Models\Event;
+use Tests\TestCase;
 
 class EventManagementTest extends TestCase
 {
@@ -139,7 +139,7 @@ class EventManagementTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                '*' => ['id', 'title', 'start', 'end', 'backgroundColor', 'url']
+                '*' => ['id', 'title', 'start', 'end', 'backgroundColor', 'url'],
             ]);
     }
 
@@ -208,10 +208,10 @@ class EventManagementTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'uid', 'title', 'start_at', 'end_at']
+                    '*' => ['id', 'uid', 'title', 'start_at', 'end_at'],
                 ],
                 'meta',
-                'links'
+                'links',
             ]);
     }
 

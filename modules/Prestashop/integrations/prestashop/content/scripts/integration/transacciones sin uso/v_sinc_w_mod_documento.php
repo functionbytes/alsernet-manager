@@ -1,75 +1,74 @@
 <?php
+
 class v_sinc_w_mod_documentoClass
 {
-    public function Procesar_v_sinc_w_mod_documento($doc, $fila, $tipo){
-        auxiliares::sendmail("ENTRO EN v_sinc_w_mod_documento");
+    public function Procesar_v_sinc_w_mod_documento($doc, $fila, $tipo)
+    {
+        auxiliares::sendmail('ENTRO EN v_sinc_w_mod_documento');
         if ($tipo <= 2) {
 
-            if (!$doc) {
-                //sendmail(__FUNCTION__.": Dato nulo en data para fila ".$fila." tipo ".$tipo);
+            if (! $doc) {
+                // sendmail(__FUNCTION__.": Dato nulo en data para fila ".$fila." tipo ".$tipo);
                 return 1;
             }
 
+            $id_attachment = ''.Db::getInstance()->getValue('SELECT id_attachment FROM aalv_attachment_import WHERE id_origen='.$doc['id']);
 
-            $id_attachment = "" . Db::getInstance()->getValue("SELECT id_attachment FROM aalv_attachment_import WHERE id_origen=" . $doc["id"]);
+            if ($id_attachment == '') {
 
-            if ($id_attachment == "") {
+                $url = 'http://docs.a-alvarez.com/'.trim($doc['contenido']);
+                Tools::copy($url, _PS_UPLOAD_DIR_.trim($doc['contenido']));
 
-                $url = "http://docs.a-alvarez.com/" . trim($doc["contenido"]);
-                Tools::copy($url, _PS_UPLOAD_DIR_ . trim($doc["contenido"]));
+                // Db::getInstance()->Execute("INSERT INTO aalv_ayudas(titulo, texto, enlace, activo, idorigen) VALUES ('".$titulo."','".$texto."','".$enlace."',".$activo.",".$ayuda["id"].")");
 
-                //Db::getInstance()->Execute("INSERT INTO aalv_ayudas(titulo, texto, enlace, activo, idorigen) VALUES ('".$titulo."','".$texto."','".$enlace."',".$activo.",".$ayuda["id"].")");
-
-                $attach = new AttachmentCore();
-                $attach->name[1] = substr($doc["titulo"], 0, 32);
-                $attach->description[1] = $doc["idioma"];
-                $attach->mime = get_mime_type(trim($doc["contenido"]));
-                $attach->file_name = trim($doc["contenido"]);
-                $attach->file_size = filesize(_PS_UPLOAD_DIR_ . trim($doc["contenido"]));
+                $attach = new AttachmentCore;
+                $attach->name[1] = substr($doc['titulo'], 0, 32);
+                $attach->description[1] = $doc['idioma'];
+                $attach->mime = get_mime_type(trim($doc['contenido']));
+                $attach->file_name = trim($doc['contenido']);
+                $attach->file_size = filesize(_PS_UPLOAD_DIR_.trim($doc['contenido']));
                 $uniqid = sha1(microtime());
-                Tools::copy(_PS_UPLOAD_DIR_ . trim($doc["contenido"]), _PS_DOWNLOAD_DIR_ . $uniqid);
-                unlink(_PS_UPLOAD_DIR_ . trim($doc["contenido"]));
+                Tools::copy(_PS_UPLOAD_DIR_.trim($doc['contenido']), _PS_DOWNLOAD_DIR_.$uniqid);
+                unlink(_PS_UPLOAD_DIR_.trim($doc['contenido']));
                 $attach->file = $uniqid;
                 $attach->add();
 
-                $idproduct = "" . Db::getInstance()->getValue("SELECT id_product FROM aalv_product_import WHERE id_modelo=" . $doc["id_modelo"]);
-                if ($idproduct == "") {
-                    $idproduct = "0";
+                $idproduct = ''.Db::getInstance()->getValue('SELECT id_product FROM aalv_product_import WHERE id_modelo='.$doc['id_modelo']);
+                if ($idproduct == '') {
+                    $idproduct = '0';
                 } else {
                     $attach->attachProduct($idproduct);
                 }
 
-
-                Db::getInstance()->Execute("INSERT INTO aalv_attachment_import(id_attachment, id_origen, id_product) VALUES (" . $attach->id . "," . $doc["id"] . "," . $idproduct . ")");
+                Db::getInstance()->Execute('INSERT INTO aalv_attachment_import(id_attachment, id_origen, id_product) VALUES ('.$attach->id.','.$doc['id'].','.$idproduct.')');
             } else {
-                $attach = new AttachmentCore((int)$id_attachment);
-                $attach->name[1] = substr($doc["titulo"], 0, 32);
-                $attach->description[1] = $doc["idioma"];
-                $attach->mime = get_mime_type(trim($doc["contenido"]));
-                $attach->file_name = trim($doc["contenido"]);
-                $attach->file_size = filesize(_PS_UPLOAD_DIR_ . trim($doc["contenido"]));
+                $attach = new AttachmentCore((int) $id_attachment);
+                $attach->name[1] = substr($doc['titulo'], 0, 32);
+                $attach->description[1] = $doc['idioma'];
+                $attach->mime = get_mime_type(trim($doc['contenido']));
+                $attach->file_name = trim($doc['contenido']);
+                $attach->file_size = filesize(_PS_UPLOAD_DIR_.trim($doc['contenido']));
                 $uniqid = sha1(microtime());
-                Tools::copy(_PS_UPLOAD_DIR_ . trim($doc["contenido"]), _PS_DOWNLOAD_DIR_ . $uniqid);
-                unlink(_PS_UPLOAD_DIR_ . trim($doc["contenido"]));
+                Tools::copy(_PS_UPLOAD_DIR_.trim($doc['contenido']), _PS_DOWNLOAD_DIR_.$uniqid);
+                unlink(_PS_UPLOAD_DIR_.trim($doc['contenido']));
                 $attach->file = $uniqid;
                 $attach->update();
-                $idproduct = "" . Db::getInstance()->getValue("SELECT id_product FROM aalv_product_import WHERE id_modelo=" . $doc["id_modelo"]);
-                if ($idproduct == "") {
-                    $idproduct = "0";
+                $idproduct = ''.Db::getInstance()->getValue('SELECT id_product FROM aalv_product_import WHERE id_modelo='.$doc['id_modelo']);
+                if ($idproduct == '') {
+                    $idproduct = '0';
                 } else {
                     $attach->attachProduct($idproduct);
                 }
 
-                Db::getInstance()->Execute("update aalv_attachment_import set id_product=" . $idproduct . " where id_attachment=" . $attach->id);
+                Db::getInstance()->Execute('update aalv_attachment_import set id_product='.$idproduct.' where id_attachment='.$attach->id);
             }
         } else {
-            //borrado? mejor desactivar?
-            Db::getInstance()->Execute("delete from aalv_attachment_import where id_origen=" . $fila);
+            // borrado? mejor desactivar?
+            Db::getInstance()->Execute('delete from aalv_attachment_import where id_origen='.$fila);
         }
 
         return 1;
     }
-
 
     /*
     function get_mime_type($filename)

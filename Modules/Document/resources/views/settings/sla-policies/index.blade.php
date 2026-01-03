@@ -19,11 +19,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('settings.documents.sla-policies.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.settings.documents.sla-policies.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.documents.sla-policies.create') }}" class="btn btn-primary">
                            Nueva política
                         </a>
                     </div>
@@ -90,7 +90,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.documents.sla-policies.index') }}">
+                <form method="GET" action="{{ route('settings.documents.sla-policies.index') }}">
                     <div class="row align-items-center">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -128,7 +128,7 @@
                                 <tr>
                                     <td>
                                         <div>
-                                            <a href="{{ route('manager.settings.documents.sla-policies.edit', $policy->id) }}" class="text-decoration-none">
+                                            <a href="{{ route('settings.documents.sla-policies.edit', $policy->id) }}" class="text-decoration-none">
                                                 <strong>{{ $policy->name }}</strong>
                                             </a>
                                             @if($policy->is_default)
@@ -162,7 +162,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" action="{{ route('manager.settings.documents.sla-policies.toggle', $policy->id) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('settings.documents.sla-policies.toggle', $policy->id) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -179,7 +179,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.documents.sla-policies.edit', $policy->id) }}">
+                                                    <a class="dropdown-item" href="{{ route('settings.documents.sla-policies.edit', $policy->id) }}">
                                                         Editar
                                                     </a>
                                                 </li>
@@ -189,7 +189,7 @@
                                                         class="dropdown-item text-success delete-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#delete-modal"
-                                                        data-url="{{ route('manager.settings.documents.sla-policies.destroy', $policy->id) }}"
+                                                        data-url="{{ route('settings.documents.sla-policies.destroy', $policy->id) }}"
                                                         data-title="Eliminar política SLA: {{ $policy->name }}">
                                                         Eliminar
                                                     </button>
@@ -217,7 +217,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.settings.documents.sla-policies.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('settings.documents.sla-policies.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i> Crear Primera Política SLA
                                 </a>
                             @endif

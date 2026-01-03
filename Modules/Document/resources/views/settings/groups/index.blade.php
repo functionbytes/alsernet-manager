@@ -20,11 +20,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.settings.documents.groups.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('settings.documents.groups.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.settings.documents.groups.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.documents.groups.create') }}" class="btn btn-primary">
                             Nuevo grupo
                         </a>
                     </div>
@@ -91,7 +91,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.documents.groups.index') }}">
+                <form method="GET" action="{{ route('settings.documents.groups.index') }}">
                     <div class="row align-items-center">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -156,7 +156,7 @@
                                         <small class="text-muted">{{ $group->description ? Str::limit($group->description, 40) : '-' }}</small>
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" action="{{ route('manager.settings.documents.groups.toggle', $group->uid) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('settings.documents.groups.toggle', $group->uid) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -173,12 +173,12 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.edit', $group->uid) }}">
+                                                    <a class="dropdown-item" href="{{ route('settings.documents.groups.edit', $group->uid) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.documents.groups.configuration', $group->uid) }}">
+                                                    <a class="dropdown-item" href="{{ route('settings.documents.groups.configuration', $group->uid) }}">
                                                         Configuración
                                                     </a>
                                                 </li>
@@ -188,7 +188,7 @@
                                                             class="dropdown-item text-success delete-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#delete-modal"
-                                                            data-url="{{ route('manager.settings.documents.groups.destroy', $group->uid) }}"
+                                                            data-url="{{ route('settings.documents.groups.destroy', $group->uid) }}"
                                                             data-title="Eliminar grupo: {{ $group->name }}">
                                                         Eliminar
                                                     </button>
@@ -216,7 +216,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.settings.documents.groups.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('settings.documents.groups.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             @endif

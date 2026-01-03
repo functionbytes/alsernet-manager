@@ -12,8 +12,8 @@
  * 3. Permission-based: Uses Spatie permissions directly
  */
 
-use Modules\User\Http\Controllers\Managers\UsersController;
 use Illuminate\Support\Facades\Route;
+use Modules\User\Http\Controllers\UsersController;
 
 /**
  * ============================================================

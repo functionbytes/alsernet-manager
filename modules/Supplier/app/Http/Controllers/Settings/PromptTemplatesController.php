@@ -66,7 +66,7 @@ class PromptTemplatesController extends Controller
         $suppliers = Supplier::where('is_active', true)->orderBy('name')->get();
         $allCategories = Category::where('available', true)->orderBy('title')->get();
 
-        return view('theme.views.settings.suppliers.templates.index', compact(
+        return view('supplier::settings.templates.index', compact(
             'templates',
             'categories',
             'contentTypes',
@@ -86,7 +86,7 @@ class PromptTemplatesController extends Controller
         $pageTitle = 'Crear Plantilla de Prompt';
         $breadcrumb = 'Configuración / Proveedores / Plantillas / Crear';
 
-        return view('theme.views.settings.suppliers.templates.create', compact(
+        return view('supplier::settings.templates.create', compact(
             'pageTitle',
             'breadcrumb'
         ));
@@ -152,7 +152,7 @@ class PromptTemplatesController extends Controller
         $pageTitle = 'Editar Plantilla: '.$template->label;
         $breadcrumb = 'Configuración / Proveedores / Plantillas / Editar';
 
-        return view('theme.views.settings.suppliers.templates.edit', compact(
+        return view('supplier::settings.templates.edit', compact(
             'template',
             'pageTitle',
             'breadcrumb'

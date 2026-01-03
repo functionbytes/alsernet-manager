@@ -54,7 +54,7 @@ class DocumentSlaPoliciesController extends Controller
      */
     public function show(DocumentSlaPolicy $policy)
     {
-        return redirect()->route('manager.settings.documents.sla-policies.edit', $policy->id);
+        return redirect()->route('settings.documents.sla-policies.edit', $policy->id);
     }
 
     /**
@@ -107,7 +107,7 @@ class DocumentSlaPoliciesController extends Controller
 
         DocumentSlaPolicy::create($validated);
 
-        return redirect()->route('manager.settings.documents.sla-policies.index')
+        return redirect()->route('settings.documents.sla-policies.index')
             ->with('success', 'Política SLA creada exitosamente.');
     }
 
@@ -146,7 +146,7 @@ class DocumentSlaPoliciesController extends Controller
 
         $policy->update($validated);
 
-        return redirect()->route('manager.settings.documents.sla-policies.index')
+        return redirect()->route('settings.documents.sla-policies.index')
             ->with('success', 'Política SLA actualizada exitosamente.');
     }
 
@@ -174,7 +174,7 @@ class DocumentSlaPoliciesController extends Controller
 
         $policy->delete();
 
-        return redirect()->route('manager.settings.documents.sla-policies.index')
+        return redirect()->route('settings.documents.sla-policies.index')
             ->with('success', 'Política SLA eliminada exitosamente.');
     }
 }

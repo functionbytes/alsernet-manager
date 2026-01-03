@@ -3,8 +3,6 @@
 namespace Modules\Supplier\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Managers\Settings\Suppliers\StoreSupplierPromptRequest;
-use App\Http\Requests\Managers\Settings\Suppliers\UpdateSupplierPromptRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,7 +51,7 @@ class SupplierPromptsController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('theme.views.settings.suppliers.prompts.index', compact('pageTitle', 'breadcrumb', 'prompts'));
+        return view('supplier::settings.prompts.index', compact('pageTitle', 'breadcrumb', 'prompts'));
     }
 
     /**
@@ -66,13 +64,13 @@ class SupplierPromptsController extends Controller
 
         $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
 
-        return view('theme.views.settings.suppliers.prompts.create', compact('pageTitle', 'breadcrumb', 'suppliers'));
+        return view('supplier::settings.prompts.create', compact('pageTitle', 'breadcrumb', 'suppliers'));
     }
 
     /**
      * Store new prompt
      */
-    public function store(StoreSupplierPromptRequest $request)
+    public function store(Request $request)
     {
         try {
             $prompt = SupplierPrompt::create([
@@ -136,13 +134,13 @@ class SupplierPromptsController extends Controller
 
         $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
 
-        return view('theme.views.settings.suppliers.prompts.edit', compact('prompt', 'pageTitle', 'breadcrumb', 'suppliers'));
+        return view('supplier::settings.prompts.edit', compact('prompt', 'pageTitle', 'breadcrumb', 'suppliers'));
     }
 
     /**
      * Update prompt
      */
-    public function update(UpdateSupplierPromptRequest $request, string $uid)
+    public function update(Request $request, string $uid)
     {
         try {
             $prompt = SupplierPrompt::where('uid', $uid)->firstOrFail();

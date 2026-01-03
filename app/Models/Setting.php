@@ -1321,7 +1321,7 @@ class Setting extends Model implements HasMedia
                 'enabled' => $settings['gmail']['enabled'] ?? false,
                 'client_id' => $settings['gmail']['client_id'] ?? '',
                 'client_secret' => $settings['gmail']['client_secret'] ?? '',
-                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('manager.settings.email.incoming.gmail.callback'),
+                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('settings.incoming-email.gmail.callback'),
                 'connections' => $settings['gmail']['connections'] ?? [],
             ],
             'mailgun' => [

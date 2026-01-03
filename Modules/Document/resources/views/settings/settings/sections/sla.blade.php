@@ -81,10 +81,10 @@
                     </h6>
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
-                    <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-outline-primary w-100">
+                    <a href="{{ route('settings.documents.sla-policies.index') }}" class="btn btn-outline-primary w-100">
                         <i class="ti ti-list me-2"></i> Ver Todas las Politicas
                     </a>
-                    <a href="{{ route('manager.settings.documents.sla-policies.create') }}" class="btn btn-primary w-100">
+                    <a href="{{ route('settings.documents.sla-policies.create') }}" class="btn btn-primary w-100">
                         <i class="ti ti-plus me-2"></i> Crear Nueva Politica
                     </a>
                     <hr class="my-2">
@@ -473,7 +473,7 @@
                             <h6 class="mb-1 fw-semibold">Documentos Fuera de SLA</h6>
                             <p class="mb-0">Hay <strong>{{ $slaStats['breached'] }}</strong> documentos que han excedido el tiempo SLA establecido.</p>
                         </div>
-                        <a href="{{ route('manager.settings.documents.configurations') }}?filter=breached" class="btn btn-danger btn-sm">
+                        <a href="{{ route('settings.documents.configurations') }}?filter=breached" class="btn btn-danger btn-sm">
                             <i class="ti ti-eye me-1"></i> Ver Documentos
                         </a>
                     </div>
@@ -491,7 +491,7 @@
                             <h6 class="mb-1 fw-semibold">Documentos por Vencer</h6>
                             <p class="mb-0">Hay <strong>{{ $slaStats['expiring_soon'] }}</strong> documentos que venceran en las proximas 24 horas.</p>
                         </div>
-                        <a href="{{ route('manager.settings.documents.configurations') }}?filter=expiring" class="btn btn-warning btn-sm">
+                        <a href="{{ route('settings.documents.configurations') }}?filter=expiring" class="btn btn-warning btn-sm">
                             <i class="ti ti-eye me-1"></i> Ver Documentos
                         </a>
                     </div>
@@ -560,7 +560,7 @@
             <h6 class="fw-semibold mb-0 text-uppercase text-muted small">
                 <i class="ti ti-list me-1"></i> Politicas SLA Activas
             </h6>
-            <a href="{{ route('manager.settings.documents.sla-policies.index') }}" class="btn btn-sm btn-outline-primary">
+            <a href="{{ route('settings.documents.sla-policies.index') }}" class="btn btn-sm btn-outline-primary">
                 Ver Todas
             </a>
         </div>
@@ -615,7 +615,7 @@
         <div class="text-center py-4 bg-light rounded">
             <i class="ti ti-clock-off fs-1 text-muted mb-2"></i>
             <p class="text-muted mb-2">No hay politicas SLA configuradas</p>
-            <a href="{{ route('manager.settings.documents.sla-policies.create') }}" class="btn btn-sm btn-primary">
+            <a href="{{ route('settings.documents.sla-policies.create') }}" class="btn btn-sm btn-primary">
                 <i class="ti ti-plus me-1"></i> Crear Primera Politica
             </a>
         </div>
@@ -653,7 +653,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-2"></i> Recalculando...');
 
         $.ajax({
-            url: '{{ route("manager.settings.documents.settings.recalculate-sla") }}',
+            url: '{{ route("settings.documents.settings.recalculate-sla") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}'

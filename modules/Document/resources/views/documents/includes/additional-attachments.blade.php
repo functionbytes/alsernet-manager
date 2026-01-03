@@ -246,7 +246,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...');
 
             $.ajax({
-                url: "{{ route('administrative.documents.upload-attachment', $document->uid) }}",
+                url: "{{ route('documents.upload-attachment', $document->uid) }}",
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -284,7 +284,7 @@
         // ===== Refresh Attachments List =====
         function refreshAttachmentsList() {
             $.ajax({
-                url: "{{ route('administrative.documents.attachments', $document->uid) }}",
+                url: "{{ route('documents.attachments', $document->uid) }}",
                 method: 'GET',
                 success: function(response) {
                     if (response.success) {
@@ -387,7 +387,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
             $.ajax({
-                url: "{{ route('administrative.documents.delete-attachment', $document->uid) }}",
+                url: "{{ route('documents.delete-attachment', $document->uid) }}",
                 method: 'POST',
                 data: {
                     media_id: mediaId,

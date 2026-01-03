@@ -8,9 +8,9 @@
         'title' => 'Vista Previa de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],
-            ['label' => 'Documentos', 'url' => route('administrative.documents.index')],
-            ['label' => 'Documento #' . $document->order_id, 'url' => route('administrative.documents.manage', $document->uid)],
-            ['label' => 'Emails', 'url' => route('administrative.documents.emails', $document->uid)],
+            ['label' => 'Documentos', 'url' => route('documents.index')],
+            ['label' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)],
+            ['label' => 'Emails', 'url' => route('documents.emails', $document->uid)],
             ['label' => 'Vista previa', 'active' => true]
         ]
     ])
@@ -203,10 +203,10 @@
                         <button type="button" class="btn btn-info" id="btnPrintEmail">
                             Imprimir
                         </button>
-                        <a href="{{ route('administrative.documents.emails', $document->uid) }}" class="btn btn-secondary">
+                        <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-secondary">
                             Volver a emails
                         </a>
-                        <a href="{{ route('administrative.documents.manage', $document->uid) }}" class="btn btn-primary">
+                        <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary">
                             Gestionar documento
                         </a>
                     </div>

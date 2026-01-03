@@ -2,7 +2,6 @@
 
 namespace Modules\Event\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +11,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Event extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $connection = 'prestashop';
 
@@ -75,12 +74,12 @@ class Event extends Model
         return $query->orderBy('created_at', 'asc');
     }
 
-    public function scopeId($query, $id): Model|null
+    public function scopeId($query, $id): ?Model
     {
         return $query->where('id', $id)->first();
     }
 
-    public function scopeUid($query, $uid): Model|null
+    public function scopeUid($query, $uid): ?Model
     {
         return $query->where('uid', $uid)->first();
     }

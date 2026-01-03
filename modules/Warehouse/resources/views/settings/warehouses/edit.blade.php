@@ -47,12 +47,12 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label class="control-label col-form-label">Codigo <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                           id="code" name="code" value="{{ old('name', $warehouse->code) }}"
+                                    <label class="control-label col-form-label">Código <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('code') is-invalid @enderror"
+                                           id="code" name="code" value="{{ old('code', $warehouse->code) }}"
                                            placeholder="ALM001, ALM002, etc."
-                                           maxlength="100" required>
-                                    @error('name')
+                                           maxlength="50" required>
+                                    @error('code')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>

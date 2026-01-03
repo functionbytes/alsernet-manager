@@ -2,164 +2,177 @@
 
 @section('content')
 
-    <div class="row">
-        <div class="col-lg-12 d-flex align-items-stretch">
+    @include('theme.components.card', ['title' => 'Editar Permiso'])
 
-            <div class="card w-100">
+    {{-- Alertas --}}
+    @include('theme.components.alerts')
 
-                <form id="formPermissions" enctype="multipart/form-data" role="form" onSubmit="return false">
+    <div class="card">
+        <form id="formPermissions" enctype="multipart/form-data" role="form" onSubmit="return false">
+            @csrf
+            <input type="hidden" name="id" value="{{ $permission->id }}">
 
-                    {{ csrf_field() }}
-
-                    <input type="hidden" id="id" name="id" value="{{$permission->id}}">
-
-                    <div class="card-body">
-                        <div class="d-flex no-block align-items-center">
-
-                            <h5 class="mb-0">Editar permiso
-                            </h5>
-
-                        </div>
-                        <p class="card-subtitle mb-3 mt-3">
-                            Este espacio está diseñado para que puedas actualizar y modificar la información de manera eficiente y segura. A continuación, encontrarás diversos <mark><code>campos</code></mark> que corresponden a los datos previamente suministrados. Te invitamos a revisar y ajustar cualquier información que consideres necesario actualizar para mantener tus datos al día.
-                        </p>
-
-                        <div class="row">
-
-                            <div class="col-6 mb-3">
-                                    <label  class="form-label">Nombres</label>
-                                    <input type="text" class="form-control" id="name"  name="name" value="{{$permission->name}}" placeholder="Ingresar nombres" autocomplete="new-password">
-                            </div>
-
-                            <div class="col-6 mb-3">
-                                    <label class="form-label">Guard</label>
-                                    <select class="form-select select2" name="guard_name">
-                                        <option value="web" {{ $permission->guard_name == 'web' ? 'selected' : '' }}>Web</option>
-                                        <option value="api" {{ $permission->guard_name == 'api' ? 'selected' : '' }}>API</option>
-                                    </select>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="errors d-none">
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="border-top pt-1 mt-4">
-                                    <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
-                                        Guardar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+            <div class="card-header bg-white border-bottom">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h5 class="mb-0">Editar Permiso: {{ $permission->name }}</h5>
+                        <p class="text-muted mb-0 small">Actualiza la información del permiso en el sistema</p>
                     </div>
-                </form>
+                    <div class="col-auto">
+                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light">
+                            <i class="fas fa-arrow-left me-2"></i>Volver
+                        </a>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            <div class="card-body">
+                {{-- Sección: Información básica --}}
+                <h6 class="fw-bold mb-3 border-bottom pb-2">
+                    <i class="fas fa-info-circle me-2"></i>Información básica
+                </h6>
 
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nombre del Permiso <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name"
+                               value="{{ $permission->name }}"
+                               placeholder="Ej: users.create" required>
+                        <small class="text-muted">Use formato: módulo.acción (ej: products.view, orders.edit)</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Guard <span class="text-danger">*</span></label>
+                        <select class="form-select" name="guard_name" required>
+                            <option value="web" {{ $permission->guard_name == 'web' ? 'selected' : '' }}>Web (Navegador)</option>
+                            <option value="api" {{ $permission->guard_name == 'api' ? 'selected' : '' }}>API (Token/OAuth)</option>
+                        </select>
+                        <small class="text-muted">Define el tipo de autenticación para este permiso</small>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" name="description" rows="3"
+                                  placeholder="Describe qué permite hacer este permiso...">{{ $permission->description ?? '' }}</textarea>
+                        <small class="text-muted">Máximo 255 caracteres. Sea claro y conciso</small>
+                    </div>
+                </div>
+
+                {{-- Información del permiso --}}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card bg-light-subtle border-0">
+                            <div class="card-body">
+                                <h6 class="mb-2 small text-muted">Roles asignados</h6>
+                                <h4 class="mb-0 fw-bold">{{ $permission->roles()->count() }}</h4>
+                                <small class="text-muted">Roles que usan este permiso</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light-subtle border-0">
+                            <div class="card-body">
+                                <h6 class="mb-2 small text-muted">Fecha de creación</h6>
+                                <h4 class="mb-0 fw-bold" style="font-size: 1rem;">{{ $permission->created_at->format('d/m/Y') }}</h4>
+                                <small class="text-muted">{{ $permission->created_at->diffForHumans() }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if($permission->roles()->count() > 0)
+                    <div class="alert alert-warning border-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Atención:</strong> Este permiso está asignado a {{ $permission->roles()->count() }} rol(es).
+                        Los cambios afectarán a todos los roles que lo utilizan.
+                    </div>
+                @endif
+            </div>
+
+            <div class="card-footer bg-white border-top">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light w-100 mb-2">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 @endsection
 
-
-
 @push('scripts')
+<script>
+$(document).ready(function() {
+    // Form validation
+    $("#formPermissions").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 3,
+                maxlength: 100,
+            },
+            description: {
+                maxlength: 255,
+            },
+            guard_name: {
+                required: true,
+            }
+        },
+        messages: {
+            name: {
+                required: "El nombre del permiso es obligatorio.",
+                minlength: "Debe contener al menos 3 caracteres.",
+                maxlength: "No puede exceder los 100 caracteres."
+            },
+            description: {
+                maxlength: "La descripción no puede exceder 255 caracteres."
+            },
+            guard_name: {
+                required: "Debe seleccionar un guard."
+            }
+        },
+        submitHandler: function(form) {
+            const submitBtn = $(form).find('button[type="submit"]');
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
 
-    <script type="text/javascript">
-
-        $(document).ready(function() {
-
-
-            $("#formPermissions").validate({
-                submit: false,
-                ignore: ".ignore",
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 3,
-                        maxlength: 100,
-                    },
-                    guard_name: {
-                        required: true,
-                    }
+            $.ajax({
+                url: "{{ route('settings.permissions.update') }}",
+                type: "POST",
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toastr.success(response.message || 'Permiso actualizado correctamente');
+                    setTimeout(function() {
+                        window.location.href = "{{ route('settings.permissions.index') }}";
+                    }, 1500);
                 },
-                messages: {
-                    name: {
-                        required: "El parametro es necesario.",
-                        minlength: "Debe contener al menos 3 caracter",
-                        maxlength: "Debe contener al menos 100 caracter",
-                    },
-                    guard_name: {
-                        required: "Debe seleccionar un guard."
+                error: function(xhr) {
+                    submitBtn.prop('disabled', false).html('<i class="fas fa-save me-2"></i>Guardar Cambios');
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        toastr.error(xhr.responseJSON.message);
+                    } else {
+                        toastr.error('Error al actualizar el permiso. Intente nuevamente.');
                     }
-                },
-                submitHandler: function(form) {
 
-                    var $form = $('#formPermissions');
-                    var formData = new FormData($form[0]);
-                    var $submitButton = $('button[type="submit"]');
-                    $submitButton.prop('disabled', true);
-
-                    $.ajax({
-                        url: "{{ route('settings.permissions.update') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: "POST",
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        success: function(response) {
-
-                            if(response.success == true){
-
-                                message = response.message;
-
-                                toastr.success(message, "Operación exitosa", {
-                                    closeButton: true,
-                                    progressBar: true,
-                                    positionClass: "toast-bottom-right",
-                                    timeOut: 1000,
-                                    onHidden: function () {
-                                        window.location.href = "{{ route('settings.permissions.index') }}";
-                                    }
-                                });
-
-
-                            }else{
-
-                                $submitButton.prop('disabled', false);
-                                error = response.message;
-
-                                toastr.warning(error, "Operación fallida", {
-                                    closeButton: true,
-                                    progressBar: true,
-                                    positionClass: "toast-bottom-right",
-                                    timeOut: 1000,
-                                    onHidden: function () {
-                                        $('.errors').text(error);
-                                        $('.errors').removeClass('d-none');
-                                    }
-                                });
-
-
-                            }
-
-                        }
-                    });
-
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            toastr.error(value[0]);
+                        });
+                    }
                 }
-
             });
-
-
-
-        });
-
-    </script>
-
+        }
+    });
+});
+</script>
 @endpush
-
-
-

@@ -42,7 +42,7 @@ class SupplierCategoriesController extends Controller
             'total_available' => Category::where('available', true)->count(),
         ];
 
-        return view('theme.views.settings.suppliers.categories.index', compact(
+        return view('supplier::settings.categories.index', compact(
             'supplier',
             'assignedCategories',
             'availableCategories',

@@ -11,7 +11,6 @@ use Modules\Document\Entities\DocumentRequirementTranslation;
 use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentValidationCondition;
 use Modules\Document\Entities\DocumentValidatorGroup;
-use Modules\Document\Http\Controllers\Managers\Settings\ValidatorGroup;
 
 /**
  * DocumentTypeController
@@ -136,7 +135,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.types')
+                ->route('settings.documents.types')
                 ->with('success', "Tipo de documento '{$validated['slug']}' creado exitosamente. Recuerde agregar las traducciones en resources/lang/{locale}/documents.php");
         } catch (\Exception $e) {
             DB::rollBack();
@@ -165,7 +164,7 @@ class DocumentTypeController extends Controller
             ->firstOrFail();
 
         $langs = Lang::all();
-        $validatorGroups = ValidatorGroup::active()->orderBy('sort_order')->get();
+        $validatorGroups = DocumentValidatorGroup::active()->orderBy('sort_order')->get();
         $validationConditions = DocumentValidationCondition::active()->ordered()->get();
 
         return view('documents::settings.types.edit', [
@@ -296,7 +295,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.types')
+                ->route('settings.documents.types')
                 ->with('success', 'Tipo de documento actualizado exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -335,7 +334,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('manager.settings.documents.types')
+                ->route('settings.documents.types')
                 ->with('success', 'Tipo de documento eliminado exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();

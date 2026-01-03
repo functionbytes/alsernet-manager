@@ -40,12 +40,12 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('administrative.documents.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Limpiar filtros">
+                                <a href="{{ route('documents.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Limpiar filtros">
                                     <i class="fa-duotone fa-xmark"></i>
                                 </a>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('administrative.documents.import') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
+                                <a href="{{ route('documents.import') }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
                                     <i class="fa-duotone fa-file-import"></i>
                                 </a>
                             </div>
@@ -106,10 +106,10 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.edit', $document->uid) }}">Editar</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.edit', $document->uid) }}">Editar</a>
                                         </li>
                                         <li class="{{ $document->media->count()>0 ? '' : 'd-none'}}">
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.summary', $document->uid) }}">Documentos</a>
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.summary', $document->uid) }}">Documentos</a>
                                         </li>
 
                                         <li class="{{ $document->confirmed_at!=null && $document->media->count()>0 && !$document->confirmed_at ? '' : 'd-none'}}">
@@ -121,7 +121,7 @@
                                         <li class="border-top my-2"></li>
 
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('administrative.documents.manage', $document->uid) }}">
+                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
                                                 Gestionar
                                             </a>
                                         </li>

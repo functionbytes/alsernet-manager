@@ -3,8 +3,8 @@
 namespace Modules\Erp\Console\Commands;
 
 use App\Models\Setting;
-use Modules\Supplier\Services\Integrations\ErpService;
 use Illuminate\Console\Command;
+use Modules\Supplier\Services\Integrations\ErpService;
 
 class ErpCheckCommand extends Command
 {

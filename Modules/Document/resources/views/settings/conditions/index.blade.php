@@ -21,11 +21,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search') || request('status'))
-                            <a href="{{ route('manager.settings.documents.conditions.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('settings.documents.conditions.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.settings.documents.conditions.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.documents.conditions.create') }}" class="btn btn-primary">
                             Nueva condición
                         </a>
                     </div>
@@ -34,7 +34,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.documents.conditions.index') }}">
+                <form method="GET" action="{{ route('settings.documents.conditions.index') }}">
                     <div class="row align-items-center g-2">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -129,12 +129,12 @@
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
                                                         <a class="dropdown-item"
-                                                           href="{{ route('manager.settings.documents.conditions.edit', $condition->uid) }}">
+                                                           href="{{ route('settings.documents.conditions.edit', $condition->uid) }}">
                                                             Editar
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('manager.settings.documents.conditions.toggle-active', $condition->uid) }}"
+                                                        <form action="{{ route('settings.documents.conditions.toggle-active', $condition->uid) }}"
                                                               method="POST" class="d-inline">
                                                             @csrf
                                                             <button type="submit" class="dropdown-item">
@@ -152,7 +152,7 @@
                                                                 class="dropdown-item text-success delete-btn"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#delete-modal"
-                                                                data-url="{{ route('manager.settings.documents.conditions.destroy', $condition->uid) }}"
+                                                                data-url="{{ route('settings.documents.conditions.destroy', $condition->uid) }}"
                                                                 data-title="Eliminar condición: {{ $condition->name }}">
                                                             Eliminar
                                                         </button>
@@ -181,7 +181,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.settings.documents.conditions.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('settings.documents.conditions.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fa fa-plus"></i> Crear Primera Condición
                                 </a>
                             @endif

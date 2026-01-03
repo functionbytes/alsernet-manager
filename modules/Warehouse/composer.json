@@ -1,12 +1,20 @@
 {
-    "name": "nwidart/warehouse",
-    "description": "Warehouse management module for Alsernet",
+    "name": "modules/warehouse",
+    "description": "Warehouse Management Module - Inventory, locations, barcodes, QR codes, stock management",
+    "keywords": ["warehouse", "inventory", "barcode", "qrcode", "stock", "locations"],
     "authors": [
         {
-            "name": "Alsernet",
+            "name": "Alsernet Development",
             "email": "dev@alsernet.com"
         }
     ],
+    "require": {
+        "intervention/image": "*",
+        "picqer/php-barcode-generator": "^3.2",
+        "bacon/bacon-qr-code": "^2.0",
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "milon/barcode": "^11.0|^12.0"
+    },
     "extra": {
         "laravel": {
             "providers": [],

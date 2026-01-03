@@ -122,7 +122,7 @@
 
             @if($document->media->count() > 1 && $document->confirmed_at != null)
                 <div class="border-top mt-3 pt-3">
-                    <a href="{{ route('administrative.documents.summary', $document->uid) }}" target="_blank" class="btn btn-outline-primary w-100">
+                    <a href="{{ route('documents.summary', $document->uid) }}" target="_blank" class="btn btn-outline-primary w-100">
                         <i class="fa fa-file-archive"></i> Ver todos los documentos comprimidos
                     </a>
                 </div>
@@ -176,7 +176,7 @@
 
             @if($document->media->count() > 1 && $document->confirmed_at != null)
                 <div class="border-top mt-3 pt-3">
-                    <a href="{{ route('administrative.documents.summary', $document->uid) }}" target="_blank" class="btn btn-primary w-100">
+                    <a href="{{ route('documents.summary', $document->uid) }}" target="_blank" class="btn btn-primary w-100">
                        Ver todos los documentos
                     </a>
                 </div>
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cargar opciones de discos de red
     function loadNetworkDisks() {
-        fetch('{{ route("administrative.documents.network-disks") }}')
+        fetch('{{ route("documents.network-disks") }}')
             .then(response => response.json())
             .then(data => {
                 if (data.disks && data.disks.length > 0) {

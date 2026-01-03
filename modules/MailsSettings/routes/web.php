@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\MailsSettings\Http\Controllers\Managers\Settings\EmailSettingsController;
-use Modules\MailsSettings\Http\Controllers\Managers\Settings\IncomingEmailSettingsController;
-use Modules\MailsSettings\Http\Controllers\Managers\Settings\OutgoingEmailSettingsController;
-use Modules\MailsSettings\Http\Controllers\Managers\Settings\StageEmailActionController;
+use Modules\MailsSettings\Http\Controllers\Settings\EmailSettingsController;
+use Modules\MailsSettings\Http\Controllers\Settings\IncomingEmailSettingsController;
+use Modules\MailsSettings\Http\Controllers\Settings\OutgoingEmailSettingsController;
 
 // Email settings routes
 Route::middleware(['web', 'auth', 'role:manager|super-admin'])
@@ -54,16 +53,9 @@ Route::middleware(['web', 'auth', 'role:manager|super-admin'])
     ->name('settings.outgoing-email.')
     ->group(function () {
         Route::get('/', [OutgoingEmailSettingsController::class, 'index'])->name('index');
+        Route::get('/edit', [OutgoingEmailSettingsController::class, 'edit'])->name('edit');
         Route::post('/update', [OutgoingEmailSettingsController::class, 'update'])->name('update');
+        Route::post('/test-connection', [OutgoingEmailSettingsController::class, 'testConnection'])->name('test-connection');
+        Route::post('/send-test', [OutgoingEmailSettingsController::class, 'sendTestEmail'])->name('send-test');
     });
 
-// Stage email action routes
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-    ->prefix('settings/stage-email-action')
-    ->name('settings.stage-email-action.')
-    ->group(function () {
-        Route::get('/', [StageEmailActionController::class, 'index'])->name('index');
-        Route::post('/store', [StageEmailActionController::class, 'store'])->name('store');
-        Route::post('/update', [StageEmailActionController::class, 'update'])->name('update');
-        Route::delete('/{id}', [StageEmailActionController::class, 'destroy'])->name('destroy');
-    });

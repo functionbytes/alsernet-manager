@@ -104,7 +104,7 @@ return Application::configure(basePath: dirname(__DIR__))
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Foundation\Providers\FoundationServiceProvider::class, // Fixes missing commands
-        BotMan\BotMan\BotManServiceProvider::class,
+        // BotMan\BotMan\BotManServiceProvider::class, // Commented out - BotMan not installed
         App\Providers\DynamicConfigServiceProvider::class, // Load dynamic config from database
     ])
     ->withExceptions(function (Exceptions $exceptions) {

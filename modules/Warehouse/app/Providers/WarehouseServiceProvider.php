@@ -28,7 +28,11 @@ class WarehouseServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerViewComposers();
+        $this->registerMenus();
         $this->loadMigrationsFrom(base_path('database/migrations/warehouses'));
+
+        // Register routes directly (Laravel 12 compatible)
+        $this->registerRoutes();
     }
 
     /**
@@ -36,8 +40,6 @@ class WarehouseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(RouteServiceProvider::class);
-
         // Registrar WarehouseLayoutParser como singleton
         $this->app->singleton(
             \Modules\Warehouse\Services\WarehouseLayoutParser::class,
@@ -46,6 +48,39 @@ class WarehouseServiceProvider extends ServiceProvider
 
         // Registrar policies
         $this->registerPolicies();
+    }
+
+    /**
+     * Register module routes
+     */
+    protected function registerRoutes(): void
+    {
+        $modulePath = module_path($this->name);
+
+        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+            ->prefix('settings/warehouse')
+            ->name('settings.warehouse.')
+            ->group(function () use ($modulePath) {
+                // Load manager routes (GET)
+                require $modulePath.'/routes/web.php';
+            });
+
+        // Warehouse worker routes
+        \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'check.roles.permissions:warehouse'])
+            ->prefix('warehouse')
+            ->name('warehouse.')
+            ->group(function () use ($modulePath) {
+                require $modulePath.'/routes/warehouses.php';
+            });
+
+        // API routes
+        \Illuminate\Support\Facades\Route::middleware(['api', 'throttle:60,1'])
+            ->prefix('api/warehouse')
+            ->name('api.warehouse.')
+            ->group(function () use ($modulePath) {
+                require $modulePath.'/routes/api.php';
+            });
     }
 
     /**
@@ -206,6 +241,33 @@ class WarehouseServiceProvider extends ServiceProvider
             'theme.components.nav',
             \Modules\Warehouse\Http\ViewComposers\NavigationComposer::class
         );
+    }
+
+    /**
+     * Register navigation menus for the Warehouse module
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item for Warehouse
+        \App\Services\NavService::registerMiniItem('warehouse', [
+            'icon' => 'fa-warehouse',
+            'tooltip' => 'Almacén',
+            'sidebar_id' => 'warehouse',
+            'order' => 40,
+        ]);
+
+        // Sidebar with menu items
+        \App\Services\NavService::registerSidebar('warehouse', [
+            'title' => 'Almacén',
+            'items' => [
+                ['label' => 'Almacenes', 'route' => 'settings.warehouse.index'],
+                ['label' => 'Pisos', 'route' => 'settings.warehouse.floors'],
+                ['label' => 'Ubicaciones', 'route' => 'settings.warehouse.stands'],
+                ['label' => 'Estilos', 'route' => 'settings.warehouse.styles.index'],
+                ['label' => 'Inventario', 'route' => 'settings.warehouse.slots'],
+                ['label' => 'Mapa Visual', 'route' => 'settings.warehouse.map'],
+            ],
+        ]);
     }
 
     /**

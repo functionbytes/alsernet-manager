@@ -5,7 +5,7 @@
 
             <div class="card">
 
-                <form id="formEmail" method="POST" action="{{ route('manager.settings.email.update') }}">
+                <form id="formEmail" method="POST" action="{{ route('settings.email.update') }}">
 
                     {{ csrf_field() }}
                     @method('PUT')
@@ -126,7 +126,7 @@
                             <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                                 Guardar
                             </button>
-                            <a href="{{ route('manager.settings.email.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                            <a href="{{ route('settings.email.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                                 Volver
                             </a>
                     </div>

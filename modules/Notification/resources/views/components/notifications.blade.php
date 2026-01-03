@@ -43,7 +43,7 @@
 
         <!-- Footer -->
         <div class="border-top p-3">
-            <a href="{{ route('manager.notifications') }}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+            <a href="{{ route('notifications.index') }}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
                 <div class="text-start">
                     <div class="fw-semibold">Ver todas las notificaciones</div>
                 </div>

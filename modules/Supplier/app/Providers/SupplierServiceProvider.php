@@ -2,6 +2,7 @@
 
 namespace Modules\Supplier\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -25,6 +26,7 @@ class SupplierServiceProvider extends ServiceProvider
         $this->registerCommandSchedules();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerMenus();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
@@ -141,6 +143,32 @@ class SupplierServiceProvider extends ServiceProvider
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->nameLower);
 
         Blade::componentNamespace(config('modules.namespace').'\\'.$this->name.'\\View\\Components', $this->nameLower);
+    }
+
+    /**
+     * Register navigation menus
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Proveedores
+        NavService::registerMiniItem('suppliers', [
+            'icon' => 'fa-truck',
+            'tooltip' => 'Proveedores',
+            'sidebar_id' => 'suppliers',
+            'order' => 50,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('suppliers', [
+            'title' => 'Proveedores',
+            'items' => [
+                ['label' => 'Gestión de proveedores', 'route' => 'settings.suppliers.index', 'icon' => 'fa-list'],
+                ['label' => 'Prompts', 'route' => 'settings.suppliers.prompts.index', 'icon' => 'fa-comments'],
+                ['label' => 'Templates', 'route' => 'settings.suppliers.templates.index', 'icon' => 'fa-file-code'],
+                ['label' => 'Automatización', 'route' => 'settings.suppliers.automation.index', 'icon' => 'fa-robot'],
+                ['label' => 'Contenido generado', 'route' => 'settings.suppliers.content.index', 'icon' => 'fa-file-alt'],
+            ],
+        ]);
     }
 
     /**

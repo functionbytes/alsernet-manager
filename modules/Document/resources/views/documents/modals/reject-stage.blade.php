@@ -77,7 +77,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Rechazando...');
 
             $.ajax({
-                url: "{{ route('administrative.documents.reject-stage', $document->uid) }}",
+                url: "{{ route('documents.reject-stage', $document->uid) }}",
                 method: 'POST',
                 data: {
                     reason: reason,

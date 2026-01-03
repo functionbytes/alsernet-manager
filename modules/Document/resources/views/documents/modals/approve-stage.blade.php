@@ -111,7 +111,7 @@
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Aprobando...');
 
                 $.ajax({
-                    url: "{{ route('administrative.documents.approve-stage', $document->uid) }}",
+                    url: "{{ route('documents.approve-stage', $document->uid) }}",
                     method: 'POST',
                     data: {
                         comments: comments,

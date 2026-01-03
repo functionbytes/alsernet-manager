@@ -1,7 +1,17 @@
 {
     "name": "modules/media",
-    "description": "Media Manager Module",
-    "authors": [],
+    "description": "Media Manager Module - File uploads, media library management, image processing",
+    "keywords": ["media", "files", "uploads", "library", "images"],
+    "authors": [
+        {
+            "name": "Alsernet Development",
+            "email": "dev@alsernet.com"
+        }
+    ],
+    "require": {
+        "spatie/laravel-medialibrary": "^10.0|^11.0",
+        "intervention/image": "*"
+    },
     "extra": {
         "laravel": {
             "providers": [],

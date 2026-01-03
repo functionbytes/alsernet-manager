@@ -200,7 +200,7 @@ $(document).ready(function() {
 
         // Enviar datos
         $.ajax({
-            url: '{{ route("manager.settings.notifications.update") }}',
+            url: '{{ route("settings.notifications.update") }}',
             type: 'POST',
             data: formData,
             success: function(response) {

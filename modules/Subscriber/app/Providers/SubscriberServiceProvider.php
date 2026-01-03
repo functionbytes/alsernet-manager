@@ -2,6 +2,7 @@
 
 namespace Modules\Subscriber\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +19,7 @@ class SubscriberServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
         $this->registerEventListeners();
+        $this->registerMenus();
     }
 
     public function register(): void
@@ -103,5 +105,29 @@ class SubscriberServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [];
+    }
+
+    /**
+     * Registrar menús del módulo Subscriber
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Subscribers
+        NavService::registerMiniItem('subscribers', [
+            'icon' => 'fa-envelope',
+            'tooltip' => 'Suscriptores',
+            'sidebar_id' => 'subscribers',
+            'order' => 50,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('subscribers', [
+            'title' => 'Suscriptores',
+            'items' => [
+                ['label' => 'Suscriptores', 'route' => 'subscribers.index', 'icon' => 'fa-user'],
+                ['label' => 'Listas de correo', 'route' => 'subscribers.lists.index', 'icon' => 'fa-list'],
+                ['label' => 'Condiciones', 'route' => 'subscribers.conditions.index', 'icon' => 'fa-filter'],
+            ],
+        ]);
     }
 }

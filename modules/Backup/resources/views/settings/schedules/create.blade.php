@@ -2,12 +2,12 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' =>  $pageTitle ])
+    @include('theme.components.card', ['title' =>  $pageTitle ])
 
     <!-- Form -->
     <div class="row g-3">
         <div class="col-lg-8">
-            <form action="{{ route('manager.settings.backup-schedules.create') }}" method="POST"
+            <form action="{{ route('settings.backup-schedules.store') }}" method="POST"
                   class="needs-validation" novalidate>
                 @csrf
 
@@ -266,7 +266,7 @@
                         <button type="submit" class="btn btn-primary mb-2 w-100">
                             Crear
                         </button>
-                        <a href="{{ route('manager.settings.backup-schedules.index') }}"
+                        <a href="{{ route('settings.backup-schedules.index') }}"
                            class="btn btn-secondary w-100">
                             Volver
                         </a>

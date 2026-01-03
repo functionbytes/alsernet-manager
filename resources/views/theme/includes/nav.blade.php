@@ -146,6 +146,9 @@
             }
         }
 
+        // Exponer toggleSidebar al scope global para onclick
+        window.toggleSidebar = toggleSidebar;
+
         /**
          * Detectar y marcar el link activo basándose en la URL actual
          */
@@ -295,11 +298,6 @@
                 });
             }
         }
-
-        /**
-         * Hacer toggleSidebar global para los onclick en Blade
-         */
-        window.toggleSidebar = toggleSidebar;
 
         /**
          * Iniciar cuando el DOM esté listo

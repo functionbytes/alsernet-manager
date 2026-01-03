@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Subscriber\Http\Controllers\Managers;
+namespace Modules\Subscriber\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use App\Models\Lang;
-use Modules\Subscriber\Models\Subscriber;
-use Modules\Subscriber\Models\SubscriberList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Subscriber\Models\Subscriber;
+use Modules\Subscriber\Models\SubscriberList;
 
 class SubscribersListsController extends Controller
 {

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->char('uid', 26)->unique()->comment('ULID unique identifier');
             $table->foreignId('workflow_id')->constrained('supplier_automation_workflows')->cascadeOnDelete();
-            $table->unsignedBigInteger('supplier_id')->nullable()
+            $table->unsignedBigInteger('supplier_id')->nullable();
             $table->foreignId('source_id')->nullable()->constrained('supplier_sources')->nullOnDelete();
             $table->string('external_execution_id', 100)->nullable()->comment('Execution ID in orchestrator');
             $table->enum('status', ['pending', 'queued', 'running', 'completed', 'failed', 'timeout', 'cancelled'])->default('pending');
