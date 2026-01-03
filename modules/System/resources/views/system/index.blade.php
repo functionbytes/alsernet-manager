@@ -492,7 +492,7 @@
 
                         const connection = document.getElementById('queueConnection').value;
 
-                        fetch('{{ route("backups.system.queue.test") }}', {
+                        fetch('{{ route("settings.system.queue.test") }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -532,7 +532,7 @@
                         btn.disabled = true;
                         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reiniciando...';
 
-                        fetch('{{ route("backups.system.queue.restart") }}', {
+                        fetch('{{ route("settings.system.queue.restart") }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
