@@ -1,9 +1,0 @@
-{
-    "name": "Faq",
-    "alias": "faq",
-    "description": "FAQ Module - Manages frequently asked questions and FAQ categories",
-    "keywords": ["faq", "frequently-asked-questions", "categories"],
-    "priority": 20,
-    "providers": ["Modules\\Faq\\Providers\\FaqServiceProvider"],
-    "files": []
-}
