@@ -2,14 +2,16 @@
 
 namespace Modules\Mailer\Services;
 
-use Modules\Mailer\Library\HtmlHandler\AddDoctype;
-use Modules\Mailer\Library\HtmlHandler\DecodeHtmlSpecialChars;
-use Modules\Mailer\Library\HtmlHandler\GenerateSpintax;
-use Modules\Mailer\Library\HtmlHandler\MakeInlineCss;
-use Modules\Mailer\Library\HtmlHandler\ParseRss;
-use Modules\Mailer\Library\HtmlHandler\TransformWidgets;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Log;
 use League\Pipeline\PipelineBuilder;
 use Modules\Campaign\Models\Template\Template;
+use Modules\Mailer\Library\AddDoctype;
+use Modules\Mailer\Library\DecodeHtmlSpecialChars;
+use Modules\Mailer\Library\GenerateSpintax;
+use Modules\Mailer\Library\MakeInlineCss;
+use Modules\Mailer\Library\ParseRss;
+use Modules\Mailer\Library\TransformWidgets;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 
@@ -166,7 +168,7 @@ class MailerTemplateRendererService
             return $pipeline->build()->process($content);
         } catch (\Exception $e) {
             // Si hay error en pipeline, devolver contenido sin procesar
-            \Log::warning('Error en TemplateRendererService pipeline: '.$e->getMessage());
+            Log::warning('Error en TemplateRendererService pipeline: '.$e->getMessage());
 
             return $content;
         }
@@ -216,7 +218,7 @@ class MailerTemplateRendererService
 
         // Si la variable tiene un mapping a Settings, usarlo primero
         if (isset($settingMappings[$variableName])) {
-            $settingValue = \Illuminate\Support\Facades\Setting::get($settingMappings[$variableName], '');
+            $settingValue = Setting::get($settingMappings[$variableName], '');
             if ($settingValue) {
                 return (string) $settingValue;
             }

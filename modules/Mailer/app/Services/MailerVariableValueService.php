@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Mailer\Services\Mails;
+namespace Modules\Mailer\Services;
 
 use Modules\Mailer\Models\MailerVariable;
 

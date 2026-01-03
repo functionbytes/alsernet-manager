@@ -47,16 +47,11 @@ class MailerServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Mailer settings routes (GET views + POST/PUT/DELETE API)
+        // Mailer settings routes (GET views + POST/PATCH/DELETE actions)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/mailers')
             ->name('settings.mailers.')
-            ->group(function () {
-                // Load view routes (GET)
-                require module_path('Mailer', 'routes/web.php');
-                // Load settings API routes (POST, PUT, DELETE)
-                require module_path('Mailer', 'routes/api/settings.php');
-            });
+            ->group(module_path('Mailer', 'routes/web.php'));
 
         // Public API routes (email sending endpoints)
         Route::middleware(['api', 'throttle:60,1'])
