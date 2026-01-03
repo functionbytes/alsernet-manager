@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Modules\Document\Commands\CreateSampleDocumentsFromPrestashop;
+use Modules\Document\Commands\MigrateRequestDocumentProducts;
+use Modules\Document\Commands\MigrateRequestDocuments;
 use Modules\Document\Commands\InitializeDocumentWorkflows;
 use Modules\Document\Commands\SendDocumentUploadReminders;
 use Modules\Document\Commands\SyncDocumentFields;
@@ -112,6 +114,8 @@ class DocumentsServiceProvider extends ServiceProvider
             InitializeDocumentWorkflows::class,
             CreateSampleDocumentsFromPrestashop::class,
             SyncDocumentFields::class,
+            MigrateRequestDocuments::class,
+            MigrateRequestDocumentProducts::class,
         ]);
     }
 
