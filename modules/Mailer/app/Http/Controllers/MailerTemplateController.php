@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Mailer\Http\Controllers\Settings;
+namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
@@ -166,7 +166,7 @@ class MailerTemplateController extends Controller
             }
 
             return redirect()
-                ->route('manager.settings.mailers.templates.edit', [
+                ->route('settings.mailers.templates.edit', [
                     'uid' => $template->uid,
                     'lang_id' => $validated['lang_id'],
                 ])
@@ -297,7 +297,7 @@ class MailerTemplateController extends Controller
             }
 
             return redirect()
-                ->route('manager.settings.mailers.templates.edit', [
+                ->route('settings.mailers.templates.edit', [
                     'uid' => $template->uid,
                     'translation_uid' => $translation->uid,
                 ])
@@ -330,7 +330,7 @@ class MailerTemplateController extends Controller
         // Usar el MISMO servicio que se usa para enviar emails reales
         // Esto garantiza que el preview sea idéntico al email enviado
         $variables = $this->getPreviewVariables($template, $langId);
-        $html = \Modules\Mailer\Services\MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+        $html = \Modules\Mailer\Services\MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
         return view('mailer::templates.preview', [
             'template' => $template,
@@ -374,7 +374,7 @@ class MailerTemplateController extends Controller
             // Usar el MISMO servicio que se usa para enviar emails reales
             // Esto garantiza que el preview sea idéntico al email enviado
             $variables = $this->getPreviewVariables($template, $langId);
-            $html = \Modules\Mailer\Services\MailTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $html = \Modules\Mailer\Services\MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             // Restaurar valores originales
             $template->layout_id = $originalLayoutId;
@@ -493,7 +493,7 @@ class MailerTemplateController extends Controller
             $template->delete();
 
             return redirect()
-                ->route('manager.settings.mailers.templates.index')
+                ->route('settings.mailers.templates.index')
                 ->with('success', "Template '{$name}' eliminado exitosamente");
         } catch (\Exception $e) {
             return redirect()

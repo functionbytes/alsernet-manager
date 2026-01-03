@@ -325,7 +325,7 @@ class DocumentSettingsSeeder extends Seeder
             );
         }
 
-        $this->command->info('✓ Document settings created/updated successfully');
-        $this->command->info('Total settings: '.count($settings));
+        $this->command->info('✓ Document backups created/updated successfully');
+        $this->command->info('Total backups: '.count($settings));
     }
 }

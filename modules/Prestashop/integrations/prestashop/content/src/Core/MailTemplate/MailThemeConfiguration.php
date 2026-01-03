@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
- * Class MailThemeConfiguration is used to save Mail Theme settings
+ * Class MailThemeConfiguration is used to save Mail Theme backups
  * in "Design > Mail Theme" page.
  */
 final class MailThemeConfiguration implements DataConfigurationInterface

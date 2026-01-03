@@ -40,7 +40,7 @@ class CategoryController extends Controller
             'leaves' => Category::leaves()->count(),
         ];
 
-        return view('theme.views.settings.categories.index', compact('categories', 'stats'));
+        return view('theme.views.backups.categories.index', compact('categories', 'stats'));
     }
 
     /**
@@ -61,7 +61,7 @@ class CategoryController extends Controller
                 ];
             });
 
-        return view('theme.views.settings.categories.create', compact('parentOptions'));
+        return view('theme.views.backups.categories.create', compact('parentOptions'));
     }
 
     /**
@@ -100,7 +100,7 @@ class CategoryController extends Controller
         }
 
         return redirect()
-            ->route('manager.settings.categories.index')
+            ->route('manager.backups.categories.index')
             ->with('success', 'Categoría creada exitosamente');
     }
 
@@ -140,7 +140,7 @@ class CategoryController extends Controller
             ];
         }
 
-        return view('theme.views.settings.categories.edit', compact('category', 'parentOptions', 'syncInfo'));
+        return view('theme.views.backups.categories.edit', compact('category', 'parentOptions', 'syncInfo'));
     }
 
     /**
@@ -187,7 +187,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         return redirect()
-            ->route('manager.settings.categories.index')
+            ->route('manager.backups.categories.index')
             ->with('success', 'Categoría actualizada exitosamente');
     }
 
@@ -211,7 +211,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()
-            ->route('manager.settings.categories.index')
+            ->route('manager.backups.categories.index')
             ->with('success', 'Categoría eliminada exitosamente');
     }
 
@@ -295,7 +295,7 @@ class CategoryController extends Controller
             ->latestAttempts()
             ->paginate(20);
 
-        return view('theme.views.settings.categories.conflicts', compact('mappings'));
+        return view('theme.views.backups.categories.conflicts', compact('mappings'));
     }
 
     /**

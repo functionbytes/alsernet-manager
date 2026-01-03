@@ -229,9 +229,9 @@ Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callc
         Route::post('/notifications/unregister-push-token', [NotificationController::class, 'unregisterPushToken']);
 
         // Configuraciones de notificaciones
-        Route::get('/notifications/settings', [NotificationSettingsController::class, 'index'])->name('notifications.settings');
-        Route::put('/notifications/settings', [NotificationSettingsController::class, 'update'])->name('notifications.settings.update');
-        Route::get('/notifications/settings/reset', [NotificationSettingsController::class, 'reset'])->name('notifications.settings.reset');
+        Route::get('/notifications/backups', [NotificationSettingsController::class, 'index'])->name('notifications.backups');
+        Route::put('/notifications/backups', [NotificationSettingsController::class, 'update'])->name('notifications.backups.update');
+        Route::get('/notifications/backups/reset', [NotificationSettingsController::class, 'reset'])->name('notifications.backups.reset');
         Route::post('/notifications/test', [NotificationSettingsController::class, 'test'])->name('notifications.test');
     });
 
@@ -299,11 +299,11 @@ Route::prefix('callcenter')->middleware(['auth',  'check.roles.permissions:callc
             });
             */
 
-    Route::prefix('settings')->group(function () {
-        Route::get('/profile', [SettingsController::class, 'profile'])->name('settings.profile');
-        Route::get('/notifications', [SettingsController::class, 'notifications'])->name('settings.notifications');
-        Route::post('/profile/update', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
-        Route::post('/notifications/update', [SettingsController::class, 'updateNotifications'])->name('settings.notifications.update');
+    Route::prefix('backups')->group(function () {
+        Route::get('/profile', [SettingsController::class, 'profile'])->name('backups.profile');
+        Route::get('/notifications', [SettingsController::class, 'notifications'])->name('backups.notifications');
+        Route::post('/profile/update', [SettingsController::class, 'updateProfile'])->name('backups.profile.update');
+        Route::post('/notifications/update', [SettingsController::class, 'updateNotifications'])->name('backups.notifications.update');
     });
 
 });

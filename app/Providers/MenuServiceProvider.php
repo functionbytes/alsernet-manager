@@ -44,27 +44,27 @@ class MenuServiceProvider extends ServiceProvider
     private function registerCoreMenus(): void
     {
         // Menú de Configuración (CORE)
-        NavService::registerMiniItem('settings', [
+        NavService::registerMiniItem('backups', [
             'icon' => 'fa-sliders',
             'tooltip' => 'Configuración',
-            'sidebar_id' => 'settings',
+            'sidebar_id' => 'backups',
             'order' => 10,
         ]);
 
-        NavService::registerSidebar('settings', [
+        NavService::registerSidebar('backups', [
             'title' => 'Configuración',
             'items' => [
-                ['label' => 'Principal', 'route' => 'manager.settings', 'icon' => 'fa-cog'],
+                ['label' => 'Principal', 'route' => 'manager.backups', 'icon' => 'fa-cog'],
                 ['label' => 'Módulos', 'route' => 'modules.index', 'icon' => 'fa-cube'],
-                ['label' => 'Categorías', 'route' => 'manager.settings.categories.index'],
-                ['label' => 'Búsqueda', 'route' => 'manager.settings.search.index'],
-                ['label' => 'Localización', 'route' => 'manager.settings.localization.index'],
-                ['label' => 'Traducciones', 'route' => 'manager.settings.translations.index'],
-                ['label' => 'Email/SMTP', 'route' => 'settings.email.index'],
-                ['label' => 'Almacenamiento', 'route' => 'manager.settings.storage'],
-                ['label' => 'Base de datos', 'route' => 'manager.settings.database.index'],
-                ['label' => 'Limpieza de BD', 'route' => 'manager.settings.database.cleanup.index'],
-                ['label' => 'Reverb (WebSocket)', 'route' => 'manager.settings.reverb.index'],
+                ['label' => 'Categorías', 'route' => 'manager.backups.categories.index'],
+                ['label' => 'Búsqueda', 'route' => 'manager.backups.search.index'],
+                ['label' => 'Localización', 'route' => 'manager.backups.localization.index'],
+                ['label' => 'Traducciones', 'route' => 'manager.backups.translations.index'],
+                ['label' => 'Email/SMTP', 'route' => 'backups.email.index'],
+                ['label' => 'Almacenamiento', 'route' => 'manager.backups.storage'],
+                ['label' => 'Base de datos', 'route' => 'manager.backups.database.index'],
+                ['label' => 'Limpieza de BD', 'route' => 'manager.backups.database.cleanup.index'],
+                ['label' => 'Reverb (WebSocket)', 'route' => 'manager.backups.reverb.index'],
             ],
         ]);
 

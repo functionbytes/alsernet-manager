@@ -380,7 +380,7 @@
         allowClear: true,
         width: '100%',
         ajax: {
-            url: '{{ route("settings.documents.configurations.search-templates") }}',
+            url: '{{ route("backups.documents.configurations.search-templates") }}',
             dataType: 'json',
             delay: 250,
             headers: {

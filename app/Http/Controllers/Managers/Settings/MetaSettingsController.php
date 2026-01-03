@@ -14,7 +14,7 @@ class MetaSettingsController extends Controller
 
         $meta = Setting::key('meta_image')->getMedia('meta')->count() > 0 ? true : false;
 
-        return view('theme.views.settings.metadata.setting')->with([
+        return view('theme.views.backups.metadata.setting')->with([
             'metadata' => $meta,
         ]);
 

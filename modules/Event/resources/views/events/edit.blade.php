@@ -81,7 +81,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-2"></i>Actualizar evento
                     </button>
-                    <a href="{{ route('manager.events') }}" class="btn btn-secondary">
+                    <a href="{{ route('manager.events.index') }}" class="btn btn-secondary">
                         <i class="fas fa-times me-2"></i>Cancelar
                     </a>
                 </div>
@@ -102,7 +102,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     alert(response.message);
-                    window.location.href = '{{ route("manager.events") }}';
+                    window.location.href = '{{ route("manager.events.index") }}';
                 }
             },
             error: function(xhr) {

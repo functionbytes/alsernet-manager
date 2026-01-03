@@ -785,7 +785,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Redirects to correct protocol if settings and request methods don't match.
+     * Redirects to correct protocol if backups and request methods don't match.
      */
     protected function sslRedirection()
     {

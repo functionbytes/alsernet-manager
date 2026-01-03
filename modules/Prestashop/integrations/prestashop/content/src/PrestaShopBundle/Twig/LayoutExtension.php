@@ -54,7 +54,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * Constructor.
      *
-     * Keeps the Context to look inside language settings.
+     * Keeps the Context to look inside language backups.
      *
      * @param LegacyContext $context
      * @param string $environment

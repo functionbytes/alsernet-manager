@@ -66,7 +66,7 @@ class NotificationServiceProvider extends ServiceProvider
                 require $modulePath.'/routes/web.php';
             });
 
-        // Notification settings routes
+        // Notification backups routes
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/notifications')
             ->name('settings.notifications.')

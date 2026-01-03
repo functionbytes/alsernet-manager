@@ -35,7 +35,7 @@ class StatusesController extends Controller
             'system' => ConversationStatus::where('is_system', true)->count(),
         ];
 
-        return view('theme.views.settings.helpdesk.statuses.index', [
+        return view('theme.views.backups.helpdesk.statuses.index', [
             'statuses' => $statuses,
             'stats' => $stats,
         ]);
@@ -46,7 +46,7 @@ class StatusesController extends Controller
      */
     public function create()
     {
-        return view('theme.views.settings.helpdesk.statuses.create');
+        return view('theme.views.backups.helpdesk.statuses.create');
     }
 
     /**
@@ -72,7 +72,7 @@ class StatusesController extends Controller
 
         ConversationStatus::create($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado creado exitosamente.');
     }
 
@@ -81,7 +81,7 @@ class StatusesController extends Controller
      */
     public function edit(ConversationStatus $status)
     {
-        return view('theme.views.settings.helpdesk.statuses.edit', compact('status'));
+        return view('theme.views.backups.helpdesk.statuses.edit', compact('status'));
     }
 
     /**
@@ -112,7 +112,7 @@ class StatusesController extends Controller
 
         $status->update($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado actualizado exitosamente.');
     }
 
@@ -131,7 +131,7 @@ class StatusesController extends Controller
 
         $status->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado eliminado exitosamente.');
     }
 

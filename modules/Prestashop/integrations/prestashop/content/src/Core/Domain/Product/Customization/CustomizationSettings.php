@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
 /**
- * Defines settings for customizations
+ * Defines backups for customizations
  */
 class CustomizationSettings
 {

@@ -88,10 +88,10 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
         if ($shouldSaveCart) {
             try {
                 if (false === $cart->update()) {
-                    throw new CartException('Failed to update cart delivery settings');
+                    throw new CartException('Failed to update cart delivery backups');
                 }
             } catch (PrestaShopException $e) {
-                throw new CartException(sprintf('An error occurred while trying to update delivery settings for cart with id "%d"', $cart->id));
+                throw new CartException(sprintf('An error occurred while trying to update delivery backups for cart with id "%d"', $cart->id));
             }
         }
     }

@@ -459,7 +459,7 @@ class ImageManagerCore
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s backups. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -481,7 +481,7 @@ class ImageManagerCore
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', [], 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s backups.', [], 'Admin.Notifications.Error');
         }
 
         return false;

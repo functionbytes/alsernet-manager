@@ -1,16 +1,17 @@
 <?php
 
-namespace Modules\Mailer\Services\Mails;
+namespace Modules\Mailer\Services;
 
-use app\Library\HtmlHandler\AddDoctype;
-use app\Library\HtmlHandler\DecodeHtmlSpecialChars;
-use app\Library\HtmlHandler\GenerateSpintax;
-use app\Library\HtmlHandler\MakeInlineCss;
-use app\Library\HtmlHandler\ParseRss;
-use app\Library\HtmlHandler\TransformWidgets;
+use Modules\Mailer\Library\HtmlHandler\AddDoctype;
+use Modules\Mailer\Library\HtmlHandler\DecodeHtmlSpecialChars;
+use Modules\Mailer\Library\HtmlHandler\GenerateSpintax;
+use Modules\Mailer\Library\HtmlHandler\MakeInlineCss;
+use Modules\Mailer\Library\HtmlHandler\ParseRss;
+use Modules\Mailer\Library\HtmlHandler\TransformWidgets;
 use League\Pipeline\PipelineBuilder;
 use Modules\Campaign\Models\Template\Template;
 use Modules\Mailer\Models\MailerLayout;
+use Modules\Mailer\Models\MailerTemplate;
 
 /**
  * TemplateRendererService
@@ -23,7 +24,7 @@ class MailerTemplateRendererService
     /**
      * Renderizar plantilla de email transaccional (EmailTemplate)
      */
-    public static function renderEmailTemplate(MailTemplate $template, array $variables = [], ?int $langId = null): string
+    public static function renderEmailTemplate(MailerTemplate $template, array $variables = [], ?int $langId = null): string
     {
         return self::render($template, $variables, 'email', $langId);
     }
@@ -39,7 +40,7 @@ class MailerTemplateRendererService
     /**
      * Renderizar plantilla genérica
      *
-     * @param  MailTemplate|Template|MailLayout  $template
+     * @param  MailerTemplate|Template|MailerLayout  $template
      * @param  string  $type  ('email', 'campaign', 'layout')
      * @param  int|null  $langId  ID del idioma para obtener traducciones
      */
@@ -174,14 +175,14 @@ class MailerTemplateRendererService
     /**
      * Obtener HTML para preview (con variables reemplazadas por ejemplos)
      *
-     * @param  MailTemplate|Template  $template
+     * @param  MailerTemplate|Template  $template
      */
     public static function getPreviewHtml($template, bool $includeLayout = true): string
     {
         // Obtener variables disponibles
         $variables = [];
 
-        if ($template instanceof MailTemplate) {
+        if ($template instanceof MailerTemplate) {
             $vars = $template->getAvailableVariables();
             foreach ($vars as $var) {
                 $variables[$var['name']] = self::getExampleValue($var['name']);
@@ -290,7 +291,7 @@ class MailerTemplateRendererService
      *
      * @return array ['valid' => bool, 'missing' => array]
      */
-    public static function validateTemplate(MailTemplate $template): array
+    public static function validateTemplate(MailerTemplate $template): array
     {
         $missing = $template->getMissingVariables();
 
@@ -306,7 +307,7 @@ class MailerTemplateRendererService
     /**
      * Obtener estadísticas del template
      *
-     * @param  MailTemplate|Template  $template
+     * @param  MailerTemplate|Template  $template
      */
     public static function getStats($template): array
     {
@@ -332,7 +333,7 @@ class MailerTemplateRendererService
      *
      * @return array ['html' => string, 'subject' => string]
      */
-    public static function prepareTestEmail(MailTemplate $template, string $recipient = ''): array
+    public static function prepareTestEmail(MailerTemplate $template, string $recipient = ''): array
     {
         $html = self::getPreviewHtml($template);
 

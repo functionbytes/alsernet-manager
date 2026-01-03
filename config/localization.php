@@ -35,11 +35,11 @@ return [
         'show_last_name_first' => false,
     ],
 
-    // Add localization settings here for a given locale
+    // Add localization backups here for a given locale
     //
     // Note:
-    // Only add settings that are different than the default ones
-    // as the application will use default values (above) for settings
+    // Only add backups that are different than the default ones
+    // as the application will use default values (above) for backups
     // that are not available in a specific locale.
     'ja' => [
         'date_full' => 'Y年m月d日',

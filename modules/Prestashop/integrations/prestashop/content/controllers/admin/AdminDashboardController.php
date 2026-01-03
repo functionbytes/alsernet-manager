@@ -77,7 +77,7 @@ class AdminDashboardControllerCore extends AdminController
         $forms = [
             'payment' => ['title' => $this->trans('Average bank fees per payment method', [], 'Admin.Dashboard.Feature'), 'id' => 'payment'],
             'carriers' => ['title' => $this->trans('Average shipping fees per shipping method', [], 'Admin.Dashboard.Feature'), 'id' => 'carriers'],
-            'other' => ['title' => $this->trans('Other settings', [], 'Admin.Dashboard.Feature'), 'id' => 'other'],
+            'other' => ['title' => $this->trans('Other backups', [], 'Admin.Dashboard.Feature'), 'id' => 'other'],
         ];
         foreach ($forms as &$form) {
             $form['icon'] = 'tab-preferences';
@@ -378,7 +378,7 @@ class AdminDashboardControllerCore extends AdminController
             $warning = $this->trans('You are currently connected under the following domain name:', [], 'Admin.Dashboard.Notification') . ' <span style="color: #CC0000;">' . $_SERVER['HTTP_HOST'] . '</span><br />';
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
                 $warning .= $this->trans(
-                    'This is different from the shop domain name set in the Multistore settings: "%s".',
+                    'This is different from the shop domain name set in the Multistore backups: "%s".',
                     [
                         '%s' => $shop->domain,
                     ],

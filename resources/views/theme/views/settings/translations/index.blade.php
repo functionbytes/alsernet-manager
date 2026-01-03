@@ -100,7 +100,7 @@
                                         <td class="text-end">
                                             <div class="btn-group btn-group-sm" role="group">
                                                 @foreach($fileData['locales'] as $localeData)
-                                                    <a href="{{ route('manager.settings.translations.edit', [$localeData['locale'], $file]) }}"
+                                                    <a href="{{ route('manager.backups.translations.edit', [$localeData['locale'], $file]) }}"
                                                        class="btn btn-outline-primary"
                                                        title="Editar {{ $localeData['locale_label'] }}">
                                                         <i class="fas fa-edit"></i>

@@ -8,14 +8,14 @@
         </div>
         <script>
             setTimeout(function() {
-                window.location.href = '{{ route('manager.helpdesk.settings.tickets.views.index') }}';
+                window.location.href = '{{ route('manager.helpdesk.backups.tickets.views.index') }}';
             }, 2000);
         </script>
     @else
 
     <div class="card w-100">
 
-        <form id="formView" method="POST" action="{{ route('manager.helpdesk.settings.tickets.views.update', $view->id) }}">
+        <form id="formView" method="POST" action="{{ route('manager.helpdesk.backups.tickets.views.update', $view->id) }}">
 
             {{ csrf_field() }}
             @method('PUT')
@@ -177,7 +177,7 @@
                 <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                     Guardar
                 </button>
-                <a href="{{ route('manager.helpdesk.settings.tickets.views.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                <a href="{{ route('manager.helpdesk.backups.tickets.views.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                     Volver
                 </a>
             </div>

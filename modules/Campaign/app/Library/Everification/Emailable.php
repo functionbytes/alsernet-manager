@@ -20,7 +20,7 @@ class Emailable
 
     public function verify($email)
     {
-        // retrieve the service settings
+        // retrieve the service backups
         $client = new Client;
 
         // build the request URI

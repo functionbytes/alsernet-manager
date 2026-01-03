@@ -29,7 +29,7 @@ $(function () {
   );
 
   if (window.location.hostname === 'blueimp.github.io') {
-    // Demo settings:
+    // Demo backups:
     $('#fileupload').fileupload('option', {
       url: '//jquery-file-upload.appspot.com/',
       // Enable image resizing, except for Android and Opera,

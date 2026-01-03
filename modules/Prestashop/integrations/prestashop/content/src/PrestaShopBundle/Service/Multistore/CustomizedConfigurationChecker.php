@@ -65,7 +65,7 @@ class CustomizedConfigurationChecker
         // we don't check group shop customization if we are already in group shop context
         if (!$isGroupShopContext) {
             // check if given configuration is overridden for the parent group shop
-            // isStrict must be true, otherwise the method will also check for configuration settings in "all shop" context
+            // isStrict must be true, otherwise the method will also check for configuration backups in "all shop" context
             $shopGroupConstraint = ShopConstraint::shopGroup($shop->getShopGroup()->getId(), true);
 
             if ($this->configuration->has($configurationKey, $shopGroupConstraint)) {

@@ -81,7 +81,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     }
 
     /**
-     * Analyses the server configuration (apache configuration and php settings)
+     * Analyses the server configuration (apache configuration and php backups)
      * to check whether PrestaShop Webservice can be used or not.
      *
      * @return array empty if no errors

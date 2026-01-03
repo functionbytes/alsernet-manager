@@ -178,11 +178,11 @@
                 </div>
                 <div class="d-flex gap-2">
                     @if(request('search'))
-                        <a href="{{ route('manager.helpdesk.settings.tickets.categories.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('manager.helpdesk.backups.tickets.categories.index') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-times me-1"></i> Limpiar búsqueda
                         </a>
                     @endif
-                    <a href="{{ route('manager.helpdesk.settings.tickets.categories.create') }}" class="btn-primary-custom">
+                    <a href="{{ route('manager.helpdesk.backups.tickets.categories.create') }}" class="btn-primary-custom">
                         <i class="fas fa-plus"></i> Nueva categoría
                     </a>
                 </div>
@@ -190,7 +190,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom" style="background: #f8f9fa;">
-                <form method="GET" action="{{ route('manager.helpdesk.settings.tickets.categories.index') }}">
+                <form method="GET" action="{{ route('manager.helpdesk.backups.tickets.categories.index') }}">
                     <div class="row align-items-center g-2">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -273,7 +273,7 @@
                                         <small class="text-muted">{{ $category->description ? Str::limit($category->description, 40) : '-' }}</small>
                                     </td>
                                     <td class="text-center" style="border: none; vertical-align: middle;">
-                                        <form method="POST" action="{{ route('manager.helpdesk.settings.tickets.categories.toggle', $category->id) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('manager.helpdesk.backups.tickets.categories.toggle', $category->id) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -290,13 +290,13 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.settings.tickets.categories.edit', $category->id) }}">
+                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.backups.tickets.categories.edit', $category->id) }}">
                                                         <i class="fas fa-edit me-2"></i> Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.helpdesk.settings.tickets.categories.destroy', $category->id) }}"
+                                                    <form method="POST" action="{{ route('manager.helpdesk.backups.tickets.categories.destroy', $category->id) }}"
                                                           onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?')">
                                                         @csrf
                                                         @method('DELETE')
@@ -329,7 +329,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.helpdesk.settings.tickets.categories.create') }}" class="btn-primary-custom">
+                                <a href="{{ route('manager.helpdesk.backups.tickets.categories.create') }}" class="btn-primary-custom">
                                     <i class="fas fa-plus"></i> Crear Primera Categoría
                                 </a>
                             @endif
@@ -414,7 +414,7 @@ $(document).ready(function() {
 
             // Save new order
             $.ajax({
-                url: '{{ route('manager.helpdesk.settings.tickets.categories.reorder') }}',
+                url: '{{ route('manager.helpdesk.backups.tickets.categories.reorder') }}',
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

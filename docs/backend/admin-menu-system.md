@@ -63,7 +63,7 @@ public function boot(): void
             ],
             [
                 'label' => 'Configuración',
-                'route' => 'manager.my-module.settings',
+                'route' => 'manager.my-module.backups',
                 'icon' => 'fa-cog',  // Opcional
             ],
             [
@@ -297,16 +297,16 @@ Salida esperada:
 ```php
 [
     'mini' => [
-        'settings' => [
+        'backups' => [
             'icon' => 'fa-sliders',
             'tooltip' => 'Configuración',
-            'sidebar_id' => 'settings',
+            'sidebar_id' => 'backups',
             'order' => 10,
         ],
         // ... más items
     ],
     'sidebar' => [
-        'settings' => [
+        'backups' => [
             'title' => 'Configuración',
             'items' => [...]
         ],

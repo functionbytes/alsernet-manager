@@ -57,7 +57,7 @@
                     </div>
                     <h6 class="mb-2">No hay endpoints configurados</h6>
                     <p class="text-muted mb-3">Crea tu primer endpoint para obtener documentación personalizada</p>
-                    <a href="{{ route('manager.settings.mailers.endpoints.create') }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('settings.mailers.endpoints.create') }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-plus"></i> Crear Endpoint
                     </a>
                 </div>
@@ -404,10 +404,10 @@ print(json.dumps(response.json(), indent=2))</code></pre>
                                 Creado: {{ $endpoint->created_at->format('d/m/Y H:i') }}
                             </small>
                             <div class="d-flex gap-2">
-                                <a href="{{ route('manager.settings.mailers.endpoints.edit', $endpoint) }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ route('settings.mailers.endpoints.edit', $endpoint) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-edit me-1"></i>Editar
                                 </a>
-                                <a href="{{ route('manager.settings.mailers.endpoints.logs', $endpoint) }}" class="btn btn-sm btn-outline-secondary">
+                                <a href="{{ route('settings.mailers.endpoints.logs', $endpoint) }}" class="btn btn-sm btn-outline-secondary">
                                     <i class="fas fa-history me-1"></i>Ver Logs
                                 </a>
                             </div>

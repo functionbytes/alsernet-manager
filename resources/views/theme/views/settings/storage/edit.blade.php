@@ -6,7 +6,7 @@
 
     <div class="card">
 
-        <form method="POST" action="{{ route('manager.settings.storage.update-disk', $diskIndex) }}" id="formEdit">
+        <form method="POST" action="{{ route('manager.backups.storage.update-disk', $diskIndex) }}" id="formEdit">
             @csrf
             @method('PATCH')
 
@@ -324,7 +324,7 @@
                 <button type="submit" class="btn btn-primary w-100 mb-1">
                     Guardar
                 </button>
-                <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
+                <a href="{{ route('manager.backups.storage') }}" class="btn btn-secondary w-100">
                     Cancelar
                 </a>
                 @if(!$isFromConfig)
@@ -340,7 +340,7 @@
 
     {{-- Delete Form --}}
     @if(!$isFromConfig)
-        <form id="deleteDiskForm" method="POST" action="{{ route('manager.settings.storage.destroy') }}"
+        <form id="deleteDiskForm" method="POST" action="{{ route('manager.backups.storage.destroy') }}"
               style="display: none;">
             @csrf
             @method('DELETE')

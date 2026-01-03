@@ -24,7 +24,7 @@ use Modules\Supplier\Entities\SupplierExtractionResult;
  * - Cleans up old content logs
  * - Cleans up old cost records
  * - Archives completed automation executions
- * - Uses configurable retention periods from settings
+ * - Uses configurable retention periods from backups
  *
  * Schedule in app/Console/Kernel.php:
  * $schedule->job(new CleanupExpiredDataJob)->daily()->at('02:00');
@@ -68,7 +68,7 @@ class CleanupExpiredDataJob implements ShouldQueue
      * Execute the job.
      *
      * Performs cleanup operations on all configured data types,
-     * respecting retention periods from settings or defaults.
+     * respecting retention periods from backups or defaults.
      */
     public function handle(): void
     {
@@ -78,7 +78,7 @@ class CleanupExpiredDataJob implements ShouldQueue
             $totalDeleted = 0;
             $cleanupSummary = [];
 
-            // Load retention periods from settings or use defaults
+            // Load retention periods from backups or use defaults
             $retentionPeriods = $this->getRetentionPeriods();
 
             // Clean up extraction results
@@ -118,7 +118,7 @@ class CleanupExpiredDataJob implements ShouldQueue
     }
 
     /**
-     * Get retention periods from settings or defaults.
+     * Get retention periods from backups or defaults.
      *
      * @return array<string, int>
      */

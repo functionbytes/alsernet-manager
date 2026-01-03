@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace Modules\Campaign\Notifications;
 
 use App\Models\Notifications\NotificationPreference;
 use Illuminate\Bus\Queueable;

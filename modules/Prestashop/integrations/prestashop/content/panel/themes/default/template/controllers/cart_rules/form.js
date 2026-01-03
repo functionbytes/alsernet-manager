@@ -355,7 +355,7 @@ $('.datepicker').datetimepicker({
   prevText: '',
   nextText: '',
   dateFormat: 'yy-mm-dd',
-  // Define a custom regional settings in order to use PrestaShop translation tools
+  // Define a custom regional backups in order to use PrestaShop translation tools
   currentText,
   closeText,
   ampm: false,

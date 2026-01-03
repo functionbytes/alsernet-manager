@@ -296,7 +296,7 @@ setting(['google_analytics_property_id' => '123456789']);
 
 ```php
 // En el controlador
-$response = Http::post(route('settings.analytics.validate-credentials'), [
+$response = Http::post(route('backups.analytics.validate-credentials'), [
     'property_id' => '123456789',
     'credentials' => json_encode($jsonCredentials)
 ]);

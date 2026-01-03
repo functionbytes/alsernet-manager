@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AiAgentSettingsController extends Controller
 {
     /**
-     * Show AI Agent settings form
+     * Show AI Agent backups form
      */
     public function index()
     {
@@ -49,7 +49,7 @@ class AiAgentSettingsController extends Controller
             'paused' => 'En Pausa',
         ];
 
-        return view('theme.views.helpdesk.ai-agent.settings', [
+        return view('theme.views.helpdesk.ai-agent.backups', [
             'agent' => $agent,
             'providers' => $providers,
             'statuses' => $statuses,
@@ -58,7 +58,7 @@ class AiAgentSettingsController extends Controller
     }
 
     /**
-     * Update AI Agent settings
+     * Update AI Agent backups
      */
     public function update(Request $request)
     {
@@ -78,7 +78,7 @@ class AiAgentSettingsController extends Controller
         $agent->personality = $validated['personality'];
         $agent->status = $validated['status'];
 
-        // Update settings (API keys, parameters)
+        // Update backups (API keys, parameters)
         $settings = [
             'api_key' => $validated['api_key'] ?? null,
             'temperature' => (float) ($validated['temperature'] ?? 0.7),
@@ -88,7 +88,7 @@ class AiAgentSettingsController extends Controller
             'presence_penalty' => (float) ($validated['presence_penalty'] ?? 0),
         ];
 
-        // Add provider-specific settings
+        // Add provider-specific backups
         if ($validated['provider'] === 'openai') {
             $settings['organization_id'] = $validated['organization_id'] ?? null;
         } elseif ($validated['provider'] === 'anthropic') {
@@ -107,7 +107,7 @@ class AiAgentSettingsController extends Controller
         $agent->save();
 
         return redirect()
-            ->route('manager.helpdesk.ai.settings')
+            ->route('manager.helpdesk.ai.backups')
             ->with('success', 'Configuración del agente IA actualizada correctamente');
     }
 
@@ -194,7 +194,7 @@ class AiAgentSettingsController extends Controller
     // Private helper methods
 
     /**
-     * Validate settings input
+     * Validate backups input
      */
     private function validateSettings(Request $request): array
     {

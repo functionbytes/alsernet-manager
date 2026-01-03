@@ -29,7 +29,7 @@
                             notify('success', '{{ trans('messages.notify.success') }}', '{{ trans('messages.automation.action.deteled') }}');
 
                             // load default sidebar
-                            sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+                            sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
                         });
                     },
                 });
@@ -51,7 +51,7 @@
                             notify('success', '{{ trans('messages.notify.success') }}', '{{ trans('messages.automation.action.deteled') }}');
 
                             // load default sidebar
-                            sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+                            sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
                         });
                     },
                 });
@@ -73,7 +73,7 @@
                             notify('success', '{{ trans('messages.notify.success') }}', '{{ trans('messages.automation.action.deteled') }}');
 
                             // load default sidebar
-                            sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+                            sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
                         });
                     },
                 });

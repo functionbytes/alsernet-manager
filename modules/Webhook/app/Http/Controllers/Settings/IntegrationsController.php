@@ -41,7 +41,7 @@ class IntegrationsController extends Controller
         $integration = WebhookIntegration::create($request->validated());
 
         return redirect()
-            ->route('manager.settings.webhooks.integrations.show', $integration->uid)
+            ->route('manager.backups.webhooks.integrations.show', $integration->uid)
             ->with('success', 'Integration created successfully.');
     }
 
@@ -76,7 +76,7 @@ class IntegrationsController extends Controller
         $integration->update($request->validated());
 
         return redirect()
-            ->route('manager.settings.webhooks.integrations.show', $integration->uid)
+            ->route('manager.backups.webhooks.integrations.show', $integration->uid)
             ->with('success', 'Integration updated successfully.');
     }
 
@@ -89,7 +89,7 @@ class IntegrationsController extends Controller
         $integration->delete();
 
         return redirect()
-            ->route('manager.settings.webhooks.integrations.index')
+            ->route('manager.backups.webhooks.integrations.index')
             ->with('success', 'Integration deleted successfully.');
     }
 

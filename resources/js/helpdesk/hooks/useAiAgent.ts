@@ -29,7 +29,7 @@ interface ProviderModel {
 export function useAiAgent(agentId?: number) {
     const queryClient = useQueryClient();
 
-    // Fetch agent settings
+    // Fetch agent backups
     const { data: agent, isLoading: isLoadingAgent } = useQuery({
         queryKey: ['ai-agent', agentId],
         queryFn: () =>
@@ -58,7 +58,7 @@ export function useAiAgent(agentId?: number) {
                 .then((r) => r.data),
     });
 
-    // Update agent settings
+    // Update agent backups
     const updateSettingsMutation = useMutation({
         mutationFn: (config: Partial<AiAgentConfig>) =>
             axios
@@ -98,7 +98,7 @@ export function useAiAgent(agentId?: number) {
         [getModelsMutation]
     );
 
-    // Helper to update settings
+    // Helper to update backups
     const updateSettings = useCallback(
         async (config: Partial<AiAgentConfig>) => {
             return updateSettingsMutation.mutateAsync(config);

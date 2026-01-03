@@ -410,7 +410,7 @@
                 btn.html('<i class="fa fa-spinner fa-spin me-1"></i> Limpiando...');
 
                 $.ajax({
-                    url: '{{ route("settings.system.access.clear") }}',
+                    url: '{{ route("backups.system.access.clear") }}',
                     type: 'POST',
                     dataType: 'json',
                     headers: {

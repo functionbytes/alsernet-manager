@@ -9,7 +9,7 @@ use Modules\Supplier\Http\Controllers\Settings\SupplierPromptsController;
 use Modules\Supplier\Http\Controllers\Settings\SuppliersController;
 use Modules\Supplier\Http\Controllers\Settings\SupplierSourcesController;
 
-Route::group(['prefix' => 'settings/suppliers'], function () {
+Route::group(['prefix' => 'backups/suppliers'], function () {
 
     // Main supplier routes (specific paths first before parametrized routes)
     Route::get('/', [SuppliersController::class, 'index'])->name('settings.suppliers.index');

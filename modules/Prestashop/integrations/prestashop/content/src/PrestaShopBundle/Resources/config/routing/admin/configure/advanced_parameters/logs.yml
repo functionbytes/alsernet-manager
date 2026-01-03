@@ -7,7 +7,7 @@ admin_logs_index:
         _legacy_link: AdminLogs
 
 admin_logs_save_settings:
-    path: /settings
+    path: /backups
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:saveSettings'

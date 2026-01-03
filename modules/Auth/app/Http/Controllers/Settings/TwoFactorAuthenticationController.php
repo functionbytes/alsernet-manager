@@ -9,7 +9,7 @@ use Illuminate\View\View;
 class TwoFactorAuthenticationController extends Controller
 {
     /**
-     * Show 2FA settings
+     * Show 2FA backups
      */
     public function index(): View
     {

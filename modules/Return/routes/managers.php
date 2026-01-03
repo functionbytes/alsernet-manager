@@ -8,7 +8,7 @@ use Modules\Returns\Http\Controllers\Managers\ProductReturnRuleController;
 | Manager Return Settings Routes
 |--------------------------------------------------------------------------
 |
-| Routes for manager configuration and settings related to returns
+| Routes for manager configuration and backups related to returns
 |
 */
 

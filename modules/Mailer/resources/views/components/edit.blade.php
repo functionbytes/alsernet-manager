@@ -10,8 +10,8 @@
         'title' => 'Editor de Componente de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.settings')],
-            ['label' => 'Componentes', 'url' => route('manager.settings.mailers.components.index')],
+            ['label' => 'Configuración', 'url' => route('manager.backups')],
+            ['label' => 'Componentes', 'url' => route('settings.mailers.components.index')],
             ['label' => $component->subject, 'active' => true]
         ]
     ])
@@ -45,7 +45,7 @@
     @endif
 
     {{-- Main Form --}}
-    <form method="POST" action="{{ route('manager.settings.mailers.components.update', $component->uid) }}" id="formEdit">
+    <form method="POST" action="{{ route('settings.mailers.components.update', $component->uid) }}" id="formEdit">
         @csrf
         @method('PATCH')
         <input type="hidden" name="lang_id" value="{{ $currentLangId ?? 1 }}">
@@ -267,11 +267,11 @@
                             Guardar
                         </button>
 
-                        <a href="{{ route('manager.settings.mailers.components.preview', ['uid' => $component->uid, 'lang_id' => $currentLangId ?? 1]) }}" class="btn btn-info w-100 mb-1" target="_blank">
+                        <a href="{{ route('settings.mailers.components.preview', ['uid' => $component->uid, 'lang_id' => $currentLangId ?? 1]) }}" class="btn btn-info w-100 mb-1" target="_blank">
                             Vista previa
                         </a>
 
-                        <a href="{{ route('manager.settings.mailers.components.index') }}" class="btn btn-secondary w-100">
+                        <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-secondary w-100">
                             Volver
                         </a>
                     </div>
@@ -329,7 +329,7 @@
                                                 ? ['class' => 'bg-success-subtle text-success',  'text' => 'Completa']
                                                 : ['class' => 'bg-warning-subtle text-warning', 'text' => 'Pendiente'];
                                         @endphp
-                                        <a href="{{ route('manager.settings.mailers.components.edit', ['uid' => $component->uid, 'translation_uid' => $translationUid]) }}"
+                                        <a href="{{ route('settings.mailers.components.edit', ['uid' => $component->uid, 'translation_uid' => $translationUid]) }}"
                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-3 py-3 hover-shadow-sm"
                                            data-bs-toggle="tooltip" title="Cambiar a {{ $lang->title }}">
                                             <div class="d-flex align-items-center gap-2 flex-grow-1">
@@ -785,7 +785,7 @@ $(document).ready(function() {
 
     // Update Preview (both containers)
     function updatePreview() {
-        const previewUrl = `{{ route('manager.settings.mailers.components.preview-ajax', $component->uid) }}?lang_id=${currentLangId}`;
+        const previewUrl = `{{ route('settings.mailers.components.preview-ajax', $component->uid) }}?lang_id=${currentLangId}`;
 
         $.ajax({
             url: previewUrl,
@@ -837,7 +837,7 @@ $(document).ready(function() {
 
     // Load Variables
     function loadVariables() {
-        const variablesUrl = '{{ route('manager.settings.mailers.components.variables') }}';
+        const variablesUrl = '{{ route('settings.mailers.components.variables') }}';
 
         $.ajax({
             url: variablesUrl,

@@ -1089,7 +1089,7 @@ namespace PrestaShopBundle\Install {
             return !empty($this->failureList);
         }
 
-        public const SETTINGS_FILE = 'config/settings.inc.php';
+        public const SETTINGS_FILE = 'config/backups.inc.php';
 
         /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
@@ -1170,7 +1170,7 @@ namespace PrestaShopBundle\Install {
 
             if (!file_exists($root_dir . '/app/config/parameters.yml') && $tmp_settings && strpos($tmp_settings, '_DB_SERVER_') !== false) {
                 $tmp_settings = preg_replace('/(\'|")\_/', '$1_LEGACY_', $tmp_settings);
-                $tmp_settings_file = str_replace('/settings', '/tmp_settings', $root_dir . '/' . self::SETTINGS_FILE);
+                $tmp_settings_file = str_replace('/backups', '/tmp_settings', $root_dir . '/' . self::SETTINGS_FILE);
                 file_put_contents($tmp_settings_file, $tmp_settings);
                 include $tmp_settings_file;
                 @unlink($tmp_settings_file);

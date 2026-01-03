@@ -22,7 +22,7 @@ return [
     'enabled' => env('COOKIE_CONSENT_ENABLED', true),
 
     /*
-     * Category settings for cookie types.
+     * Category backups for cookie types.
      */
     'categories' => [
         'essential' => [

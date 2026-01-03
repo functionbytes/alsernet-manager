@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Mailer\Http\Controllers\Settings;
+namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lang;
@@ -12,6 +12,7 @@ use Modules\Mailer\Traits\AuthorizesMailerActions;
 class MailerComponentController extends Controller
 {
     use AuthorizesMailerActions;
+
     /**
      * Listar todos los componentes de email (header, footer, etc.)
      */
@@ -145,7 +146,7 @@ class MailerComponentController extends Controller
             }
 
             return redirect()
-                ->route('manager.settings.mailers.components.edit', [
+                ->route('settings.mailers.components.edit', [
                     'uid' => $layout->uid,
                     'lang_id' => $validated['lang_id'],
                 ])
@@ -191,7 +192,7 @@ class MailerComponentController extends Controller
 
             // Si no existe traducción para este idioma, crear una vacía
             if (! $translation) {
-                $translation = new MailLayoutLang([
+                $translation = new MailerLayoutLang([
                     'layout_id' => $layout->id,
                     'lang_id' => $langId,
                     'subject' => '',
@@ -265,7 +266,7 @@ class MailerComponentController extends Controller
             // Redirigir usando translation_uid si está disponible
             if ($validated['translation_uid']) {
                 return redirect()
-                    ->route('manager.settings.mailers.components.edit', [
+                    ->route('settings.mailers.components.edit', [
                         'uid' => $layout->uid,
                         'translation_uid' => $translation->uid,
                     ])
@@ -374,7 +375,7 @@ class MailerComponentController extends Controller
             $layout->delete();
 
             return redirect()
-                ->route('manager.settings.mailers.components.index')
+                ->route('settings.mailers.components.index')
                 ->with('success', "Componente '{$name}' eliminado exitosamente");
         } catch (\Exception $e) {
             return redirect()
@@ -409,7 +410,7 @@ class MailerComponentController extends Controller
             $langId = $request->input('lang_id', 1);
 
             return redirect()
-                ->route('manager.settings.mailers.components.edit', [
+                ->route('settings.mailers.components.edit', [
                     'uid' => $newLayout->uid,
                     'lang_id' => $langId,
                 ])

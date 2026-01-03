@@ -448,7 +448,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                     'data-route' => 'admin_orders_view',
                     'data-route-param-name' => 'orderId',
                     'data-tabs-blocked-message' => $this->trans(
-                        'It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.',
+                        'It looks like you have exceeded the number of tabs allowed. Check your browser backups to open multiple tabs.',
                         [],
                         'Admin.Orderscustomers.Feature'
                     ),

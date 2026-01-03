@@ -193,7 +193,7 @@ $(document).ready(function() {
 
     // Download logs button
     $('#downloadLogsBtn').on('click', function() {
-        const downloadUrl = '{{ route("settings.suppliers.automation.logs.download") }}?type=' + currentLogType;
+        const downloadUrl = '{{ route("backups.suppliers.automation.logs.download") }}?type=' + currentLogType;
         window.location.href = downloadUrl;
     });
 
@@ -210,7 +210,7 @@ $(document).ready(function() {
         `);
 
         $.ajax({
-            url: '{{ route("settings.suppliers.automation.logs.data") }}',
+            url: '{{ route("backups.suppliers.automation.logs.data") }}',
             method: 'GET',
             data: { type: type },
             success: function(response) {

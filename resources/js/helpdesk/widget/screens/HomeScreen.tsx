@@ -9,7 +9,7 @@ export function HomeScreen() {
     const settings = useWidgetStore(state => state.settings);
     const t = useTranslation();
 
-    console.log('🏠 HomeScreen rendering with settings:', {
+    console.log('🏠 HomeScreen rendering with backups:', {
         enable_send_message: settings.enable_send_message,
         enable_create_ticket: settings.enable_create_ticket,
         enable_search_help: settings.enable_search_help,

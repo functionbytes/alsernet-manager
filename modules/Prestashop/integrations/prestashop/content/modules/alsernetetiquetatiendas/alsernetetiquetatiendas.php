@@ -126,7 +126,7 @@ class AlsernetEtiquetatiendas extends Module
 
         $this->context->smarty->assign([
             'module_dir' => $this->_path,
-            'settings'   => $settings,
+            'backups'   => $settings,
             'img_abs'    => $settings['base_image'] ? _PS_BASE_URL_ . _THEME_PROD_DIR_ : '',
             'savepos_url'    => $savepos_url,
             'generate_url'   => $generate_url,

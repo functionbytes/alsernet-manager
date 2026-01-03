@@ -44,9 +44,9 @@ class CreateDatabasePermissionsSeeder extends Seeder
     {
         return [
             // Database Settings
-            'database.settings.view' => 'Ver configuración de base de datos',
-            'database.settings.update' => 'Actualizar configuración de base de datos',
-            'database.settings.test_connection' => 'Probar conexión a base de datos',
+            'database.backups.view' => 'Ver configuración de base de datos',
+            'database.backups.update' => 'Actualizar configuración de base de datos',
+            'database.backups.test_connection' => 'Probar conexión a base de datos',
 
             // Database Cleanup
             'database.cleanup.view' => 'Ver herramienta de limpieza de base de datos',
@@ -87,7 +87,7 @@ class CreateDatabasePermissionsSeeder extends Seeder
 
         // Manager - View only
         $this->assignToRole('manager', [
-            'database.settings.view',
+            'database.backups.view',
             'database.cleanup.view',
         ]);
     }

@@ -325,14 +325,14 @@ class NotificationPreference extends Model
         'channel',
         'notification_type',
         'is_enabled',
-        'settings',          // JSON for extensibility
+        'backups',          // JSON for extensibility
     ];
 
     protected function casts(): array
     {
         return [
             'is_enabled' => 'boolean',
-            'settings' => 'array',
+            'backups' => 'array',
         ];
     }
 
@@ -439,7 +439,7 @@ return new class extends Migration
             $table->string('channel');           // email, push, in_app, sms
             $table->string('notification_type'); // order.created, order.shipped, etc.
             $table->boolean('is_enabled')->default(true);
-            $table->json('settings')->nullable(); // For extensibility
+            $table->json('backups')->nullable(); // For extensibility
 
             $table->timestamps();
 

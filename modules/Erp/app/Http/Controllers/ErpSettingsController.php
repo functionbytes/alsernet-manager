@@ -33,7 +33,7 @@ class ErpSettingsController extends Controller
         $lastCheckDate = $lastCheck ? \Carbon\Carbon::parse($lastCheck) : null;
         $needsCheck = ! $lastCheckDate || $lastCheckDate->diffInMinutes(now()) > 5;
 
-        return view('theme.views.settings.erp.index', compact('settings', 'stats', 'needsCheck'));
+        return view('theme.views.backups.erp.index', compact('settings', 'stats', 'needsCheck'));
     }
 
     /**
@@ -43,7 +43,7 @@ class ErpSettingsController extends Controller
     {
         $settings = Setting::getErpSettings();
 
-        return view('theme.views.settings.erp.edit', compact('settings'));
+        return view('theme.views.backups.erp.edit', compact('settings'));
     }
 
     /**
@@ -65,7 +65,7 @@ class ErpSettingsController extends Controller
         // Limpiar cache del servicio
         $this->erpService->clearCache();
 
-        return redirect()->route('manager.settings.erp.index')
+        return redirect()->route('manager.backups.erp.index')
             ->with('success', 'Configuración del ERP actualizada correctamente');
     }
 

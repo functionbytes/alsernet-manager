@@ -50,7 +50,7 @@ class TicketCannedRepliesController extends Controller
 
         $categories = TicketCategory::active()->ordered()->get();
 
-        return view('theme.views.settings.helpdesk.ticket-canned-replies.index', [
+        return view('theme.views.backups.helpdesk.ticket-canned-replies.index', [
             'replies' => $replies,
             'stats' => $stats,
             'categories' => $categories,
@@ -64,7 +64,7 @@ class TicketCannedRepliesController extends Controller
     {
         $categories = TicketCategory::active()->ordered()->get();
 
-        return view('theme.views.settings.helpdesk.ticket-canned-replies.create', [
+        return view('theme.views.backups.helpdesk.ticket-canned-replies.create', [
             'categories' => $categories,
         ]);
     }
@@ -103,7 +103,7 @@ class TicketCannedRepliesController extends Controller
             $reply->ticketCategories()->attach($categoriesData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.canned-replies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.canned-replies.index')
             ->with('success', 'Respuesta enlatada creada exitosamente.');
     }
 
@@ -120,7 +120,7 @@ class TicketCannedRepliesController extends Controller
         $reply->load('ticketCategories');
         $categories = TicketCategory::active()->ordered()->get();
 
-        return view('theme.views.settings.helpdesk.ticket-canned-replies.edit', [
+        return view('theme.views.backups.helpdesk.ticket-canned-replies.edit', [
             'reply' => $reply,
             'categories' => $categories,
         ]);
@@ -165,7 +165,7 @@ class TicketCannedRepliesController extends Controller
             $reply->ticketCategories()->sync($categoriesData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.canned-replies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.canned-replies.index')
             ->with('success', 'Respuesta enlatada actualizada exitosamente.');
     }
 
@@ -181,7 +181,7 @@ class TicketCannedRepliesController extends Controller
 
         $reply->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.canned-replies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.canned-replies.index')
             ->with('success', 'Respuesta enlatada eliminada exitosamente.');
     }
 }

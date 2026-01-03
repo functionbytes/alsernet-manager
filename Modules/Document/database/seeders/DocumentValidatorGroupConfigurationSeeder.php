@@ -20,7 +20,7 @@ class DocumentValidatorGroupConfigurationSeeder extends Seeder
      * - Document types that require this group's validation
      * - Approval timeout period
      * - Whether rejection is allowed
-     * - Notification settings
+     * - Notification backups
      *
      * Depends on: DocumentValidatorGroupSeeder (must run first)
      */

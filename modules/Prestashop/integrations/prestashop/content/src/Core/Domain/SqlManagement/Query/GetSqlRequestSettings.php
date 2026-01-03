@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
 /**
- * Class GetSqlRequestSettingsQuery gets SqlRequest settings.
+ * Class GetSqlRequestSettingsQuery gets SqlRequest backups.
  */
 class GetSqlRequestSettings
 {

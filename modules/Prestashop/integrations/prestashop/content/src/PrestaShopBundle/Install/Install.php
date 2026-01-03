@@ -62,7 +62,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
 {
-    public const SETTINGS_FILE = 'config/settings.inc.php';
+    public const SETTINGS_FILE = 'config/backups.inc.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     protected $logger;
@@ -80,7 +80,7 @@ class Install extends AbstractInstall
     public $xml_loader_ids = [];
 
     /**
-     * The path of the settings file we want to use for the installation.
+     * The path of the backups file we want to use for the installation.
      *
      * @var string
      */
@@ -131,7 +131,7 @@ class Install extends AbstractInstall
     }
 
     /**
-     * Generate the settings file.
+     * Generate the backups file.
      */
     public function generateSettingsFile(
         $database_host,
@@ -141,7 +141,7 @@ class Install extends AbstractInstall
         $database_prefix,
         $database_engine
     ) {
-        // Check permissions for settings file
+        // Check permissions for backups file
         if (
             file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
             && !is_writable(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
@@ -210,7 +210,7 @@ class Install extends AbstractInstall
         $settings_content .= '//@deprecated 1.7';
 
         if (!file_put_contents(_PS_ROOT_DIR_ . '/' . $this->settingsFile, $settings_content)) {
-            $this->setError($this->translator->trans('Cannot write settings file', [], 'Install'));
+            $this->setError($this->translator->trans('Cannot write backups file', [], 'Install'));
 
             return false;
         }
@@ -275,7 +275,7 @@ class Install extends AbstractInstall
 
     /**
      * PROCESS : installDatabase
-     * Generate settings file and create database structure.
+     * Generate backups file and create database structure.
      */
     public function installDatabase($clear_database = false)
     {
@@ -773,7 +773,7 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
         Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', $data['smtp_port']);
 
-        // Set default rewriting settings
+        // Set default rewriting backups
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
 
         $groups = Group::getGroups((int) Configuration::get('PS_LANG_DEFAULT'));

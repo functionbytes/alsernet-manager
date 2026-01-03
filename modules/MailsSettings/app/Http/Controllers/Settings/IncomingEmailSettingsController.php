@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class IncomingEmailSettingsController extends Controller
 {
     /**
-     * Display incoming email settings
+     * Display incoming email backups
      */
     public function index()
     {
@@ -21,11 +21,11 @@ class IncomingEmailSettingsController extends Controller
         $pageTitle = 'Configuración de Correo Entrante';
         $breadcrumb = 'Configuración / Email / Entrante';
 
-        return view('mails-settings::managers.settings.email.incoming', compact('settings', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::managers.backups.email.incoming', compact('settings', 'pageTitle', 'breadcrumb'));
     }
 
     /**
-     * Update Pipe handler settings
+     * Update Pipe handler backups
      */
     public function updatePipe(Request $request)
     {
@@ -40,7 +40,7 @@ class IncomingEmailSettingsController extends Controller
             return redirect()->route('settings.email.incoming.index')
                 ->with('success', 'Configuración Pipe actualizada correctamente');
         } catch (\Exception $e) {
-            Log::error('Error updating Pipe settings', [
+            Log::error('Error updating Pipe backups', [
                 'error' => $e->getMessage(),
             ]);
 
@@ -51,7 +51,7 @@ class IncomingEmailSettingsController extends Controller
     }
 
     /**
-     * Update REST API handler settings
+     * Update REST API handler backups
      */
     public function updateApi(Request $request)
     {
@@ -66,7 +66,7 @@ class IncomingEmailSettingsController extends Controller
             return redirect()->route('settings.email.incoming.index')
                 ->with('success', 'Configuración REST API actualizada correctamente');
         } catch (\Exception $e) {
-            Log::error('Error updating API settings', [
+            Log::error('Error updating API backups', [
                 'error' => $e->getMessage(),
             ]);
 
@@ -104,7 +104,7 @@ class IncomingEmailSettingsController extends Controller
     }
 
     /**
-     * Update Mailgun handler settings
+     * Update Mailgun handler backups
      */
     public function updateMailgun(Request $request)
     {
@@ -120,7 +120,7 @@ class IncomingEmailSettingsController extends Controller
             return redirect()->route('settings.email.incoming.index')
                 ->with('success', 'Configuración Mailgun actualizada correctamente');
         } catch (\Exception $e) {
-            Log::error('Error updating Mailgun settings', [
+            Log::error('Error updating Mailgun backups', [
                 'error' => $e->getMessage(),
             ]);
 
@@ -281,11 +281,11 @@ class IncomingEmailSettingsController extends Controller
         $pageTitle = 'Documentación REST API - Incoming Email';
         $breadcrumb = 'Configuración / Email / Entrante / Documentación API';
 
-        return view('mails-settings::managers.settings.email.api-documentation', compact('pageTitle', 'breadcrumb'));
+        return view('mails-backups::managers.backups.email.api-documentation', compact('pageTitle', 'breadcrumb'));
     }
 
     /**
-     * Update Gmail API handler settings
+     * Update Gmail API handler backups
      */
     public function updateGmail(Request $request)
     {
@@ -302,7 +302,7 @@ class IncomingEmailSettingsController extends Controller
             return redirect()->route('settings.email.incoming.index')
                 ->with('success', 'Configuración Gmail actualizada correctamente');
         } catch (\Exception $e) {
-            Log::error('Error updating Gmail settings', [
+            Log::error('Error updating Gmail backups', [
                 'error' => $e->getMessage(),
             ]);
 
@@ -454,7 +454,7 @@ class IncomingEmailSettingsController extends Controller
     }
 
     /**
-     * Update phpList handler settings
+     * Update phpList handler backups
      */
     public function updatePhplist(Request $request)
     {
@@ -471,7 +471,7 @@ class IncomingEmailSettingsController extends Controller
             return redirect()->route('settings.email.incoming.index')
                 ->with('success', 'Configuración phpList actualizada correctamente');
         } catch (\Exception $e) {
-            Log::error('Error updating phpList settings', [
+            Log::error('Error updating phpList backups', [
                 'error' => $e->getMessage(),
             ]);
 

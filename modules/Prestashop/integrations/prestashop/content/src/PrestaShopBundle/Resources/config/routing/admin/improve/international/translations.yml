@@ -15,12 +15,12 @@ admin_international_langs_export_catalogues:
         _legacy_link: AdminTranslations:submitExport
 
 admin_international_langs_show_settings:
-    path: /settings
+    path: /backups
     methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:showSettings
         _legacy_controller: AdminTranslations
-        _legacy_link: AdminTranslations:settings
+        _legacy_link: AdminTranslations:backups
 
 admin_international_langs_modify:
     path: /modify

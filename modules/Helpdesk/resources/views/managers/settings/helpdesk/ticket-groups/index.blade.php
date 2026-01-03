@@ -20,11 +20,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.helpdesk.settings.tickets.groups.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.helpdesk.backups.tickets.groups.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.helpdesk.settings.tickets.groups.create') }}" class="btn btn-primary">
+                        <a href="{{ route('manager.helpdesk.backups.tickets.groups.create') }}" class="btn btn-primary">
                             Nuevo grupo
                         </a>
                     </div>
@@ -91,7 +91,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.helpdesk.settings.tickets.groups.index') }}">
+                <form method="GET" action="{{ route('manager.helpdesk.backups.tickets.groups.index') }}">
                     <div class="row align-items-center">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -152,7 +152,7 @@
                                         <small class="text-muted">{{ $group->description ? Str::limit($group->description, 50) : '-' }}</small>
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" action="{{ route('manager.helpdesk.settings.tickets.groups.toggle', $group->id) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('manager.helpdesk.backups.tickets.groups.toggle', $group->id) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -169,13 +169,13 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.settings.tickets.groups.edit', $group->id) }}">
+                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.backups.tickets.groups.edit', $group->id) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.helpdesk.settings.tickets.groups.destroy', $group->id) }}"
+                                                    <form method="POST" action="{{ route('manager.helpdesk.backups.tickets.groups.destroy', $group->id) }}"
                                                           onsubmit="return confirm('¿Estás seguro de eliminar este grupo?')">
                                                         @csrf
                                                         @method('DELETE')
@@ -205,7 +205,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.helpdesk.settings.tickets.groups.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('manager.helpdesk.backups.tickets.groups.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i> Crear Primer Grupo
                                 </a>
                             @endif

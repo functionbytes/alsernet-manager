@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('manager.settings.backup-schedules.create-form') }}"
+                                <a href="{{ route('manager.backups.backup-schedules.create-form') }}"
                                    class="btn btn-primary">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -71,7 +71,7 @@
             <div class="card card-body text-center py-5">
                 <i class="fa fa-calendar-xmark fa-3x text-muted mb-3"></i>
                 <p class="text-muted">No hay schedules de backup configurados.</p>
-                <a href="{{ route('manager.settings.backup-schedules.create-form') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('manager.backups.backup-schedules.create-form') }}" class="btn btn-primary btn-sm">
                     Crear el Primero
                 </a>
             </div>
@@ -145,7 +145,7 @@
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3"
-                                                   href="{{ route('manager.settings.backup-schedules.edit-form', $schedule->id) }}">Editar</a>
+                                                   href="{{ route('manager.backups.backup-schedules.edit-form', $schedule->id) }}">Editar</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3 toggle-schedule"

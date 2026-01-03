@@ -263,7 +263,7 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Probando...');
 
         $.ajax({
-            url: '{{ route("settings.suppliers.sources.test", [$supplier->uid, ":uid"]) }}'.replace(':uid', uid),
+            url: '{{ route("backups.suppliers.sources.test", [$supplier->uid, ":uid"]) }}'.replace(':uid', uid),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}'

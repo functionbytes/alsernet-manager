@@ -13,14 +13,14 @@ class NotificationPreference extends Model
         'channel',
         'notification_type',
         'is_enabled',
-        'settings',
+        'backups',
     ];
 
     protected function casts(): array
     {
         return [
             'is_enabled' => 'boolean',
-            'settings' => 'array',
+            'backups' => 'array',
         ];
     }
 

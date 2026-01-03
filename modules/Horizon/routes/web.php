@@ -10,8 +10,8 @@ use Modules\Horizon\Http\Controllers\Api\HorizonApiController;
 |--------------------------------------------------------------------------
 |
 | Queue monitoring and management dashboard
-| Prefix: /settings/horizon (applied by ServiceProvider)
-| Name: settings.horizon.* (applied by ServiceProvider)
+| Prefix: /backups/horizon (applied by ServiceProvider)
+| Name: backups.horizon.* (applied by ServiceProvider)
 | Middleware: web, auth, role:manager|super-admin
 |
 */

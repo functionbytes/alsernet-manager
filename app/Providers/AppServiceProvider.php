@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton('app.settings', fn () => $this->getSettings());
+        $this->app->singleton('app.backups', fn () => $this->getSettings());
     }
 
     public function boot(): void

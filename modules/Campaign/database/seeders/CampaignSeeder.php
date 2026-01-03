@@ -18,7 +18,7 @@ class CampaignSeeder extends Seeder
      * - Campaign type (regular, automated, etc.)
      * - Email content (HTML and plain text)
      * - Sender information
-     * - Tracking settings
+     * - Tracking backups
      * - Association with mailing list
      */
     public function run(): void

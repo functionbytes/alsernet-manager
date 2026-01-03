@@ -416,7 +416,7 @@ class AdminImagesControllerCore extends AdminController
     }
 
     /**
-     * Delete resized image then regenerate new one with updated settings.
+     * Delete resized image then regenerate new one with updated backups.
      *
      * @param string $dir
      * @param array $type

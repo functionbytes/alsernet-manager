@@ -47,15 +47,14 @@ class MailerServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        // Mailer settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/mailers')
-            ->name('manager.settings.mailers.')
+            ->name('settings.mailers.')
             ->group(function () {
                 // Load view routes (GET)
                 require module_path('Mailer', 'routes/web.php');
-
-                // Load API routes (POST, PUT, DELETE) - same prefix/name
+                // Load settings API routes (POST, PUT, DELETE)
                 require module_path('Mailer', 'routes/api/settings.php');
             });
 
@@ -83,10 +82,10 @@ class MailerServiceProvider extends ServiceProvider
         NavService::registerSidebar('mailers', [
             'title' => 'Emails',
             'items' => [
-                ['label' => 'Plantillas', 'route' => 'manager.settings.mailers.templates.index'],
-                ['label' => 'Componentes', 'route' => 'manager.settings.mailers.components.index'],
-                ['label' => 'Variables', 'route' => 'manager.settings.mailers.variables.index'],
-                ['label' => 'Puntos de envío', 'route' => 'manager.settings.mailers.endpoints.index'],
+                ['label' => 'Plantillas', 'route' => 'settings.mailers.templates.index'],
+                ['label' => 'Componentes', 'route' => 'settings.mailers.components.index'],
+                ['label' => 'Variables', 'route' => 'settings.mailers.variables.index'],
+                ['label' => 'Puntos de envío', 'route' => 'settings.mailers.endpoints.index'],
             ],
         ]);
     }

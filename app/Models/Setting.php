@@ -792,7 +792,7 @@ class Setting extends Model implements HasMedia
     }
 
     /**
-     * Write default settings to DB.
+     * Write default backups to DB.
      *
      * @var bool
      */
@@ -1321,7 +1321,7 @@ class Setting extends Model implements HasMedia
                 'enabled' => $settings['gmail']['enabled'] ?? false,
                 'client_id' => $settings['gmail']['client_id'] ?? '',
                 'client_secret' => $settings['gmail']['client_secret'] ?? '',
-                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('settings.incoming-email.gmail.callback'),
+                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('backups.incoming-email.gmail.callback'),
                 'connections' => $settings['gmail']['connections'] ?? [],
             ],
             'mailgun' => [

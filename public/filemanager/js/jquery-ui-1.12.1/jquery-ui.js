@@ -4834,7 +4834,7 @@ var widgetsAccordion = $.widget( "ui.accordion", {
 			easing = options;
 		}
 
-		// fall back from options to animation in case of partial down settings
+		// fall back from options to animation in case of partial down backups
 		easing = easing || options.easing || animate.easing;
 		duration = duration || options.duration || animate.duration;
 
@@ -7213,7 +7213,7 @@ function datepicker_getZindex( elem ) {
 /* Date picker manager.
    Use the singleton instance of this class, $.datepicker, to interact with the date picker.
    Settings for (groups of) date pickers are maintained in an instance object,
-   allowing multiple different settings on the same page. */
+   allowing multiple different backups on the same page. */
 
 function Datepicker() {
 	this._curInst = null; // The current instance in use
@@ -7230,8 +7230,8 @@ function Datepicker() {
 	this._unselectableClass = "ui-datepicker-unselectable"; // The name of the unselectable cell marker class
 	this._currentClass = "ui-datepicker-current-day"; // The name of the current day marker class
 	this._dayOverClass = "ui-datepicker-days-cell-over"; // The name of the day hover marker class
-	this.regional = []; // Available regional settings, indexed by language code
-	this.regional[ "" ] = { // Default regional settings
+	this.regional = []; // Available regional backups, indexed by language code
+	this.regional[ "" ] = { // Default regional backups
 		closeText: "Done", // Display text for close link
 		prevText: "Prev", // Display text for previous month link
 		nextText: "Next", // Display text for next month link
@@ -7284,7 +7284,7 @@ function Datepicker() {
 			// [0] = true if selectable, false if not, [1] = custom CSS class name(s) or "",
 			// [2] = cell title (optional), e.g. $.datepicker.noWeekends
 		beforeShow: null, // Function that takes an input field and
-			// returns a set of custom settings for the date picker
+			// returns a set of custom backups for the date picker
 		onSelect: null, // Define a callback function when a date is selected
 		onChangeMonthYear: null, // Define a callback function when the month or year is changed
 		onClose: null, // Define a callback function when the datepicker is closed
@@ -7317,8 +7317,8 @@ $.extend( Datepicker.prototype, {
 		return this.dpDiv;
 	},
 
-	/* Override the default settings for all instances of the date picker.
-	 * @param  settings  object - the new settings to use as defaults (anonymous object)
+	/* Override the default backups for all instances of the date picker.
+	 * @param  backups  object - the new backups to use as defaults (anonymous object)
 	 * @return the manager object
 	 */
 	setDefaults: function( settings ) {
@@ -7328,7 +7328,7 @@ $.extend( Datepicker.prototype, {
 
 	/* Attach the date picker to a jQuery selection.
 	 * @param  target	element - the target input field or division or span
-	 * @param  settings  object - the new settings to use for this date picker instance (anonymous)
+	 * @param  backups  object - the new backups to use for this date picker instance (anonymous)
 	 */
 	_attachDatepicker: function( target, settings ) {
 		var nodeName, inline, inst;
@@ -7378,7 +7378,7 @@ $.extend( Datepicker.prototype, {
 		}
 	},
 
-	/* Make attachments based on settings. */
+	/* Make attachments based on backups. */
 	_attachments: function( input, inst ) {
 		var showOn, buttonText, buttonImage,
 			appendText = this._get( inst, "appendText" ),
@@ -7480,7 +7480,7 @@ $.extend( Datepicker.prototype, {
 	 * @param  input element - ignored
 	 * @param  date	string or Date - the initial date to display
 	 * @param  onSelect  function - the function to call when a date is selected
-	 * @param  settings  object - update the dialog date picker instance's settings (anonymous object)
+	 * @param  backups  object - update the dialog date picker instance's backups (anonymous object)
 	 * @param  pos int[2] - coordinates for the dialog's position within the screen or
 	 *					event - with x/y coordinates or
 	 *					leave empty for default (screen centre)
@@ -7646,11 +7646,11 @@ $.extend( Datepicker.prototype, {
 		}
 	},
 
-	/* Update or retrieve the settings for a date picker attached to an input field or division.
+	/* Update or retrieve the backups for a date picker attached to an input field or division.
 	 * @param  target  element - the target input field or division or span
-	 * @param  name	object - the new settings to update or
+	 * @param  name	object - the new backups to update or
 	 *				string - the name of the setting to change or retrieve,
-	 *				when retrieving also "all" for all instance settings or
+	 *				when retrieving also "all" for all instance backups or
 	 *				"defaults" for all global defaults
 	 * @param  value   any - the new value for the setting
 	 *				(omit if above is an object or to retrieve a value)
@@ -8273,7 +8273,7 @@ $.extend( Datepicker.prototype, {
 	 *
 	 * @param  format string - the expected format of the date
 	 * @param  value string - the date in the above format
-	 * @param  settings Object - attributes include:
+	 * @param  backups Object - attributes include:
 	 *					shortYearCutoff  number - the cutoff year for determining the century (optional)
 	 *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
 	 *					dayNames		string[7] - names of the days from Sunday (optional)
@@ -8487,7 +8487,7 @@ $.extend( Datepicker.prototype, {
 	 *
 	 * @param  format string - the desired format of the date
 	 * @param  date Date - the date value to format
-	 * @param  settings Object - attributes include:
+	 * @param  backups Object - attributes include:
 	 *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
 	 *					dayNames		string[7] - names of the days from Sunday (optional)
 	 *					monthNamesShort string[12] - abbreviated names of the months (optional)
@@ -9152,7 +9152,7 @@ $.extend( Datepicker.prototype, {
 			( !maxYear || date.getFullYear() <= maxYear ) );
 	},
 
-	/* Provide the configuration settings for formatting/parsing. */
+	/* Provide the configuration backups for formatting/parsing. */
 	_getFormatConfig: function( inst ) {
 		var shortYearCutoff = this._get( inst, "shortYearCutoff" );
 		shortYearCutoff = ( typeof shortYearCutoff !== "string" ? shortYearCutoff :
@@ -9221,7 +9221,7 @@ function datepicker_extendRemove( target, props ) {
 
 /* Invoke the datepicker functionality.
    @param  options  string - a command, optionally followed by additional parameters or
-					Object - settings for attaching new datepicker functionality
+					Object - backups for attaching new datepicker functionality
    @return  jQuery object */
 $.fn.datepicker = function( options ) {
 

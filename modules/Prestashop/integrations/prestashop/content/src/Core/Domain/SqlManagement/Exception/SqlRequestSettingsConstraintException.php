@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
 /**
- * Class SqlRequestSettingsConstraintException is thrown when invalid settings are supplied.
+ * Class SqlRequestSettingsConstraintException is thrown when invalid backups are supplied.
  */
 class SqlRequestSettingsConstraintException extends SqlRequestException
 {

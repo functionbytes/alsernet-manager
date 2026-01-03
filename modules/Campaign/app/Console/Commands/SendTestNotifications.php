@@ -4,12 +4,12 @@ namespace Modules\Campaign\Console\Commands;
 
 use App\Models\User;
 use App\Notifications\OrderCreated;
-use App\Notifications\SystemAlert;
 use App\Notifications\TicketAssigned;
 use App\Notifications\TicketCreated;
 use App\Notifications\TicketStatusChanged;
 use App\Notifications\UserMentioned;
 use Illuminate\Console\Command;
+use Modules\Campaign\Notifications\SystemAlert;
 use Modules\Document\Notifications\DocumentApproved;
 use Modules\Document\Notifications\DocumentRejected;
 use Modules\Document\Notifications\DocumentStatusChanged;

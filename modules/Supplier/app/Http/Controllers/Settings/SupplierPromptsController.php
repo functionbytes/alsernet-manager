@@ -88,7 +88,7 @@ class SupplierPromptsController extends Controller
                 'version' => 1,
             ]);
 
-            return redirect()->route('manager.settings.suppliers.prompts.index')
+            return redirect()->route('manager.backups.suppliers.prompts.index')
                 ->with('success', 'Prompt creado exitosamente');
 
         } catch (\Exception $e) {
@@ -163,7 +163,7 @@ class SupplierPromptsController extends Controller
                 'version' => $incrementVersion ? $prompt->version + 1 : $prompt->version,
             ]);
 
-            return redirect()->route('manager.settings.suppliers.prompts.index')
+            return redirect()->route('manager.backups.suppliers.prompts.index')
                 ->with('success', 'Prompt actualizado exitosamente');
 
         } catch (\Exception $e) {

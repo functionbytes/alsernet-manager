@@ -12,12 +12,12 @@ class LanguageMiddleware
     {
         try {
             DB::connection()->getPdo();
-            if (! DB::getSchemaBuilder()->hasTable('settings')) {
+            if (! DB::getSchemaBuilder()->hasTable('backups')) {
 
                 return $next($request);
             } else {
 
-                \App::setlocale(session()->get('locale') ?? @(DB::table('settings')->where('key', 'default_lang')->first()->value));
+                \App::setlocale(session()->get('locale') ?? @(DB::table('backups')->where('key', 'default_lang')->first()->value));
 
                 return $next($request);
             }

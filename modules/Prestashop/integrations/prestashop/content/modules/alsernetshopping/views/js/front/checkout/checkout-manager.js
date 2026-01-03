@@ -431,7 +431,7 @@ if (typeof window.CheckoutManager === 'undefined') {
 
                 // Update cart header totals if available
                 if (window.settings && typeof window.settings.updateCartHeader === 'function') {
-                    console.log('📦 Updating cart header via window.settings.updateCartHeader');
+                    console.log('📦 Updating cart header via window.backups.updateCartHeader');
                     window.settings.updateCartHeader();
                 }
 
@@ -779,7 +779,7 @@ if (typeof window.CheckoutManager === 'undefined') {
             // DELETE en el resumen (no dropdown) - FIXED: Added more selectors
             $(document)
                 .off('click.cart-summary', '.cart-inventaries-lists .delete-to-cart') // Clear any previous handlers
-                .off('click.cart', '.cart-inventaries-lists .delete-to-cart') // Remove settings.js handler
+                .off('click.cart', '.cart-inventaries-lists .delete-to-cart') // Remove backups.js handler
                 .on('click.cart-summary', '.page-order .right-sidebar-checkout .cart-summary .summary .cart-inventaries-lists .product-item .delete-to-product, .cart-inventaries-lists .delete-to-cart', async (e) => {
                     e.preventDefault();
                     e.stopImmediatePropagation(); // Prevent other handlers
@@ -805,7 +805,7 @@ if (typeof window.CheckoutManager === 'undefined') {
             // DELETE desde modal de confirmación del checkout
             $(document)
                 .off('click.checkout-delete-modal', '#delete-checkout-modal .delete-to-product')
-                .off('click.cart', '.page-order #delete-checkout-modal .delete-to-product') // Remove settings.js handler
+                .off('click.cart', '.page-order #delete-checkout-modal .delete-to-product') // Remove backups.js handler
                 .on('click.checkout-delete-modal', '#delete-checkout-modal .delete-to-product', this.handleCheckoutProductDelete.bind(this));
 
             // Coupon management - Apply and Remove voucher
@@ -1459,12 +1459,12 @@ if (typeof window.CheckoutManager === 'undefined') {
                     // GTM tracking for product removal
                     this.trackProductRemoval(productData);
 
-                    // Clear cart cache (same as settings.js)
+                    // Clear cart cache (same as backups.js)
                     if (window.cart && typeof window.cart.clearCache === 'function') {
                         window.cart.clearCache();
                     }
 
-                    // Update cart dropdown/component (same as settings.js) - NO OPEN in checkout
+                    // Update cart dropdown/component (same as backups.js) - NO OPEN in checkout
                     if (window.cart && typeof window.cart.loadCart === 'function') {
                         console.log('🔄 Updating cart dropdown component');
                         await window.cart.loadCart(false); // fromProduct = false to NOT open dropdown
@@ -2155,9 +2155,9 @@ if (typeof window.CheckoutManager === 'undefined') {
                 return;
             }
 
-            // ENSURE settings.js handler is removed before showing modal
+            // ENSURE backups.js handler is removed before showing modal
             $modalButton.off('click.cart');
-            console.log('🔧 Removed settings.js handler from modal button');
+            console.log('🔧 Removed backups.js handler from modal button');
 
             // Clear existing data attributes
             $modalButton.removeAttr('data-id-cart data-id-product data-id-product-attribute')
@@ -2427,7 +2427,7 @@ if (typeof window.CheckoutManager === 'undefined') {
                 // OPCIÓN B: Deltas individuales (funciona con backend actual)
                 await this.processPendingQuantityUpdates();
 
-                // 2) Update cart dropdown component (same as settings.js) - NO OPEN
+                // 2) Update cart dropdown component (same as backups.js) - NO OPEN
                 if (window.cart && typeof window.cart.clearCache === 'function') {
                     window.cart.clearCache();
                 }

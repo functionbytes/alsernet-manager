@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
- * Providers additional settings required for multi store form functionality.
+ * Providers additional backups required for multi store form functionality.
  */
 interface MultiStoreSettingsFormDataProviderInterface
 {

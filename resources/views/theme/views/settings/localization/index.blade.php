@@ -7,7 +7,7 @@
     <div class="widget-content searchable-container list">
 
         @include('theme.components.alerts')
-        <form method="POST" action="{{ route('manager.settings.localization.update') }}">
+        <form method="POST" action="{{ route('manager.backups.localization.update') }}">
             @csrf
             @method('PUT')
 
@@ -237,7 +237,7 @@
 
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary w-100 mb-2">Guardar</button>
-                    <a href="{{ route('manager.settings') }}" class="btn btn-secondary w-100">Cancelar</a>
+                    <a href="{{ route('manager.backups') }}" class="btn btn-secondary w-100">Cancelar</a>
                 </div>
 
             </div>

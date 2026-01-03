@@ -21,7 +21,7 @@ class AdminAlsernetEtiquetatiendasController extends ModuleAdminController
         $this->context->controller->addJS($this->module->getPathUri() . 'views/js/preview.js');
         $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/uploader.css');
         $this->context->smarty->assign([
-            'settings' => $settings,
+            'backups' => $settings,
             'base_image_url' => $settings['base_image'] ? $this->module->getPathUri() . 'uploads/' . $settings['base_image'] : null,
             'generate_url' => self::$currentIndex . '&token=' . $this->token . '&ajax=1&action=GeneratePdf',
             'savepos_url' => self::$currentIndex . '&token=' . $this->token . '&ajax=1&action=SavePositions',
@@ -196,7 +196,7 @@ class AdminAlsernetEtiquetatiendasController extends ModuleAdminController
         // Pasar variables al TPL de configuración (que ahora incluye el preview)
         $this->context->smarty->assign([
             'module_dir'     => $this->_path,
-            'settings'       => $settings,
+            'backups'       => $settings,
             'base_image_url' => $base_image_url,
             'savepos_url'    => $savepos_url,
             'generate_url'   => $generate_url,

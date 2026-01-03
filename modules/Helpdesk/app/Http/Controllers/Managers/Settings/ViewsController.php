@@ -45,7 +45,7 @@ class ViewsController extends Controller
 
         $views = $query->ordered()->paginate(20);
 
-        return view('theme.views.settings.helpdesk.views.index', compact('views', 'stats'));
+        return view('theme.views.backups.helpdesk.views.index', compact('views', 'stats'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ViewsController extends Controller
         $statuses = ConversationStatus::active()->ordered()->get();
         $groups = Group::with('users')->get();
 
-        return view('theme.views.settings.helpdesk.views.create', compact('statuses', 'groups'));
+        return view('theme.views.backups.helpdesk.views.create', compact('statuses', 'groups'));
     }
 
     /**
@@ -80,7 +80,7 @@ class ViewsController extends Controller
 
         ConversationView::create($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista creada exitosamente.');
     }
 
@@ -91,14 +91,14 @@ class ViewsController extends Controller
     {
         // Check if user can edit this view
         if (! $view->canEdit(Auth::id())) {
-            return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+            return redirect()->route('manager.helpdesk.backups.tickets.views.index')
                 ->with('error', 'No tienes permiso para editar esta vista.');
         }
 
         $statuses = ConversationStatus::active()->ordered()->get();
         $groups = Group::with('users')->get();
 
-        return view('theme.views.settings.helpdesk.views.edit', compact('view', 'statuses', 'groups'));
+        return view('theme.views.backups.helpdesk.views.edit', compact('view', 'statuses', 'groups'));
     }
 
     /**
@@ -125,7 +125,7 @@ class ViewsController extends Controller
 
         $view->update($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista actualizada exitosamente.');
     }
 
@@ -145,7 +145,7 @@ class ViewsController extends Controller
 
         $view->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista eliminada exitosamente.');
     }
 

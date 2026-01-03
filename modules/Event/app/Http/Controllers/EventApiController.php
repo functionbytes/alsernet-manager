@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Event\Http\Controllers\Api;
+namespace Modules\Event\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Modules\Event\Http\Requests\Events\StoreEventRequest;
-use Modules\Event\Http\Requests\Events\UpdateEventRequest;
+use Modules\Event\Http\Requests\StoreEventRequest;
+use Modules\Event\Http\Requests\UpdateEventRequest;
 use Modules\Event\Http\Resources\EventCollection;
 use Modules\Event\Http\Resources\EventResource;
 use Modules\Event\Models\Event;

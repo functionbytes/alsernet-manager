@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\DTO;
 
 /**
- * Holds default settings for shop logos.
+ * Holds default backups for shop logos.
  */
 class ShopLogoSettings
 {

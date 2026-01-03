@@ -134,48 +134,48 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
     });
 
 
-    Route::group(['prefix' => 'settings'], function () {
+    Route::group(['prefix' => 'backups'], function () {
 
-        Route::get('/', [SettingsController::class, 'index'])->name('manager.settings');
-        Route::post('/update', [SettingsController::class, 'update'])->name('manager.settings.update');
+        Route::get('/', [SettingsController::class, 'index'])->name('manager.backups');
+        Route::post('/update', [SettingsController::class, 'update'])->name('manager.backups.update');
 
-        Route::post('/favicon', [SettingsController::class, 'storeFavicon'])->name('manager.settings.favicon');
-        Route::get('/delete/favicon/{id}', [SettingsController::class, 'deleteFavicon'])->name('manager.settings.favicon.delete');
-        Route::get('/get/favicon/{id}', [SettingsController::class, 'getFavicon'])->name('manager.settings.favicon.get');
+        Route::post('/favicon', [SettingsController::class, 'storeFavicon'])->name('manager.backups.favicon');
+        Route::get('/delete/favicon/{id}', [SettingsController::class, 'deleteFavicon'])->name('manager.backups.favicon.delete');
+        Route::get('/get/favicon/{id}', [SettingsController::class, 'getFavicon'])->name('manager.backups.favicon.get');
 
-        Route::post('/logo', [SettingsController::class, 'storeLogo'])->name('manager.settings.logo');
-        Route::get('/delete/logo/{id}', [SettingsController::class, 'deleteLogo'])->name('manager.settings.logo.delete');
-        Route::get('/get/logo/{id}', [SettingsController::class, 'getLogo'])->name('manager.settings.logo.get');
+        Route::post('/logo', [SettingsController::class, 'storeLogo'])->name('manager.backups.logo');
+        Route::get('/delete/logo/{id}', [SettingsController::class, 'deleteLogo'])->name('manager.backups.logo.delete');
+        Route::get('/get/logo/{id}', [SettingsController::class, 'getLogo'])->name('manager.backups.logo.get');
 
         // @deprecated Maintenance routes moved to modules/System/routes/web.php
-        // Route::get('/maintenance', [MantenanceSettingsController::class, 'index'])->name('manager.settings.maintenance');
-        // Route::post('/maintenance/update', [MantenanceSettingsController::class, 'update'])->name('manager.settings.maintenance.update');
+        // Route::get('/maintenance', [MantenanceSettingsController::class, 'index'])->name('manager.backups.maintenance');
+        // Route::post('/maintenance/update', [MantenanceSettingsController::class, 'update'])->name('manager.backups.maintenance.update');
 
-        Route::get('/hours', [HoursSettingsController::class, 'index'])->name('manager.settings.hours');
-        Route::post('/hours/update', [HoursSettingsController::class, 'update'])->name('manager.settings.hours.update');
+        Route::get('/hours', [HoursSettingsController::class, 'index'])->name('manager.backups.hours');
+        Route::post('/hours/update', [HoursSettingsController::class, 'update'])->name('manager.backups.hours.update');
 
         // Storage management routes
-        Route::get('/storage', [StorageController::class, 'index'])->name('manager.settings.storage');
-        Route::get('/storage/create', [StorageController::class, 'create'])->name('manager.settings.storage.create');
-        Route::post('/storage/update', [StorageController::class, 'update'])->name('manager.settings.storage.update');
-        Route::delete('/storage', [StorageController::class, 'destroy'])->name('manager.settings.storage.destroy');
-        Route::post('/storage', [StorageController::class, 'store'])->name('manager.settings.storage.store');
-        Route::get('/storage/{index}/edit', [StorageController::class, 'edit'])->name('manager.settings.storage.edit');
-        Route::patch('/storage/{index}', [StorageController::class, 'updateDisk'])->name('manager.settings.storage.update-disk');
+        Route::get('/storage', [StorageController::class, 'index'])->name('manager.backups.storage');
+        Route::get('/storage/create', [StorageController::class, 'create'])->name('manager.backups.storage.create');
+        Route::post('/storage/update', [StorageController::class, 'update'])->name('manager.backups.storage.update');
+        Route::delete('/storage', [StorageController::class, 'destroy'])->name('manager.backups.storage.destroy');
+        Route::post('/storage', [StorageController::class, 'store'])->name('manager.backups.storage.store');
+        Route::get('/storage/{index}/edit', [StorageController::class, 'edit'])->name('manager.backups.storage.edit');
+        Route::patch('/storage/{index}', [StorageController::class, 'updateDisk'])->name('manager.backups.storage.update-disk');
 
         // Category management routes (hierarchical with PrestaShop sync)
         Route::group(['prefix' => 'categories'], function () {
-            Route::get('/', [CategoryController::class, 'index'])->name('manager.settings.categories.index');
-            Route::get('/create', [CategoryController::class, 'create'])->name('manager.settings.categories.create');
-            Route::post('/', [CategoryController::class, 'store'])->name('manager.settings.categories.store');
-            Route::get('/{uid}/edit', [CategoryController::class, 'edit'])->name('manager.settings.categories.edit');
-            Route::put('/{uid}', [CategoryController::class, 'update'])->name('manager.settings.categories.update');
-            Route::delete('/{uid}', [CategoryController::class, 'destroy'])->name('manager.settings.categories.destroy');
-            Route::post('/reorder', [CategoryController::class, 'reorder'])->name('manager.settings.categories.reorder');
-            Route::post('/{uid}/sync-to-prestashop', [CategoryController::class, 'syncToPrestaShop'])->name('manager.settings.categories.sync-to-prestashop');
-            Route::post('/sync-from-prestashop', [CategoryController::class, 'syncFromPrestaShop'])->name('manager.settings.categories.sync-from-prestashop');
-            Route::get('/conflicts', [CategoryController::class, 'conflicts'])->name('manager.settings.categories.conflicts');
-            Route::post('/conflicts/{mapping}/resolve', [CategoryController::class, 'resolveConflict'])->name('manager.settings.categories.conflicts.resolve');
+            Route::get('/', [CategoryController::class, 'index'])->name('manager.backups.categories.index');
+            Route::get('/create', [CategoryController::class, 'create'])->name('manager.backups.categories.create');
+            Route::post('/', [CategoryController::class, 'store'])->name('manager.backups.categories.store');
+            Route::get('/{uid}/edit', [CategoryController::class, 'edit'])->name('manager.backups.categories.edit');
+            Route::put('/{uid}', [CategoryController::class, 'update'])->name('manager.backups.categories.update');
+            Route::delete('/{uid}', [CategoryController::class, 'destroy'])->name('manager.backups.categories.destroy');
+            Route::post('/reorder', [CategoryController::class, 'reorder'])->name('manager.backups.categories.reorder');
+            Route::post('/{uid}/sync-to-prestashop', [CategoryController::class, 'syncToPrestaShop'])->name('manager.backups.categories.sync-to-prestashop');
+            Route::post('/sync-from-prestashop', [CategoryController::class, 'syncFromPrestaShop'])->name('manager.backups.categories.sync-from-prestashop');
+            Route::get('/conflicts', [CategoryController::class, 'conflicts'])->name('manager.backups.categories.conflicts');
+            Route::post('/conflicts/{mapping}/resolve', [CategoryController::class, 'resolveConflict'])->name('manager.backups.categories.conflicts.resolve');
         });
 
         // Mailer routes are now handled by modules\Mail
@@ -187,20 +187,20 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
         // Search Settings
         Route::group(['prefix' => 'search'], function () {
-            Route::get('/', [SearchSettingsController::class, 'index'])->name('manager.settings.search.index');
-            Route::put('/update', [SearchSettingsController::class, 'update'])->name('manager.settings.search.update');
+            Route::get('/', [SearchSettingsController::class, 'index'])->name('manager.backups.search.index');
+            Route::put('/update', [SearchSettingsController::class, 'update'])->name('manager.backups.search.update');
         });
 
         // Localization Settings
         Route::group(['prefix' => 'localization'], function () {
-            Route::get('/', [LocalizationSettingsController::class, 'index'])->name('manager.settings.localization.index');
-            Route::put('/update', [LocalizationSettingsController::class, 'update'])->name('manager.settings.localization.update');
+            Route::get('/', [LocalizationSettingsController::class, 'index'])->name('manager.backups.localization.index');
+            Route::put('/update', [LocalizationSettingsController::class, 'update'])->name('manager.backups.localization.update');
         });
 
         Route::group(['prefix' => 'translations'], function () {
-            Route::get('/', [TranslationController::class, 'index'])->name('manager.settings.translations.index');
-            Route::get('/edit/{locale}/{file}', [TranslationController::class, 'edit'])->name('manager.settings.translations.edit');
-            Route::patch('/update/{locale}/{file}', [TranslationController::class, 'update'])->name('manager.settings.translations.update');
+            Route::get('/', [TranslationController::class, 'index'])->name('manager.backups.translations.index');
+            Route::get('/edit/{locale}/{file}', [TranslationController::class, 'edit'])->name('manager.backups.translations.edit');
+            Route::patch('/update/{locale}/{file}', [TranslationController::class, 'update'])->name('manager.backups.translations.update');
         });
 
     });

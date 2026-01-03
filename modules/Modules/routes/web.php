@@ -9,9 +9,9 @@ use Modules\Modules\Http\Controllers\ModulesController;
 |--------------------------------------------------------------------------
 |
 | Rutas para la gestión de vistas de configuración de módulos
-| URL: /settings/modules (aplicado por RouteServiceProvider)
+| URL: /backups/modules (aplicado por RouteServiceProvider)
 | Middleware: web, auth, role:manager|super-admin (aplicado por RouteServiceProvider)
-| SOLO GET para renderizar vistas. POST, PUT, DELETE están en routes/api/settings.php
+| SOLO GET para renderizar vistas. POST, PUT, DELETE están en routes/api/backups.php
 |
 */
 

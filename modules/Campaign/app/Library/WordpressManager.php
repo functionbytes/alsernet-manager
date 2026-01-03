@@ -24,7 +24,7 @@ class WordpressManager
         if (! defined('DB_NAME')) {
             $this->endpoint = config('wordpress.url').'/wp-json/vbrand/v1';
 
-            // ** MySQL settings - You can get this info from your web host ** //
+            // ** MySQL backups - You can get this info from your web host ** //
             /** The name of the database for WordPress */
             define('DB_NAME', config('database.connections.wordpress.database'));
 

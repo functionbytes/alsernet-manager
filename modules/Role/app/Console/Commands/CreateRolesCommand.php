@@ -29,7 +29,7 @@ class CreateRolesCommand extends Command
             ],
             'manager' => [
                 'label' => 'Gerente General',
-                'description' => 'Gestiona usuarios y operaciones generales del perfil settings. Puede crear, editar y eliminar usuarios; ver reportes; y administrar datos básicos del sistema.',
+                'description' => 'Gestiona usuarios y operaciones generales del perfil backups. Puede crear, editar y eliminar usuarios; ver reportes; y administrar datos básicos del sistema.',
                 'color' => '#0066FF', // Azul
             ],
             'callcenter-manager' => [

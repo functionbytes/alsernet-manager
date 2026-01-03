@@ -289,7 +289,7 @@ $(document).ready(function() {
                 // Create a hidden form to submit DELETE request
                 const form = $('<form>', {
                     method: 'POST',
-                    action: '{{ route("settings.suppliers.automation.workflows.destroy", $workflow->uid) }}'
+                    action: '{{ route("backups.suppliers.automation.workflows.destroy", $workflow->uid) }}'
                 });
 
                 form.append('{{ csrf_field() }}');

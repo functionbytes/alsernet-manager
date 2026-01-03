@@ -157,7 +157,7 @@
 
 
                     $.ajax({
-                        url: "{{ route('manager.settings.metadata.update') }}",
+                        url: "{{ route('manager.backups.metadata.update') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -223,7 +223,7 @@
 
             var myMetadata = new Dropzone("div#metadata", {
                 paramName: "file",
-                url: "{{ route('manager.settings.metadata') }}",
+                url: "{{ route('manager.backups.metadata') }}",
                 addRemoveLinks: true,
                 autoProcessQueue: false,
                 uploadMultiple: false,
@@ -238,7 +238,7 @@
 
                     item = $("#slack").val();
 
-                    $.getJSON("{{ route('manager.settings.metadata.metadata.get', ':item') }}".replace(':item', item), function (data) {
+                    $.getJSON("{{ route('manager.backups.metadata.metadata.get', ':item') }}".replace(':item', item), function (data) {
 
                         $.each(data, function (key, value) {
 

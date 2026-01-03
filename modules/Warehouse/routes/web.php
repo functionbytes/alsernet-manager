@@ -24,9 +24,9 @@ use Modules\Warehouse\Http\Controllers\Products\BarcodeController as ProductsBar
 |--------------------------------------------------------------------------
 |
 | Routes for warehouse management by managers
-| Prefix: /settings/warehouse (applied by WarehouseServiceProvider)
+| Prefix: /backups/warehouse (applied by WarehouseServiceProvider)
 | Middleware: auth, role:manager|super-admin (applied by WarehouseServiceProvider)
-| Name prefix: settings.warehouse. (applied by WarehouseServiceProvider)
+| Name prefix: backups.warehouse. (applied by WarehouseServiceProvider)
 |
 */
 
@@ -62,33 +62,15 @@ Route::group(['prefix' => 'styles'], function () {
     Route::get('/destroy/{uid}', [WarehouseLocationStylesController::class, 'destroy'])->name('styles.destroy');
 });
 
-// Stands Routes (Consolidated with Locations)
-Route::group(['prefix' => 'stands'], function () {
-    Route::get('/', [WarehouseLocationsController::class, 'index'])->name('stands');
-    Route::get('/create', [WarehouseLocationsController::class, 'create'])->name('stands.create');
-    Route::post('/store', [WarehouseLocationsController::class, 'store'])->name('stands.store');
-    Route::post('/update', [WarehouseLocationsController::class, 'update'])->name('stands.update');
-    Route::get('/edit/{uid}', [WarehouseLocationsController::class, 'edit'])->name('stands.edit');
-    Route::get('/view/{uid}', [WarehouseLocationsController::class, 'view'])->name('stands.view');
-    Route::get('/destroy/{uid}', [WarehouseLocationsController::class, 'destroy'])->name('stands.destroy');
-});
+// Stands Routes (Redirects to warehouse list)
+Route::get('/stands', function () {
+    return redirect()->route('settings.warehouse.index')->with('info', 'Selecciona un almacén para ver sus stands');
+})->name('stands');
 
-// Inventory Slots Routes
-Route::group(['prefix' => 'slots'], function () {
-    Route::get('/', [WarehouseInventorySlotsController::class, 'index'])->name('slots');
-    Route::get('/create', [WarehouseInventorySlotsController::class, 'create'])->name('slots.create');
-    Route::post('/store', [WarehouseInventorySlotsController::class, 'store'])->name('slots.store');
-    Route::post('/update', [WarehouseInventorySlotsController::class, 'update'])->name('slots.update');
-    Route::get('/edit/{uid}', [WarehouseInventorySlotsController::class, 'edit'])->name('slots.edit');
-    Route::get('/view/{uid}', [WarehouseInventorySlotsController::class, 'view'])->name('slots.view');
-    Route::get('/destroy/{uid}', [WarehouseInventorySlotsController::class, 'destroy'])->name('slots.destroy');
-
-    // Inventory operations
-    Route::post('/{uid}/add-quantity', [WarehouseInventorySlotsController::class, 'addQuantity'])->name('slots.add-quantity');
-    Route::post('/{uid}/subtract-quantity', [WarehouseInventorySlotsController::class, 'subtractQuantity'])->name('slots.subtract-quantity');
-    Route::post('/{uid}/add-weight', [WarehouseInventorySlotsController::class, 'addWeight'])->name('slots.add-weight');
-    Route::post('/{uid}/clear', [WarehouseInventorySlotsController::class, 'clear'])->name('slots.clear');
-});
+// Inventory Slots Routes (Redirects to warehouse list)
+Route::get('/slots', function () {
+    return redirect()->route('settings.warehouse.index')->with('info', 'Selecciona un almacén para ver sus slots de inventario');
+})->name('slots');
 
 // Warehouse CRUD (Main List)
 Route::get('/', [WarehouseController::class, 'index'])->name('index');

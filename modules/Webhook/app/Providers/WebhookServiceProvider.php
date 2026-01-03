@@ -52,15 +52,15 @@ class WebhookServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register gates for settings authorization
+     * Register gates for backups authorization
      */
     protected function registerGates(): void
     {
         $settingsPolicy = new SettingsPolicy;
 
-        // Configure settings gates
+        // Configure backups gates
         Gate::define('configure-webhooks', fn ($user) => $settingsPolicy->configure($user));
-        Gate::define('view-webhook-settings', fn ($user) => $settingsPolicy->viewSettings($user));
+        Gate::define('view-webhook-backups', fn ($user) => $settingsPolicy->viewSettings($user));
         Gate::define('manage-webhook-integrations', fn ($user) => $settingsPolicy->manageIntegrations($user));
         Gate::define('manage-webhook-subscriptions', fn ($user) => $settingsPolicy->manageSubscriptions($user));
         Gate::define('manage-webhook-events', fn ($user) => $settingsPolicy->manageEvents($user));
@@ -72,28 +72,33 @@ class WebhookServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
+        $moduleName = $this->name;
+        $webPath = module_path($moduleName, 'routes/web.php');
+        $settingsPath = module_path($moduleName, 'routes/settings.php');
+        $apiPath = module_path($moduleName, 'routes/api.php');
+
         // Webhook operational routes (day-to-day webhook monitoring)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('webhooks')
             ->name('manager.webhooks.')
-            ->group(function () {
-                require module_path($this->name, 'routes/web.php');
+            ->group(function () use ($webPath) {
+                require $webPath;
             });
 
-        // Webhook configuration routes (system settings)
+        // Webhook configuration routes (system backups)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/webhooks')
-            ->name('manager.settings.webhooks.')
-            ->group(function () {
-                require module_path($this->name, 'routes/settings.php');
+            ->name('manager.backups.webhooks.')
+            ->group(function () use ($settingsPath) {
+                require $settingsPath;
             });
 
         // Public API routes
         Route::middleware(['api'])
             ->prefix('api/webhooks')
             ->name('api.webhooks.')
-            ->group(function () {
-                require module_path($this->name, 'routes/api.php');
+            ->group(function () use ($apiPath) {
+                require $apiPath;
             });
     }
 
@@ -117,8 +122,8 @@ class WebhookServiceProvider extends ServiceProvider
                 ['label' => 'Listado de webhooks', 'route' => 'manager.webhooks.index'],
                 ['label' => 'Entregas', 'route' => 'manager.webhooks.deliveries'],
                 ['label' => 'Eventos', 'route' => 'manager.webhooks.events'],
-                ['label' => 'Integraciones', 'route' => 'manager.settings.webhooks.integrations.index'],
-                ['label' => 'Suscripciones', 'route' => 'manager.settings.webhooks.subscriptions.index'],
+                ['label' => 'Integraciones', 'route' => 'manager.backups.webhooks.integrations.index'],
+                ['label' => 'Suscripciones', 'route' => 'manager.backups.webhooks.subscriptions.index'],
             ],
         ]);
     }

@@ -961,7 +961,7 @@
 				self.require[self.format[format].media] = true;
 			});
 
-			// Now required types are known, finish the options default settings.
+			// Now required types are known, finish the options default backups.
 			if(this.require.video) {
 				this.options = $.extend(true, {},
 					this.optionsVideo,

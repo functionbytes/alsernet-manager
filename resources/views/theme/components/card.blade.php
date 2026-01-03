@@ -6,7 +6,7 @@
                 <h6 class="fw-semibold mb-1 text-uppercase">{{ $title }}</h5>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a class="text-muted text-decoration-none" href="{{ route('home') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a class="text-muted text-decoration-none" href=" ">Dashboard</a></li>
                     </ol>
                 </nav>
             </div>

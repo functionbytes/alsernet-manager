@@ -234,7 +234,7 @@ $(document).ready(function() {
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: '{{ route("settings.erp.check-connection") }}',
+            url: '{{ route("backups.erp.check-connection") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -267,7 +267,7 @@ $(document).ready(function() {
     // Toggle servicio activo
     $('#toggleServiceBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("settings.erp.toggle-active") }}',
+            url: '{{ route("backups.erp.toggle-active") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -297,7 +297,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("settings.erp.clear-cache") }}',
+            url: '{{ route("backups.erp.clear-cache") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -320,7 +320,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("settings.erp.reset-stats") }}',
+            url: '{{ route("backups.erp.reset-stats") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -345,7 +345,7 @@ $(document).ready(function() {
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ route("settings.erp.test-sync") }}',
+            url: '{{ route("backups.erp.test-sync") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -370,7 +370,7 @@ $(document).ready(function() {
     // Refrescar estadísticas
     $('#refreshBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("settings.erp.get-stats") }}',
+            url: '{{ route("backups.erp.get-stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {

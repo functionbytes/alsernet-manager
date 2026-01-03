@@ -45,7 +45,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('manager.settings.mailers.variables.create') }}" class="btn btn-primary">
+                                <a href="{{ route('settings.mailers.variables.create') }}" class="btn btn-primary">
                                     <i class="fa-duotone fa-plus"></i>
                                 </a>
                             </div>
@@ -125,7 +125,7 @@
                                         <input class="form-check-input toggle-status" type="checkbox"
                                             @checked($variable->is_enabled)
                                             data-variable-id="{{ $variable->id }}"
-                                            data-url="{{ route('manager.settings.mailers.variables.toggle-status', $variable) }}">
+                                            data-url="{{ route('settings.mailers.variables.toggle-status', $variable) }}">
                                     </div>
                                 </td>
                                 <td class="text-left">
@@ -135,7 +135,7 @@
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $variable->id }}">
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('manager.settings.mailers.variables.edit', $variable) }}">
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.mailers.variables.edit', $variable) }}">
                                                     Editar
                                                 </a>
                                             </li>
@@ -144,7 +144,7 @@
                                                     <hr class="dropdown-divider">
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3 text-danger confirm-delete" data-href="{{ route('manager.settings.mailers.variables.destroy', $variable) }}">
+                                                    <a class="dropdown-item d-flex align-items-center gap-3 text-danger confirm-delete" data-href="{{ route('settings.mailers.variables.destroy', $variable) }}">
                                                         Eliminar
                                                     </a>
                                                 </li>

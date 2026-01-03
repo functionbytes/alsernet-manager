@@ -130,7 +130,7 @@ class WarehouseController extends Controller
         }
 
         $summary = [
-            'total_floors' => $warehouse->locations()->distinct('floor_id')->count(),
+            'total_floors' => $warehouse->floors()->count(),
             'total_locations' => $warehouse->locations()->count(),
             'total_slots' => $warehouse->locations()->withCount('slots')->get()->sum('slots_count'),
             'occupied_slots' => 0, // Calcular dinámicamente si es necesario
@@ -261,7 +261,7 @@ class WarehouseController extends Controller
             'warehouse_id' => $warehouse->id,
             'warehouse_uid' => $warehouse->uid,
             'name' => $warehouse->name,
-            'total_floors' => $warehouse->locations()->distinct('floor_id')->count(),
+            'total_floors' => $warehouse->floors()->count(),
             'total_locations' => $warehouse->locations()->count(),
             'total_slots' => $warehouse->locations()->with('slots')->get()->sum(function ($location) {
                 return $location->slots()->count();

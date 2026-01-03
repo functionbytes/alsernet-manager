@@ -223,12 +223,12 @@ NavService::getAll();
 // Salida esperada:
 [
     'mini' => [
-        'settings' => [...],
+        'backups' => [...],
         'documents' => [...],
         'marketing' => [...],
     ],
     'sidebar' => [
-        'settings' => [...],
+        'backups' => [...],
         'documents' => [...],
         'marketing' => [...],
     ]
@@ -304,7 +304,7 @@ Consulta: [Font Awesome Icons](https://fontawesome.com/icons)
 5. **Crear las rutas** en `modules/MyModule/routes/web.php`:
    ```php
    Route::get('dashboard', [...]);
-   Route::get('settings', [...]);
+   Route::get('backups', [...]);
    ```
 
 6. **¡Listo!** Los menús aparecerán automáticamente

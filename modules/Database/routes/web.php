@@ -10,23 +10,23 @@ use Modules\Database\Http\Controllers\DatabaseSettingsController;
 |--------------------------------------------------------------------------
 |
 | Rutas para el módulo de configuración y limpieza de base de datos
-| Prefix: /settings/database (aplicado por ServiceProvider)
-| Name: manager.settings.database.* (aplicado por ServiceProvider)
+| Prefix: /backups/database (aplicado por ServiceProvider)
+| Name: manager.backups.database.* (aplicado por ServiceProvider)
 |
 | Permisos: Usa Spatie Permission middleware
 */
 
 // Database Settings Routes
-Route::middleware('can:database.settings.view')->group(function () {
+Route::middleware('can:database.backups.view')->group(function () {
     Route::get('/', [DatabaseSettingsController::class, 'index'])->name('index');
 });
 
-Route::middleware('can:database.settings.update')->group(function () {
+Route::middleware('can:database.backups.update')->group(function () {
     Route::get('/edit', [DatabaseSettingsController::class, 'edit'])->name('edit');
     Route::put('/update', [DatabaseSettingsController::class, 'update'])->name('update');
 });
 
-Route::middleware('can:database.settings.test_connection')->group(function () {
+Route::middleware('can:database.backups.test_connection')->group(function () {
     Route::post('/check-connection', [DatabaseSettingsController::class, 'checkConnection'])->name('check-connection');
 });
 

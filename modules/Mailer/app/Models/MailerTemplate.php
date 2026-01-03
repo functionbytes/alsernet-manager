@@ -2,11 +2,11 @@
 
 namespace Modules\Mailer\Models;
 
-use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Mailer\Traits\HasUid;
 
 /**
  * @property int $id
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Modules\Mailer\Models\MailLayout|null $layout
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Mailer\Models\MailTemplateLang> $translations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Mailer\Models\MailerTemplateLang> $translations
  * @property-read string|null $subject (magic getter - from current translation)
  * @property-read string|null $content (magic getter - from current translation)
  */
@@ -55,7 +55,7 @@ class MailerTemplate extends Model
      */
     public function layout(): BelongsTo
     {
-        return $this->belongsTo('Modules\Mailer\Models\MailLayout', 'layout_id', 'id');
+        return $this->belongsTo('Modules\Mailer\Models\MailerLayout', 'layout_id', 'id');
     }
 
     /**
@@ -70,7 +70,7 @@ class MailerTemplate extends Model
      * Obtener traducción para un idioma específico con fallback
      * Si no existe la traducción, intenta con lang_id 1 (idioma por defecto)
      */
-    public function translate(?int $langId = null): ?MailTemplateLang
+    public function translate(?int $langId = null): ?MailerTemplateLang
     {
         $langId = $langId ?? 1;
 

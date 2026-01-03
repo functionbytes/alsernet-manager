@@ -16,7 +16,7 @@ class BarcodeController extends Controller
 
         $products = Product::all();
 
-        return view('theme.views.settings.faqs.faqs.index')->with([
+        return view('theme.views.backups.faqs.faqs.index')->with([
             'faqs' => $faqs,
             'available' => $available,
             'searchKey' => $searchKey,
@@ -37,7 +37,7 @@ class BarcodeController extends Controller
         $categories->prepend('', '');
         $categories = $categories->pluck('title', 'id');
 
-        return view('theme.views.settings.faqs.faqs.create')->with([
+        return view('theme.views.backups.faqs.faqs.create')->with([
             'availables' => $availables,
             'categories' => $categories,
         ]);
@@ -59,7 +59,7 @@ class BarcodeController extends Controller
         $categories = FaqCategorie::latest()->available()->get();
         $categories = $categories->pluck('title', 'id');
 
-        return view('theme.views.settings.faqs.faqs.edit')->with([
+        return view('theme.views.backups.faqs.faqs.edit')->with([
             'availables' => $availables,
             'categories' => $categories,
             'faq' => $faq,

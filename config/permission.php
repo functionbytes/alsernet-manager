@@ -174,7 +174,7 @@ return [
      */
     // 'wildcard_permission' => Spatie\Permission\WildcardPermission::class,
 
-    /* Cache-specific settings */
+    /* Cache-specific backups */
 
     'cache' => [
 

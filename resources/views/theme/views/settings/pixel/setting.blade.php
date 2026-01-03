@@ -118,7 +118,7 @@
                     $submitButton.prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('manager.settings.pixel.update') }}",
+                        url: "{{ route('manager.backups.pixel.update') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },

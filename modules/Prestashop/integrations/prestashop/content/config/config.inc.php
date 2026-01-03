@@ -54,7 +54,7 @@ if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (! is_dir(_PS_ROOT_
     exit('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-/* No settings file? goto installer... */
+/* No backups file? goto installer... */
 if (! file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && ! file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
     Tools::redirectToInstall();
 }
@@ -160,7 +160,7 @@ Language::loadLanguages();
 $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
 $context->country = $default_country;
 
-/* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
+/* It is not safe to rely on the system's timezone backups, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */

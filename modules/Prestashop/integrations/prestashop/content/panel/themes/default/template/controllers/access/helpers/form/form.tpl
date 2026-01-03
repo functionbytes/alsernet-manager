@@ -152,7 +152,7 @@
                      if (res == 'ok')
                         showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                      else
-                        showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
+                        showErrorMessage("{l s='Unable to update backups.' d='Admin.Notifications.Error'}");
                   } catch(e) {
                      jAlert('Technical error');
                   }
@@ -181,7 +181,7 @@
                   if (res == 'ok')
                      showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                   else
-                     showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
+                     showErrorMessage("{l s='Unable to update backups.' d='Admin.Notifications.Error'}");
                }
                catch(e)
                {
@@ -227,7 +227,7 @@
                   if (res == 'ok')
                      showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                   else
-                     showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
+                     showErrorMessage("{l s='Unable to update backups.' d='Admin.Notifications.Error'}");
                }
                catch(e)
                {

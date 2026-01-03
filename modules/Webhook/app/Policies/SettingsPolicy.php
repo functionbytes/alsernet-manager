@@ -25,7 +25,7 @@ class SettingsPolicy
     }
 
     /**
-     * Determine if the user can view webhook settings.
+     * Determine if the user can view webhook backups.
      */
     public function viewSettings(User $user): bool
     {

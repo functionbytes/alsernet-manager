@@ -20,7 +20,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may configure all of the mailers used by your application plus
-    | their respective settings. Several examples have been configured for
+    | their respective backups. Several examples have been configured for
     | you and you are free to add your own as your application requires.
     |
     | Laravel supports a variety of mail "transports" by default and keeps
@@ -88,7 +88,7 @@ return [
     |
     | If you are using Markdown based email rendering, you may configure the
     | theme and component paths that are used when rendering the e-mail to
-    | the client browser. You are free to modify these settings as needed.
+    | the client browser. You are free to modify these backups as needed.
     |
     */
 

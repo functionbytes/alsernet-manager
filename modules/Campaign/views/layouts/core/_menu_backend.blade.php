@@ -92,7 +92,7 @@
 								</li>
 							@endif
 							<li class="nav-item {{ in_array($menu, ['tax']) ? 'active' : '' }}">
-								<a href="{{ route('Admin\TaxController@settings') }}" class="dropdown-item d-flex align-items-center">
+								<a href="{{ route('Admin\TaxController@backups') }}" class="dropdown-item d-flex align-items-center">
 									<i class="navbar-icon" style="width: 20px;">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 575 446"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M485.3,446H98a15,15,0,0,1,0-30H485.3A59.8,59.8,0,0,0,545,356.3V191a15,15,0,0,1,30,0V356.3A89.8,89.8,0,0,1,485.3,446Z" style="fill:gray"/><path d="M425.5,369H89.5A89.5,89.5,0,0,1,0,279.5V89.5A89.5,89.5,0,0,1,89.5,0h336A89.5,89.5,0,0,1,515,89.5v190A89.5,89.5,0,0,1,425.5,369ZM89.5,30A59.6,59.6,0,0,0,30,89.5v190A59.6,59.6,0,0,0,89.5,339h336A59.6,59.6,0,0,0,485,279.5V89.5A59.6,59.6,0,0,0,425.5,30Z" style="fill:gray"/><path d="M310.8,299.1a95.4,95.4,0,1,1,28-4.3A93.8,93.8,0,0,1,310.8,299.1Zm0-160a65.1,65.1,0,1,0,30.2,7.5A64.7,64.7,0,0,0,310.8,139.1Z" style="fill:gray"/><path d="M164.9,120H94a15,15,0,0,1,0-30h70.9a15,15,0,0,1,0,30Z" style="fill:gray"/><path d="M144.9,219H94a15,15,0,0,1,0-30h50.9a15,15,0,0,1,0,30Z" style="fill:gray"/></g></g></svg>
 									</i>{{ trans('messages.tax_settings') }}

@@ -91,7 +91,7 @@
             <div class="tab-content mt-4" id="aiAgentTabContent">
                 <!-- Settings Tab -->
                 <div class="tab-pane fade show active" id="tab-settings" role="tabpanel">
-                    @include('managers.views.helpdesk.ai-agent.partials.settings-tab', ['agent' => $agent, 'providers' => $providers, 'statuses' => $statuses])
+                    @include('managers.views.helpdesk.ai-agent.partials.backups-tab', ['agent' => $agent, 'providers' => $providers, 'statuses' => $statuses])
                 </div>
 
                 <!-- Tags Tab -->

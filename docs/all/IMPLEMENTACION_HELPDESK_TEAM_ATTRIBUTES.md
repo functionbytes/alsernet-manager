@@ -39,7 +39,7 @@ Agregar en `routes/managers.php` dentro del grupo `Route::prefix('helpdesk')`:
 
 ```php
 // TEAM SETTINGS
-Route::prefix('settings/team')->name('manager.helpdesk.settings.team.')->group(function () {
+Route::prefix('backups/team')->name('manager.helpdesk.backups.team.')->group(function () {
     Route::get('members', [TeamController::class, 'membersIndex'])->name('members');
     Route::get('members/{id}/edit', [TeamController::class, 'memberEdit'])->name('member.edit');
     Route::put('members/{id}', [TeamController::class, 'memberUpdate'])->name('member.update');
@@ -53,7 +53,7 @@ Route::prefix('settings/team')->name('manager.helpdesk.settings.team.')->group(f
 });
 
 // ATTRIBUTES SETTINGS
-Route::prefix('settings/attributes')->name('manager.helpdesk.settings.attributes.')->group(function () {
+Route::prefix('backups/attributes')->name('manager.helpdesk.backups.attributes.')->group(function () {
     Route::get('/', [AttributesController::class, 'index'])->name('index');
     Route::get('create', [AttributesController::class, 'create'])->name('create');
     Route::post('/', [AttributesController::class, 'store'])->name('store');

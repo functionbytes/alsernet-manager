@@ -14,7 +14,7 @@
     </div>
 
     <!-- Bulk Actions -->
-    @if($failedCount > 0 && auth()->user()->can('manage-horizon-settings'))
+    @if($failedCount > 0 && auth()->user()->can('manage-horizon-backups'))
         <div class="mb-3">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-sm btn-outline-success" onclick="retryAllFailed()">
@@ -64,7 +64,7 @@
                                         <small class="text-muted">{{ $job['timestamp'] ?? '—' }}</small>
                                     </td>
                                     <td>
-                                        @can('manage-horizon-settings')
+                                        @can('manage-horizon-backups')
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <button class="btn btn-outline-success" title="Reintentar" onclick="retryJob('{{ $job['id'] ?? '' }}')">
                                                     <i class="fas fa-sync-alt"></i>

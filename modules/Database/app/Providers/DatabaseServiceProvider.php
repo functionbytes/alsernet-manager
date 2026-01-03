@@ -47,12 +47,14 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Database settings and cleanup routes
+        $webPath = module_path($this->name, 'routes/web.php');
+
+        // Database backups and cleanup routes
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/database')
-            ->name('manager.settings.database.')
-            ->group(function () {
-                require module_path($this->name, 'routes/web.php');
+            ->name('manager.backups.database.')
+            ->group(function () use ($webPath) {
+                require $webPath;
             });
     }
 

@@ -11,7 +11,7 @@
         'title' => 'Componentes de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.settings')],
+            ['label' => 'Configuración', 'url' => route('manager.backups')],
             ['label' => 'Componentes de correo', 'active' => true]
         ]
     ])
@@ -28,10 +28,10 @@
                         <p class="small mb-0 text-muted">Gestiona header, footer y otros componentes reutilizables para tus plantillas de email</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('manager.settings.mailers.templates.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-secondary">
                             Ver plantillas
                         </a>
-                        <a href="{{ route('manager.settings.mailers.components.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.mailers.components.create') }}" class="btn btn-primary">
                             Nuevo componente
                         </a>
                     </div>
@@ -82,7 +82,7 @@
 
             {{-- Filters --}}
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.mailers.components.index') }}">
+                <form method="GET" action="{{ route('settings.mailers.components.index') }}">
                     <div class="row g-3 align-items-end">
                         <div class="col-12 col-md-7">
                             <label for="search" class="form-label fw-semibold">Búsqueda</label>
@@ -113,7 +113,7 @@
                                 <i class="fa fa-magnifying-glass me-2"></i>Buscar
                             </button>
                             @if ($search || $type)
-                                <a href="{{ route('manager.settings.mailers.components.index') }}" class="btn btn-outline-secondary">
+                                <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-outline-secondary">
                                     <i class="fa fa-xmark"></i>
                                 </a>
                             @endif
@@ -215,18 +215,18 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.mailers.components.edit', $component->uid) }}">
+                                                    <a class="dropdown-item" href="{{ route('settings.mailers.components.edit', $component->uid) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.mailers.components.preview', $component->uid) }}" target="_blank">
+                                                    <a class="dropdown-item" href="{{ route('settings.mailers.components.preview', $component->uid) }}" target="_blank">
                                                         Vista previa
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <form method="POST"
-                                                          action="{{ route('manager.settings.mailers.components.duplicate', $component->uid) }}">
+                                                          action="{{ route('settings.mailers.components.duplicate', $component->uid) }}">
                                                         @csrf
                                                         <button type="submit" class="dropdown-item">
                                                             Duplicar
@@ -237,7 +237,7 @@
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <form method="POST"
-                                                              action="{{ route('manager.settings.mailers.components.destroy', $component->uid) }}"
+                                                              action="{{ route('settings.mailers.components.destroy', $component->uid) }}"
                                                               onsubmit="return confirm('¿Estás seguro de que deseas eliminar este componente?');">
                                                             @csrf
                                                             @method('DELETE')
@@ -269,11 +269,11 @@
                         @endif
                     </p>
                     @if ($search || $type)
-                        <a href="{{ route('manager.settings.mailers.components.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-secondary">
                             Ver todos
                         </a>
                     @else
-                        <a href="{{ route('manager.settings.mailers.components.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.mailers.components.create') }}" class="btn btn-primary">
                             + Crear ahora
                         </a>
                     @endif

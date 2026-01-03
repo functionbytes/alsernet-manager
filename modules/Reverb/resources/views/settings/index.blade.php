@@ -50,7 +50,7 @@
                             <button type="button" class="btn btn-primary" id="testConnection">
                                 <i class="fas fa-plug me-2"></i>Probar conexión
                             </button>
-                            <a href="{{ route('manager.settings.reverb.edit') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.backups.reverb.edit') }}" class="btn btn-secondary">
                                 <i class="fas fa-edit me-2"></i>Editar
                             </a>
                         </div>
@@ -105,10 +105,10 @@
                     <h6 class="card-title mb-3">Acciones rápidas</h6>
 
                     <div class="btn-group" role="group">
-                        <a href="{{ route('manager.settings.reverb.monitoring.index') }}" class="btn btn-outline-primary">
+                        <a href="{{ route('manager.backups.reverb.monitoring.index') }}" class="btn btn-outline-primary">
                             <i class="fas fa-chart-line me-2"></i>Monitoreo
                         </a>
-                        <a href="{{ route('manager.settings.reverb.edit') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('manager.backups.reverb.edit') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-cog me-2"></i>Configuración
                         </a>
                     </div>
@@ -124,7 +124,7 @@ document.getElementById('testConnection')?.addEventListener('click', function() 
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Probando...';
 
-    fetch('{{ route("manager.settings.reverb.test-connection") }}', {
+    fetch('{{ route("manager.backups.reverb.test-connection") }}', {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

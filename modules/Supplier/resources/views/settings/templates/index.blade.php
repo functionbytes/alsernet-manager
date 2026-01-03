@@ -276,7 +276,7 @@ $(document).ready(function() {
         const templateLabel = $(this).data('template-label');
 
         $('#selectedTemplateName').text(templateLabel);
-        $('#cloneForm').attr('action', '/manager/settings/suppliers/templates/' + templateUid + '/clone');
+        $('#cloneForm').attr('action', '/manager/backups/suppliers/templates/' + templateUid + '/clone');
     });
 
     // Handle scope change to show/hide supplier and category selects

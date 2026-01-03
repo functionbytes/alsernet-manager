@@ -8,8 +8,8 @@ use Modules\Notification\Http\Controllers\Settings\NotificationSettingsControlle
 | Notification Settings Routes
 |--------------------------------------------------------------------------
 |
-| Prefix: /settings/notifications (applied by NotificationServiceProvider)
-| Name: settings.notifications.* (applied by NotificationServiceProvider)
+| Prefix: /backups/notifications (applied by NotificationServiceProvider)
+| Name: backups.notifications.* (applied by NotificationServiceProvider)
 | Middleware: web, auth, role:manager|super-admin (applied by NotificationServiceProvider)
 |
 */

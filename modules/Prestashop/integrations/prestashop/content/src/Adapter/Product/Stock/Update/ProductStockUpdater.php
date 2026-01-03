@@ -42,7 +42,7 @@ use Product;
 use StockAvailable;
 
 /**
- * Updates settings related to Product stock
+ * Updates backups related to Product stock
  */
 class ProductStockUpdater
 {

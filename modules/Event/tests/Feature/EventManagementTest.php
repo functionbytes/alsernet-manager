@@ -16,7 +16,7 @@ class EventManagementTest extends TestCase
     public function test_can_view_events_index(): void
     {
         $this->actingAs($this->createUser())
-            ->get(route('manager.events'))
+            ->get(route('manager.events.index'))
             ->assertStatus(200)
             ->assertViewIs('event::managers.events.index');
     }
@@ -152,7 +152,7 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($this->createUser())
             ->get(route('manager.events.destroy', $event->uid))
-            ->assertRedirect(route('manager.events'));
+            ->assertRedirect(route('manager.events.index'));
 
         $this->assertSoftDeleted('aalv_Alsernet_event_manager', [
             'uid' => $event->uid,

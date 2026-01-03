@@ -115,7 +115,7 @@ class UploadHandler
             // browser when downloaded, e.g. "example.html.gif" with embedded
             // JavaScript code.
             'replace_dots_in_filenames' => '-',
-            // The php.ini settings upload_max_filesize and post_max_size
+            // The php.ini backups upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
             'min_file_size' => 1,

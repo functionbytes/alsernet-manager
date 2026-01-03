@@ -56,7 +56,7 @@ class HICallMeBackOverride extends HICallMeBack
                 'icon' => 'icon-paint-brush',
             ],
             'general_settings' => [
-                'title' => $this->l('General settings'),
+                'title' => $this->l('General backups'),
                 'icon' => 'icon-cog',
             ],
             'agents' => [

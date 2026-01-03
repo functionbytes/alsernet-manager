@@ -52,8 +52,8 @@ Si el seeder falla por Telescope, usa Tinker manualmente:
 php artisan tinker
 
 # Dentro de tinker:
-Spatie\Permission\Models\Permission::create(['name' => 'reverb.settings.view', 'guard_name' => 'web']);
-Spatie\Permission\Models\Permission::create(['name' => 'reverb.settings.update', 'guard_name' => 'web']);
+Spatie\Permission\Models\Permission::create(['name' => 'reverb.backups.view', 'guard_name' => 'web']);
+Spatie\Permission\Models\Permission::create(['name' => 'reverb.backups.update', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.channels.view', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.channels.broadcast', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.events.broadcast', 'guard_name' => 'web']);

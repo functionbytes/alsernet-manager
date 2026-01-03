@@ -55,7 +55,7 @@
         }
     </style>
 
-    <form method="POST" action="{{ route('manager.settings.translations.update', [$locale, $file]) }}"
+    <form method="POST" action="{{ route('manager.backups.translations.update', [$locale, $file]) }}"
           id="translationForm">
         @csrf
         @method('PATCH')
@@ -64,7 +64,7 @@
 
             <!-- Toolbar -->
             <div class="d-flex gap-2 mb-3" style="flex-wrap: wrap; align-items: center;">
-                <a href="{{ route('manager.settings.translations.index') }}" class="btn btn-light btn-sm">
+                <a href="{{ route('manager.backups.translations.index') }}" class="btn btn-light btn-sm">
                     <i class="fas fa-arrow-left me-1"></i> Volver
                 </a>
                 <button type="submit" class="btn btn-primary btn-sm">
@@ -109,7 +109,7 @@
             </div>
 
             <!-- Translation Sections -->
-            @include('theme.views.settings.translations.partials.translation-fields-modern', [
+            @include('theme.views.backups.translations.partials.translation-fields-modern', [
                 'data' => $content,
                 'baseData' => $baseContent ?? [],
                 'prefix' => ''
@@ -119,7 +119,7 @@
 
         <!-- Submit Footer -->
         <div class="d-flex gap-2 mt-4" style="flex-wrap: wrap;">
-            <a href="{{ route('manager.settings.translations.index') }}" class="btn btn-light btn-sm">
+            <a href="{{ route('manager.backups.translations.index') }}" class="btn btn-light btn-sm">
                 <i class="fas fa-times me-1"></i> Cancelar
             </a>
             <button type="submit" class="btn btn-primary btn-sm">

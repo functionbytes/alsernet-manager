@@ -30,7 +30,7 @@ use Configuration;
 use PrestaShop\PrestaShop\Core\Form\MultiStoreSettingsFormDataProviderInterface;
 
 /**
- * This class is used to retrieve data which is used in settings form to render multi store fields - its used in
+ * This class is used to retrieve data which is used in backups form to render multi store fields - its used in
  * Theme & logo page.
  *
  * @internal

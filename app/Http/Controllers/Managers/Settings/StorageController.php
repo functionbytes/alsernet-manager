@@ -20,7 +20,7 @@ class StorageController extends Controller
         $storageData = $this->getStorageData();
         $statistics = $this->getStorageStatistics($storageData);
 
-        return view('theme.views.settings.storage.index', [
+        return view('theme.views.backups.storage.index', [
             'storageData' => $storageData,
             'statistics' => $statistics,
         ]);
@@ -252,7 +252,7 @@ class StorageController extends Controller
     {
         $storageData = $this->getStorageData();
 
-        return view('theme.views.settings.storage.create', [
+        return view('theme.views.backups.storage.create', [
             'driverOptions' => $storageData['driver_options'],
         ]);
     }
@@ -336,7 +336,7 @@ class StorageController extends Controller
             Setting::set('system.custom_storage_disks', json_encode($existingDisks));
 
             return redirect()
-                ->route('manager.settings.storage.index')
+                ->route('manager.backups.storage.index')
                 ->with('success', 'Disco de almacenamiento creado correctamente');
         } catch (\Exception $e) {
             \Log::error('Error creating storage disk', [
@@ -360,14 +360,14 @@ class StorageController extends Controller
         // Verificar que el índice existe
         if (! isset($storageData['custom_disks'][$index])) {
             return redirect()
-                ->route('manager.settings.storage.index')
+                ->route('manager.backups.storage.index')
                 ->with('error', 'El disco solicitado no existe');
         }
 
         $disk = $storageData['custom_disks'][$index];
         $isFromConfig = $disk['from_config'] ?? false;
 
-        return view('theme.views.settings.storage.edit', [
+        return view('theme.views.backups.storage.edit', [
             'disk' => $disk,
             'diskIndex' => $index,
             'isFromConfig' => $isFromConfig,
@@ -385,7 +385,7 @@ class StorageController extends Controller
         // Verificar que el índice existe
         if (! isset($storageData['custom_disks'][$index])) {
             return redirect()
-                ->route('manager.settings.storage.index')
+                ->route('manager.backups.storage.index')
                 ->with('error', 'El disco solicitado no existe');
         }
 
@@ -468,7 +468,7 @@ class StorageController extends Controller
             Setting::set('system.custom_storage_disks', json_encode($existingDisks));
 
             return redirect()
-                ->route('manager.settings.storage.index')
+                ->route('manager.backups.storage.index')
                 ->with('success', 'Disco actualizado correctamente');
         } catch (\Exception $e) {
             \Log::error('Error updating storage disk', [

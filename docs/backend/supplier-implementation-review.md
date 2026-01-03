@@ -297,37 +297,37 @@ El sistema está completamente implementado con las siguientes rutas activas:
 
 ### 1. Rutas Registradas
 ```bash
-✅ manager.settings.suppliers.index
-✅ manager.settings.suppliers.create
-✅ manager.settings.suppliers.store
-✅ manager.settings.suppliers.edit
-✅ manager.settings.suppliers.update
-✅ manager.settings.suppliers.destroy
-✅ manager.settings.suppliers.toggle
-✅ manager.settings.suppliers.test-all
+✅ manager.backups.suppliers.index
+✅ manager.backups.suppliers.create
+✅ manager.backups.suppliers.store
+✅ manager.backups.suppliers.edit
+✅ manager.backups.suppliers.update
+✅ manager.backups.suppliers.destroy
+✅ manager.backups.suppliers.toggle
+✅ manager.backups.suppliers.test-all
 
-✅ manager.settings.supplier-automation.index
-✅ manager.settings.supplier-automation.dashboard
-✅ manager.settings.supplier-automation.run
-✅ manager.settings.supplier-automation.schedule
-✅ manager.settings.supplier-automation.logs
-✅ manager.settings.supplier-automation.stats
+✅ manager.backups.supplier-automation.index
+✅ manager.backups.supplier-automation.dashboard
+✅ manager.backups.supplier-automation.run
+✅ manager.backups.supplier-automation.schedule
+✅ manager.backups.supplier-automation.logs
+✅ manager.backups.supplier-automation.stats
 
-✅ manager.settings.supplier-prompts.index
-✅ manager.settings.supplier-prompts.create
-✅ manager.settings.supplier-prompts.store
-✅ manager.settings.supplier-prompts.edit
-✅ manager.settings.supplier-prompts.update
-✅ manager.settings.supplier-prompts.destroy
-✅ manager.settings.supplier-prompts.toggle
-✅ manager.settings.supplier-prompts.test
+✅ manager.backups.supplier-prompts.index
+✅ manager.backups.supplier-prompts.create
+✅ manager.backups.supplier-prompts.store
+✅ manager.backups.supplier-prompts.edit
+✅ manager.backups.supplier-prompts.update
+✅ manager.backups.supplier-prompts.destroy
+✅ manager.backups.supplier-prompts.toggle
+✅ manager.backups.supplier-prompts.test
 
-✅ manager.settings.supplier-content.index
-✅ manager.settings.supplier-content.show
-✅ manager.settings.supplier-content.approve
-✅ manager.settings.supplier-content.reject
-✅ manager.settings.supplier-content.edit
-✅ manager.settings.supplier-content.filter
+✅ manager.backups.supplier-content.index
+✅ manager.backups.supplier-content.show
+✅ manager.backups.supplier-content.approve
+✅ manager.backups.supplier-content.reject
+✅ manager.backups.supplier-content.edit
+✅ manager.backups.supplier-content.filter
 ```
 
 ### 2. Base de Datos

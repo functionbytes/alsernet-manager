@@ -51,7 +51,7 @@ return [
              * MySQL, PostgreSQL, SQLite and Mongo databases are supported.
              *
              * The content of the database dump may be customized for each connection
-             * by adding a 'dump' key to the connection settings in config/database.php.
+             * by adding a 'dump' key to the connection backups in config/database.php.
              * E.g.
              * 'mysql' => [
              *       ...

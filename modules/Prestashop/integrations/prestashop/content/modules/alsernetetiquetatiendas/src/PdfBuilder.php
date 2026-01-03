@@ -12,24 +12,24 @@ class PdfBuilder
     /**
      * Constructor flexible:
      *
-     * - new PdfBuilder($bgPath, $settings)
-     * - new PdfBuilder($settings)
+     * - new PdfBuilder($bgPath, $backups)
+     * - new PdfBuilder($backups)
      */
     public function __construct($arg1 = null, $arg2 = null)
     {
-        // Caso 1: (string $bgPath, array $settings)
+        // Caso 1: (string $bgPath, array $backups)
         if (is_string($arg1) && is_array($arg2)) {
             $this->bgPath  = $arg1;
             $this->settings = $arg2;
-            error_log('[PdfBuilder::__construct] Modo 1 (bgPath + settings)');
+            error_log('[PdfBuilder::__construct] Modo 1 (bgPath + backups)');
             return;
         }
 
-        // Caso 2: (array $settings)
+        // Caso 2: (array $backups)
         if (is_array($arg1) && $arg2 === null) {
             $this->settings = $arg1;
             $this->bgPath   = null;
-            error_log('[PdfBuilder::__construct] Modo 2 (solo settings)');
+            error_log('[PdfBuilder::__construct] Modo 2 (solo backups)');
             return;
         }
 

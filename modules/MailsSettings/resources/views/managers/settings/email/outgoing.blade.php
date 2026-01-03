@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Probando...';
 
-            fetch('{{ route("settings.outgoing-email.test-connection") }}', {
+            fetch('{{ route("backups.outgoing-email.test-connection") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sendTestEmailBtn.disabled = true;
             sendTestEmailBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Enviando...';
 
-            fetch('{{ route("settings.outgoing-email.send-test") }}', {
+            fetch('{{ route("backups.outgoing-email.send-test") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

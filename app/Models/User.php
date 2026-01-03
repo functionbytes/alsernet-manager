@@ -383,7 +383,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the agent settings for this user.
+     * Get the agent backups for this user.
      */
     public function agentSettings(): HasOne
     {

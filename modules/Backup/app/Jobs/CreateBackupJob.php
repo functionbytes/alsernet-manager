@@ -129,7 +129,7 @@ class CreateBackupJob implements ShouldQueue
     {
         try {
             if (! $this->dbSettings) {
-                Log::warning('No database settings provided');
+                Log::warning('No database backups provided');
 
                 return;
             }

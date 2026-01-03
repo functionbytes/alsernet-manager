@@ -17,7 +17,7 @@ admin_webservice_keys_search:
         _legacy_link: AdminWebservice:submitFilterwebservice_account
 
 admin_webservice_save_settings:
-    path: /settings
+    path: /backups
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:saveSettings'

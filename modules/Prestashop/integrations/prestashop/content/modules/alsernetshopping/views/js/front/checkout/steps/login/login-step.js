@@ -122,12 +122,12 @@
                     return;
                 }
 
-                // Get messages from settings.js for multilingual support
+                // Get messages from backups.js for multilingual support
                 const messages = (typeof window.settings !== 'undefined' && window.settings.getMessages)
                     ? window.settings.getMessages()
                     : {};
 
-                // Ensure custom validation methods are loaded from settings BEFORE using them
+                // Ensure custom validation methods are loaded from backups BEFORE using them
                 if (typeof window.settings !== 'undefined' && typeof window.settings.addCustomValidationMethods === 'function') {
                     window.settings.addCustomValidationMethods();
                 }

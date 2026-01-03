@@ -19,7 +19,7 @@ Se corrigieron múltiples inconsistencias en el módulo de **fuentes de proveedo
 **Solución:**
 ```php
 // routes/theme.php
-Route::prefix('{supplierUid}/sources')->name('manager.settings.suppliers.sources.')->group(function () {
+Route::prefix('{supplierUid}/sources')->name('manager.backups.suppliers.sources.')->group(function () {
     Route::get('/', [SupplierSourcesController::class, 'index'])->name('index');
     Route::get('/data', [SupplierSourcesController::class, 'getData'])->name('data'); // ✅ AGREGADA
     // ...otras rutas
@@ -43,11 +43,11 @@ Route::prefix('{supplierUid}/sources')->name('manager.settings.suppliers.sources
 ```javascript
 // ❌ ANTES
 const supplierId = {{ $supplier->id }};
-ajax: '{{ route("manager.settings.suppliers.sources.data", $supplier->id) }}',
+ajax: '{{ route("manager.backups.suppliers.sources.data", $supplier->id) }}',
 
 // ✅ DESPUÉS
 const supplierUid = '{{ $supplier->uid }}';
-ajax: '{{ route("manager.settings.suppliers.sources.data", $supplier->uid) }}',
+ajax: '{{ route("manager.backups.suppliers.sources.data", $supplier->uid) }}',
 ```
 
 ---
@@ -160,7 +160,7 @@ private function getActionsHtml($source): string
 ```bash
 ✅ php artisan tinker --execute="echo route('manager.settings.suppliers.sources.index', '01KCWG99FV1CAN5YAZPRE4PHDR');"
 
-Output: https://webadminpruebas.a-alvarez.com/manager/settings/suppliers/01KCWG99FV1CAN5YAZPRE4PHDR/sources
+Output: https://webadminpruebas.a-alvarez.com/manager/backups/suppliers/01KCWG99FV1CAN5YAZPRE4PHDR/sources
 ```
 
 ### 2. Formateo de Código

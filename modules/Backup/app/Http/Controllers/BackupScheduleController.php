@@ -4,7 +4,7 @@ namespace Modules\Backup\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\Backup\Models\Setting\Backup\BackupSchedule;
+use Modules\Backup\Models\BackupSchedule;
 
 class BackupScheduleController extends Controller
 {
@@ -35,7 +35,7 @@ class BackupScheduleController extends Controller
         $breadcrumb = 'Configuración / Backups Programados';
         $searchKey = $request->get('search');
 
-        return view('backup::settings.schedules.index', compact('schedules', 'pageTitle', 'breadcrumb', 'searchKey'));
+        return view('backup::schedules.index', compact('schedules', 'pageTitle', 'breadcrumb', 'searchKey'));
     }
 
     /**
@@ -57,7 +57,7 @@ class BackupScheduleController extends Controller
             'database' => 'Base de Datos',
         ];
 
-        return view('backup::settings.schedules.create', compact(
+        return view('backup::schedules.create', compact(
             'pageTitle',
             'breadcrumb',
             'frequencies',
@@ -110,7 +110,7 @@ class BackupScheduleController extends Controller
             'next_run_at' => $schedule->calculateNextRun(),
         ]);
 
-        return redirect()->route('settings.backup-schedules.index')
+        return redirect()->route('settings.backup.schedules.index')
             ->with('success', 'Schedule de backup creado exitosamente');
     }
 
@@ -134,7 +134,7 @@ class BackupScheduleController extends Controller
             'database' => 'Base de Datos',
         ];
 
-        return view('backup::settings.schedules.edit', compact(
+        return view('backup::schedules.edit', compact(
             'schedule',
             'pageTitle',
             'breadcrumb',
@@ -179,7 +179,7 @@ class BackupScheduleController extends Controller
             'next_run_at' => $schedule->calculateNextRun(),
         ]);
 
-        return redirect()->route('settings.backup-schedules.index')
+        return redirect()->route('settings.backup.schedules.index')
             ->with('success', 'Schedule de backup actualizado exitosamente');
     }
 
@@ -200,7 +200,7 @@ class BackupScheduleController extends Controller
             ]);
         }
 
-        return redirect()->route('settings.backup-schedules.index')
+        return redirect()->route('settings.backup.schedules.index')
             ->with('success', 'Schedule eliminado exitosamente');
     }
 

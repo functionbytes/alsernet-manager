@@ -146,7 +146,7 @@ class ThemeController extends AbstractAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                    $this->trans('The backups have been successfully updated.', 'Admin.Notifications.Success')
                 );
             } catch (DomainException $e) {
                 $this->addFlash(
@@ -385,7 +385,7 @@ class ThemeController extends AbstractAdminController
         $this->getCommandBus()->handle(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
 
         $this->addFlash('success', $this->trans(
-            'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',
+            'Your theme has been correctly reset to its default backups. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',
             'Admin.Design.Notification',
             [
                 '%regenerate_label%' => $this->trans('Regenerate thumbnails', 'Admin.Design.Feature'),

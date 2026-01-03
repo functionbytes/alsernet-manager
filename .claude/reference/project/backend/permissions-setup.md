@@ -194,8 +194,8 @@ php artisan permissions:assign <role_id> <permission_name> --role
 # Asignar permiso 'users.create' al usuario 5
 php artisan permissions:assign 5 users.create
 
-# Asignar permiso 'settings.manage' al rol admin
-php artisan permissions:assign 2 settings.manage --role
+# Asignar permiso 'backups.manage' al rol admin
+php artisan permissions:assign 2 backups.manage --role
 ```
 
 ---

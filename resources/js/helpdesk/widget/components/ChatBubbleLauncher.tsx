@@ -10,7 +10,7 @@ export function ChatBubbleLauncher({ onToggle, isOpen }: ChatBubbleLauncherProps
     const settings = useWidgetStore(state => state.settings);
     const [isHovered, setIsHovered] = useState(false);
 
-    // Get position from settings
+    // Get position from backups
     const position = settings.position || 'bottom-right';
     const sideSpacing = settings.side_spacing || 16;
     const bottomSpacing = settings.bottom_spacing || 16;

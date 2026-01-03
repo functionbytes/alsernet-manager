@@ -190,8 +190,8 @@ return [
     | Queue Worker Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may define the queue worker settings used by your application
-    | in all environments. These supervisors and settings handle all your
+    | Here you may define the queue worker backups used by your application
+    | in all environments. These supervisors and backups handle all your
     | queued jobs and will be provisioned by Horizon during deployment.
     |
     */

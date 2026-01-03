@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | These routes are currently empty as API routes are registered
-| within the web.php file using the /settings/horizon/api prefix.
+| within the web.php file using the /backups/horizon/api prefix.
 |
 */

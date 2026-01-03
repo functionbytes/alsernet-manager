@@ -16,7 +16,7 @@
         <div class="trigger-action mt-4">
             <span class="btn btn-secondary email-settings-change mr-1"
             >
-                {{ trans('messages.automation.email.settings') }}
+                {{ trans('messages.automation.email.backups') }}
             </span>
             @if ($email->hasTemplate())
                 <a onclick="popupwindow('{{ route('Automation2Controller@templatePreview', [
@@ -54,7 +54,7 @@
 
     <script>
         // Click on exist action
-        $('.email-settings-change').click(function(e) {
+        $('.email-backups-change').click(function(e) {
             e.preventDefault();
 
             var url = '{{ route('Automation2Controller@emailTemplate', ['uid' => $automation->uid, 'email_uid' => $email->uid]) }}';
@@ -100,7 +100,7 @@
     });
 
                                 // load default sidebar
-                                sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+                                sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
                             });
                         }
                     });
@@ -166,7 +166,7 @@
                             });
 
                             // load default sidebar
-                            sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+                            sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
                         });
                     },
                 });

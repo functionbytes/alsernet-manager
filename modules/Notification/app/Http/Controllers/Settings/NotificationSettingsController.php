@@ -29,7 +29,7 @@ class NotificationSettingsController extends BaseManagerController
             'retention_days' => config('notification.retention_days', 30),
         ];
 
-        return view('notification::theme.settings.index', compact('config'));
+        return view('notification::theme.backups.index', compact('config'));
     }
 
     public function update(Request $request): JsonResponse

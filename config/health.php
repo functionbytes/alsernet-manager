@@ -95,12 +95,12 @@ return [
         'always_send_fresh_results' => true,
 
         /*
-         * The secret that is displayed at the Application Health settings at Oh Dear.
+         * The secret that is displayed at the Application Health backups at Oh Dear.
          */
         'secret' => env('OH_DEAR_HEALTH_CHECK_SECRET'),
 
         /*
-         * The URL that should be configured in the Application health settings at Oh Dear.
+         * The URL that should be configured in the Application health backups at Oh Dear.
          */
         'url' => '/oh-dear-health-check-results',
     ],

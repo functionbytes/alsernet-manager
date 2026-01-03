@@ -39,10 +39,10 @@ class UserServiceProvider extends ServiceProvider
     {
         $modulePath = dirname(__DIR__, 2);
 
-        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        // User settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings')
-            ->name('settings.')
+            ->prefix('settings/users')
+            ->name('settings.users.')
             ->group(function () use ($modulePath) {
                 // Load view routes (GET)
                 require $modulePath.'/routes/web.php';

@@ -63,7 +63,7 @@ class ImageDropzoneType extends TranslatorAwareType
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
                 'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Catalog.Feature'),
-                'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
+                'window.saveImage' => $this->trans('Save image backups', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
                 'window.closePhotoSwipe' => $this->trans('Close (esc)', 'Admin.Actions'),

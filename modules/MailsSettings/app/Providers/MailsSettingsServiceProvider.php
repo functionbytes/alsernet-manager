@@ -12,7 +12,7 @@ class MailsSettingsServiceProvider extends ServiceProvider
         // Merge module config
         $this->mergeConfigFrom(
             __DIR__.'/../../config/mails-settings.php',
-            'mails-settings'
+            'mails-backups'
         );
     }
 
@@ -26,11 +26,11 @@ class MailsSettingsServiceProvider extends ServiceProvider
 
         // Publish config
         $this->publishes([
-            __DIR__.'/../../config/mails-settings.php' => config_path('mails-settings.php'),
-        ], 'mails-settings-config');
+            __DIR__.'/../../config/mails-settings.php' => config_path('mails-backups.php'),
+        ], 'mails-backups-config');
 
         // Load views
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mails-settings');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mails-backups');
     }
 
     protected function registerRoutes(): void
@@ -43,14 +43,14 @@ class MailsSettingsServiceProvider extends ServiceProvider
 
     protected function registerMenus(): void
     {
-        NavService::registerMiniItem('email-settings', [
+        NavService::registerMiniItem('email-backups', [
             'icon' => 'fa-envelope-circle-check',
             'tooltip' => 'Configuración de Email',
-            'sidebar_id' => 'email-settings',
+            'sidebar_id' => 'email-backups',
             'order' => 50,
         ]);
 
-        NavService::registerSidebar('email-settings', [
+        NavService::registerSidebar('email-backups', [
             'title' => 'Configuración de Email',
             'items' => [
                 ['label' => 'Configuración general', 'route' => 'settings.email.index'],

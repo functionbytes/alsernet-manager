@@ -74,8 +74,8 @@ class SettingsController extends Controller
             'cc_email' => false,
         ]);
 
-        return view('theme.views.settings.helpdesk.tickets', [
-            'settings' => $settings,
+        return view('theme.views.backups.helpdesk.tickets', [
+            'backups' => $settings,
         ]);
     }
 
@@ -218,8 +218,8 @@ class SettingsController extends Controller
             'top-left' => 'Arriba Izquierda',
         ];
 
-        return view('theme.views.settings.helpdesk.livechat', [
-            'settings' => $settings,
+        return view('theme.views.backups.helpdesk.livechat', [
+            'backups' => $settings,
             'positions' => $positions,
         ]);
     }
@@ -311,8 +311,8 @@ class SettingsController extends Controller
             'gemini' => 'Google Gemini',
         ];
 
-        return view('theme.views.settings.helpdesk.ai', [
-            'settings' => $settings,
+        return view('theme.views.backups.helpdesk.ai', [
+            'backups' => $settings,
             'providers' => $providers,
         ]);
     }
@@ -356,8 +356,8 @@ class SettingsController extends Controller
             'enable_quarantine' => true,
         ]);
 
-        return view('theme.views.settings.helpdesk.uploading', [
-            'settings' => $settings,
+        return view('theme.views.backups.helpdesk.uploading', [
+            'backups' => $settings,
         ]);
     }
 
@@ -394,6 +394,6 @@ class SettingsController extends Controller
         \Cache::put($key, $values, now()->addDays(365));
 
         // Optional: Also save to database for persistence
-        // settings()->set($key, $values);
+        // backups()->set($key, $values);
     }
 }

@@ -1,16 +1,17 @@
 <?php
 
-namespace Modules\Mailer\Http\Controllers\Settings;
+namespace Modules\Mailer\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Lang;
-use Illuminate\Http\Request;
-use Modules\Mailer\Models\MailerVariable;
 use Modules\Mailer\Traits\AuthorizesMailerActions;
+use Modules\Mailer\Models\MailerVariable;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Lang;
 
 class MailerVariableController extends Controller
 {
     use AuthorizesMailerActions;
+
     /**
      * Display a listing of email variables
      */
@@ -94,14 +95,14 @@ class MailerVariableController extends Controller
         }
 
         return redirect()
-            ->route('manager.settings.mailers.variables.index')
+            ->route('settings.mailers.variables.index')
             ->with('success', "Variable '{$variable->key}' creada exitosamente.");
     }
 
     /**
      * Show the form for editing a variable
      */
-    public function edit(MailVariable $variable)
+    public function edit(MailerVariable $variable)
     {
         $pageTitle = 'Editar Variable de Email';
         $breadcrumb = 'Configuración / Correos / Variables / Editar';
@@ -135,7 +136,7 @@ class MailerVariableController extends Controller
     /**
      * Update the specified variable in storage
      */
-    public function update(Request $request, MailVariable $variable)
+    public function update(Request $request, MailerVariable $variable)
     {
         $validated = $request->validate([
             'key' => 'required|string|unique:mail_variables,key,'.$variable->id.'|regex:/^[A-Z_]+$/',
@@ -170,18 +171,18 @@ class MailerVariableController extends Controller
         }
 
         return redirect()
-            ->route('manager.settings.mailers.variables.index')
+            ->route('settings.mailers.variables.index')
             ->with('success', "Variable '{$variable->key}' actualizada exitosamente.");
     }
 
     /**
      * Remove the specified variable from storage
      */
-    public function destroy(MailVariable $variable)
+    public function destroy(MailerVariable $variable)
     {
         if ($variable->is_system) {
             return redirect()
-                ->route('manager.settings.mailers.variables.index')
+                ->route('settings.mailers.variables.index')
                 ->with('error', 'No se puede eliminar variables del sistema.');
         }
 
@@ -189,14 +190,14 @@ class MailerVariableController extends Controller
         $variable->delete();
 
         return redirect()
-            ->route('manager.settings.mailers.variables.index')
+            ->route('settings.mailers.variables.index')
             ->with('success', "Variable '{$key}' eliminada exitosamente.");
     }
 
     /**
      * Toggle variable status
      */
-    public function toggleStatus(MailVariable $variable)
+    public function toggleStatus(MailerVariable $variable)
     {
         $variable->update(['is_enabled' => ! $variable->is_enabled]);
 

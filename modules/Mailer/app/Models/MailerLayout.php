@@ -2,31 +2,14 @@
 
 namespace Modules\Mailer\Models;
 
-use app\Library\ExtendedSwiftMessage;
-use App\Traits\HasUid;
-use Closure;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Mailer\Traits\HasUid;
+use Closure;
 
-/**
- * @property int $id
- * @property string $uid
- * @property string $alias
- * @property string $group_name
- * @property string $code
- * @property string $type
- * @property bool $is_protected
- * @property bool $is_enabled
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read string|null $subject
- * @property-read string|null $content
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Mailer\Models\MailerLayoutLang> $translations
- */
 class MailerLayout extends Model
 {
     use HasUid;
-
     protected $table = 'mailer_layouts';
 
     protected $fillable = [

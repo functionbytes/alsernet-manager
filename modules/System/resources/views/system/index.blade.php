@@ -492,7 +492,7 @@
 
                         const connection = document.getElementById('queueConnection').value;
 
-                        fetch('{{ route("settings.system.queue.test") }}', {
+                        fetch('{{ route("backups.system.queue.test") }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -532,7 +532,7 @@
                         btn.disabled = true;
                         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reiniciando...';
 
-                        fetch('{{ route("settings.system.queue.restart") }}', {
+                        fetch('{{ route("backups.system.queue.restart") }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -567,12 +567,12 @@
                     broadcastDriver.addEventListener('change', function () {
                         const selectedDriver = this.value;
 
-                        // Hide all settings panels
+                        // Hide all backups panels
                         if (reverbSettings) reverbSettings.style.display = 'none';
                         if (pusherSettings) pusherSettings.style.display = 'none';
                         if (redisSettings) redisSettings.style.display = 'none';
 
-                        // Show selected driver settings
+                        // Show selected driver backups
                         if (selectedDriver === 'reverb' && reverbSettings) {
                             reverbSettings.style.display = 'block';
                         } else if (selectedDriver === 'pusher' && pusherSettings) {

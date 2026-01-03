@@ -98,14 +98,14 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'permissions.edit' => 'Editar permisos',
             'permissions.delete' => 'Eliminar permisos',
 
-            'settings.langs' => 'Gestionar idiomas del manager', // Added description
-            'settings.langs.create' => 'Crear idiomas del manager', // Added description
-            'settings.langs.store' => 'Almacenar idiomas del manager', // Added description
-            'settings.langs.update' => 'Actualizar idiomas del manager', // Added description
-            'settings.langs.edit' => 'Editar idiomas del manager', // Added description
-            'settings.langs.view' => 'Ver idiomas del manager', // Added description
-            'settings.langs.destroy' => 'Eliminar idiomas del manager', // Added description
-            'settings.langs.categories' => 'Gestionar categorías de idiomas del manager', // Added description
+            'backups.langs' => 'Gestionar idiomas del manager', // Added description
+            'backups.langs.create' => 'Crear idiomas del manager', // Added description
+            'backups.langs.store' => 'Almacenar idiomas del manager', // Added description
+            'backups.langs.update' => 'Actualizar idiomas del manager', // Added description
+            'backups.langs.edit' => 'Editar idiomas del manager', // Added description
+            'backups.langs.view' => 'Ver idiomas del manager', // Added description
+            'backups.langs.destroy' => 'Eliminar idiomas del manager', // Added description
+            'backups.langs.categories' => 'Gestionar categorías de idiomas del manager', // Added description
 
             // FAQs
             'faqs.view' => 'Ver FAQs',
@@ -146,7 +146,7 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             // Live Chat
             'livechat.view' => 'Ver chat en vivo',
             'livechat.engage' => 'Participar en chats',
-            'livechat.settings' => 'Configurar chat',
+            'livechat.backups' => 'Configurar chat',
             'livechat.operators.manage' => 'Gestionar operadores',
 
             // Documentos administrativos
@@ -195,7 +195,7 @@ class CompleteRolesAndPermissionsSeeder extends Seeder
             'returns.success' => 'Ver confirmación de devolución',
 
             // Configuración del sistema
-            'system.settings.manage' => 'Gestionar configuración del sistema',
+            'system.backups.manage' => 'Gestionar configuración del sistema',
             'system.maintenance' => 'Modo mantenimiento del sistema',
             'system.logs.view' => 'Ver logs del sistema',
             'system.api.manage' => 'Gestionar API tokens del sistema',

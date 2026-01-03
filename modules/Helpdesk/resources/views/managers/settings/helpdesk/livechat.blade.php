@@ -19,7 +19,7 @@
                         <p class="small mb-0 text-muted">{{ __('helpdesk.livechat.page_description') }}</p>
                     </div>
                     <div class="d-flex gap-2 align-items-center">
-                        <a href="{{ route('manager.settings') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('manager.backups') }}" class="btn btn-outline-secondary">
                             <i class="fa fa-arrow-left me-1"></i> {{ __('helpdesk.livechat.buttons.back') }}
                         </a>
                         <button type="submit" form="livechatForm" class="btn btn-primary" id="saveBtn" disabled>
@@ -33,7 +33,7 @@
         <div class="row g-3">
             <!-- Main Form (left side) -->
             <div class="col-lg-8">
-                <form method="POST" action="{{ route('manager.helpdesk.settings.livechat.update') }}" id="livechatForm">
+                <form method="POST" action="{{ route('manager.helpdesk.backups.livechat.update') }}" id="livechatForm">
                     @csrf
                     @method('PUT')
 
@@ -651,7 +651,7 @@ $(document).ready(function() {
         sendSettingsToIframe();
     });
 
-    // Send settings to iframe via postMessage
+    // Send backups to iframe via postMessage
     function sendSettingsToIframe() {
         if (!iframeWindow) return;
 
@@ -690,7 +690,7 @@ $(document).ready(function() {
         };
 
         iframeWindow.postMessage({
-            source: 'be-settings-editor',
+            source: 'be-backups-editor',
             type: 'setValues',
             values: settings
         }, '*');

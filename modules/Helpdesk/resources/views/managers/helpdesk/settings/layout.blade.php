@@ -364,7 +364,7 @@
 
                 {{-- Tab Content --}}
                 <div class="settings-content">
-                    @yield('settings-content')
+                    @yield('backups-content')
                 </div>
             </div>
         </div>

@@ -12,8 +12,8 @@ use Modules\Auth\Http\Controllers\Settings\TwoFactorAuthenticationController;
 |--------------------------------------------------------------------------
 |
 | Rutas de configuración de seguridad del usuario
-| Prefix: /settings/auth (aplicado por ServiceProvider)
-| Name: settings.auth.* (aplicado por ServiceProvider)
+| Prefix: /backups/auth (aplicado por ServiceProvider)
+| Name: backups.auth.* (aplicado por ServiceProvider)
 | Middleware: web, auth
 |
 */

@@ -61,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MailThemeController extends FrameworkBundleAdminController
 {
     /**
-     * Show mail theme settings and generation page.
+     * Show mail theme backups and generation page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *

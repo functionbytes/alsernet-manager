@@ -26,7 +26,7 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('manager.settings.reverb.update') }}" method="POST">
+                    <form action="{{ route('manager.backups.reverb.update') }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -109,7 +109,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-2"></i>Guardar cambios
                             </button>
-                            <a href="{{ route('manager.settings.reverb.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.backups.reverb.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>Cancelar
                             </a>
                         </div>

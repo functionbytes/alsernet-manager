@@ -282,7 +282,7 @@ class StatusesController extends Controller
     public function index()
     {
         $statuses = ConversationStatus::orderBy('order')->get();
-        return view('theme.views.settings.helpdesk.statuses.index', compact('statuses'));
+        return view('theme.views.backups.helpdesk.statuses.index', compact('statuses'));
     }
 
     public function store(Request $request)

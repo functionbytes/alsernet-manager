@@ -611,8 +611,8 @@ class Alsernetcontents extends Module implements WidgetInterface
         );
 
         $this->context->controller->registerJavascript(
-            'alsernet-settings',
-            $this->_path . 'views/js/front/settings.js',
+            'alsernet-backups',
+            $this->_path . 'views/js/front/backups.js',
             ['position' => 'bottom', 'priority' => 6]
         );
 

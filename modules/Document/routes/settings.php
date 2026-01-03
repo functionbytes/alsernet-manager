@@ -16,8 +16,8 @@ use Modules\Document\Http\Controllers\Settings\StageEmailActionController;
 |--------------------------------------------------------------------------
 |
 | Rutas para la configuración del sistema de documentos
-| Prefix: /settings/documents (aplicado por RouteServiceProvider)
-| Name: settings.documents.* (aplicado por RouteServiceProvider)
+| Prefix: /settings/documents (aplicado por DocumentsServiceProvider)
+| Name: settings.documents.* (aplicado por DocumentsServiceProvider)
 | Middleware: web, auth, role:manager|super-admin
 |
 */

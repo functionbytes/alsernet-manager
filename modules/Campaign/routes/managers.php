@@ -409,8 +409,8 @@ Route::group(
             Route::delete('/delete', [AutomationsController::class, 'delete'])->name('delete');
             Route::match(['get', 'post'], 'automation/{uid}/copy', [AutomationsController::class, 'copy'])->name('copy');
 
-            // Automation data and settings
-            Route::get('/{uid}/settings', [AutomationsController::class, 'settings'])->name('settings');
+            // Automation data and backups
+            Route::get('/{uid}/backups', [AutomationsController::class, 'settings'])->name('backups');
             Route::post('/{uid}/update', [AutomationsController::class, 'update'])->name('update');
             Route::post('/{uid}/data/save', [AutomationsController::class, 'saveData'])->name('saveData');
             Route::get('/{uid}/insight', [AutomationsController::class, 'insight'])->name('insight');

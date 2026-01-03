@@ -100,7 +100,7 @@ class HookRepository
     }
 
     /**
-     * Saves hook settings for a list of hooks.
+     * Saves hook backups for a list of hooks.
      * The $hooks array should have this format:
      * [
      *     "hookName" => [

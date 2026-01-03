@@ -144,7 +144,7 @@ class CachingConfiguration implements DataConfigurationInterface
 
         if (false === $this->phpParameters->saveConfiguration()) {
             $errors[] = [
-                'key' => 'The settings file cannot be overwritten.',
+                'key' => 'The backups file cannot be overwritten.',
                 'domain' => 'Admin.Advparameters.Notification',
                 'parameters' => [],
             ];

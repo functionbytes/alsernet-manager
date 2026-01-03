@@ -3,9 +3,9 @@
 namespace Modules\Campaign\Console\Commands;
 
 use App\Models\User;
-use App\Notifications\SystemAlert;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
+use Modules\Campaign\Notifications\SystemAlert;
 
 class SendGroupNotification extends Command
 {

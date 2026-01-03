@@ -57,7 +57,7 @@ class WarehouseServiceProvider extends ServiceProvider
     {
         $modulePath = module_path($this->name);
 
-        // Manager settings routes (GET views + POST/PUT/DELETE API)
+        // Manager backups routes (GET views + POST/PUT/DELETE API)
         \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/warehouse')
             ->name('settings.warehouse.')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Backup\Listeners\Systems\Backups;
+namespace Modules\Backup\Listeners;
 
 use Spatie\Backup\Events\BackupHasFailed;
 use Spatie\Backup\Events\BackupHasSucceeded;

@@ -1315,7 +1315,7 @@ class DocumentsController extends Controller
         // Get all upload types for dropdown
         $uploadTypes = DocumentUploadType::where('is_active', true)->orderBy('order')->get();
 
-        // Get global document configuration settings (for fallback)
+        // Get global document configuration backups (for fallback)
         $configController = new DocumentConfigurationController;
         $globalSettings = $configController->getGlobalSettings();
 
@@ -2241,7 +2241,7 @@ class DocumentsController extends Controller
             $adminId = auth()->check() ? auth()->id() : null;
 
             // Despachar job para enviar email en background
-            // La plantilla se obtiene automáticamente desde settings en DocumentEmailTemplateService
+            // La plantilla se obtiene automáticamente desde backups en DocumentEmailTemplateService
             MailTemplateJob::dispatch($document, 'custom', [
                 'subject' => $subject,
                 'content' => $content,

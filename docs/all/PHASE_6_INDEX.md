@@ -63,7 +63,7 @@ https://website.test/warehouse/helpdesk/settings/{setting}
 
 ### 3. Verificar Rutas
 ```bash
-php artisan route:list | grep warehouse.helpdesk.settings
+php artisan route:list | grep warehouse.helpdesk.backups
 ```
 
 ## 📁 Estructura de Archivos
@@ -114,7 +114,7 @@ public function newSettingIndex()
         'option1' => 'default',
         'option2' => false,
     ]);
-    return view('theme.views.helpdesk.settings.new_setting', ['settings' => $settings]);
+    return view('theme.views.helpdesk.backups.new_setting', ['backups' => $settings]);
 }
 
 public function newSettingUpdate(Request $request)
@@ -150,7 +150,7 @@ Route::put('new-setting', [HelpdeskSettingsController::class, 'newSettingUpdate'
 ### Error: "Route not defined"
 ```bash
 php artisan optimize:clear
-php artisan route:list | grep warehouse.helpdesk.settings
+php artisan route:list | grep warehouse.helpdesk.backups
 ```
 
 ### Error: "Table doesn't exist"

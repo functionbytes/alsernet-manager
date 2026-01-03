@@ -11,7 +11,7 @@ return [
                 'items' => [
                     [
                         'label' => 'Lista de eventos',
-                        'route' => 'manager.events',
+                        'route' => 'manager.events.index',
                         'icon' => 'fas fa-list',
                         'permission' => 'events.view',
                     ],

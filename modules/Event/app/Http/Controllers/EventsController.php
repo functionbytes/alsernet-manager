@@ -132,7 +132,7 @@ class EventsController extends Controller
         $event = Event::uid($uid);
         $event->delete();
 
-        return redirect()->route('manager.events');
+        return redirect()->route('manager.events.index');
     }
 
     private function getFormOptions(): array

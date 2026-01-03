@@ -113,7 +113,7 @@ $("#formSupplier").validate({
         if(response.success == true){
           toastr.success(message, "Operación exitosa");
           setTimeout(function() {
-            window.location = "{{ route('manager.settings.suppliers.index') }}";
+            window.location = "{{ route('manager.backups.suppliers.index') }}";
           }, 2000);
         }
       }
@@ -151,7 +151,7 @@ public function index(Request $request): View
         ->orderBy('name', 'asc')
         ->paginate(15);
 
-    return view('theme.views.settings.suppliers.index',
+    return view('theme.views.backups.suppliers.index',
         compact('suppliers', 'searchKey', 'is_active', 'pageTitle', 'breadcrumb'));
 }
 ```
@@ -231,21 +231,21 @@ All routes already defined in `routes/managers.php`:
 ```php
 Route::group(['prefix' => 'suppliers'], function () {
     Route::get('/', [SuppliersController::class, 'index'])
-        ->name('manager.settings.suppliers.index');
+        ->name('manager.backups.suppliers.index');
     Route::get('/create', [SuppliersController::class, 'create'])
-        ->name('manager.settings.suppliers.create');
+        ->name('manager.backups.suppliers.create');
     Route::post('/', [SuppliersController::class, 'store'])
-        ->name('manager.settings.suppliers.store');
+        ->name('manager.backups.suppliers.store');
     Route::get('/{uid}/edit', [SuppliersController::class, 'edit'])
-        ->name('manager.settings.suppliers.edit');
+        ->name('manager.backups.suppliers.edit');
     Route::put('/{uid}', [SuppliersController::class, 'update'])
-        ->name('manager.settings.suppliers.update');
+        ->name('manager.backups.suppliers.update');
     Route::delete('/{uid}', [SuppliersController::class, 'destroy'])
-        ->name('manager.settings.suppliers.destroy');
+        ->name('manager.backups.suppliers.destroy');
     Route::get('/{uid}', [SuppliersController::class, 'show'])
-        ->name('manager.settings.suppliers.show');
+        ->name('manager.backups.suppliers.show');
     Route::post('/{uid}/toggle', [SuppliersController::class, 'toggle'])
-        ->name('manager.settings.suppliers.toggle');
+        ->name('manager.backups.suppliers.toggle');
 });
 ```
 

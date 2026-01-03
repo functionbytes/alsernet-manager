@@ -91,7 +91,7 @@ class HorizonApiController extends Controller
      */
     public function retryJob(Request $request, string $jobId): JsonResponse
     {
-        $this->authorize('manage-horizon-settings');
+        $this->authorize('manage-horizon-backups');
 
         try {
             $result = $this->statsService->retryJob($jobId);
@@ -114,7 +114,7 @@ class HorizonApiController extends Controller
      */
     public function retryAll(): JsonResponse
     {
-        $this->authorize('manage-horizon-settings');
+        $this->authorize('manage-horizon-backups');
 
         try {
             $count = $this->statsService->retryAllFailed();
@@ -138,7 +138,7 @@ class HorizonApiController extends Controller
      */
     public function forgetJob(Request $request, string $jobId): JsonResponse
     {
-        $this->authorize('manage-horizon-settings');
+        $this->authorize('manage-horizon-backups');
 
         try {
             $result = $this->statsService->forgetJob($jobId);

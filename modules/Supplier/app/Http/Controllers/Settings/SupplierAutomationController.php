@@ -395,7 +395,7 @@ class SupplierAutomationController extends Controller
             $workflow = SupplierAutomationWorkflow::create($validated);
 
             return redirect()
-                ->route('manager.settings.suppliers.automation.index')
+                ->route('manager.backups.suppliers.automation.index')
                 ->with('success', 'Workflow creado exitosamente');
 
         } catch (\Exception $e) {
@@ -446,7 +446,7 @@ class SupplierAutomationController extends Controller
             $workflow->update($validated);
 
             return redirect()
-                ->route('manager.settings.suppliers.automation.index')
+                ->route('manager.backups.suppliers.automation.index')
                 ->with('success', 'Workflow actualizado exitosamente');
 
         } catch (\Exception $e) {
@@ -468,14 +468,14 @@ class SupplierAutomationController extends Controller
             $workflow->delete();
 
             return redirect()
-                ->route('manager.settings.suppliers.automation.index')
+                ->route('manager.backups.suppliers.automation.index')
                 ->with('success', 'Workflow eliminado exitosamente');
 
         } catch (\Exception $e) {
             Log::error('Error deleting workflow: '.$e->getMessage());
 
             return redirect()
-                ->route('manager.settings.suppliers.automation.index')
+                ->route('manager.backups.suppliers.automation.index')
                 ->with('error', 'Error al eliminar el workflow: '.$e->getMessage());
         }
     }

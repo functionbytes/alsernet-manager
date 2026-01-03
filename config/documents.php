@@ -47,37 +47,37 @@ return [
                 'items' => [
                     [
                         'label' => 'Configuraciones',
-                        'route' => 'manager.settings.documents.configurations',
+                        'route' => 'manager.backups.documents.configurations',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Almacenamiento',
-                        'route' => 'manager.settings.documents.configurations.storage',
+                        'route' => 'manager.backups.documents.configurations.storage',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Grupos de validación',
-                        'route' => 'manager.settings.documents.groups.index',
+                        'route' => 'manager.backups.documents.groups.index',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Tipos de documento',
-                        'route' => 'manager.settings.documents.types',
+                        'route' => 'manager.backups.documents.types',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Condiciones de validación',
-                        'route' => 'manager.settings.documents.conditions',
+                        'route' => 'manager.backups.documents.conditions',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Políticas SLA',
-                        'route' => 'manager.settings.documents.sla-policies.index',
+                        'route' => 'manager.backups.documents.sla-policies.index',
                         'permission' => 'documents.manage',
                     ],
                     [
                         'label' => 'Bloqueos de producto',
-                        'route' => 'manager.settings.documents.blockades.index',
+                        'route' => 'manager.backups.documents.blockades.index',
                         'permission' => 'documents.manage',
                     ],
                 ],

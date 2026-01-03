@@ -10,7 +10,7 @@
             'title' => 'Gestión de almacenamiento',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],
-                ['label' => 'Configuración', 'url' => route('manager.settings')],
+                ['label' => 'Configuración', 'url' => route('manager.backups')],
                 ['label' => 'Almacenamiento', 'active' => true]
             ]
         ])
@@ -27,7 +27,7 @@
                             <p class="small mb-0 text-muted">Gestiona los discos de almacenamiento personalizados del sistema</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('manager.settings.storage.create') }}" class="btn btn-primary">
+                            <a href="{{ route('manager.backups.storage.create') }}" class="btn btn-primary">
                                 Nuevo disco
                             </a>
                         </div>
@@ -169,7 +169,7 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item" href="{{ route('manager.settings.storage.edit', $index) }}">
+                                                        <a class="dropdown-item" href="{{ route('manager.backups.storage.edit', $index) }}">
                                                             Editar
                                                         </a>
                                                     </li>
@@ -199,7 +199,7 @@
                             <p class="text-muted mb-4">
                                 Comienza creando tu primer disco de almacenamiento personalizado.
                             </p>
-                            <a href="{{ route('manager.settings.storage.create') }}" class="btn btn-primary">
+                            <a href="{{ route('manager.backups.storage.create') }}" class="btn btn-primary">
                                 + Crear ahora
                             </a>
                         </div>
@@ -211,7 +211,7 @@
         </div>
 
         {{-- Delete Form --}}
-        <form id="deleteDiskForm" method="POST" action="{{ route('manager.settings.storage.destroy') }}" style="display: none;">
+        <form id="deleteDiskForm" method="POST" action="{{ route('manager.backups.storage.destroy') }}" style="display: none;">
             @csrf
             @method('DELETE')
             <input type="hidden" name="disk_name" id="delete_disk_name">

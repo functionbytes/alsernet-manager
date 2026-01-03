@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier;
 
 /**
- * Defines settings for supplier
+ * Defines backups for supplier
  */
 final class SupplierSettings
 {

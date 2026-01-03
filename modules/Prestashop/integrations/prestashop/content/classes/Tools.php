@@ -3572,7 +3572,7 @@ exit;
     }
 
     /**
-     * Get max file upload size considering server settings and optional max value.
+     * Get max file upload size considering server backups and optional max value.
      *
      * @param  int  $max_size  optional max file size
      * @return int max file size in bytes

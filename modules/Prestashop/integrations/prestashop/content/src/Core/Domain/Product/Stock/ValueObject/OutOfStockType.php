@@ -46,7 +46,7 @@ class OutOfStockType
     public const OUT_OF_STOCK_AVAILABLE = 1;
 
     /**
-     * Product availability when out of stock is define by shop settings.
+     * Product availability when out of stock is define by shop backups.
      */
     public const OUT_OF_STOCK_DEFAULT = 2;
 

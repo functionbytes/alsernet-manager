@@ -385,7 +385,7 @@ $(document).ready(function() {
                 if (response.success) {
                     toastr.success(response.message, 'Fuente creada');
                     setTimeout(function() {
-                        window.location.href = '{{ route("settings.suppliers.sources.index", $supplier->uid) }}';
+                        window.location.href = '{{ route("backups.suppliers.sources.index", $supplier->uid) }}';
                     }, 1000);
                 } else {
                     toastr.error(response.message, 'Error');

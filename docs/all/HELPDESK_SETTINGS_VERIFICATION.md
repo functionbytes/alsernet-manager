@@ -45,11 +45,11 @@ php artisan tinker
 
 ```php
 // Test routes exist
-Route::getRoutes()->where('name', 'like', 'warehouse.helpdesk.settings.*')->each(fn($r) => echo $r->name . "\n");
+Route::getRoutes()->where('name', 'like', 'warehouse.helpdesk.backups.*')->each(fn($r) => echo $r->name . "\n");
 
 // Should output:
-// warehouse.helpdesk.settings.tickets
-// warehouse.helpdesk.settings.livechat
+// warehouse.helpdesk.backups.tickets
+// warehouse.helpdesk.backups.livechat
 // ... 8 more
 
 exit
@@ -336,7 +336,7 @@ Accessibility
 ```bash
 php artisan route:clear
 php artisan optimize:clear
-php artisan route:list | grep warehouse.helpdesk.settings
+php artisan route:list | grep warehouse.helpdesk.backups
 ```
 
 ### "Table doesn't exist" Error

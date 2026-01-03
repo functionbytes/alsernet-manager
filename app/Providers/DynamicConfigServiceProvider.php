@@ -57,7 +57,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load database configuration from settings
+     * Load database configuration from backups
      */
     private function loadDatabaseConfig(): void
     {
@@ -91,7 +91,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load mail configuration from settings
+     * Load mail configuration from backups
      */
     private function loadMailConfig(): void
     {
@@ -121,7 +121,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load prestashop configuration from settings
+     * Load prestashop configuration from backups
      */
     private function loadPrestashopConfig(): void
     {
@@ -154,7 +154,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load custom storage disks from settings
+     * Load custom storage disks from backups
      */
     private function loadStorageConfig(): void
     {

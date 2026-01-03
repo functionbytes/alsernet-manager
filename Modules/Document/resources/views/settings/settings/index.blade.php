@@ -128,7 +128,7 @@
             </div>
 
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('settings.documents.settings.update') }}" id="documentSettingsForm">
+                <form method="POST" action="{{ route('settings.documents.backups.update') }}" id="documentSettingsForm">
                     @csrf
                     @method('PUT')
 
@@ -136,17 +136,17 @@
                     <div class="tab-content" id="settingsTabContent">
                         <!-- General Settings Tab -->
                         <div class="tab-pane fade show active" id="general-content" role="tabpanel" aria-labelledby="general-tab">
-                            @include('settings.views.settings.documents.settings.sections.general')
+                            @include('settings.views.backups.documents.backups.sections.general')
                         </div>
 
                         <!-- Email Settings Tab -->
                         <div class="tab-pane fade" id="email-content" role="tabpanel" aria-labelledby="email-tab">
-                            @include('settings.views.settings.documents.settings.sections.email')
+                            @include('settings.views.backups.documents.backups.sections.email')
                         </div>
 
                         <!-- SLA Settings Tab -->
                         <div class="tab-pane fade" id="sla-content" role="tabpanel" aria-labelledby="sla-tab">
-                            @include('settings.views.settings.documents.settings.sections.sla')
+                            @include('settings.views.backups.documents.backups.sections.sla')
                         </div>
                     </div>
                 </form>
@@ -438,7 +438,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-1"></i> Restaurando...');
 
         $.ajax({
-            url: '{{ route("settings.documents.settings.reset") }}',
+            url: '{{ route("backups.documents.backups.reset") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}'

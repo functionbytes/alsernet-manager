@@ -10,8 +10,8 @@
             'title' => 'Vista Previa de Plantilla',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],
-                ['label' => 'Configuración', 'url' => route('manager.settings')],
-                ['label' => 'Plantillas', 'url' => route('manager.settings.mailers.templates.index')],
+                ['label' => 'Configuración', 'url' => route('manager.backups')],
+                ['label' => 'Plantillas', 'url' => route('settings.mailers.templates.index')],
                 ['label' => $template->name, 'active' => true]
             ]
         ])
@@ -187,7 +187,7 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('manager.settings.mailers.templates.edit', $template->uid) }}" class="btn btn-primary">
+                            <a href="{{ route('settings.mailers.templates.edit', $template->uid) }}" class="btn btn-primary">
                                 Editar
                             </a>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSendTest">
@@ -197,7 +197,7 @@
                                 Imprimir
                             </button>
 
-                            <a href="{{ route('manager.settings.mailers.templates.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-secondary">
                                 Volver
                             </a>
                         </div>
@@ -243,7 +243,7 @@
 
     <div class="modal fade" id="modalSendTest" tabindex="-1" aria-labelledby="modalSendTestLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form method="POST" action="{{ route('manager.settings.mailers.templates.send-test', $template->uid) }}">
+            <form method="POST" action="{{ route('settings.mailers.templates.send-test', $template->uid) }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">

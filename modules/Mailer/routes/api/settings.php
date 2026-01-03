@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Mailer\Http\Controllers\Settings\MailerComponentController;
-use Modules\Mailer\Http\Controllers\Settings\MailerEndpointController;
-use Modules\Mailer\Http\Controllers\Settings\MailerTemplateController;
-use Modules\Mailer\Http\Controllers\Settings\MailerVariableController;
+use Modules\Mailer\Http\Controllers\MailerComponentController;
+use Modules\Mailer\Http\Controllers\MailerEndpointController;
+use Modules\Mailer\Http\Controllers\MailerTemplateController;
+use Modules\Mailer\Http\Controllers\MailerVariableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ use Modules\Mailer\Http\Controllers\Settings\MailerVariableController;
 */
 
 // Templates API Routes
-Route::middleware('can:manage-mailer-templates')->prefix('templates')->name('templates.')->group(function () {
+Route::prefix('templates')->name('templates.')->group(function () {
     Route::post('/', [MailerTemplateController::class, 'store'])->name('store');
     Route::patch('/{uid}', [MailerTemplateController::class, 'update'])->name('update');
     Route::delete('/{uid}', [MailerTemplateController::class, 'destroy'])->name('destroy');
@@ -28,7 +28,7 @@ Route::middleware('can:manage-mailer-templates')->prefix('templates')->name('tem
 });
 
 // Components API Routes
-Route::middleware('can:manage-mailer-components')->prefix('components')->name('components.')->group(function () {
+Route::prefix('components')->name('components.')->group(function () {
     Route::post('/', [MailerComponentController::class, 'store'])->name('store');
     Route::patch('/{uid}', [MailerComponentController::class, 'update'])->name('update');
     Route::delete('/{uid}', [MailerComponentController::class, 'destroy'])->name('destroy');
@@ -36,7 +36,7 @@ Route::middleware('can:manage-mailer-components')->prefix('components')->name('c
 });
 
 // Variables API Routes
-Route::middleware('can:manage-mailer-variables')->prefix('variables')->name('variables.')->group(function () {
+Route::prefix('variables')->name('variables.')->group(function () {
     Route::post('/', [MailerVariableController::class, 'store'])->name('store');
     Route::patch('/{variable}', [MailerVariableController::class, 'update'])->name('update');
     Route::delete('/{variable}', [MailerVariableController::class, 'destroy'])->name('destroy');
@@ -44,7 +44,7 @@ Route::middleware('can:manage-mailer-variables')->prefix('variables')->name('var
 });
 
 // Endpoints API Routes
-Route::middleware('can:manage-mailer-endpoints')->prefix('endpoints')->name('endpoints.')->group(function () {
+Route::prefix('endpoints')->name('endpoints.')->group(function () {
     Route::post('/', [MailerEndpointController::class, 'store'])->name('store');
     Route::patch('/{emailEndpoint}', [MailerEndpointController::class, 'update'])->name('update');
     Route::delete('/{emailEndpoint}', [MailerEndpointController::class, 'destroy'])->name('destroy');

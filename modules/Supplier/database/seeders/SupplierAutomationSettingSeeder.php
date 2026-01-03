@@ -311,6 +311,6 @@ class SupplierAutomationSettingSeeder extends Seeder
             );
         }
 
-        $this->command->info('Created '.count($settings).' automation settings');
+        $this->command->info('Created '.count($settings).' automation backups');
     }
 }

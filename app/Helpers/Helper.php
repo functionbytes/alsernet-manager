@@ -597,7 +597,7 @@ function get_datetime_format($name, $locale)
     } elseif (array_key_exists($name, $defaultConfig)) {
         return $defaultConfig[$name];
     } else {
-        throw new \Exception('AC: Invalid datetime format type: '.$name.' => make sure the type is available in BOTH local and default (*) settings');
+        throw new \Exception('AC: Invalid datetime format type: '.$name.' => make sure the type is available in BOTH local and default (*) backups');
     }
 
 }

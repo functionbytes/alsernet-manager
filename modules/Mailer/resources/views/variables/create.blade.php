@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <form action="{{ route('manager.settings.mailers.variables.store') }}" method="POST">
+                <form action="{{ route('settings.mailers.variables.store') }}" method="POST">
                     @csrf
 
                     <div class="card-body">
@@ -19,7 +19,7 @@
                                     Complete la información en todos los idiomas disponibles.
                                 </p>
                             </div>
-                            <a href="{{ route('manager.settings.mailers.variables.index') }}" class="btn btn-light">
+                            <a href="{{ route('settings.mailers.variables.index') }}" class="btn btn-light">
                                 <i class="fas fa-arrow-left me-1"></i> Volver
                             </a>
                         </div>
@@ -198,7 +198,7 @@
 
                     <div class="card-footer border-top">
                         <div class="d-flex gap-2 justify-content-end">
-                            <a href="{{ route('manager.settings.mailers.variables.index') }}" class="btn btn-light">
+                            <a href="{{ route('settings.mailers.variables.index') }}" class="btn btn-light">
                                 <i class="fas fa-times me-1"></i> Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">

@@ -19,11 +19,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.helpdesk.settings.ticket-sla-policies.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.helpdesk.backups.ticket-sla-policies.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.helpdesk.settings.ticket-sla-policies.create') }}" class="btn btn-primary">
+                        <a href="{{ route('manager.helpdesk.backups.ticket-sla-policies.create') }}" class="btn btn-primary">
                             Nueva política SLA
                         </a>
                     </div>
@@ -90,7 +90,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.helpdesk.settings.ticket-sla-policies.index') }}">
+                <form method="GET" action="{{ route('manager.helpdesk.backups.ticket-sla-policies.index') }}">
                     <div class="row align-items-center">
                         <div class="col-md-9">
                             <div class="input-group">
@@ -153,7 +153,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" action="{{ route('manager.helpdesk.settings.ticket-sla-policies.toggle', $policy->id) }}" class="toggle-form">
+                                        <form method="POST" action="{{ route('manager.helpdesk.backups.ticket-sla-policies.toggle', $policy->id) }}" class="toggle-form">
                                             @csrf
                                             @method('PATCH')
                                             <div class="form-check form-switch d-inline-block">
@@ -170,13 +170,13 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.settings.ticket-sla-policies.edit', $policy->id) }}">
+                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.backups.ticket-sla-policies.edit', $policy->id) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.helpdesk.settings.ticket-sla-policies.destroy', $policy->id) }}"
+                                                    <form method="POST" action="{{ route('manager.helpdesk.backups.ticket-sla-policies.destroy', $policy->id) }}"
                                                           onsubmit="return confirm('¿Estás seguro de eliminar esta política SLA?')">
                                                         @csrf
                                                         @method('DELETE')
@@ -206,7 +206,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.helpdesk.settings.ticket-sla-policies.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('manager.helpdesk.backups.ticket-sla-policies.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i> Crear Primera Política SLA
                                 </a>
                             @endif

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address;
 
 /**
- * Defines settings for addresses
+ * Defines backups for addresses
  */
 final class AddressSettings
 {

@@ -41,7 +41,7 @@ class DeliveryTimeNoteType
     public const TYPE_NONE = 0;
 
     /**
-     * Represents case when additional delivery time notes should be taken from default settings
+     * Represents case when additional delivery time notes should be taken from default backups
      */
     public const TYPE_DEFAULT = 1;
 

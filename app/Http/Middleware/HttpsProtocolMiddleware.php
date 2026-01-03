@@ -12,7 +12,7 @@ class HttpsProtocolMiddleware
     {
         try {
             DB::connection()->getPdo();
-            if (! DB::getSchemaBuilder()->hasTable('settings')) {
+            if (! DB::getSchemaBuilder()->hasTable('backups')) {
 
                 return $next($request);
             } else {

@@ -21,11 +21,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         @if(request('search'))
-                            <a href="{{ route('manager.helpdesk.settings.tickets.tags.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('manager.helpdesk.backups.tickets.tags.index') }}" class="btn btn-secondary">
                                 Limpiar búsqueda
                             </a>
                         @endif
-                        <a href="{{ route('manager.helpdesk.settings.tickets.tags.create') }}" class="btn btn-primary">
+                        <a href="{{ route('manager.helpdesk.backups.tickets.tags.create') }}" class="btn btn-primary">
                             Nuevo tag
                         </a>
                     </div>
@@ -85,7 +85,7 @@
 
             <!-- Search Section -->
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.helpdesk.settings.tickets.tags.index') }}">
+                <form method="GET" action="{{ route('manager.helpdesk.backups.tickets.tags.index') }}">
                     <div class="row align-items-center g-2">
                         <div class="col-md-7">
                             <div class="input-group">
@@ -165,13 +165,13 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.settings.tickets.tags.edit', $tag->id) }}">
+                                                    <a class="dropdown-item" href="{{ route('manager.helpdesk.backups.tickets.tags.edit', $tag->id) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('manager.helpdesk.settings.tickets.tags.destroy', $tag->id) }}"
+                                                    <form method="POST" action="{{ route('manager.helpdesk.backups.tickets.tags.destroy', $tag->id) }}"
                                                           onsubmit="return confirm('¿Estás seguro de eliminar este tag? Esta acción no se puede deshacer.')">
                                                         @csrf
                                                         @method('DELETE')
@@ -204,7 +204,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('manager.helpdesk.settings.tickets.tags.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('manager.helpdesk.backups.tickets.tags.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i> Crear Primer Tag
                                 </a>
                             @endif

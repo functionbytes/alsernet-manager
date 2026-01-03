@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
 /**
- * Defines settings for customization fields
+ * Defines backups for customization fields
  */
 class CustomizationFieldSettings
 {

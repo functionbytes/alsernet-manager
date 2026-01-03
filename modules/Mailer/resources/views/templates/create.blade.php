@@ -10,8 +10,8 @@
         'title' => 'Crear Nueva Plantilla de Email',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.settings')],
-            ['label' => 'Plantillas', 'url' => route('manager.settings.mailers.templates.index')],
+            ['label' => 'Configuración', 'url' => route('manager.backups')],
+            ['label' => 'Plantillas', 'url' => route('settings.mailers.templates.index')],
             ['label' => 'Crear', 'active' => true]
         ]
     ])
@@ -45,7 +45,7 @@
     @endif
 
     {{-- Main Form --}}
-    <form method="POST" action="{{ route('manager.settings.mailers.templates.store') }}" id="formCreate">
+    <form method="POST" action="{{ route('settings.mailers.templates.store') }}" id="formCreate">
         @csrf
 
         <div class="row g-3">
@@ -334,7 +334,7 @@
                         <button type="submit" class="btn btn-primary w-100  mb-1">
                             Crear
                         </button>
-                        <a href="{{ route('manager.settings.mailers.templates.index') }}" class="btn btn-secondary w-100">
+                        <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-secondary w-100">
                             Volver
                         </a>
                     </div>
@@ -718,7 +718,7 @@ $(document).ready(function() {
 
         // Call API to load variables for the module
         $.ajax({
-            url: '{{ route('manager.settings.mailers.variables-by-module') }}',
+            url: '{{ route('settings.mailers.variables-by-module') }}',
             type: 'GET',
             data: { module: module },
             dataType: 'json',

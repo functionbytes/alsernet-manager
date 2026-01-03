@@ -48,28 +48,32 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
+        $webPath = module_path($this->name, 'routes/web.php');
+        $settingsPath = module_path($this->name, 'routes/settings.php');
+        $apiPath = module_path($this->name, 'routes/api.php');
+
         // Public authentication routes (login, register, password reset)
         Route::middleware(['web', 'guest'])
             ->prefix('auth')
             ->name('auth.')
-            ->group(function () {
-                require module_path($this->name, 'routes/web.php');
+            ->group(function () use ($webPath) {
+                require $webPath;
             });
 
         // Auth settings routes (2FA, sessions, security)
         Route::middleware(['web', 'auth'])
             ->prefix('settings/auth')
             ->name('settings.auth.')
-            ->group(function () {
-                require module_path($this->name, 'routes/settings.php');
+            ->group(function () use ($settingsPath) {
+                require $settingsPath;
             });
 
         // API routes
         Route::middleware(['api'])
             ->prefix('api/auth')
             ->name('api.auth.')
-            ->group(function () {
-                require module_path($this->name, 'routes/api.php');
+            ->group(function () use ($apiPath) {
+                require $apiPath;
             });
     }
 

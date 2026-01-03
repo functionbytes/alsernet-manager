@@ -108,7 +108,7 @@ class AlsernetTransportistas extends Module
             if ($this->saveConfiguration()) {
                 $output .= $this->displayConfirmation($this->l('Settings updated successfully.'));
             } else {
-                $output .= $this->displayError($this->l('Failed to update settings.'));
+                $output .= $this->displayError($this->l('Failed to update backups.'));
             }
         }
 

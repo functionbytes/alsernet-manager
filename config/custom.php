@@ -24,7 +24,7 @@ return [
     // Beta features
     'woo' => false,
 
-    // Special settings
+    // Special backups
     'japan' => env('APP_JAPAN', false),
 
     // If "APP_PROFILE=" (empty), then make it return null too

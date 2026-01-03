@@ -51,7 +51,7 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance backups, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">build</i>
             <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class LocalizationSettingsController extends Controller
 {
     /**
-     * Display localization settings page
+     * Display localization backups page
      */
     public function index()
     {
@@ -23,10 +23,10 @@ class LocalizationSettingsController extends Controller
         // Get current default language
         $defaultLanguage = Setting::get('default_language', config('app.locale'));
 
-        // Get other localization settings
+        // Get other localization backups
         $settings = Setting::getLocalizationSettings();
 
-        return view('theme.views.settings.localization.index', compact(
+        return view('theme.views.backups.localization.index', compact(
             'pageTitle',
             'breadcrumb',
             'languages',
@@ -36,7 +36,7 @@ class LocalizationSettingsController extends Controller
     }
 
     /**
-     * Update localization settings
+     * Update localization backups
      */
     public function update(Request $request)
     {
@@ -56,7 +56,7 @@ class LocalizationSettingsController extends Controller
             $this->updateEnvVariable('APP_LOCALE', $validated['default_language']);
             $this->updateEnvVariable('APP_TIMEZONE', $validated['timezone']);
 
-            return redirect()->route('manager.settings.localization.index')
+            return redirect()->route('manager.backups.localization.index')
                 ->with('success', 'Configuración de localización actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()

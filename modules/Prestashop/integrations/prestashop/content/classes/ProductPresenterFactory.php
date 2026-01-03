@@ -53,7 +53,7 @@ class ProductPresenterFactoryCore
     }
 
     /**
-     * Get presentation settings.
+     * Get presentation backups.
      *
      * @return ProductPresentationSettings
      */

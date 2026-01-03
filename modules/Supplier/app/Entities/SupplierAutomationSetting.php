@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * SupplierAutomationSetting Model
  *
- * Global configuration settings for the automation system.
+ * Global configuration backups for the automation system.
  *
  * @property int $id
  * @property string $key Configuration key (unique)
@@ -68,7 +68,7 @@ class SupplierAutomationSetting extends Model
     }
 
     /**
-     * Scope: Filter sensitive settings
+     * Scope: Filter sensitive backups
      */
     public function scopeSensitive(Builder $query, bool $sensitive = true): Builder
     {
@@ -134,7 +134,7 @@ class SupplierAutomationSetting extends Model
     }
 
     /**
-     * Get all settings as key-value array
+     * Get all backups as key-value array
      */
     public static function getAllSettings(?string $category = null): array
     {

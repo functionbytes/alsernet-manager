@@ -36,7 +36,7 @@ class TicketGroupsController extends Controller
             'total_members' => \DB::connection('helpdesk')->table('helpdesk_ticket_group_user')->distinct('user_id')->count('user_id'),
         ];
 
-        return view('theme.views.settings.helpdesk.ticket-groups.index', [
+        return view('theme.views.backups.helpdesk.ticket-groups.index', [
             'groups' => $groups,
             'stats' => $stats,
         ]);
@@ -53,7 +53,7 @@ class TicketGroupsController extends Controller
             ->orderBy('lastname')
             ->get();
 
-        return view('theme.views.settings.helpdesk.ticket-groups.create', [
+        return view('theme.views.backups.helpdesk.ticket-groups.create', [
             'users' => $users,
         ]);
     }
@@ -91,7 +91,7 @@ class TicketGroupsController extends Controller
             $group->users()->attach($usersData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.groups.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.groups.index')
             ->with('success', 'Grupo creado exitosamente.');
     }
 
@@ -107,7 +107,7 @@ class TicketGroupsController extends Controller
             ->orderBy('lastname')
             ->get();
 
-        return view('theme.views.settings.helpdesk.ticket-groups.edit', [
+        return view('theme.views.backups.helpdesk.ticket-groups.edit', [
             'group' => $group,
             'users' => $users,
         ]);
@@ -148,7 +148,7 @@ class TicketGroupsController extends Controller
             $group->users()->sync($usersData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.groups.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.groups.index')
             ->with('success', 'Grupo actualizado exitosamente.');
     }
 
@@ -180,7 +180,7 @@ class TicketGroupsController extends Controller
 
         $group->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.groups.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.groups.index')
             ->with('success', 'Grupo eliminado exitosamente.');
     }
 

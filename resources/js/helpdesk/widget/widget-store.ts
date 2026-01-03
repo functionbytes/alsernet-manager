@@ -41,7 +41,7 @@ interface WidgetState {
     fetchSettings: () => Promise<void>;
 }
 
-// Default settings
+// Default backups
 const defaultSettings: LiveChatSettings = {
     show_avatars: true,
     show_help_center: true,
@@ -85,7 +85,7 @@ export const useWidgetStore = create<WidgetState>()((set) => ({
             const response = await fetch('/lc/api/settings');
 
             if (!response.ok) {
-                throw new Error('Failed to fetch settings');
+                throw new Error('Failed to fetch backups');
             }
 
             const settings = await response.json();
@@ -98,10 +98,10 @@ export const useWidgetStore = create<WidgetState>()((set) => ({
                 isLoadingSettings: false
             });
 
-            console.log('✅ Widget settings loaded:', settings);
+            console.log('✅ Widget backups loaded:', settings);
         } catch (error) {
-            console.error('❌ Failed to load widget settings:', error);
-            // Keep default settings on error
+            console.error('❌ Failed to load widget backups:', error);
+            // Keep default backups on error
             set({ isLoadingSettings: false });
         }
     },

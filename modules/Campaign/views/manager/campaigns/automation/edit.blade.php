@@ -400,7 +400,7 @@
             lastSaved.load();
 
             // load sidebar
-            sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}');
+            sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}');
 
             // history toggle
             $('.diagram .history .history-list').click(function() {

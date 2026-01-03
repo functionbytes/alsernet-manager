@@ -9,17 +9,17 @@ use Illuminate\Http\Request;
 class SearchSettingsController extends Controller
 {
     /**
-     * Display search settings page
+     * Display search backups page
      */
     public function index()
     {
         $pageTitle = 'Configuración de búsqueda';
         $breadcrumb = 'Configuración / Búsqueda';
 
-        // Get search settings from database
+        // Get search backups from database
         $settings = Setting::getSearchSettings();
 
-        return view('theme.views.settings.search.index', compact(
+        return view('theme.views.backups.search.index', compact(
             'pageTitle',
             'breadcrumb',
             'settings'
@@ -27,7 +27,7 @@ class SearchSettingsController extends Controller
     }
 
     /**
-     * Update search settings
+     * Update search backups
      */
     public function update(Request $request)
     {
@@ -43,7 +43,7 @@ class SearchSettingsController extends Controller
         try {
             Setting::setSearchSettings($validated);
 
-            return redirect()->route('manager.settings.search.index')
+            return redirect()->route('manager.backups.search.index')
                 ->with('success', 'Configuración de búsqueda actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()

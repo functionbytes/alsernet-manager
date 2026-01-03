@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestSettings
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
- * Class SaveSqlManagerSettingsCommand saves default file encoding settings
+ * Class SaveSqlManagerSettingsCommand saves default file encoding backups
  * for SqlRequest's query result export file.
  */
 class SaveSqlRequestSettingsCommand

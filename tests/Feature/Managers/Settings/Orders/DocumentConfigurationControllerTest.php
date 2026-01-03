@@ -15,10 +15,10 @@ class DocumentConfigurationControllerTest extends TestCase
      */
     public function test_global_settings_page_loads(): void
     {
-        $response = $this->get(route('manager.settings.documents.configurations.global'));
+        $response = $this->get(route('manager.backups.documents.configurations.global'));
 
         $response->assertStatus(200);
-        $response->assertViewIs('theme.views.settings.documents.configurations.index');
+        $response->assertViewIs('theme.views.backups.documents.configurations.index');
         $response->assertViewHas('globalSettings');
     }
 
@@ -41,7 +41,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => '']
         );
 
@@ -75,7 +75,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => 'Solicitud']
         );
 
@@ -114,7 +114,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => '']
         );
 
@@ -145,7 +145,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => '']
         );
 
@@ -171,7 +171,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => 'Idioma']
         );
 
@@ -206,7 +206,7 @@ class DocumentConfigurationControllerTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            route('manager.settings.documents.configurations.search-templates'),
+            route('manager.backups.documents.configurations.search-templates'),
             ['q' => 'Test']
         );
 

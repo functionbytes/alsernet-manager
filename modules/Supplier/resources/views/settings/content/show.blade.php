@@ -280,7 +280,7 @@ $(document).ready(function() {
         const editedContent = $('#generatedContentEdit').val();
 
         $.ajax({
-            url: '{{ route("settings.suppliers.content.update", ":id") }}'.replace(':id', contentId),
+            url: '{{ route("backups.suppliers.content.update", ":id") }}'.replace(':id', contentId),
             method: 'PUT',
             data: {
                 generated_content: editedContent
@@ -353,7 +353,7 @@ $(document).ready(function() {
                 btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Procesando...');
 
                 $.ajax({
-                    url: '{{ route("settings.suppliers.content.action", ":id") }}'.replace(':id', contentId),
+                    url: '{{ route("backups.suppliers.content.action", ":id") }}'.replace(':id', contentId),
                     method: 'POST',
                     data: {
                         action: action,

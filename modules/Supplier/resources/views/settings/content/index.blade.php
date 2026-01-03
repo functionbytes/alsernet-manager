@@ -343,7 +343,7 @@ $(document).ready(function() {
                 // Create form and submit
                 const form = $('<form>', {
                     'method': 'POST',
-                    'action': '{{ route("settings.suppliers.content.action", ":uid") }}'.replace(':uid', uid)
+                    'action': '{{ route("backups.suppliers.content.action", ":uid") }}'.replace(':uid', uid)
                 });
 
                 form.append($('<input>', {

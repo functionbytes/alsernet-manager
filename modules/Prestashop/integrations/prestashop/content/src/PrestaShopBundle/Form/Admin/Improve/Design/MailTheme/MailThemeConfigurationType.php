@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class MailThemeConfigurationType is used to create the form allowing to define mail
- * theme settings (for now just the defaultTheme).
+ * theme backups (for now just the defaultTheme).
  */
 class MailThemeConfigurationType extends AbstractType
 {

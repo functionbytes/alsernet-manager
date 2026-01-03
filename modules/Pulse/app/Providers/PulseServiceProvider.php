@@ -69,7 +69,7 @@ class PulseServiceProvider extends ServiceProvider
             return $user->hasAnyRole(['super-admin', 'manager']);
         });
 
-        Gate::define('manage-pulse-settings', function ($user) {
+        Gate::define('manage-pulse-backups', function ($user) {
             return $user->hasRole('super-admin');
         });
     }

@@ -44,11 +44,11 @@ class ErpCheckCommand extends Command
         $this->info('🔍 Checking ERP connection...');
         $this->newLine();
 
-        // Get settings
+        // Get backups
         $settings = Setting::getErpSettings();
 
         if (! $settings) {
-            $this->error('❌ No ERP settings found. Please configure the ERP first.');
+            $this->error('❌ No ERP backups found. Please configure the ERP first.');
 
             return self::FAILURE;
         }

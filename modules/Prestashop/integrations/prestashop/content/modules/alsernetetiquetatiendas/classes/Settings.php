@@ -58,7 +58,7 @@ class AlsernetEtiquetatiendasSettings
             $defaults['pos_label_y' . $slot] = 100;
         }
 
-        // Mezcla settings guardados con defaults
+        // Mezcla backups guardados con defaults
         if (!is_array($row)) {
             $row = [];
         }

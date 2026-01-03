@@ -94,10 +94,10 @@
                                 <i class="fas fa-sync-alt me-2"></i>Reintentar todos los fallidos
                             </button>
                         @endcan
-                        <a href="{{ route('backups.horizon.failed') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('settings.horizon.failed') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-list me-2"></i>Ver trabajos fallidos
                         </a>
-                        <a href="{{ route('backups.horizon.metrics') }}" class="btn btn-outline-info btn-sm">
+                        <a href="{{ route('settings.horizon.metrics') }}" class="btn btn-outline-info btn-sm">
                             <i class="fas fa-chart-line me-2"></i>Ver métricas
                         </a>
                         <a href="/horizon" target="_blank" class="btn btn-outline-dark btn-sm">
@@ -172,7 +172,7 @@
     function retryAllFailed() {
         if (!confirm('¿Desea reintentar todos los trabajos fallidos?')) return;
 
-        fetch('{{ route('backups.horizon.api.retryAll') }}', {
+        fetch('{{ route('settings.horizon.api.retryAll') }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -196,7 +196,7 @@
 
     // Auto-refresh statistics
     setInterval(() => {
-        fetch('{{ route('backups.horizon.api.stats') }}')
+        fetch('{{ route('settings.horizon.api.stats') }}')
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

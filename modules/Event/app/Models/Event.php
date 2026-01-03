@@ -13,8 +13,6 @@ class Event extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
 
-    protected $connection = 'prestashop';
-
     protected $table = 'aalv_Alsernet_event_manager';
 
     protected static $recordEvents = ['deleted', 'updated', 'created'];

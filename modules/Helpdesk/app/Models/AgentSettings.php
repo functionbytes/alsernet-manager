@@ -25,7 +25,7 @@ class AgentSettings extends Model
     ];
 
     /**
-     * Get the user that owns the agent settings.
+     * Get the user that owns the agent backups.
      * Note: User model is in the default connection, not helpdesk
      */
     public function user(): BelongsTo
@@ -35,7 +35,7 @@ class AgentSettings extends Model
     }
 
     /**
-     * Create default settings for an agent.
+     * Create default backups for an agent.
      */
     public static function newFromDefault(): self
     {

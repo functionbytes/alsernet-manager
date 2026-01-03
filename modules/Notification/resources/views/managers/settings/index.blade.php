@@ -155,7 +155,7 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    $('#notification-settings-form').on('submit', function(e) {
+    $('#notification-backups-form').on('submit', function(e) {
         e.preventDefault();
 
         const formData = {
@@ -200,7 +200,7 @@ $(document).ready(function() {
 
         // Enviar datos
         $.ajax({
-            url: '{{ route("settings.notifications.update") }}',
+            url: '{{ route("backups.notifications.update") }}',
             type: 'POST',
             data: formData,
             success: function(response) {

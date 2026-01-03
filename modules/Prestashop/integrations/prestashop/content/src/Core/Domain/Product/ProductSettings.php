@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Defines settings for product.
- * If related Value Object does not exist, then various settings (e.g. regex, length constraints) are saved here
+ * Defines backups for product.
+ * If related Value Object does not exist, then various backups (e.g. regex, length constraints) are saved here
  */
 class ProductSettings
 {

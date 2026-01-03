@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 class UploadingSettingsController extends Controller
 {
     /**
-     * Display uploading settings page
+     * Display uploading backups page
      */
     public function index()
     {
         $pageTitle = 'Configuración de carga de archivos';
         $breadcrumb = 'Configuración / Carga de archivos';
 
-        // Get uploading settings from database
+        // Get uploading backups from database
         $settings = Setting::getUploadingSettings();
 
         // Get current PHP upload limits
@@ -36,7 +36,7 @@ class UploadingSettingsController extends Controller
     }
 
     /**
-     * Update uploading settings
+     * Update uploading backups
      */
     public function update(Request $request)
     {

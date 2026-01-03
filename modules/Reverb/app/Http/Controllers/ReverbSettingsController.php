@@ -11,7 +11,7 @@ use Illuminate\View\View;
 class ReverbSettingsController extends Controller
 {
     /**
-     * Display Reverb settings index page.
+     * Display Reverb backups index page.
      */
     public function index(): View
     {
@@ -29,7 +29,7 @@ class ReverbSettingsController extends Controller
     }
 
     /**
-     * Show the form for editing Reverb settings.
+     * Show the form for editing Reverb backups.
      */
     public function edit(): View
     {
@@ -45,7 +45,7 @@ class ReverbSettingsController extends Controller
     }
 
     /**
-     * Update Reverb settings.
+     * Update Reverb backups.
      */
     public function update(Request $request): RedirectResponse
     {
@@ -57,12 +57,12 @@ class ReverbSettingsController extends Controller
             'server_port' => 'required|integer|min:1|max:65535',
         ]);
 
-        // Here you would save the settings to your configuration
+        // Here you would save the backups to your configuration
         // For now, we'll just redirect with success
 
         return redirect()
-            ->route('manager.settings.reverb.index')
-            ->with('success', 'Reverb settings updated successfully');
+            ->route('manager.backups.reverb.index')
+            ->with('success', 'Reverb backups updated successfully');
     }
 
     /**

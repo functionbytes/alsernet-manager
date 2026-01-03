@@ -71,7 +71,7 @@ Route::group(['prefix' => 'inventaries'], function () {
     Route::get('/single/barcode/{slack}', [ProductsBarcodesController::class, 'single'])->name('manager.inventaries.barcodes.single');
 });
 
-Route::group(['prefix' => 'settings'], function () {
-    // Route::get('/', [SettingsController::class, 'index'])->name('settings');
+Route::group(['prefix' => 'backups'], function () {
+    // Route::get('/', [SettingsController::class, 'index'])->name('backups');
     // Route::post('/update', [SettingsController::class, 'update'])->name('settings.update');
 });

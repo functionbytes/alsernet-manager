@@ -40,6 +40,6 @@
 {{ form_errors(form.legend) }}
 
 <div class="actions">
-    <button type="button" class="btn btn-sm btn-primary pull-sm-right" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save image settings'|trans({}, 'Admin.Actions') }}</button>
+    <button type="button" class="btn btn-sm btn-primary pull-sm-right" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save image backups'|trans({}, 'Admin.Actions') }}</button>
     <button type="button" class="btn btn-sm btn-link" onclick="formImagesProduct.delete({{ image.id }})"><i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
 </div>

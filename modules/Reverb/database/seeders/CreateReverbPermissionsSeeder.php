@@ -39,8 +39,8 @@ class CreateReverbPermissionsSeeder extends Seeder
     {
         return [
             // Settings Management
-            'reverb.settings.view' => 'Ver configuración de Reverb',
-            'reverb.settings.update' => 'Actualizar configuración de Reverb',
+            'reverb.backups.view' => 'Ver configuración de Reverb',
+            'reverb.backups.update' => 'Actualizar configuración de Reverb',
 
             // Channel Management
             'reverb.channels.view' => 'Ver canales de broadcasting',
@@ -88,7 +88,7 @@ class CreateReverbPermissionsSeeder extends Seeder
 
         // Manager - Limited permissions
         $this->assignToRole('manager', [
-            'reverb.settings.view',
+            'reverb.backups.view',
             'reverb.channels.view',
             'reverb.events.broadcast',
             'reverb.presence.view',

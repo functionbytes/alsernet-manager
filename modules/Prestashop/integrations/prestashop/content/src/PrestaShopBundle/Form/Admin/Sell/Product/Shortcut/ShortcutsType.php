@@ -52,7 +52,7 @@ class ShortcutsType extends TranslatorAwareType
                 'label_help_box' => $this->trans('How many inventaries should be available for sale?', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [
-                    'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Stock', 'Admin.Catalog.Feature')]),
+                    'text' => $this->trans('Advanced backups in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Stock', 'Admin.Catalog.Feature')]),
                     'href' => '#stock-tab',
                     'align' => 'right',
                     'attr' => [
@@ -66,7 +66,7 @@ class ShortcutsType extends TranslatorAwareType
                 'label_help_box' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [
-                    'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
+                    'text' => $this->trans('Advanced backups in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
                     'href' => '#pricing-tab',
                     'align' => 'right',
                     'attr' => [

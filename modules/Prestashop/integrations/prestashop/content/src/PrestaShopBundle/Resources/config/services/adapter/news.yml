@@ -18,7 +18,7 @@ services:
     class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
     factory: ["@prestashop.core.circuit_breaker.advanced_factory", create]
     arguments:
-      - "@prestashop.adapter.news.circuit_breaker.settings"
+      - "@prestashop.adapter.news.circuit_breaker.backups"
 
   prestashop.adapter.news.provider:
     class: PrestaShop\PrestaShop\Adapter\News\NewsDataProvider

@@ -12,7 +12,6 @@
         "laravel/framework": "^12.0",
         "laravel/mcp": "^0.4.0",
         "laravel/sanctum": "^4.0",
-        "laravel/telescope": "^5.15",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.6",
         "nesbot/carbon": "^3.8",

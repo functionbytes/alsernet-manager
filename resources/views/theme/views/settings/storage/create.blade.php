@@ -6,7 +6,7 @@
 
     <div class="card">
 
-        <form method="POST" action="{{ route('manager.settings.storage.store') }}" id="formCreate">
+        <form method="POST" action="{{ route('manager.backups.storage.store') }}" id="formCreate">
             @csrf
 
             <div class="card-header border-bottom p-3">
@@ -273,7 +273,7 @@
                 <button type="submit" class="btn btn-primary w-100 mb-1">
                     Guardar
                 </button>
-                <a href="{{ route('manager.settings.storage') }}" class="btn btn-secondary w-100">
+                <a href="{{ route('manager.backups.storage') }}" class="btn btn-secondary w-100">
                     Cancelar
                 </a>
             </div>

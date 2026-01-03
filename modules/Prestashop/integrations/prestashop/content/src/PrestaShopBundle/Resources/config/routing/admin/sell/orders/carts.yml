@@ -77,7 +77,7 @@ admin_carts_edit_language:
     expose: true
 
 admin_carts_set_delivery_settings:
-  path: /{cartId}/rules/delivery-settings
+  path: /{cartId}/rules/delivery-backups
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:updateDeliverySettings

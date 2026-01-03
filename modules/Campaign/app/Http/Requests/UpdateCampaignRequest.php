@@ -36,7 +36,7 @@ class UpdateCampaignRequest extends FormRequest
             'content.*.label' => 'required_if:content.*.type,button',
             'content.*.url' => 'required_if:content.*.type,button,image|url',
 
-            // Appearance settings
+            // Appearance backups
             'appearance' => 'nullable|array',
             'appearance.background_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',
             'appearance.text_color' => 'nullable|string|regex:/^#[0-9A-F]{6}$/i',

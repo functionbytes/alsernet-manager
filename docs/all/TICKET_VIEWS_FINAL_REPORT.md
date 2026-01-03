@@ -264,7 +264,7 @@ manager.helpdesk.settings.{resource}.{action}
 ### Required Routes for Each Resource
 
 ```php
-Route::prefix('settings/helpdesk')->name('settings.')->group(function () {
+Route::prefix('backups/helpdesk')->name('backups.')->group(function () {
     // Ticket SLA Policies
     Route::resource('ticket-sla-policies', TicketSLAPolicyController::class);
     Route::patch('ticket-sla-policies/{id}/toggle', [TicketSLAPolicyController::class, 'toggle'])

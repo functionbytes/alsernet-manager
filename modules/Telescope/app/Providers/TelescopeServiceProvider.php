@@ -21,6 +21,11 @@ class TelescopeServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Publish migrations from this module
+        $this->publishes([
+            __DIR__.'/../../database/migrations' => database_path('migrations'),
+        ], 'telescope-migrations');
+
         // Configure authorization for Telescope access
         $this->configureAuthorization();
 

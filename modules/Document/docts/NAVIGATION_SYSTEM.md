@@ -21,7 +21,7 @@ return [
             'items' => [
                 [
                     'label' => 'Configuraciones',
-                    'route' => 'manager.settings.documents.configurations',
+                    'route' => 'manager.backups.documents.configurations',
                     'permission' => 'documents:view',
                 ],
                 // ... más items
@@ -94,7 +94,7 @@ Consume la variable inyectada:
 ```php
 [
     'label' => 'Tipos de documento',
-    'route' => 'manager.settings.documents.types',
+    'route' => 'manager.backups.documents.types',
     'permission' => 'document_types:view', // Solo ve este item si tiene el permiso
 ],
 ```

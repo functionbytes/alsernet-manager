@@ -367,7 +367,7 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Probando...');
 
         $.ajax({
-            url: '{{ route("settings.suppliers.sources.test", [$supplier->uid, $source->uid]) }}',
+            url: '{{ route("backups.suppliers.sources.test", [$supplier->uid, $source->uid]) }}',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}'
@@ -407,7 +407,7 @@ $(document).ready(function() {
                 if (response.success) {
                     toastr.success(response.message, 'Cambios guardados');
                     setTimeout(function() {
-                        window.location.href = '{{ route("settings.suppliers.sources.index", $supplier->uid) }}';
+                        window.location.href = '{{ route("backups.suppliers.sources.index", $supplier->uid) }}';
                     }, 1000);
                 } else {
                     toastr.error(response.message, 'Error');

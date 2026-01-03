@@ -79,7 +79,7 @@ function includeDatepicker($id, $time = false)
 }
 
 /**
- * Generate a new settings file, only transmitted parameters are updated
+ * Generate a new backups file, only transmitted parameters are updated
  *
  * @param  string  $baseUri  Base URI
  * @param  string  $theme  Theme name (eg. default)
@@ -115,8 +115,8 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
-    copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'wb')) {
+    copy(_PS_ADMIN_DIR_.'/../config/backups.inc.php', _PS_ADMIN_DIR_.'/../config/backups.old.php');
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/backups.inc.php', 'wb')) {
         fwrite($fd, $content);
         fclose($fd);
 

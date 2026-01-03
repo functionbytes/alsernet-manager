@@ -153,7 +153,7 @@ Si obtienes errores de permisos:
 2. Asigna permisos manualmente desde la base de datos:
 
 ```php
-$user->givePermissionTo('reverb.settings.view');
+$user->givePermissionTo('reverb.backups.view');
 $user->givePermissionTo('reverb.events.broadcast');
 ```
 
@@ -166,8 +166,8 @@ Si el seeder falla por Telescope:
 php artisan tinker
 
 # Dentro de tinker:
-Spatie\Permission\Models\Permission::create(['name' => 'reverb.settings.view', 'guard_name' => 'web']);
-Spatie\Permission\Models\Permission::create(['name' => 'reverb.settings.update', 'guard_name' => 'web']);
+Spatie\Permission\Models\Permission::create(['name' => 'reverb.backups.view', 'guard_name' => 'web']);
+Spatie\Permission\Models\Permission::create(['name' => 'reverb.backups.update', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.channels.view', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.channels.broadcast', 'guard_name' => 'web']);
 Spatie\Permission\Models\Permission::create(['name' => 'reverb.events.broadcast', 'guard_name' => 'web']);

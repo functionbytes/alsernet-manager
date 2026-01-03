@@ -6,15 +6,15 @@ export function SettingsPreviewListener() {
     const updateSettings = useWidgetStore(state => state.updateSettings);
 
     useEffect(() => {
-        // Listen for messages from settings page
+        // Listen for messages from backups page
         const handleMessage = (event: MessageEvent) => {
             // Security: Only accept messages from same origin
             if (event.origin !== window.location.origin) {
                 return;
             }
 
-            // Only process messages from settings editor
-            if (event.data?.source !== 'be-settings-editor') {
+            // Only process messages from backups editor
+            if (event.data?.source !== 'be-backups-editor') {
                 return;
             }
 
@@ -38,7 +38,7 @@ export function SettingsPreviewListener() {
         if (!alreadyFiredLoadedEvent.current) {
             window.parent.postMessage(
                 {
-                    source: 'be-settings-preview',
+                    source: 'be-backups-preview',
                     type: 'appLoaded'
                 },
                 '*'

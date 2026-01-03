@@ -24,10 +24,10 @@ export function WidgetApp({ isPreview, isInline, conversationId }: WidgetAppProp
 
     const fetchSettings = useWidgetStore(state => state.fetchSettings);
 
-    // Fetch settings from backend on mount (but not in preview mode)
+    // Fetch backups from backend on mount (but not in preview mode)
     useEffect(() => {
         if (!isPreview) {
-            console.log('📡 Fetching widget settings from backend...');
+            console.log('📡 Fetching widget backups from backend...');
             fetchSettings();
         } else {
             console.log('👁️ Preview mode: Settings will be received via postMessage');

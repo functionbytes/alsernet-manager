@@ -2,7 +2,7 @@
 
 namespace Modules\Mailer\Models;
 
-use App\Traits\HasUid;
+use Modules\Mailer\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

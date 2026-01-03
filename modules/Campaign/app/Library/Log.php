@@ -27,7 +27,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
 /**
- * Read configuration settings
+ * Read configuration backups
  * Setup init CONSTANTS.
  */
 class Log

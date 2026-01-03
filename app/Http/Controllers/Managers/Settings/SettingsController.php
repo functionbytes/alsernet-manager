@@ -21,7 +21,7 @@ class SettingsController extends Controller
         // Get first setting record for ID (required by view)
         $setting = Setting::first() ?? new Setting;
 
-        return view('theme.views.settings.settings.setting')->with([
+        return view('theme.views.backups.backups.setting')->with([
             'setting' => $setting,
             'logo' => $logo,
             'favicon' => $favicon,

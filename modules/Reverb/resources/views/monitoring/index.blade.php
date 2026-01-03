@@ -106,9 +106,9 @@ let autoRefreshInterval = null;
 async function updateStats() {
     try {
         const [stats, channels, connections] = await Promise.all([
-            fetch('{{ route("manager.settings.reverb.monitoring.stats") }}').then(r => r.json()),
-            fetch('{{ route("manager.settings.reverb.monitoring.channels") }}').then(r => r.json()),
-            fetch('{{ route("manager.settings.reverb.monitoring.connections") }}').then(r => r.json()),
+            fetch('{{ route("manager.backups.reverb.monitoring.stats") }}').then(r => r.json()),
+            fetch('{{ route("manager.backups.reverb.monitoring.channels") }}').then(r => r.json()),
+            fetch('{{ route("manager.backups.reverb.monitoring.connections") }}').then(r => r.json()),
         ]);
 
         updateServerStatus(stats);

@@ -24,7 +24,7 @@ class MigrateProductBlockades extends Command
 
     /**
      * Default blockade labels to search for
-     * Can be overridden via settings
+     * Can be overridden via backups
      */
     private const DEFAULT_BLOCKADE_LABELS = 'DNI,ESCOPETA,RIFLE,CORTA';
 
@@ -45,7 +45,7 @@ class MigrateProductBlockades extends Command
             $this->info('Existing blockades deleted.');
         }
 
-        // Get blockade labels from settings or use defaults
+        // Get blockade labels from backups or use defaults
         $blockadeLabels = \App\Models\Setting::get('product_blockade_labels', self::DEFAULT_BLOCKADE_LABELS);
         $this->info("Using blockade labels: {$blockadeLabels}");
 

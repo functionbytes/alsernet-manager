@@ -15,22 +15,22 @@ class RouteServiceProvider extends ServiceProvider
     public function map(): void
     {
         $this->mapApiRoutes();
-        $this->mapManagerRoutes();
+        $this->mapWebRoutes();
     }
 
     protected function mapApiRoutes(): void
     {
         Route::middleware(['api', 'auth:sanctum'])
-            ->prefix('api')
-            ->name('api.')
+            ->prefix('api/events')
+            ->name('api.events.')
             ->group(module_path('Event', 'routes/api.php'));
     }
 
-    protected function mapManagerRoutes(): void
+    protected function mapWebRoutes(): void
     {
         Route::middleware(['web', 'auth'])
-            ->prefix('manager')
-            ->name('manager.')
+            ->prefix('manager/events')
+            ->name('manager.events.')
             ->group(module_path('Event', 'routes/web.php'));
     }
 }

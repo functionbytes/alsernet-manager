@@ -16,15 +16,15 @@ use Modules\Document\Entities\DocumentSlaBreach;
 use Modules\Document\Entities\DocumentSlaPolicy;
 
 /**
- * Controller for managing document settings.
+ * Controller for managing document backups.
  *
- * Handles document-related system settings including email notifications,
+ * Handles document-related system backups including email notifications,
  * SLA policies, and general configuration options.
  */
 class DocumentSettingsController extends Controller
 {
     /**
-     * The settings prefix for document-related settings.
+     * The backups prefix for document-related backups.
      */
     private const SETTINGS_PREFIX = 'documents.';
 
@@ -37,7 +37,7 @@ class DocumentSettingsController extends Controller
         'general' => [
             'label' => 'General',
             'description' => 'Configuracion general del modulo de documentos',
-            'icon' => 'ti ti-settings',
+            'icon' => 'ti ti-backups',
         ],
         'email' => [
             'label' => 'Notificaciones Email',
@@ -57,13 +57,13 @@ class DocumentSettingsController extends Controller
     ];
 
     /**
-     * Display the document settings dashboard.
+     * Display the document backups dashboard.
      *
-     * Retrieves all document settings grouped by category and displays
+     * Retrieves all document backups grouped by category and displays
      * statistics about SLA compliance and document processing.
      *
      * @param  Request  $request  The HTTP request instance
-     * @return View The settings dashboard view
+     * @return View The backups dashboard view
      */
     public function index(Request $request): View
     {
@@ -71,7 +71,7 @@ class DocumentSettingsController extends Controller
         $breadcrumb = 'Configuracion / Documentos';
         $activeTab = $request->get('tab', 'general');
 
-        // Retrieve settings grouped by category
+        // Retrieve backups grouped by category
         $settingGroups = $this->getSettingsGroupedByCategory();
 
         // Calculate SLA compliance statistics
@@ -85,7 +85,7 @@ class DocumentSettingsController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('documents::settings.settings.index', [
+        return view('documents::settings.backups.index', [
             'pageTitle' => $pageTitle,
             'breadcrumb' => $breadcrumb,
             'activeTab' => $activeTab,
@@ -181,20 +181,20 @@ class DocumentSettingsController extends Controller
     }
 
     /**
-     * Batch update multiple settings.
+     * Batch update multiple backups.
      *
-     * Performs transactional updates ensuring all settings are updated
+     * Performs transactional updates ensuring all backups are updated
      * or none are (all-or-nothing approach).
      *
-     * @param  Request  $request  The HTTP request containing settings array
+     * @param  Request  $request  The HTTP request containing backups array
      * @return RedirectResponse Redirect with flash message
      */
     public function store(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'settings' => ['required', 'array'],
-            'settings.*.key' => ['required', 'string', 'max:255'],
-            'settings.*.value' => ['present'],
+            'backups' => ['required', 'array'],
+            'backups.*.key' => ['required', 'string', 'max:255'],
+            'backups.*.value' => ['present'],
         ]);
 
         if ($validator->fails()) {
@@ -205,9 +205,9 @@ class DocumentSettingsController extends Controller
                 ->with('error', 'Error de validacion en los datos enviados');
         }
 
-        $settings = $request->input('settings', []);
+        $settings = $request->input('backups', []);
 
-        // Pre-validate all settings before starting transaction
+        // Pre-validate all backups before starting transaction
         $validationErrors = [];
         foreach ($settings as $index => $setting) {
             $key = $setting['key'];
@@ -255,7 +255,7 @@ class DocumentSettingsController extends Controller
 
                 Setting::set($key, $processedValue);
 
-                // Track updated settings for logging
+                // Track updated backups for logging
                 $updatedSettings[] = [
                     'key' => $key,
                     'old_value' => $oldValue,
@@ -271,13 +271,13 @@ class DocumentSettingsController extends Controller
             }
 
             return redirect()
-                ->route('settings.documents.settings.index')
+                ->route('settings.documents.backups.index')
                 ->with('success', 'Configuraciones actualizadas correctamente ('.count($updatedSettings).' cambios)');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Error in batch document settings update', [
+            Log::error('Error in batch document backups update', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -290,9 +290,9 @@ class DocumentSettingsController extends Controller
     }
 
     /**
-     * Get settings grouped by section.
+     * Get backups grouped by section.
      *
-     * Return settings organized by section for display in tabs/accordion.
+     * Return backups organized by section for display in tabs/accordion.
      * Includes section descriptions and metadata.
      *
      * @param  string|null  $section  Optional section filter
@@ -315,7 +315,7 @@ class DocumentSettingsController extends Controller
                 'data' => [
                     'section' => $section,
                     'metadata' => self::SETTING_GROUPS[$section] ?? null,
-                    'settings' => $groupedSettings[$section],
+                    'backups' => $groupedSettings[$section],
                 ],
             ]);
         }
@@ -327,9 +327,9 @@ class DocumentSettingsController extends Controller
                 'metadata' => self::SETTING_GROUPS[$group] ?? [
                     'label' => ucfirst($group),
                     'description' => '',
-                    'icon' => 'ti ti-settings',
+                    'icon' => 'ti ti-backups',
                 ],
-                'settings' => $settings,
+                'backups' => $settings,
             ];
         }
 
@@ -340,7 +340,7 @@ class DocumentSettingsController extends Controller
     }
 
     /**
-     * Reset settings to default values.
+     * Reset backups to default values.
      *
      * @param  Request  $request  The HTTP request with optional group filter
      * @return JsonResponse JSON response with success/error status
@@ -378,7 +378,7 @@ class DocumentSettingsController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Error resetting document settings to defaults', [
+            Log::error('Error resetting document backups to defaults', [
                 'group' => $request->input('group'),
                 'error' => $e->getMessage(),
             ]);
@@ -391,18 +391,18 @@ class DocumentSettingsController extends Controller
     }
 
     /**
-     * Retrieve all document settings grouped by category.
+     * Retrieve all document backups grouped by category.
      *
      * @return array<string, array> Settings grouped by category
      */
     private function getSettingsGroupedByCategory(): array
     {
-        // Get all document settings from database
+        // Get all document backups from database
         $settings = Setting::where('key', 'like', self::SETTINGS_PREFIX.'%')
             ->get()
             ->keyBy('key');
 
-        // Get default settings with metadata
+        // Get default backups with metadata
         $defaultSettings = $this->getDefaultSettings();
 
         $grouped = [];
@@ -432,9 +432,9 @@ class DocumentSettingsController extends Controller
     }
 
     /**
-     * Get default settings configuration.
+     * Get default backups configuration.
      *
-     * @return array<string, array> Default settings with metadata
+     * @return array<string, array> Default backups with metadata
      */
     private function getDefaultSettings(): array
     {

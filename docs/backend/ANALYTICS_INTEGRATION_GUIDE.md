@@ -166,7 +166,7 @@ storage/app/analytics-credentials.json
 ```php
 // config/permissions.php
 'analytics' => [
-    'settings',
+    'backups',
     'general',
     'page',
     'browser',
@@ -338,7 +338,7 @@ POST /admin/settings/analytics/json → Upload de JSON
 ### 6. **Permisos**
    ```php
    'analytics' => [
-       'settings',
+       'backups',
        'general',
        'page',
        'browser',
@@ -407,7 +407,7 @@ class AnalyticsController extends Controller {
             return view('analytics::dashboard', compact('stats', 'topPages'));
 
         } catch (InvalidConfiguration $e) {
-            return redirect()->route('settings.analytics.index')
+            return redirect()->route('backups.analytics.index')
                 ->with('error', 'Analytics not configured');
         }
     }

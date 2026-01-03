@@ -537,7 +537,7 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restaure default settings.
+     * Actions to perform to restaure default backups.
      *
      * @param string $name The theme name to reset
      *

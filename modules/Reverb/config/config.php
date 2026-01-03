@@ -12,8 +12,8 @@ return [
     | Reverb Server Configuration
     |--------------------------------------------------------------------------
     |
-    | Configure the Reverb WebSocket server settings including host,
-    | port, and TLS/SSL settings for secure connections.
+    | Configure the Reverb WebSocket server backups including host,
+    | port, and TLS/SSL backups for secure connections.
     */
 
     'server' => [
@@ -28,7 +28,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Configure how clients connect to the Reverb server.
-    | These settings are used by the client-side Echo instance.
+    | These backups are used by the client-side Echo instance.
     */
 
     'broadcasting' => [
@@ -44,7 +44,7 @@ return [
     | Channel Configuration
     |--------------------------------------------------------------------------
     |
-    | Define channel groups and their default settings.
+    | Define channel groups and their default backups.
     */
 
     'channels' => [

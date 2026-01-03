@@ -52,7 +52,7 @@
                     {{ "You are about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.modules.Notification') }}
                     <br>
                     <br>
-                    {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'Admin.modules.Notification') }}
+                    {{ "Your current backups will be saved, but the module will no longer be active."|trans({}, 'Admin.modules.Notification') }}
                   {% endif %}
                   {% if module_action == 'uninstall' %}
                     {{ "You are about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.modules.Notification') }}
@@ -74,7 +74,7 @@
                     {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.modules.Notification') }}
                     <br>
                     <br>
-                    {{ "This will restore the defaults settings."|trans({}, 'Admin.modules.Notification') }}
+                    {{ "This will restore the defaults backups."|trans({}, 'Admin.modules.Notification') }}
                     <br>
                     <span class="italic red">
                       {{ "This action cannot be undone."|trans({}, 'Admin.modules.Notification') }}

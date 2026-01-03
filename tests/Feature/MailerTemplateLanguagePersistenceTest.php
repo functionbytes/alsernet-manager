@@ -66,7 +66,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Step 1: Access edit view with English (lang_id=2)
         $response = $this->get(
-            route('manager.settings.mailers.templates.edit', [
+            route('manager.backups.mailers.templates.edit', [
                 'uid' => $template->uid,
                 'lang_id' => $englishLang->id,
             ])
@@ -79,7 +79,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Step 2: Submit form with changes while on English language
         $updateResponse = $this->patch(
-            route('manager.settings.mailers.templates.update', $template->uid),
+            route('manager.backups.mailers.templates.update', $template->uid),
             [
                 'subject' => 'Updated Subject in English',
                 'content' => '<p>Updated Content in English</p>',
@@ -97,7 +97,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // The critical assertion: After update, should redirect back to English, not Spanish
         $updateResponse->assertRedirect(
-            route('manager.settings.mailers.templates.edit', [
+            route('manager.backups.mailers.templates.edit', [
                 'uid' => $template->uid,
                 'lang_id' => $englishLang->id,
             ])
@@ -159,7 +159,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Start on Spanish
         $response = $this->get(
-            route('manager.settings.mailers.templates.edit', [
+            route('manager.backups.mailers.templates.edit', [
                 'uid' => $template->uid,
                 'lang_id' => $spanishLang->id,
             ])
@@ -168,7 +168,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Click to switch to English (this is an <a> link, not a form)
         $englishResponse = $this->get(
-            route('manager.settings.mailers.templates.edit', [
+            route('manager.backups.mailers.templates.edit', [
                 'uid' => $template->uid,
                 'lang_id' => $englishLang->id,
             ])
@@ -179,7 +179,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Now save changes while on English
         $updateResponse = $this->patch(
-            route('manager.settings.mailers.templates.update', $template->uid),
+            route('manager.backups.mailers.templates.update', $template->uid),
             [
                 'subject' => 'Updated EN Subject',
                 'content' => '<p>Updated EN Content</p>',
@@ -190,7 +190,7 @@ class MailerTemplateLanguagePersistenceTest extends TestCase
 
         // Should redirect back to English, not Spanish
         $updateResponse->assertRedirect(
-            route('manager.settings.mailers.templates.edit', [
+            route('manager.backups.mailers.templates.edit', [
                 'uid' => $template->uid,
                 'lang_id' => $englishLang->id,
             ])

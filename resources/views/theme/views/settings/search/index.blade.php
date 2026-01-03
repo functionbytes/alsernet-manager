@@ -21,7 +21,7 @@
 
             <!-- Form -->
             <div class="card-body">
-                <form method="POST" action="{{ route('manager.settings.search.update') }}">
+                <form method="POST" action="{{ route('manager.backups.search.update') }}">
                     @csrf
                     @method('PUT')
 
@@ -154,7 +154,7 @@
                         <div class="col-12">
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-primary">Guardar configuración</button>
-                                <a href="{{ route('manager.settings') }}" class="btn btn-outline-secondary">Cancelar</a>
+                                <a href="{{ route('manager.backups') }}" class="btn btn-outline-secondary">Cancelar</a>
                             </div>
                         </div>
                     </div>

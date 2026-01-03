@@ -1960,7 +1960,7 @@ php artisan supplier-automation:backup --components=all --destination=s3
 class SupplierAutomationBackupCommand extends Command
 {
     protected $signature = 'supplier-automation:backup
-        {--components=all : settings,credentials,workflows,metrics}
+        {--components=all : backups,credentials,workflows,metrics}
         {--destination=local : local,s3}';
 
     public function handle(): void
@@ -1968,8 +1968,8 @@ class SupplierAutomationBackupCommand extends Command
         $components = $this->parseComponents();
         $backup = [];
 
-        if (in_array('settings', $components)) {
-            $backup['settings'] = SupplierAutomationSetting::all()->toArray();
+        if (in_array('backups', $components)) {
+            $backup['backups'] = SupplierAutomationSetting::all()->toArray();
         }
 
         if (in_array('workflows', $components)) {
@@ -3218,7 +3218,7 @@ class SupplierSeeder extends Seeder
                 'contact_phone' => '+34 900 123 456',
                 'is_active' => true,
                 'priority' => 1,
-                'settings' => [
+                'backups' => [
                     'default_lang' => 'es',
                     'auto_approve' => false,
                     'quality_threshold' => 80,
@@ -3234,7 +3234,7 @@ class SupplierSeeder extends Seeder
                 'contact_phone' => '+34 900 234 567',
                 'is_active' => true,
                 'priority' => 2,
-                'settings' => [
+                'backups' => [
                     'default_lang' => 'es',
                     'auto_approve' => true,
                     'quality_threshold' => 75,
@@ -3250,7 +3250,7 @@ class SupplierSeeder extends Seeder
                 'contact_phone' => '+34 900 345 678',
                 'is_active' => true,
                 'priority' => 3,
-                'settings' => [
+                'backups' => [
                     'default_lang' => 'es',
                     'auto_approve' => false,
                     'quality_threshold' => 70,
@@ -4512,7 +4512,7 @@ class SupplierFactory extends Factory
             'contact_phone' => $this->faker->phoneNumber(),
             'is_active' => $this->faker->boolean(80),
             'priority' => $this->faker->numberBetween(1, 10),
-            'settings' => [
+            'backups' => [
                 'default_lang' => 'es',
                 'auto_approve' => $this->faker->boolean(30),
                 'quality_threshold' => $this->faker->numberBetween(60, 90),

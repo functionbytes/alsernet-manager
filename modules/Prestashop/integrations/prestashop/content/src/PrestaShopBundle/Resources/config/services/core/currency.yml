@@ -25,7 +25,7 @@ services:
       class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
       factory: ["@prestashop.core.circuit_breaker.advanced_factory", create]
       arguments:
-        - "@prestashop.core.currency.exchange_rate.settings"
+        - "@prestashop.core.currency.exchange_rate.backups"
 
     prestashop.core.exchange_rate.provider:
       class: PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider

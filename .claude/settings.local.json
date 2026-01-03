@@ -370,7 +370,9 @@
       "Bash(then echo \"$module: MISSING\")",
       "Bash(else echo \"$module: EXISTS\")",
       "Bash(composer update:*)",
-      "Bash(/dev/null <<'EOF'\n# Horizon Module Implementation Plan\nThis is a comprehensive plan for creating the Horizon module following established patterns.\nEOF)"
+      "Bash(/dev/null <<'EOF'\n# Horizon Module Implementation Plan\nThis is a comprehensive plan for creating the Horizon module following established patterns.\nEOF)",
+      "Bash(/Users/functionbytes/Function/Coding/manager/vendor/bin/pint:*)",
+      "Bash(/opt/homebrew/opt/php@8.4/bin/php:*)"
     ],
     "deny": [],
     "ask": []

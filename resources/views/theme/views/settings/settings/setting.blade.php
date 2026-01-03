@@ -520,7 +520,7 @@
 
 
                     $.ajax({
-                        url: "{{ route('manager.settings.update') }}",
+                        url: "{{ route('manager.backups.update') }}",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -552,7 +552,7 @@
                                 });
 
                                 setTimeout(function () {
-                                    window.location = "{{ route('manager.settings') }}";
+                                    window.location = "{{ route('manager.backups') }}";
                                 }, 2000);
 
                             } else {
@@ -588,7 +588,7 @@
 
             var myLogo = new Dropzone("div#logo", {
                 paramName: "file",
-                url: "{{ route('manager.settings.logo') }}",
+                url: "{{ route('manager.backups.logo') }}",
                 addRemoveLinks: true,
                 autoProcessQueue: false,
                 uploadMultiple: false,
@@ -604,7 +604,7 @@
 
                     item = $("#page_logo").val();
 
-                    $.getJSON("{{ route('manager.settings.logo.get', ':item') }}".replace(':item', item), function (data) {
+                    $.getJSON("{{ route('manager.backups.logo.get', ':item') }}".replace(':item', item), function (data) {
 
                         $.each(data, function (key, value) {
 
@@ -650,7 +650,7 @@
                         if (file.id) {
                             $.ajax({
                                 type: 'GET',
-                                url: "{{ route('manager.settings.logo.delete', ':id') }}".replace(':id', file.id),
+                                url: "{{ route('manager.backups.logo.delete', ':id') }}".replace(':id', file.id),
                                 success: function (result) {
                                     $("#status").val('false');
                                 }
@@ -679,7 +679,7 @@
 
             var myFavicon = new Dropzone("div#favicon", {
                 paramName: "file",
-                url: "{{ route('manager.settings.favicon') }}",
+                url: "{{ route('manager.backups.favicon') }}",
                 addRemoveLinks: true,
                 autoProcessQueue: false,
                 uploadMultiple: false,
@@ -695,7 +695,7 @@
 
                     item = $("#page_favicon").val();
 
-                    $.getJSON("{{ route('manager.settings.favicon.get', ':item') }}".replace(':item', item), function (data) {
+                    $.getJSON("{{ route('manager.backups.favicon.get', ':item') }}".replace(':item', item), function (data) {
 
                         $.each(data, function (key, value) {
 
@@ -743,7 +743,7 @@
                         if (file.id) {
                             $.ajax({
                                 type: 'GET',
-                                url: "{{ route('manager.settings.favicon.delete', ':id') }}".replace(':id', file.id),
+                                url: "{{ route('manager.backups.favicon.delete', ':id') }}".replace(':id', file.id),
                                 success: function (result) {
                                     $("#status").val('false');
                                 }

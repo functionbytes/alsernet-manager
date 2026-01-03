@@ -1,7 +1,7 @@
 <div class="row">
     <!-- Main Settings Form -->
     <div class="col-lg-8">
-        <form method="POST" action="{{ route('manager.helpdesk.ai.settings.update') }}" id="settingsForm">
+        <form method="POST" action="{{ route('manager.helpdesk.ai.backups.update') }}" id="settingsForm">
             @csrf
             @method('PUT')
 
@@ -281,7 +281,7 @@ document.getElementById('testConnection')?.addEventListener('click', function(e)
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Probando...';
 
-    fetch('{{ route("manager.helpdesk.ai.settings.test") }}', {
+    fetch('{{ route("manager.helpdesk.ai.backups.test") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

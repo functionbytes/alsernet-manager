@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
 /**
- * Class SqlRequestSettings stores SqlRequest settings.
+ * Class SqlRequestSettings stores SqlRequest backups.
  */
 class SqlRequestSettings
 {

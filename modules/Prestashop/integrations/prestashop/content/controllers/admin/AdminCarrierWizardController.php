@@ -70,7 +70,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             'name' => 'carrier_wizard',
             'steps' => [
                 [
-                    'title' => $this->trans('General settings', [], 'Admin.Shipping.Feature'),
+                    'title' => $this->trans('General backups', [], 'Admin.Shipping.Feature'),
                 ],
                 [
                     'title' => $this->trans('Shipping locations and costs', [], 'Admin.Shipping.Feature'),

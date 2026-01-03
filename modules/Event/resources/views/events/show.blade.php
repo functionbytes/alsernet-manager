@@ -9,7 +9,7 @@
                 <a href="{{ route('manager.events.edit', $event->uid) }}" class="btn btn-sm btn-info">
                     <i class="fas fa-edit me-2"></i>Editar
                 </a>
-                <a href="{{ route('manager.events') }}" class="btn btn-sm btn-secondary">
+                <a href="{{ route('manager.events.index') }}" class="btn btn-sm btn-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Volver
                 </a>
             </div>

@@ -17,7 +17,7 @@ class CampaignTemplateSeeder extends Seeder
      * - Unique identifier (uid)
      * - HTML content
      * - Subject line and sender information
-     * - Tracking settings
+     * - Tracking backups
      */
     public function run(): void
     {
@@ -235,7 +235,7 @@ HTML;
                 <p><a href="#" class="read-more">Read More →</a></p>
             </div>
             <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin-top: 20px;">
-                <p><strong>Tip of the Week:</strong> Did you know you can customize your dashboard? Visit your settings to personalize your experience.</p>
+                <p><strong>Tip of the Week:</strong> Did you know you can customize your dashboard? Visit your backups to personalize your experience.</p>
             </div>
         </div>
         <div class="footer">
@@ -317,7 +317,7 @@ CUSTOMER SUCCESS STORY: Case Study
 Learn how one of our customers increased their productivity by 300% using our platform.
 
 TIP OF THE WEEK:
-Did you know you can customize your dashboard? Visit your settings to personalize your experience.
+Did you know you can customize your dashboard? Visit your backups to personalize your experience.
 
 © 2024 Our Company. All rights reserved.
 TEXT;

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Some static settings of tax rules group inside Product context
+ * Some static backups of tax rules group inside Product context
  */
 class ProductTaxRulesGroupSettings
 {

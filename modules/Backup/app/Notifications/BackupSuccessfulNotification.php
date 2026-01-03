@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Backup\Notifications\BackupNotifications;
+namespace Modules\Backup\Notifications;
 
 use Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification as BaseNotification;
 

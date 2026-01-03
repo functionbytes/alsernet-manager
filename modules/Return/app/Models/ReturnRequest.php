@@ -3,7 +3,7 @@
 namespace Modules\Returns\Models;
 
 use App\Models\Return\Order\ReturnOrder;
-use App\Traits\HasUid;
+use Modules\Return\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

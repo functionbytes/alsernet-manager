@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class DatabaseSettingsController extends Controller
 {
     /**
-     * Display database settings form
+     * Display database backups form
      */
     public function index()
     {
@@ -34,7 +34,7 @@ class DatabaseSettingsController extends Controller
     }
 
     /**
-     * Update database settings
+     * Update database backups
      */
     public function update(Request $request)
     {
@@ -43,7 +43,7 @@ class DatabaseSettingsController extends Controller
 
             Setting::setDatabaseSettings($validated);
 
-            return redirect()->route('manager.settings.database.index')
+            return redirect()->route('manager.backups.database.index')
                 ->with('success', 'Configuración de base de datos actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()

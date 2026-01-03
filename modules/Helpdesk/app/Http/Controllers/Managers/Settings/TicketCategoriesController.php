@@ -42,7 +42,7 @@ class TicketCategoriesController extends Controller
             'with_sla' => TicketCategory::whereNotNull('default_sla_policy_id')->count(),
         ];
 
-        return view('theme.views.settings.helpdesk.ticket-categories.index', [
+        return view('theme.views.backups.helpdesk.ticket-categories.index', [
             'categories' => $categories,
             'stats' => $stats,
         ]);
@@ -57,7 +57,7 @@ class TicketCategoriesController extends Controller
         $groups = TicketGroup::active()->ordered()->get();
         $cannedReplies = TicketCannedReply::active()->get();
 
-        return view('theme.views.settings.helpdesk.ticket-categories.create', [
+        return view('theme.views.backups.helpdesk.ticket-categories.create', [
             'slaPolicies' => $slaPolicies,
             'groups' => $groups,
             'cannedReplies' => $cannedReplies,
@@ -117,7 +117,7 @@ class TicketCategoriesController extends Controller
             $category->ticketCannedReplies()->attach($repliesData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.categories.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.categories.index')
             ->with('success', 'Categoría creada exitosamente.');
     }
 
@@ -131,7 +131,7 @@ class TicketCategoriesController extends Controller
         $groups = TicketGroup::active()->ordered()->get();
         $cannedReplies = TicketCannedReply::active()->get();
 
-        return view('theme.views.settings.helpdesk.ticket-categories.edit', [
+        return view('theme.views.backups.helpdesk.ticket-categories.edit', [
             'category' => $category,
             'slaPolicies' => $slaPolicies,
             'groups' => $groups,
@@ -201,7 +201,7 @@ class TicketCategoriesController extends Controller
             $category->ticketCannedReplies()->sync($repliesData);
         }
 
-        return redirect()->route('manager.helpdesk.settings.tickets.categories.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.categories.index')
             ->with('success', 'Categoría actualizada exitosamente.');
     }
 
@@ -217,7 +217,7 @@ class TicketCategoriesController extends Controller
 
         $category->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.categories.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.categories.index')
             ->with('success', 'Categoría eliminada exitosamente.');
     }
 

@@ -4,7 +4,7 @@
 
     <div class="card w-100">
 
-        <form id="formGroup" method="POST" action="{{ route('manager.helpdesk.settings.tickets.groups.store') }}">
+        <form id="formGroup" method="POST" action="{{ route('manager.helpdesk.backups.tickets.groups.store') }}">
 
             {{ csrf_field() }}
 
@@ -145,7 +145,7 @@
                 <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                     Guardar
                 </button>
-                <a href="{{ route('manager.helpdesk.settings.tickets.groups.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                <a href="{{ route('manager.helpdesk.backups.tickets.groups.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                     Cancelar
                 </a>
             </div>

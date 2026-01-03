@@ -6,7 +6,7 @@
 
     <div class="card w-100">
 
-        <form method="POST" action="{{ route('manager.settings.mailers.endpoints.store') }}" id="formCreate">
+        <form method="POST" action="{{ route('settings.mailers.endpoints.store') }}" id="formCreate">
             @csrf
 
             <div class="card-body">
@@ -15,7 +15,7 @@
                         <h5 class="mb-0">Crear nuevo endpoint de email</h5>
                         <p class="card-subtitle mb-0 mt-2">Configura un endpoint para recibir solicitudes de envío de emails desde sistemas externos como PrestaShop, Shopify u otros.</p>
                     </div>
-                    <a href="{{ route('manager.settings.mailers.endpoints.index') }}" class="btn btn-light">
+                    <a href="{{ route('settings.mailers.endpoints.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left me-1"></i> Atrás
                     </a>
                 </div>
@@ -282,7 +282,7 @@ Header: X-API-Token: abc123...
                     <button type="submit" class="btn btn-info px-4 waves-effect waves-light">
                         <i class="fas fa-save me-2"></i>Crear endpoint
                     </button>
-                    <a href="{{ route('manager.settings.mailers.endpoints.index') }}" class="btn btn-light px-4">
+                    <a href="{{ route('settings.mailers.endpoints.index') }}" class="btn btn-light px-4">
                         Cancelar
                     </a>
                 </div>

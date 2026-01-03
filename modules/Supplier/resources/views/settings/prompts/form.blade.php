@@ -262,7 +262,7 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Probando...');
 
         $.ajax({
-            url: '{{ route("settings.suppliers.prompts.test") }}',
+            url: '{{ route("backups.suppliers.prompts.test") }}',
             method: 'POST',
             data: {
                 template: template,
@@ -297,8 +297,8 @@ $(document).ready(function() {
         const formData = $(this).serialize();
         const id = $('input[name="id"]').val();
         const url = id
-            ? '{{ route("settings.suppliers.prompts.update", ":id") }}'.replace(':id', id)
-            : '{{ route("settings.suppliers.prompts.store") }}';
+            ? '{{ route("backups.suppliers.prompts.update", ":id") }}'.replace(':id', id)
+            : '{{ route("backups.suppliers.prompts.store") }}';
         const method = id ? 'PUT' : 'POST';
 
         $.ajax({
@@ -309,7 +309,7 @@ $(document).ready(function() {
                 if (response.success) {
                     toastr.success(response.message, 'Prompts');
                     setTimeout(() => {
-                        window.location.href = '{{ route("settings.suppliers.prompts.index") }}';
+                        window.location.href = '{{ route("backups.suppliers.prompts.index") }}';
                     }, 1000);
                 }
             },

@@ -187,7 +187,7 @@ Eliminar los archivos antiguos de `app/`:
 rm -rf app/Models/Mail/
 rm -rf app/Http/Controllers/Managers/Settings/Mails/
 rm -rf app/Http/Controllers/Managers/Settings/Mail/
-rm -rf app/Http/Controllers/Api/EmailEndpointController.php
+rm -rf app/Http/Controllers/Api/MailerEndpointController.php
 rm -rf app/Services/Mails/
 rm -rf app/Mail/
 rm -rf app/Jobs/Email/

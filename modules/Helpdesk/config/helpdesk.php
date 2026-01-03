@@ -5,7 +5,7 @@ return [
         'manager_settings' => [
             'icon' => 'fas fa-headset',
             'title' => 'Helpdesk',
-            'route' => 'manager.settings.helpdesk.index',
+            'route' => 'manager.backups.helpdesk.index',
             'permission' => 'manage_helpdesk_settings',
         ],
         'agent_menu' => [

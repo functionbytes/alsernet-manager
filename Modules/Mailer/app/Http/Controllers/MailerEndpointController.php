@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Mailer\Http\Controllers\Api;
+namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -9,7 +9,7 @@ use Modules\Mailer\Jobs\SendEndpointEmailJob;
 use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerEndpointLog;
 
-class EmailEndpointController extends Controller
+class MailerEndpointController extends Controller
 {
     /**
      * Send email via endpoint

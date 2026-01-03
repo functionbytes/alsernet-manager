@@ -88,7 +88,7 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show translations settings page.
+     * Show translations backups page.
      *
      * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

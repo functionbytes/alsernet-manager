@@ -34,7 +34,7 @@ class TicketSlaPoliciesController extends Controller
             'with_escalation' => TicketSlaPolicy::where('enable_escalation', true)->count(),
         ];
 
-        return view('theme.views.settings.helpdesk.ticket-sla-policies.index', [
+        return view('theme.views.backups.helpdesk.ticket-sla-policies.index', [
             'policies' => $policies,
             'stats' => $stats,
         ]);
@@ -45,7 +45,7 @@ class TicketSlaPoliciesController extends Controller
      */
     public function create()
     {
-        return view('theme.views.settings.helpdesk.ticket-sla-policies.create');
+        return view('theme.views.backups.helpdesk.ticket-sla-policies.create');
     }
 
     /**
@@ -96,7 +96,7 @@ class TicketSlaPoliciesController extends Controller
 
         TicketSlaPolicy::create($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.sla-policies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.sla-policies.index')
             ->with('success', 'Política SLA creada exitosamente.');
     }
 
@@ -105,7 +105,7 @@ class TicketSlaPoliciesController extends Controller
      */
     public function edit(TicketSlaPolicy $policy)
     {
-        return view('theme.views.settings.helpdesk.ticket-sla-policies.edit', compact('policy'));
+        return view('theme.views.backups.helpdesk.ticket-sla-policies.edit', compact('policy'));
     }
 
     /**
@@ -135,7 +135,7 @@ class TicketSlaPoliciesController extends Controller
 
         $policy->update($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.sla-policies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.sla-policies.index')
             ->with('success', 'Política SLA actualizada exitosamente.');
     }
 
@@ -164,7 +164,7 @@ class TicketSlaPoliciesController extends Controller
 
         $policy->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.sla-policies.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.sla-policies.index')
             ->with('success', 'Política SLA eliminada exitosamente.');
     }
 }

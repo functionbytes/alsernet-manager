@@ -8,20 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Warehouse\Models\Kardex;
 
-/**
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order\Order> $orders
- * @property-read int|null $orders_count
- * @property-read \Modules\Warehouse\Models\Product\Product|null $product
- * @property-read \App\Models\Shop|null $shop
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation id($id)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductLocation uid($uid)
- *
- * @mixin \Eloquent
- */
 class ProductLocation extends Model
 {
     use HasFactory;

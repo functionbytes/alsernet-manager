@@ -5,6 +5,16 @@ use Modules\MailsSettings\Http\Controllers\Settings\EmailSettingsController;
 use Modules\MailsSettings\Http\Controllers\Settings\IncomingEmailSettingsController;
 use Modules\MailsSettings\Http\Controllers\Settings\OutgoingEmailSettingsController;
 
+/*
+|--------------------------------------------------------------------------
+| Email Settings Routes
+|--------------------------------------------------------------------------
+|
+| Rutas para la configuración de email del sistema
+| Middleware: web, auth, role:manager|super-admin
+|
+*/
+
 // Email settings routes
 Route::middleware(['web', 'auth', 'role:manager|super-admin'])
     ->prefix('settings/email')
@@ -58,4 +68,3 @@ Route::middleware(['web', 'auth', 'role:manager|super-admin'])
         Route::post('/test-connection', [OutgoingEmailSettingsController::class, 'testConnection'])->name('test-connection');
         Route::post('/send-test', [OutgoingEmailSettingsController::class, 'sendTestEmail'])->name('send-test');
     });
-

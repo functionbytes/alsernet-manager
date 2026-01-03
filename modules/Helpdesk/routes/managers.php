@@ -111,11 +111,11 @@ Route::group(['prefix' => 'helpdesk'], function () {
     // AI Agent
     Route::prefix('ai')->group(function () {
         // Settings
-        Route::get('settings', [AiAgentSettingsController::class, 'index'])->name('manager.helpdesk.ai.settings');
-        Route::put('settings', [AiAgentSettingsController::class, 'update'])->name('manager.helpdesk.ai.settings.update');
-        Route::post('settings/test-connection', [AiAgentSettingsController::class, 'testConnection'])->name('manager.helpdesk.ai.settings.test');
-        Route::post('settings/get-models', [AiAgentSettingsController::class, 'getModels'])->name('manager.helpdesk.ai.settings.get-models');
-        Route::get('settings/statistics', [AiAgentSettingsController::class, 'statistics'])->name('manager.helpdesk.ai.settings.statistics');
+        Route::get('backups', [AiAgentSettingsController::class, 'index'])->name('manager.helpdesk.ai.backups');
+        Route::put('backups', [AiAgentSettingsController::class, 'update'])->name('manager.helpdesk.ai.backups.update');
+        Route::post('backups/test-connection', [AiAgentSettingsController::class, 'testConnection'])->name('manager.helpdesk.ai.backups.test');
+        Route::post('backups/get-models', [AiAgentSettingsController::class, 'getModels'])->name('manager.helpdesk.ai.backups.get-models');
+        Route::get('backups/statistics', [AiAgentSettingsController::class, 'statistics'])->name('manager.helpdesk.ai.backups.statistics');
 
         // Tags
         Route::get('tags', [AiAgentSettingsController::class, 'tagsIndex'])->name('manager.helpdesk.ai.tags.index');
@@ -161,7 +161,7 @@ Route::group(['prefix' => 'helpdesk'], function () {
     });
 
     // Settings
-    Route::prefix('settings')->name('manager.helpdesk.settings.')->group(function () {
+    Route::prefix('backups')->name('manager.helpdesk.backups.')->group(function () {
         // Tickets Settings
         Route::get('tickets', [SettingsHelpdeskController::class, 'ticketsIndex'])->name('tickets');
         Route::put('tickets', [SettingsHelpdeskController::class, 'ticketsUpdate'])->name('tickets.update');

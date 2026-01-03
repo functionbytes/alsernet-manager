@@ -207,7 +207,7 @@ class FreeShippingAmountDisplayOverride extends FreeShippingAmountDisplay
         // If it is reached, check if shipping is free, otherwise return false.
         // this case is possible when there are delivery limitations by carrier for inventaries
         // and that carrier doesn't have free shipping
-        // while our calculations might show that it must have (based on default carrier settings)
+        // while our calculations might show that it must have (based on default carrier backups)
         return $totalPrice < $freeShippingFrom ? $freeShippingFrom - $totalPrice : ($totalShipping > 0 ? false : 0);
     }
 }

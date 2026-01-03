@@ -130,7 +130,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Request SQL settings save.
+     * Process Request SQL backups save.
      *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
@@ -430,7 +430,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get Request SQL settings form handler.
+     * Get Request SQL backups form handler.
      *
      * @return FormHandlerInterface
      */

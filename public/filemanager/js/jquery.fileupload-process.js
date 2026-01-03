@@ -92,7 +92,7 @@
       return chain;
     },
 
-    // Replaces the settings of each processQueue item that
+    // Replaces the backups of each processQueue item that
     // are strings starting with an "@", using the remaining
     // substring as key for the option map,
     // e.g. "@autoUpload" is replaced with options.autoUpload:

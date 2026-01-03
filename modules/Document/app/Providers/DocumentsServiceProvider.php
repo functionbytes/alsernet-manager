@@ -105,8 +105,6 @@ class DocumentsServiceProvider extends ServiceProvider
             ->group(function () {
                 require module_path($this->name, 'routes/settings.php');
 
-                // Load API routes (POST, PUT, DELETE) - same prefix/name
-                require module_path($this->name, 'routes/api/settings.php');
             });
 
         // Public API routes

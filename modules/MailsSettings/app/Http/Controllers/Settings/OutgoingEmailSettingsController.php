@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 class OutgoingEmailSettingsController extends Controller
 {
     /**
-     * Display outgoing email settings
+     * Display outgoing email backups
      */
     public function index()
     {
@@ -19,7 +19,7 @@ class OutgoingEmailSettingsController extends Controller
         $pageTitle = 'Configuración de Correo Saliente';
         $breadcrumb = 'Configuración / Email / Saliente';
 
-        return view('mails-settings::managers.settings.email.outgoing', compact('settings', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::managers.backups.email.outgoing', compact('settings', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -32,11 +32,11 @@ class OutgoingEmailSettingsController extends Controller
         $pageTitle = 'Editar Correo Saliente';
         $breadcrumb = 'Configuración / Email / Saliente / Editar';
 
-        return view('mails-settings::managers.settings.email.outgoing-edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::managers.backups.email.outgoing-edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
     }
 
     /**
-     * Update outgoing email settings
+     * Update outgoing email backups
      */
     public function update(Request $request)
     {
@@ -131,7 +131,7 @@ class OutgoingEmailSettingsController extends Controller
 
             $settings = Setting::getEmailSettings();
 
-            // Configure mail settings temporarily
+            // Configure mail backups temporarily
             config([
                 'mail.default' => 'smtp',
                 'mail.mailers.smtp' => [

@@ -22,7 +22,7 @@ Se cambió el redirect para mantener explícitamente el `lang_id` seleccionado:
 
 ```php
 return redirect()
-    ->route('manager.settings.mailers.templates.edit', [
+    ->route('manager.backups.mailers.templates.edit', [
         'uid' => $template->uid,
         'lang_id' => $validated['lang_id'],
     ])

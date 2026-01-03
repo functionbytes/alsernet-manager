@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Queue;
 class SystemSettingsController extends Controller
 {
     /**
-     * Display system settings page with tabs
+     * Display system backups page with tabs
      */
     public function index(Request $request)
     {
@@ -35,7 +35,7 @@ class SystemSettingsController extends Controller
     }
 
     /**
-     * Get queue settings
+     * Get queue backups
      */
     private function getQueueSettings()
     {
@@ -48,7 +48,7 @@ class SystemSettingsController extends Controller
     }
 
     /**
-     * Get websockets settings
+     * Get websockets backups
      */
     private function getWebsocketsSettings()
     {
@@ -56,18 +56,18 @@ class SystemSettingsController extends Controller
             'driver' => config('broadcasting.default'),
             'connections' => config('broadcasting.connections'),
 
-            // Reverb settings
+            // Reverb backups
             'reverb_host' => Setting::get('reverb_host', config('reverb.servers.reverb.host', '0.0.0.0')),
             'reverb_port' => Setting::get('reverb_port', config('reverb.servers.reverb.port', 8080)),
             'reverb_scheme' => Setting::get('reverb_scheme', config('reverb.servers.reverb.scheme', 'http')),
 
-            // Pusher settings
+            // Pusher backups
             'pusher_app_id' => Setting::get('pusher_app_id', config('broadcasting.connections.pusher.app_id', '')),
             'pusher_key' => Setting::get('pusher_key', config('broadcasting.connections.pusher.key', '')),
             'pusher_secret' => Setting::get('pusher_secret', config('broadcasting.connections.pusher.secret', '')),
             'pusher_cluster' => Setting::get('pusher_cluster', config('broadcasting.connections.pusher.options.cluster', 'mt1')),
 
-            // Redis settings
+            // Redis backups
             'redis_host' => Setting::get('redis_host', config('database.redis.default.host', '127.0.0.1')),
             'redis_port' => Setting::get('redis_port', config('database.redis.default.port', 6379)),
             'redis_password' => Setting::get('redis_password', config('database.redis.default.password', '')),
@@ -76,7 +76,7 @@ class SystemSettingsController extends Controller
     }
 
     /**
-     * Update queue settings
+     * Update queue backups
      */
     public function updateQueue(Request $request)
     {
@@ -103,7 +103,7 @@ class SystemSettingsController extends Controller
     }
 
     /**
-     * Update websockets settings
+     * Update websockets backups
      */
     public function updateWebsockets(Request $request)
     {
@@ -132,7 +132,7 @@ class SystemSettingsController extends Controller
             Setting::set('broadcast_driver', $validated['broadcast_driver']);
             $this->updateEnvVariable('BROADCAST_DRIVER', $validated['broadcast_driver']);
 
-            // Reverb settings
+            // Reverb backups
             if (isset($validated['reverb_host'])) {
                 Setting::set('reverb_host', $validated['reverb_host']);
                 $this->updateEnvVariable('REVERB_HOST', $validated['reverb_host']);
@@ -148,7 +148,7 @@ class SystemSettingsController extends Controller
                 $this->updateEnvVariable('REVERB_SCHEME', $validated['reverb_scheme']);
             }
 
-            // Pusher settings
+            // Pusher backups
             if (isset($validated['pusher_app_id'])) {
                 Setting::set('pusher_app_id', $validated['pusher_app_id']);
                 $this->updateEnvVariable('PUSHER_APP_ID', $validated['pusher_app_id']);
@@ -169,7 +169,7 @@ class SystemSettingsController extends Controller
                 $this->updateEnvVariable('PUSHER_APP_CLUSTER', $validated['pusher_cluster']);
             }
 
-            // Redis settings
+            // Redis backups
             if (isset($validated['redis_host'])) {
                 Setting::set('redis_host', $validated['redis_host']);
                 $this->updateEnvVariable('REDIS_HOST', $validated['redis_host']);

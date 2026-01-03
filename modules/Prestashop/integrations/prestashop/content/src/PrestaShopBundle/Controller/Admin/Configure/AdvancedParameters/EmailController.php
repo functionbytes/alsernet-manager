@@ -135,7 +135,7 @@ class EmailController extends FrameworkBundleAdminController
             } else {
                 $this->addFlash(
                     'success',
-                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                    $this->trans('The backups have been successfully updated.', 'Admin.Notifications.Success')
                 );
             }
         }

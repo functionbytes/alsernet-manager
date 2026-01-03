@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LocalizationController extends FrameworkBundleAdminController
 {
     /**
-     * Show localization settings page.
+     * Show localization backups page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *

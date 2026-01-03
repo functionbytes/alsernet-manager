@@ -36,7 +36,7 @@ class TicketStatusesController extends Controller
             'default' => TicketStatus::where('is_default', true)->count(),
         ];
 
-        return view('theme.views.settings.helpdesk.ticket-statuses.index', [
+        return view('theme.views.backups.helpdesk.ticket-statuses.index', [
             'statuses' => $statuses,
             'stats' => $stats,
         ]);
@@ -47,7 +47,7 @@ class TicketStatusesController extends Controller
      */
     public function create()
     {
-        return view('theme.views.settings.helpdesk.ticket-statuses.create');
+        return view('theme.views.backups.helpdesk.ticket-statuses.create');
     }
 
     /**
@@ -75,7 +75,7 @@ class TicketStatusesController extends Controller
 
         TicketStatus::create($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado creado exitosamente.');
     }
 
@@ -84,7 +84,7 @@ class TicketStatusesController extends Controller
      */
     public function edit(TicketStatus $status)
     {
-        return view('theme.views.settings.helpdesk.ticket-statuses.edit', compact('status'));
+        return view('theme.views.backups.helpdesk.ticket-statuses.edit', compact('status'));
     }
 
     /**
@@ -118,7 +118,7 @@ class TicketStatusesController extends Controller
 
         $status->update($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado actualizado exitosamente.');
     }
 
@@ -138,7 +138,7 @@ class TicketStatusesController extends Controller
 
         $status->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.statuses.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.statuses.index')
             ->with('success', 'Estado eliminado exitosamente.');
     }
 

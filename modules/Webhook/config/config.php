@@ -9,7 +9,7 @@ return [
     | Webhook Configuration
     |--------------------------------------------------------------------------
     |
-    | Configure default webhook settings and behavior
+    | Configure default webhook backups and behavior
     |
     */
 

@@ -21,7 +21,7 @@ class AiAgentFlowsController extends Controller
 
         if (! $agent) {
             return redirect()
-                ->route('manager.helpdesk.ai-agent.settings')
+                ->route('manager.helpdesk.ai-agent.backups')
                 ->with('error', 'Primero debes configurar un agente IA');
         }
 
@@ -54,7 +54,7 @@ class AiAgentFlowsController extends Controller
         $agent = AiAgent::first();
 
         if (! $agent) {
-            return redirect()->route('manager.helpdesk.ai-agent.settings');
+            return redirect()->route('manager.helpdesk.ai-agent.backups');
         }
 
         $triggers = ['message' => 'Mensaje', 'intent' => 'Intención', 'keyword' => 'Palabra clave', 'conversation_start' => 'Inicio'];

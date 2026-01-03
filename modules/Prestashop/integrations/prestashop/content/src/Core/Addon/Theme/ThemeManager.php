@@ -278,7 +278,7 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restore default settings.
+     * Actions to perform to restore default backups.
      *
      * @param string $themeName The theme name to reset
      *

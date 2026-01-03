@@ -85,7 +85,7 @@
                                   rows="5"
                                   data-max-chars="2000"
                                   id="emailInitialRequestMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['initial_request']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['initial_request']['message'] ?? 'Estimado/a {{customer_name}},
 
 Necesitamos que nos proporcione los siguientes documentos para completar su solicitud:
 
@@ -159,7 +159,7 @@ Gracias por su colaboracion.
                                   rows="5"
                                   data-max-chars="2000"
                                   id="emailMissingDocsMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['missing_docs']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['missing_docs']['message'] ?? 'Estimado/a {{customer_name}},
 
 Necesitamos que vuelva a enviar el siguiente documento: {{document_name}}
 
@@ -271,7 +271,7 @@ Por favor, acceda al siguiente enlace: {{upload_link}}
                                   rows="5"
                                   data-max-chars="2000"
                                   id="emailReminderMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['reminder']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['reminder']['message'] ?? 'Estimado/a {{customer_name}},
 
 Le recordamos que aun tiene documentos pendientes de cargar para su orden #{{order_id}}.
 
@@ -344,7 +344,7 @@ Gracias.
                                   rows="4"
                                   data-max-chars="2000"
                                   id="emailApprovalMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['approval']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['approval']['message'] ?? 'Estimado/a {{customer_name}},
 
 Su documento "{{document_name}}" ha sido aprobado.
 
@@ -401,7 +401,7 @@ Su documento "{{document_name}}" ha sido aprobado.
                                   rows="5"
                                   data-max-chars="2000"
                                   id="emailRejectionMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['rejection']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['rejection']['message'] ?? 'Estimado/a {{customer_name}},
 
 Su documento "{{document_name}}" ha sido rechazado por el siguiente motivo:
 
@@ -462,7 +462,7 @@ Por favor, cargue una version corregida en: {{upload_link}}
                                   rows="5"
                                   data-max-chars="2000"
                                   id="emailCompletionMessage"
-                                  placeholder="Escribe el mensaje...">{{ $settings['email']['completion']['message'] ?? 'Estimado/a {{customer_name}},
+                                  placeholder="Escribe el mensaje...">{{ $backups['email']['completion']['message'] ?? 'Estimado/a {{customer_name}},
 
 Nos complace informarle que todos los documentos requeridos para su orden #{{order_id}} han sido aprobados satisfactoriamente.
 
@@ -622,7 +622,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-1"></i> Enviando...');
 
         $.ajax({
-            url: '{{ route("settings.documents.settings.test-email") }}',
+            url: '{{ route("backups.documents.backups.test-email") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -649,7 +649,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-1"></i> Enviando...');
 
         $.ajax({
-            url: '{{ route("settings.documents.settings.test-email") }}',
+            url: '{{ route("backups.documents.backups.test-email") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',

@@ -3,9 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use Modules\User\Http\Controllers\UsersController;
 
-Route::group(['prefix' => 'users'], function () {
-    Route::get('/', [UsersController::class, 'index'])->name('users.index');
-    Route::get('/create', [UsersController::class, 'create'])->name('users.create');
-    Route::get('/{uid}', [UsersController::class, 'view'])->name('users.show');
-    Route::get('/{uid}/edit', [UsersController::class, 'edit'])->name('users.edit');
-});
+/*
+|--------------------------------------------------------------------------
+| User Settings Web Routes
+|--------------------------------------------------------------------------
+|
+| Rutas para la gestión de vistas de usuarios
+| SOLO GET para renderizar vistas. POST, PUT, DELETE están en routes/api.php
+| Prefix: /settings/users (aplicado por UserServiceProvider)
+| Name: settings.users.* (aplicado por UserServiceProvider)
+| Middleware: web, auth, role:manager|super-admin
+|
+*/
+
+Route::get('/', [UsersController::class, 'index'])->name('index');
+Route::get('/create', [UsersController::class, 'create'])->name('create');
+Route::get('{uid}', [UsersController::class, 'view'])->name('show');
+Route::get('{uid}/edit', [UsersController::class, 'edit'])->name('edit');

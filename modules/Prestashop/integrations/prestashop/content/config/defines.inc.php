@@ -174,7 +174,7 @@ define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
 define('_PS_TMP_IMG_DIR_', _PS_IMG_DIR_.'tmp/');
 
-/* settings php */
+/* backups php */
 define('_PS_TRANS_PATTERN_', '(.*[^\\\\])');
 define('_PS_MIN_TIME_GENERATE_PASSWD_', '360');
 

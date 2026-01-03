@@ -24,15 +24,18 @@ class HorizonServiceProvider extends ServiceProvider
 
     private function loadRoutes(): void
     {
+        $apiPath = $this->module_path('routes/api.php');
+        $webPath = $this->module_path('routes/web.php');
+
         Route::middleware('api')
             ->prefix('api')
-            ->group(function () {
-                require $this->module_path('routes/api.php');
+            ->group(function () use ($apiPath) {
+                require $apiPath;
             });
 
         Route::middleware('web')
-            ->group(function () {
-                require $this->module_path('routes/web.php');
+            ->group(function () use ($webPath) {
+                require $webPath;
             });
     }
 
@@ -54,7 +57,7 @@ class HorizonServiceProvider extends ServiceProvider
             return $user->hasAnyRole(['super-admin', 'manager']);
         });
 
-        Gate::define('manage-horizon-settings', function ($user = null) {
+        Gate::define('manage-horizon-backups', function ($user = null) {
             if (! $user) {
                 return false;
             }

@@ -24,7 +24,7 @@
  *}
 
 <div class="alert alert-danger">
-	{l s='By default, all images settings are already installed in your store. Do not delete them, you will need it!' d='Admin.Design.Help'}
+	{l s='By default, all images backups are already installed in your store. Do not delete them, you will need it!' d='Admin.Design.Help'}
 </div>
 
 {if isset($content)}

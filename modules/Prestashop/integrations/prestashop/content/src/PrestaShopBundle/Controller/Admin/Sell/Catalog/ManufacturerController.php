@@ -664,7 +664,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             MemoryLimitException::class => $this->trans(
-                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
+                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration backups.',
                     'Admin.Notifications.Error'
             ),
             ImageUploadException::class => $this->trans(
@@ -771,14 +771,14 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
             return $this->trans(
-                'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit backups.',
                 'Admin.Catalog.Notification',
                 [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
+            'The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit backups.',
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );

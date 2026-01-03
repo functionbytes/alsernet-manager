@@ -265,7 +265,7 @@ $(document).ready(function() {
         workflowsTable = $('#workflowsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("settings.suppliers.automation.workflows.data") }}',
+            ajax: '{{ route("backups.suppliers.automation.workflows.data") }}',
             columns: [
                 { data: 'name', name: 'name' },
                 { data: 'supplier', name: 'supplier' },
@@ -282,7 +282,7 @@ $(document).ready(function() {
         executionsTable = $('#executionsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("settings.suppliers.automation.executions.data") }}',
+            ajax: '{{ route("backups.suppliers.automation.executions.data") }}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'workflow', name: 'workflow' },
@@ -301,7 +301,7 @@ $(document).ready(function() {
         triggersTable = $('#triggersTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("settings.suppliers.automation.triggers.data") }}',
+            ajax: '{{ route("backups.suppliers.automation.triggers.data") }}',
             columns: [
                 { data: 'workflow', name: 'workflow' },
                 { data: 'type', name: 'type' },
@@ -318,7 +318,7 @@ $(document).ready(function() {
         alertsTable = $('#alertsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("settings.suppliers.automation.alerts.data") }}',
+            ajax: '{{ route("backups.suppliers.automation.alerts.data") }}',
             columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'type', name: 'type' },
@@ -339,7 +339,7 @@ $(document).ready(function() {
     // Refresh stats
     function refreshStats() {
         $.ajax({
-            url: '{{ route("settings.suppliers.automation.stats") }}',
+            url: '{{ route("backups.suppliers.automation.stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {
@@ -363,7 +363,7 @@ $(document).ready(function() {
 
     // Create workflow
     $('#createWorkflowBtn').on('click', function() {
-        window.location.href = '{{ route("settings.suppliers.automation.workflows.create") }}';
+        window.location.href = '{{ route("backups.suppliers.automation.workflows.create") }}';
     });
 
     // Run all workflows
@@ -384,7 +384,7 @@ $(document).ready(function() {
                 btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Ejecutando...');
 
                 $.ajax({
-                    url: '{{ route("settings.suppliers.automation.workflows.run-all") }}',
+                    url: '{{ route("backups.suppliers.automation.workflows.run-all") }}',
                     method: 'POST',
                     data: { _token: '{{ csrf_token() }}' },
                     success: function(response) {
@@ -420,7 +420,7 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '{{ route("settings.suppliers.automation.executions.clear-failed") }}',
+                    url: '{{ route("backups.suppliers.automation.executions.clear-failed") }}',
                     method: 'POST',
                     data: { _token: '{{ csrf_token() }}' },
                     success: function(response) {
@@ -443,7 +443,7 @@ $(document).ready(function() {
         const id = $(this).data('id');
 
         $.ajax({
-            url: '{{ route("settings.suppliers.automation.workflows.run", ":id") }}'.replace(':id', id),
+            url: '{{ route("backups.suppliers.automation.workflows.run", ":id") }}'.replace(':id', id),
             method: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
@@ -464,7 +464,7 @@ $(document).ready(function() {
         const id = $(this).data('id');
 
         $.ajax({
-            url: '{{ route("settings.suppliers.automation.executions.show", ":id") }}'.replace(':id', id),
+            url: '{{ route("backups.suppliers.automation.executions.show", ":id") }}'.replace(':id', id),
             method: 'GET',
             success: function(response) {
                 if (response.success) {

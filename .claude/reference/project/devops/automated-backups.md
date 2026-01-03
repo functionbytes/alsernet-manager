@@ -304,7 +304,7 @@ Total backups executed: 1
 ### Obtener detalles de un schedule
 
 ```bash
-GET /manager/settings/backup-schedules/{id}/details
+GET /manager/backups/backup-schedules/{id}/details
 ```
 
 **Response:**
@@ -327,7 +327,7 @@ GET /manager/settings/backup-schedules/{id}/details
 ### Activar/Desactivar un schedule
 
 ```bash
-POST /manager/settings/backup-schedules/{id}/toggle
+POST /manager/backups/backup-schedules/{id}/toggle
 ```
 
 **Response:**

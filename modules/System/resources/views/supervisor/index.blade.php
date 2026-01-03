@@ -769,7 +769,7 @@
 
         function refreshStatus() {
             $.ajax({
-                url: '{{ route("settings.system.supervisor.status-ajax") }}',
+                url: '{{ route("backups.system.supervisor.status-ajax") }}',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -938,7 +938,7 @@
         function startProcess(processName) {
             if (confirm('¿Iniciar el proceso "' + processName + '"?')) {
                 $.ajax({
-                    url: '{{ route("settings.system.supervisor.start", ["processName" => ":processName"]) }}'.replace(':processName', processName),
+                    url: '{{ route("backups.system.supervisor.start", ["processName" => ":processName"]) }}'.replace(':processName', processName),
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -967,7 +967,7 @@
         function stopProcess(processName) {
             if (confirm('¿Detener el proceso "' + processName + '"?')) {
                 $.ajax({
-                    url: '{{ route("settings.system.supervisor.stop", ["processName" => ":processName"]) }}'.replace(':processName', processName),
+                    url: '{{ route("backups.system.supervisor.stop", ["processName" => ":processName"]) }}'.replace(':processName', processName),
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -996,7 +996,7 @@
         function restartProcess(processName) {
             if (confirm('¿Reiniciar el proceso "' + processName + '"?')) {
                 $.ajax({
-                    url: '{{ route("settings.system.supervisor.restart", ["processName" => ":processName"]) }}'.replace(':processName', processName),
+                    url: '{{ route("backups.system.supervisor.restart", ["processName" => ":processName"]) }}'.replace(':processName', processName),
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -1034,7 +1034,7 @@
             modal.hide();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.reload") }}',
+                url: '{{ route("backups.system.supervisor.reload") }}',
                 type: 'POST',
                 dataType: 'json',
                 headers: {
@@ -1073,7 +1073,7 @@
             modal.hide();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.restart-service") }}',
+                url: '{{ route("backups.system.supervisor.restart-service") }}',
                 type: 'POST',
                 dataType: 'json',
                 headers: {
@@ -1105,7 +1105,7 @@
             var formData = $('#backupForm').serialize();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.backup-create") }}',
+                url: '{{ route("backups.system.supervisor.backup-create") }}',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -1126,7 +1126,7 @@
 
         function loadBackups() {
             var env = $('#filterEnv').val();
-            var url = '{{ route("settings.system.supervisor.backups-list") }}';
+            var url = '{{ route("backups.system.supervisor.backups-list") }}';
             if (env) url += '?environment=' + env;
 
             $.ajax({
@@ -1138,7 +1138,7 @@
                     if (data.backups && data.backups.length > 0) {
                         var html = '';
                         $.each(data.backups, function (index, b) {
-                            var downloadUrl = '{{ route("settings.system.supervisor.backup-download", ["backupId" => ":id"]) }}'.replace(':id', b.id);
+                            var downloadUrl = '{{ route("backups.system.supervisor.backup-download", ["backupId" => ":id"]) }}'.replace(':id', b.id);
 
                             html += '<tr>';
                             html += '<td><strong>' + b.name + '</strong><br><small class="text-muted">' + (b.description || '') + '</small></td>';
@@ -1187,7 +1187,7 @@
         function restoreBackup(backupId) {
             if (confirm('⚠️ Restaurar un backup sobrescribirá la configuración actual. ¿Continuar?')) {
                 $.ajax({
-                    url: '{{ route("settings.system.supervisor.backup-restore", ["backupId" => ":id"]) }}'.replace(':id', backupId),
+                    url: '{{ route("backups.system.supervisor.backup-restore", ["backupId" => ":id"]) }}'.replace(':id', backupId),
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -1211,7 +1211,7 @@
         function deleteBackup(backupId) {
             if (confirm('¿Eliminar este backup?')) {
                 $.ajax({
-                    url: '{{ route("settings.system.supervisor.backup-delete", ["backupId" => ":id"]) }}'.replace(':id', backupId),
+                    url: '{{ route("backups.system.supervisor.backup-delete", ["backupId" => ":id"]) }}'.replace(':id', backupId),
                     type: 'DELETE',
                     dataType: 'json',
                     headers: {
@@ -1234,7 +1234,7 @@
 
         function loadConfigFiles() {
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-files-list") }}',
+                url: '{{ route("backups.system.supervisor.config-files-list") }}',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -1261,7 +1261,7 @@
             event.preventDefault();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-file-get") }}',
+                url: '{{ route("backups.system.supervisor.config-file-get") }}',
                 type: 'GET',
                 data: {file: filePath},
                 dataType: 'json',
@@ -1291,7 +1291,7 @@
             var formData = $('#configForm').serialize();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-file-update") }}',
+                url: '{{ route("backups.system.supervisor.config-file-update") }}',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -1338,7 +1338,7 @@
             $('#logsContent').html('<i class="fa fa-spinner fa-spin"></i> Cargando logs...');
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.logs", ["processName" => ":name"]) }}'.replace(':name', processName) + '?lines=' + lines,
+                url: '{{ route("backups.system.supervisor.logs", ["processName" => ":name"]) }}'.replace(':name', processName) + '?lines=' + lines,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {

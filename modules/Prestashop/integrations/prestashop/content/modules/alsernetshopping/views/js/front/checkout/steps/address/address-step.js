@@ -1753,7 +1753,7 @@ console.log('🚀 address-step.js script loading...');
 
             /**
              * Add custom validation methods for form fields
-             * Now using global validation methods from settings.js
+             * Now using global validation methods from backups.js
              */
             addCustomValidationMethods() {
                 if (typeof window.settings !== 'undefined' && typeof window.settings.addCustomValidationMethods === 'function') {

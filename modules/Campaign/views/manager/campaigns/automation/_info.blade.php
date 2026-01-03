@@ -47,8 +47,8 @@
     </p>
     <div>
         <a href="javascript:;" class="btn btn-info text-nowrap d-flex align-items-center"
-           onclick="sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}')">
-            <i class="material-symbols-rounded me-2">auto_graph</i> {{ trans('messages.automation.settings') }}
+           onclick="sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}')">
+            <i class="material-symbols-rounded me-2">auto_graph</i> {{ trans('messages.automation.backups') }}
         </a>
     </div>
 </div>

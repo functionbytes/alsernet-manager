@@ -48,7 +48,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
         SETTINGS = COMPONENT ? $.extend( true, {}, COMPONENT.defaults, OPTIONS ) : OPTIONS || {},
 
 
-        // Merge the default classes with the settings classes.
+        // Merge the default classes with the backups classes.
         CLASSES = $.extend( {}, PickerConstructor.klasses(), SETTINGS.klass ),
 
 
@@ -96,7 +96,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 }
 
 
-                // Create a new picker component with the settings.
+                // Create a new picker component with the backups.
                 P.component = new COMPONENT(P, SETTINGS)
 
 
@@ -115,12 +115,12 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                 prepareElement()
 
 
-                // Insert the root as specified in the settings.
+                // Insert the root as specified in the backups.
                 if ( SETTINGS.container ) $( SETTINGS.container ).append( P.$root )
                 else $ELEMENT.after( P.$root )
 
 
-                // Bind the default component and settings events.
+                // Bind the default component and backups events.
                 P.on({
                     start: P.component.onStart,
                     render: P.component.onRender,

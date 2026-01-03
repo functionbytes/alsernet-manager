@@ -4,7 +4,7 @@
 
     <div class="card w-100">
 
-        <form id="formReply" method="POST" action="{{ route('manager.helpdesk.settings.tickets.canned-replies.store') }}">
+        <form id="formReply" method="POST" action="{{ route('manager.helpdesk.backups.tickets.canned-replies.store') }}">
 
             {{ csrf_field() }}
 
@@ -155,7 +155,7 @@
                 <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                     Guardar
                 </button>
-                <a href="{{ route('manager.helpdesk.settings.tickets.canned-replies.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                <a href="{{ route('manager.helpdesk.backups.tickets.canned-replies.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                     Cancelar
                 </a>
             </div>

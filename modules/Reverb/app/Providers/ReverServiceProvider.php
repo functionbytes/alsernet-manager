@@ -52,7 +52,7 @@ class ReverServiceProvider extends ServiceProvider
         // Reverb admin routes
         Route::middleware(['web', 'auth', 'role:manager|super-admin'])
             ->prefix('settings/reverb')
-            ->name('manager.settings.reverb.')
+            ->name('manager.backups.reverb.')
             ->group(function () {
                 require module_path($this->name, 'routes/web.php');
             });

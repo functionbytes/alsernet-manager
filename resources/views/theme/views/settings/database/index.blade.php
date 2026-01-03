@@ -29,7 +29,7 @@
                         <button type="button" class="btn btn-primary" id="testConnectionBtn">
                             <i class="fa fa-plug me-1"></i> Probar conexión
                         </button>
-                        <a href="{{ route('manager.settings.database.edit') }}" class="btn btn-secondary">
+                        <a href="{{ route('manager.backups.database.edit') }}" class="btn btn-secondary">
                             <i class="fa fa-pen-to-square me-1"></i> Editar configuración
                         </a>
                     </div>
@@ -192,7 +192,7 @@
                 btn.html('<i class="fa fa-spinner fa-spin me-1"></i> Probando...');
 
                 $.ajax({
-                    url: '{{ route("manager.settings.database.check-connection") }}',
+                    url: '{{ route("manager.backups.database.check-connection") }}',
                     type: 'POST',
                     dataType: 'json',
                     headers: {

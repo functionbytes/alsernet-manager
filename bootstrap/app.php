@@ -98,12 +98,6 @@ return Application::configure(basePath: dirname(__DIR__))
         Illuminate\Cookie\CookieServiceProvider::class, // NECESARIO para Cookie::queue()
         Illuminate\Auth\AuthServiceProvider::class, // NECESARIO para Auth::attempt(), Auth::user()
         Illuminate\Redis\RedisServiceProvider::class, // Agregado para corregir "redis"
-        Illuminate\Cache\CacheServiceProvider::class,
-        Illuminate\Database\DatabaseServiceProvider::class,
-        Illuminate\Filesystem\FilesystemServiceProvider::class,
-        Illuminate\View\ViewServiceProvider::class,
-        Illuminate\Translation\TranslationServiceProvider::class,
-        Illuminate\Foundation\Providers\FoundationServiceProvider::class, // Fixes missing commands
         // BotMan\BotMan\BotManServiceProvider::class, // Commented out - BotMan not installed
         App\Providers\DynamicConfigServiceProvider::class, // Load dynamic config from database
     ])

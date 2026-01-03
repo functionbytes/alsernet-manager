@@ -19,7 +19,7 @@
       <div class="row g-2">
         <!-- Configuración -->
         <div class="col-md-3">
-          <a href="{{ route('manager.settings.prestashop.edit') }}" class="btn btn-primary w-100">
+          <a href="{{ route('manager.backups.prestashop.edit') }}" class="btn btn-primary w-100">
             Configurar
           </a>
         </div>
@@ -377,7 +377,7 @@ $(document).ready(function() {
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.check-connection") }}',
+            url: '{{ route("manager.backups.prestashop.check-connection") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -406,7 +406,7 @@ $(document).ready(function() {
     // Toggle servicio
     $('#toggleServiceBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.toggle-active") }}',
+            url: '{{ route("manager.backups.prestashop.toggle-active") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -436,7 +436,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.reset-stats") }}',
+            url: '{{ route("manager.backups.prestashop.reset-stats") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -461,7 +461,7 @@ $(document).ready(function() {
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.test-sync") }}',
+            url: '{{ route("manager.backups.prestashop.test-sync") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -486,7 +486,7 @@ $(document).ready(function() {
     // Refrescar estadísticas
     $('#refreshBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.get-stats") }}',
+            url: '{{ route("manager.backups.prestashop.get-stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {
@@ -514,7 +514,7 @@ $(document).ready(function() {
 
     function loadBlockadesStatus() {
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.blockades-status") }}',
+            url: '{{ route("manager.backups.prestashop.blockades-status") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {
@@ -552,7 +552,7 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Sincronizando...');
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.sync-blockades") }}',
+            url: '{{ route("manager.backups.prestashop.sync-blockades") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -601,7 +601,7 @@ $(document).ready(function() {
         btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.save-blockade-labels") }}',
+            url: '{{ route("manager.backups.prestashop.save-blockade-labels") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -677,7 +677,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("manager.settings.prestashop.create-blockade") }}',
+            url: '{{ route("manager.backups.prestashop.create-blockade") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'

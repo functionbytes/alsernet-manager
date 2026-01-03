@@ -64,7 +64,7 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $io->success('There is no routes without _legacy_link settings');
+        $io->success('There is no routes without _legacy_link backups');
 
         return 0;
     }

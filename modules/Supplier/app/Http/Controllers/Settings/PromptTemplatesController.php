@@ -128,7 +128,7 @@ class PromptTemplatesController extends Controller
             ]);
 
             return redirect()
-                ->route('manager.settings.suppliers.templates.index')
+                ->route('manager.backups.suppliers.templates.index')
                 ->with('success', 'Plantilla creada exitosamente');
 
         } catch (\Exception $e) {
@@ -194,7 +194,7 @@ class PromptTemplatesController extends Controller
             ]);
 
             return redirect()
-                ->route('manager.settings.suppliers.templates.index')
+                ->route('manager.backups.suppliers.templates.index')
                 ->with('success', 'Plantilla actualizada exitosamente');
 
         } catch (\Exception $e) {

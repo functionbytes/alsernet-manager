@@ -33,7 +33,7 @@
                 <li class="border-bottom my-3"></li>
                 <li class="fw-semibold text-dark text-uppercase mx-9 my-2 px-3 fs-2">
                     VISTAS
-                    <a href="{{ route('manager.helpdesk.settings.tickets.views.create') }}" class="float-end text-primary" title="Nueva vista">
+                    <a href="{{ route('manager.helpdesk.backups.tickets.views.create') }}" class="float-end text-primary" title="Nueva vista">
                         <i class="fas fa-plus fs-4"></i>
                     </a>
                 </li>
@@ -54,7 +54,7 @@
                 <li class="border-bottom my-3"></li>
                 <li class="fw-semibold text-dark text-uppercase mx-9 my-2 px-3 fs-2">
                     CATEGORÍAS
-                    <a href="{{ route('manager.helpdesk.settings.tickets.categories.index') }}" class="float-end text-primary" title="Gestionar">
+                    <a href="{{ route('manager.helpdesk.backups.tickets.categories.index') }}" class="float-end text-primary" title="Gestionar">
                         <i class="fas fa-cog fs-4"></i>
                     </a>
                 </li>
@@ -81,7 +81,7 @@
                 <li class="border-bottom my-3"></li>
                 <li class="fw-semibold text-dark text-uppercase mx-9 my-2 px-3 fs-2">
                     GRUPOS
-                    <a href="{{ route('manager.helpdesk.settings.tickets.team.groups') }}" class="float-end text-primary" title="Gestionar">
+                    <a href="{{ route('manager.helpdesk.backups.tickets.team.groups') }}" class="float-end text-primary" title="Gestionar">
                         <i class="fas fa-cog fs-4"></i>
                     </a>
                 </li>

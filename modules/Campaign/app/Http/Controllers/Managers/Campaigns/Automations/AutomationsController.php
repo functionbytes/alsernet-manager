@@ -187,7 +187,7 @@ class AutomationsController extends Controller
 
         // redirect if fails
         if ($validator->fails()) {
-            return response()->view('automation2.settings', [
+            return response()->view('automation2.backups', [
                 'automation' => $automation,
                 'errors' => $validator->errors(),
             ], 400);
@@ -249,7 +249,7 @@ class AutomationsController extends Controller
     }
 
     /**
-     * Automation settings in sidebar.
+     * Automation backups in sidebar.
      *
      * @return \Illuminate\Http\Response
      */
@@ -263,7 +263,7 @@ class AutomationsController extends Controller
             return $this->notAuthorized();
         }
 
-        return view('automation2.settings', [
+        return view('automation2.backups', [
             'automation' => $automation,
         ]);
     }

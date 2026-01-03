@@ -229,7 +229,7 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
         } else {
             $response['orders_sended'] = $this->module->l('No email sent:') .
                 $this->module->l('you don\'t have any order that corresponds to the selected criteria.') .
-                $this->module->l('Please modify your settings and expand your range of selection.');
+                $this->module->l('Please modify your backups and expand your range of selection.');
         }
 
         // Trace for debugging

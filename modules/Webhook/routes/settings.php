@@ -10,13 +10,13 @@ use Modules\Webhook\Http\Controllers\Settings\SubscriptionsController;
 |--------------------------------------------------------------------------
 |
 | Rutas para la configuración del sistema de webhooks
-| Prefix: /settings/webhooks (aplicado por ServiceProvider)
-| Name: manager.settings.webhooks.* (aplicado por ServiceProvider)
+| Prefix: /backups/webhooks (aplicado por ServiceProvider)
+| Name: manager.backups.webhooks.* (aplicado por ServiceProvider)
 | Middleware: web, auth, role:manager|super-admin
 |
 */
 
-Route::middleware('can:view-webhook-settings')->group(function () {
+Route::middleware('can:view-webhook-backups')->group(function () {
 
     // Integrations management
     Route::prefix('integrations')->name('integrations.')->group(function () {

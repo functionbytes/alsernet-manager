@@ -27,10 +27,10 @@
                         <p class="small mb-0 text-muted">Gestiona plantillas de email para documentos, órdenes y notificaciones</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('manager.settings.mailers.components.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-secondary">
                             Ver componentes
                         </a>
-                        <a href="{{ route('manager.settings.mailers.templates.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.mailers.templates.create') }}" class="btn btn-primary">
                             Nuevo template
                         </a>
                     </div>
@@ -51,7 +51,7 @@
                                 </p>
                             </div>
                         </div>
-                        <a href="{{ route('manager.settings.mailers.components.index') }}" class="btn btn-info flex-shrink-0">
+                        <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-info flex-shrink-0">
                             <i class="fa fa-arrow-right me-2"></i>Ver
                         </a>
                     </div>
@@ -92,7 +92,7 @@
 
             {{-- Filters --}}
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('manager.settings.mailers.templates.index') }}">
+                <form method="GET" action="{{ route('settings.mailers.templates.index') }}">
                     <div class="row g-3 align-items-end">
                         <div class="col-12 col-md-7">
                             <label for="search" class="form-label fw-semibold">Búsqueda</label>
@@ -123,7 +123,7 @@
                                 <i class="fa fa-magnifying-glass me-2"></i>Buscar
                             </button>
                             @if ($search || $module)
-                                <a href="{{ route('manager.settings.mailers.templates.index') }}" class="btn btn-outline-secondary">
+                                <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-outline-secondary">
                                     <i class="fa fa-xmark"></i>
                                 </a>
                             @endif
@@ -181,12 +181,12 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.mailers.templates.edit', $template->uid) }}">
+                                                    <a class="dropdown-item" href="{{ route('settings.mailers.templates.edit', $template->uid) }}">
                                                         Editar
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('manager.settings.mailers.templates.preview', $template->uid) }}" target="_blank">
+                                                    <a class="dropdown-item" href="{{ route('settings.mailers.templates.preview', $template->uid) }}" target="_blank">
                                                         Vista previa
                                                     </a>
                                                 </li>
@@ -199,7 +199,7 @@
                                                 </li>
                                                 <li>
                                                     <form method="POST"
-                                                          action="{{ route('manager.settings.mailers.templates.toggle-status', $template->uid) }}">
+                                                          action="{{ route('settings.mailers.templates.toggle-status', $template->uid) }}">
                                                         @csrf
                                                         <button type="submit" class="dropdown-item">
                                                             {{ $template->is_enabled ? 'Desactivar' : 'Activar' }}
@@ -209,7 +209,7 @@
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
                                                     <form method="POST"
-                                                          action="{{ route('manager.settings.mailers.templates.destroy', $template->uid) }}"
+                                                          action="{{ route('settings.mailers.templates.destroy', $template->uid) }}"
                                                           onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta plantilla?');">
                                                         @csrf
                                                         @method('DELETE')
@@ -226,7 +226,7 @@
                                 {{-- Modal: Send Test Email --}}
                                 <div class="modal fade" id="modalSendTest{{ $template->uid }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <form method="POST" action="{{ route('manager.settings.mailers.templates.send-test', $template->uid) }}">
+                                        <form method="POST" action="{{ route('settings.mailers.templates.send-test', $template->uid) }}">
                                             @csrf
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -278,11 +278,11 @@
                         @endif
                     </p>
                     @if ($search || $module || $langId)
-                        <a href="{{ route('manager.settings.mailers.templates.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-secondary">
                             Ver todas
                         </a>
                     @else
-                        <a href="{{ route('manager.settings.mailers.templates.create') }}" class="btn btn-primary">
+                        <a href="{{ route('settings.mailers.templates.create') }}" class="btn btn-primary">
                             + Crear ahora
                         </a>
                     @endif

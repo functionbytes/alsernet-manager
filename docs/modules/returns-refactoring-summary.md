@@ -244,7 +244,7 @@ Route::prefix('callcenter/returns')->group(function () {
 
 **`routes/managers.php`** (CRUD routes):
 ```php
-Route::prefix('manager/settings/returns')->group(function () {
+Route::prefix('manager/backups/returns')->group(function () {
     Route::resource('rules', 'Managers\ProductReturnRuleController');
     Route::post('rules/{id}/toggle-status', ...);
     Route::post('rules/{id}/clone', ...);

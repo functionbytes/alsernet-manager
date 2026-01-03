@@ -37,7 +37,7 @@ class TicketViewsController extends Controller
             'shared' => TicketView::where('is_shared', true)->count(),
         ];
 
-        return view('theme.views.settings.helpdesk.ticket-views.index', [
+        return view('theme.views.backups.helpdesk.ticket-views.index', [
             'views' => $views,
             'stats' => $stats,
         ]);
@@ -48,7 +48,7 @@ class TicketViewsController extends Controller
      */
     public function create()
     {
-        return view('theme.views.settings.helpdesk.ticket-views.create');
+        return view('theme.views.backups.helpdesk.ticket-views.create');
     }
 
     /**
@@ -76,7 +76,7 @@ class TicketViewsController extends Controller
 
         TicketView::create($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista creada exitosamente.');
     }
 
@@ -90,7 +90,7 @@ class TicketViewsController extends Controller
             return back()->with('error', 'No se pueden editar las vistas del sistema.');
         }
 
-        return view('theme.views.settings.helpdesk.ticket-views.edit', compact('view'));
+        return view('theme.views.backups.helpdesk.ticket-views.edit', compact('view'));
     }
 
     /**
@@ -127,7 +127,7 @@ class TicketViewsController extends Controller
 
         $view->update($validated);
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista actualizada exitosamente.');
     }
 
@@ -143,7 +143,7 @@ class TicketViewsController extends Controller
 
         $view->delete();
 
-        return redirect()->route('manager.helpdesk.settings.tickets.views.index')
+        return redirect()->route('manager.helpdesk.backups.tickets.views.index')
             ->with('success', 'Vista eliminada exitosamente.');
     }
 

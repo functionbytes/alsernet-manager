@@ -29,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the manager settings routes (web + API).
+     * Define the manager backups routes (web + API).
      *
      * These routes are protected with manager/super-admin role requirement.
      */
@@ -42,8 +42,6 @@ class RouteServiceProvider extends ServiceProvider
                 // Load view routes (GET)
                 require module_path($this->name, 'routes/web.php');
 
-                // Load API routes (POST, PUT, DELETE) - same prefix/name
-                require module_path($this->name, 'routes/api/settings.php');
             });
     }
 

@@ -1,8 +1,8 @@
 <ul class="nav nav-tabs mt-3 mb-4 nav-underline">
     <li class="nav-item">
-        <a class="nav-link settings" href="javascript:;" onclick="sidebar.load('{{ route('Automation2Controller@settings', $automation->uid) }}')">
+        <a class="nav-link settings" href="javascript:;" onclick="sidebar.load('{{ route('Automation2Controller@backups', $automation->uid) }}')">
             <i class="material-symbols-rounded me-2">menu</i>
-            {{ trans('messages.automation.settings') }}
+            {{ trans('messages.automation.backups') }}
         </a>
     </li>
     <li class="nav-item">

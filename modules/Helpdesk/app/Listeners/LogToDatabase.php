@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace Modules\Helpdesk\Listeners;
 
 use App\Models\ApplicationLog;
 use Illuminate\Log\Events\MessageLogged;

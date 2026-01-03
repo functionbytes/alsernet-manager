@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
 /**
- * Defines settings for Category's SEO
+ * Defines backups for Category's SEO
  */
 final class SeoSettings
 {

@@ -1,9 +1,9 @@
 @include('theme.automation._info')
 
-@include('theme.automation._tabs', ['tab' => 'settings'])
+@include('theme.automation._tabs', ['tab' => 'backups'])
 
 <p class="mt-3">
-    {!! trans('messages.automation.settings.intro') !!}
+    {!! trans('messages.automation.backups.intro') !!}
 </p>
 
 <form id="automationUpdate" action="{{ action("Automation2Controller@update", $automation->uid) }}" method="POST" class="form-validate-jqueryz">
@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <button class="btn btn-secondary mt-20">{{ trans('messages.automation.settings.save') }}</button>
+    <button class="btn btn-secondary mt-20">{{ trans('messages.automation.backups.save') }}</button>
 </form>
 
 <div class="mt-4 d-flex py-3">

@@ -21,7 +21,7 @@ class NavigationComposer
 
         $items = [];
 
-        // Manager settings navigation
+        // Manager backups navigation
         if (auth()->check() && auth()->user()->hasRole(['manager', 'super-admin'])) {
             if (!empty($config['manager_settings'])) {
                 $section = $config['manager_settings'];

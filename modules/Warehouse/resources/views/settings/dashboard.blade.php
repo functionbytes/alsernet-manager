@@ -185,7 +185,7 @@ $(document).ready(function() {
     $('#warehouse-selector').on('change', function() {
         const warehouseUid = $(this).val();
         if (warehouseUid) {
-            window.location.href = '/settings/warehouse/' + warehouseUid + '/details/dashboard';
+            window.location.href = '/backups/warehouse/' + warehouseUid + '/details/dashboard';
         }
     });
 });

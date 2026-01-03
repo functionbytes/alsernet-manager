@@ -508,7 +508,7 @@
 // Delete IMAP Connection
 function deleteImapConnection(connectionId) {
     if (confirm('¿Está seguro de que desea eliminar esta conexión IMAP?')) {
-        fetch(`{{ url('manager/settings/email/incoming/imap') }}/${connectionId}`, {
+        fetch(`{{ url('manager/backups/email/incoming/imap') }}/${connectionId}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -530,7 +530,7 @@ function deleteImapConnection(connectionId) {
 // Delete Gmail Connection
 function deleteGmailConnection(connectionId) {
     if (confirm('¿Está seguro de que desea eliminar esta cuenta de Gmail?')) {
-        fetch(`{{ url('manager/settings/email/incoming/gmail') }}/${connectionId}`, {
+        fetch(`{{ url('manager/backups/email/incoming/gmail') }}/${connectionId}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generando...';
 
-            fetch('{{ route("settings.incoming-email.api.generate-key") }}', {
+            fetch('{{ route("backups.incoming-email.api.generate-key") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Probando...';
 
-            fetch('{{ route("settings.incoming-email.phplist.test") }}', {
+            fetch('{{ route("backups.incoming-email.phplist.test") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando...';
 
-            fetch('{{ route("settings.incoming-email.phplist.lists") }}', {
+            fetch('{{ route("backups.incoming-email.phplist.lists") }}', {
                 method: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

@@ -93,7 +93,7 @@ Schema::create('notification_preferences', function (Blueprint $table) {
     $table->string('channel');           // email, push, in_app, sms
     $table->string('notification_type');
     $table->boolean('is_enabled')->default(true);
-    $table->json('settings')->nullable();
+    $table->json('backups')->nullable();
     $table->timestamps();
     $table->unique(['user_id', 'channel', 'notification_type']);
     $table->index(['user_id', 'channel']);

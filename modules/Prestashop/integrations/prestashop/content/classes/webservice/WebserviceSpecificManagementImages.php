@@ -1091,7 +1091,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     throw new WebserviceException('This type of image format is not recognized, allowed formats are: '.implode('", "', $this->acceptedImgMimeTypes), [73, 400]);
                 } elseif ($file['error']) {
                     // Check error while uploading
-                    throw new WebserviceException('Error while uploading image. Please change your server\'s settings', [74, 400]);
+                    throw new WebserviceException('Error while uploading image. Please change your server\'s backups', [74, 400]);
                 }
 
                 // Try to copy image file to a temporary file

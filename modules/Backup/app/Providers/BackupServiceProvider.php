@@ -42,7 +42,7 @@ class BackupServiceProvider extends ServiceProvider
             'title' => 'Copias de seguridad',
             'items' => [
                 ['label' => 'Todas las copias', 'route' => 'settings.backups.index'],
-                ['label' => 'Programación', 'route' => 'settings.backup-schedules.index'],
+                ['label' => 'Programación', 'route' => 'settings.backup.schedules.index'],
             ],
         ]);
     }

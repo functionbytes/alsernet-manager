@@ -49,7 +49,7 @@ class SubscriptionsController extends Controller
         $subscription = WebhookSubscription::create($request->validated());
 
         return redirect()
-            ->route('manager.settings.webhooks.subscriptions.show', $subscription->uid)
+            ->route('manager.backups.webhooks.subscriptions.show', $subscription->uid)
             ->with('success', 'Subscription created successfully.');
     }
 
@@ -85,7 +85,7 @@ class SubscriptionsController extends Controller
         $subscription->update($request->validated());
 
         return redirect()
-            ->route('manager.settings.webhooks.subscriptions.show', $subscription->uid)
+            ->route('manager.backups.webhooks.subscriptions.show', $subscription->uid)
             ->with('success', 'Subscription updated successfully.');
     }
 
@@ -98,7 +98,7 @@ class SubscriptionsController extends Controller
         $subscription->delete();
 
         return redirect()
-            ->route('manager.settings.webhooks.subscriptions.index')
+            ->route('manager.backups.webhooks.subscriptions.index')
             ->with('success', 'Subscription deleted successfully.');
     }
 

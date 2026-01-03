@@ -40,7 +40,7 @@
 				});
 			}
 
-			var btn_save_settings = $('span[class~="process-icon-save-settings"]').parent();
+			var btn_save_settings = $('span[class~="process-icon-save-backups"]').parent();
 			var btn_submit_settings = $('#submitSettings');
 
 			if (btn_save_settings.length > 0 && btn_submit_settings.length > 0)

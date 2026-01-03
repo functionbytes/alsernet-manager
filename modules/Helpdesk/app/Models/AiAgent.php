@@ -17,7 +17,7 @@ class AiAgent extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'settings' => 'array',
+        'backups' => 'array',
         'metadata' => 'array',
         'enabled_at' => 'datetime',
         'created_at' => 'datetime',
@@ -32,7 +32,7 @@ class AiAgent extends Model
         'model', // 'gpt-4o', 'claude-3-opus', 'gemini-pro', etc.
         'personality', // System prompt / personality description
         'status', // 'inactive', 'active', 'paused'
-        'settings', // JSON: API keys, temperature, max_tokens, etc.
+        'backups', // JSON: API keys, temperature, max_tokens, etc.
         'metadata',
         'enabled_at',
     ];
@@ -189,7 +189,7 @@ class AiAgent extends Model
     }
 
     /**
-     * Get API key from settings
+     * Get API key from backups
      */
     public function getApiKey()
     {

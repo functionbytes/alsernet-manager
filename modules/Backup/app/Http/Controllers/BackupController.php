@@ -2,13 +2,13 @@
 
 namespace Modules\Backup\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Setting;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Backup\Jobs\CreateBackupJob;
+use App\Http\Controllers\Controller;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Illuminate\Http\Request;
+use App\Models\Setting;
 
 class BackupController extends Controller
 {
@@ -84,11 +84,11 @@ class BackupController extends Controller
 
             // Update databases to backup if selected
             if (in_array('database', $backupTypes)) {
-                // Get database configuration from settings
+                // Get database configuration from backups
                 $dbSettings = Setting::getDatabaseSettings();
                 $defaultConnection = $dbSettings['db_connection'] ?? config('database.default', 'mysql');
 
-                // Update the database connection with settings from database
+                // Update the database connection with backups from database
                 $dbConnections = config('database.connections');
                 if (isset($dbConnections[$defaultConnection])) {
                     $dbConnections[$defaultConnection] = [
@@ -107,7 +107,7 @@ class BackupController extends Controller
                 $backupConfig['databases'] = [$defaultConnection];
             }
 
-            // Get database settings if database backup is selected
+            // Get database backups if database backup is selected
             $dbSettings = null;
             if (in_array('database', $backupTypes)) {
                 $dbSettings = Setting::getDatabaseSettings();
