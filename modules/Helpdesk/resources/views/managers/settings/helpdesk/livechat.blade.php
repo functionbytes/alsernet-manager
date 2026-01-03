@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => __('helpdesk.livechat.title')])
+    @include('theme.components.card', ['title' => __('helpdesk.livechat.title')])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Header Actions Card -->
         <div class="card mb-3">

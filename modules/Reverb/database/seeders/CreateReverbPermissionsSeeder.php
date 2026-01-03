@@ -18,7 +18,7 @@ class CreateReverbPermissionsSeeder extends Seeder
     public function run(): void
     {
         // Reset cached roles and permissions
-        app()[\\Spatie\\Permission\\PermissionRegistrar::class]->forgetCachedPermissions();
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Define all Reverb permissions
         $permissions = $this->definePermissions();

@@ -636,7 +636,7 @@ class WebhookSubscriptionController extends Controller
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Integrations Card -->
         <div class="card">
@@ -1011,7 +1011,7 @@ class StoreIntegrationRequest extends FormRequest
 2. **Controladores**: Namespace `Managers\Settings\Webhooks`
 3. **Vistas**: `resources/views/managers/views/settings/webhooks/{resource}/{action}.blade.php`
 4. **Layout**: `@extends('layouts.managers')`
-5. **Includes**: `@include('managers.includes.card')`, `@include('managers.components.alerts')`
+5. **Includes**: `@include('managers.includes.card')`, `@include('theme.components.alerts')`
 6. **Bootstrap**: Cards, tables, badges, buttons siguiendo Bootstrap 5.3
 7. **Icons**: Font Awesome 6 (`fas fa-xxx`)
 8. **AJAX**: Respuestas JSON con `success`, `message`, `redirect`

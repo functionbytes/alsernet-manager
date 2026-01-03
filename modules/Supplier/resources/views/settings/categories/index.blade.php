@@ -15,7 +15,7 @@
                         </a>
                     </div>
 
-                    @include('managers.components.alerts')
+                    @include('theme.components.alerts')
 
                     <!-- Stats Cards -->
                     <div class="row g-3 mb-4">
@@ -208,7 +208,7 @@
         </div>
     </div>
 
-    @include('managers.components.delete')
+    @include('theme.components.delete')
 
 @endsection
 

@@ -21,6 +21,9 @@ class TelescopeServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Configure authorization for Telescope access
+        $this->configureAuthorization();
+
         // Only load Telescope in development or if explicitly enabled
         if (!$this->app->environment('production')) {
             Telescope::night();
@@ -37,13 +40,33 @@ class TelescopeServiceProvider extends ServiceProvider
     }
 
     /**
+     * Configure authorization for Telescope access
+     */
+    private function configureAuthorization(): void
+    {
+        // Allow all local requests to access Telescope
+        Telescope::auth(function ($request) {
+            // In development, allow all requests
+            if ($this->app->environment('local', 'development')) {
+                return true;
+            }
+
+            // In other environments, check for explicit authorization
+            // You can add custom logic here (e.g., check IP, user role, etc.)
+            return false;
+        });
+    }
+
+    /**
      * Filter Telescope entries to control what gets recorded
      */
     private function filterEntries(): void
     {
         Telescope::filter(function (IncomingEntry $entry) {
-            // Skip recording of successful HTTP requests from assets
-            if ($entry->isRequest()) {
+            $type = $entry->type;
+
+            // Skip static asset requests
+            if ($type === 'request') {
                 $uri = $entry->content['request']['uri'] ?? '';
 
                 // Skip static assets
@@ -52,13 +75,13 @@ class TelescopeServiceProvider extends ServiceProvider
                 }
 
                 // Skip health checks and ping routes
-                if (preg_match('/\/(health|ping|livewire)/', $uri)) {
+                if (preg_match('/\/(health|ping|livewire|telescope)/', $uri)) {
                     return false;
                 }
             }
 
             // Skip recording of certain commands
-            if ($entry->isCommand()) {
+            if ($type === 'command') {
                 $command = $entry->content['command'] ?? '';
 
                 // Skip long-running queue workers and schedulers

@@ -64,6 +64,7 @@ class MenuServiceProvider extends ServiceProvider
                 ['label' => 'Almacenamiento', 'route' => 'manager.settings.storage'],
                 ['label' => 'Base de datos', 'route' => 'manager.settings.database.index'],
                 ['label' => 'Limpieza de BD', 'route' => 'manager.settings.database.cleanup.index'],
+                ['label' => 'Reverb (WebSocket)', 'route' => 'manager.settings.reverb.index'],
             ],
         ]);
 

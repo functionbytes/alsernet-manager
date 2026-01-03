@@ -56,7 +56,7 @@
                                 </div>
                             @endif
 
-                            <a href="{{ route('manager.settings.stage-email-actions.edit', $stageKey) }}" class="btn btn-sm btn-primary w-100 mt-auto">
+                            <a href="{{ route('settings.documents.stage-email-actions.edit', $stageKey) }}" class="btn btn-sm btn-primary w-100 mt-auto">
                                 <i class="fa fa-edit me-2"></i>Configurar
                             </a>
                         </div>

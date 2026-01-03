@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    @include('managers.components.alerts')
+    @include('theme.components.alerts')
 
     {{-- Campaign Header Card --}}
     <div class="card mb-3">

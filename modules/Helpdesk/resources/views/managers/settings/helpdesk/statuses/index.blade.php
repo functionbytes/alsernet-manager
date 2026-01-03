@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Estados de Conversación'])
+    @include('theme.components.card', ['title' => 'Estados de Conversación'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- System Settings Card -->
         <div class="card">

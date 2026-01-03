@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Políticas SLA'])
+    @include('theme.components.card', ['title' => 'Políticas SLA'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <div class="card">
             <div class="card-header p-4 border-bottom border-light">

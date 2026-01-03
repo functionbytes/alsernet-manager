@@ -637,7 +637,7 @@
 @section('content')
 <div id="mediaManagerApp">
     {{-- Breadcrumb --}}
-    @include('managers.components.card', [
+    @include('theme.components.card', [
         'title' => 'Gestor de Medios',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => route('manager.dashboard')],
@@ -650,7 +650,7 @@
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
-    </div>
+    </div> Route [manager.settings.stage-email-actions.edit] not defined.
 
     <div v-else>
 

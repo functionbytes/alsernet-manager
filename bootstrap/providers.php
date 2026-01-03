@@ -26,6 +26,7 @@ return [
     Modules\Event\Providers\EventServiceProvider::class,
     Modules\Health\Providers\HealthServiceProvider::class,
     Modules\System\Providers\SystemServiceProvider::class,
+    Modules\Telescope\Providers\TelescopeServiceProvider::class,
 
     // Disabled modules - comment out to prevent loading issues
     // Modules\Analytics\Providers\AnalyticsServiceProvider::class,

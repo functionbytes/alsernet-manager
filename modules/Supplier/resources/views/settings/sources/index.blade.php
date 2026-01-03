@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
+    @include('theme.components.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Sources Card -->
         <div class="card">

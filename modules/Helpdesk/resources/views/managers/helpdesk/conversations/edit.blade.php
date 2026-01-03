@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Editar Conversación'])
+    @include('theme.components.card', ['title' => 'Editar Conversación'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <form method="POST" action="{{ route('manager.helpdesk.conversations.update', $conversation) }}">
             @csrf

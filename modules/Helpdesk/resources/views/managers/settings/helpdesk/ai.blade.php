@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Configuración de IA del Helpdesk'])
+    @include('theme.components.card', ['title' => 'Configuración de IA del Helpdesk'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <form method="POST" action="{{ route('manager.helpdesk.settings.ai.update') }}" id="aiForm">
             @csrf

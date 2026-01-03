@@ -20,6 +20,7 @@
     "Pulse": true,
     "Return": false,
     "Returns": false,
+    "Reverb": true,
     "Role": true,
     "Subscriber": false,
     "Supplier": false,

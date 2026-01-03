@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('managers.components.card', ['title' => 'Atributos Personalizados'])
+    @include('theme.components.card', ['title' => 'Atributos Personalizados'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Action Buttons -->
         <div class="card">

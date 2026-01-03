@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.theme')
 
 @section('title', 'Transferencia de Productos')
 

@@ -5,11 +5,11 @@
 @section('content')
 <div class="container-fluid">
     <!-- Header -->
-    @include('managers.components.card', ['title' => 'Centro de Ayuda'])
+    @include('theme.components.card', ['title' => 'Centro de Ayuda'])
 
     <div class="widget-content searchable-container list">
 
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
 
         <!-- Breadcrumb Navigation -->
         <div class="card mb-3">

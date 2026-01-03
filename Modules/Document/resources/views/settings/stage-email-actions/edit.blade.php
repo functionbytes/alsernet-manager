@@ -7,7 +7,7 @@
     <div class="widget-content">
         @include('theme.components.alerts')
 
-        <form action="{{ route('manager.settings.stage-email-actions.update', $stage) }}" method="POST">
+        <form action="{{ route('settings.documents.stage-email-actions.update', $stage) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -100,7 +100,7 @@
 
             <div class="border-top pt-3 mt-4">
                 <div class="d-flex gap-2 justify-content-end">
-                    <a href="{{ route('manager.settings.stage-email-actions.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('settings.documents.stage-email-actions.index') }}" class="btn btn-secondary">
                         <i class="fa fa-times me-2"></i>Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">

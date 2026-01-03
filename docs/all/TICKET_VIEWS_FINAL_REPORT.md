@@ -153,7 +153,7 @@ All views should follow this structure:
 @section('content')
     @include('managers.includes.card', ['title' => 'Title'])
     <div class="widget-content searchable-container list">
-        @include('managers.components.alerts')
+        @include('theme.components.alerts')
         <div class="card">
             <!-- Header with title and create button -->
             <!-- Stats cards (4 columns) -->
