@@ -1,4 +1,4 @@
-@extends('theme.layout')
+@extends('layouts.theme')
 
 @section('title', 'Autenticación de Dos Factores')
 

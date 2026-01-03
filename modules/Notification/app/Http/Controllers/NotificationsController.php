@@ -26,7 +26,7 @@ class NotificationsController extends Controller
 
         $notifications = $query->paginate(20);
 
-        return view('notification::theme.notifications.index', [
+        return view('notification::managers.notifications.index', [
             'notifications' => $notifications,
             'filter' => $filter,
             'unreadCount' => $user->unreadNotificationsCount(),

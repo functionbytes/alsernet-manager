@@ -1,4 +1,4 @@
-@extends('theme.layout')
+@extends('layouts.theme')
 
 @section('title', 'Sesiones Activas')
 

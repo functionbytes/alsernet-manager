@@ -70,7 +70,7 @@ class MediaServiceProvider extends ServiceProvider
         NavService::registerSidebar('media', [
             'title' => 'Gestor de Medios',
             'items' => [
-                ['label' => 'Gestor de archivos', 'route' => 'media.index', 'icon' => 'fa-folder-open'],
+                ['label' => 'Gestor de archivos', 'route' => 'media.index'],
             ],
         ]);
     }

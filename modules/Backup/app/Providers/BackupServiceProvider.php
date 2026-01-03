@@ -41,8 +41,8 @@ class BackupServiceProvider extends ServiceProvider
         NavService::registerSidebar('backups', [
             'title' => 'Copias de seguridad',
             'items' => [
-                ['label' => 'Todas las copias', 'route' => 'settings.backups.index', 'icon' => 'fa-list'],
-                ['label' => 'Programación', 'route' => 'settings.backup-schedules.index', 'icon' => 'fa-clock'],
+                ['label' => 'Todas las copias', 'route' => 'settings.backups.index'],
+                ['label' => 'Programación', 'route' => 'settings.backup-schedules.index'],
             ],
         ]);
     }

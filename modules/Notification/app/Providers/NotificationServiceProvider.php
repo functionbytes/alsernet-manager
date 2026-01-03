@@ -107,8 +107,8 @@ class NotificationServiceProvider extends ServiceProvider
         NavService::registerSidebar('notifications', [
             'title' => 'Notificaciones',
             'items' => [
-                ['label' => 'Todas las notificaciones', 'route' => 'notifications.index', 'icon' => 'fa-list'],
-                ['label' => 'Crear notificación', 'route' => 'notifications.create', 'icon' => 'fa-plus'],
+                ['label' => 'Todas las notificaciones', 'route' => 'notifications.index'],
+                ['label' => 'Crear notificación', 'route' => 'notifications.create'],
             ],
         ]);
     }

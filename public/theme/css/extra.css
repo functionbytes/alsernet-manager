@@ -841,17 +841,6 @@ kbd {
     flex-shrink: 0;
 }
 
-.side-mini-panel .sidebarmenu .sidebar-nav {
-    position: relative;
-    height: 100vh;
-    width: 240px;
-    background: var(--bs-white);
-    z-index: 10;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.08);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    padding: 20px;
-    overflow-y: auto;
-}
 
 .side-mini-panel .sidebarmenu .sidebar-nav.d-none {
     display: none !important;
