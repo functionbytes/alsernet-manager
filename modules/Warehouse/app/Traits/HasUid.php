@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Warehouse\Traits;
+namespace Modules\Document\Traits;
 
 use Illuminate\Support\Str;
 

@@ -4,25 +4,27 @@
 
     @include('theme.components.card', ['title' =>  $pageTitle ])
 
+
     <!-- Form -->
     <div class="row g-3">
         <div class="col-lg-8">
-            <form action="{{ route('settings.backup-schedules.store') }}" method="POST"
+            <form action="{{ route('settings.backup.schedules.update', $schedule->id) }}" method="POST"
                   class="needs-validation" novalidate>
                 @csrf
+                @method('PUT')
 
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-0">
                             <h5 class="mb-0">Información general</h5>
-                            <p class="text-muted mb-3">Datos básicos del schedule de backup</p>
+                            <p class="text-muted mb-3">Datos de conexión a la base de datos de PrestaShop</p>
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="name" class="form-label fw-semibold">Nombre del Schedule <span
                                                 class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
                                            id="name" name="name" placeholder="ej: Backup Diario"
-                                           value="{{ old('name') }}" required>
+                                           value="{{ old('name', $schedule->name) }}" required>
                                     <small class="text-muted d-block mt-1">
                                         <i class="fa fa-circle-question"></i> Nombre descriptivo para identificar el
                                         schedule
@@ -33,10 +35,11 @@
                                 </div>
 
                                 <div class="col-md-12">
+
                                     <div class="form-check form-switch">
                                         <input type="hidden" name="enabled" value="0">
                                         <input class="form-check-input" type="checkbox" id="enabled" name="enabled"
-                                               value="1" {{ old('enabled', true) ? 'checked' : '' }}>
+                                               value="1" {{ old('enabled', $schedule->enabled) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="enabled">
                                             <span class="fw-semibold">Activar schedule automáticamente</span>
                                         </label>
@@ -48,7 +51,7 @@
 
                             <div class="mb-0">
                                 <h5 class="mb-0">Programación</h5>
-                                <p class="text-muted mb-3">Define cómo y cuándo se ejecutará el backup</p>
+                                <p class="text-muted mb-3">Datos de conexión a la base de datos de PrestaShop</p>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="frequency" class="form-label fw-semibold">Frecuencia <span
@@ -58,7 +61,7 @@
                                                 onchange="updateFrequencyOptions()">
                                             <option value="">Seleccione una frecuencia</option>
                                             @foreach ($frequencies as $key => $label)
-                                                <option value="{{ $key }}" {{ old('frequency') === $key ? 'selected' : '' }}>
+                                                <option value="{{ $key }}" {{ old('frequency', $schedule->frequency) === $key ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
                                             @endforeach
@@ -76,7 +79,8 @@
                                         <input type="time"
                                                class="form-control @error('scheduled_time') is-invalid @enderror"
                                                id="scheduled_time" name="scheduled_time"
-                                               value="{{ old('scheduled_time', '02:00') }}" required>
+                                               value="{{ old('scheduled_time', $schedule->scheduled_time->format('H:i')) }}"
+                                               required>
                                         <small class="text-muted d-block mt-1">
                                             <i class="fa fa-circle-question"></i> La hora se ejecutará automáticamente
                                             cuando se alcance. Recomendado: 2:00 AM - 4:00 AM
@@ -101,7 +105,7 @@
                                                     5 => 'Viernes',
                                                     6 => 'Sábado',
                                                 ];
-                                                $selectedDays = old('days_of_week', []);
+                                                $selectedDays = old('days_of_week', $schedule->days_of_week ?? []);
                                             @endphp
                                             @foreach ($daysOfWeek as $day => $label)
                                                 <div class="col-sm-6 mb-2">
@@ -129,7 +133,7 @@
                                                     class="text-danger">*</span></label>
                                         <div class="row">
                                             @php
-                                                $selectedMonthDays = old('days_of_month', []);
+                                                $selectedMonthDays = old('days_of_month', $schedule->days_of_month ?? []);
                                             @endphp
                                             @for ($day = 1; $day <= 31; $day++)
                                                 <div class="col-sm-4 col-md-3 mb-2">
@@ -156,7 +160,8 @@
                                             (horas) <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control"
                                                id="custom_interval_hours" name="custom_interval_hours"
-                                               min="1" max="8760" value="{{ old('custom_interval_hours', 24) }}"
+                                               min="1" max="8760"
+                                               value="{{ old('custom_interval_hours', $schedule->custom_interval_hours ?? 24) }}"
                                                placeholder="Cada X horas">
                                         <small class="text-muted d-block mt-1">
                                             <i class="fa fa-circle-question"></i> Ejecutará el backup cada X horas desde
@@ -170,7 +175,7 @@
 
                             <div class="mb-0">
                                 <h5 class="mb-0">Tipos de Backup</h5>
-                                <p class="text-muted mb-3">Selecciona qué elementos incluir en cada backup</p>
+                                <p class="text-muted mb-3">Datos de conexión a la base de datos de PrestaShop</p>
                                 <div class="d-flex justify-content-between align-items-center pb-3">
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button type="button" id="selectAllBackupTypes"
@@ -199,7 +204,7 @@
                                         'storage' => 'fa-folder',
                                         'database' => 'fa-database',
                                     ];
-                                    $selectedTypes = old('backup_types', []);
+                                    $selectedTypes = old('backup_types', $schedule->backup_types ?? []);
                                 @endphp
 
                                 <div class="backup-options">
@@ -259,14 +264,44 @@
                                 @enderror
                             </div>
 
+                            <hr class="">
+
+                            <div class="mb-0">
+                                <h5 class="mb-0">Información de Ejecución</h5>
+                                <p class="text-muted mb-3">Datos de conexión a la base de datos de PrestaShop</p>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <small class="text-muted">Último Backup:</small>
+                                        <p class="mb-0">
+                                            @if ($schedule->last_run_at)
+                                                {{ $schedule->last_run_at->format('Y-m-d H:i:s') }}
+                                            @else
+                                                <span class="text-muted">Nunca ejecutado</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <small class="text-muted">Próximo Backup:</small>
+                                        <p class="mb-0">
+                                            @if ($schedule->next_run_at)
+                                                {{ $schedule->next_run_at->format('Y-m-d H:i:s') }}
+                                            @else
+                                                <span class="text-muted">Pendiente de cálculo</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary mb-2 w-100">
-                            Crear
+                            Guardar
                         </button>
-                        <a href="{{ route('settings.backup-schedules.index') }}"
+                        <a href="{{ route('settings.backup.schedules.index') }}"
                            class="btn btn-secondary w-100">
                             Volver
                         </a>
@@ -331,22 +366,18 @@
             switch (frequency) {
                 case 'weekly':
                     weeklyOpts.style.display = 'block';
-                    weeklyOpts.classList.add('animate__fadeIn');
                     break;
                 case 'monthly':
                     monthlyOpts.style.display = 'block';
-                    monthlyOpts.classList.add('animate__fadeIn');
                     break;
                 case 'custom':
                     customOpts.style.display = 'block';
-                    customOpts.classList.add('animate__fadeIn');
                     break;
             }
         }
 
-        // Form validation and submission
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize frequency options display
             updateFrequencyOptions();
 
             // Select/Deselect all backup types
@@ -369,46 +400,6 @@
                     backupTypeCheckboxes.forEach(checkbox => {
                         checkbox.checked = false;
                     });
-                });
-            }
-
-            // Bootstrap form validation
-            const form = document.querySelector('.needs-validation');
-            if (form) {
-                form.addEventListener('submit', function (event) {
-                    // Validate that at least one backup type is selected
-                    const checkboxes = document.querySelectorAll('input[name="backup_types[]"]');
-                    const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-
-                    if (!isChecked) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        alert('Por favor, selecciona al menos un tipo de backup');
-                        return false;
-                    }
-
-                    // Validate frequency-specific requirements
-                    const frequency = document.getElementById('frequency').value;
-
-                    if (frequency === 'weekly') {
-                        const weeklyDays = document.querySelectorAll('#weeklyOptions input[type="checkbox"]');
-                        const isWeeklySelected = Array.from(weeklyDays).some(day => day.checked);
-                        if (!isWeeklySelected) {
-                            event.preventDefault();
-                            alert('Por favor, selecciona al menos un día de la semana');
-                            return false;
-                        }
-                    }
-
-                    if (frequency === 'monthly') {
-                        const monthlyDays = document.querySelectorAll('#monthlyOptions input[type="checkbox"]');
-                        const isMonthlySelected = Array.from(monthlyDays).some(day => day.checked);
-                        if (!isMonthlySelected) {
-                            event.preventDefault();
-                            alert('Por favor, selecciona al menos un día del mes');
-                            return false;
-                        }
-                    }
                 });
             }
         });

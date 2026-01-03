@@ -7,7 +7,7 @@
 
             <div class="card border shadow-none w-100">
 
-                <form method="POST" action="{{ route('settings.backups.store') }}">
+                <form method="POST" action="{{ route('backups.backups.store') }}">
 
                     {{ csrf_field() }}
 
@@ -172,7 +172,7 @@
                                 <button type="submit" class="btn btn-primary px-4 w-100 mb-2">
                                     Crear
                                 </button>
-                                <a href="{{ route('settings.backups.index') }}"
+                                <a href="{{ route('backups.backups.index') }}"
                                    class="btn btn-secondary px-4 w-100">
                                     Volver
                                 </a>

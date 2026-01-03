@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Pages\PagesController;
-use App\Http\Controllers\RoleManagementController;
 use Modules\Auth\Http\Controllers\LoginController;
 
 Route::group(['middleware' => ['web']], function () {
@@ -14,7 +12,7 @@ Route::group(['middleware' => ['web']], function () {
 
     // Protected routes - require authentication
     Route::middleware(['auth'])->group(function () {
-        Route::get('/home', [PagesController::class, 'home'])->name('home');
+        Route::redirect('/home', '/');
 
         // Manager routes
         require __DIR__.'/managers.php';
@@ -92,23 +90,24 @@ Route::group(['middleware' => ['web']], function () {
     // Route::get('/jquery_validate_locale', 'Controller@jquery_validate_locale'); // TODO: Fix this route - controller doesn't exist
 
     // Admin Panel Routes - Protected by super-admins role
-    Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-        // Role Management
-        Route::get('/roles', [RoleManagementController::class, 'index'])->name('roles.index');
-        Route::get('/roles/{user}/edit', [RoleManagementController::class, 'edit'])->name('roles.edit');
-        Route::put('/roles/{user}', [RoleManagementController::class, 'update'])->name('roles.update');
+    // TODO: Implement RoleManagementController
+    // Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    //     // Role Management
+    //     Route::get('/roles', [RoleManagementController::class, 'index'])->name('roles.index');
+    //     Route::get('/roles/{user}/edit', [RoleManagementController::class, 'edit'])->name('roles.edit');
+    //     Route::put('/roles/{user}', [RoleManagementController::class, 'update'])->name('roles.update');
 
-        // Role Mappings & Profile Routes
-        Route::get('/roles-mappings', [RoleManagementController::class, 'mappings'])->name('roles.mappings');
-        Route::put('/role-mapping/{mapping}', [RoleManagementController::class, 'updateMapping'])->name('roles.update-mapping');
-        Route::put('/profile-route/{route}', [RoleManagementController::class, 'updateRoute'])->name('roles.update-route');
-    });
+    //     // Role Mappings & Profile Routes
+    //     Route::get('/roles-mappings', [RoleManagementController::class, 'mappings'])->name('roles.mappings');
+    //     Route::put('/role-mapping/{mapping}', [RoleManagementController::class, 'updateMapping'])->name('roles.update-mapping');
+    //     Route::put('/profile-route/{route}', [RoleManagementController::class, 'updateRoute'])->name('roles.update-route');
+    // });
 
     // LiveChat Widget - Public route (no authentication required)
     Route::prefix('lc')->name('lc.')->group(function () {
         Route::get('/widget', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'index'])->name('widget');
         Route::get('/launcher-demo', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'launcherDemo'])->name('launcher-demo');
-        Route::get('/api/settings', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'settings'])->name('widget.settings');
+        Route::get('/api/backups', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'settings'])->name('widget.backups');
         Route::get('/api/helpcenter', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiWidget'])->name('widget.helpcenter');
         Route::get('/api/helpcenter/articles/{id}', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiArticle'])->name('widget.helpcenter.article');
 

@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('settings.backup-schedules.create') }}"
+                                <a href="{{ route('settings.backup.schedules.create') }}"
                                    class="btn btn-primary">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -71,7 +71,7 @@
             <div class="card card-body text-center py-5">
                 <i class="fa fa-calendar-xmark fa-3x text-muted mb-3"></i>
                 <p class="text-muted">No hay schedules de backup configurados.</p>
-                <a href="{{ route('settings.backup-schedules.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('settings.backup.schedules.create') }}" class="btn btn-primary btn-sm">
                     Crear el Primero
                 </a>
             </div>
@@ -145,7 +145,7 @@
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3"
-                                                   href="{{ route('settings.backup-schedules.edit', $schedule->id) }}">Editar</a>
+                                                   href="{{ route('settings.backup.schedules.edit', $schedule->id) }}">Editar</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3 toggle-schedule"
