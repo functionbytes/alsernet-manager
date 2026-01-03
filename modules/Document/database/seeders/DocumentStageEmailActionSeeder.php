@@ -13,7 +13,6 @@ class DocumentStageEmailActionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Documentación (Etapa 1) - All email actions enabled
         $this->createStageActions(
             DocumentStageEmailAction::STAGE_DOCUMENTACION,
             [
@@ -25,7 +24,6 @@ class DocumentStageEmailActionSeeder extends Seeder
             ]
         );
 
-        // Licencias (Etapa 2) - No email actions (it's a pass-through stage)
         $this->createStageActions(
             DocumentStageEmailAction::STAGE_LICENCIAS,
             [
@@ -37,7 +35,6 @@ class DocumentStageEmailActionSeeder extends Seeder
             ]
         );
 
-        // Contabilidad (Etapa 3) - Approval, rejection, and custom email enabled
         $this->createStageActions(
             DocumentStageEmailAction::STAGE_CONTABILIDAD,
             [
@@ -48,6 +45,8 @@ class DocumentStageEmailActionSeeder extends Seeder
                 DocumentStageEmailAction::ACTION_CORREO_PERSONALIZADO => true,
             ]
         );
+
+        $this->command->info('✅ Document stage email actions seeded successfully');
     }
 
     /**
