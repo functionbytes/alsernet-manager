@@ -41,7 +41,7 @@ class RoleServiceProvider extends ServiceProvider
         $modulePath = dirname(__DIR__, 2);
 
         // Manager settings routes (GET views + POST/PUT/DELETE API)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings')
             ->name('settings.')
             ->group(function () use ($modulePath) {

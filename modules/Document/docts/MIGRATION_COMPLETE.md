@@ -211,7 +211,7 @@ Modules/Documents/
 
 ### Managers (Settings)
 - Prefix: `manager/settings`
-- Middleware: `auth`, `role:manager|super-admin`
+- Middleware: `auth`, `role:super-admin`
 - Routes: Document configurations, types, conditions, SLA policies, groups
 - Total: ~50 routes
 

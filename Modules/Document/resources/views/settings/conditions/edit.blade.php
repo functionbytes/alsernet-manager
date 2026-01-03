@@ -7,7 +7,7 @@
         <form id="formValidationCondition" method="POST" action="{{ route('settings.documents.conditions.update', $condition->uid) }}">
 
             {{ csrf_field() }}
-            @method('PUT')
+            @method('PATCH')
 
             <div class="card-body">
                 <div class="mb-4">

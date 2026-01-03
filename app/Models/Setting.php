@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Models;
 
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Setting extends Model implements HasMedia
 {
@@ -56,7 +55,7 @@ class Setting extends Model implements HasMedia
     /**
      * Get setting by key (static method for fluent API).
      *
-     * @param string $key
+     * @param  string  $key
      * @return Setting|null
      */
     public static function key($key)
@@ -1321,7 +1320,7 @@ class Setting extends Model implements HasMedia
                 'enabled' => $settings['gmail']['enabled'] ?? false,
                 'client_id' => $settings['gmail']['client_id'] ?? '',
                 'client_secret' => $settings['gmail']['client_secret'] ?? '',
-                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('backups.incoming-email.gmail.callback'),
+                'redirect_uri' => $settings['gmail']['redirect_uri'] ?? route('settings.incoming-email.gmail.callback'),
                 'connections' => $settings['gmail']['connections'] ?? [],
             ],
             'mailgun' => [

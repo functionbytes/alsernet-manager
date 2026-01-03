@@ -225,7 +225,7 @@ class DocumentsServiceProvider extends ServiceProvider
         NavService::registerSidebar('settings', [
             'title' => 'Documentos',
             'items' => [
-                ['label' => 'Configuración global (Documentos)', 'route' => 'settings.documents.configurations.global'],
+                ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
                 ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
                 ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
                 ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],

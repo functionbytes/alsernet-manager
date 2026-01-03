@@ -42,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
             ->group(module_path($this->name, 'routes/callcenters.php'));
 
         // Manager returns routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('manager/backups/returns')
             ->name('manager.backups.returns.')
             ->group(module_path($this->name, 'routes/web.php'));

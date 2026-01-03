@@ -16,17 +16,13 @@
                 </a>
             </div>
 
-            <div class="card card-body mb-3">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="mb-0 fw-bold text-dark">
-                        Sincronización de bloqueos de productos
-                    </h5>
-                    <span class="badge bg-primary">Datos</span>
-                </div>
-
-                <p class="text-muted mb-3">
-                    Sincroniza los bloqueos de productos (DNI, ESCOPETA, RIFLE, CORTA) desde la base de datos externa de PrestaShop.
-                </p>
+            <!-- Sync Statistics Card -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Sincronización de bloqueos de productos</h6>
+                    <p class="text-muted mb-3">
+                        Sincroniza los bloqueos de productos (DNI, ESCOPETA, RIFLE, CORTA) desde la base de datos externa de PrestaShop.
+                    </p>
 
                 <div class="row mb-4">
                     <div class="col-lg-3 col-md-6 mb-3">
@@ -132,25 +128,26 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3">
+                <div class="row g-2">
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-primary w-100" id="syncBlockadesBtn">
+                        <button type="button" class="btn btn-success w-100" id="syncBlockadesBtn">
                             <i class="fas fa-sync-alt me-2"></i> Sincronizar bloqueos
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-danger w-100" id="syncBlockadesFreshBtn">
+                        <button type="button" class="btn btn-warning w-100" id="syncBlockadesFreshBtn">
                             <i class="fas fa-redo me-2"></i> Sincronizar (limpiar y volver a sincronizar)
                         </button>
                     </div>
                 </div>
+                </div>
+            </div>
 
-                <!-- Add Manual Blockades Section -->
-                <div class="border-top pt-3">
+            <!-- Manual Blockades Card -->
+            <div class="card mb-3">
+                <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0">
-                            <i class="fa fa-plus-circle me-2"></i>Agregar bloqueos manuales
-                        </h6>
+                        <h6 class="fw-bold mb-0">Agregar bloqueos manuales</h6>
                         <button type="button" class="btn btn-sm btn-primary" id="addBlockadeRowBtn">
                             <i class="fa fa-plus me-1"></i> Agregar fila
                         </button>
@@ -185,12 +182,12 @@
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Statistics by Document Type -->
-                <div class="border-top pt-4 mt-4">
-                    <h6 class="fw-bold mb-3">
-                        <i class="fa fa-chart-bar me-2"></i>Bloqueos por tipo de documento
-                    </h6>
+            <!-- Statistics by Document Type Card -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">Bloqueos por tipo de documento</h6>
                     <div class="row">
                         @forelse($documentTypes as $docType)
                             <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
@@ -225,12 +222,12 @@
                         @endforelse
                     </div>
                 </div>
+            </div>
 
-                <!-- Recent Blockades Table -->
-                <div class="border-top pt-4 mt-4">
-                    <h6 class="fw-bold mb-3">
-                        <i class="fa fa-clock-rotate-left me-2"></i>Bloqueos recientes
-                    </h6>
+            <!-- Recent Blockades Card -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">Bloqueos recientes</h6>
                     @if($recentBlockades->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-sm table-hover mb-0">

@@ -11,11 +11,11 @@ use Modules\Health\Http\Controllers\HealthController;
 | Health monitoring and system diagnostics routes
 | Prefix: /backups/health (applied by ServiceProvider)
 | Name: backups.health.* (applied by ServiceProvider)
-| Middleware: web, auth, role:manager|super-admin
+| Middleware: web, auth, role:super-admin
 |
 */
 
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+Route::middleware(['web', 'auth', 'role:super-admin'])
     ->prefix('settings/health')
     ->name('settings.health.')
     ->group(function () {

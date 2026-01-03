@@ -19,6 +19,7 @@ class DocumentValidationConditionSeeder extends Seeder
         $conditions = [
             [
                 'key' => 'is_weapon',
+                'condition_type' => 'sale_type',
                 'name' => 'Es un arma',
                 'description' => 'Documentos que requieren validación de licencias de armas. Incluye escopetas, rifles y armas cortas.',
                 'sale_types' => ['escopeta', 'rifle', 'corta', 'armas'],
@@ -27,6 +28,7 @@ class DocumentValidationConditionSeeder extends Seeder
             ],
             [
                 'key' => 'is_dni_only',
+                'condition_type' => 'sale_type',
                 'name' => 'Requiere solo DNI',
                 'description' => 'Documentos que solo requieren validación de DNI/identificación, sin necesidad de licencias adicionales.',
                 'sale_types' => ['dni'],
@@ -35,6 +37,7 @@ class DocumentValidationConditionSeeder extends Seeder
             ],
             [
                 'key' => 'requires_financing',
+                'condition_type' => 'field',
                 'name' => 'Requiere financiación',
                 'description' => 'Documentos que incluyen financiación y requieren validación contable adicional.',
                 'sale_types' => [], // This condition is checked via document.requires_financing field, not sale_type

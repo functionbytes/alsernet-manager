@@ -18,26 +18,31 @@ class DocumentTypeSeeder extends Seeder
         $types = $this->getDocumentTypes();
 
         foreach ($types as $typeData) {
-            // Create DocumentType
-            $documentType = DocumentType::create([
-                'slug' => $typeData['slug'],
-                'icon' => $typeData['icon'] ?? null,
-                'color' => $typeData['color'] ?? null,
-                'is_active' => true,
-                'sort_order' => $typeData['sort_order'] ?? 0,
-                'sla_multiplier' => $typeData['sla_multiplier'] ?? 1.0,
-            ]);
+            // Create or update DocumentType
+            $documentType = DocumentType::updateOrCreate(
+                ['slug' => $typeData['slug']],
+                [
+                    'label' => $typeData['label'] ?? $typeData['slug'],
+                    'icon' => $typeData['icon'] ?? null,
+                    'color' => $typeData['color'] ?? null,
+                    'is_active' => true,
+                    'sort_order' => $typeData['sort_order'] ?? 0,
+                    'sla_multiplier' => $typeData['sla_multiplier'] ?? 1.0,
+                ]
+            );
 
             // Create requirements for this document type
             foreach ($typeData['requirements'] as $index => $reqData) {
-                $documentType->requirements()->create([
-                    'key' => $reqData['key'],
-                    'is_required' => $reqData['is_required'] ?? true,
-                    'accepts_multiple' => $reqData['accepts_multiple'] ?? false,
-                    'max_file_size' => $reqData['max_file_size'] ?? 10240,
-                    'allowed_extensions' => $reqData['allowed_extensions'] ?? ['pdf', 'jpg', 'jpeg', 'png'],
-                    'sort_order' => $index,
-                ]);
+                $documentType->requirements()->updateOrCreate(
+                    ['key' => $reqData['key']],
+                    [
+                        'is_required' => $reqData['is_required'] ?? true,
+                        'accepts_multiple' => $reqData['accepts_multiple'] ?? false,
+                        'max_file_size' => $reqData['max_file_size'] ?? 10240,
+                        'allowed_extensions' => $reqData['allowed_extensions'] ?? ['pdf', 'jpg', 'jpeg', 'png'],
+                        'sort_order' => $index,
+                    ]
+                );
             }
         }
     }
@@ -52,6 +57,7 @@ class DocumentTypeSeeder extends Seeder
         return [
             [
                 'slug' => 'corta',
+                'label' => 'Licencia de Caza (Corta)',
                 'icon' => 'fa-gun',
                 'color' => 'danger',
                 'sort_order' => 1,
@@ -79,6 +85,7 @@ class DocumentTypeSeeder extends Seeder
             ],
             [
                 'slug' => 'rifle',
+                'label' => 'Licencia de Caza (Rifle)',
                 'icon' => 'fa-crosshairs',
                 'color' => 'warning',
                 'sort_order' => 2,
@@ -100,6 +107,7 @@ class DocumentTypeSeeder extends Seeder
             ],
             [
                 'slug' => 'escopeta',
+                'label' => 'Licencia de Caza (Escopeta)',
                 'icon' => 'fa-burst',
                 'color' => 'info',
                 'sort_order' => 3,
@@ -121,6 +129,7 @@ class DocumentTypeSeeder extends Seeder
             ],
             [
                 'slug' => 'dni',
+                'label' => 'Documento Nacional de Identidad',
                 'icon' => 'fa-id-card',
                 'color' => 'success',
                 'sort_order' => 4,
@@ -138,6 +147,7 @@ class DocumentTypeSeeder extends Seeder
             ],
             [
                 'slug' => 'general',
+                'label' => 'Documento General',
                 'icon' => 'fa-file-alt',
                 'color' => 'secondary',
                 'sort_order' => 5,
@@ -146,6 +156,28 @@ class DocumentTypeSeeder extends Seeder
                     [
                         'key' => 'documento',
                         'is_required' => true,
+                    ],
+                ],
+            ],
+            [
+                'slug' => 'balines',
+                'label' => 'Licencia de Balines',
+                'icon' => 'fa-circle',
+                'color' => 'warning',
+                'sort_order' => 6,
+                'sla_multiplier' => 0.5,
+                'requirements' => [
+                    [
+                        'key' => 'dni_frontal',
+                        'is_required' => true,
+                        'max_file_size' => 5120,
+                        'allowed_extensions' => ['pdf', 'jpg', 'jpeg', 'png'],
+                    ],
+                    [
+                        'key' => 'dni_trasera',
+                        'is_required' => true,
+                        'max_file_size' => 5120,
+                        'allowed_extensions' => ['pdf', 'jpg', 'jpeg', 'png'],
                     ],
                 ],
             ],

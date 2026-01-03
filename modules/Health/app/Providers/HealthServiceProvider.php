@@ -19,14 +19,13 @@ use Spatie\Health\Facades\Health;
 
 class HealthServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
-        // Register HealthCheck services
+        $this->app->register(RouteServiceProvider::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'health');
 
         // Publish config
@@ -79,16 +78,9 @@ class HealthServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Health Check
-        NavService::registerMiniItem('health', [
-            'icon' => 'fa-heart-pulse',
-            'tooltip' => 'Estado del sistema',
-            'sidebar_id' => 'health',
-            'order' => 100,
-        ]);
 
         // Sidebar con los items del módulo
-        NavService::registerSidebar('health', [
+        NavService::registerSidebar('settings', [
             'title' => 'Estado del sistema',
             'items' => [
                 ['label' => 'Dashboard', 'route' => 'settings.health.index'],

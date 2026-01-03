@@ -4,7 +4,7 @@ namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Modules\Document\Entities\ValidatorGroup;
+use Modules\Document\Entities\DocumentValidatorGroup;
 
 class DocumentValidatorGroupSeeder extends Seeder
 {
@@ -28,7 +28,7 @@ class DocumentValidatorGroupSeeder extends Seeder
                 'name' => 'Equipo Documentación',
                 'key' => 'documentation_team',
                 'description' => 'Responsables de la validación inicial de documentos',
-                'priority' => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
@@ -36,7 +36,7 @@ class DocumentValidatorGroupSeeder extends Seeder
                 'name' => 'Equipo Licencias',
                 'key' => 'licenses_team',
                 'description' => 'Responsables de la validación de licencias y permisos',
-                'priority' => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
             [
@@ -44,7 +44,7 @@ class DocumentValidatorGroupSeeder extends Seeder
                 'name' => 'Equipo Contabilidad',
                 'key' => 'accounting_team',
                 'description' => 'Responsables de la aprobación final y registros contables',
-                'priority' => 3,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
             [
@@ -52,13 +52,13 @@ class DocumentValidatorGroupSeeder extends Seeder
                 'name' => 'Equipo Legal',
                 'key' => 'legal_team',
                 'description' => 'Validación de aspectos legales y términos',
-                'priority' => 4,
+                'sort_order' => 4,
                 'is_active' => false, // Disabled by default
             ],
         ];
 
         foreach ($groups as $groupData) {
-            ValidatorGroup::firstOrCreate(
+            DocumentValidatorGroup::firstOrCreate(
                 ['key' => $groupData['key']],
                 $groupData
             );

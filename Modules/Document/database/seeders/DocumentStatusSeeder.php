@@ -3,6 +3,7 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentStatus;
 
 class DocumentStatusSeeder extends Seeder
 {
@@ -11,14 +12,6 @@ class DocumentStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        // Document Status Flow (aligned with email notifications):
-        // 1. Solicitado (Pending) → Initial Request email sent
-        // 2. Esperando Documentos → Reminder emails sent periodically
-        // 3. Documentos Recibidos (NEW) → Upload Confirmation email sent
-        // 4. Incompleto → Missing documents (intermediate state)
-        // 5. Aprobado (Final) → Approval email sent (COMPLETION)
-        // 6. Rechazado → Rejection email sent (awaiting resubmission)
-        // 7. Cancelado → Request cancelled
 
         $statuses = [
             [
@@ -97,7 +90,7 @@ class DocumentStatusSeeder extends Seeder
         ];
 
         foreach ($statuses as $status) {
-            \App\Models\Document\DocumentStatus::firstOrCreate(
+            DocumentStatus::firstOrCreate(
                 ['key' => $status['key']],
                 $status
             );

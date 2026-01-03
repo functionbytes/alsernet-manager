@@ -12,7 +12,7 @@
                     <h5 class="mb-0">
                         <i class="fas fa-cube me-2"></i>{{ $module['name'] }}
                     </h5>
-                    <a href="{{ route('modules.index') }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                    <a href="{{ route('settings.modules.index') }}" class="btn btn-sm btn-outline-secondary ms-auto">
                         <i class="fas fa-arrow-left me-1"></i>Volver
                     </a>
                 </div>
@@ -137,13 +137,13 @@
 
                     <div class="d-flex gap-2 flex-wrap">
                         {{-- Edit Button --}}
-                        <a href="{{ route('modules.edit', $module['alias']) }}" class="btn btn-primary">
+                        <a href="{{ route('settings.modules.edit', $module['alias']) }}" class="btn btn-primary">
                             <i class="fas fa-edit me-2"></i>Editar configuración
                         </a>
 
                         @if(!in_array($module['name'], ['Role', 'Modules']))
                             @if($module['enabled'])
-                                <form action="{{ route('modules.disable', $module['alias']) }}" method="POST" class="d-inline">
+                                <form action="{{ route('settings.modules.disable', $module['alias']) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-warning"
                                             onclick="return confirm('¿Deshabilitar {{ $module['name'] }}?')">
@@ -151,7 +151,7 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('modules.enable', $module['alias']) }}" method="POST" class="d-inline">
+                                <form action="{{ route('settings.modules.enable', $module['alias']) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-success">
                                         <i class="fas fa-play me-2"></i>Habilitar
@@ -159,7 +159,7 @@
                                 </form>
                             @endif
 
-                            <form action="{{ route('modules.uninstall', $module['alias']) }}" method="POST" class="d-inline">
+                            <form action="{{ route('settings.modules.uninstall', $module['alias']) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger"
                                         onclick="return confirm('¿Desinstalar {{ $module['name'] }}? Esta acción es irreversible.')">

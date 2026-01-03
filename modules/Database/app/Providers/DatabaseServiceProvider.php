@@ -50,7 +50,7 @@ class DatabaseServiceProvider extends ServiceProvider
         $webPath = module_path($this->name, 'routes/web.php');
 
         // Database backups and cleanup routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/database')
             ->name('manager.backups.database.')
             ->group(function () use ($webPath) {

@@ -43,14 +43,8 @@ class MailsSettingsServiceProvider extends ServiceProvider
 
     protected function registerMenus(): void
     {
-        NavService::registerMiniItem('email-backups', [
-            'icon' => 'fa-envelope-circle-check',
-            'tooltip' => 'Configuración de Email',
-            'sidebar_id' => 'email-backups',
-            'order' => 50,
-        ]);
 
-        NavService::registerSidebar('email-backups', [
+        NavService::registerSidebar('settings', [
             'title' => 'Configuración de Email',
             'items' => [
                 ['label' => 'Configuración general', 'route' => 'settings.email.index'],

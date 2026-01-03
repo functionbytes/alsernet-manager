@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\MailsSettings\Http\Controllers\Settings;
+namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -19,7 +19,7 @@ class OutgoingEmailSettingsController extends Controller
         $pageTitle = 'Configuración de Correo Saliente';
         $breadcrumb = 'Configuración / Email / Saliente';
 
-        return view('mails-backups::managers.backups.email.outgoing', compact('settings', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::settings.outgoing', compact('settings', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -32,7 +32,7 @@ class OutgoingEmailSettingsController extends Controller
         $pageTitle = 'Editar Correo Saliente';
         $breadcrumb = 'Configuración / Email / Saliente / Editar';
 
-        return view('mails-backups::managers.backups.email.outgoing-edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::settings.outgoing-edit', compact('settings', 'rules', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -45,7 +45,7 @@ class OutgoingEmailSettingsController extends Controller
 
             Setting::setEmailSettings($validated);
 
-            return redirect()->route('settings.email.outgoing.index')
+            return redirect()->route('settings.outgoing.index')
                 ->with('success', 'Configuración de correo saliente actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()

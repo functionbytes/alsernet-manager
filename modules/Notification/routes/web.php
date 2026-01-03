@@ -15,8 +15,6 @@ use Modules\Notification\Http\Controllers\NotificationsController;
 */
 
 Route::get('/', [NotificationsController::class, 'index'])->name('index');
-Route::get('/create', [NotificationsController::class, 'create'])->name('create');
-Route::post('/store', [NotificationsController::class, 'store'])->name('store');
-Route::get('/{id}/edit', [NotificationsController::class, 'edit'])->name('edit');
-Route::post('/{id}/update', [NotificationsController::class, 'update'])->name('update');
+Route::post('/{id}/mark-as-read', [NotificationsController::class, 'markAsRead'])->name('markAsRead');
+Route::post('/mark-all-as-read', [NotificationsController::class, 'markAllAsRead'])->name('markAllAsRead');
 Route::delete('/{id}', [NotificationsController::class, 'destroy'])->name('destroy');

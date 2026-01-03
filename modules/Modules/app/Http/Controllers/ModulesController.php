@@ -54,7 +54,7 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
@@ -86,7 +86,7 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
@@ -118,7 +118,7 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
@@ -142,14 +142,14 @@ class ModulesController extends Controller
 
                 file_put_contents($configPath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-                return redirect()->route('modules.show', $module->getName())
+                return redirect()->route('settings.modules.show', $module->getName())
                     ->with('success', "Module '{$module->getName()}' updated successfully.");
             } else {
-                return redirect()->route('modules.edit', $module->getName())
+                return redirect()->route('settings.modules.edit', $module->getName())
                     ->with('error', 'Module configuration file not found.');
             }
         } catch (\Exception $e) {
-            return redirect()->route('modules.edit', $module->getName())
+            return redirect()->route('settings.modules.edit', $module->getName())
                 ->with('error', "Error updating module: {$e->getMessage()}");
         }
     }
@@ -162,17 +162,17 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
         try {
             $module->enable();
 
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('success', "Module '{$module->getName()}' has been enabled successfully.");
         } catch (\Exception $e) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Failed to enable module: {$e->getMessage()}");
         }
     }
@@ -185,24 +185,24 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
         // Prevent disabling core modules
         $coreModules = ['Role', 'Modules'];
         if (in_array($module->getName(), $coreModules)) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Cannot disable core module '{$module->getName()}'.");
         }
 
         try {
             $module->disable();
 
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('success', "Module '{$module->getName()}' has been disabled successfully.");
         } catch (\Exception $e) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Failed to disable module: {$e->getMessage()}");
         }
     }
@@ -276,13 +276,13 @@ class ModulesController extends Controller
                 array_map('unlink', glob("$tempPath/*.*"));
                 rmdir($tempPath);
 
-                return redirect()->route('modules.index')
+                return redirect()->route('settings.modules.index')
                     ->with('success', "Module '$moduleName' has been installed successfully.");
             } else {
                 throw new \Exception('Failed to extract ZIP file.');
             }
         } catch (\Exception $e) {
-            return redirect()->route('modules.uploadForm')
+            return redirect()->route('settings.modules.uploadForm')
                 ->with('error', "Installation failed: {$e->getMessage()}");
         }
     }
@@ -295,14 +295,14 @@ class ModulesController extends Controller
         $module = Module::find($moduleAlias);
 
         if (! $module) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Module '{$moduleAlias}' not found.");
         }
 
         // Prevent uninstalling core modules
         $coreModules = ['Role', 'Modules'];
         if (in_array($module->getName(), $coreModules)) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Cannot uninstall core module '{$module->getName()}'.");
         }
 
@@ -316,10 +316,10 @@ class ModulesController extends Controller
             $modulePath = $module->getPath();
             $this->deleteDirectory($modulePath);
 
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('success', "Module '{$module->getName()}' has been uninstalled successfully.");
         } catch (\Exception $e) {
-            return redirect()->route('modules.index')
+            return redirect()->route('settings.modules.index')
                 ->with('error', "Failed to uninstall module: {$e->getMessage()}");
         }
     }

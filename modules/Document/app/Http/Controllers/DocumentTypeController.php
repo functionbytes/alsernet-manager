@@ -7,7 +7,7 @@ use App\Models\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentRequirement;
-use Modules\Document\Entities\DocumentRequirementTranslation;
+use Modules\Document\Entities\DocumentRequirementLang;
 use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentValidationCondition;
 use Modules\Document\Entities\DocumentValidatorGroup;
@@ -120,7 +120,7 @@ class DocumentTypeController extends Controller
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementTranslation::create([
+                                DocumentRequirementLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],
@@ -160,7 +160,7 @@ class DocumentTypeController extends Controller
         // Support both slug and uid
         $type = DocumentType::where('slug', $documentType)
             ->orWhere('uid', $documentType)
-            ->with(['requirements.translations'])
+            ->with(['requirements.langs'])
             ->firstOrFail();
 
         $langs = Lang::all();
@@ -269,12 +269,12 @@ class DocumentTypeController extends Controller
                     // Update or create translations
                     if (isset($requirementData['translations']) && is_array($requirementData['translations'])) {
                         // Delete existing translations and recreate them
-                        $requirement->translations()->delete();
+                        $requirement->langs()->delete();
 
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementTranslation::create([
+                                DocumentRequirementLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],

@@ -89,7 +89,7 @@ Database seeders are in `/database/seeders/Warehouse/`.
 
 ### Manager Routes
 - **Prefix**: `/manager/warehouse`
-- **Middleware**: `auth`, `role:manager|super-admin`
+- **Middleware**: `auth`, `role:super-admin`
 - **Routes**:
   - Warehouse CRUD: `/manager/warehouse/warehouses`
   - Floor management: `/manager/warehouse/floors`

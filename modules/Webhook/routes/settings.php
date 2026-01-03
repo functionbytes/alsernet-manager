@@ -12,7 +12,7 @@ use Modules\Webhook\Http\Controllers\Settings\SubscriptionsController;
 | Rutas para la configuración del sistema de webhooks
 | Prefix: /backups/webhooks (aplicado por ServiceProvider)
 | Name: manager.backups.webhooks.* (aplicado por ServiceProvider)
-| Middleware: web, auth, role:manager|super-admin
+| Middleware: web, auth, role:super-admin
 |
 */
 

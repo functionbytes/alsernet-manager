@@ -67,7 +67,7 @@ class NotificationServiceProvider extends ServiceProvider
             });
 
         // Notification backups routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/notifications')
             ->name('settings.notifications.')
             ->group(function () use ($modulePath) {
@@ -108,7 +108,6 @@ class NotificationServiceProvider extends ServiceProvider
             'title' => 'Notificaciones',
             'items' => [
                 ['label' => 'Todas las notificaciones', 'route' => 'notifications.index'],
-                ['label' => 'Crear notificación', 'route' => 'notifications.create'],
             ],
         ]);
     }

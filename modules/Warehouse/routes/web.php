@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Warehouse\Http\Controllers\Products\BarcodeController as ProductsBarcodesController;
+use Modules\Warehouse\Http\Controllers\Products\ProductsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\BarcodeController as LocationsBarcodesController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsController as ShopsLocationsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\ReportController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseDashboardController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseFloorsController;
@@ -11,12 +17,6 @@ use Modules\Warehouse\Http\Controllers\Settings\WarehouseLocationSectionsControl
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseLocationStylesController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseMapController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseReportsController;
-use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
-use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsController as ShopsLocationsController;
-use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\BarcodeController as LocationsBarcodesController;
-use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\ReportController;
-use Modules\Warehouse\Http\Controllers\Products\ProductsController;
-use Modules\Warehouse\Http\Controllers\Products\BarcodeController as ProductsBarcodesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ use Modules\Warehouse\Http\Controllers\Products\BarcodeController as ProductsBar
 |
 | Routes for warehouse management by managers
 | Prefix: /backups/warehouse (applied by WarehouseServiceProvider)
-| Middleware: auth, role:manager|super-admin (applied by WarehouseServiceProvider)
+| Middleware: auth, role:super-admin (applied by WarehouseServiceProvider)
 | Name prefix: backups.warehouse. (applied by WarehouseServiceProvider)
 |
 */

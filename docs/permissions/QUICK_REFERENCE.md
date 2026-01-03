@@ -4,7 +4,7 @@
 
 ```bash
 # Single run
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 
 # With full migration
 php artisan migrate:fresh --seed

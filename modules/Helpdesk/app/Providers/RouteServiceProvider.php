@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         // Manager backups routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('manager/backups/helpdesk')
             ->name('manager.backups.helpdesk.')
             ->group(module_path($this->name, 'routes/web.php'));

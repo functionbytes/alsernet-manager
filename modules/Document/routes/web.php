@@ -18,12 +18,12 @@ use Modules\Document\Http\Controllers\Settings\StageEmailActionController;
 | Rutas para la gestión operacional y configuración de documentos
 | Operational routes use /documents prefix
 | Configuration routes use /settings/documents prefix
-| Middleware: web, auth, role:manager|super-admin
+| Middleware: web, auth, role:super-admin
 | Authorization: Handled in controllers via traits
 |
 */
 
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])->group(function () {
+Route::middleware(['web', 'auth', 'role:super-admin'])->group(function () {
 
     // ====================================================================
     // OPERATIONAL ROUTES - /documents

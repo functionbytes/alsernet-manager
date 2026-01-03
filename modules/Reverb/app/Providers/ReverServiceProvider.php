@@ -3,7 +3,6 @@
 namespace Modules\Reverb\Providers;
 
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 
@@ -16,18 +15,6 @@ class ReverServiceProvider extends ServiceProvider
     protected string $nameLower = 'reverb';
 
     /**
-     * Boot the application events.
-     */
-    public function boot(): void
-    {
-        $this->registerTranslations();
-        $this->registerConfig();
-        $this->registerViews();
-        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
-        $this->registerRoutes();
-    }
-
-    /**
      * Register the service provider.
      */
     public function register(): void
@@ -37,25 +24,14 @@ class ReverServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register module routes
+     * Boot the application events.
      */
-    protected function registerRoutes(): void
+    public function boot(): void
     {
-        // Reverb API routes for real-time features
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('api/reverb')
-            ->name('api.reverb.')
-            ->group(function () {
-                require module_path($this->name, 'routes/api.php');
-            });
-
-        // Reverb admin routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings/reverb')
-            ->name('manager.backups.reverb.')
-            ->group(function () {
-                require module_path($this->name, 'routes/web.php');
-            });
+        $this->registerTranslations();
+        $this->registerConfig();
+        $this->registerViews();
+        $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
     /**

@@ -42,7 +42,7 @@ class DocumentType extends Model
 
     public function getTranslationsList()
     {
-        $langs = Lang::all();
+        $langs = DocumentLang::all();
         $translations = [];
 
         foreach ($langs as $lang) {
@@ -62,7 +62,7 @@ class DocumentType extends Model
     // Get translation for specific language
     public function translate(?int $langId = null)
     {
-        $langId = $langId ?? Lang::getDefaultLangId();
+        $langId = $langId ?? DocumentLang::getDefaultLangId();
 
         return $this->getTranslationsList()->firstWhere('lang_id', $langId);
     }

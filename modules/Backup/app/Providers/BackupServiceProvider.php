@@ -7,14 +7,13 @@ use Illuminate\Support\ServiceProvider;
 
 class BackupServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
-        // Register Backup services
+        $this->app->register(RouteServiceProvider::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'backup');
 
         $this->publishes([
@@ -38,7 +37,7 @@ class BackupServiceProvider extends ServiceProvider
         ]);
 
         // Sidebar con los items del módulo
-        NavService::registerSidebar('backups', [
+        NavService::registerSidebar('settings', [
             'title' => 'Copias de seguridad',
             'items' => [
                 ['label' => 'Todas las copias', 'route' => 'settings.backups.index'],

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\MailsSettings\Http\Controllers\Settings;
+namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -21,7 +21,7 @@ class IncomingEmailSettingsController extends Controller
         $pageTitle = 'Configuración de Correo Entrante';
         $breadcrumb = 'Configuración / Email / Entrante';
 
-        return view('mails-backups::managers.backups.email.incoming', compact('settings', 'pageTitle', 'breadcrumb'));
+        return view('mails-backups::settings.incoming', compact('settings', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -37,7 +37,7 @@ class IncomingEmailSettingsController extends Controller
 
             Setting::setIncomingEmailSettings($validated);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Configuración Pipe actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Error updating Pipe backups', [
@@ -63,7 +63,7 @@ class IncomingEmailSettingsController extends Controller
 
             Setting::setIncomingEmailSettings($validated);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Configuración REST API actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Error updating API backups', [
@@ -117,7 +117,7 @@ class IncomingEmailSettingsController extends Controller
 
             Setting::setIncomingEmailSettings($validated);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Configuración Mailgun actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Error updating Mailgun backups', [
@@ -168,7 +168,7 @@ class IncomingEmailSettingsController extends Controller
                 'api' => $settings['api'] ?? ['enabled' => false],
             ]));
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Conexión IMAP agregada correctamente');
         } catch (\Exception $e) {
             Log::error('Error storing IMAP connection', [
@@ -205,7 +205,7 @@ class IncomingEmailSettingsController extends Controller
                 'api' => $settings['api'] ?? ['enabled' => false],
             ]));
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Conexión IMAP eliminada correctamente');
         } catch (\Exception $e) {
             Log::error('Error deleting IMAP connection', [
@@ -281,7 +281,7 @@ class IncomingEmailSettingsController extends Controller
         $pageTitle = 'Documentación REST API - Incoming Email';
         $breadcrumb = 'Configuración / Email / Entrante / Documentación API';
 
-        return view('mails-backups::managers.backups.email.api-documentation', compact('pageTitle', 'breadcrumb'));
+        return view('mails-backups::settings.api-documentation', compact('pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -299,7 +299,7 @@ class IncomingEmailSettingsController extends Controller
 
             Setting::setIncomingEmailSettings($validated);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Configuración Gmail actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Error updating Gmail backups', [
@@ -322,14 +322,14 @@ class IncomingEmailSettingsController extends Controller
             $gmailSettings = $settings['gmail'] ?? [];
 
             if (empty($gmailSettings['client_id']) || empty($gmailSettings['client_secret'])) {
-                return redirect()->route('settings.email.incoming.index')
+                return redirect()->route('settings.incoming.index')
                     ->with('error', 'Configure primero las credenciales de Gmail (Client ID y Client Secret)');
             }
 
             $client = new GoogleClient;
             $client->setClientId($gmailSettings['client_id']);
             $client->setClientSecret($gmailSettings['client_secret']);
-            $client->setRedirectUri($gmailSettings['redirect_uri'] ?? route('settings.email.incoming.gmail.callback'));
+            $client->setRedirectUri($gmailSettings['redirect_uri'] ?? route('settings.incoming.gmail.callback'));
             $client->addScope(Gmail::GMAIL_READONLY);
             $client->addScope(Gmail::GMAIL_MODIFY);
             $client->setAccessType('offline');
@@ -343,7 +343,7 @@ class IncomingEmailSettingsController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('error', 'Error al iniciar autorización de Gmail: '.$e->getMessage());
         }
     }
@@ -357,7 +357,7 @@ class IncomingEmailSettingsController extends Controller
             $code = $request->input('code');
 
             if (! $code) {
-                return redirect()->route('settings.email.incoming.index')
+                return redirect()->route('settings.incoming.index')
                     ->with('error', 'No se recibió el código de autorización de Google');
             }
 
@@ -367,7 +367,7 @@ class IncomingEmailSettingsController extends Controller
             $client = new GoogleClient;
             $client->setClientId($gmailSettings['client_id']);
             $client->setClientSecret($gmailSettings['client_secret']);
-            $client->setRedirectUri($gmailSettings['redirect_uri'] ?? route('settings.email.incoming.gmail.callback'));
+            $client->setRedirectUri($gmailSettings['redirect_uri'] ?? route('settings.incoming.gmail.callback'));
 
             // Exchange authorization code for access token
             $token = $client->fetchAccessTokenWithAuthCode($code);
@@ -403,14 +403,14 @@ class IncomingEmailSettingsController extends Controller
                 'mailgun' => $settings['mailgun'] ?? ['enabled' => false],
             ]));
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', "Cuenta de Gmail {$profile->emailAddress} conectada correctamente");
         } catch (\Exception $e) {
             Log::error('Error handling Gmail OAuth2 callback', [
                 'error' => $e->getMessage(),
             ]);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('error', 'Error al conectar cuenta de Gmail: '.$e->getMessage());
         }
     }
@@ -440,7 +440,7 @@ class IncomingEmailSettingsController extends Controller
                 'mailgun' => $settings['mailgun'] ?? ['enabled' => false],
             ]));
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Conexión Gmail eliminada correctamente');
         } catch (\Exception $e) {
             Log::error('Error deleting Gmail connection', [
@@ -468,7 +468,7 @@ class IncomingEmailSettingsController extends Controller
 
             Setting::setIncomingEmailSettings($validated);
 
-            return redirect()->route('settings.email.incoming.index')
+            return redirect()->route('settings.incoming.index')
                 ->with('success', 'Configuración phpList actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Error updating phpList backups', [

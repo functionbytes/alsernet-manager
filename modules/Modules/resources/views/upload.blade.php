@@ -12,7 +12,7 @@
                     <h5 class="mb-0">
                         <i class="fas fa-download me-2"></i>Instalar nuevo módulo
                     </h5>
-                    <a href="{{ route('modules.index') }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                    <a href="{{ route('settings.modules.index') }}" class="btn btn-sm btn-outline-secondary ms-auto">
                         <i class="fas fa-arrow-left me-1"></i>Volver
                     </a>
                 </div>
@@ -30,7 +30,7 @@
                 @endif
 
                 {{-- Upload Form Section --}}
-                <form action="{{ route('modules.install') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('settings.modules.install') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-4">
@@ -119,7 +119,7 @@
                         <button type="submit" class="btn btn-primary btn-lg px-5">
                             <i class="fas fa-upload me-2"></i>Instalar módulo
                         </button>
-                        <a href="{{ route('modules.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('settings.modules.index') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Cancelar
                         </a>
                     </div>
@@ -140,7 +140,7 @@
                         <p class="small text-muted mb-0">
                             <i class="fas fa-info-circle me-1"></i>
                             Para más información sobre cómo desarrollar módulos, consulta la
-                            <a href="{{ route('modules.index') }}" class="text-decoration-none">lista de módulos instalados</a>.
+                            <a href="{{ route('settings.modules.index') }}" class="text-decoration-none">lista de módulos instalados</a>.
                         </p>
                     </div>
                 </div>

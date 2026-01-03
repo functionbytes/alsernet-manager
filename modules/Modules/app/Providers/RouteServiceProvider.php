@@ -35,9 +35,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapManagerSettingsRoutes(): void
     {
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/modules')
-            ->name('modules.')
+            ->name('settings.modules.')
             ->group(function (): void {
                 // Load view routes (GET)
                 require module_path($this->name, 'routes/web.php');
@@ -52,6 +52,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes(): void
     {
-        Route::middleware('api')->prefix('api')->name('api.')->group(module_path($this->name, '/routes/api.php'));
+        Route::middleware('api')->prefix('api')->name('api.')->group(function (): void {
+            require module_path($this->name, 'routes/api.php');
+        });
     }
 }

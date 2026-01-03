@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generando...';
 
-            fetch('{{ route("backups.incoming-email.api.generate-key") }}', {
+            fetch('{{ route("settings.incoming-email.api.generate-key") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Probando...';
 
-            fetch('{{ route("backups.incoming-email.phplist.test") }}', {
+            fetch('{{ route("settings.incoming-email.phplist.test") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando...';
 
-            fetch('{{ route("backups.incoming-email.phplist.lists") }}', {
+            fetch('{{ route("settings.incoming-email.phplist.lists") }}', {
                 method: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

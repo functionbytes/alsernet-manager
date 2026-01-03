@@ -3,6 +3,7 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentSource;
 
 class DocumentSourceSeeder extends Seeder
 {
@@ -63,7 +64,7 @@ class DocumentSourceSeeder extends Seeder
         ];
 
         foreach ($sources as $source) {
-            \App\Models\Document\DocumentSource::firstOrCreate(
+            DocumentSource::firstOrCreate(
                 ['key' => $source['key']],
                 $source
             );

@@ -8,7 +8,7 @@ use Database\Seeders\Core\LangSeeder;
 use Database\Seeders\Core\MailVariableSeeder;
 use Database\Seeders\Core\MediaFolderSeeder;
 use Illuminate\Database\Seeder;
-use Modules\Document\Database\Seeders\CreateDocumentPermissionsSeeder;
+use Modules\Document\Database\Seeders\DocumentPermissionsSeeder;
 use Modules\Document\Database\Seeders\DocumentConfigurationSeeder;
 use Modules\Document\Database\Seeders\DocumentGroupSeeder;
 use Modules\Document\Database\Seeders\DocumentLoadSeeder;
@@ -19,7 +19,7 @@ use Modules\Document\Database\Seeders\DocumentSyncSeeder;
 use Modules\Document\Database\Seeders\DocumentUploadTypeSeeder;
 use Modules\Document\Database\Seeders\DocumentValidatorGroupConfigurationSeeder;
 use Modules\Document\Database\Seeders\DocumentValidatorGroupSeeder;
-use Modules\Document\Database\Seeders\StageEmailActionSeeder;
+use Modules\Document\Database\Seeders\DocumentStageEmailActionSeeder;
 use Modules\Helpdesk\Database\Seeders\HelpCenterSeeder;
 use Modules\Helpdesk\Database\Seeders\HelpdeskCannedReplySeeder;
 use Modules\Helpdesk\Database\Seeders\HelpdeskConversationStatusSeeder;
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
             // Document Validation (depends on DocumentStatusSeeder)
             DocumentValidatorGroupSeeder::class,
             DocumentValidatorGroupConfigurationSeeder::class,
-            StageEmailActionSeeder::class,
+            DocumentStageEmailActionSeeder::class,
 
             // ========================================
             // PHASE 4: RETURN SYSTEM
@@ -157,7 +157,7 @@ class DatabaseSeeder extends Seeder
             // ========================================
             // PHASE 7: ROLES & PERMISSIONS
             // ========================================
-            CreateDocumentPermissionsSeeder::class,
+            DocumentPermissionsSeeder::class,
             RolesAndUsersSeeder::class,
 
             // ========================================

@@ -78,7 +78,7 @@ class WebhookServiceProvider extends ServiceProvider
         $apiPath = module_path($moduleName, 'routes/api.php');
 
         // Webhook operational routes (day-to-day webhook monitoring)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('webhooks')
             ->name('manager.webhooks.')
             ->group(function () use ($webPath) {
@@ -86,7 +86,7 @@ class WebhookServiceProvider extends ServiceProvider
             });
 
         // Webhook configuration routes (system backups)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/webhooks')
             ->name('manager.backups.webhooks.')
             ->group(function () use ($settingsPath) {

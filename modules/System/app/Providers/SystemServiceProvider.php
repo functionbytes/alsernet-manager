@@ -56,13 +56,12 @@ class SystemServiceProvider extends ServiceProvider
         NavService::registerSidebar('settings', [
             'title' => 'Configuraciones',
             'items' => [
-                ['label' => 'Configuración (Sistema)', 'route' => 'settings.system.index'],
+                ['label' => 'Configuración', 'route' => 'settings.system.index'],
                 ['label' => 'Información del sistema', 'route' => 'settings.system.info.index'],
-                ['label' => 'Cache y mantenimiento', 'route' => 'settings.system.cache.index'],
                 ['label' => 'Supervisor', 'route' => 'settings.system.supervisor.index'],
                 ['label' => 'Logs del servidor', 'route' => 'settings.system.access.index'],
                 ['label' => 'Carga de archivos', 'route' => 'settings.system.uploading.index'],
-                ['label' => 'Modo mantenimiento', 'route' => 'settings.system.maintenance.index'],
+                ['label' => 'Cache y mantenimiento', 'route' => 'settings.system.maintenance.index'],
             ],
         ]);
     }

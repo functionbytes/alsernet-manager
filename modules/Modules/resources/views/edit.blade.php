@@ -12,7 +12,7 @@
                     <h5 class="mb-0">
                         <i class="fas fa-edit me-2"></i>Editar {{ $module['name'] }}
                     </h5>
-                    <a href="{{ route('modules.show', $module['alias']) }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                    <a href="{{ route('settings.modules.show', $module['alias']) }}" class="btn btn-sm btn-outline-secondary ms-auto">
                         <i class="fas fa-times me-1"></i>Cancelar
                     </a>
                 </div>
@@ -36,7 +36,7 @@
                 @endif
 
                 {{-- Edit Form --}}
-                <form action="{{ route('modules.update', $module['alias']) }}" method="POST">
+                <form action="{{ route('settings.modules.update', $module['alias']) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -164,11 +164,11 @@
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-save me-2"></i>Guardar cambios
                             </button>
-                            <a href="{{ route('modules.show', $module['alias']) }}" class="btn btn-light border">
+                            <a href="{{ route('settings.modules.show', $module['alias']) }}" class="btn btn-light border">
                                 <i class="fas fa-times me-2"></i>Cancelar
                             </a>
                         </div>
-                        <a href="{{ route('modules.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('settings.modules.index') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Volver a módulos
                         </a>
                     </div>

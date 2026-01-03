@@ -3,6 +3,8 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentStatus;
+use Modules\Document\Entities\DocumentStatusTransition;
 
 class DocumentStatusTransitionSeeder extends Seeder
 {
@@ -42,11 +44,11 @@ class DocumentStatusTransitionSeeder extends Seeder
         ];
 
         foreach ($transitions as $transition) {
-            $fromStatus = \App\Models\Document\DocumentStatus::where('key', $transition['from'])->first();
-            $toStatus = \App\Models\Document\DocumentStatus::where('key', $transition['to'])->first();
+            $fromStatus = DocumentStatus::where('key', $transition['from'])->first();
+            $toStatus = DocumentStatus::where('key', $transition['to'])->first();
 
             if ($fromStatus && $toStatus) {
-                \App\Models\Document\DocumentStatusTransition::firstOrCreate(
+                DocumentStatusTransition::firstOrCreate(
                     [
                         'from_status_id' => $fromStatus->id,
                         'to_status_id' => $toStatus->id,

@@ -4,8 +4,8 @@ namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Modules\Document\Entities\ValidatorGroup;
-use Modules\Document\Entities\ValidatorGroupConfiguration;
+use Modules\Document\Entities\DocumentValidatorGroup;
+use Modules\Document\Entities\DocumentValidatorGroupConfiguration;
 
 class DocumentValidatorGroupConfigurationSeeder extends Seeder
 {
@@ -27,9 +27,9 @@ class DocumentValidatorGroupConfigurationSeeder extends Seeder
     public function run(): void
     {
         // Get validator groups
-        $docTeam = ValidatorGroup::where('key', 'documentation_team')->first();
-        $licenseTeam = ValidatorGroup::where('key', 'licenses_team')->first();
-        $accountingTeam = ValidatorGroup::where('key', 'accounting_team')->first();
+        $docTeam = DocumentValidatorGroup::where('key', 'documentation_team')->first();
+        $licenseTeam = DocumentValidatorGroup::where('key', 'licenses_team')->first();
+        $accountingTeam = DocumentValidatorGroup::where('key', 'accounting_team')->first();
 
         if (! $docTeam || ! $licenseTeam || ! $accountingTeam) {
             $this->command->error('❌ Validator groups not found. Run DocumentValidatorGroupSeeder first!');
@@ -108,7 +108,7 @@ class DocumentValidatorGroupConfigurationSeeder extends Seeder
         ];
 
         foreach ($configurations as $config) {
-            ValidatorGroupConfiguration::firstOrCreate(
+            DocumentValidatorGroupConfiguration::firstOrCreate(
                 [
                     'validator_group_id' => $config['validator_group_id'],
                     'document_types' => $config['document_types'],

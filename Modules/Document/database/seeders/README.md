@@ -34,7 +34,7 @@ php artisan db:seed --class=Database\\Seeders\\DatabaseSeeder
 
 ### Run Only Document Permissions
 ```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 ### Fresh Migration with All Seeders

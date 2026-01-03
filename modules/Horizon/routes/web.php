@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Horizon\Http\Controllers\HorizonController;
 use Modules\Horizon\Http\Controllers\Api\HorizonApiController;
+use Modules\Horizon\Http\Controllers\HorizonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,11 +12,11 @@ use Modules\Horizon\Http\Controllers\Api\HorizonApiController;
 | Queue monitoring and management dashboard
 | Prefix: /backups/horizon (applied by ServiceProvider)
 | Name: backups.horizon.* (applied by ServiceProvider)
-| Middleware: web, auth, role:manager|super-admin
+| Middleware: web, auth, role:super-admin
 |
 */
 
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+Route::middleware(['web', 'auth', 'role:super-admin'])
     ->prefix('settings/horizon')
     ->name('settings.horizon.')
     ->group(function () {

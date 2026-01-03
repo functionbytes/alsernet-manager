@@ -40,7 +40,7 @@ class UserServiceProvider extends ServiceProvider
         $modulePath = dirname(__DIR__, 2);
 
         // User settings routes (GET views + POST/PUT/DELETE API)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+        Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/users')
             ->name('settings.users.')
             ->group(function () use ($modulePath) {
@@ -72,7 +72,6 @@ class UserServiceProvider extends ServiceProvider
             'title' => 'Usuarios',
             'items' => [
                 ['label' => 'Todos los usuarios', 'route' => 'settings.users.index'],
-                ['label' => 'Crear usuario', 'route' => 'settings.users.create'],
             ],
         ]);
     }

@@ -3,6 +3,7 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentLoad;
 
 class DocumentLoadSeeder extends Seeder
 {
@@ -54,7 +55,7 @@ class DocumentLoadSeeder extends Seeder
         ];
 
         foreach ($loads as $load) {
-            \App\Models\Document\DocumentLoad::firstOrCreate(
+            DocumentLoad::firstOrCreate(
                 ['key' => $load['key']],
                 $load
             );

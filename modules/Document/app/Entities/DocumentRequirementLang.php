@@ -7,11 +7,11 @@ use Modules\Document\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DocumentRequirementTranslation extends Model
+class DocumentRequirementLang extends Model
 {
     use HasUid;
 
-    protected $table = 'document_type_requirement_translations';
+    protected $table = 'document_type_requirement_langs';
 
     protected $fillable = [
         'uid',

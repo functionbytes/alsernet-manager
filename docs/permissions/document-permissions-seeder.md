@@ -10,7 +10,7 @@ The `CreateDocumentPermissionsSeeder` manages all document-related permissions f
 
 ### Single Execution
 ```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 ### In DatabaseSeeder
@@ -158,7 +158,7 @@ $this->assignToRole('administrative', [
 ### Step 3: Run Seeder
 
 ```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 ## Using Permissions in Code

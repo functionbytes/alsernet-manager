@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\MailsSettings\Http\Controllers\Settings\EmailSettingsController;
-use Modules\MailsSettings\Http\Controllers\Settings\IncomingEmailSettingsController;
-use Modules\MailsSettings\Http\Controllers\Settings\OutgoingEmailSettingsController;
+use Modules\MailsSettings\Http\Controllers\EmailSettingsController;
+use Modules\MailsSettings\Http\Controllers\IncomingEmailSettingsController;
+use Modules\MailsSettings\Http\Controllers\OutgoingEmailSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,12 +11,12 @@ use Modules\MailsSettings\Http\Controllers\Settings\OutgoingEmailSettingsControl
 |--------------------------------------------------------------------------
 |
 | Rutas para la configuración de email del sistema
-| Middleware: web, auth, role:manager|super-admin
+| Middleware: web, auth, role:super-admin
 |
 */
 
 // Email settings routes
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+Route::middleware(['web', 'auth', 'role:super-admin'])
     ->prefix('settings/email')
     ->name('settings.email.')
     ->group(function () {
@@ -25,7 +25,7 @@ Route::middleware(['web', 'auth', 'role:manager|super-admin'])
     });
 
 // Incoming email settings routes
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+Route::middleware(['web', 'auth', 'role:super-admin'])
     ->prefix('settings/incoming-email')
     ->name('settings.incoming-email.')
     ->group(function () {
@@ -58,7 +58,7 @@ Route::middleware(['web', 'auth', 'role:manager|super-admin'])
     });
 
 // Outgoing email settings routes
-Route::middleware(['web', 'auth', 'role:manager|super-admin'])
+Route::middleware(['web', 'auth', 'role:super-admin'])
     ->prefix('settings/outgoing-email')
     ->name('settings.outgoing-email.')
     ->group(function () {

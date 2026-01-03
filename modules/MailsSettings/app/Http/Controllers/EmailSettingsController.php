@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\MailsSettings\Http\Controllers\Settings;
+namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -19,7 +19,7 @@ class EmailSettingsController extends Controller
         $outgoingSettings = Setting::getEmailSettings();
         $incomingSettings = Setting::getIncomingEmailSettings();
 
-        return view('mails-backups::managers.backups.email.index', compact(
+        return view('mails-backups::settings.index', compact(
             'pageTitle',
             'breadcrumb',
             'outgoingSettings',

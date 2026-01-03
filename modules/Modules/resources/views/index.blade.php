@@ -31,7 +31,7 @@
                         <h5 class="mb-0">
                             <i class="fas fa-cube me-2"></i>Administración de módulos
                         </h5>
-                        <a href="{{ route('modules.uploadForm') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('settings.modules.uploadForm') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus me-2"></i>Instalar módulo
                         </a>
                     </div>
@@ -137,7 +137,7 @@
                                         <td class="text-end pe-3">
                                             <div class="d-flex gap-1 justify-content-end">
                                                 {{-- View Details --}}
-                                                <a href="{{ route('modules.show', $module['alias']) }}"
+                                                <a href="{{ route('settings.modules.show', $module['alias']) }}"
                                                    class="btn btn-sm btn-light border" title="Ver detalles"
                                                    data-bs-toggle="tooltip">
                                                     <i class="fas fa-eye"></i>
@@ -146,7 +146,7 @@
                                                 {{-- Enable/Disable/Uninstall --}}
                                                 @if(!in_array($module['name'], ['Role', 'Modules']))
                                                     @if($module['enabled'])
-                                                        <form action="{{ route('modules.disable', $module['alias']) }}"
+                                                        <form action="{{ route('settings.modules.disable', $module['alias']) }}"
                                                               method="POST" class="d-inline">
                                                             @csrf
                                                             <button type="submit" class="btn btn-sm btn-warning-subtle border border-warning"
@@ -156,7 +156,7 @@
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <form action="{{ route('modules.enable', $module['alias']) }}"
+                                                        <form action="{{ route('settings.modules.enable', $module['alias']) }}"
                                                               method="POST" class="d-inline">
                                                             @csrf
                                                             <button type="submit" class="btn btn-sm btn-success-subtle border border-success"
@@ -167,7 +167,7 @@
                                                     @endif
 
                                                     {{-- Uninstall --}}
-                                                    <form action="{{ route('modules.uninstall', $module['alias']) }}"
+                                                    <form action="{{ route('settings.modules.uninstall', $module['alias']) }}"
                                                           method="POST" class="d-inline">
                                                         @csrf
                                                         <button type="submit" class="btn btn-sm btn-danger-subtle border border-danger"

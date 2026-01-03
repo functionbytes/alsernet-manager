@@ -2,49 +2,25 @@
 
 namespace Modules\Horizon\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 use App\Services\NavService;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class HorizonServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->register(RouteServiceProvider::class);
     }
 
     public function boot(): void
     {
-        $this->loadRoutes();
-        $this->loadViews();
-        $this->registerGates();
-        $this->registerMenus();
-    }
-
-    private function loadRoutes(): void
-    {
-        $apiPath = $this->module_path('routes/api.php');
-        $webPath = $this->module_path('routes/web.php');
-
-        Route::middleware('api')
-            ->prefix('api')
-            ->group(function () use ($apiPath) {
-                require $apiPath;
-            });
-
-        Route::middleware('web')
-            ->group(function () use ($webPath) {
-                require $webPath;
-            });
-    }
-
-    private function loadViews(): void
-    {
         $this->loadViewsFrom(
-            $this->module_path('resources/views'),
+            module_path('Horizon', 'resources/views'),
             'horizon'
         );
+        $this->registerGates();
+        $this->registerMenus();
     }
 
     private function registerGates(): void
@@ -68,44 +44,28 @@ class HorizonServiceProvider extends ServiceProvider
 
     private function registerMenus(): void
     {
-        // Register mini-item in sidebar navigation
-        NavService::registerMiniItem('horizon', [
-            'icon' => 'fa-chart-area',
-            'tooltip' => 'Colas y trabajos',
-            'sidebar_id' => 'horizon',
-            'order' => 85,
-        ]);
 
         // Register sidebar group with submenu items
-        NavService::registerSidebar('horizon', [
-            'title' => 'Horizon - Monitoreo de colas',
+        NavService::registerSidebar('settings', [
+            'title' => 'Horizon',
             'items' => [
                 [
                     'label' => 'Dashboard',
                     'route' => 'settings.horizon.index',
-                    'icon' => 'fa-tachometer-alt',
                 ],
                 [
                     'label' => 'Trabajos activos',
                     'route' => 'settings.horizon.jobs',
-                    'icon' => 'fa-list',
                 ],
                 [
                     'label' => 'Trabajos fallidos',
                     'route' => 'settings.horizon.failed',
-                    'icon' => 'fa-exclamation-triangle',
                 ],
                 [
                     'label' => 'Métricas',
                     'route' => 'settings.horizon.metrics',
-                    'icon' => 'fa-chart-line',
                 ],
             ],
         ]);
-    }
-
-    private function module_path(string $path = ''): string
-    {
-        return __DIR__ . '/../../' . $path;
     }
 }

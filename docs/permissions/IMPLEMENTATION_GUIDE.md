@@ -47,7 +47,7 @@ A complete, production-ready Spatie Laravel Permission seeder for document manag
 
 **Individual execution:**
 ```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 **Full database seeding:**
@@ -150,7 +150,7 @@ $this->assignToRole('manager', [
 ### Step 3: Run the Seeder
 
 ```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 The seeder uses `findOrCreate()`, so it's safe to run multiple times.
@@ -279,14 +279,14 @@ php artisan cache:clear
 php artisan cache:clear
 
 # Re-run seeder
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
 ```
 
 ### "Access denied" in production
 ```bash
 # Make sure to migrate and seed in production
 php artisan migrate --env=production
-php artisan db:seed --class=Database\\Seeders\\Documents\\CreateDocumentPermissionsSeeder --env=production
+php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder --env=production
 ```
 
 ## Feature Checklist

@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class CreateDocumentPermissionsSeeder extends Seeder
+class DocumentPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.

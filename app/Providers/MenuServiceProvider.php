@@ -54,8 +54,7 @@ class MenuServiceProvider extends ServiceProvider
         NavService::registerSidebar('backups', [
             'title' => 'Configuración',
             'items' => [
-                ['label' => 'Principal', 'route' => 'manager.backups', 'icon' => 'fa-cog'],
-                ['label' => 'Módulos', 'route' => 'modules.index', 'icon' => 'fa-cube'],
+                ['label' => 'Principal', 'route' => 'manager.backups'],
                 ['label' => 'Categorías', 'route' => 'manager.backups.categories.index'],
                 ['label' => 'Búsqueda', 'route' => 'manager.backups.search.index'],
                 ['label' => 'Localización', 'route' => 'manager.backups.localization.index'],

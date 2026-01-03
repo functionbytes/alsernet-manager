@@ -3,6 +3,7 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\Document\Entities\DocumentSync;
 
 class DocumentSyncSeeder extends Seeder
 {
@@ -63,7 +64,7 @@ class DocumentSyncSeeder extends Seeder
         ];
 
         foreach ($syncs as $sync) {
-            \App\Models\Document\DocumentSync::firstOrCreate(
+            DocumentSync::firstOrCreate(
                 ['key' => $sync['key']],
                 $sync
             );

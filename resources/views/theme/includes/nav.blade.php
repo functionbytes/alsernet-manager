@@ -101,6 +101,9 @@
                                     @endphp
                                     <li class="sidebar-item">
                                         <a href="{{ route($item['route']) }}"
+                                           data-current-route="{{ $currentRouteName }}"
+                                           data-item-route="{{ $itemRoute }}"
+                                           data-is-active="{{ $isActive ? 'true' : 'false' }}"
                                            class="sidebar-link {{ $isActive ? 'active' : '' }}">
                                             @if(!empty($item['icon']))
                                                 <i class="fa {{ $item['icon'] }} me-2"></i>
@@ -202,12 +205,9 @@
                         return;
                     }
 
-                    // Comparar URLs de diferentes formas
+                    // Comparar URLs de manera exacta
                     const linkUrl = new URL(href, window.location.origin);
-                    const isActive =
-                        currentPath === linkUrl.pathname ||
-                        currentPath.startsWith(linkUrl.pathname + '/') ||
-                        currentUrl === href;
+                    const isActive = currentPath === linkUrl.pathname || currentUrl === href;
 
                     if (isActive) {
                         // Marcar este link como activo
