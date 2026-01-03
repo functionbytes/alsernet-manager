@@ -72,77 +72,10 @@
             @endif
 
             <!-- Order Details -->
-            <div class="card mb-3">
-                <div class="card-header p-3 bg-white border-bottom">
-                    <h5 class="mb-1 fw-bold">Detalle de la orden</h5>
-                    <p class="small mb-0 text-muted">Información de la orden y fechas</p>
-                </div>
-                <div class="card-body">
-                    <form id="formDocuments" enctype="multipart/form-data" role="form" onSubmit="return false">
-                        {{ csrf_field() }}
-                        <input type="hidden" id="uid" name="uid" value="{{ $document->uid }}">
-
-                        <div class="row g-3">
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Orden</label>
-                                <input type="text" class="form-control" value="{{$document->order_id}}" disabled>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Referencia</label>
-                                <input type="text" class="form-control" value="{{$document->order_reference}}" disabled>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Tipo</label>
-                                <input type="text" class="form-control" value="{{$documentTypeLabel}}" disabled>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Fecha de orden</label>
-                                <input type="text" class="form-control" value="{{ $document->order_date ? \Carbon\Carbon::parse($document->order_date)->format('d/m/Y H:i') : '' }}" disabled>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Fecha de confirmación</label>
-                                <input type="text" class="form-control" value="{{ $document->confirmed_at ? \Carbon\Carbon::parse($document->confirmed_at)->format('d/m/Y H:i') : '' }}" disabled>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <label class="form-label fw-semibold">Fecha de creación</label>
-                                <input type="text" class="form-control" value="{{ $document->created_at ? \Carbon\Carbon::parse($document->created_at)->format('d/m/Y H:i') : '' }}" disabled>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            @include('documents::documents.components.management.order-details')
 
             <!-- Customer Information -->
-            <div class="card mb-3">
-                <div class="card-header p-3 bg-white border-bottom">
-                    <h5 class="mb-1 fw-bold">Información del cliente</h5>
-                    <p class="small mb-0 text-muted">Datos de contacto del cliente</p>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-sm-12 col-md-6">
-                            <label class="form-label fw-semibold">Nombres</label>
-                            <input type="text" class="form-control" value="{{$document->customer_firstname}}" disabled>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <label class="form-label fw-semibold">Apellidos</label>
-                            <input type="text" class="form-control" value="{{$document->customer_lastname}}" disabled>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <label class="form-label fw-semibold">DNI/NIE/CIF</label>
-                            <input type="text" class="form-control" value="{{$document->customer_dni}}" disabled>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <label class="form-label fw-semibold">Correo electrónico</label>
-                            <input type="text" class="form-control" value="{{$document->customer_email}}" disabled>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <label class="form-label fw-semibold">Teléfono</label>
-                            <input type="text" class="form-control" value="{{$document->customer_cellphone}}" disabled>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('documents::documents.components.management.customer-information')
 
             <!-- Document Configuration (Permission-Controlled) -->
             @if(auth()->user()->canViewDocumentComponent('document-management'))
@@ -188,48 +121,6 @@
     </div>
 
 @endsection
-
-@push('styles')
-<style>
-    /* Variable Cards Styling */
-    .variable-card {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 8px 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 42px;
-        margin-bottom: 8px;
-    }
-
-    .variable-card:hover {
-        background: linear-gradient(135deg, #90bb13 0%, #7a9f10 100%);
-        border-color: #90bb13;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(144, 187, 19, 0.15);
-    }
-
-    .variable-card:hover .variable-code {
-        color: #ffffff;
-    }
-
-    .variable-code {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #495057;
-        background: transparent;
-        border: none;
-        padding: 0;
-        margin: 0;
-        text-align: center;
-        word-break: break-word;
-        transition: color 0.2s ease;
-    }
-</style>
-@endpush
 
 @push('scripts')
     <script>

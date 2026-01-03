@@ -1,0 +1,31 @@
+{{-- Component: Customer Information Card --}}
+<div class="card mb-3">
+    <div class="card-header p-3 bg-white border-bottom">
+        <h5 class="mb-1 fw-bold">Información del cliente</h5>
+        <p class="small mb-0 text-muted">Datos de contacto del cliente</p>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-12 col-md-6">
+                <label class="form-label fw-semibold">Nombres</label>
+                <input type="text" class="form-control" value="{{$document->customer_firstname}}" disabled>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label class="form-label fw-semibold">Apellidos</label>
+                <input type="text" class="form-control" value="{{$document->customer_lastname}}" disabled>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label class="form-label fw-semibold">DNI/NIE/CIF</label>
+                <input type="text" class="form-control" value="{{$document->customer_dni}}" disabled>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label class="form-label fw-semibold">Correo electrónico</label>
+                <input type="text" class="form-control" value="{{$document->customer_email}}" disabled>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label class="form-label fw-semibold">Teléfono</label>
+                <input type="text" class="form-control" value="{{$document->customer_cellphone}}" disabled>
+            </div>
+        </div>
+    </div>
+</div>
