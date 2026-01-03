@@ -653,7 +653,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="ti ti-loader ti-spin me-2"></i> Recalculando...');
 
         $.ajax({
-            url: '{{ route("backups.documents.backups.recalculate-sla") }}',
+            url: '{{ route("settings.documents.settings.update") }}',
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}'

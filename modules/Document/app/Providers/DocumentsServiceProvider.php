@@ -205,7 +205,7 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Documentos
+        // Mini-nav item para Documentos (operaciones)
         NavService::registerMiniItem('documents', [
             'icon' => 'fa-file-pdf',
             'tooltip' => 'Documentos',
@@ -213,26 +213,19 @@ class DocumentsServiceProvider extends ServiceProvider
             'order' => 20,
         ]);
 
-        // Sidebar local - Documentos (operaciones + configuración)
+        // Sidebar local - Documentos (operaciones)
         NavService::registerSidebar('documents', [
             'title' => 'Documentos',
             'items' => [
                 ['label' => 'Listado de documentos', 'route' => 'documents.index'],
-                ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
-                ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
-                ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
-                ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],
-                ['label' => 'Grupos de validadores', 'route' => 'settings.documents.groups.index'],
-                ['label' => 'Bloqueos de productos', 'route' => 'settings.documents.blockades.index'],
-                ['label' => 'Acciones de email por etapa', 'route' => 'settings.documents.stage-email-actions.index'],
             ],
         ]);
 
-        // Sidebar global - Settings (también registra configuraciones de documentos)
+        // Agregar configuraciones de documentos al sidebar genérico 'settings'
         NavService::registerSidebar('settings', [
-            'title' => 'Documentos',
+            'title' => 'Configuraciones',
             'items' => [
-                ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
+                ['label' => 'Configuración global (Documentos)', 'route' => 'settings.documents.configurations.global'],
                 ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
                 ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
                 ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],

@@ -43,6 +43,7 @@ class NavService
 
     /**
      * Registrar items en un sidebar (menú desplegable)
+     * Si el sidebar ya existe, lo sobrescribe
      */
     public static function registerSidebar(string $sidebarId, array $config): void
     {
@@ -55,7 +56,35 @@ class NavService
             throw new \InvalidArgumentException("Sidebar '{$sidebarId}' must have 'title' and 'items'");
         }
 
-        self::$menus['sidebar'][$sidebarId] = $config;
+        // Si ya existe, agregar items al existente en lugar de sobrescribir
+        if (isset(self::$menus['sidebar'][$sidebarId])) {
+            self::$menus['sidebar'][$sidebarId]['items'] = array_merge(
+                self::$menus['sidebar'][$sidebarId]['items'],
+                $config['items']
+            );
+        } else {
+            self::$menus['sidebar'][$sidebarId] = $config;
+        }
+    }
+
+    /**
+     * Agregar items a un sidebar existente
+     * Útil cuando múltiples módulos quieren contribuir items al mismo sidebar
+     */
+    public static function addSidebarItems(string $sidebarId, array $items): void
+    {
+        if (! isset(self::$menus['sidebar'])) {
+            self::$menus['sidebar'] = [];
+        }
+
+        if (! isset(self::$menus['sidebar'][$sidebarId])) {
+            throw new \InvalidArgumentException("Sidebar '{$sidebarId}' does not exist. Register it first with registerSidebar().");
+        }
+
+        self::$menus['sidebar'][$sidebarId]['items'] = array_merge(
+            self::$menus['sidebar'][$sidebarId]['items'],
+            $items
+        );
     }
 
     /**

@@ -26,7 +26,7 @@
                     <small class="text-muted d-block mb-3">Selecciona cómo se evaluará esta condición en los documentos</small>
 
                     <div class="row g-3">
-                        @foreach(\App\Models\Document\DocumentValidationCondition::AVAILABLE_TYPES as $typeKey => $typeLabel)
+                        @foreach($availableTypes as $typeKey => $typeLabel)
                             <div class="col-md-4">
                                 <div class="card mb-0 condition-type-card {{ old('condition_type', $condition->condition_type) == $typeKey ? 'active' : '' }}"
                                      data-type="{{ $typeKey }}">

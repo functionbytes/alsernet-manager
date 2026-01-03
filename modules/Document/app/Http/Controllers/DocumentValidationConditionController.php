@@ -52,9 +52,11 @@ class DocumentValidationConditionController extends Controller
     public function create()
     {
         $validSaleTypes = DocumentType::getValidBlockadeTypes();
+        $availableTypes = DocumentValidationCondition::AVAILABLE_TYPES;
 
         return view('documents::settings.conditions.create', [
             'validSaleTypes' => $validSaleTypes,
+            'availableTypes' => $availableTypes,
         ]);
     }
 
@@ -141,10 +143,12 @@ class DocumentValidationConditionController extends Controller
             ->firstOrFail();
 
         $validSaleTypes = DocumentType::getValidBlockadeTypes();
+        $availableTypes = DocumentValidationCondition::AVAILABLE_TYPES;
 
         return view('documents::settings.conditions.edit', [
             'condition' => $validationCondition,
             'validSaleTypes' => $validSaleTypes,
+            'availableTypes' => $availableTypes,
         ]);
     }
 

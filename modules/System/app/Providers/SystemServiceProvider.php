@@ -44,20 +44,20 @@ class SystemServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para System
-        NavService::registerMiniItem('system', [
-            'icon' => 'fa-cogs',
-            'tooltip' => 'Sistema',
-            'sidebar_id' => 'system',
-            'order' => 110,
+        // Mini-nav item para Settings (configuraciones)
+        NavService::registerMiniItem('settings', [
+            'icon' => 'fa-sliders',
+            'tooltip' => 'Configuraciones',
+            'sidebar_id' => 'settings',
+            'order' => 100,
         ]);
 
-        // Sidebar con los items del módulo
-        NavService::registerSidebar('system', [
-            'title' => 'Sistema',
+        // Agregar configuraciones de sistema al sidebar genérico 'settings'
+        NavService::registerSidebar('settings', [
+            'title' => 'Configuraciones',
             'items' => [
-                ['label' => 'Configuración', 'route' => 'settings.system.index'],
-                ['label' => 'Información', 'route' => 'settings.system.info.index'],
+                ['label' => 'Configuración (Sistema)', 'route' => 'settings.system.index'],
+                ['label' => 'Información del sistema', 'route' => 'settings.system.info.index'],
                 ['label' => 'Cache y mantenimiento', 'route' => 'settings.system.cache.index'],
                 ['label' => 'Supervisor', 'route' => 'settings.system.supervisor.index'],
                 ['label' => 'Logs del servidor', 'route' => 'settings.system.access.index'],

@@ -25,34 +25,18 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapWebRoutes(): void
     {
-        // Operational document routes
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('documents')
-            ->name('documents.')
-            ->group(module_path($this->name, 'routes/web.php'));
-
-        // Settings VIEW routes (GET only) + API routes (POST, PUT, DELETE)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings/documents')
-            ->name('settings.documents.')
-            ->group(function () {
-                // Load configuration routes (GET)
-                require module_path($this->name, 'routes/settings.php');
-
-            });
-
-        // Administrative routes
-        Route::middleware(['web', 'auth', 'role:administrative|super-admin'])
-            ->prefix('administrative')
-            ->name('administrative.')
-            ->group(module_path($this->name, 'routes/administratives.php'));
+        // Web routes (operational and configuration)
+        // Middleware, prefix, and name are applied within the route file
+        require module_path($this->name, 'routes/web.php');
     }
 
     protected function mapApiRoutes(): void
     {
         Route::middleware(['api', 'throttle:60,1'])
             ->prefix('api/documents')
-            ->name('api.')
-            ->group(module_path($this->name, 'routes/api.php'));
+            ->name('api.documents.')
+            ->group(function () {
+                require module_path($this->name, 'routes/api.php');
+            });
     }
 }

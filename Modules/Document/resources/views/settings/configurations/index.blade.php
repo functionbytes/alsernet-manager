@@ -34,7 +34,7 @@
 
 
 
-                <form action="{{ route('settings.documents.configurations.update') }}"
+                <form action="{{ route('settings.documents.configurations') }}"
                       method="POST" class="needs-validation" novalidate>
                     @csrf
 
@@ -380,7 +380,7 @@
         allowClear: true,
         width: '100%',
         ajax: {
-            url: '{{ route("backups.documents.configurations.search-templates") }}',
+            url: '{{ route("settings.documents.configurations.search-templates") }}',
             dataType: 'json',
             delay: 250,
             headers: {
