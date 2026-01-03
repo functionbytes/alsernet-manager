@@ -90,25 +90,11 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Document operational routes (day-to-day document management)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('documents')
-            ->name('documents.')
-            ->group(function () {
-                require module_path($this->name, 'routes/web.php');
-            });
-
-        // Document configuration routes (system settings)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings/documents')
-            ->name('settings.documents.')
-            ->group(function () {
-                require module_path($this->name, 'routes/settings.php');
-
-            });
+        // Web routes (operational and configuration) - middleware/prefix/name applied within the file
+        require module_path($this->name, 'routes/web.php');
 
         // Public API routes
-        Route::middleware(['api'])
+        Route::middleware(['api', 'throttle:60,1'])
             ->prefix('api/documents')
             ->name('api.documents.')
             ->group(function () {
@@ -227,7 +213,7 @@ class DocumentsServiceProvider extends ServiceProvider
             'order' => 20,
         ]);
 
-        // Sidebar con los items del módulo
+        // Sidebar local - Documentos (operaciones + configuración)
         NavService::registerSidebar('documents', [
             'title' => 'Documentos',
             'items' => [
@@ -237,7 +223,20 @@ class DocumentsServiceProvider extends ServiceProvider
                 ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
                 ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],
                 ['label' => 'Grupos de validadores', 'route' => 'settings.documents.groups.index'],
-                ['label' => 'Configuración de documentos', 'route' => 'settings.documents.settings.index'],
+                ['label' => 'Bloqueos de productos', 'route' => 'settings.documents.blockades.index'],
+                ['label' => 'Acciones de email por etapa', 'route' => 'settings.documents.stage-email-actions.index'],
+            ],
+        ]);
+
+        // Sidebar global - Settings (también registra configuraciones de documentos)
+        NavService::registerSidebar('settings', [
+            'title' => 'Documentos',
+            'items' => [
+                ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
+                ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
+                ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
+                ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],
+                ['label' => 'Grupos de validadores', 'route' => 'settings.documents.groups.index'],
                 ['label' => 'Bloqueos de productos', 'route' => 'settings.documents.blockades.index'],
                 ['label' => 'Acciones de email por etapa', 'route' => 'settings.documents.stage-email-actions.index'],
             ],
