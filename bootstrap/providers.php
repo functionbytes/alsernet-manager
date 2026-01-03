@@ -26,7 +26,6 @@ return [
     Modules\Event\Providers\EventServiceProvider::class,
     Modules\Health\Providers\HealthServiceProvider::class,
     Modules\System\Providers\SystemServiceProvider::class,
-    Modules\Telescope\Providers\TelescopeServiceProvider::class,
 
     // Disabled modules - comment out to prevent loading issues
     // Modules\Analytics\Providers\AnalyticsServiceProvider::class,
@@ -34,8 +33,8 @@ return [
     // Modules\Erp\Providers\ErpServiceProvider::class,
     // Modules\Subscriber\Providers\SubscriberServiceProvider::class,
     // Modules\Supplier\Providers\SupplierServiceProvider::class,
-    // modules\Campaign\Providers\CampaignServiceProvider::class,
-    // modules\Returns\Providers\ReturnsServiceProvider::class,
-    // modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
-    // modules\Faq\Providers\FaqServiceProvider::class,
+    // Modules\Campaign\Providers\CampaignServiceProvider::class,
+    // Modules\Returns\Providers\ReturnsServiceProvider::class,
+    // Modules\Helpdesk\Providers\HelpdeskServiceProvider::class,
+    // Modules\Faq\Providers\FaqServiceProvider::class,
 ];

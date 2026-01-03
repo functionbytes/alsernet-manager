@@ -70,23 +70,4 @@ class NotificationSettingsController extends BaseManagerController
 
         return $this->success('Configuración actualizada correctamente');
     }
-
-    protected function updateEnvFile(array $data): void
-    {
-        $envFile = base_path('.env');
-        $envContent = file_get_contents($envFile);
-
-        foreach ($data as $key => $value) {
-            $pattern = "/^{$key}=.*/m";
-            $replacement = "{$key}={$value}";
-
-            if (preg_match($pattern, $envContent)) {
-                $envContent = preg_replace($pattern, $replacement, $envContent);
-            } else {
-                $envContent .= "\n{$replacement}";
-            }
-        }
-
-        file_put_contents($envFile, $envContent);
-    }
 }
