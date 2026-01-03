@@ -10,10 +10,24 @@
     $currentRoute = request()->route()?->getName() ?? '';
 
     foreach ($allSidebars as $sidebarId => $sidebar) {
-        foreach ($sidebar['items'] as $item) {
-            if (request()->routeIs($item['route'] . '*')) {
-                $activeSidebarId = $sidebarId;
-                break 2;
+        // Soportar ambas estructuras: sections (nueva) e items (legacy)
+        if (isset($sidebar['sections'])) {
+            // Nueva estructura con múltiples secciones
+            foreach ($sidebar['sections'] as $section) {
+                foreach ($section['items'] ?? [] as $item) {
+                    if (request()->routeIs($item['route'] . '*')) {
+                        $activeSidebarId = $sidebarId;
+                        break 3;
+                    }
+                }
+            }
+        } else {
+            // Estructura legacy con items directos
+            foreach ($sidebar['items'] ?? [] as $item) {
+                if (request()->routeIs($item['route'] . '*')) {
+                    $activeSidebarId = $sidebarId;
+                    break 2;
+                }
             }
         }
     }
