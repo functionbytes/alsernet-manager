@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentRequirement;
 use Modules\Document\Entities\DocumentRequirementLang;
 use Modules\Document\Entities\DocumentType;
+use Modules\Document\Entities\DocumentTypeValidationStage;
 use Modules\Document\Entities\DocumentValidationCondition;
 use Modules\Document\Entities\DocumentValidatorGroup;
 
@@ -68,7 +69,7 @@ class DocumentTypeController extends Controller
             'sort_order' => 'nullable|integer|min:0',
             'sla_multiplier' => 'nullable|numeric|min:0|max:100',
             'validation_stages' => 'nullable|array',
-            'validation_stages.*.key' => 'required|string|exists:validator_groups,key',
+            'validation_stages.*.key' => 'required|string|exists:document_validator_groups,key',
             'validation_stages.*.order' => 'required|integer|min:1',
             'validation_stages.*.conditions' => 'nullable|array',
             'validation_stages.*.conditions.*' => 'nullable|boolean',
@@ -99,8 +100,20 @@ class DocumentTypeController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
                 'sort_order' => $validated['sort_order'] ?? 0,
                 'sla_multiplier' => $validated['sla_multiplier'] ?? 1.0,
-                'validation_stages' => $validated['validation_stages'] ?? null,
             ]);
+
+            // Create validation stages in relational table
+            if (isset($validated['validation_stages']) && is_array($validated['validation_stages'])) {
+                foreach ($validated['validation_stages'] as $stageData) {
+                    DocumentTypeValidationStage::create([
+                        'document_type_id' => $documentType->id,
+                        'key' => $stageData['key'],
+                        'order' => $stageData['order'],
+                        'conditions' => $stageData['conditions'] ?? null,
+                        'is_active' => true,
+                    ]);
+                }
+            }
 
             // Create requirements if any
             if (isset($validated['requirements']) && is_array($validated['requirements'])) {
@@ -135,7 +148,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('settings.documents.types')
+                ->route('settings.documents.types.index')
                 ->with('success', "Tipo de documento '{$validated['slug']}' creado exitosamente. Recuerde agregar las traducciones en resources/lang/{locale}/documents.php");
         } catch (\Exception $e) {
             DB::rollBack();
@@ -160,7 +173,7 @@ class DocumentTypeController extends Controller
         // Support both slug and uid
         $type = DocumentType::where('slug', $documentType)
             ->orWhere('uid', $documentType)
-            ->with(['requirements.langs'])
+            ->with(['requirements.langs', 'validationStages'])
             ->firstOrFail();
 
         $langs = Lang::all();
@@ -198,7 +211,7 @@ class DocumentTypeController extends Controller
             'sort_order' => 'nullable|integer|min:0',
             'sla_multiplier' => 'nullable|numeric|min:0|max:100',
             'validation_stages' => 'nullable|array',
-            'validation_stages.*.key' => 'required|string|exists:validator_groups,key',
+            'validation_stages.*.key' => 'required|string|exists:document_validator_groups,key',
             'validation_stages.*.order' => 'required|integer|min:1',
             'validation_stages.*.conditions' => 'nullable|array',
             'validation_stages.*.conditions.*' => 'nullable|boolean',
@@ -230,8 +243,24 @@ class DocumentTypeController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
                 'sort_order' => $validated['sort_order'] ?? 0,
                 'sla_multiplier' => $validated['sla_multiplier'] ?? 1.0,
-                'validation_stages' => $validated['validation_stages'] ?? null,
             ]);
+
+            // Update validation stages in relational table
+            if (isset($validated['validation_stages']) && is_array($validated['validation_stages'])) {
+                // Delete old stages
+                $type->validationStages()->delete();
+
+                // Create new stages
+                foreach ($validated['validation_stages'] as $stageData) {
+                    DocumentTypeValidationStage::create([
+                        'document_type_id' => $type->id,
+                        'key' => $stageData['key'],
+                        'order' => $stageData['order'],
+                        'conditions' => $stageData['conditions'] ?? null,
+                        'is_active' => true,
+                    ]);
+                }
+            }
 
             // Get existing requirement IDs
             $existingRequirementIds = $type->requirements->pluck('id')->toArray();
@@ -295,7 +324,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('settings.documents.types')
+                ->route('settings.documents.types.index')
                 ->with('success', 'Tipo de documento actualizado exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -334,7 +363,7 @@ class DocumentTypeController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('settings.documents.types')
+                ->route('settings.documents.types.index')
                 ->with('success', 'Tipo de documento eliminado exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();

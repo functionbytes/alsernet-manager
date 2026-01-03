@@ -8,13 +8,10 @@ use Spatie\Permission\Models\Role;
 
 class DocumentPermissionsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Reset cached roles and permissions
-        app([\Spatie\Permission\PermissionRegistrar::class])->forgetCachedPermissions();
+
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         $permissions = $this->definePermissions();
         $this->createPermissionsFor($permissions);
@@ -59,9 +56,6 @@ class DocumentPermissionsSeeder extends Seeder
         $this->command->line('Created '.count($permissions).' permissions');
     }
 
-    /**
-     * Assign permissions to document-related roles.
-     */
     private function assignPermissionsToRoles(): void
     {
         $this->assignToRole('super-admin', ['documents.*', 'document_types.*', 'document_settings.*']);
@@ -87,9 +81,6 @@ class DocumentPermissionsSeeder extends Seeder
         ]);
     }
 
-    /**
-     * Helper method to assign permissions to a role.
-     */
     private function assignToRole(string $roleName, array $permissions): void
     {
         $role = Role::findOrCreate($roleName, 'web');

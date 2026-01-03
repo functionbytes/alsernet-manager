@@ -232,5 +232,5 @@
 @endpush
 
 {{-- MODALES DE WORKFLOW --}}
-@include('documents::modals.approve-stage')
-@include('documents::modals.reject-stage')
+@include('documents::documents.components.validation.modals.approve-stage')
+@include('documents::documents.components.validation.modals.reject-stage')

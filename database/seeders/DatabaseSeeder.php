@@ -8,18 +8,24 @@ use Database\Seeders\Core\LangSeeder;
 use Database\Seeders\Core\MailVariableSeeder;
 use Database\Seeders\Core\MediaFolderSeeder;
 use Illuminate\Database\Seeder;
-use Modules\Document\Database\Seeders\DocumentPermissionsSeeder;
 use Modules\Document\Database\Seeders\DocumentConfigurationSeeder;
+use Modules\Document\Database\Seeders\DocumentConfigurationTemplatesSeeder;
+use Modules\Document\Database\Seeders\DocumentEmailTemplateSeeder;
 use Modules\Document\Database\Seeders\DocumentGroupSeeder;
 use Modules\Document\Database\Seeders\DocumentLoadSeeder;
+use Modules\Document\Database\Seeders\DocumentPermissionsSeeder;
+use Modules\Document\Database\Seeders\DocumentSLAPoliciesSeeder;
 use Modules\Document\Database\Seeders\DocumentSourceSeeder;
+use Modules\Document\Database\Seeders\DocumentStageEmailActionSeeder;
 use Modules\Document\Database\Seeders\DocumentStatusSeeder;
 use Modules\Document\Database\Seeders\DocumentStatusTransitionSeeder;
 use Modules\Document\Database\Seeders\DocumentSyncSeeder;
+use Modules\Document\Database\Seeders\DocumentTypeSeeder;
 use Modules\Document\Database\Seeders\DocumentUploadTypeSeeder;
+use Modules\Document\Database\Seeders\DocumentValidationConditionSeeder;
 use Modules\Document\Database\Seeders\DocumentValidatorGroupConfigurationSeeder;
 use Modules\Document\Database\Seeders\DocumentValidatorGroupSeeder;
-use Modules\Document\Database\Seeders\DocumentStageEmailActionSeeder;
+use Modules\Document\Database\Seeders\DocumentValidatorGroupUserSeeder;
 use Modules\Helpdesk\Database\Seeders\HelpCenterSeeder;
 use Modules\Helpdesk\Database\Seeders\HelpdeskCannedReplySeeder;
 use Modules\Helpdesk\Database\Seeders\HelpdeskConversationStatusSeeder;
@@ -118,15 +124,20 @@ class DatabaseSeeder extends Seeder
             DocumentSourceSeeder::class,
             DocumentLoadSeeder::class,
             DocumentSyncSeeder::class,
+            DocumentTypeSeeder::class,
 
             // Document Groups & Transitions (depends on DocumentStatusSeeder)
             DocumentGroupSeeder::class,
             DocumentStatusTransitionSeeder::class,
 
-            // Document Validation (depends on DocumentStatusSeeder)
+            // Document Validation & Configuration (depends on DocumentStatusSeeder and DocumentTypeSeeder)
+            DocumentValidationConditionSeeder::class,
+            DocumentSLAPoliciesSeeder::class,
             DocumentValidatorGroupSeeder::class,
             DocumentValidatorGroupConfigurationSeeder::class,
             DocumentStageEmailActionSeeder::class,
+            DocumentEmailTemplateSeeder::class,
+            DocumentConfigurationTemplatesSeeder::class,
 
             // ========================================
             // PHASE 4: RETURN SYSTEM
@@ -159,6 +170,7 @@ class DatabaseSeeder extends Seeder
             // ========================================
             DocumentPermissionsSeeder::class,
             RolesAndUsersSeeder::class,
+            DocumentValidatorGroupUserSeeder::class,
 
             // ========================================
             // PHASE 8: OPTIONAL FEATURES

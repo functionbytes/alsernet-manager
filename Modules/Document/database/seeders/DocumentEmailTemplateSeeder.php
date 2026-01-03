@@ -2,44 +2,48 @@
 
 namespace Modules\Document\Database\Seeders;
 
-use App\Models\Lang;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use Modules\Document\Entities\DocumentLang;
 use Modules\Campaign\Models\Layout\Layout;
 use Modules\Mailer\Models\MailerTemplate;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DocumentEmailTemplateSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // Get all available languages for translations
-        $langs = Lang::all();
-
-        if ($langs->isEmpty()) {
-            $this->command->warn('No language found in database. Please create at least one language first.');
-
+        try {
+            $langs = DocumentLang::all();
+        } catch (\Exception $e) {
+            $this->command->warn('⚠️ DocumentLang table not found. Skipping email template seeding.');
             return;
         }
 
-        // Get email layout wrapper
-        $layoutWrapper = Layout::where('alias', 'email_template_wrapper')->first();
+        if ($langs->isEmpty()) {
+            $this->command->warn('⚠️ No language found in database. Skipping email template seeding.');
+            return;
+        }
 
-        // Email templates for documents
+        $layoutWrapper = null;
+        try {
+            $layoutWrapper = Layout::where('alias', 'email_template_wrapper')->first();
+        } catch (\Exception $e) {
+            $this->command->info('⚠️ Layout table not found or not available.');
+        }
+
         $templates = [
             [
                 'key' => 'document_initial_request',
-                'name' => 'Solicitud de Documentación',
-                'subject' => 'Solicitud de Documentación - pedido {ORDER_REFERENCE}',
+                'name' => 'Solicitud de documentación',
+                'subject' => 'Solicitud de documentación - pedido {ORDER_REFERENCE}',
                 'content' => $this->getInitialRequestContent(),
                 'description' => 'Email enviado cuando se solicita documentación al cliente',
             ],
             [
                 'key' => 'document_missing_documents',
-                'name' => 'Documentación Faltante',
-                'subject' => 'Documentación Faltante - pedido {ORDER_REFERENCE}',
+                'name' => 'Documentación faltante',
+                'subject' => 'Documentación faltante - pedido {ORDER_REFERENCE}',
                 'content' => $this->getMissingDocumentsContent(),
                 'description' => 'Email enviado cuando se solicitan documentos específicos faltantes',
             ],
@@ -52,36 +56,39 @@ class DocumentEmailTemplateSeeder extends Seeder
             ],
             [
                 'key' => 'document_approved',
-                'name' => 'Documentos Aprobados',
-                'subject' => 'Documentos Aprobados - pedido {ORDER_REFERENCE}',
+                'name' => 'Documentos aprobados',
+                'subject' => 'Documentos aprobados - pedido {ORDER_REFERENCE}',
                 'content' => $this->getApprovedContent(),
                 'description' => 'Email enviado cuando los documentos son aprobados',
             ],
             [
                 'key' => 'document_rejected',
-                'name' => 'Documentos Rechazados',
-                'subject' => 'Documentos Rechazados - Acción Requerida - pedido {ORDER_REFERENCE}',
+                'name' => 'Documentos rechazados',
+                'subject' => 'Documentos rechazados - acción requerida - pedido {ORDER_REFERENCE}',
                 'content' => $this->getRejectedContent(),
                 'description' => 'Email enviado cuando los documentos son rechazados',
             ],
             [
                 'key' => 'document_completed',
-                'name' => 'Documentación Completa',
-                'subject' => 'Documentación Completa - pedido {ORDER_REFERENCE}',
+                'name' => 'Documentación completa',
+                'subject' => 'Documentación completa - pedido {ORDER_REFERENCE}',
                 'content' => $this->getCompletedContent(),
                 'description' => 'Email enviado cuando la documentación está completa',
             ],
             [
                 'key' => 'document_custom_email',
-                'name' => 'Correo Personalizado',
+                'name' => 'Correo personalizado',
                 'subject' => '{EMAIL_SUBJECT}',
                 'content' => $this->getCustomEmailContent(),
                 'description' => 'Plantilla para enviar correos personalizados al cliente',
             ],
         ];
 
+        $createdCount = 0;
+        $updatedCount = 0;
+
         foreach ($templates as $template) {
-            // Create or get the EmailTemplate (without language-specific data)
+            // Use firstOrCreate to avoid duplicates
             $emailTemplate = MailerTemplate::firstOrCreate(
                 [
                     'key' => $template['key'],
@@ -97,7 +104,14 @@ class DocumentEmailTemplateSeeder extends Seeder
                 ]
             );
 
-            // Create translations for each language
+            $isNew = $emailTemplate->wasRecentlyCreated;
+            if ($isNew) {
+                $createdCount++;
+            } else {
+                $updatedCount++;
+            }
+
+            // Update translations
             foreach ($langs as $lang) {
                 $emailTemplate->translations()->updateOrCreate(
                     [
@@ -112,7 +126,8 @@ class DocumentEmailTemplateSeeder extends Seeder
             }
         }
 
-        $this->command->info('✓ Document email templates created successfully');
+        $this->command->info("✓ Document email templates: {$createdCount} created, {$updatedCount} already exist");
+        $this->command->comment('  Use DocumentConfigurationTemplatesSeeder to link templates to settings');
     }
 
     private function getInitialRequestContent(): string

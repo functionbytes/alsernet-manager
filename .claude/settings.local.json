@@ -379,7 +379,15 @@
       "Bash(continue grep -q registerMenus modules/$module/app/Providers/*ServiceProvider.php)",
       "Bash(__NEW_LINE__ echo \"=== Running Document Module Seeders ===\")",
       "Bash(__NEW_LINE__ for seeder in \"CreateDocumentPermissionsSeeder\" \"DocumentTypeSeeder\" \"DocumentStatusSeeder\" \"DocumentStatusTransitionSeeder\" \"DocumentSourceSeeder\" \"DocumentGroupSeeder\" \"DocumentUploadTypeSeeder\" \"DocumentSettingsSeeder\" \"DocumentConfigurationSeeder\")",
-      "Bash(do echo \"Running $seeder...\" php artisan db:seed --class=\"Modules\\\\Document\\\\Database\\\\Seeders$seeder\")"
+      "Bash(do echo \"Running $seeder...\" php artisan db:seed --class=\"Modules\\\\Document\\\\Database\\\\Seeders$seeder\")",
+      "Bash(app/Console/Commands/MigrateRequestDocumentProducts.php )",
+      "Bash(config/database.php )",
+      "Bash(.env)",
+      "Bash(config/database.php)",
+      "Bash(modules/Document/app/Commands/MigrateRequestDocumentProducts.php )",
+      "Bash(modules/Document/app/Providers/DocumentsServiceProvider.php)",
+      "Bash(modules/Document/resources/views/settings/configurations/index.blade.php)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

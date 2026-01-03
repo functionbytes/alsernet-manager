@@ -4,6 +4,7 @@ namespace Modules\Document\Traits;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentValidationHistory;
@@ -471,12 +472,12 @@ trait HasValidationWorkflow
     }
 
     /**
-     * Polymorphic relationship to validation history.
+     * Relationship to validation history.
      * Auto-implemented by trait.
      */
-    public function validationHistory()
+    public function validationHistory(): HasMany
     {
-        return $this->morphMany(DocumentValidationHistory::class, 'validatable');
+        return $this->hasMany(DocumentValidationHistory::class, 'document_id');
     }
 
     /**

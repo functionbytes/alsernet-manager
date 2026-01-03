@@ -40,13 +40,19 @@ class DocumentsController extends Controller
         $dateTo = $request->get('date_to');
         $perPage = paginationNumber();
 
-        $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
+        $query = Document::filterListing($search, null, $dateFrom, $dateTo)
             ->when($statusId, fn ($q) => $q->where('status_id', $statusId))
-            ->when($loadId, fn ($q) => $q->where('load_id', $loadId))
-            // FILTROS DE VALIDACIÓN: Solo documentos asignados al grupo del usuario y en validación
-            ->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
-            ->whereIn('validation_status', ['pending', 'in_validation'])
-            ->paginate($perPage);
+            ->when($loadId, fn ($q) => $q->where('load_id', $loadId));
+
+        // FILTROS DE VALIDACIÓN: Solo aplicar restricciones si NO es super-admin
+        if (! auth()->user()->hasRole('super-admin')) {
+            $query = $query->where(function ($q) {
+                $q->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
+                    ->orWhereNull('current_validator_group');
+            })->whereIn('validation_status', ['pending', 'in_validation']);
+        }
+
+        $documents = $query->paginate($perPage);
 
         // Get statuses and loads for filters
         $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();
@@ -79,12 +85,19 @@ class DocumentsController extends Controller
         $pendingStatus = DocumentStatus::where('key', 'pending')->first();
 
         // Filter only documents with pending status
-        $documents = Document::filterListing($search, null, $dateFrom, $dateTo)
-            ->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
-            ->whereIn('validation_status', ['pending', 'in_validation'])
+        $query = Document::filterListing($search, null, $dateFrom, $dateTo)
             ->where('status_id', $pendingStatus?->id)
-            ->when($loadId, fn ($q) => $q->where('load_id', $loadId))
-            ->paginate($perPage);
+            ->when($loadId, fn ($q) => $q->where('load_id', $loadId));
+
+        // FILTROS DE VALIDACIÓN: Solo aplicar restricciones si NO es super-admin
+        if (! auth()->user()->hasRole('super-admin')) {
+            $query = $query->where(function ($q) {
+                $q->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
+                    ->orWhereNull('current_validator_group');
+            })->whereIn('validation_status', ['pending', 'in_validation']);
+        }
+
+        $documents = $query->paginate($perPage);
 
         // Get statuses and loads for filters
         $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();

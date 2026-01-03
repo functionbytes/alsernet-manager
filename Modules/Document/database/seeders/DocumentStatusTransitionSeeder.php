@@ -8,12 +8,8 @@ use Modules\Document\Entities\DocumentStatusTransition;
 
 class DocumentStatusTransitionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Define valid transitions
         $transitions = [
             // From PENDING
             ['from' => 'pending', 'to' => 'incomplete', 'permission' => null],
@@ -37,10 +33,6 @@ class DocumentStatusTransitionSeeder extends Seeder
             // From REJECTED
             ['from' => 'rejected', 'to' => 'awaiting_documents', 'permission' => null],
             ['from' => 'rejected', 'to' => 'cancelled', 'permission' => null],
-
-            // From COMPLETED (final state - no transitions)
-
-            // From CANCELLED (final state - no transitions)
         ];
 
         foreach ($transitions as $transition) {
@@ -61,5 +53,7 @@ class DocumentStatusTransitionSeeder extends Seeder
                 );
             }
         }
+
+        $this->command->info('✅ Document status transitions seeded successfully');
     }
 }

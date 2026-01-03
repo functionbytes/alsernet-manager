@@ -249,14 +249,14 @@
 
                                                             <div class="card-body">
                                                                 <div class="row g-3">
-                                                                    <div class="col-md-12 col-sm-12">
-                                                                        <div class="mb-3">
+                                                                    <div class="col-md-12 col-sm-12 mt-0">
+                                                                        <div class="mb-0">
                                                                             <label class="control-label col-form-label">Orden</label>
                                                                             <input type="number" class="form-control stage-order" name="stage_order_@{{KEY}}" value="1" min="1" placeholder="1">
                                                                             <small class="form-text text-muted">Menor número = mayor prioridad</small>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-12">
+                                                                    <div class="col-md-12 mt-0">
                                                                         <label class="control-label col-form-label">Condiciones de ejecución</label>
                                                                         @{{CONDITIONS_SELECT}}
                                                                     </div>

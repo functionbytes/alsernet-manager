@@ -40,6 +40,11 @@ class DocumentType extends Model
         return $this->hasMany(DocumentRequirement::class)->orderBy('sort_order');
     }
 
+    public function validationStages(): HasMany
+    {
+        return $this->hasMany(DocumentTypeValidationStage::class)->orderBy('order');
+    }
+
     public function getTranslationsList()
     {
         $langs = DocumentLang::all();
@@ -132,58 +137,87 @@ class DocumentType extends Model
 
     public function getValidationStages(): array
     {
-        if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
-            return ['documentacion']; // Default fallback
+        // Get from relational table first (new format)
+        $stages = $this->validationStages()
+            ->active()
+            ->ordered()
+            ->pluck('key')
+            ->toArray();
+
+        // Fallback for legacy data
+        if (empty($stages)) {
+            if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
+                return ['documentacion']; // Default fallback
+            }
+
+            // Check if it's the old JSON format
+            if (isset($this->validation_stages[0]) && is_array($this->validation_stages[0]) && isset($this->validation_stages[0]['key'])) {
+                // New JSON format: sort by order and extract keys
+                $stages = collect($this->validation_stages)
+                    ->sortBy('order')
+                    ->pluck('key')
+                    ->values()
+                    ->toArray();
+            } else {
+                // Old format: simple array of keys
+                $stages = $this->validation_stages;
+            }
         }
 
-        // Check if it's the new format (array of objects with 'key' property)
-        if (isset($this->validation_stages[0]) && is_array($this->validation_stages[0]) && isset($this->validation_stages[0]['key'])) {
-            // New format: sort by order and extract keys
-            $stages = collect($this->validation_stages)
-                ->sortBy('order')
-                ->pluck('key')
-                ->values()
-                ->toArray();
-
-            return $stages;
-        }
-
-        // Old format: simple array of keys
-        return $this->validation_stages;
+        return $stages;
     }
 
     public function getValidationStagesWithConditions(): array
     {
-        if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
-            return [
-                [
-                    'key' => 'documentacion',
-                    'order' => 1,
-                    'conditions' => [],
-                ],
-            ];
-        }
-
-        // Check if it's the new format
-        if (isset($this->validation_stages[0]) && is_array($this->validation_stages[0]) && isset($this->validation_stages[0]['key'])) {
-            // New format: sort by order
-            return collect($this->validation_stages)
-                ->sortBy('order')
-                ->values()
-                ->toArray();
-        }
-
-        // Old format: convert to new format
-        return collect($this->validation_stages)
-            ->map(function ($key, $index) {
+        // Get from relational table first (new format)
+        $stages = $this->validationStages()
+            ->active()
+            ->ordered()
+            ->get()
+            ->map(function ($stage) {
                 return [
-                    'key' => $key,
-                    'order' => $index + 1,
-                    'conditions' => [],
+                    'key' => $stage->key,
+                    'order' => $stage->order,
+                    'conditions' => $stage->conditions ?? [],
                 ];
             })
-            ->values()
             ->toArray();
+
+        // Fallback for legacy data
+        if (empty($stages)) {
+            if (empty($this->validation_stages) || ! is_array($this->validation_stages)) {
+                return [
+                    [
+                        'key' => 'documentacion',
+                        'order' => 1,
+                        'conditions' => [],
+                    ],
+                ];
+            }
+
+            // Check if it's the old JSON format
+            if (isset($this->validation_stages[0]) && is_array($this->validation_stages[0]) && isset($this->validation_stages[0]['key'])) {
+                // JSON format: sort by order
+                $stages = collect($this->validation_stages)
+                    ->sortBy('order')
+                    ->values()
+                    ->toArray();
+            } else {
+                // Old format: convert to new format
+                $stages = collect($this->validation_stages)
+                    ->map(function ($key, $index) {
+                        return [
+                            'key' => $key,
+                            'order' => $index + 1,
+                            'conditions' => [],
+                        ];
+                    })
+                    ->values()
+                    ->toArray();
+            }
+        }
+
+        return $stages;
     }
 
     public static function getByType(string $type): ?self

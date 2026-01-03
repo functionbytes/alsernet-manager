@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DocumentValidatorGroupConfigurationHistory extends Model
 {
-    protected $table = 'document_storage_config_histories';
+    protected $table = 'document_validator_group_configuration_histories';
 
     protected $fillable = [
         'validator_group_id',

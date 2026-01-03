@@ -17,15 +17,6 @@ class DocumentSourceSeeder extends Seeder
     {
         $sources = [
             [
-                'key' => 'manual',
-                'label' => 'Manual',
-                'description' => 'Documento cargado manualmente por el administrador',
-                'icon' => 'pencil',
-                'color' => '#6c757d',
-                'is_active' => true,
-                'order' => 1,
-            ],
-            [
                 'key' => 'email',
                 'label' => 'Email',
                 'description' => 'Cliente envió el documento por email',
@@ -37,7 +28,7 @@ class DocumentSourceSeeder extends Seeder
             [
                 'key' => 'whatsapp',
                 'label' => 'WhatsApp',
-                'description' => 'Cliente envió el documento por WhatsApp',
+                'description' => 'Cliente envió el documento por whatsApp',
                 'icon' => 'phone',
                 'color' => '#25d366',
                 'is_active' => true,
@@ -45,21 +36,12 @@ class DocumentSourceSeeder extends Seeder
             ],
             [
                 'key' => 'prestashop',
-                'label' => 'PrestaShop',
-                'description' => 'Cliente cargó el documento desde el portal PrestaShop',
+                'label' => 'Prestashop',
+                'description' => 'Cliente cargó el documento desde el portal prestashop',
                 'icon' => 'globe',
                 'color' => '#24b9a6',
                 'is_active' => true,
                 'order' => 4,
-            ],
-            [
-                'key' => 'api',
-                'label' => 'API',
-                'description' => 'Documento cargado a través de integración API',
-                'icon' => 'code',
-                'color' => '#6f42c1',
-                'is_active' => true,
-                'order' => 5,
             ],
         ];
 
@@ -69,5 +51,7 @@ class DocumentSourceSeeder extends Seeder
                 $source
             );
         }
+
+        $this->command->info('✅ Document sources seeded successfully');
     }
 }

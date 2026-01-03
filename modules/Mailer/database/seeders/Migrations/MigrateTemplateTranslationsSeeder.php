@@ -2,19 +2,10 @@
 
 namespace Modules\Mailer\Database\Seeders\Migrations;
 
+use Illuminate\Database\Seeder;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerTemplateLang;
-use Illuminate\Database\Seeder;
 
-/**
- * MigrateTemplateTranslationsSeeder
- *
- * Migrates email template translations from the base template records
- * to the dedicated mailer_template_langs table for multi-language support.
- *
- * This seeder should be run after templates are created to ensure
- * proper i18n data structure.
- */
 class MigrateTemplateTranslationsSeeder extends Seeder
 {
     /**
@@ -36,7 +27,7 @@ class MigrateTemplateTranslationsSeeder extends Seeder
                 ->where('lang_id', $langId)
                 ->exists();
 
-            if (!$exists && ($template->subject || $template->content)) {
+            if (! $exists && ($template->subject || $template->content)) {
                 MailerTemplateLang::create([
                     'mailer_template_id' => $template->id,
                     'lang_id' => $langId,
@@ -52,7 +43,7 @@ class MigrateTemplateTranslationsSeeder extends Seeder
             }
         }
 
-        $this->command->info("✓ Email template translations migration completed!");
+        $this->command->info('✓ Email template translations migration completed!');
         $this->command->info("  - Migrated: {$migratedCount}");
         $this->command->info("  - Skipped: {$skippedCount}");
     }

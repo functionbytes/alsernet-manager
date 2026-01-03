@@ -7,7 +7,7 @@
         <form id="formGroup" method="POST" action="{{ route('settings.documents.groups.update', $group->uid) }}">
 
             {{ csrf_field() }}
-            @method('PUT')
+            @method('PATCH')
 
             <div class="card-body">
                 <div class="d-flex no-block align-items-center">

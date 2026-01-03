@@ -5,7 +5,7 @@
         <p class="small mb-0 text-muted">Comunicación con el cliente</p>
     </div>
     <div class="card-body">
-        @if($documentConfig['enable_initial_request'] ?? true)
+        @if(($documentConfig['enable_initial_request'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-initial-request'))
             <!-- Solicitud Inicial -->
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_missing_docs'] ?? true)
+        @if(($documentConfig['enable_missing_docs'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-missing-docs'))
             <!-- Documentos Faltantes -->
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -35,7 +35,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_reminder'] ?? true)
+        @if(($documentConfig['enable_reminder'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-reminder'))
             <!-- Recordatorio -->
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -50,7 +50,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_upload_confirmation'] ?? true)
+        @if(($documentConfig['enable_upload_confirmation'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-upload-confirmation'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -65,7 +65,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_approval'] ?? true)
+        @if(($documentConfig['enable_approval'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-approval'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -80,7 +80,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_rejection'] ?? true)
+        @if(($documentConfig['enable_rejection'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-rejection'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
@@ -95,7 +95,7 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_custom_email'] ?? true)
+        @if(($documentConfig['enable_custom_email'] ?? true) && auth()->user()->canActionDocumentComponent('email-actions', 'send-custom'))
             <!-- Correo Personalizado -->
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">

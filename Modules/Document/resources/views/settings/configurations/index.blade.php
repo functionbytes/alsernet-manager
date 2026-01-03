@@ -5,9 +5,8 @@
     @include('theme.components.card', ['title' => 'Configuración Global de Documentos'])
 
 
-        <!-- Mensajes de estado -->
         @if ($message = session('success'))
-            <div class="alert bg-light-secondary text-black alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="fas fa-check-circle me-2"></i> {{ $message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -34,9 +33,10 @@
 
 
 
-                <form action="{{ route('settings.documents.configurations') }}"
+                <form action="{{ route('settings.documents.configurations.update') }}"
                       method="POST" class="needs-validation" novalidate>
                     @csrf
+                    @method('PATCH')
 
                     <div class="card">
                         <div class="card-body">

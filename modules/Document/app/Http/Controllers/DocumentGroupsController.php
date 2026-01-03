@@ -70,7 +70,7 @@ class DocumentGroupsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:191',
-            'key' => 'required|string|max:100|unique:validator_groups,key|regex:/^[a-z0-9_-]+$/',
+            'key' => 'required|string|max:100|unique:document_validator_groups,key|regex:/^[a-z0-9_-]+$/',
             'description' => 'nullable|string|max:1000',
             'assignment_mode' => 'required|in:manual,round_robin,load_balanced',
             'is_default' => 'nullable|boolean',
@@ -128,7 +128,7 @@ class DocumentGroupsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:191',
-            'key' => 'required|string|max:100|regex:/^[a-z0-9_-]+$/|unique:validator_groups,key,'.$group->id,
+            'key' => 'required|string|max:100|regex:/^[a-z0-9_-]+$/|unique:document_validator_groups,key,'.$group->id,
             'description' => 'nullable|string|max:1000',
             'assignment_mode' => 'required|in:manual,round_robin,load_balanced',
             'is_default' => 'nullable|boolean',
@@ -204,7 +204,7 @@ class DocumentGroupsController extends Controller
     {
         $validated = $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'exists:validator_groups,id',
+            'ids.*' => 'exists:document_validator_groups,id',
         ]);
 
         DocumentValidatorGroup::reorder($validated['ids']);

@@ -11,8 +11,7 @@ class DocumentValidationConditionSeeder extends Seeder
      * Run the database seeds.
      *
      * Seeds the default validation conditions for document workflows.
-     * These map condition keys (used in validation_stages) to arrays of sale_types
-     * from the document_product_blockades table.
+     * These map condition keys to arrays of sale_types from the document_product_blockades table.
      */
     public function run(): void
     {
@@ -29,9 +28,9 @@ class DocumentValidationConditionSeeder extends Seeder
             [
                 'key' => 'is_dni_only',
                 'condition_type' => 'sale_type',
-                'name' => 'Requiere solo DNI',
+                'name' => 'Requiere solo identificación',
                 'description' => 'Documentos que solo requieren validación de DNI/identificación, sin necesidad de licencias adicionales.',
-                'sale_types' => ['dni'],
+                'sale_types' => ['dni','balines'],
                 'is_active' => true,
                 'sort_order' => 2,
             ],
@@ -40,7 +39,7 @@ class DocumentValidationConditionSeeder extends Seeder
                 'condition_type' => 'field',
                 'name' => 'Requiere financiación',
                 'description' => 'Documentos que incluyen financiación y requieren validación contable adicional.',
-                'sale_types' => [], // This condition is checked via document.requires_financing field, not sale_type
+                'sale_types' => [],
                 'is_active' => true,
                 'sort_order' => 3,
             ],
@@ -53,6 +52,6 @@ class DocumentValidationConditionSeeder extends Seeder
             );
         }
 
-        $this->command->info('✓ Document validation conditions seeded successfully.');
+        $this->command->info('✅ Document validation conditions seeded successfully');
     }
 }

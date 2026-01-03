@@ -9,7 +9,7 @@
 
         <form action="{{ route('settings.documents.stage-email-actions.update', $stage) }}" method="POST">
             @csrf
-            @method('PUT')
+            @method('PATCH')
 
             <div class="alert alert-info mb-4">
                 <i class="fa fa-info-circle me-2"></i>

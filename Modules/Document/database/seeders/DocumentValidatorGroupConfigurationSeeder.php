@@ -3,27 +3,12 @@
 namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Entities\DocumentValidatorGroupConfiguration;
 
 class DocumentValidatorGroupConfigurationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * Seeds the document_validator_group_configurations table with validation rules
-     * for each validator group.
-     *
-     * Configuration defines:
-     * - Required number of approvals before moving to next stage
-     * - Document types that require this group's validation
-     * - Approval timeout period
-     * - Whether rejection is allowed
-     * - Notification backups
-     *
-     * Depends on: DocumentValidatorGroupSeeder (must run first)
-     */
+
     public function run(): void
     {
         // Get validator groups
@@ -32,7 +17,7 @@ class DocumentValidatorGroupConfigurationSeeder extends Seeder
         $accountingTeam = DocumentValidatorGroup::where('key', 'accounting_team')->first();
 
         if (! $docTeam || ! $licenseTeam || ! $accountingTeam) {
-            $this->command->error('❌ Validator groups not found. Run DocumentValidatorGroupSeeder first!');
+            $this->command->warn('⚠️ Validator groups not found. Skipping configuration seeding.');
 
             return;
         }
@@ -40,78 +25,76 @@ class DocumentValidatorGroupConfigurationSeeder extends Seeder
         $configurations = [
             // Documentation Team Config
             [
-                'uid' => Str::ulid(),
                 'validator_group_id' => $docTeam->id,
-                'document_types' => json_encode(['*']), // All document types
-                'required_approvals' => 1,
-                'approval_timeout_days' => 5,
-                'allow_rejection' => true,
-                'rejection_requires_reason' => true,
-                'auto_escalate_on_timeout' => true,
-                'notify_on_assignment' => true,
-                'notify_on_expiration' => true,
-                'priority' => 'high',
-                'metadata' => json_encode([
-                    'stage' => 1,
-                    'stage_name' => 'Validación Inicial',
-                    'check_completeness' => true,
-                    'check_signatures' => false,
-                ]),
+                'key' => 'doc_team_required_approvals',
+                'label' => 'Aprobaciones requeridas',
+                'description' => 'Número de aprobaciones requeridas',
+                'value' => '1',
+                'category' => 'approvals',
+                'order' => 1,
+                'is_active' => true,
+            ],
+            [
+                'validator_group_id' => $docTeam->id,
+                'key' => 'doc_team_timeout_days',
+                'label' => 'Días de espera',
+                'description' => 'Días antes de escalación',
+                'value' => '5',
+                'category' => 'timeout',
+                'order' => 2,
                 'is_active' => true,
             ],
 
             // Licenses Team Config
             [
-                'uid' => Str::ulid(),
                 'validator_group_id' => $licenseTeam->id,
-                'document_types' => json_encode(['license', 'permit', 'authorization']),
-                'required_approvals' => 1,
-                'approval_timeout_days' => 7,
-                'allow_rejection' => true,
-                'rejection_requires_reason' => true,
-                'auto_escalate_on_timeout' => true,
-                'notify_on_assignment' => true,
-                'notify_on_expiration' => true,
-                'priority' => 'medium',
-                'metadata' => json_encode([
-                    'stage' => 2,
-                    'stage_name' => 'Validación de Licencias',
-                    'check_expiration' => true,
-                    'check_authenticity' => true,
-                    'external_verification_required' => true,
-                ]),
+                'key' => 'license_team_required_approvals',
+                'label' => 'Aprobaciones requeridas',
+                'description' => 'Número de aprobaciones requeridas',
+                'value' => '1',
+                'category' => 'approvals',
+                'order' => 1,
+                'is_active' => true,
+            ],
+            [
+                'validator_group_id' => $licenseTeam->id,
+                'key' => 'license_team_timeout_days',
+                'label' => 'Días de espera',
+                'description' => 'Días antes de escalación',
+                'value' => '7',
+                'category' => 'timeout',
+                'order' => 2,
                 'is_active' => true,
             ],
 
             // Accounting Team Config
             [
-                'uid' => Str::ulid(),
                 'validator_group_id' => $accountingTeam->id,
-                'document_types' => json_encode(['*']), // All types
-                'required_approvals' => 1,
-                'approval_timeout_days' => 3,
-                'allow_rejection' => true,
-                'rejection_requires_reason' => true,
-                'auto_escalate_on_timeout' => false, // Final stage, don't escalate
-                'notify_on_assignment' => true,
-                'notify_on_expiration' => true,
-                'priority' => 'critical',
-                'metadata' => json_encode([
-                    'stage' => 3,
-                    'stage_name' => 'Aprobación Final',
-                    'creates_accounting_entry' => true,
-                    'sends_approval_email' => true,
-                    'requires_digital_signature' => false,
-                ]),
+                'key' => 'accounting_team_required_approvals',
+                'label' => 'Aprobaciones requeridas',
+                'description' => 'Número de aprobaciones requeridas',
+                'value' => '1',
+                'category' => 'approvals',
+                'order' => 1,
+                'is_active' => true,
+            ],
+            [
+                'validator_group_id' => $accountingTeam->id,
+                'key' => 'accounting_team_timeout_days',
+                'label' => 'Días de espera',
+                'description' => 'Días antes de escalación',
+                'value' => '3',
+                'category' => 'timeout',
+                'order' => 2,
                 'is_active' => true,
             ],
         ];
 
         foreach ($configurations as $config) {
-            DocumentValidatorGroupConfiguration::firstOrCreate(
+            DocumentValidatorGroupConfiguration::updateOrCreate(
                 [
                     'validator_group_id' => $config['validator_group_id'],
-                    'document_types' => $config['document_types'],
+                    'key' => $config['key'],
                 ],
                 $config
             );

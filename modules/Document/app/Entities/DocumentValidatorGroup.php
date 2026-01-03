@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Modules\Document\Traits\HasUid;
+use Illuminate\Support\Facades\Cache;
 
 class DocumentValidatorGroup extends Model
 {
@@ -76,12 +77,103 @@ class DocumentValidatorGroup extends Model
 
     public function configurations(): HasMany
     {
-        return $this->hasMany(DocumentValidatorGroupConfiguration::class);
+        return $this->hasMany(DocumentValidatorGroupConfiguration::class, 'validator_group_id');
     }
 
     public function configurationHistory(): HasMany
     {
-        return $this->hasMany(DocumentValidatorGroupConfigurationHistory::class);
+        return $this->hasMany(DocumentValidatorGroupConfigurationHistory::class, 'validator_group_id');
+    }
+
+    /**
+     * Permissions assigned to this validator group
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            DocumentPermission::class,
+            'document_validator_group_permission',
+            'validator_group_id',
+            'permission_id'
+        )->withTimestamps();
+    }
+
+    /**
+     * Check if group has a specific permission
+     */
+    public function hasPermission(string $permissionName): bool
+    {
+        return Cache::remember(
+            "group_{$this->id}_has_permission_{$permissionName}",
+            3600,
+            fn () => $this->permissions()
+                ->where('name', $permissionName)
+                ->where('is_active', true)
+                ->exists()
+        );
+    }
+
+    /**
+     * Check if group can perform an action (alias for hasPermission)
+     */
+    public function can(string $action): bool
+    {
+        return $this->hasPermission($action);
+    }
+
+    /**
+     * Give permission to group
+     */
+    public function givePermissionTo(string|DocumentPermission $permission): self
+    {
+        $permissionModel = is_string($permission)
+            ? DocumentPermission::findByName($permission)
+            : $permission;
+
+        if ($permissionModel && ! $this->hasPermission($permissionModel->name)) {
+            $this->permissions()->attach($permissionModel->id);
+            Cache::forget("group_{$this->id}_has_permission_{$permissionModel->name}");
+        }
+
+        return $this;
+    }
+
+    /**
+     * Revoke permission from group
+     */
+    public function revokePermissionFrom(string|DocumentPermission $permission): self
+    {
+        $permissionModel = is_string($permission)
+            ? DocumentPermission::findByName($permission)
+            : $permission;
+
+        if ($permissionModel) {
+            $this->permissions()->detach($permissionModel->id);
+            Cache::forget("group_{$this->id}_has_permission_{$permissionModel->name}");
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sync permissions for this group
+     */
+    public function syncPermissions(array $permissions): self
+    {
+        $permissionIds = collect($permissions)->map(function ($permission) {
+            if ($permission instanceof DocumentPermission) {
+                return $permission->id;
+            }
+
+            return DocumentPermission::findByName($permission)?->id;
+        })->filter()->toArray();
+
+        $this->permissions()->sync($permissionIds);
+
+        // Clear all permission cache for this group
+        Cache::forget("group_{$this->id}_has_permission_*");
+
+        return $this;
     }
 
     public static function findDefault(): ?self

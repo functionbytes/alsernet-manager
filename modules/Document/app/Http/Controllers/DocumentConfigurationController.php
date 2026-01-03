@@ -220,13 +220,13 @@ class DocumentConfigurationController extends Controller
             'enable_upload_confirmation' => 'boolean',
             'enable_approval' => 'boolean',
             'enable_rejection' => 'boolean',
-            'mail_template_initial_request_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_reminder_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_missing_docs_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_custom_email_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_upload_confirmation_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_approval_id' => 'nullable|integer|exists:mail_templates,id',
-            'mail_template_rejection_id' => 'nullable|integer|exists:mail_templates,id',
+            'mail_template_initial_request_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_reminder_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_missing_docs_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_custom_email_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_upload_confirmation_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_approval_id' => 'nullable|integer|exists:mailer_templates,id',
+            'mail_template_rejection_id' => 'nullable|integer|exists:mailer_templates,id',
         ]);
 
         try {

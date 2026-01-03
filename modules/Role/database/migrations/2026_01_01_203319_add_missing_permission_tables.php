@@ -18,7 +18,7 @@ return new class extends Migration
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
         // Create model_has_permissions table (missing)
-        if (!Schema::hasTable($tableNames['model_has_permissions'])) {
+        if (! Schema::hasTable($tableNames['model_has_permissions'])) {
             Schema::create($tableNames['model_has_permissions'], static function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams) {
                 $table->unsignedBigInteger($pivotPermission);
 
@@ -44,7 +44,7 @@ return new class extends Migration
         }
 
         // Create role_has_permissions table (missing)
-        if (!Schema::hasTable($tableNames['role_has_permissions'])) {
+        if (! Schema::hasTable($tableNames['role_has_permissions'])) {
             Schema::create($tableNames['role_has_permissions'], static function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {
                 $table->unsignedBigInteger($pivotPermission);
                 $table->unsignedBigInteger($pivotRole);

@@ -8,41 +8,60 @@ use Modules\Document\Entities\DocumentStageEmailAction;
 
 class DocumentStageEmailActionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $this->createStageActions(
-            DocumentStageEmailAction::STAGE_DOCUMENTACION,
+            'pending',
             [
-                DocumentStageEmailAction::ACTION_SOLICITUD_DOCUMENTOS => true,
-                DocumentStageEmailAction::ACTION_CONFIRMACION_ARCHIVOS => true,
-                DocumentStageEmailAction::ACTION_APROBACION => true,
-                DocumentStageEmailAction::ACTION_RECHAZO => true,
-                DocumentStageEmailAction::ACTION_CORREO_PERSONALIZADO => true,
+                'notify_creator' => true,
+                'notify_reviewer' => true,
+                'notify_approver' => false,
+                'notify_team' => false,
+                'send_summary' => false,
             ]
         );
 
         $this->createStageActions(
-            DocumentStageEmailAction::STAGE_LICENCIAS,
+            'in_review',
             [
-                DocumentStageEmailAction::ACTION_SOLICITUD_DOCUMENTOS => false,
-                DocumentStageEmailAction::ACTION_CONFIRMACION_ARCHIVOS => false,
-                DocumentStageEmailAction::ACTION_APROBACION => false,
-                DocumentStageEmailAction::ACTION_RECHAZO => false,
-                DocumentStageEmailAction::ACTION_CORREO_PERSONALIZADO => false,
+                'notify_creator' => false,
+                'notify_reviewer' => true,
+                'notify_approver' => false,
+                'notify_team' => true,
+                'send_summary' => false,
             ]
         );
 
         $this->createStageActions(
-            DocumentStageEmailAction::STAGE_CONTABILIDAD,
+            'approved',
             [
-                DocumentStageEmailAction::ACTION_SOLICITUD_DOCUMENTOS => false,
-                DocumentStageEmailAction::ACTION_CONFIRMACION_ARCHIVOS => false,
-                DocumentStageEmailAction::ACTION_APROBACION => true,
-                DocumentStageEmailAction::ACTION_RECHAZO => true,
-                DocumentStageEmailAction::ACTION_CORREO_PERSONALIZADO => true,
+                'notify_creator' => true,
+                'notify_reviewer' => false,
+                'notify_approver' => true,
+                'notify_team' => false,
+                'send_summary' => true,
+            ]
+        );
+
+        $this->createStageActions(
+            'rejected',
+            [
+                'notify_creator' => true,
+                'notify_reviewer' => false,
+                'notify_approver' => true,
+                'notify_team' => true,
+                'send_summary' => false,
+            ]
+        );
+
+        $this->createStageActions(
+            'completed',
+            [
+                'notify_creator' => true,
+                'notify_reviewer' => false,
+                'notify_approver' => false,
+                'notify_team' => false,
+                'send_summary' => true,
             ]
         );
 

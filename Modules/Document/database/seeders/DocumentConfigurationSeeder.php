@@ -14,7 +14,7 @@ class DocumentConfigurationSeeder extends Seeder
     {
         $configurations = [
             'corta' => [
-                'label' => 'Armas Cortas',
+                'label' => 'Armas cortas',
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
                     'doc_2' => 'DNI - Cara trasera',
@@ -38,16 +38,10 @@ class DocumentConfigurationSeeder extends Seeder
                 ],
             ],
             'dni' => [
-                'label' => 'Solo DNI',
+                'label' => 'Solo identificación',
                 'documents' => [
                     'doc_1' => 'DNI - Cara delantera',
                     'doc_2' => 'DNI - Cara trasera',
-                ],
-            ],
-            'general' => [
-                'label' => 'General',
-                'documents' => [
-                    'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)',
                 ],
             ],
         ];
@@ -61,5 +55,7 @@ class DocumentConfigurationSeeder extends Seeder
                 ]
             );
         }
+
+        $this->command->info('✅ Document configurations seeded successfully');
     }
 }

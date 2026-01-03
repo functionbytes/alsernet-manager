@@ -5,16 +5,13 @@ namespace Modules\Document\Entities;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class DocumentValidationHistory extends Model
 {
-    use HasUid;
+    protected $table = 'document_validation_history';
 
     protected $fillable = [
-        'uid',
-        'validatable_type',
-        'validatable_id',
+        'document_id',
         'stage_number',
         'validator_group',
         'validator_user_id',
@@ -31,9 +28,9 @@ class DocumentValidationHistory extends Model
         ];
     }
 
-    public function validatable(): MorphTo
+    public function document(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Document::class);
     }
 
     public function validator(): BelongsTo
@@ -44,11 +41,6 @@ class DocumentValidationHistory extends Model
     public function group(): ?DocumentValidatorGroup
     {
         return DocumentValidatorGroup::findByKey($this->validator_group);
-    }
-
-    public function scopeForType($query, string $type)
-    {
-        return $query->where('validatable_type', $type);
     }
 
     public function scopeWithAction($query, string $action)

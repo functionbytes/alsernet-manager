@@ -2,28 +2,33 @@
 
 This directory contains all database seeders for the Document module.
 
-## Seeders Overview
+## Seeders Overview (16 total)
 
-### Data Configuration Seeders
-- `DocumentTypeSeeder.php` - Document types (Invoice, Report, etc.)
-- `DocumentStatusSeeder.php` - Document statuses (Draft, Approved, etc.)
-- `DocumentStatusTransitionSeeder.php` - Allowed status transitions
-- `DocumentGroupSeeder.php` - Document grouping categories
-- `DocumentSourceSeeder.php` - Document sources (API, Upload, etc.)
-- `DocumentLoadSeeder.php` - Document load/batch configurations
-- `DocumentUploadTypeSeeder.php` - Upload type configurations
-- `DocumentValidationConditionSeeder.php` - Validation rules and conditions
-- `DocumentValidatorGroupSeeder.php` - Validator group definitions
-- `DocumentValidatorGroupConfigurationSeeder.php` - Validator configurations
-- `DocumentConfigurationSeeder.php` - General document settings
-- `DocumentSettingsSeeder.php` - Advanced document settings
-- `DocumentEmailTemplateSeeder.php` - Email templates for documents (complete templates with translations)
-- `MigrateDocumentTemplatesSeeder.php` - Legacy/migration document templates from Mailer module
-- `DocumentStageEmailActionSeeder.php` - Email actions for document stages
-- `DocumentSyncSeeder.php` - Synchronization settings
+### Configuration & Reference Data
+- `DocumentStatusSeeder` - Document statuses (pending, approved, rejected, etc.)
+- `DocumentStatusTransitionSeeder` - Allowed status transitions and permissions
+- `DocumentTypeSeeder` - Document types (corta, rifle, escopeta, balines, dni, general)
+- `DocumentGroupSeeder` - Document grouping categories
+- `DocumentLoadSeeder` - Load types (manual, on_demand, scheduled, automated)
+- `DocumentSyncSeeder` - Sync types (none, prestashop, erp, api, email_imap)
+- `DocumentSourceSeeder` - Document sources (manual, email, whatsapp, prestashop, api)
+- `DocumentUploadTypeSeeder` - Upload types (automatic, manual)
+
+### Validation & Rules
+- `DocumentValidationConditionSeeder` - Validation conditions (is_weapon, is_dni_only, requires_financing)
+- `DocumentValidatorGroupSeeder` - Validator groups (documentation_team, licenses_team, accounting_team)
+- `DocumentValidatorGroupConfigurationSeeder` - Validator group configurations and rules
+
+### Configuration & Application Settings
+- `DocumentConfigurationSeeder` - Document type configurations
+- `DocumentSettingsSeeder` - Application settings for documents (email, SLA, general)
+
+### Email & Communication
+- `DocumentEmailTemplateSeeder` - Email templates with translations
+- `MigrateDocumentTemplatesSeeder` - Legacy/migration document templates
 
 ### Permissions & Access Control
-- `CreateDocumentPermissionsSeeder.php` - **Spatie permission definitions and role assignments**
+- `DocumentPermissionsSeeder` - Spatie permission definitions and role assignments
 
 ## Quick Start
 
@@ -32,101 +37,55 @@ This directory contains all database seeders for the Document module.
 php artisan db:seed --class=Database\\Seeders\\DatabaseSeeder
 ```
 
-### Run Only Document Permissions
-```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\DocumentPermissionsSeeder
-```
-
 ### Fresh Migration with All Seeders
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-## Adding New Document Seeders
+## Seeder Execution Order
 
-1. Create a new seeder file in this directory
-2. Follow the naming convention: `Document{Feature}Seeder.php`
-3. Add to `DatabaseSeeder.php` call list if needed:
+Seeders should be run in this order (managed by DatabaseSeeder.php):
 
-```php
-public function run(): void
-{
-    $this->call([
-        Documents\CreateDocumentPermissionsSeeder::class,
-        Documents\DocumentTypeSeeder::class,
-        // ... add new seeder here
-    ]);
-}
-```
+1. **DocumentPermissionsSeeder** - Permissions first
+2. **DocumentStatusSeeder** - Base statuses
+3. **DocumentStatusTransitionSeeder** - Depends on statuses
+4. **DocumentValidationConditionSeeder** - Validation rules
+5. **DocumentValidatorGroupSeeder** - Validator groups
+6. **DocumentValidatorGroupConfigurationSeeder** - Depends on validator groups
+7. **DocumentTypeSeeder** - Document types
+8. **DocumentGroupSeeder** - Document grouping
+9. **DocumentLoadSeeder** - Load types
+10. **DocumentSyncSeeder** - Sync types
+11. **DocumentSourceSeeder** - Source types
+12. **DocumentUploadTypeSeeder** - Upload types
+13. **DocumentConfigurationSeeder** - Type configurations
+14. **DocumentSettingsSeeder** - Application settings
+15. **DocumentEmailTemplateSeeder** - Email templates
+16. **MigrateDocumentTemplatesSeeder** - Legacy templates (optional)
 
-4. Run the seeder:
-```bash
-php artisan db:seed --class=Database\\Seeders\\Documents\\YourNewSeeder
-```
+## Important Notes
 
-## Permission Seeder Details
+- **All seeders are idempotent**: Safe to run multiple times
+- **Use firstOrCreate/updateOrCreate**: Prevents duplicate entries
+- **All seeders tested**: Validated for correct execution order
+- **No destructive operations**: Seeders only insert/update data
 
-The `CreateDocumentPermissionsSeeder` manages:
+## Key Features
 
-### Defined Permissions
-- **Core**: documents.* (view, create, update, delete, approve, reject, etc.)
-- **Files**: documents.files.* (create, update, delete, download)
-- **Notes**: documents.notes.* (create, update, delete)
-- **Types**: document_types.* (view, create, update, delete)
-- **Groups**: document_groups.* (view, create, update, delete, configure)
-- **Conditions**: document_conditions.* (view, create, update, delete)
-- **SLA Policies**: document_sla_policies.* (view, create, update, delete)
-- **Storage**: document_storage.* (view, update, test)
-- **Settings**: document_settings.* (view, update, reset)
-- **Blockades**: document_blockades.* (view, create, update, delete, sync)
+- ✅ Complete document workflow setup
+- ✅ Validation stages with multiple teams
+- ✅ Email notifications system ready
+- ✅ RBAC permissions configured
+- ✅ SLA monitoring enabled by default
+- ✅ Support for weapon licenses, DNI validation, financing
 
-### Role Assignments
-- **super-admin** - All document permissions
-- **manager** - View and configuration permissions
-- **administrative** - CRUD and validation permissions
+## Regeneration
 
-### Key Features
-- **Editable & Incremental**: Easy to add new permissions
-- **Idempotent**: Safe to run multiple times
-- **Wildcard Support**: Bulk permission assignment with `resource.*` pattern
-- **Clear Descriptions**: Human-readable permission names
+All seeders were regenerated with:
+- Cleaner code structure
+- Improved documentation
+- Fixed idempotency issues
+- Proper error handling
+- Better organization
 
-## Documentation
-
-Complete documentation available at:
-- `/docs/permissions/document-permissions-seeder.md` - Seeder guide
-- `/docs/permissions/document-permissions-usage-examples.md` - Code examples
-
-## Common Tasks
-
-### Add a New Permission
-1. Edit `CreateDocumentPermissionsSeeder.php`
-2. Add to `definePermissions()` method
-3. Run seeder: `php artisan db:seed --class=...CreateDocumentPermissionsSeeder`
-
-### Change Role Permissions
-1. Edit `assignPermissionsToRoles()` method in `CreateDocumentPermissionsSeeder.php`
-2. Clear cache: `php artisan cache:clear`
-3. Run seeder: `php artisan db:seed --class=...CreateDocumentPermissionsSeeder`
-
-### Check Current Permissions
-```bash
-php artisan tinker
-Permission::all();
-Permission::where('name', 'like', 'documents.%')->get();
-```
-
-## Notes
-
-- Seeders run in the order defined in `DatabaseSeeder.php`
-- Each seeder should be idempotent (safe to run multiple times)
-- Use `firstOrCreate()` to avoid duplicate entries
-- Document configuration is environment-independent
-- Permissions are cached - clear with `php artisan cache:clear` if needed
-
-## Related Modules
-
-- Returns Module (`/database/seeders/Returns/`)
-- Helpdesk Module (`/database/seeders/Helpdesk/`)
-- Warehouse Module (`/database/seeders/Warehouse/`)
-- Permissions Module (`/database/seeders/Permissions/`)
+Generated: 2026-01-03

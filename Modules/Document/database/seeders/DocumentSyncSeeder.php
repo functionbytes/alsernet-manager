@@ -7,12 +7,7 @@ use Modules\Document\Entities\DocumentSync;
 
 class DocumentSyncSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * Seeds the document_syncs table with all available document sync types.
-     * Syncs represent the synchronization method used for documents.
-     */
+
     public function run(): void
     {
         $syncs = [
@@ -27,8 +22,8 @@ class DocumentSyncSeeder extends Seeder
             ],
             [
                 'key' => 'prestashop',
-                'label' => 'PrestaShop',
-                'description' => 'Sincronización automática con PrestaShop',
+                'label' => 'Prestashop',
+                'description' => 'Sincronización automática con prestaShop',
                 'icon' => 'globe',
                 'color' => '#24b9a6',
                 'is_active' => true,
@@ -36,30 +31,12 @@ class DocumentSyncSeeder extends Seeder
             ],
             [
                 'key' => 'erp',
-                'label' => 'ERP',
-                'description' => 'Sincronización con sistema ERP',
+                'label' => 'Gestion',
+                'description' => 'Sincronización con sistema gestion',
                 'icon' => 'database',
                 'color' => '#0d6efd',
                 'is_active' => true,
                 'order' => 3,
-            ],
-            [
-                'key' => 'api',
-                'label' => 'API',
-                'description' => 'Sincronización a través de API externa',
-                'icon' => 'code',
-                'color' => '#6f42c1',
-                'is_active' => true,
-                'order' => 4,
-            ],
-            [
-                'key' => 'email_imap',
-                'label' => 'Email (IMAP)',
-                'description' => 'Sincronización de documentos desde email',
-                'icon' => 'envelope',
-                'color' => '#0dcaf0',
-                'is_active' => true,
-                'order' => 5,
             ],
         ];
 
@@ -69,5 +46,7 @@ class DocumentSyncSeeder extends Seeder
                 $sync
             );
         }
+
+        $this->command->info('✅ Document sync types seeded successfully');
     }
 }

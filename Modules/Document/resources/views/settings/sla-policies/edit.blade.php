@@ -9,7 +9,7 @@
         <form id="formSlaPolicy" method="POST" action="{{ route('settings.documents.sla-policies.update', $policy->id) }}">
 
             {{ csrf_field() }}
-            @method('PUT')
+            @method('PATCH')
 
             <div class="card-body">
                 <div class="d-flex no-block align-items-center">

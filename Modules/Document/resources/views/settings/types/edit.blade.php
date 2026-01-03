@@ -6,6 +6,7 @@
             <div class="card w-100">
                 <form id="formDocumentType" action="{{ route('settings.documents.types.update', $documentType->slug) }}" method="POST">
                     @csrf
+                    @method('PATCH')
                     <div class="card-header border-bottom p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -256,7 +257,7 @@
                                                             <div class="card-body">
                                                                 <div class="row g-3">
                                                                     <!-- Orden -->
-                                                                    <div class="col-md-6 col-sm-12">
+                                                                    <div class="col-md-12 col-sm-12 mt-0">
                                                                         <div class="mb-3">
                                                                             <label class="control-label col-form-label">Orden</label>
                                                                             <input type="number"
@@ -269,11 +270,8 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <!-- Placeholder para mantener el grid -->
-                                                                    <div class="col-md-6 col-sm-12"></div>
-
                                                                     <!-- Condiciones -->
-                                                                    <div class="col-md-12">
+                                                                    <div class="col-md-12 mt-0">
                                                                             <label class="control-label col-form-label">Condiciones de ejecución</label>
 
                                                                             @if($validationConditions->isEmpty())
@@ -289,6 +287,7 @@
                                                                                     id="conditions_{{ $group->key }}"
                                                                                     name="stage_conditions_{{ $group->key }}[]"
                                                                                     data-key="{{ $group->key }}"
+                                                                                    data-selected-conditions="{{ json_encode($conditions) }}"
                                                                                     data-placeholder="Seleccionar condiciones para ejecutar esta etapa...">
                                                                                 @foreach($validationConditions as $validationCondition)
                                                                                     <option value="{{ $validationCondition->key }}"
@@ -957,6 +956,22 @@ $(document).ready(function() {
         templateSelection: formatConditionSelection
     });
 
+    // Set selected values from data attributes
+    $('.select2-conditions').each(function() {
+        const $select = $(this);
+        const selectedConditionsAttr = $select.data('selected-conditions');
+
+        if (selectedConditionsAttr && typeof selectedConditionsAttr === 'string') {
+            try {
+                const selectedConditions = JSON.parse(selectedConditionsAttr);
+                const selectedKeys = Object.keys(selectedConditions).filter(key => selectedConditions[key]);
+                $select.val(selectedKeys).trigger('change');
+            } catch (e) {
+                console.warn('Failed to parse selected conditions:', e);
+            }
+        }
+    });
+
     function formatConditionOption(option) {
         if (!option.id) return option.text;
 
@@ -1019,10 +1034,26 @@ $(document).ready(function() {
             const $stageItem = $(this);
             const key = $stageItem.data('key');
             const order = parseInt($stageItem.find('.stage-order').val()) || 1;
+            const $select = $stageItem.find('.stage-conditions-select');
 
             // Build conditions object from selected conditions
             const conditions = {};
-            const selectedConditions = $stageItem.find('.stage-conditions-select').val() || [];
+
+            // Get selected values - try both .val() and data attribute as fallback
+            let selectedConditions = $select.val() || [];
+
+            // If no values from .val(), try to get from data attribute
+            if (selectedConditions.length === 0) {
+                const dataAttr = $select.data('selected-conditions');
+                if (dataAttr && typeof dataAttr === 'object') {
+                    // Data attribute has the conditions object
+                    Object.keys(dataAttr).forEach(key => {
+                        if (dataAttr[key]) {
+                            selectedConditions.push(key);
+                        }
+                    });
+                }
+            }
 
             selectedConditions.forEach(function(conditionKey) {
                 conditions[conditionKey] = true;

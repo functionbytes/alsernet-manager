@@ -39,5 +39,7 @@ class DocumentUploadTypeSeeder extends Seeder
                 $type
             );
         }
+
+        $this->command->info('✅ Document upload types seeded successfully');
     }
 }

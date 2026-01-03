@@ -10,28 +10,34 @@
 
     <div class="row">
         <div class="col-lg-4">
-            <!-- Email Actions - Sidebar -->
-            @include('theme.components.email-actions-card', [
-                'document' => $document,
-                'documentConfig' => $documentConfig
-            ])
+            <!-- Email Actions - Sidebar (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('email-actions'))
+                @include('theme.components.email-actions-card', [
+                    'document' => $document,
+                    'documentConfig' => $documentConfig
+                ])
+            @endif
 
-            <!-- Workflow Multi-Etapa -->
-            @include('documents::components.validation-workflow-sidebar')
+            <!-- Workflow Multi-Etapa (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('validation-workflow'))
+                @include('documents::documents.components.validation.validation-workflow-sidebar')
+            @endif
 
-            <!-- Document Notes -->
-            @include('documents::components.document-notes-sidebar')
+            <!-- Document Notes (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('document-notes'))
+                @include('documents::documents.components.notes.document-notes-sidebar')
+            @endif
 
-            <!-- Action History -->
+            <!-- Action History (Always Visible) -->
             <div id="actionHistoryContainer">
-                @include('documents::components.action-history')
+                @include('documents::documents.components.management.action-history')
             </div>
 
-            <!-- Email History -->
-            @include('documents::components.email-history')
+            <!-- Email History (Always Visible) -->
+            @include('documents::documents.components.email.email-history')
 
-            <!-- Status Timeline -->
-            @include('documents::components.status-timeline')
+            <!-- Status Timeline (Always Visible) -->
+            @include('documents::documents.components.management.status-timeline')
 
         </div>
 
@@ -138,29 +144,35 @@
                 </div>
             </div>
 
-            <!-- Document Configuration -->
-            @include('theme.components.document-management-card', [
-                'document' => $document,
-                'statuses' => $statuses,
-                'documentSources' => $documentSources,
-                'documentLoads' => $documentLoads,
-                'documentSyncs' => $documentSyncs,
-                'uploadTypes' => $uploadTypes
-            ])
-
-            <!-- Upload Section - Ocultar si ya está gestionado y tiene documentos -->
-            <div id="uploadSectionContainer">
-                @include('documents::partials.upload-section', [
+            <!-- Document Configuration (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('document-management'))
+                @include('theme.components.document-management-card', [
                     'document' => $document,
-                    'requiredDocuments' => $requiredDocuments,
-                    'uploadedDocs' => $uploadedDocs,
-                    'missingDocs' => $missingDocs,
-                    'allUploaded' => $allUploaded,
+                    'statuses' => $statuses,
+                    'documentSources' => $documentSources,
+                    'documentLoads' => $documentLoads,
+                    'documentSyncs' => $documentSyncs,
+                    'uploadTypes' => $uploadTypes
                 ])
-            </div>
+            @endif
 
-            <!-- Additional Attachments Section -->
-            @include('documents::components.additional-attachments')
+            <!-- Upload Section (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('document-upload'))
+                <div id="uploadSectionContainer">
+                    @include('documents::partials.upload-section', [
+                        'document' => $document,
+                        'requiredDocuments' => $requiredDocuments,
+                        'uploadedDocs' => $uploadedDocs,
+                        'missingDocs' => $missingDocs,
+                        'allUploaded' => $allUploaded,
+                    ])
+                </div>
+            @endif
+
+            <!-- Additional Attachments Section (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('additional-attachments'))
+                @include('documents::documents.components.files.additional-attachments')
+            @endif
 
         </div>
 
@@ -170,8 +182,8 @@
          MODALES DE UTILIDAD (Confirmaciones)
          ======================================================================== --}}
 
-    @include('documents::modals.confirm-missing-documents')
-    @include('documents::modals.confirm-delete-document')
+    @include('documents::documents.components.management.modals.confirm-missing-docs')
+    @include('documents::documents.components.files.modals.confirm-delete')
 
     </div>
 
