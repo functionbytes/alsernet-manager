@@ -56,13 +56,13 @@ class SystemServiceProvider extends ServiceProvider
         NavService::registerSidebar('system', [
             'title' => 'Sistema',
             'items' => [
-                ['label' => 'Configuración', 'route' => 'settings.system.index', 'icon' => 'fa-sliders'],
-                ['label' => 'Información', 'route' => 'settings.system.info.index', 'icon' => 'fa-info-circle'],
-                ['label' => 'Cache y mantenimiento', 'route' => 'settings.system.cache.index', 'icon' => 'fa-broom'],
-                ['label' => 'Supervisor', 'route' => 'settings.system.supervisor.index', 'icon' => 'fa-server'],
-                ['label' => 'Logs del servidor', 'route' => 'settings.system.access.index', 'icon' => 'fa-file-lines'],
-                ['label' => 'Carga de archivos', 'route' => 'settings.system.uploading.index', 'icon' => 'fa-upload'],
-                ['label' => 'Modo mantenimiento', 'route' => 'settings.system.maintenance.index', 'icon' => 'fa-wrench'],
+                ['label' => 'Configuración', 'route' => 'settings.system.index'],
+                ['label' => 'Información', 'route' => 'settings.system.info.index'],
+                ['label' => 'Cache y mantenimiento', 'route' => 'settings.system.cache.index'],
+                ['label' => 'Supervisor', 'route' => 'settings.system.supervisor.index'],
+                ['label' => 'Logs del servidor', 'route' => 'settings.system.access.index'],
+                ['label' => 'Carga de archivos', 'route' => 'settings.system.uploading.index'],
+                ['label' => 'Modo mantenimiento', 'route' => 'settings.system.maintenance.index'],
             ],
         ]);
     }

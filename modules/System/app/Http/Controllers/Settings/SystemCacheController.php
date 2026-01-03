@@ -101,7 +101,7 @@ class SystemCacheController extends Controller
     public function index()
     {
         // Redirect to unified maintenance page
-        return redirect()->route('manager.settings.maintenance');
+        return redirect()->route('settings.system.maintenance.index');
     }
 
     /**
