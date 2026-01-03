@@ -26,11 +26,25 @@ class MailerEndpointController extends Controller
      * Display a listing of all email endpoints
      * GET /settings/mailers/endpoints
      */
-    public function index()
+    public function index(Request $request)
     {
-        $endpoints = MailerEndpoint::with('template', 'language')
-            ->orderBy('name')
-            ->paginate(15);
+        $query = MailerEndpoint::with('template', 'language');
+
+        // Filter by status if provided
+        $status = $request->input('status');
+        if ($status === 'active') {
+            $query->where('is_active', true);
+        } elseif ($status === 'inactive') {
+            $query->where('is_active', false);
+        }
+
+        // Filter by source if provided
+        $source = $request->input('source');
+        if ($source) {
+            $query->where('source', $source);
+        }
+
+        $endpoints = $query->orderBy('name')->paginate(15);
 
         // Get unique sources from endpoints for filtering
         $sources = MailerEndpoint::distinct('source')
@@ -39,7 +53,7 @@ class MailerEndpointController extends Controller
             ->values()
             ->toArray();
 
-        return view('mailer::endpoints.index', compact('endpoints', 'sources'));
+        return view('mailer::endpoints.index', compact('endpoints', 'sources', 'status', 'source'));
     }
 
     /**
