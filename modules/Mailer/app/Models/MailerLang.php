@@ -1,51 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Mailer\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property int $id
- * @property string $uid
- * @property string $title
- * @property string $iso_code
- * @property string $lenguage_code
- * @property string|null $locate
- * @property string|null $date_format_full
- * @property string|null $date_format_lite
- * @property int $available
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Categorie> $categories
- * @property-read int|null $categories_count
- *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang ascending()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang available()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang descending()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang id($id)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang iso($iso)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang locate($iso)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang search($keyword)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang uid($uid)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereAvailable($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereDateFormatFull($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereDateFormatLite($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereIsoCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereLenguageCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereLocate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereUid($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lang whereUpdatedAt($value)
- *
- * @mixin \Eloquent
- */
-class Lang extends Model
+class MailerLang extends Model
 {
     use HasFactory;
 
@@ -117,11 +77,6 @@ class Lang extends Model
         return $options;
     }
 
-    /**
-     * Search items.
-     *
-     * @return collect
-     */
     public function scopeSearch($query, $keyword)
     {
         // Keyword
@@ -147,14 +102,6 @@ class Lang extends Model
         return resource_path(join_paths('lang', $this->iso_code));
     }
 
-    public function categories()
-    {
-        return $this->belongsToMany('App\Models\Categorie', 'lang_categorie', 'lang_id', 'categorie_id');
-    }
-
-    /**
-     * Get the default language ID
-     */
     public static function getDefaultLangId(): int
     {
         return self::available()->first()?->id ?? 1;

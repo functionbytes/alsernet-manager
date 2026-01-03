@@ -3,8 +3,8 @@
 namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lang;
 use Illuminate\Http\Request;
+use Modules\Mailer\Models\MailerLang;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerLayoutLang;
 use Modules\Mailer\Traits\AuthorizesMailerActions;
@@ -55,7 +55,7 @@ class MailerComponentController extends Controller
             ->toArray();
 
         // Obtener idiomas disponibles
-        $langs = Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         return view('mailer::components.index', [
             'components' => $components,
@@ -75,12 +75,12 @@ class MailerComponentController extends Controller
         // Obtener idioma del request (default: primer idioma disponible)
         $langId = $request->input('lang_id');
         if (! $langId) {
-            $defaultLang = Lang::available()->first();
+            $defaultLang = MailerLang::available()->first();
             $langId = $defaultLang?->id;
         }
 
         // Obtener idiomas disponibles
-        $langs = Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         return view('mailer::components.create', [
             'langId' => $langId,
@@ -117,7 +117,7 @@ class MailerComponentController extends Controller
             }
 
             // Obtener todos los idiomas disponibles
-            $allLangs = Lang::available()->get();
+            $allLangs = MailerLang::available()->get();
 
             if ($allLangs->isEmpty()) {
                 return redirect()
@@ -137,7 +137,7 @@ class MailerComponentController extends Controller
 
             // Crear traducciones para todos los idiomas
             foreach ($allLangs as $lang) {
-                MailerLayoutLang::create([
+                MailerLayoutMailerLang::create([
                     'layout_id' => $layout->id,
                     'lang_id' => $lang->id,
                     'subject' => $validated['subject'],
@@ -179,7 +179,7 @@ class MailerComponentController extends Controller
 
         // Obtener traducción por translation_uid si se proporciona
         if ($translation_uid) {
-            $translation = MailerLayoutLang::where('uid', $translation_uid)
+            $translation = MailerLayoutMailerLang::where('uid', $translation_uid)
                 ->where('layout_id', $layout->id)
                 ->firstOrFail();
             $langId = $translation->lang_id;
@@ -202,7 +202,7 @@ class MailerComponentController extends Controller
         }
 
         // Obtener idiomas disponibles
-        $langs = Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         // Obtener otras traducciones para este layout
         $otherTranslations = $layout->translations()
@@ -255,7 +255,7 @@ class MailerComponentController extends Controller
                 ]);
             } else {
                 // Crear nueva traducción si no existe
-                $translation = MailerLayoutLang::create([
+                $translation = MailerLayoutMailerLang::create([
                     'mailer_layout_id' => $layout->id,
                     'lang_id' => $validated['lang_id'],
                     'subject' => $validated['subject'],

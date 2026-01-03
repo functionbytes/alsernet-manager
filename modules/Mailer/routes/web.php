@@ -17,8 +17,8 @@ use Modules\Mailer\Http\Controllers\MailerVariableController;
 */
 
 Route::middleware(['web', 'auth', 'role:super-admin'])
-    ->prefix('settings/mailers')
-    ->name('settings.mailers.')
+    ->prefix('mailers')
+    ->name('mailers.')
     ->group(function () {
         // ====================================================================
         // TEMPLATES
@@ -95,4 +95,5 @@ Route::middleware(['web', 'auth', 'role:super-admin'])
             Route::delete('/{emailEndpoint}', [MailerEndpointController::class, 'destroy'])->name('destroy');
             Route::post('/regenerate-token/{emailEndpoint}', [MailerEndpointController::class, 'regenerateToken'])->name('regenerate-token');
         });
+
     });

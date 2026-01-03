@@ -2,6 +2,7 @@
 
 namespace Modules\Mailer\Http\Controllers;
 
+use Modules\Mailer\Models\MailerLang;
 use Modules\Mailer\Traits\AuthorizesMailerActions;
 use Modules\Mailer\Models\MailerVariable;
 use App\Http\Controllers\Controller;
@@ -41,7 +42,7 @@ class MailerVariableController extends Controller
         $pageTitle = 'Crear Variable de Email';
         $breadcrumb = 'Configuración / Correos / Variables / Crear';
 
-        $langs = Lang::all();
+        $langs = MailerLang::all();
         $categories = [
             'system' => 'Sistema',
             'customer' => 'Cliente',
@@ -107,7 +108,7 @@ class MailerVariableController extends Controller
         $pageTitle = 'Editar Variable de Email';
         $breadcrumb = 'Configuración / Correos / Variables / Editar';
 
-        $langs = Lang::all();
+        $langs = MailerLang::all();
         $categories = [
             'system' => 'Sistema',
             'customer' => 'Cliente',

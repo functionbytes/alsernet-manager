@@ -3,12 +3,12 @@
 namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lang;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Mailer\Jobs\SendEndpointEmailJob;
 use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerEndpointLog;
+use Modules\Mailer\Models\MailerLang;
 use Modules\Mailer\Models\MailerTemplate;
 
 class MailerEndpointController extends Controller
@@ -32,7 +32,14 @@ class MailerEndpointController extends Controller
             ->orderBy('name')
             ->paginate(15);
 
-        return view('mailer::endpoints.index', compact('endpoints'));
+        // Get unique sources from endpoints for filtering
+        $sources = MailerEndpoint::distinct('source')
+            ->pluck('source')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        return view('mailer::endpoints.index', compact('endpoints', 'sources'));
     }
 
     /**
@@ -87,7 +94,7 @@ class MailerEndpointController extends Controller
             ->orderBy('name')
             ->get();
 
-        $langs = Lang::all();
+        $langs = MailerLang::all();
 
         $logs = $emailEndpoint->logs()
             ->latest()

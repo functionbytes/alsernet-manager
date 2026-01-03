@@ -3,11 +3,14 @@
 namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lang;
+use DOMDocument;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Modules\Mailer\Models\MailerLang;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerTemplateLang;
+use Modules\Mailer\Models\MailerVariable;
 use Modules\Mailer\Services\MailerTemplateRendererService;
 use Modules\Mailer\Services\MailerVariableReplacementService;
 
@@ -48,7 +51,7 @@ class MailerTemplateController extends Controller
         $modules = MailerTemplate::distinct('module')->pluck('module')->toArray();
 
         // Obtener idiomas disponibles
-        $langs = \App\Models\Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         return view('mailer::templates.index', [
             'templates' => $templates,
@@ -79,7 +82,7 @@ class MailerTemplateController extends Controller
         // Obtener idioma del request (default: primer idioma disponible)
         $langId = $request->input('lang_id');
         if (! $langId) {
-            $defaultLang = \App\Models\Lang::available()->first();
+            $defaultLang = MailerLang::available()->first();
             $langId = $defaultLang?->id;
         }
 
@@ -89,7 +92,7 @@ class MailerTemplateController extends Controller
         $variables = MailerTemplate::defaultVariables($module);
 
         // Obtener idiomas disponibles
-        $langs = \App\Models\Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         return view('mailer::templates.create', [
             'template' => $template,
@@ -136,7 +139,7 @@ class MailerTemplateController extends Controller
             }
 
             // Obtener todos los idiomas disponibles
-            $allLangs = \App\Models\Lang::available()->get();
+            $allLangs = MailerLang::available()->get();
 
             if ($allLangs->isEmpty()) {
                 return redirect()
@@ -174,7 +177,7 @@ class MailerTemplateController extends Controller
                 ])
                 ->with('success', "Template '{$validated['name']}' creado exitosamente para todos los idiomas (".count($allLangs).' versiones)');
         } catch (\Exception $e) {
-            \Log::error('Error creating email template', [
+            Log::error('Error creating email template', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'data' => $validated ?? [],
@@ -227,7 +230,7 @@ class MailerTemplateController extends Controller
         $variables = $template->getAvailableVariables();
 
         // Obtener idiomas disponibles para mostrar selector
-        $langs = Lang::available()->get();
+        $langs = MailerLang::available()->get();
 
         // Obtener otras traducciones para este template
         $otherTranslations = $template->translations()
@@ -389,7 +392,7 @@ class MailerTemplateController extends Controller
                 'html' => $html,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error en previewAjax: '.$e->getMessage());
+            Log::error('Error en previewAjax: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -596,7 +599,7 @@ PREHEADER;
      */
     private function beautifyHtml(string $html): string
     {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
 
@@ -708,7 +711,7 @@ PREHEADER;
                 'variables' => $variables,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error loading variables: '.$e->getMessage());
+            Log::error('Error loading variables: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -737,7 +740,7 @@ PREHEADER;
 
             // Get variables from database filtered by the specified module
             // Includes variables from the specific module + core variables
-            $dbVariables = \Modules\Mailer\Models\MailerVariable::query()
+            $dbVariables = MailerVariable::query()
                 ->where('is_enabled', true)
                 ->where(function ($query) use ($module) {
                     $query->where('module', $module)
@@ -777,7 +780,7 @@ PREHEADER;
                 'variables' => $variables,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error loading variables by module: '.$e->getMessage());
+            Log::error('Error loading variables by module: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -827,7 +830,7 @@ PREHEADER;
             $html = $this->renderTemplateWithLayout($template, 1);
 
             // Enviar email usando el facade Mail correctamente
-            \Illuminate\Support\Facades\Mail::send([], [], function ($message) use ($translation, $validated, $html) {
+            Mail::send([], [], function ($message) use ($translation, $validated, $html) {
                 $message->to($validated['test_email'])
                     ->subject($translation->subject)
                     ->html($html);
