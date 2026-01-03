@@ -91,8 +91,8 @@ class HealthServiceProvider extends ServiceProvider
         NavService::registerSidebar('health', [
             'title' => 'Estado del sistema',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'settings.health.index', 'icon' => 'fa-tachometer-alt'],
-                ['label' => 'Historial', 'route' => 'settings.health.history', 'icon' => 'fa-clock-rotate-left'],
+                ['label' => 'Dashboard', 'route' => 'settings.health.index'],
+                ['label' => 'Historial', 'route' => 'settings.health.history'],
             ],
         ]);
     }

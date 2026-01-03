@@ -1234,7 +1234,7 @@
 
         function loadConfigFiles() {
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-files") }}',
+                url: '{{ route("settings.system.supervisor.config-files-list") }}',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -1261,7 +1261,7 @@
             event.preventDefault();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-file") }}',
+                url: '{{ route("settings.system.supervisor.config-file-get") }}',
                 type: 'GET',
                 data: {file: filePath},
                 dataType: 'json',
@@ -1291,7 +1291,7 @@
             var formData = $('#configForm').serialize();
 
             $.ajax({
-                url: '{{ route("settings.system.supervisor.config-update") }}',
+                url: '{{ route("settings.system.supervisor.config-file-update") }}',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
