@@ -17,8 +17,8 @@ use Modules\Mailer\Http\Controllers\MailerVariableController;
 */
 
 Route::middleware(['web', 'auth', 'role:super-admin'])
-    ->prefix('mailers')
-    ->name('mailers.')
+    ->prefix('settings/mailers')
+    ->name('settings.mailers.')
     ->group(function () {
         // ====================================================================
         // TEMPLATES
