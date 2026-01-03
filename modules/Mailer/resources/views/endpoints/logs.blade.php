@@ -28,10 +28,10 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-end">
-                    <a href="{{ route('settings.mailers.endpoints.edit', $endpoint) }}" class="btn btn-sm btn-outline-primary">
+                    <a href="{{ route('mailers.endpoints.edit', $endpoint) }}" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-edit me-1"></i> Editar
                     </a>
-                    <a href="{{ route('settings.mailers.endpoints.index') }}" class="btn btn-sm btn-light">
+                    <a href="{{ route('mailers.endpoints.index') }}" class="btn btn-sm btn-light">
                         <i class="fas fa-arrow-left me-1"></i> Atrás
                     </a>
                 </div>
@@ -108,7 +108,7 @@
 
             {{-- Filter & Search --}}
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('settings.mailers.endpoints.logs', $endpoint) }}">
+                <form method="GET" action="{{ route('mailers.endpoints.logs', $endpoint) }}">
                     <div class="row g-2">
                         <div class="col-md-4">
                             <div class="input-group">

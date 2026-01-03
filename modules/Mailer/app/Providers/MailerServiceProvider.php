@@ -47,11 +47,8 @@ class MailerServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        // Mailer settings routes (GET views + POST/PATCH/DELETE actions)
-        Route::middleware(['web', 'auth', 'role:manager|super-admin'])
-            ->prefix('settings/mailers')
-            ->name('settings.mailers.')
-            ->group(module_path('Mailer', 'routes/web.php'));
+        // Load web routes (settings admin panel)
+        require module_path('Mailer', 'routes/web.php');
 
         // Public API routes (email sending endpoints)
         Route::middleware(['api', 'throttle:60,1'])
@@ -77,10 +74,10 @@ class MailerServiceProvider extends ServiceProvider
         NavService::registerSidebar('mailers', [
             'title' => 'Emails',
             'items' => [
-                ['label' => 'Plantillas', 'route' => 'settings.mailers.templates.index'],
-                ['label' => 'Componentes', 'route' => 'settings.mailers.components.index'],
-                ['label' => 'Variables', 'route' => 'settings.mailers.variables.index'],
-                ['label' => 'Puntos de envío', 'route' => 'settings.mailers.endpoints.index'],
+                ['label' => 'Plantillas', 'route' => 'mailers.templates.index'],
+                ['label' => 'Componentes', 'route' => 'mailers.components.index'],
+                ['label' => 'Variables', 'route' => 'mailers.variables.index'],
+                ['label' => 'Puntos de envío', 'route' => 'mailers.endpoints.index'],
             ],
         ]);
     }

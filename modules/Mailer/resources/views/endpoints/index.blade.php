@@ -19,7 +19,7 @@
                         <h5 class="mb-1 fw-bold">Endpoints configurados</h5>
                         <p class="small mb-0 text-muted">Gestiona los endpoints para enviar correos desde aplicaciones externas</p>
                     </div>
-                    <a href="{{ route('settings.mailers.endpoints.create') }}" class="btn btn-primary">
+                    <a href="{{ route('mailers.endpoints.create') }}" class="btn btn-primary">
                         Crear endpoint
                     </a>
                 </div>
@@ -93,7 +93,7 @@
 
             {{-- Search & Filter --}}
             <div class="card-body border-bottom">
-                <form method="GET" action="{{ route('settings.mailers.endpoints.index') }}">
+                <form method="GET" action="{{ route('mailers.endpoints.index') }}">
                     <div class="row g-2">
                         <div class="col-md-4">
                             <div class="input-group">
@@ -195,19 +195,19 @@
                                                 </a>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.mailers.endpoints.edit', $endpoint) }}">
+                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('mailers.endpoints.edit', $endpoint) }}">
                                                             Editar
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('settings.mailers.endpoints.logs', $endpoint) }}">
+                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('mailers.endpoints.logs', $endpoint) }}">
                                                             Ver logs
                                                         </a>
                                                     </li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3  confirm-delete"
-                                                           data-href="{{ route('settings.mailers.endpoints.destroy', $endpoint) }}">
+                                                           data-href="{{ route('mailers.endpoints.destroy', $endpoint) }}">
                                                             Eliminar
                                                         </a>
                                                     </li>
@@ -234,7 +234,7 @@
                                 @endif
                             </p>
                             @if(!request('search'))
-                                <a href="{{ route('settings.mailers.endpoints.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('mailers.endpoints.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus"></i> Crear endpoint
                                 </a>
                             @endif

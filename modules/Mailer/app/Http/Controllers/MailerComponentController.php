@@ -146,7 +146,7 @@ class MailerComponentController extends Controller
             }
 
             return redirect()
-                ->route('settings.mailers.components.edit', [
+                ->route('mailers.components.edit', [
                     'uid' => $layout->uid,
                     'lang_id' => $validated['lang_id'],
                 ])
@@ -266,7 +266,7 @@ class MailerComponentController extends Controller
             // Redirigir usando translation_uid si está disponible
             if ($validated['translation_uid']) {
                 return redirect()
-                    ->route('settings.mailers.components.edit', [
+                    ->route('mailers.components.edit', [
                         'uid' => $layout->uid,
                         'translation_uid' => $translation->uid,
                     ])
@@ -375,7 +375,7 @@ class MailerComponentController extends Controller
             $layout->delete();
 
             return redirect()
-                ->route('settings.mailers.components.index')
+                ->route('mailers.components.index')
                 ->with('success', "Componente '{$name}' eliminado exitosamente");
         } catch (\Exception $e) {
             return redirect()
@@ -410,7 +410,7 @@ class MailerComponentController extends Controller
             $langId = $request->input('lang_id', 1);
 
             return redirect()
-                ->route('settings.mailers.components.edit', [
+                ->route('mailers.components.edit', [
                     'uid' => $newLayout->uid,
                     'lang_id' => $langId,
                 ])

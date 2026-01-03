@@ -11,7 +11,7 @@
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
             ['label' => 'Configuración', 'url' => route('manager.backups')],
-            ['label' => 'Componentes', 'url' => route('settings.mailers.components.index')],
+            ['label' => 'Componentes', 'url' => route('mailers.components.index')],
             ['label' => 'Crear', 'active' => true]
         ]
     ])
@@ -45,7 +45,7 @@
     @endif
 
     {{-- Main Form --}}
-    <form method="POST" action="{{ route('settings.mailers.components.store') }}" id="formCreate">
+    <form method="POST" action="{{ route('mailers.components.store') }}" id="formCreate">
         @csrf
 
         <div class="row g-3">
@@ -262,7 +262,7 @@
 
                     {{-- Action Buttons --}}
                     <div class="card-footer bg-white border-top">
-                        <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-secondary w-100 mb-1">
+                        <a href="{{ route('mailers.components.index') }}" class="btn btn-secondary w-100 mb-1">
                             <i class="fas fa-arrow-left me-2"></i>Volver
                         </a>
                         <button type="submit" class="btn btn-primary w-100">
@@ -722,7 +722,7 @@ $(document).ready(function() {
 
     // Load Variables
     function loadVariables() {
-        const variablesUrl = '{{ route('settings.mailers.components.variables') }}';
+        const variablesUrl = '{{ route('mailers.components.variables') }}';
 
         $.ajax({
             url: variablesUrl,

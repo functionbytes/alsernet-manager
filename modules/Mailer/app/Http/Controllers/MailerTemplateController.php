@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerTemplateLang;
+use Modules\Mailer\Services\MailerTemplateRendererService;
+use Modules\Mailer\Services\MailerVariableValueService;
 
 class MailerTemplateController extends Controller
 {
@@ -166,7 +168,7 @@ class MailerTemplateController extends Controller
             }
 
             return redirect()
-                ->route('settings.mailers.templates.edit', [
+                ->route('mailers.templates.edit', [
                     'uid' => $template->uid,
                     'lang_id' => $validated['lang_id'],
                 ])
@@ -297,7 +299,7 @@ class MailerTemplateController extends Controller
             }
 
             return redirect()
-                ->route('settings.mailers.templates.edit', [
+                ->route('mailers.templates.edit', [
                     'uid' => $template->uid,
                     'translation_uid' => $translation->uid,
                 ])
@@ -330,7 +332,7 @@ class MailerTemplateController extends Controller
         // Usar el MISMO servicio que se usa para enviar emails reales
         // Esto garantiza que el preview sea idéntico al email enviado
         $variables = $this->getPreviewVariables($template, $langId);
-        $html = \Modules\Mailer\Services\MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+        $html = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
         return view('mailer::templates.preview', [
             'template' => $template,
@@ -374,7 +376,7 @@ class MailerTemplateController extends Controller
             // Usar el MISMO servicio que se usa para enviar emails reales
             // Esto garantiza que el preview sea idéntico al email enviado
             $variables = $this->getPreviewVariables($template, $langId);
-            $html = \Modules\Mailer\Services\MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
+            $html = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
             // Restaurar valores originales
             $template->layout_id = $originalLayoutId;
@@ -405,7 +407,7 @@ class MailerTemplateController extends Controller
         $langId = $langId ?? 1;
 
         // Obtener valores reales traducidos desde la base de datos
-        $realValues = \Modules\Mailer\Services\MailVariableValueService::getTranslatedValues($langId, $template->module);
+        $realValues = MailerVariableValueService::getTranslatedValues($langId, $template->module);
 
         $baseVariables = [
             // Sistema - usar valores reales de BD, con fallback a config
@@ -493,7 +495,7 @@ class MailerTemplateController extends Controller
             $template->delete();
 
             return redirect()
-                ->route('settings.mailers.templates.index')
+                ->route('mailers.templates.index')
                 ->with('success', "Template '{$name}' eliminado exitosamente");
         } catch (\Exception $e) {
             return redirect()

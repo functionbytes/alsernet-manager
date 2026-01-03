@@ -11,7 +11,7 @@
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
             ['label' => 'Configuración', 'url' => route('manager.backups')],
-            ['label' => 'Plantillas', 'url' => route('settings.mailers.templates.index')],
+            ['label' => 'Plantillas', 'url' => route('mailers.templates.index')],
             ['label' => $template->name, 'active' => true]
         ]
     ])
@@ -45,7 +45,7 @@
     @endif
 
     {{-- Main Form --}}
-    <form method="POST" action="{{ route('settings.mailers.templates.update', $template->uid) }}" id="formEdit">
+    <form method="POST" action="{{ route('mailers.templates.update', $template->uid) }}" id="formEdit">
         @csrf
         @method('PATCH')
         <input type="hidden" name="lang_id" value="{{ $currentLangId ?? 1 }}">
@@ -330,11 +330,11 @@
                             Guardar
                         </button>
 
-                        <a href="{{ route('settings.mailers.templates.preview', ['uid' => $template->uid, 'lang_id' => $currentLangId ?? 1]) }}" class="btn btn-info w-100 mb-1" target="_blank">
+                        <a href="{{ route('mailers.templates.preview', ['uid' => $template->uid, 'lang_id' => $currentLangId ?? 1]) }}" class="btn btn-info w-100 mb-1" target="_blank">
                             Vista previa
                         </a>
 
-                        <a href="{{ route('settings.mailers.templates.index') }}" class="btn btn-secondary w-100">
+                        <a href="{{ route('mailers.templates.index') }}" class="btn btn-secondary w-100">
                             Volver
                         </a>
                     </div>
@@ -389,7 +389,7 @@
                                             $isComplete = $langTranslation && !empty($langTranslation->subject) && !empty($langTranslation->content);
                                             $translationUid = $langTranslation?->uid;
                                         @endphp
-                                        <a href="{{ route('settings.mailers.templates.edit', ['uid' => $template->uid, 'translation_uid' => $translationUid]) }}"
+                                        <a href="{{ route('mailers.templates.edit', ['uid' => $template->uid, 'translation_uid' => $translationUid]) }}"
                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-3 py-3 hover-shadow-sm"
                                            data-bs-toggle="tooltip" title="Cambiar a {{ $lang->title }}">
                                             <div class="d-flex align-items-center gap-2 flex-grow-1">
@@ -789,7 +789,7 @@ $(document).ready(function() {
     // Update Preview
     function updatePreview() {
         updatePreviewStatus('Actualizando...', 'spinner', 'warning');
-        const previewUrl = `{{ route('settings.mailers.templates.preview-ajax', $template->uid) }}`;
+        const previewUrl = `{{ route('mailers.templates.preview-ajax', $template->uid) }}`;
 
         // Obtener el layout_id actual del formulario (para live preview sin guardar)
         const currentLayoutId = $('#layout_id').val();
@@ -852,7 +852,7 @@ $(document).ready(function() {
 
     // Load Variables
     function loadVariables() {
-        const variablesUrl = '{{ route('settings.mailers.templates.variables', $template->uid) }}';
+        const variablesUrl = '{{ route('mailers.templates.variables', $template->uid) }}';
 
         $.ajax({
             url: variablesUrl,

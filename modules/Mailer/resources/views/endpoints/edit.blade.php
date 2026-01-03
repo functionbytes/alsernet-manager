@@ -6,7 +6,7 @@
 
     <div class="card w-100">
 
-        <form method="POST" action="{{ route('settings.mailers.endpoints.update', $endpoint) }}" id="formEdit">
+        <form method="POST" action="{{ route('mailers.endpoints.update', $endpoint) }}" id="formEdit">
             @csrf
             @method('PATCH')
 
@@ -16,7 +16,7 @@
                         <h5 class="mb-0">Editar endpoint de email</h5>
                         <p class="card-subtitle mb-0 mt-2">Modifica la configuración del endpoint <strong>{{ $endpoint->name }}</strong>.</p>
                     </div>
-                    <a href="{{ route('settings.mailers.endpoints.index') }}" class="btn btn-light">
+                    <a href="{{ route('mailers.endpoints.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left me-1"></i> Atrás
                     </a>
                 </div>
@@ -139,7 +139,7 @@
 
                     <div class="col-12 col-md-6">
                         <div class="mb-3">
-                            <a href="{{ route('settings.mailers.endpoints.logs', $endpoint) }}" class="btn btn-outline-primary w-100">
+                            <a href="{{ route('mailers.endpoints.logs', $endpoint) }}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-history me-2"></i>Ver todos los logs
                             </a>
                         </div>
@@ -475,7 +475,7 @@
                     <button type="submit" class="btn btn-info px-4 waves-effect waves-light">
                         <i class="fas fa-save me-2"></i>Guardar cambios
                     </button>
-                    <a href="{{ route('settings.mailers.endpoints.index') }}" class="btn btn-light px-4">
+                    <a href="{{ route('mailers.endpoints.index') }}" class="btn btn-light px-4">
                         Cancelar
                     </a>
                 </div>
@@ -506,7 +506,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <form method="POST" action="{{ route('settings.mailers.endpoints.regenerate-token', $endpoint) }}" style="display: inline;">
+                    <form method="POST" action="{{ route('mailers.endpoints.regenerate-token', $endpoint) }}" style="display: inline;">
                         @csrf
                         <button type="submit" class="btn btn-warning">
                             <i class="fas fa-sync me-1"></i> Regenerar

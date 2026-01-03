@@ -95,7 +95,7 @@ class MailerVariableController extends Controller
         }
 
         return redirect()
-            ->route('settings.mailers.variables.index')
+            ->route('mailers.variables.index')
             ->with('success', "Variable '{$variable->key}' creada exitosamente.");
     }
 
@@ -171,7 +171,7 @@ class MailerVariableController extends Controller
         }
 
         return redirect()
-            ->route('settings.mailers.variables.index')
+            ->route('mailers.variables.index')
             ->with('success', "Variable '{$variable->key}' actualizada exitosamente.");
     }
 
@@ -182,7 +182,7 @@ class MailerVariableController extends Controller
     {
         if ($variable->is_system) {
             return redirect()
-                ->route('settings.mailers.variables.index')
+                ->route('mailers.variables.index')
                 ->with('error', 'No se puede eliminar variables del sistema.');
         }
 
@@ -190,7 +190,7 @@ class MailerVariableController extends Controller
         $variable->delete();
 
         return redirect()
-            ->route('settings.mailers.variables.index')
+            ->route('mailers.variables.index')
             ->with('success', "Variable '{$key}' eliminada exitosamente.");
     }
 

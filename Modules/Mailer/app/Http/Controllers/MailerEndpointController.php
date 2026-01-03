@@ -3,14 +3,168 @@
 namespace Modules\Mailer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lang;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Mailer\Jobs\SendEndpointEmailJob;
 use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerEndpointLog;
+use Modules\Mailer\Models\MailerTemplate;
 
 class MailerEndpointController extends Controller
 {
+    /**
+     * Display documentation for email endpoints
+     * GET /settings/mailers/endpoints/documentation
+     */
+    public function documentation()
+    {
+        return view('mailer::endpoints.documentation');
+    }
+
+    /**
+     * Display a listing of all email endpoints
+     * GET /settings/mailers/endpoints
+     */
+    public function index()
+    {
+        $endpoints = MailerEndpoint::with('template', 'language')
+            ->orderBy('name')
+            ->paginate(15);
+
+        return view('mailer::endpoints.index', compact('endpoints'));
+    }
+
+    /**
+     * Show the form for creating a new email endpoint
+     * GET /settings/mailers/endpoints/create
+     */
+    public function create()
+    {
+        $templates = MailerTemplate::enabled()
+            ->orderBy('name')
+            ->get();
+
+        $langs = \App\Models\Lang::all();
+
+        return view('mailer::endpoints.create', compact('templates', 'langs'));
+    }
+
+    /**
+     * Store a newly created email endpoint in database
+     * POST /settings/mailers/endpoints
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:mailer_endpoints,slug',
+            'source' => 'required|string|in:internal,webhook,api',
+            'type' => 'required|string|in:transactional,notification',
+            'description' => 'nullable|string',
+            'mailer_template_id' => 'required|exists:mailer_templates,id',
+            'lang_id' => 'required|exists:langs,id',
+            'expected_variables' => 'nullable|array',
+            'required_variables' => 'nullable|array',
+            'variable_mappings' => 'nullable|array',
+            'is_active' => 'boolean',
+        ]);
+
+        $endpoint = MailerEndpoint::create($validated);
+
+        return redirect()
+            ->route('mailers.endpoints.edit', $endpoint)
+            ->with('success', 'Email endpoint created successfully');
+    }
+
+    /**
+     * Show the form for editing the specified email endpoint
+     * GET /settings/mailers/endpoints/edit/{emailEndpoint}
+     */
+    public function edit(MailerEndpoint $emailEndpoint)
+    {
+        $templates = MailerTemplate::enabled()
+            ->orderBy('name')
+            ->get();
+
+        $langs = Lang::all();
+
+        $logs = $emailEndpoint->logs()
+            ->latest()
+            ->limit(50)
+            ->get();
+
+        return view('mailer::endpoints.edit', compact('emailEndpoint', 'templates', 'langs', 'logs'));
+    }
+
+    /**
+     * Update the specified email endpoint in database
+     * PATCH /settings/mailers/endpoints/{emailEndpoint}
+     */
+    public function update(Request $request, MailerEndpoint $emailEndpoint)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:mailer_endpoints,slug,'.$emailEndpoint->id,
+            'source' => 'required|string|in:internal,webhook,api',
+            'type' => 'required|string|in:transactional,notification',
+            'description' => 'nullable|string',
+            'mailer_template_id' => 'required|exists:mailer_templates,id',
+            'lang_id' => 'required|exists:langs,id',
+            'expected_variables' => 'nullable|array',
+            'required_variables' => 'nullable|array',
+            'variable_mappings' => 'nullable|array',
+            'is_active' => 'boolean',
+        ]);
+
+        $emailEndpoint->update($validated);
+
+        return redirect()
+            ->route('mailers.endpoints.edit', $emailEndpoint)
+            ->with('success', 'Email endpoint updated successfully');
+    }
+
+    /**
+     * Delete the specified email endpoint
+     * DELETE /settings/mailers/endpoints/{emailEndpoint}
+     */
+    public function destroy(MailerEndpoint $emailEndpoint)
+    {
+        $emailEndpoint->delete();
+
+        return redirect()
+            ->route('mailers.endpoints.index')
+            ->with('success', 'Email endpoint deleted successfully');
+    }
+
+    /**
+     * Display logs for the specified email endpoint
+     * GET /settings/mailers/endpoints/logs/{emailEndpoint}
+     */
+    public function logs(MailerEndpoint $emailEndpoint)
+    {
+        $logs = $emailEndpoint->logs()
+            ->latest()
+            ->paginate(20);
+
+        return view('mailer::endpoints.logs', compact('emailEndpoint', 'logs'));
+    }
+
+    /**
+     * Regenerate API token for the specified endpoint
+     * POST /settings/mailers/endpoints/regenerate-token/{emailEndpoint}
+     */
+    public function regenerateToken(MailerEndpoint $emailEndpoint)
+    {
+        $emailEndpoint->update([
+            'api_token' => MailerEndpoint::generateToken(),
+        ]);
+
+        return redirect()
+            ->route('mailers.endpoints.edit', $emailEndpoint)
+            ->with('success', 'API token regenerated successfully');
+    }
+
     /**
      * Send email via endpoint
      * POST /api/email-endpoints/{slug}/send

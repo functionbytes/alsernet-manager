@@ -11,7 +11,7 @@
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],
                 ['label' => 'Configuración', 'url' => route('manager.backups')],
-                ['label' => 'Componentes', 'url' => route('settings.mailers.components.index')],
+                ['label' => 'Componentes', 'url' => route('mailers.components.index')],
                 ['label' => $component->subject, 'active' => true]
             ]
         ])
@@ -175,14 +175,14 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('settings.mailers.components.edit', $component->uid) }}" class="btn btn-primary">
+                            <a href="{{ route('mailers.components.edit', $component->uid) }}" class="btn btn-primary">
                                 Editar
                             </a>
                             <button type="button" class="btn btn-info" id="btnPrintComponent">
                                 Imprimir
                             </button>
 
-                            <a href="{{ route('settings.mailers.components.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('mailers.components.index') }}" class="btn btn-secondary">
                                 Volver
                             </a>
                         </div>

@@ -13,11 +13,6 @@ class MailerSettingsPolicy
             return true;
         }
 
-        // Managers pueden configurar emails
-        if ($user->hasRole('manager')) {
-            return $user->can('manager.mailers.configure');
-        }
-
         return false;
     }
 
@@ -32,7 +27,6 @@ class MailerSettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.mailers.manage-templates');
     }
 
     public function manageComponents(User $user): bool
@@ -41,7 +35,6 @@ class MailerSettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.mailers.manage-components');
     }
 
     public function manageVariables(User $user): bool
@@ -50,7 +43,6 @@ class MailerSettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.mailers.manage-variables');
     }
 
     public function manageEndpoints(User $user): bool
@@ -59,6 +51,5 @@ class MailerSettingsPolicy
             return true;
         }
 
-        return $user->hasRole('manager') && $user->can('manager.mailers.manage-endpoints');
     }
 }

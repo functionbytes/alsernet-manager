@@ -15,10 +15,10 @@ Email template management and endpoint configuration module for Alsernet. Provid
 ## Routes
 
 **Manager Routes** (`/manager/settings/mailers/`):
-- Templates: `manager.settings.mailers.templates.*` - CRUD operations for email templates
-- Components: `manager.settings.mailers.components.*` - CRUD for layout components
-- Variables: `manager.settings.mailers.variables.*` - Manage email variables
-- Endpoints: `manager.settings.mailers.endpoints.*` - Configure API endpoints
+- Templates: `manager.mailers.templates.*` - CRUD operations for email templates
+- Components: `manager.mailers.components.*` - CRUD for layout components
+- Variables: `manager.mailers.variables.*` - Manage email variables
+- Endpoints: `manager.mailers.endpoints.*` - Configure API endpoints
 
 **API Routes** (`/api/endpoints/`):
 - `POST /{slug}/send` - Send email via endpoint
