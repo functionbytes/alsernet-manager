@@ -155,8 +155,12 @@ Route::prefix('manager')->middleware(['auth'])->group(function () {
 
         // Storage management routes
         Route::get('/storage', [StorageController::class, 'index'])->name('manager.settings.storage');
-        Route::post('/storage', [StorageController::class, 'update'])->name('manager.settings.storage.update');
+        Route::get('/storage/create', [StorageController::class, 'create'])->name('manager.settings.storage.create');
+        Route::post('/storage/update', [StorageController::class, 'update'])->name('manager.settings.storage.update');
         Route::delete('/storage', [StorageController::class, 'destroy'])->name('manager.settings.storage.destroy');
+        Route::post('/storage', [StorageController::class, 'store'])->name('manager.settings.storage.store');
+        Route::get('/storage/{index}/edit', [StorageController::class, 'edit'])->name('manager.settings.storage.edit');
+        Route::patch('/storage/{index}', [StorageController::class, 'updateDisk'])->name('manager.settings.storage.update-disk');
 
         // Category management routes (hierarchical with PrestaShop sync)
         Route::group(['prefix' => 'categories'], function () {
