@@ -97,7 +97,7 @@
                                     @php
                                         $currentRouteName = request()->route()?->getName() ?? '';
                                         $itemRoute = $item['route'];
-                                        $isActive = $currentRouteName === $itemRoute || str_starts_with($currentRouteName, $itemRoute . '.');
+                                        $isActive = $currentRouteName === $itemRoute;
                                     @endphp
                                     <li class="sidebar-item">
                                         <a href="{{ route($item['route']) }}"
