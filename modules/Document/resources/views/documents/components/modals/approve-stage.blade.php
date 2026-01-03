@@ -36,7 +36,7 @@
                         <label class="form-label fw-semibold small">
                             Asignar a usuario específico
                         </label>
-                        <select class="form-select form-select-sm" id="assignToUser">
+                        <select class="form-select select2 form-select-sm" id="assignToUser">
                             <option value="">Cargando...</option>
                         </select>
                         <small class="text-muted">

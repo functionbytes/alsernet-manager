@@ -76,7 +76,7 @@
                                 Modo de asignación
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="assignment_mode" class="form-select" required>
+                            <select name="assignment_mode" class="form-select select2" required>
                                 <option value="manual" {{ old('assignment_mode', 'manual') == 'manual' ? 'selected' : '' }}>
                                     Manual - El administrador asigna manualmente
                                 </option>
@@ -147,7 +147,7 @@
                                                             </div>
                                                         </label>
                                                         <div class="mt-2 priority-selector" style="display: none;">
-                                                            <select name="user_priorities[]" class="form-select form-select-sm select2">
+                                                            <select name="user_priorities[]" class="form-select select2 form-select-sm select2">
                                                                 <option value="primary" selected>Primario</option>
                                                                 <option value="backup">Respaldo</option>
                                                             </select>

@@ -60,7 +60,7 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_initial_request_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_initial_request_id"
                                             name="mail_template_initial_request_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         @foreach ($globalSettings['available_templates'] as $template)
@@ -110,7 +110,7 @@
 
                                     <div class="col-md-12 mt-1">
                                         <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                        <select class="form-select select2-template select2" id="mail_template_reminder_id"
+                                        <select class="form-select select2 select2-template select2" id="mail_template_reminder_id"
                                                 name="mail_template_reminder_id"
                                                 data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                             @foreach ($globalSettings['available_templates'] as $template)
@@ -147,7 +147,7 @@
 
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_missing_docs_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_missing_docs_id"
                                             name="mail_template_missing_docs_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         @foreach ($globalSettings['available_templates'] as $template)
@@ -183,7 +183,7 @@
 
                                 <div class="mb-0">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_custom_email_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_custom_email_id"
                                             name="mail_template_custom_email_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         <option value=""></option>
@@ -222,7 +222,7 @@
 
                                 <div class="mb-0">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_upload_confirmation_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_upload_confirmation_id"
                                             name="mail_template_upload_confirmation_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         @foreach ($globalSettings['available_templates'] as $template)
@@ -260,7 +260,7 @@
 
                                 <div class="mb-0">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_approval_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_approval_id"
                                             name="mail_template_approval_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         @foreach ($globalSettings['available_templates'] as $template)
@@ -298,7 +298,7 @@
 
                                 <div class="mb-0">
                                     <label class="form-label fw-bold">Plantilla de Email (Opcional)</label>
-                                    <select class="form-select select2-template select2" id="mail_template_rejection_id"
+                                    <select class="form-select select2 select2-template select2" id="mail_template_rejection_id"
                                             name="mail_template_rejection_id"
                                             data-placeholder="Selecciona un template o deja vacío para usar el predefinido">
                                         @foreach ($globalSettings['available_templates'] as $template)

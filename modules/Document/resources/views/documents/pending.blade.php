@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="status_id">
+                                    <select class="form-select select2 select2" name="status_id">
                                         <option value="">Todos los estados</option>
                                         @foreach($statuses as $status)
                                             <option value="{{ $status->id }}" {{ ($statusId ?? '') == $status->id ? 'selected' : '' }}>
@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="load_id">
+                                    <select class="form-select select2 select2" name="load_id">
                                         <option value="">Todos los orígenes</option>
                                         @foreach($loads as $load)
                                             <option value="{{ $load->id }}" {{ ($loadId ?? '') == $load->id ? 'selected' : '' }}>

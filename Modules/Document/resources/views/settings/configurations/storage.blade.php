@@ -53,7 +53,7 @@
                     <div class="row g-3">
                         <div class="col-lg-8">
                             <label class="form-label fw-bold">Disco predeterminado</label>
-                            <select class="form-select" id="default_storage_disk" name="default_storage_disk" required>
+                            <select class="form-select select2" id="default_storage_disk" name="default_storage_disk" required>
                                 <option value="">Selecciona un disco</option>
                                 @foreach($storageSettings['available_disks'] as $diskName => $disk)
                                     <option value="{{ $diskName }}"

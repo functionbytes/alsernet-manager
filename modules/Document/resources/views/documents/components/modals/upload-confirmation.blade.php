@@ -32,7 +32,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Categoría de documentos</label>
-                    <select class="form-select" id="documentCategory">
+                    <select class="form-select select2" id="documentCategory">
                         <option value="">Seleccionar categoría...</option>
                         <option value="identity">Documentos de identidad</option>
                         <option value="financial">Documentos financieros</option>

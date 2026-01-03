@@ -382,7 +382,7 @@
                         Vista por Defecto
                     </label>
                     <p class="text-muted small mb-2">Tipo de vista predeterminada para la lista de documentos.</p>
-                    <select class="form-select" name="default_view">
+                    <select class="form-select select2" name="default_view">
                         <option value="grid" {{ ($settings['display']['default_view'] ?? 'grid') == 'grid' ? 'selected' : '' }}>
                             Cuadricula
                         </option>
@@ -403,7 +403,7 @@
                         Elementos por Pagina
                     </label>
                     <p class="text-muted small mb-2">Cantidad de documentos a mostrar por pagina.</p>
-                    <select class="form-select" name="items_per_page">
+                    <select class="form-select select2" name="items_per_page">
                         <option value="10" {{ ($settings['display']['items_per_page'] ?? 20) == 10 ? 'selected' : '' }}>10</option>
                         <option value="20" {{ ($settings['display']['items_per_page'] ?? 20) == 20 ? 'selected' : '' }}>20</option>
                         <option value="50" {{ ($settings['display']['items_per_page'] ?? 20) == 50 ? 'selected' : '' }}>50</option>

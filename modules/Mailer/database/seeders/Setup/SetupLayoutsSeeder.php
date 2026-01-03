@@ -106,54 +106,7 @@ class SetupLayoutsSeeder extends Seeder
 
     private function getHeaderContent(): string
     {
-        return <<<'HTML'
-<!-- =========================
-     HEADER (EMAIL-SAFE)
-========================= -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
-  <tr>
-    <td align="center" style="padding:0;margin:0;">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:600px;max-width:600px;">
-        <tr>
-          <td align="center" style="padding:10px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.4;color:#666;">
-            Si no puedes ver este email correctamente, <a href="{VIEW_ONLINE_URL}" target="_blank" style="color:#666;text-decoration:underline;">ver online</a>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="center" style="padding:18px 20px 10px 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td align="center">
-                  <a href="{HOME_URL}" target="_blank" style="text-decoration:none;border:0;">
-                    <img src="https://imagenes.a-alvarez.com/mailing/Alvarez-logo-es.png"
-                         alt="Alvarez deporte y tiempo libre"
-                         width="400"
-                         border="0"
-                         style="display:block;width:100%;max-width:400px;height:auto;border:0;outline:none;text-decoration:none;">
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Separador opcional -->
-        <tr>
-          <td align="center" style="padding:0 20px 10px 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="border-bottom:1px solid #e6e6e6;line-height:1px;font-size:1px;">&nbsp;</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-      </table>
-    </td>
-  </tr>
-</table>
-HTML;
+        return '';
     }
 
     private function getFooterContent(): string
@@ -344,9 +297,9 @@ HTML;
     private function getWrapperContent(): string
     {
         return <<<'HTML'
-{{ header }}
-{{ content }}
-{{ footer }}
-HTML;
+                {{ header }}
+                {{ content }}
+                {{ footer }}
+                HTML;
     }
 }

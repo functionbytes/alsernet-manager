@@ -52,7 +52,7 @@
                             <label class="form-label fw-semibold small">
                                 Asignar a usuario específico
                             </label>
-                            <select class="form-select form-select-sm" id="assignToUser">
+                            <select class="form-select select2 form-select-sm" id="assignToUser">
                                 <option value="">Todo el grupo ({{ $nextGroupUsers->count() }} usuarios)</option>
                                 @foreach($nextGroupUsers as $user)
                                     <option value="{{ $user->id }}">

@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="input-group">
-                                    <select class="form-select select2" name="proccess" data-minimum-results-for-search="Infinity">
+                                    <select class="form-select select2 select2" name="proccess" data-minimum-results-for-search="Infinity">
                                         <option value="">Seleccionar estado</option>
                                         <option value="1" @isset($proccess) @if ($proccess==1) selected @endif @endisset>  Cargados</option>
                                         <option value="0" @isset($proccess) @if ($proccess==0) selected  @endif @endisset>  Pendiente</option>

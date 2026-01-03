@@ -117,7 +117,7 @@
                         <div class="col-12 col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Estado</label>
-                                <select class="form-select @error('is_active') is-invalid @enderror"
+                                <select class="form-select select2 @error('is_active') is-invalid @enderror"
                                         name="is_active">
                                     <option value="1" {{ old('is_active', $condition->is_active) == '1' ? 'selected' : '' }}>
                                         Activa
@@ -184,7 +184,7 @@
                             Etiquetas <span class="text-danger">*</span>
                         </label>
                         <select multiple
-                                class="form-select select2-tags"
+                                class="form-select select2 select2-tags"
                                 id="sale_types"
                                 name="sale_types[]"
                                 data-placeholder="Seleccionar o agregar sale types...">

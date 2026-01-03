@@ -112,7 +112,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label class="control-label col-form-label">Estado</label>
-                                    <select class="form-select  select2 @error('is_active') is-invalid @enderror" name="is_active">
+                                    <select class="form-select select2  select2 @error('is_active') is-invalid @enderror" name="is_active">
                                         <option value="1" {{ old('is_active', $documentType->is_active) == 1 ? 'selected' : '' }}>Activo</option>
                                         <option value="0" {{ old('is_active', $documentType->is_active) == 0 ? 'selected' : '' }}>Inactivo</option>
                                     </select>
@@ -285,7 +285,7 @@
                                                                                 </div>
                                                                         @else
                                                                             <select multiple
-                                                                                    class="form-select select2 select2-conditions stage-conditions-select"
+                                                                                    class="form-select select2 select2 select2-conditions stage-conditions-select"
                                                                                     id="conditions_{{ $group->key }}"
                                                                                     name="stage_conditions_{{ $group->key }}[]"
                                                                                     data-key="{{ $group->key }}"
@@ -592,7 +592,7 @@ $(document).ready(function() {
                 </p>
             </div>
         @else
-            <select multiple class="form-select select2 select2-conditions stage-conditions-select" name="stage_conditions_@{{KEY}}[]" data-key="@{{KEY}}" data-placeholder="Seleccionar condiciones para ejecutar esta etapa...">
+            <select multiple class="form-select select2 select2 select2-conditions stage-conditions-select" name="stage_conditions_@{{KEY}}[]" data-key="@{{KEY}}" data-placeholder="Seleccionar condiciones para ejecutar esta etapa...">
                 @foreach($validationConditions as $validationCondition)
                     <option value="{{ $validationCondition->key }}"
                             data-description="{{ $validationCondition->description ?? '' }}"
@@ -650,7 +650,7 @@ $(document).ready(function() {
         });
 
         // Create modal HTML
-        var selectHtml = '<select id="stageSelector" class="form-select">' + options + '</select>';
+        var selectHtml = '<select id="stageSelector" class="form-select select2">' + options + '</select>';
 
         var modalHtml = '<div class="modal fade" id="addStageModal" tabindex="-1">' +
             '<div class="modal-dialog modal-dialog-centered">' +

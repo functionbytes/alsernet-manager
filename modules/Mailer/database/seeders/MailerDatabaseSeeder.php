@@ -2,13 +2,12 @@
 
 namespace Modules\Mailer\Database\Seeders;
 
-use Modules\Mailer\Database\Seeders\Setup\SetupVariablesSeeder;
-use Modules\Mailer\Database\Seeders\Setup\SetupLayoutsSeeder;
-use Modules\Mailer\Database\Seeders\Templates\MailerTemplateLayoutSeeder;
+use Illuminate\Database\Seeder;
 use Modules\Mailer\Database\Seeders\Examples\ExampleTemplatesSeeder;
 use Modules\Mailer\Database\Seeders\Migrations\MigrateTemplateTranslationsSeeder;
-use Modules\Mailer\Database\Seeders\Migrations\MigrateDocumentTemplatesSeeder;
-use Illuminate\Database\Seeder;
+use Modules\Mailer\Database\Seeders\Setup\SetupLayoutsSeeder;
+use Modules\Mailer\Database\Seeders\Setup\SetupVariablesSeeder;
+use Modules\Mailer\Database\Seeders\Templates\MailerTemplateLayoutSeeder;
 
 /**
  * MailerDatabaseSeeder
@@ -76,10 +75,6 @@ class MailerDatabaseSeeder extends Seeder
 
         $this->command->info('Step 5: Migrating template translations...');
         $this->call(MigrateTemplateTranslationsSeeder::class);
-        $this->command->info('');
-
-        $this->command->info('Step 6: Migrating document-related templates...');
-        $this->call(MigrateDocumentTemplatesSeeder::class);
         $this->command->info('');
 
         $this->command->info('╔════════════════════════════════════════╗');

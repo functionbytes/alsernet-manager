@@ -17,9 +17,9 @@ This directory contains all database seeders for the Document module.
 - `DocumentValidatorGroupConfigurationSeeder.php` - Validator configurations
 - `DocumentConfigurationSeeder.php` - General document settings
 - `DocumentSettingsSeeder.php` - Advanced document settings
-- `DocumentEmailTemplateSeeder.php` - Email templates for documents
-- `DocumentEmailLayoutSeeder.php` - Email layout templates
-- `StageEmailActionSeeder.php` - Email actions for document stages
+- `DocumentEmailTemplateSeeder.php` - Email templates for documents (complete templates with translations)
+- `MigrateDocumentTemplatesSeeder.php` - Legacy/migration document templates from Mailer module
+- `DocumentStageEmailActionSeeder.php` - Email actions for document stages
 - `DocumentSyncSeeder.php` - Synchronization settings
 
 ### Permissions & Access Control

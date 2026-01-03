@@ -251,7 +251,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small">Zona Horaria</label>
-                                <select class="form-select" name="sla_timezone">
+                                <select class="form-select select2" name="sla_timezone">
                                     <option value="Europe/Madrid" {{ ($settings['sla']['timezone'] ?? 'Europe/Madrid') == 'Europe/Madrid' ? 'selected' : '' }}>
                                         Europe/Madrid
                                     </option>

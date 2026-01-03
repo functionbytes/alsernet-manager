@@ -42,7 +42,7 @@
             <!-- Selector de disco de red (mostrar solo si está habilitada carpeta en red) -->
             <div id="networkDiskSelector" style="display: none;" class="mb-3">
                 <label class="form-label fw-semibold">Carpeta compartida en red</label>
-                <select class="form-select" id="network_disk" name="network_disk">
+                <select class="form-select select2" id="network_disk" name="network_disk">
                     <option value="">Cargando opciones...</option>
                 </select>
                 <small class="text-muted d-block mt-2">

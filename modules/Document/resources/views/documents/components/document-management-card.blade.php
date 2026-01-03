@@ -12,7 +12,7 @@
             <div class="row g-3">
                 <div class="col-12">
                     <label class="form-label fw-semibold">Estado del documento</label>
-                    <select class="form-select select2" id="status_id" name="status_id">
+                    <select class="form-select select2 select2" id="status_id" name="status_id">
                         <option value="">Selecciona un estado</option>
                         @forelse($statuses as $status)
                             <option value="{{ $status->id }}"
@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label fw-semibold">Origen (canal)</label>
-                    <select class="form-select select2" id="source_id" name="source_id">
+                    <select class="form-select select2 select2" id="source_id" name="source_id">
                         <option value="">Sin especificar</option>
                         @forelse($documentSources as $source)
                             <option value="{{ $source->id }}" {{ $document->source_id == $source->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label fw-semibold">Método de carga</label>
-                    <select class="form-select select2" id="load_id" name="load_id">
+                    <select class="form-select select2 select2" id="load_id" name="load_id">
                         <option value="">Sin especificar</option>
                         @forelse($documentLoads as $load)
                             <option value="{{ $load->id }}" {{ $document->load_id == $load->id ? 'selected' : '' }}>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label fw-semibold">Tipo de sincronización</label>
-                    <select class="form-select select2" id="sync_id" name="sync_id">
+                    <select class="form-select select2 select2" id="sync_id" name="sync_id">
                         <option value="">Sin especificar</option>
                         @forelse($documentSyncs as $sync)
                             <option value="{{ $sync->id }}" {{ $document->sync_id == $sync->id ? 'selected' : '' }}>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label fw-semibold">Tipo de subida</label>
-                    <select class="form-select select2" id="upload_id" name="upload_id">
+                    <select class="form-select select2 select2" id="upload_id" name="upload_id">
                         <option value="">Sin especificar</option>
                         @forelse($uploadTypes as $uploadType)
                             <option value="{{ $uploadType->id }}" {{ $document->upload_id == $uploadType->id ? 'selected' : '' }}>

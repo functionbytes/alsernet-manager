@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <select class="form-select select2" name="status" data-minimum-results-for-search="Infinity">
+                            <select class="form-select select2 select2" name="status" data-minimum-results-for-search="Infinity">
                                 <option value="">Todos los estados</option>
                                 <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Activo</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactivo</option>

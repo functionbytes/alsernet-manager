@@ -397,7 +397,7 @@ $(document).ready(function() {
                     <input type="number" class="form-control form-control-sm" name="blockades[${rowCounter}][source_id]" required>
                 </td>
                 <td>
-                    <select class="form-select form-select-sm product-type-select" name="blockades[${rowCounter}][type]" data-row="${rowCounter}" required>
+                    <select class="form-select select2 form-select-sm product-type-select" name="blockades[${rowCounter}][type]" data-row="${rowCounter}" required>
                         <option value="simple">Producto simple</option>
                         <option value="combination">Combinación</option>
                     </select>
@@ -409,7 +409,7 @@ $(document).ready(function() {
                     <input type="number" class="form-control form-control-sm attribute-id-input" name="blockades[${rowCounter}][attribute_id]" data-row="${rowCounter}" disabled>
                 </td>
                 <td>
-                    <select class="form-select form-select-sm" name="blockades[${rowCounter}][document_type_id]" required>
+                    <select class="form-select select2 form-select-sm" name="blockades[${rowCounter}][document_type_id]" required>
                         ${documentTypesOptions}
                     </select>
                 </td>
