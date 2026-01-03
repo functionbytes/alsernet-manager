@@ -7,7 +7,7 @@
             <h5 class="mb-0">Crear evento</h5>
         </div>
         <div class="card-body">
-            <form id="formEvent" method="POST" action="{{ route('events.store') }}">
+            <form id="formEvent" method="POST" action="{{ route('manager.events.store') }}">
                 @csrf
 
                 <div class="row">

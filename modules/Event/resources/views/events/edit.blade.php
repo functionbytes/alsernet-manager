@@ -96,7 +96,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         $.ajax({
-            url: '{{ route("events.update") }}',
+            url: '{{ route("manager.events.update") }}',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
