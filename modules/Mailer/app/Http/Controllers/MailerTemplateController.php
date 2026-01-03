@@ -9,7 +9,7 @@ use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerTemplateLang;
 use Modules\Mailer\Services\MailerTemplateRendererService;
-use Modules\Mailer\Services\MailerVariableValueService;
+use Modules\Mailer\Services\MailerVariableReplacementService;
 
 class MailerTemplateController extends Controller
 {
@@ -406,68 +406,7 @@ class MailerTemplateController extends Controller
     {
         $langId = $langId ?? 1;
 
-        // Obtener valores reales traducidos desde la base de datos
-        $realValues = MailerVariableValueService::getTranslatedValues($langId, $template->module);
-
-        $baseVariables = [
-            // Sistema - usar valores reales de BD, con fallback a config
-            'COMPANY_NAME' => $realValues['COMPANY_NAME'] ?? config('app.name', 'Alsernet'),
-            'SITE_NAME' => $realValues['SITE_NAME'] ?? config('app.name', 'Alsernet'),
-            'SITE_URL' => $realValues['SITE_URL'] ?? config('app.url', 'https://example.com'),
-            'SUPPORT_EMAIL' => $realValues['SUPPORT_EMAIL'] ?? config('mail.support.address', 'soporte@example.com'),
-            'SUPPORT_PHONE' => $realValues['SUPPORT_PHONE'] ?? '+34 900 000 000',
-            'CONTACT_EMAIL' => $realValues['CONTACT_EMAIL'] ?? config('mail.from.address', 'info@example.com'),
-            'CURRENT_YEAR' => date('Y'),
-            'CURRENT_DATE' => date('d/m/Y'),
-            'CURRENT_DATETIME' => date('d/m/Y H:i'),
-
-            // Cliente (ejemplos)
-            'CUSTOMER_NAME' => 'Juan García Pérez',
-            'CUSTOMER_FIRSTNAME' => 'Juan',
-            'CUSTOMER_LASTNAME' => 'García Pérez',
-            'CUSTOMER_EMAIL' => 'juan.garcia@example.com',
-
-            // Pedido (ejemplos)
-            'ORDER_ID' => '12345',
-            'ORDER_REFERENCE' => 'REF-2024-001',
-            'ORDER_DATE' => date('d/m/Y'),
-
-            // Documento (ejemplos)
-            'DOCUMENT_TYPE' => 'DNI',
-            'DOCUMENT_TYPE_LABEL' => 'Documento de Identidad',
-            'DOCUMENT_UID' => 'DOC-ABC123',
-            'UPLOAD_LINK' => config('app.url').'/upload/DOC-ABC123',
-            'UPLOAD_URL' => config('app.url').'/upload/DOC-ABC123',
-            'EXPIRATION_DATE' => date('d/m/Y', strtotime('+3 days')),
-            'DEADLINE' => date('d/m/Y', strtotime('+3 days')),
-
-            // Contenido personalizado (para plantillas custom)
-            'custom_content' => '<p>Este es un contenido de ejemplo para el correo personalizado.</p>',
-            'CUSTOM_CONTENT' => '<p>Este es un contenido de ejemplo para el correo personalizado.</p>',
-        ];
-
-        // Agregar variables específicas según el módulo
-        if ($template->module === 'documents') {
-            $baseVariables['MISSING_DOCUMENTS'] = '<ul style="margin: 10px 0; padding-left: 20px;"><li style="margin: 5px 0;">DNI o Pasaporte</li><li style="margin: 5px 0;">Comprobante de domicilio</li><li style="margin: 5px 0;">Justificante de ingresos</li></ul>';
-            $baseVariables['MISSING_DOCUMENTS_LIST'] = $baseVariables['MISSING_DOCUMENTS'];
-            $baseVariables['REQUIRED_DOCUMENTS_LIST'] = $baseVariables['MISSING_DOCUMENTS'];
-            $baseVariables['DOCUMENT_INSTRUCTIONS'] = 'Por favor, cargue los documentos solicitados en formato PDF o imagen.';
-
-            // Variable NOTES_SECTION con ejemplo de nota del administrador
-            $baseVariables['NOTES_SECTION'] = '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff0049;">
-                <p style="margin: 0; font-weight: bold; color: #374151;">Nota adicional:</p>
-                <p style="margin-top: 10px; font-style: italic; color: #555;">"La foto del DNI está borrosa. Por favor, asegúrese de que todos los datos sean legibles. También necesitamos que el comprobante de domicilio no tenga más de 3 meses de antigüedad."</p>
-            </div>';
-            $baseVariables['NOTES'] = 'La foto del DNI está borrosa. Por favor, asegúrese de que todos los datos sean legibles.';
-            $baseVariables['REQUEST_REASON'] = $baseVariables['NOTES'];
-
-            // Variables para emails de recordatorio
-            $baseVariables['DAYS_SINCE_REQUEST'] = '5';
-            // REMINDER_MESSAGE sin contenedor - la plantilla ya tiene su propio estilo
-            $baseVariables['REMINDER_MESSAGE'] = 'Han pasado <strong>5 días</strong> desde que solicitamos su documentación y aún no hemos recibido respuesta. Le recordamos que es importante que nos envíe los documentos lo antes posible para poder continuar con el procesamiento de su pedido.';
-        }
-
-        return $baseVariables;
+        return MailerVariableReplacementService::getPreviewVariablesForTemplate($template, $langId);
     }
 
     /**
