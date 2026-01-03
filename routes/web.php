@@ -104,28 +104,29 @@ Route::group(['middleware' => ['web']], function () {
     // });
 
     // LiveChat Widget - Public route (no authentication required)
-    Route::prefix('lc')->name('lc.')->group(function () {
-        Route::get('/widget', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'index'])->name('widget');
-        Route::get('/launcher-demo', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'launcherDemo'])->name('launcher-demo');
-        Route::get('/api/backups', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'settings'])->name('widget.backups');
-        Route::get('/api/helpcenter', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiWidget'])->name('widget.helpcenter');
-        Route::get('/api/helpcenter/articles/{id}', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiArticle'])->name('widget.helpcenter.article');
+    // TODO: Implement WidgetController and HelpCenterController from Helpdesk module
+    // Route::prefix('lc')->name('lc.')->group(function () {
+    //     Route::get('/widget', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'index'])->name('widget');
+    //     Route::get('/launcher-demo', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'launcherDemo'])->name('launcher-demo');
+    //     Route::get('/api/backups', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'settings'])->name('widget.backups');
+    //     Route::get('/api/helpcenter', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiWidget'])->name('widget.helpcenter');
+    //     Route::get('/api/helpcenter/articles/{id}', [\App\Http\Controllers\Managers\Helpdesk\HelpCenterController::class, 'apiArticle'])->name('widget.helpcenter.article');
 
-        // Widget Conversation API - Public (customer-facing)
-        Route::post('/api/conversations', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'store'])->name('api.conversations.store');
-        Route::get('/api/conversations/{id}', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'show'])->name('api.conversations.show');
-        Route::post('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'sendMessage'])->name('api.conversations.messages.send');
-        Route::get('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'getMessages'])->name('api.conversations.messages.index');
-        Route::post('/api/conversations/{id}/close', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'close'])->name('api.conversations.close');
+    //     // Widget Conversation API - Public (customer-facing)
+    //     Route::post('/api/conversations', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'store'])->name('api.conversations.store');
+    //     Route::get('/api/conversations/{id}', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'show'])->name('api.conversations.show');
+    //     Route::post('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'sendMessage'])->name('api.conversations.messages.send');
+    //     Route::get('/api/conversations/{id}/messages', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'getMessages'])->name('api.conversations.messages.index');
+    //     Route::post('/api/conversations/{id}/close', [\Modules\Helpdesk\Http\Controllers\Api\Helpdesk\WidgetConversationController::class, 'close'])->name('api.conversations.close');
 
-        // Catch-all route for React Router (BrowserRouter) - Must be last
-        // This allows client-side routing for /lc/widget/*, /lc/widget/conversation, /lc/widget/help, etc.
-        Route::get('/widget/{any?}', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'index'])
-            ->where('any', '.*')
-            ->name('widget.catchall');
-    });
+    //     // Catch-all route for React Router (BrowserRouter) - Must be last
+    //     // This allows client-side routing for /lc/widget/*, /lc/widget/conversation, /lc/widget/help, etc.
+    //     Route::get('/widget/{any?}', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'index'])
+    //         ->where('any', '.*')
+    //         ->name('widget.catchall');
+    // });
 
-    // Alternative route alias for launcher demo (livechat prefix)
-    Route::get('/livechat/launcher-demo', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'launcherDemo'])->name('livechat.launcher-demo');
+    // // Alternative route alias for launcher demo (livechat prefix)
+    // Route::get('/livechat/launcher-demo', [\App\Http\Controllers\Helpdesk\WidgetController::class, 'launcherDemo'])->name('livechat.launcher-demo');
 
 });
