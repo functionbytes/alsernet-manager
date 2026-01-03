@@ -255,8 +255,8 @@ class MailerComponentController extends Controller
                 ]);
             } else {
                 // Crear nueva traducción si no existe
-                $translation = LayoutTranslation::create([
-                    'layout_id' => $layout->id,
+                $translation = MailerLayoutLang::create([
+                    'mailer_layout_id' => $layout->id,
                     'lang_id' => $validated['lang_id'],
                     'subject' => $validated['subject'],
                     'content' => $validated['content'],
