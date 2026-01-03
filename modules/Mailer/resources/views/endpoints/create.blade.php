@@ -154,7 +154,7 @@
                             <select class="form-select select2 @error('lang_id') is-invalid @enderror"
                                     id="lang_id" name="lang_id">
                                 <option value="">-- Seleccionar idioma --</option>
-                                @foreach($languages as $lang)
+                                @foreach($langs as $lang)
                                     <option value="{{ $lang->id }}" @if(old('lang_id') == $lang->id) selected @endif>
                                         {{ $lang->title }}
                                     </option>
