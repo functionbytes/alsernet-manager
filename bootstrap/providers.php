@@ -25,6 +25,7 @@ return [
     Modules\Backup\Providers\BackupServiceProvider::class,
     Modules\Event\Providers\EventServiceProvider::class,
     Modules\Health\Providers\HealthServiceProvider::class,
+    Modules\Horizon\Providers\HorizonServiceProvider::class,
     Modules\System\Providers\SystemServiceProvider::class,
     Modules\Telescope\Providers\TelescopeServiceProvider::class,
 

@@ -44,6 +44,7 @@
             "Modules\\Compliance\\": "modules/Compliance/app/",
             "Modules\\Document\\": "modules/Document/app/",
             "Modules\\Health\\": "modules/Health/app/",
+            "Modules\\Horizon\\": "modules/Horizon/app/",
             "Modules\\Mail\\": "modules/Mail/app/",
             "Modules\\Mailer\\": "modules/Mailer/app/",
             "Modules\\MailsSettings\\": "modules/MailsSettings/app/",

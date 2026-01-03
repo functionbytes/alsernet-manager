@@ -11,6 +11,12 @@ use Modules\Warehouse\Http\Controllers\Settings\WarehouseLocationSectionsControl
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseLocationStylesController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseMapController;
 use Modules\Warehouse\Http\Controllers\Settings\WarehouseReportsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsController as ShopsLocationsController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\BarcodeController as LocationsBarcodesController;
+use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\ReportController;
+use Modules\Warehouse\Http\Controllers\Products\ProductsController;
+use Modules\Warehouse\Http\Controllers\Products\BarcodeController as ProductsBarcodesController;
 
 /*
 |--------------------------------------------------------------------------

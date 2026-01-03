@@ -30,7 +30,7 @@ class EventsController extends Controller
 
         $events = $events->paginate(10);
 
-        return view('event::theme.events.index')->with([
+        return view('event::events.index')->with([
             'events' => $events,
             'available' => $available,
             'searchKey' => $searchKey,
@@ -41,7 +41,7 @@ class EventsController extends Controller
     {
         $options = $this->getFormOptions();
 
-        return view('event::theme.events.create')->with($options);
+        return view('event::events.create')->with($options);
     }
 
     public function edit(string $uid): View
@@ -49,7 +49,7 @@ class EventsController extends Controller
         $event = Event::uid($uid);
         $options = $this->getFormOptions();
 
-        return view('event::theme.events.edit')->with([
+        return view('event::events.edit')->with([
             'event' => $event,
             ...$options,
         ]);
@@ -59,7 +59,7 @@ class EventsController extends Controller
     {
         $event = Event::uid($uid);
 
-        return view('event::theme.events.show')->with([
+        return view('event::events.show')->with([
             'event' => $event,
         ]);
     }

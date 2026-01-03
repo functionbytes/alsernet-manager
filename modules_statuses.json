@@ -10,6 +10,7 @@
     "Faq": false,
     "Helpdesk": false,
     "Health": true,
+    "Horizon": true,
     "Mail": false,
     "Mailer": true,
     "MailsSettings": true,

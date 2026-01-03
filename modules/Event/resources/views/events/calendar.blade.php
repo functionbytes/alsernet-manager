@@ -6,7 +6,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="mb-0 fw-bold">Calendario de eventos</h5>
-                <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('manager.events.create') }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-plus me-2"></i>Crear evento
                 </a>
             </div>
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             day: 'Día',
             list: 'Lista'
         },
-        events: '{{ route("events.calendar.events") }}',
+        events: '{{ route("manager.events.calendar.events") }}',
         eventClick: function(info) {
             if (info.event.url) {
                 window.location.href = info.event.url;

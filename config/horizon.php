@@ -214,10 +214,39 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
-                'maxProcesses' => 10,
+            'supervisor-default' => [
+                'queue' => ['default'],
+                'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+            ],
+            'supervisor-emails' => [
+                'queue' => ['emails'],
+                'maxProcesses' => 5,
+            ],
+            'supervisor-high' => [
+                'queue' => ['high', 'deliveries'],
+                'maxProcesses' => 10,
+            ],
+            'supervisor-pdf' => [
+                'queue' => ['pdf-generation'],
+                'maxProcesses' => 3,
+            ],
+            'supervisor-bulk' => [
+                'queue' => ['bulk-operations'],
+                'maxProcesses' => 2,
+            ],
+            'supervisor-notifications' => [
+                'queue' => ['notifications'],
+                'maxProcesses' => 5,
+            ],
+            'supervisor-erp' => [
+                'queue' => ['erp'],
+                'maxProcesses' => 3,
+            ],
+            'supervisor-ai' => [
+                'queue' => ['ai-content'],
+                'maxProcesses' => 2,
             ],
         ],
 

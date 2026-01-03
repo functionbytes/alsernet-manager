@@ -12,7 +12,7 @@ class CalendarController extends Controller
 {
     public function index(): View
     {
-        return view('event::theme.events.calendar');
+        return view('event::events.calendar');
     }
 
     public function events(Request $request): JsonResponse

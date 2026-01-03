@@ -86,7 +86,8 @@ use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsControl
 // use App\Http\Controllers\Managers\Warehouses\WarehouseLocationStylesController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseMapController;
 // use App\Http\Controllers\Managers\Warehouses\WarehouseReportsController;
-use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
+// Warehouse routes are now handled by the Warehouse module
+// use Modules\Warehouse\Http\Controllers\Settings\Shops\Shops\ShopsController;
 
 // use App\Http\Controllers\Managers\Settings\ErpIntegrationSettingsController; // TODO: Controller doesn't exist
 

@@ -18,7 +18,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($this->createUser())
             ->get(route('manager.events'))
             ->assertStatus(200)
-            ->assertViewIs('event::theme.events.index');
+            ->assertViewIs('event::managers.events.index');
     }
 
     /**
@@ -29,7 +29,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($this->createUser())
             ->get(route('manager.events.create'))
             ->assertStatus(200)
-            ->assertViewIs('event::theme.events.create');
+            ->assertViewIs('event::managers.events.create');
     }
 
     /**
@@ -67,7 +67,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($this->createUser())
             ->get(route('manager.events.edit', $event->uid))
             ->assertStatus(200)
-            ->assertViewIs('event::theme.events.edit')
+            ->assertViewIs('event::managers.events.edit')
             ->assertViewHas('event', $event);
     }
 
@@ -109,7 +109,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($this->createUser())
             ->get(route('manager.events.view', $event->uid))
             ->assertStatus(200)
-            ->assertViewIs('event::theme.events.show')
+            ->assertViewIs('event::managers.events.show')
             ->assertViewHas('event', $event);
     }
 
@@ -121,7 +121,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($this->createUser())
             ->get(route('manager.events.calendar'))
             ->assertStatus(200)
-            ->assertViewIs('event::theme.events.calendar');
+            ->assertViewIs('event::managers.events.calendar');
     }
 
     /**
