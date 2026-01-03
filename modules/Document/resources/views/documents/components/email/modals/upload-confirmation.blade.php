@@ -147,7 +147,7 @@
             formData.append('_token', '{{ csrf_token() }}');
 
             $.ajax({
-                url: "{{ route('api.documents.upload-files', $document->uid) }}",
+                url: "{{ route('api.documents.files.store', $document->uid) }}",
                 method: 'POST',
                 data: formData,
                 processData: false,
