@@ -94,7 +94,8 @@ Route::middleware(['web', 'auth', 'role:super-admin'])->group(function () {
             Route::get('/sla', [DocumentConfigurationController::class, 'slaSettings'])->name('sla');
 
             // Update operations
-            Route::patch('/', [DocumentConfigurationController::class, 'update'])->name('update');
+            Route::patch('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('update');
+            Route::post('/', [DocumentConfigurationController::class, 'updateGlobalSettings'])->name('store');
             Route::post('/sla/update', [DocumentConfigurationController::class, 'updateSlaSettings'])->name('sla.update');
             Route::post('/reset-defaults', [DocumentConfigurationController::class, 'resetToDefaults'])->name('reset-defaults');
         });
