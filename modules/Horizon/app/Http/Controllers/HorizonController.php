@@ -20,6 +20,7 @@ class HorizonController extends Controller
         $this->authorize('view-horizon');
 
         $stats = $this->statsService->getOverallStats();
+        $stats['uptime_formatted'] = $this->formatUptime($stats['uptime'] ?? 0);
 
         $pageTitle = 'Monitoreo de colas';
         $breadcrumb = 'Configuración / Horizon';
@@ -90,5 +91,29 @@ class HorizonController extends Controller
             'pageTitle',
             'breadcrumb'
         ));
+    }
+
+    /**
+     * Format uptime seconds to human-readable format
+     */
+    private function formatUptime(int $seconds): string
+    {
+        if ($seconds === 0) {
+            return '—';
+        }
+
+        $days = intdiv($seconds, 86400);
+        $hours = intdiv($seconds % 86400, 3600);
+        $minutes = intdiv($seconds % 3600, 60);
+
+        if ($days > 0) {
+            return "{$days}d {$hours}h";
+        }
+
+        if ($hours > 0) {
+            return "{$hours}h {$minutes}m";
+        }
+
+        return "{$minutes}m";
     }
 }

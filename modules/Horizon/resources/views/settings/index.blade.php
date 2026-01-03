@@ -89,15 +89,15 @@
                 <div class="card-body">
                     <h6 class="card-title fw-bold mb-3">Acciones rápidas</h6>
                     <div class="d-grid gap-2">
-                        @can('manage-horizon-settings')
+                        @can('manage-horizon-backups')
                             <button class="btn btn-outline-primary btn-sm" onclick="retryAllFailed()">
                                 <i class="fas fa-sync-alt me-2"></i>Reintentar todos los fallidos
                             </button>
                         @endcan
-                        <a href="{{ route('settings.horizon.failed') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('backups.horizon.failed') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-list me-2"></i>Ver trabajos fallidos
                         </a>
-                        <a href="{{ route('settings.horizon.metrics') }}" class="btn btn-outline-info btn-sm">
+                        <a href="{{ route('backups.horizon.metrics') }}" class="btn btn-outline-info btn-sm">
                             <i class="fas fa-chart-line me-2"></i>Ver métricas
                         </a>
                         <a href="/horizon" target="_blank" class="btn btn-outline-dark btn-sm">
@@ -128,7 +128,7 @@
                         </div>
                         <div class="col-6">
                             <p class="text-muted mb-1">Tiempo de actividad</p>
-                            <p class="fw-bold">{{ $this->formatUptime($stats['uptime'] ?? 0) }}</p>
+                            <p class="fw-bold">{{ $stats['uptime_formatted'] ?? '—' }}</p>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
     function retryAllFailed() {
         if (!confirm('¿Desea reintentar todos los trabajos fallidos?')) return;
 
-        fetch('{{ route('settings.horizon.api.retryAll') }}', {
+        fetch('{{ route('backups.horizon.api.retryAll') }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -196,7 +196,7 @@
 
     // Auto-refresh statistics
     setInterval(() => {
-        fetch('{{ route('settings.horizon.api.stats') }}')
+        fetch('{{ route('backups.horizon.api.stats') }}')
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
