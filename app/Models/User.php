@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Library\AutoBillingData;
 use App\Library\Facades\Billing;
 use App\Library\Facades\SubscriptionFacade;
-use App\Models\Role\RoleMapping;
 use App\Models\Subscription\Subscription;
 use App\Models\Subscription\SubscriptionLog;
 use App\Traits\HasUid;
@@ -24,10 +23,11 @@ use Modules\Subscriber\Models\Subscriber;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
+use Modules\Document\Traits\HasDocumentPermissions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens,HasFactory , HasRoles , HasUid , LogsActivity;
+    use HasApiTokens,HasFactory , HasRoles , HasUid , LogsActivity, HasDocumentPermissions;
     use Notifiable {
         routeNotificationFor as protected routeNotificationForNotifiable;
     }
@@ -136,41 +136,16 @@ class User extends Authenticatable
 
     /**
      * Get the dashboard route for the user based on their primary role
-     * Dynamically determines the redirect route based on user's assigned roles
-     * and the profile mappings stored in the database
+     * Uses Spatie Laravel Permission to determine the appropriate dashboard
+     * All users go to the generic Core dashboard which adapts based on role
      *
      * @return string The route name for the user's dashboard
      */
     public function redirectRouteName(): string
     {
-        // Super-admins get access to manager dashboard with full control
-        if ($this->hasRole('super-admin')) {
-            return 'manager.dashboard';
-        }
-
-        // Admins get access to manager dashboard
-        if ($this->hasRole('admin')) {
-            return 'manager.dashboard';
-        }
-
-        // Get all active role mappings to determine user's profile
-        $roleMappings = RoleMapping::getActive();
-        $userRoles = $this->roles->pluck('name')->toArray();
-
-        // Check each profile to see if user has any of its allowed roles
-        foreach ($roleMappings as $profile => $allowedRoles) {
-            $matchingRoles = array_intersect($userRoles, $allowedRoles);
-            if (! empty($matchingRoles)) {
-                // User has a role in this profile, get the dashboard route
-                $route = ProfileRoute::getRoute($profile);
-                if ($route) {
-                    return $route;
-                }
-            }
-        }
-
-        // Fallback: No matching role found - redirect to manager dashboard as default
-        return 'manager.dashboard';
+        // All users go to the generic Core dashboard
+        // The dashboard adapts its content based on the user's role via Spatie
+        return 'core.dashboard';
     }
 
     public function passwordHistories(): HasMany

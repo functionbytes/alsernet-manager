@@ -24,12 +24,12 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-2">Destino de almacenamiento</label>
                 <div class="btn-group w-100" role="group">
-                    <input type="radio" class="btn-check storage-destination" name="storage_destination" id="storage_local" value="local" checked>
+                    <input type="radio" class="btn-check storage-destination" name="storage_destination" id="storage_local" value="local" checked @if(!auth()->user()->canActionDocumentComponent('document-upload', 'upload')) disabled @endif>
                     <label class="btn btn-outline-primary" for="storage_local">
                         <i class="fas fa-server me-2"></i>Almacenamiento local
                     </label>
 
-                    <input type="radio" class="btn-check storage-destination" name="storage_destination" id="storage_network" value="network">
+                    <input type="radio" class="btn-check storage-destination" name="storage_destination" id="storage_network" value="network" @if(!auth()->user()->canActionDocumentComponent('document-upload', 'upload')) disabled @endif>
                     <label class="btn btn-outline-primary" for="storage_network">
                         <i class="fas fa-network-wired me-2"></i>Carpeta en red
                     </label>
@@ -42,7 +42,7 @@
             <!-- Selector de disco de red (mostrar solo si está habilitada carpeta en red) -->
             <div id="networkDiskSelector" style="display: none;" class="mb-3">
                 <label class="form-label fw-semibold">Carpeta compartida en red</label>
-                <select class="form-select select2" id="network_disk" name="network_disk">
+                <select class="form-select select2" id="network_disk" name="network_disk" @if(!auth()->user()->canActionDocumentComponent('document-upload', 'upload')) disabled @endif>
                     <option value="">Cargando opciones...</option>
                 </select>
                 <small class="text-muted d-block mt-2">
@@ -79,9 +79,15 @@
                                         <a href="{{ parse_url($uploadedDocs[$docKey]->getUrl(), PHP_URL_PATH) }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
                                             <i class="fa fa-download"></i>
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-media-id="{{ $uploadedDocs[$docKey]->id }}" data-doc-type="{{ $docKey }}" title="Eliminar">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
+                                        @if(auth()->user()->canActionDocumentComponent('document-upload', 'delete'))
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-media-id="{{ $uploadedDocs[$docKey]->id }}" data-doc-type="{{ $docKey }}" title="Eliminar">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-danger" disabled title="No tienes permiso para eliminar documentos">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +98,7 @@
                                 class="form-control document-file-input"
                                 name="documents[{{ $docKey }}]"
                                 data-doc-type="{{ $docKey }}"
-                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" @if(!auth()->user()->canActionDocumentComponent('document-upload', 'upload')) disabled @endif
                             >
                             <small class="text-muted d-block mt-1">
                                 <i class="fa fa-info-circle"></i> PDF, JPG, PNG, DOC (máximo 10MB)
@@ -111,7 +117,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 btn-upload-document" @if($allUploaded) disabled @endif>
+                <button type="submit" class="btn btn-primary w-100 btn-upload-document" @if($allUploaded || !auth()->user()->canActionDocumentComponent('document-upload', 'upload')) disabled @endif>
                     @if($allUploaded)
                         <i class="fa fa-check-circle"></i> Documentos Completos
                     @else

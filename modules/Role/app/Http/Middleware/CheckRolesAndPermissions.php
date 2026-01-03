@@ -2,25 +2,13 @@
 
 namespace Modules\Role\Http\Middleware;
 
-use App\Models\Role\RoleMapping;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class CheckRolesAndPermissions
 {
-    /**
-     * Get role mappings dynamically from database with caching
-     * Caches for 1 hour to improve performance
-     */
-    protected function getRoleMapping(): array
-    {
-        return Cache::remember('role_mappings_active', 3600, function () {
-            return RoleMapping::getActive();
-        });
-    }
 
     /**
      * Mapping of HTTP actions to permission suffixes
@@ -54,18 +42,18 @@ class CheckRolesAndPermissions
             return redirect()->route('login');
         }
 
+        // Super-admin has access to everything
         if ($user->hasRole('super-admin')) {
             return $next($request);
         }
 
-        $roleMapping = $this->getRoleMapping();
-        if ($roleType && isset($roleMapping[$roleType])) {
-            if (! $user->hasAnyRole($roleMapping[$roleType])) {
-                $this->logAccessDenial($request, $user, 'Rol no autorizado para acceder a esta sección');
-                abort(403, 'No tienes permisos para acceder a esta sección.');
-            }
+        // If roleType is specified, check if user has that role
+        if ($roleType && ! $user->hasRole($roleType)) {
+            $this->logAccessDenial($request, $user, "Rol '{$roleType}' no autorizado para acceder a esta sección");
+            abort(403, "No tienes permisos para acceder a esta sección.");
         }
 
+        // Check specific permissions for the route
         $this->checkSpecificPermissions($request, $user, $roleType);
 
         return $next($request);
@@ -73,58 +61,35 @@ class CheckRolesAndPermissions
 
     /**
      * Verify that the user has specific permissions for the requested route
+     * Uses Spatie Laravel Permission to check permissions
      */
-    private function checkSpecificPermissions(Request $request, $user, string $role): void
+    private function checkSpecificPermissions(Request $request, $user, ?string $role): void
     {
         $routeName = $request->route()?->getName();
         if (! $routeName) {
             return;
         }
 
-        $roleMapping = $this->getRoleMapping();
-        if (! isset($roleMapping[$role])) {
-            $this->logAccessDenial($request, $user, "Grupo no válido: $role");
-            abort(403, "Grupo no válido: $role");
-        }
-
-        $validRoles = $roleMapping[$role];
-
-        // Verify user has one of the allowed roles for this group
-        $userRoleNames = $user->roles->pluck('name')->toArray();
-        $hasAllowedRole = collect($userRoleNames)->intersect($validRoles)->isNotEmpty();
-
-        if (! $hasAllowedRole) {
-            $this->logAccessDenial($request, $user, "Rol no pertenece al grupo permitido: $role");
-            abort(403, "Tu rol no pertenece al grupo permitido para esta ruta ($role).");
-        }
-
-        // Extract permissions only from allowed roles
-        $permissions = $user->roles
-            ->filter(fn ($r) => in_array($r->name, $validRoles))
-            ->flatMap(fn ($r) => $r->permissions->pluck('name'))
-            ->unique()
-            ->values()
-            ->toArray();
-
-        // Strip the group prefix from route name (e.g: callcenter.returns.index → returns.index)
-        $internalRoute = str($routeName)->after("{$role}.")->toString();
-        $segments = explode('.', $internalRoute);
+        // Extract route segments for permission checking
+        // Example: callcenter.returns.index → resource: returns, action: index
+        $segments = explode('.', $routeName);
 
         if (count($segments) < 2) {
             $this->logAccessDenial($request, $user, "Ruta inválida: $routeName");
             abort(403, "Ruta no válida: $routeName");
         }
 
-        $resource = $segments[0]; // e.g: returns
-        $action = $segments[1];   // e.g: index
+        $resource = $segments[count($segments) - 2]; // e.g: returns
+        $action = $segments[count($segments) - 1];    // e.g: index
 
         // Resolve the required permission from the action
         $suffix = $this->actionToPermission[$action] ?? $action;
         $permission = "{$resource}.{$suffix}";
 
-        if (! in_array($permission, $permissions)) {
-            $this->logAccessDenial($request, $user, "Permiso requerido: $permission");
-            abort(403, "No tienes permisos para acceder a esta ruta: $permission");
+        // Check if user has the permission using Spatie
+        if (! $user->hasPermissionTo($permission)) {
+            $this->logAccessDenial($request, $user, "Permiso requerido: {$permission}");
+            abort(403, "No tienes permisos para acceder a esta ruta: {$permission}");
         }
     }
 

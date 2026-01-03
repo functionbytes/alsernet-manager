@@ -8,6 +8,7 @@ return [
     App\Providers\TelescopeServiceProvider::class,
     Modules\Auth\Providers\AuthServiceProvider::class,
     Modules\Backup\Providers\BackupServiceProvider::class,
+    Modules\Core\Providers\CoreServiceProvider::class,
     Modules\Database\Providers\DatabaseServiceProvider::class,
     Modules\Document\Providers\DocumentsServiceProvider::class,
     Modules\Event\Providers\EventServiceProvider::class,

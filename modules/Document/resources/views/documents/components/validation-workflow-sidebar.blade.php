@@ -78,12 +78,25 @@
         {{-- Action Buttons --}}
         @if($canApproveStage)
             <div class="d-grid gap-2 mb-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#approveStageModal">
-                    Aprobar
-                </button>
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rejectStageModal">
-                    Rechazar
-                </button>
+                @if(auth()->user()->canActionDocumentComponent('validation-workflow', 'approve'))
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#approveStageModal">
+                        Aprobar
+                    </button>
+                @else
+                    <button type="button" class="btn btn-primary" disabled title="No tienes permiso para aprobar documentos">
+                        Aprobar
+                    </button>
+                @endif
+
+                @if(auth()->user()->canActionDocumentComponent('validation-workflow', 'reject'))
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rejectStageModal">
+                        Rechazar
+                    </button>
+                @else
+                    <button type="button" class="btn btn-outline-primary" disabled title="No tienes permiso para rechazar documentos">
+                        Rechazar
+                    </button>
+                @endif
             </div>
         @elseif($document->validation_status === 'approved')
             <div class="alert bg-primary-subtle py-3 px-3 mb-3" role="alert">

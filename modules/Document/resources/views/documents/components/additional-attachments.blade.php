@@ -30,7 +30,7 @@
                            class="form-control form-control-sm"
                            id="additionalFile"
                            name="file"
-                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled @endif>
                     <small class="text-muted d-block mt-1">
                         <i class="fas fa-info-circle me-1"></i>
                         PDF, JPG, PNG, DOC, DOCX (máx. 10MB)
@@ -45,12 +45,12 @@
                            id="attachmentNotes"
                            name="notes"
                            placeholder="Ej: Factura proforma, Contrato firmado..."
-                           maxlength="500">
+                           maxlength="500" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled @endif>
                 </div>
                 <div class="col-12">
                     <button type="submit"
                             class="btn btn-primary w-100"
-                            id="uploadAttachmentBtn">
+                            id="uploadAttachmentBtn" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled title="No tienes permiso para subir adjuntos" @endif>
                         <i class="fas fa-upload me-2"></i>Subir documento
                     </button>
                 </div>
@@ -109,13 +109,23 @@
                                                data-bs-toggle="tooltip">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger attachment-action-btn delete-attachment-btn"
-                                                    data-media-id="{{ $attachment['id'] }}"
-                                                    title="Eliminar"
-                                                    data-bs-toggle="tooltip">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            @if(auth()->user()->canActionDocumentComponent('additional-attachments', 'delete'))
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger attachment-action-btn delete-attachment-btn"
+                                                        data-media-id="{{ $attachment['id'] }}"
+                                                        title="Eliminar"
+                                                        data-bs-toggle="tooltip">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            @else
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger attachment-action-btn"
+                                                        disabled
+                                                        title="No tienes permiso para eliminar adjuntos"
+                                                        data-bs-toggle="tooltip">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

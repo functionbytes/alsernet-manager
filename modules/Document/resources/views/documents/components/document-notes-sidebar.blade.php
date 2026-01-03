@@ -45,14 +45,29 @@
                             <div class="d-flex align-items-center gap-1 flex-shrink-0">
                                 @if(auth()->check() && $note->created_by === auth()->user()->id)
                                     <div class="note-actions-editable">
-                                        <button class="btn-note-edit" data-note-id="{{ $note->id }}"
-                                                data-bs-toggle="tooltip" data-bs-title="Editar nota">
-                                            <i class="fas fa-pen-to-square text-black fs-2"></i>
-                                        </button>
-                                        <button class="btn-note-delete" data-note-id="{{ $note->id }}"
-                                                data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
-                                            <i class="fas fa-trash text-black fs-2"></i>
-                                        </button>
+                                        @if(auth()->user()->canActionDocumentComponent('document-notes', 'edit'))
+                                            <button class="btn-note-edit" data-note-id="{{ $note->id }}"
+                                                    data-bs-toggle="tooltip" data-bs-title="Editar nota">
+                                                <i class="fas fa-pen-to-square text-black fs-2"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn-note-edit" disabled title="No tienes permiso para editar notas"
+                                                    style="opacity: 0.5; cursor: not-allowed;">
+                                                <i class="fas fa-pen-to-square text-black fs-2"></i>
+                                            </button>
+                                        @endif
+
+                                        @if(auth()->user()->canActionDocumentComponent('document-notes', 'delete'))
+                                            <button class="btn-note-delete" data-note-id="{{ $note->id }}"
+                                                    data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
+                                                <i class="fas fa-trash text-black fs-2"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn-note-delete" disabled title="No tienes permiso para eliminar notas"
+                                                    style="opacity: 0.5; cursor: not-allowed;">
+                                                <i class="fas fa-trash text-black fs-2"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 @endif
                             </div>
@@ -91,10 +106,10 @@
             @csrf
             <div class="mb-2">
                 <textarea class="form-control form-control-sm" id="noteContent" name="content" rows="2"
-                          placeholder="Escribe una nota..." required style="resize: none;"></textarea>
+                          placeholder="Escribe una nota..." required style="resize: none;" @if(!auth()->user()->canActionDocumentComponent('document-notes', 'add')) disabled @endif></textarea>
             </div>
             <div class="text-end">
-                <button type="submit" class="btn btn-primary  w-100">
+                <button type="submit" class="btn btn-primary  w-100" @if(!auth()->user()->canActionDocumentComponent('document-notes', 'add')) disabled title="No tienes permiso para agregar notas" @endif>
                     <i class="fas fa-plus me-1"></i> Agregar
                 </button>
             </div>

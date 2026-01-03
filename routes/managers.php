@@ -2,7 +2,7 @@
 
 // Campaign routes are now handled by modules\Campaign
 // See: modules/Campaign/routes/theme.php
-use App\Http\Controllers\Managers\DashboardController;
+// Dashboard now handled by Core module
 use App\Http\Controllers\Managers\PulseController;
 use App\Http\Controllers\Managers\Settings\BackupController;
 use App\Http\Controllers\Managers\Settings\BackupScheduleController;
@@ -93,7 +93,8 @@ use Modules\Warehouse\Http\Controllers\Settings\Shops\Locations\LocationsControl
 
 Route::prefix('manager')->middleware(['auth'])->group(function () {
 
-    Route::get('/', [DashboardController::class, 'dashboard'])->name('manager.dashboard');
+    // Redirect to Core module dashboard
+    Route::get('/', fn () => redirect()->route('core.dashboard'))->name('manager.dashboard');
 
     // User Management Routes (APPROACH 1: Middleware-Based)
     // These routes are protected by CheckRolesAndPermissions middleware

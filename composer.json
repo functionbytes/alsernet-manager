@@ -39,6 +39,7 @@
             "Modules\\Analytics\\": "modules/Analytics/app/",
             "Modules\\Auth\\": "modules/Auth/app/",
             "Modules\\Backup\\": "modules/Backup/app/",
+            "Modules\\Core\\": "modules/Core/app/",
             "Modules\\Compliance\\": "modules/Compliance/app/",
             "Modules\\Document\\": "modules/Document/app/",
             "Modules\\Health\\": "modules/Health/app/",
