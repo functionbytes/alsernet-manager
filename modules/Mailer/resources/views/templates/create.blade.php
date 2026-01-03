@@ -718,7 +718,7 @@ $(document).ready(function() {
 
         // Call API to load variables for the module
         $.ajax({
-            url: '{{ route('mailers.variables-by-module') }}',
+            url: '{{ route('mailers.templates.variables-by-module') }}',
             type: 'GET',
             data: { module: module },
             dataType: 'json',
