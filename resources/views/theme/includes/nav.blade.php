@@ -96,7 +96,7 @@
                                 @forelse($section['items'] as $item)
                                     <li class="sidebar-item">
                                         <a href="{{ route($item['route']) }}"
-                                           class="sidebar-link {{ request()->routeIs($item['route'] . '*') ? 'active' : '' }}">
+                                           class="sidebar-link @if(request()->routeIs($item['route']) || request()->routeIs($item['route'] . '.*')) active @endif">
                                             @if(!empty($item['icon']))
                                                 <i class="fa {{ $item['icon'] }} me-2"></i>
                                             @endif
