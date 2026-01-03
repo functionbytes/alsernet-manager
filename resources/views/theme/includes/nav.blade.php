@@ -94,9 +94,14 @@
                                 </li>
 
                                 @forelse($section['items'] as $item)
+                                    @php
+                                        $currentRouteName = request()->route()?->getName() ?? '';
+                                        $itemRoute = $item['route'];
+                                        $isActive = $currentRouteName === $itemRoute || str_starts_with($currentRouteName, $itemRoute . '.');
+                                    @endphp
                                     <li class="sidebar-item">
                                         <a href="{{ route($item['route']) }}"
-                                           class="sidebar-link @if(request()->routeIs($item['route']) || request()->routeIs($item['route'] . '.*')) active @endif">
+                                           class="sidebar-link {{ $isActive ? 'active' : '' }}">
                                             @if(!empty($item['icon']))
                                                 <i class="fa {{ $item['icon'] }} me-2"></i>
                                             @endif
