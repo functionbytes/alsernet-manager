@@ -842,7 +842,23 @@ kbd {
 }
 
 
+/* Sidebar Navigation Transitions */
+.side-mini-panel .sidebarmenu .sidebar-nav {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
 .side-mini-panel .sidebarmenu .sidebar-nav.d-none {
     display: none !important;
     visibility: hidden !important;
+    opacity: 0;
+}
+
+/* Ensure nav-small-cap properly hides with parent */
+.sidebar-nav.d-none .nav-small-cap,
+.sidebar-nav.d-none .sidebar-item {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }

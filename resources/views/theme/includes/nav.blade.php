@@ -69,23 +69,34 @@
                          id="menu-right-{{ $sidebarId }}"
                          data-simplebar="init">
                         <ul class="sidebar-menu" id="sidebarnav-{{ $sidebarId }}">
-                            <li class="nav-small-cap">
-                                <span class="hide-menu">{{ $sidebar['title'] }}</span>
-                            </li>
+                            @php
+                                $sections = isset($sidebar['sections']) ? $sidebar['sections'] : [['title' => $sidebar['title'] ?? 'Menu', 'items' => $sidebar['items'] ?? []]];
+                            @endphp
 
-                            @forelse($sidebar['items'] as $item)
-                                <li class="sidebar-item">
-                                    <a href="{{ route($item['route']) }}"
-                                       class="sidebar-link {{ request()->routeIs($item['route'] . '*') ? 'active' : '' }}">
-                                        @if(!empty($item['icon']))
-                                            <i class="fa {{ $item['icon'] }} me-2"></i>
-                                        @endif
-                                        <span class="hide-menu">{{ $item['label'] }}</span>
-                                    </a>
+                            @forelse($sections as $section)
+                                <!-- Sección de configuración con nav-small-cap -->
+                                <li class="nav-small-cap">
+                                    <span class="hide-menu">{{ $section['title'] }}</span>
                                 </li>
+
+                                @forelse($section['items'] as $item)
+                                    <li class="sidebar-item">
+                                        <a href="{{ route($item['route']) }}"
+                                           class="sidebar-link {{ request()->routeIs($item['route'] . '*') ? 'active' : '' }}">
+                                            @if(!empty($item['icon']))
+                                                <i class="fa {{ $item['icon'] }} me-2"></i>
+                                            @endif
+                                            <span class="hide-menu">{{ $item['label'] }}</span>
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li class="sidebar-item">
+                                        <span class="hide-menu text-muted">Sin opciones</span>
+                                    </li>
+                                @endforelse
                             @empty
                                 <li class="sidebar-item">
-                                    <span class="hide-menu text-muted">Sin opciones</span>
+                                    <span class="hide-menu text-muted">Sin secciones</span>
                                 </li>
                             @endforelse
                         </ul>
@@ -128,14 +139,16 @@
                 item.classList.remove('selected');
             });
 
-            // Mostrar el sidebar seleccionado
-            targetSidebar.classList.remove('d-none');
-            targetMiniNav.classList.add('selected');
+            // Mostrar el sidebar seleccionado con delay para permitir transiciones CSS
+            setTimeout(() => {
+                targetSidebar.classList.remove('d-none');
+                targetMiniNav.classList.add('selected');
 
-            // Dispatch event para reinicializar tooltips
-            document.dispatchEvent(new CustomEvent('sidebarChanged', {
-                detail: { sidebarId, miniNavId }
-            }));
+                // Dispatch event para reinicializar tooltips
+                document.dispatchEvent(new CustomEvent('sidebarChanged', {
+                    detail: { sidebarId, miniNavId }
+                }));
+            }, 50);
 
             // Guardar preferencia
             try {

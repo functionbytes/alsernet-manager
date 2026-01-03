@@ -43,7 +43,7 @@ class NavService
 
     /**
      * Registrar items en un sidebar (menú desplegable)
-     * Si el sidebar ya existe, lo sobrescribe
+     * Si el sidebar ya existe, agrega una nueva sección con su propio título
      */
     public static function registerSidebar(string $sidebarId, array $config): void
     {
@@ -56,20 +56,53 @@ class NavService
             throw new \InvalidArgumentException("Sidebar '{$sidebarId}' must have 'title' and 'items'");
         }
 
-        // Si ya existe, agregar items al existente en lugar de sobrescribir
+        // Si el sidebar ya existe, agregar una nueva sección en lugar de sobrescribir
         if (isset(self::$menus['sidebar'][$sidebarId])) {
-            self::$menus['sidebar'][$sidebarId]['items'] = array_merge(
-                self::$menus['sidebar'][$sidebarId]['items'],
-                $config['items']
-            );
+            // Inicializar 'sections' si no existe
+            if (! isset(self::$menus['sidebar'][$sidebarId]['sections'])) {
+                // Si hay items legacy, convertir a sección
+                $legacyItems = self::$menus['sidebar'][$sidebarId]['items'] ?? [];
+                $legacyTitle = self::$menus['sidebar'][$sidebarId]['title'] ?? 'Menu';
+
+                self::$menus['sidebar'][$sidebarId]['sections'] = [];
+
+                if (! empty($legacyItems)) {
+                    self::$menus['sidebar'][$sidebarId]['sections'][] = [
+                        'title' => $legacyTitle,
+                        'items' => $legacyItems,
+                    ];
+                }
+
+                // Limpiar items y title legacy si existen
+                if (isset(self::$menus['sidebar'][$sidebarId]['items'])) {
+                    unset(self::$menus['sidebar'][$sidebarId]['items']);
+                }
+                if (isset(self::$menus['sidebar'][$sidebarId]['title'])) {
+                    unset(self::$menus['sidebar'][$sidebarId]['title']);
+                }
+            }
+
+            // Agregar nueva sección
+            self::$menus['sidebar'][$sidebarId]['sections'][] = [
+                'title' => $config['title'],
+                'items' => $config['items'],
+            ];
         } else {
-            self::$menus['sidebar'][$sidebarId] = $config;
+            // Crear sidebar nuevo con estructura de secciones
+            self::$menus['sidebar'][$sidebarId] = [
+                'sections' => [
+                    [
+                        'title' => $config['title'],
+                        'items' => $config['items'],
+                    ],
+                ],
+            ];
         }
     }
 
     /**
      * Agregar items a un sidebar existente
-     * Útil cuando múltiples módulos quieren contribuir items al mismo sidebar
+     * Agrega items a la última sección. Útil cuando múltiples módulos quieren contribuir items al mismo sidebar
      */
     public static function addSidebarItems(string $sidebarId, array $items): void
     {
@@ -81,10 +114,22 @@ class NavService
             throw new \InvalidArgumentException("Sidebar '{$sidebarId}' does not exist. Register it first with registerSidebar().");
         }
 
-        self::$menus['sidebar'][$sidebarId]['items'] = array_merge(
-            self::$menus['sidebar'][$sidebarId]['items'],
-            $items
-        );
+        // Si usa estructura de secciones, agregar a la última sección
+        if (isset(self::$menus['sidebar'][$sidebarId]['sections'])) {
+            $lastSectionIndex = count(self::$menus['sidebar'][$sidebarId]['sections']) - 1;
+            if ($lastSectionIndex >= 0) {
+                self::$menus['sidebar'][$sidebarId]['sections'][$lastSectionIndex]['items'] = array_merge(
+                    self::$menus['sidebar'][$sidebarId]['sections'][$lastSectionIndex]['items'],
+                    $items
+                );
+            }
+        } else {
+            // Estructura legacy
+            self::$menus['sidebar'][$sidebarId]['items'] = array_merge(
+                self::$menus['sidebar'][$sidebarId]['items'] ?? [],
+                $items
+            );
+        }
     }
 
     /**
@@ -134,12 +179,26 @@ class NavService
             $miniItem = self::getMiniItem($sidebarId);
 
             if ($miniItem) {
-                $navigation[$sidebarId] = [
-                    'id' => $sidebarId,
-                    'title' => $sidebar['title'],
-                    'icon' => $miniItem['icon'],
-                    'items' => $sidebar['items'],
-                ];
+                // Soportar nueva estructura de secciones
+                if (isset($sidebar['sections'])) {
+                    // Extraer primer título de la primera sección
+                    $firstSectionTitle = $sidebar['sections'][0]['title'] ?? $sidebarId;
+
+                    $navigation[$sidebarId] = [
+                        'id' => $sidebarId,
+                        'title' => $firstSectionTitle,
+                        'icon' => $miniItem['icon'],
+                        'sections' => $sidebar['sections'],
+                    ];
+                } else {
+                    // Estructura legacy
+                    $navigation[$sidebarId] = [
+                        'id' => $sidebarId,
+                        'title' => $sidebar['title'] ?? $sidebarId,
+                        'icon' => $miniItem['icon'],
+                        'items' => $sidebar['items'] ?? [],
+                    ];
+                }
             }
         }
 

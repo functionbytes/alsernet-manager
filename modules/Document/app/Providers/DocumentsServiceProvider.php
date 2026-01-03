@@ -223,7 +223,7 @@ class DocumentsServiceProvider extends ServiceProvider
 
         // Agregar configuraciones de documentos al sidebar genérico 'settings'
         NavService::registerSidebar('settings', [
-            'title' => 'Configuraciones',
+            'title' => 'Documentos',
             'items' => [
                 ['label' => 'Configuración global (Documentos)', 'route' => 'settings.documents.configurations.global'],
                 ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],

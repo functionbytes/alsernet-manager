@@ -60,7 +60,6 @@ class MenuServiceProvider extends ServiceProvider
                 ['label' => 'Búsqueda', 'route' => 'manager.backups.search.index'],
                 ['label' => 'Localización', 'route' => 'manager.backups.localization.index'],
                 ['label' => 'Traducciones', 'route' => 'manager.backups.translations.index'],
-                ['label' => 'Email/SMTP', 'route' => 'backups.email.index'],
                 ['label' => 'Almacenamiento', 'route' => 'manager.backups.storage'],
                 ['label' => 'Base de datos', 'route' => 'manager.backups.database.index'],
                 ['label' => 'Limpieza de BD', 'route' => 'manager.backups.database.cleanup.index'],
