@@ -98,10 +98,10 @@
                 </button>
             </form>
 
-            @if($document->media->count() > 1 && $document->confirmed_at != null)
+            @if($allUploaded && $document->media->count() > 0)
                 <div class="border-top mt-3 pt-3">
                     <a href="{{ route('documents.summary', $document->uid) }}" target="_blank" class="btn btn-outline-primary w-100">
-                        Ver todos los documentos comprimidos
+                        <i class="fa fa-file-archive"></i> Ver todos los documentos comprimidos
                     </a>
                 </div>
             @endif
