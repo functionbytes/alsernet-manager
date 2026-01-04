@@ -425,7 +425,9 @@
                 $('#confirmDeleteDocumentModal').modal('hide');
 
                 $.ajax({
-                    url: "{{ route('api.documents.delete-attachment', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid) + '/' + mediaId,
+                    url: "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
+                        .replace('UID_PLACEHOLDER', documentUid)
+                        .replace('MEDIA_PLACEHOLDER', mediaId),
                     type: 'DELETE',
                     success: function(response) {
                         if (response.success) {
