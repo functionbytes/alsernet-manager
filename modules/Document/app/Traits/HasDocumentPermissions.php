@@ -185,7 +185,12 @@ trait HasDocumentPermissions
             // Historial
             'action-history' => $this->canInDocumentModule('view-all-documents'),
             'email-history' => $this->canInDocumentModule('view-all-documents'),
-            'status-timeline' => true, // Visible para todos
+            'status-timeline' => $this->canInDocumentModule('view-all-documents'),
+
+            // Información del Documento
+            'products-list' => $this->canInDocumentModule('view-all-documents'),
+            'order-details' => $this->canInDocumentModule('view-all-documents'),
+            'customer-information' => $this->canInDocumentModule('view-all-documents'),
 
             // Sincronización
             'sync-operations' => $this->canInDocumentModule('import-documents') ||

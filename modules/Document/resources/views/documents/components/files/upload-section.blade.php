@@ -1,4 +1,6 @@
-<!-- Upload Section - Ocultar si ya está gestionado y tiene documentos, o si todos están cargados -->
+<div id="uploadSectionContainer">
+
+    <!-- Upload Section - Ocultar si ya está gestionado y tiene documentos, o si todos están cargados -->
 @if(!($document->proccess == 1 && $document->media->count() > 0) && !$allUploaded)
     <div class="card mb-3" id="documentsUploadCard">
         <div class="card-header p-3 bg-white border-bottom">
@@ -136,7 +138,7 @@
         </div>
     </div>
 @endif
-
+</div>
 <!-- Mensaje de éxito cuando todos los documentos están cargados -->
 @if($allUploaded)
     <div class="card mb-3">
@@ -190,6 +192,7 @@
         </div>
     </div>
 @endif
+
 
 {{-- Upload Section Scripts --}}
 @push('scripts')
@@ -572,6 +575,164 @@
                     }
                 });
             }
+
+
+
+            /**
+             * Recarga completamente la sección de carga de documentos vía AJAX
+             */
+            function reloadDocumentsSection(uid = documentUid) {
+                console.log('[reloadDocumentsSection] Iniciando recarga para uid:', uid);
+
+                $.ajax({
+                    url: "{{ route('documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('[reloadDocumentsSection] Response:', response);
+
+                        if (response.success && response.html) {
+                            const $container = $('#uploadSectionContainer');
+                            $container.html(response.html);
+                            console.log('[reloadDocumentsSection] Recarga completada');
+                        } else {
+                            console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
+                            toastr.error('No se pudo actualizar la sección', 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('[reloadDocumentsSection] Error AJAX:', xhr);
+                        let errorMsg = 'Error al refrescar la sección de documentos';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        } else if (xhr.status === 404) {
+                            errorMsg = 'La ruta de actualización no existe (404)';
+                        }
+
+                        toastr.error(errorMsg, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    }
+                });
+            }
+
+            /**
+             * DEPRECATED: Mantener por compatibilidad, usar reloadDocumentsSection()
+             */
+            function updateDocumentState(uid = documentUid) {
+                reloadDocumentsSection(uid);
+            }
+
+            /**
+             * Recarga el historial de acciones
+             */
+            function reloadActionHistory(uid = documentUid) {
+                console.log('[reloadActionHistory] Iniciando recarga para uid:', uid);
+
+                $.ajax({
+                    url: "{{ route('documents.refresh-action-history', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('[reloadActionHistory] Response:', response);
+
+                        if (response.success && response.html) {
+                            const $container = $('#actionHistoryContainer');
+                            $container.html(response.html);
+                            console.log('[reloadActionHistory] Recarga completada');
+                        } else {
+                            console.error('[reloadActionHistory] Respuesta sin success o html:', response);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('[reloadActionHistory] Error AJAX:', xhr);
+                        let errorMsg = 'Error al refrescar el historial de acciones';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        console.error(errorMsg);
+                    }
+                });
+            }
+
+            /**
+             * Actualiza la lista de documentos faltantes
+             */
+            function updateMissingDocumentsUI(response) {
+                const missingDocs = response.missing_documents || {};
+                const totalMissing = response.stats?.total_missing || 0;
+
+                // Actualizar contador de documentos faltantes en el modal
+                const $missingBadge = $('.missing-count-badge');
+                if ($missingBadge.length) {
+                    if (totalMissing > 0) {
+                        $missingBadge.removeClass('d-none').text(totalMissing);
+                    } else {
+                        $missingBadge.addClass('d-none');
+                    }
+                }
+
+                // Actualizar lista de documentos faltantes si existe
+                const $missingList = $('#missingDocsList');
+                if ($missingList.length) {
+                    $missingList.empty();
+                    if (Object.keys(missingDocs).length > 0) {
+                        Object.entries(missingDocs).forEach(([docType, docLabel]) => {
+                            $missingList.append(`
+                            <li class="list-group-item">
+                                <i class="fa fa-warning text-warning"></i> ${escapeHtml(docLabel)}
+                            </li>
+                        `);
+                        });
+                    } else {
+                        $missingList.html('<li class="list-group-item text-success">Todos los documentos están cargados</li>');
+                    }
+                }
+
+                // Si está completo, mostrar mensaje de éxito
+                if (response.all_uploaded) {
+                    toastr.success('¡Todos los documentos han sido cargados correctamente!', 'Completado', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                }
+            }
+
+            /**
+             * Función auxiliar para escapar HTML (usada en múltiples lugares)
+             */
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, m => map[m]);
+            }
+
+            // ===== Global Event Listeners =====
+            // Llamar a updateDocumentState después de cargar documentos exitosamente
+            $(document).on('ajax-upload-success', function() {
+                updateDocumentState();
+            });
+
+            // También actualizar cuando se elimina un documento
+            $(document).on('document-deleted', function() {
+                updateDocumentState();
+            });
+
         });
     </script>
 @endpush
