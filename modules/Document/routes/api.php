@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Document\Http\Controllers\Api\DocumentValidationController;
+use Modules\Document\Http\Controllers\DocumentsController as WebDocumentsController;
 
 // Public/Webhook routes (external systems, no authentication required)
 // Routes will be prefixed and named by the RouteServiceProvider
@@ -46,7 +47,7 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::delete('/{uid}/notes/{noteId}', [DocumentValidationController::class, 'deleteNote'])->name('notes.delete');
 
     // File operations
-    Route::post('/{uid}/admin-upload', [DocumentValidationController::class, 'adminUploadDocument'])->name('admin-upload');
+    Route::post('/{uid}/admin-upload', [WebDocumentsController::class, 'UploadDocument'])->name('admin-upload');
     Route::post('/{uid}/attachments', [DocumentValidationController::class, 'uploadAttachment'])->name('attachments.upload');
     Route::post('/{uid}/upload-attachment', [DocumentValidationController::class, 'uploadAdditionalAttachment'])->name('upload-attachment');
     Route::delete('/attachments/{attachmentId}', [DocumentValidationController::class, 'deleteAttachment'])->name('attachments.delete');
