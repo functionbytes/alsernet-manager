@@ -520,39 +520,6 @@ class DocumentValidationController extends Controller
     }
 
     /**
-     * Eliminar archivo adjunto adicional del documento
-     */
-    public function deleteAdditionalAttachment(string $uid, int $mediaId): JsonResponse
-    {
-        try {
-            $document = Document::where('uid', $uid)->firstOrFail();
-
-            $this->authorize('update', $document);
-
-            $media = Media::find($mediaId);
-
-            if (! $media || $media->model_id !== $document->id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Archivo no encontrado o no pertenece a este documento',
-                ], 404);
-            }
-
-            $media->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Documento eliminado correctamente',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al eliminar documento: '.$e->getMessage(),
-            ], 422);
-        }
-    }
-
-    /**
      * Obtener historial de acciones
      */
     public function getActionHistory(string $uid): JsonResponse
@@ -918,6 +885,154 @@ class DocumentValidationController extends Controller
                 'success' => false,
                 'message' => 'Error sincronizando documentos: '.$e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * Sube adjuntos adicionales desde la vista administrativa
+     * Estos documentos son visibles para contabilidad y otros grupos
+     */
+    public function uploadAdditionalAttachment(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $request->validate([
+                'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx',
+                'notes' => 'nullable|string|max:500',
+            ]);
+
+            $file = $request->file('file');
+            $notes = $request->input('notes');
+            $uploadedBy = auth()->check() ? auth()->user()->full_name : 'Admin';
+
+            // Sanitizar nombre de archivo para prevenir ataques XSS y path traversal
+            $originalName = $file->getClientOriginalName();
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $originalName);
+            $sanitizedNotes = $notes ? htmlspecialchars($notes, ENT_QUOTES, 'UTF-8') : null;
+
+            // Guardar archivo en colección de adjuntos adicionales
+            $media = $document->addMedia($file)
+                ->usingFileName($sanitizedName)
+                ->withCustomProperties([
+                    'original_name' => $originalName,
+                    'uploaded_by' => $uploadedBy,
+                    'notes' => $sanitizedNotes,
+                    'uploaded_at' => now()->toDateTimeString(),
+                ])
+                ->toMediaCollection('additional_attachments');
+
+            // Asegurar permisos
+            $mediaPath = $media->getPath();
+            if (file_exists($mediaPath)) {
+                @chmod($mediaPath, 0644);
+            }
+            $mediaDir = dirname($mediaPath);
+            if (is_dir($mediaDir)) {
+                @chmod($mediaDir, 0755);
+            }
+
+            // Sincronizar JSON
+            $document->syncAdditionalAttachmentsJson();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Adjunto adicional cargado correctamente',
+                'file' => [
+                    'id' => $media->id,
+                    'name' => $media->getCustomProperty('original_name'),
+                    'file_name' => $media->file_name,
+                    'size' => $media->size,
+                    'url' => $media->getUrl(),
+                    'uploaded_at' => $media->created_at->format('d/m/Y H:i'),
+                    'uploaded_by' => $uploadedBy,
+                    'notes' => $notes,
+                ],
+                'total_attachments' => $document->getMedia('additional_attachments')->count(),
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error uploading additional attachment', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar adjunto: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Lista todos los adjuntos adicionales de un documento
+     */
+    public function getAdditionalAttachments($uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $attachments = $document->getAdditionalAttachmentsWithDetails();
+
+            return response()->json([
+                'success' => true,
+                'attachments' => $attachments,
+                'total' => count($attachments),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener adjuntos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Eliminar archivo adjunto adicional del documento
+     */
+    public function deleteAdditionalAttachment(string $uid, int $mediaId): JsonResponse
+    {
+        try {
+            $document = Document::where('uid', $uid)->firstOrFail();
+
+            $this->authorize('update', $document);
+
+            $media = Media::find($mediaId);
+
+            if (! $media || $media->model_id !== $document->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Archivo no encontrado o no pertenece a este documento',
+                ], 404);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento eliminado correctamente',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar documento: '.$e->getMessage(),
+            ], 422);
         }
     }
 }

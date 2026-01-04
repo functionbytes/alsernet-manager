@@ -18,7 +18,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-primary w-100" id="btnSendApproval">
-                    Enviar
+                    Enviar aprobación
                 </button>
                 <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
             </div>

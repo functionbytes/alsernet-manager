@@ -60,7 +60,7 @@
                              style="width: 0%"></div>
                     </div>
                     <button type="button" class="btn btn-primary w-100 mb-1" id="btnConfirmUpload">
-                        <i class="fas fa-cloud-upload-alt me-2"></i>Cargar archivos
+                        Cargar archivos
                     </button>
                     <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
                         Cancelar

@@ -12,7 +12,7 @@
         <div class="col-lg-4">
             <!-- Email Actions - Sidebar (Permission-Controlled) -->
             @if(auth()->user()->canDocument('email-actions'))
-                @include('theme.components.email-actions-card', [
+                @include('documents::documents.documents.components.email.actions', [
                     'document' => $document,
                     'documentConfig' => $documentConfig
                 ])
@@ -37,7 +37,7 @@
 
             <!-- Email History (Permission-Controlled) -->
             @if(auth()->user()->canDocument('view-view-email-history'))
-                @include('documents::documents.documents.components.email.email-history')
+                @include('documents::documents.documents.components.email.history')
             @endif
 
             <!-- Status Timeline (Permission-Controlled) -->

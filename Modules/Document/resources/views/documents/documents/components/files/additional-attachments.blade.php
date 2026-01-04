@@ -27,7 +27,7 @@
                         Seleccionar archivo
                     </label>
                     <input type="file"
-                           class="form-control form-control-sm"
+                           class="form-control"
                            id="additionalFile"
                            name="file"
                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" @if(!auth()->user()->canDocument('upload-attachments')) disabled @endif>
@@ -41,7 +41,7 @@
                         Notas <span class="text-muted fw-normal">(opcional)</span>
                     </label>
                     <input type="text"
-                           class="form-control form-control-sm"
+                           class="form-control"
                            id="attachmentNotes"
                            name="notes"
                            placeholder="Ej: Factura proforma, Contrato firmado..."
@@ -51,7 +51,7 @@
                     <button type="submit"
                             class="btn btn-primary w-100"
                             id="uploadAttachmentBtn" @if(!auth()->user()->canDocument('upload-attachments')) disabled title="No tienes permiso para subir adjuntos" @endif>
-                        <i class="fas fa-upload me-2"></i>Subir documento
+                        Subir documento
                     </button>
                 </div>
             </div>
@@ -64,75 +64,47 @@
             @if($totalAttachments > 0)
                 <div class="attachments-scroll">
                     @foreach($attachmentDetails as $attachment)
-                        <div class="attachment-item border-bottom py-2" data-attachment-id="{{ $attachment['id'] }}">
-                            <div class="d-flex align-items-start gap-2">
-                                {{-- File Icon --}}
-                                @php
-                                    $extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
-                                    $iconConfig = [
-                                        'pdf' => ['icon' => 'fa-file-pdf', 'color' => 'text-danger'],
-                                        'doc' => ['icon' => 'fa-file-word', 'color' => 'text-primary'],
-                                        'docx' => ['icon' => 'fa-file-word', 'color' => 'text-primary'],
-                                        'jpg' => ['icon' => 'fa-file-image', 'color' => 'text-success'],
-                                        'jpeg' => ['icon' => 'fa-file-image', 'color' => 'text-success'],
-                                        'png' => ['icon' => 'fa-file-image', 'color' => 'text-success'],
-                                    ];
-                                    $icon = $iconConfig[$extension] ?? ['icon' => 'fa-file', 'color' => 'text-secondary'];
-                                @endphp
-                                <i class="fas {{ $icon['icon'] }} {{ $icon['color'] }} mt-1" style="font-size: 1rem;"></i>
-
-                                {{-- Content --}}
-                                <div class="flex-grow-1 min-width-0">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="min-width-0">
-                                            <small class="fw-semibold d-block text-dark text-truncate" title="{{ $attachment['name'] }}">
-                                                {{ Str::limit($attachment['name'], 25) }}
-                                            </small>
+                        <div class="mb-3" data-attachment-id="{{ $attachment['id'] }}">
+                            <div class="uploaded-doc-info p-3 bg-light-secondary border rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center flex-grow-1">
+                                        <div>
+                                            <p class="mb-0 fw-semibold">{{ $attachment['name'] }}</p>
                                             @if($attachment['notes'])
-                                                <small class="text-muted d-block fst-italic">
-                                                    <i class="fas fa-sticky-note me-1"></i>{{ Str::limit($attachment['notes'], 30) }}
+                                                <small class="text-muted d-block fst-italic mt-1">
+                                                    <i class="fas fa-sticky-note me-1"></i>{{ $attachment['notes'] }}
                                                 </small>
                                             @endif
-                                            <small class="text-muted">
-                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
-                                                <span class="mx-1">•</span>
-                                                {{ $attachment['uploaded_at'] }}
-                                            </small>
+                                            <small class="text-muted">{{ number_format($attachment['size'] / 1024, 1) }} KB • {{ $attachment['uploaded_at'] }}</small>
                                         </div>
-
-                                        {{-- Actions --}}
-                                        <div class="d-flex gap-1 flex-shrink-0 ms-2">
-                                            <a href="{{ $attachment['url'] }}"
-                                               target="_blank"
-                                               class="btn btn-sm btn-outline-primary attachment-action-btn"
-                                               title="Ver documento"
-                                               data-bs-toggle="tooltip">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @if(auth()->user()->canDocument('delete-attachments'))
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-danger attachment-action-btn delete-attachment-btn"
-                                                        data-media-id="{{ $attachment['id'] }}"
-                                                        title="Eliminar"
-                                                        data-bs-toggle="tooltip">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            @else
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-danger attachment-action-btn"
-                                                        disabled
-                                                        title="No tienes permiso para eliminar adjuntos"
-                                                        data-bs-toggle="tooltip">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            @endif
-                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ $attachment['url'] }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        @if(auth()->user()->canDocument('delete-attachments'))
+                                            <button type="button" class="btn btn-sm btn-danger delete-attachment-btn" data-media-id="{{ $attachment['id'] }}" title="Eliminar">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-danger" disabled title="No tienes permiso para eliminar adjuntos">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
+
+                @if($totalAttachments > 0)
+                    <div class="border-top mt-3 pt-3">
+                        <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-primary w-100">
+                             Ver todos los documentos comprimidos
+                        </a>
+                    </div>
+                @endif
             @else
                 <div class="alert bg-light-subtle py-3 px-3 mb-0" role="alert" id="noAttachmentsAlert">
                     <div class="d-flex align-items-start">
@@ -144,6 +116,36 @@
                     </div>
                 </div>
             @endif
+        </div>
+    </div>
+</div>
+
+{{-- Modal: Confirmar eliminación de adjunto --}}
+<div class="modal fade" id="confirmDeleteAttachmentModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteAttachmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteAttachmentModalLabel">
+                    Confirmar eliminación
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">
+                    <strong>¿Estás seguro de que deseas eliminar este documento?</strong>
+                </p>
+                <p class="text-muted small mt-2 mb-0">
+                    Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100 mb-1" id="confirmDeleteAttachmentBtn">
+                    Eliminar
+                </button>
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -176,29 +178,6 @@
         background: #adb5bd;
     }
 
-    .attachment-item {
-        transition: all 0.2s ease;
-        border-color: #e9ecef !important;
-    }
-
-    .attachment-item:hover {
-        background-color: #f8f9fa;
-    }
-
-    .attachment-item:last-child {
-        border-bottom: none !important;
-    }
-
-    .attachment-action-btn {
-        padding: 0.25rem 0.4rem;
-        font-size: 0.75rem;
-        line-height: 1;
-    }
-
-    .attachment-action-btn:hover {
-        transform: scale(1.05);
-    }
-
     #uploadAdditionalAttachmentForm .form-control {
         border-color: #dee2e6;
     }
@@ -206,10 +185,6 @@
     #uploadAdditionalAttachmentForm .form-control:focus {
         border-color: #90bb13;
         box-shadow: 0 0 0 0.2rem rgba(144, 187, 19, 0.15);
-    }
-
-    .min-width-0 {
-        min-width: 0;
     }
 </style>
 @endpush
@@ -286,7 +261,7 @@
                     });
                 },
                 complete: function() {
-                    $btn.prop('disabled', false).html('<i class="fas fa-upload me-2"></i>Subir documento');
+                    $btn.prop('disabled', false).html('Subir documento');
                 }
             });
         });
@@ -321,53 +296,30 @@
                             let html = '<div class="attachments-scroll">';
                             attachments.forEach(function(attachment) {
                                 const sizeKB = (attachment.size / 1024).toFixed(1);
-                                const ext = attachment.name.split('.').pop().toLowerCase();
-                                const iconMap = {
-                                    'pdf': 'fa-file-pdf text-danger',
-                                    'doc': 'fa-file-word text-primary',
-                                    'docx': 'fa-file-word text-primary',
-                                    'jpg': 'fa-file-image text-success',
-                                    'jpeg': 'fa-file-image text-success',
-                                    'png': 'fa-file-image text-success'
-                                };
-                                const iconClass = iconMap[ext] || 'fa-file text-secondary';
 
                                 const notesHtml = attachment.notes ?
-                                    `<small class="text-muted d-block fst-italic">
-                                        <i class="fas fa-sticky-note me-1"></i>${attachment.notes.substring(0, 30)}${attachment.notes.length > 30 ? '...' : ''}
+                                    `<small class="text-muted d-block fst-italic mt-1">
+                                        <i class="fas fa-sticky-note me-1"></i>${attachment.notes}
                                     </small>` : '';
 
                                 html += `
-                                    <div class="attachment-item border-bottom py-2" data-attachment-id="${attachment.id}">
-                                        <div class="d-flex align-items-start gap-2">
-                                            <i class="fas ${iconClass} mt-1" style="font-size: 1rem;"></i>
-                                            <div class="flex-grow-1 min-width-0">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="min-width-0">
-                                                        <small class="fw-semibold d-block text-dark text-truncate" title="${attachment.name}">
-                                                            ${attachment.name.length > 25 ? attachment.name.substring(0, 25) + '...' : attachment.name}
-                                                        </small>
+                                    <div class="mb-3" data-attachment-id="${attachment.id}">
+                                        <div class="uploaded-doc-info p-3 bg-light-secondary border rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center flex-grow-1">
+                                                    <div>
+                                                        <p class="mb-0 fw-semibold">${attachment.name}</p>
                                                         ${notesHtml}
-                                                        <small class="text-muted">
-                                                            ${sizeKB} KB
-                                                            <span class="mx-1">•</span>
-                                                            ${attachment.uploaded_at}
-                                                        </small>
+                                                        <small class="text-muted">${sizeKB} KB • ${attachment.uploaded_at}</small>
                                                     </div>
-                                                    <div class="d-flex gap-1 flex-shrink-0 ms-2">
-                                                        <a href="${attachment.url}"
-                                                           target="_blank"
-                                                           class="btn btn-sm btn-outline-primary attachment-action-btn"
-                                                           title="Ver documento">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <button type="button"
-                                                                class="btn btn-sm btn-outline-danger attachment-action-btn delete-attachment-btn"
-                                                                data-media-id="${attachment.id}"
-                                                                title="Eliminar">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <a href="${attachment.url}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger delete-attachment-btn" data-media-id="${attachment.id}" title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -375,6 +327,18 @@
                                 `;
                             });
                             html += '</div>';
+
+                            // Agregar botón de descarga si hay más de 1 attachment
+                            if (total > 0) {
+                                html += `
+                                    <div class="border-top mt-3 pt-3">
+                                        <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-outline-primary w-100">
+                                            <i class="fa fa-file-archive"></i> Ver todos los documentos comprimidos
+                                        </a>
+                                    </div>
+                                `;
+                            }
+
                             $container.html(html);
                         }
                     }
@@ -386,20 +350,35 @@
         }
 
         // ===== Delete Attachment =====
-        $(document).on('click', '.delete-attachment-btn', function() {
-            const $btn = $(this);
-            const mediaId = $btn.data('media-id');
+        var pendingDeleteMediaId = null;
+        var pendingDeleteBtn = null;
 
-            if (!confirm('¿Estás seguro de que deseas eliminar este adjunto?')) {
+        $(document).on('click', '.delete-attachment-btn', function(e) {
+            e.preventDefault();
+
+            pendingDeleteBtn = $(this);
+            pendingDeleteMediaId = pendingDeleteBtn.data('media-id');
+
+            // Mostrar modal
+            var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteAttachmentModal'));
+            confirmModal.show();
+        });
+
+        // ===== Confirmar eliminación de adjunto =====
+        $(document).on('click', '#confirmDeleteAttachmentBtn', function() {
+            if (!pendingDeleteMediaId || !pendingDeleteBtn) {
                 return;
             }
 
-            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+            pendingDeleteBtn.prop('disabled', true);
+            pendingDeleteBtn.html('<i class="fas fa-spinner fa-spin"></i>');
+
+            $('#confirmDeleteAttachmentModal').modal('hide');
 
             $.ajax({
                 url: "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
                     .replace('UID_PLACEHOLDER', documentUid)
-                    .replace('MEDIA_PLACEHOLDER', mediaId),
+                    .replace('MEDIA_PLACEHOLDER', pendingDeleteMediaId),
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -417,13 +396,23 @@
                     }
                 },
                 error: function(xhr) {
-                    const message = xhr.responseJSON?.message || 'Error al eliminar el archivo';
+                    var message = 'Error al eliminar el archivo';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
                     toastr.error(message, 'Error', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
                     });
-                    $btn.prop('disabled', false).html('<i class="fas fa-trash"></i>');
+                },
+                complete: function() {
+                    if (pendingDeleteBtn) {
+                        pendingDeleteBtn.prop('disabled', false);
+                        pendingDeleteBtn.html('<i class="fas fa-trash"></i>');
+                    }
+                    pendingDeleteMediaId = null;
+                    pendingDeleteBtn = null;
                 }
             });
         });

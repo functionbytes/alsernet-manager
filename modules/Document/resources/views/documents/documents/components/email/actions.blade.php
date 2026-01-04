@@ -6,7 +6,6 @@
     </div>
     <div class="card-body">
         @if($documentConfig['enable_initial_request'] ?? true)
-            <!-- Solicitud Inicial -->
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Solicitud inicial
@@ -16,13 +15,13 @@
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100 send-notification-btn"
                         data-uid="{{ $document->uid }}">
-                    Solicitar carga
+                    Enviar solicitud
                 </button>
             </div>
         @endif
 
         @if($documentConfig['enable_missing_docs'] ?? true)
-            <!-- Documentos Faltantes -->
+            <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Documentos específicos
@@ -32,13 +31,13 @@
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#missingDocsModal">
-                    Documentos faltantes
+                    Enviar solicitud documentación
                 </button>
             </div>
         @endif
 
         @if($documentConfig['enable_reminder'] ?? true)
-            <!-- Recordatorio -->
+            <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Recordatorio
@@ -64,7 +63,7 @@
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#uploadConfirmationModal">
-                    Enviar
+                    Enviar confirmación
                 </button>
             </div>
         @endif
@@ -80,7 +79,7 @@
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#approvalModal">
-                    Enviar
+                    Enviar aprobación
                 </button>
             </div>
         @endif
@@ -102,7 +101,7 @@
         @endif
 
         @if($documentConfig['enable_custom_email'] ?? true)
-            <!-- Correo Personalizado -->
+            <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Correo personalizado
@@ -121,11 +120,11 @@
 
 {{-- MODALES DE EMAIL (Condicionales) --}}
 @if($documentConfig['enable_missing_docs'] ?? true)
-    @include('documents::documents.documents.components.email.modals.missing-docs')
+    @include('documents::documents.documents.components.email.modals.missing')
 @endif
 
 @if($documentConfig['enable_initial_request'] ?? true)
-    @include('documents::documents.documents.components.email.modals.initial-request')
+    @include('documents::documents.documents.components.email.modals.request')
 @endif
 
 @if($documentConfig['enable_reminder'] ?? true)
@@ -133,7 +132,7 @@
 @endif
 
 @if($documentConfig['enable_upload_confirmation'] ?? true)
-    @include('documents::documents.documents.components.email.modals.upload-confirmation')
+    @include('documents::documents.documents.components.email.modals.confirmation')
 @endif
 
 @if($documentConfig['enable_approval'] ?? true)
@@ -145,5 +144,5 @@
 @endif
 
 @if($documentConfig['enable_custom_email'] ?? true)
-    @include('documents::documents.documents.components.email.modals.custom-email')
+    @include('documents::documents.documents.components.email.modals.custom')
 @endif

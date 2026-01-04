@@ -543,7 +543,16 @@ class DocumentsController extends Controller
     {
         $document = Document::findByUid($uid);
 
-        $mediaItems = $document->media;
+        // Filtrar por tipo de documentos si se especifica
+        $type = request()->query('type');
+
+        if ($type === 'attachments') {
+            // Solo documentos adicionales (additional_attachments)
+            $mediaItems = $document->getMedia('additional_attachments');
+        } else {
+            // Todos los documentos del documento (comportamiento por defecto)
+            $mediaItems = $document->media;
+        }
 
         $pdfDocs = $mediaItems->filter(fn ($media) => $media->mime_type === 'application/pdf');
 
@@ -1869,11 +1878,12 @@ class DocumentsController extends Controller
             $documentType = $document->documentType?->load('requirements');
             $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
 
-            // Obtener documentos ya cargados organizados por tipo (recargando relación media)
-            $document->load('media');
-
+            // Obtener documentos ya cargados organizados por tipo
+            // IMPORTANTE: Solo obtener media de colecciones que NO sean additional_attachments
             $uploadedDocs = [];
-            foreach ($document->media as $media) {
+            $allMedia = $document->media()->where('collection_name', '!=', 'additional_attachments')->get();
+
+            foreach ($allMedia as $media) {
                 $docType = $media->getCustomProperty('document_type', 'documento');
                 $uploadedDocs[$docType] = $media;
             }
