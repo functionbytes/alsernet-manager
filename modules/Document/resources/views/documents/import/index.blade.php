@@ -2,6 +2,19 @@
 
 @section('content')
 
+    @if (!auth()->user()->canActionDocumentComponent('import-documents', 'upload') &&
+         !auth()->user()->canInDocumentModule('sync-erp') &&
+         !auth()->user()->canInDocumentModule('sync-api'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-lock me-2"></i>
+            <strong>Acceso denegado.</strong> No tienes permiso para importar documentos.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <a href="{{ route('documents.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Volver a documentos
+        </a>
+    @else
+
     @include('theme.components.card', ['title' => 'Importar Documentos'])
 
     @if ($message = session('success'))
@@ -70,9 +83,16 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    <a href="{{ route('documents.import.api') }}" class="btn btn-primary w-100">
-                        <i class="fas fa-arrow-right me-2"></i> Importar desde prestashop
-                    </a>
+                    @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload') ||
+                        auth()->user()->canInDocumentModule('sync-api'))
+                        <a href="{{ route('documents.import.api') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-arrow-right me-2"></i> Importar desde prestashop
+                        </a>
+                    @else
+                        <button type="button" class="btn btn-primary w-100 disabled" disabled>
+                            <i class="fas fa-lock me-2"></i> Permiso requerido
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -127,9 +147,16 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    <a href="{{ route('documents.import.erp') }}" class="btn btn-primary w-100">
-                        <i class="fas fa-arrow-right me-2"></i> Importar desde gestion
-                    </a>
+                    @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload') ||
+                        auth()->user()->canInDocumentModule('sync-erp'))
+                        <a href="{{ route('documents.import.erp') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-arrow-right me-2"></i> Importar desde gestion
+                        </a>
+                    @else
+                        <button type="button" class="btn btn-primary w-100 disabled" disabled>
+                            <i class="fas fa-lock me-2"></i> Permiso requerido
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -161,5 +188,7 @@
             </div>
         </div>
     </div>
+
+    @endif
 
 @endsection

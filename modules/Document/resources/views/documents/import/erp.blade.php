@@ -2,6 +2,18 @@
 
 @section('content')
 
+    @if (!auth()->user()->canActionDocumentComponent('import-documents', 'upload') &&
+         !auth()->user()->canInDocumentModule('sync-erp'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-lock me-2"></i>
+            <strong>Acceso denegado.</strong> No tienes permiso para importar documentos desde Gestión.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <a href="{{ route('documents.import') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Volver a opciones de importación
+        </a>
+    @else
+
     @include('theme.components.card', ['title' => 'Importar desde gestión'])
 
     <div class="widget-content">
@@ -95,6 +107,8 @@
             </div>
         </div>
     </div>
+
+    @endif
 
 @endsection
 
