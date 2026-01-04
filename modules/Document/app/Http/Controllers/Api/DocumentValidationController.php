@@ -377,7 +377,7 @@ class DocumentValidationController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $this->authorize('view', $document);
 
-        $emails = $document->emailHistory()
+        $emails = $document->mails()
             ->orderBy('sent_at', 'desc')
             ->get();
 
@@ -395,7 +395,7 @@ class DocumentValidationController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $this->authorize('view', $document);
 
-        $email = $document->emailHistory()
+        $email = $document->mails()
             ->where('uid', $mailUid)
             ->firstOrFail();
 
@@ -583,7 +583,7 @@ class DocumentValidationController extends Controller
 
         $this->authorize('view', $document);
 
-        $emails = $document->emailHistory()
+        $emails = $document->mails()
             ->orderBy('sent_at', 'desc')
             ->get();
 

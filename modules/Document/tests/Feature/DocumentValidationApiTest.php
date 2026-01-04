@@ -259,7 +259,7 @@ class DocumentValidationApiTest extends TestCase
     public function it_can_get_email_history()
     {
         // Crear un email de prueba
-        $this->document->emailHistory()->create([
+        $this->document->mails()->create([
             'recipient_email' => 'cliente@example.com',
             'subject' => 'Prueba',
             'body_text' => 'Cuerpo del email',

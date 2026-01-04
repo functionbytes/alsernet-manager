@@ -1637,7 +1637,7 @@ class DocumentsController extends Controller
 
         return response()->json([
             'success' => true,
-            'document' => $document->load(['media', 'actionHistory', 'emailHistory']),
+            'document' => $document->load(['media', 'actions', 'mails']),
         ]);
     }
 
