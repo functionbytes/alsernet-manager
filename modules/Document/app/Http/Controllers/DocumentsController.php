@@ -1389,8 +1389,11 @@ class DocumentsController extends Controller
         $documentTypeLabel = $documentType?->getLabel() ?? ucfirst($document->type);
 
         // Obtener documentos ya cargados organizados por tipo
+        // IMPORTANTE: Solo obtener media de la colección 'documents' (documentos requeridos)
         $uploadedDocs = [];
-        foreach ($document->media as $media) {
+        $allMedia = $document->media()->where('collection_name', 'documents')->get();
+
+        foreach ($allMedia as $media) {
             $docType = $media->getCustomProperty('document_type', 'documento');
             $uploadedDocs[$docType] = $media;
         }
