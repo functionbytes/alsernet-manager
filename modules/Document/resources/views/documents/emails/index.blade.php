@@ -133,7 +133,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('documents.emails.preview', $mail->uid) }}" target="_blank">
+                                                    <a class="dropdown-item" href="{{ route('api.documents.emails.preview', $mail->uid) }}" target="_blank">
                                                         Vista previa
                                                     </a>
                                                 </li>

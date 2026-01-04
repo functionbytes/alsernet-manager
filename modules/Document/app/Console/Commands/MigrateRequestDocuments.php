@@ -1,10 +1,11 @@
 <?php
 
-namespace Modules\Document\Commands;
+namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentProductBlockade;
 use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentType;
@@ -79,23 +80,49 @@ class MigrateRequestDocuments extends Command
 
             foreach ($sourceRecords as $source) {
                 try {
-                    // Map type to type_id with fallback mappings
-                    $typeSlug = strtolower($source->type ?? '');
+                    // First, check if this document has products in blockades
+                    $documentTypeId = null;
 
-                    // Handle legacy type mappings
-                    $typeMappings = [
-                        'gun' => 'corta', // Default mapping for legacy 'gun' type
-                    ];
-                    if (isset($typeMappings[$typeSlug])) {
-                        $typeSlug = $typeMappings[$typeSlug];
+                    // Get products associated with this document from legacy database
+                    $documentProducts = $sourceDb->table('request_document_products')
+                        ->where('document_id', $source->id)
+                        ->pluck('product_id')
+                        ->toArray();
+
+                    if (! empty($documentProducts)) {
+                        // Check if any of these products are in document_product_blockades
+                        $blockade = DocumentProductBlockade::whereIn('product_id', $documentProducts)
+                            ->whereNotNull('document_type_id')
+                            ->first();
+
+                        if ($blockade) {
+                            // Use the document_type_id from the blockade
+                            $documentTypeId = $blockade->document_type_id;
+                            $this->line("  ℹ Document {$source->id}: Using type from blockade (product_id: {$blockade->product_id})");
+                        }
                     }
 
-                    if (! isset($typeMap[$typeSlug])) {
-                        $errors[] = "Record {$source->id}: Unknown type '{$source->type}'";
-                        $skipped++;
-                        $bar->advance();
+                    // If no blockade found, use legacy type mapping
+                    if (! $documentTypeId) {
+                        $typeSlug = strtolower($source->type ?? '');
 
-                        continue;
+                        // Handle legacy type mappings
+                        $typeMappings = [
+                            'gun' => 'corta', // Default mapping for legacy 'gun' type
+                        ];
+                        if (isset($typeMappings[$typeSlug])) {
+                            $typeSlug = $typeMappings[$typeSlug];
+                        }
+
+                        if (! isset($typeMap[$typeSlug])) {
+                            $errors[] = "Record {$source->id}: Unknown type '{$source->type}'";
+                            $skipped++;
+                            $bar->advance();
+
+                            continue;
+                        }
+
+                        $documentTypeId = $typeMap[$typeSlug];
                     }
 
                     // Map source to source_id with fallback mappings
@@ -120,7 +147,7 @@ class MigrateRequestDocuments extends Command
                     // Prepare data for insertion
                     $documentData = [
                         'uid' => $source->uid,
-                        'type_id' => $typeMap[$typeSlug],
+                        'type_id' => $documentTypeId,
                         'source_id' => $sourceMap[$sourceKey],
                         'sync_id' => 1, // 'none' - no synchronization
                         'load_id' => 2, // 'system' - loaded by migration system

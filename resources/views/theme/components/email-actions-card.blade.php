@@ -114,29 +114,29 @@
 
 {{-- MODALES DE EMAIL (Condicionales) --}}
 @if($documentConfig['enable_missing_docs'] ?? true)
-    @include('documents::modals.missing-docs')
+    @include('documents::documents.documents.components.email.modals.missing-docs')
 @endif
 
 @if($documentConfig['enable_initial_request'] ?? true)
-    @include('documents::modals.initial-request')
+    @include('documents::documents.documents.components.email.modals.initial-request')
 @endif
 
 @if($documentConfig['enable_reminder'] ?? true)
-    @include('documents::modals.reminder')
+    @include('documents::documents.documents.components.email.modals.reminder')
 @endif
 
 @if($documentConfig['enable_upload_confirmation'] ?? true)
-    @include('documents::modals.upload-confirmation')
+    @include('documents::documents.documents.components.email.modals.upload-confirmation')
 @endif
 
 @if($documentConfig['enable_approval'] ?? true)
-    @include('documents::modals.approval')
+    @include('documents::documents.documents.components.email.modals.approval')
 @endif
 
 @if($documentConfig['enable_rejection'] ?? true)
-    @include('documents::modals.rejection')
+    @include('documents::documents.documents.components.email.modals.rejection')
 @endif
 
 @if($documentConfig['enable_custom_email'] ?? true)
-    @include('documents::modals.custom-email')
+    @include('documents::documents.documents.components.email.modals.custom-email')
 @endif

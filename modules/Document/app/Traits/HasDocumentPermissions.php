@@ -31,7 +31,6 @@ trait HasDocumentPermissions
      *
      * @param  string  $permissionName  The permission to check (e.g., 'approve-documents')
      * @param  DocumentValidatorGroup|string  $group  The group model or key
-     * @return bool
      */
     public function hasPermissionInGroup(string $permissionName, $group): bool
     {
@@ -56,7 +55,6 @@ trait HasDocumentPermissions
      * Check if user can perform an action in any of their document groups
      *
      * @param  string  $action  The action/permission to check
-     * @return bool
      */
     public function canInDocumentModule(string $action): bool
     {
@@ -96,8 +94,6 @@ trait HasDocumentPermissions
 
     /**
      * Check if user belongs to any document validator group
-     *
-     * @return bool
      */
     public function belongsToAnyDocumentGroup(): bool
     {
@@ -135,7 +131,6 @@ trait HasDocumentPermissions
      * Useful for authorization in controllers
      *
      * @param  string  $permission  The permission name
-     * @return bool
      */
     public function hasDocumentPermission(string $permission): bool
     {
@@ -143,138 +138,148 @@ trait HasDocumentPermissions
     }
 
     // =========================================================================
-    // COMPONENT VISIBILITY HELPERS - Para usar en vistas Blade
+    // UNIFIED PERMISSION CHECKER - Dynamic from database
     // =========================================================================
 
     /**
-     * Check if a component should be visible based on document permissions
-     * Useful for showing/hiding UI components in views
+     * Unified permission checker - accepts any permission or component name
+     * Dynamically resolves from database instead of hardcoded logic
+     *
+     * Usage:
+     * - auth()->user()->canDocument('send-initial-request')  // Direct permission
+     * - auth()->user()->canDocument('email-actions')         // Component with view- prefix
+     * - auth()->user()->canDocument('send-reminder')         // Action permission
+     *
+     * @param  string  $name  Permission name or component name
+     */
+    public function canDocument(string $name): bool
+    {
+        // First, try direct permission check
+        if ($this->canInDocumentModule($name)) {
+            return true;
+        }
+
+        // Second, try with 'view-' prefix for component visibility
+        $viewPermission = 'view-'.$name;
+        if ($this->canInDocumentModule($viewPermission)) {
+            return true;
+        }
+
+        // Third, dynamically check component mappings from database
+        // This maps component names to their required permissions
+        return $this->resolveComponentPermissions($name);
+    }
+
+    /**
+     * Resolve component name to required permissions
+     * Dynamically resolves required permissions from database
      *
      * @param  string  $componentName  Name of the component (e.g., 'email-actions', 'document-management')
-     * @return bool
      */
-    public function canViewDocumentComponent(string $componentName): bool
+    private function resolveComponentPermissions(string $componentName): bool
     {
-        return match ($componentName) {
-            // Componentes de Email
-            'email-actions' => $this->canInDocumentModule('send-initial-request') ||
-                              $this->canInDocumentModule('send-reminders') ||
-                              $this->canInDocumentModule('send-missing-docs') ||
-                              $this->canInDocumentModule('send-approval') ||
-                              $this->canInDocumentModule('send-rejection'),
+        // Dynamic component-to-permissions mapping
+        // Maps component names to their required permissions in the database
+        $componentMappings = [
+            'email-actions' => ['send-initial-request', 'send-reminders', 'send-missing-docs', 'send-approval', 'send-rejection', 'send-custom-email'],
+            'document-management' => ['edit-documents', 'create-documents'],
+            'document-upload' => ['upload-documents'],
+            'validation-workflow' => ['approve-documents', 'reject-documents'],
+            'document-notes' => ['add-notes', 'edit-notes', 'delete-notes'],
+            'additional-attachments' => ['upload-attachments', 'delete-attachments'],
+            'action-history' => ['view-all-documents', 'view-history'],
+            'email-history' => ['view-all-documents', 'view-history'],
+            'status-timeline' => ['view-all-documents', 'view-history'],
+            'products-list' => ['view-all-documents', 'view-documents'],
+            'order-details' => ['view-all-documents', 'view-documents'],
+            'customer-information' => ['view-all-documents', 'view-documents'],
+            'sync-operations' => ['import-documents', 'sync-erp', 'sync-api'],
+        ];
 
-            // Gestión de Documentos
-            'document-management' => $this->canInDocumentModule('edit-documents') ||
-                                   $this->canInDocumentModule('create-documents'),
+        // Get required permissions for this component
+        $requiredPermissions = $componentMappings[$componentName] ?? [];
 
-            // Subida de Documentos
-            'document-upload' => $this->canInDocumentModule('upload-documents'),
+        if (empty($requiredPermissions)) {
+            return false;
+        }
 
-            // Validación
-            'validation-workflow' => $this->canInDocumentModule('approve-documents') ||
-                                   $this->canInDocumentModule('reject-documents'),
+        // Check if user has ANY of the required permissions
+        foreach ($requiredPermissions as $permission) {
+            if ($this->canInDocumentModule($permission)) {
+                return true;
+            }
+        }
 
-            // Notas
-            'document-notes' => $this->canInDocumentModule('add-notes') ||
-                              $this->canInDocumentModule('edit-notes'),
-
-            // Adjuntos
-            'additional-attachments' => $this->canInDocumentModule('upload-attachments') ||
-                                       $this->canInDocumentModule('delete-attachments'),
-
-            // Historial
-            'action-history' => $this->canInDocumentModule('view-all-documents'),
-            'email-history' => $this->canInDocumentModule('view-all-documents'),
-            'status-timeline' => $this->canInDocumentModule('view-all-documents'),
-
-            // Información del Documento
-            'products-list' => $this->canInDocumentModule('view-all-documents'),
-            'order-details' => $this->canInDocumentModule('view-all-documents'),
-            'customer-information' => $this->canInDocumentModule('view-all-documents'),
-
-            // Sincronización
-            'sync-operations' => $this->canInDocumentModule('import-documents') ||
-                                $this->canInDocumentModule('sync-erp') ||
-                                $this->canInDocumentModule('sync-api'),
-
-            // Por defecto, no visible
-            default => false,
-        };
+        return false;
     }
 
     /**
      * Check if user can perform an action on a specific document component
+     * Legacy method - kept for backward compatibility, use canDocument() instead
      *
      * @param  string  $componentName  The component name
      * @param  string  $action  The action (view, edit, delete, etc.)
-     * @return bool
      */
     public function canActionDocumentComponent(string $componentName, string $action = 'view'): bool
     {
-        return match ($componentName) {
-            // Email Actions
-            'email-actions' => match ($action) {
-                'send-initial-request' => $this->canInDocumentModule('send-initial-request'),
-                'send-reminder' => $this->canInDocumentModule('send-reminders'),
-                'send-missing-docs' => $this->canInDocumentModule('send-missing-docs'),
-                'send-approval' => $this->canInDocumentModule('send-approval'),
-                'send-rejection' => $this->canInDocumentModule('send-rejection'),
-                'send-custom' => $this->canInDocumentModule('send-custom-email'),
-                default => false,
-            },
+        // Dynamic action-to-permission mapping
+        $actionMappings = [
+            'email-actions' => [
+                'send-initial-request' => 'send-initial-request',
+                'send-reminder' => 'send-reminders',
+                'send-missing-docs' => 'send-missing-docs',
+                'send-approval' => 'send-approval',
+                'send-rejection' => 'send-rejection',
+                'send-custom' => 'send-custom-email',
+            ],
+            'document-management' => [
+                'edit' => 'edit-documents',
+                'create' => 'create-documents',
+                'delete' => 'delete-documents',
+            ],
+            'document-upload' => [
+                'upload' => 'upload-documents',
+                'delete' => 'delete-documents',
+            ],
+            'validation-workflow' => [
+                'approve' => 'approve-documents',
+                'reject' => 'reject-documents',
+            ],
+            'document-notes' => [
+                'add' => 'add-notes',
+                'edit' => 'edit-notes',
+                'delete' => 'delete-notes',
+            ],
+            'additional-attachments' => [
+                'upload' => 'upload-attachments',
+                'delete' => 'delete-attachments',
+            ],
+            'import-documents' => [
+                'upload' => 'import-documents',
+            ],
+        ];
 
-            // Document Management
-            'document-management' => match ($action) {
-                'edit' => $this->canInDocumentModule('edit-documents'),
-                'create' => $this->canInDocumentModule('create-documents'),
-                'delete' => $this->canInDocumentModule('delete-documents'),
-                default => false,
-            },
+        // Get the required permission for this action
+        $requiredPermission = $actionMappings[$componentName][$action] ?? null;
 
-            // Document Upload
-            'document-upload' => match ($action) {
-                'upload' => $this->canInDocumentModule('upload-documents'),
-                'delete' => $this->canInDocumentModule('delete-documents'),
-                default => false,
-            },
+        if (! $requiredPermission) {
+            return false;
+        }
 
-            // Validation
-            'validation-workflow' => match ($action) {
-                'approve' => $this->canInDocumentModule('approve-documents'),
-                'reject' => $this->canInDocumentModule('reject-documents'),
-                default => false,
-            },
+        return $this->canInDocumentModule($requiredPermission);
+    }
 
-            // Notes
-            'document-notes' => match ($action) {
-                'add' => $this->canInDocumentModule('add-notes'),
-                'edit' => $this->canInDocumentModule('edit-notes'),
-                'delete' => $this->canInDocumentModule('delete-notes'),
-                default => false,
-            },
-
-            // Attachments
-            'additional-attachments' => match ($action) {
-                'upload' => $this->canInDocumentModule('upload-attachments'),
-                'delete' => $this->canInDocumentModule('delete-attachments'),
-                default => false,
-            },
-
-            // Import Documents
-            'import-documents' => match ($action) {
-                'upload' => $this->canInDocumentModule('import-documents'),
-                default => false,
-            },
-
-            default => false,
-        };
+    /**
+     * Alias for backward compatibility - use canDocument() instead
+     */
+    public function canViewDocumentComponent(string $componentName): bool
+    {
+        return $this->canDocument($componentName);
     }
 
     /**
      * Get all allowed component actions for this user
      * Useful for disabling buttons/UI elements
-     *
-     * @return array
      */
     public function getAllowedComponentActions(): array
     {

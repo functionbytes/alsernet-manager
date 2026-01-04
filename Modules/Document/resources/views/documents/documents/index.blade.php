@@ -56,12 +56,14 @@
                                     <i class="fa-duotone fa-magnifying-glass"></i>
                                 </button>
                             </div>
+
                             <div class="col-auto">
                                 <a href="{{ route('documents.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Limpiar filtros">
                                     <i class="fa-duotone fa-xmark"></i>
                                 </a>
                             </div>
-                            @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload'))
+
+                            @if(auth()->user()->canDocument('route-sync-documents'))
                                 <div class="col-auto">
                                     <a href="{{ route('documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
                                         <i class="fa-duotone fa-file-import"></i>
@@ -122,29 +124,26 @@
                                         <i class="fa-duotone fa-solid fa-ellipsis"></i>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.show', $document->uid) }}">
-                                                <i class="fas fa-eye me-2"></i> Ver
-                                            </a>
-                                        </li>
-                                        @if(auth()->user()->canActionDocumentComponent('document-management', 'edit'))
+
+                                        @if(auth()->user()->canDocument('route-show-documents'))
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
-                                                    <i class="fas fa-cog me-2"></i> Gestionar
-                                                </a>
-                                            </li>
-                                        @else
-                                            <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3 disabled" href="#" onclick="return false;">
-                                                    <i class="fas fa-cog me-2"></i> Gestionar
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.show', $document->uid) }}">
+                                                    Ver
                                                 </a>
                                             </li>
                                         @endif
-                                        @if($document->mails()->count() > 0 && auth()->user()->canViewDocumentComponent('email-history'))
+                                        @if(auth()->user()->canDocument('route-manage-documents'))
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
+                                                    Gestionar
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if($document->mails()->count() > 0 && auth()->user()->canDocument('route-mails-documents'))
                                             <li class="border-top my-2"></li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.emails', $document->uid) }}">
-                                                    <i class="fas fa-envelope me-2"></i> Ver emails
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('api.documents.emails', $document->uid) }}">
+                                                    Ver emails
                                                 </a>
                                             </li>
                                         @endif

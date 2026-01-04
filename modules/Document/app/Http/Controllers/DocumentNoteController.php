@@ -21,6 +21,14 @@ class DocumentNoteController extends Controller
     public function addNote(Request $request, $uid): JsonResponse
     {
         try {
+            // Verificar permiso para agregar notas
+            if (! auth()->user()->canDocument('add-notes')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permiso para agregar notas.',
+                ], 403);
+            }
+
             $document = Document::findByUid($uid);
 
             if (! $document) {
@@ -76,6 +84,14 @@ class DocumentNoteController extends Controller
     public function updateNote(Request $request, $uid, $noteId): JsonResponse
     {
         try {
+            // Verificar permiso para editar notas
+            if (! auth()->user()->canDocument('edit-notes')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permiso para editar notas.',
+                ], 403);
+            }
+
             $document = Document::findByUid($uid);
 
             if (! $document) {
@@ -92,14 +108,6 @@ class DocumentNoteController extends Controller
                     'success' => false,
                     'message' => 'Nota no encontrada.',
                 ], 404);
-            }
-
-            // Verificar que el usuario autenticado sea el autor de la nota
-            if ($note->created_by !== auth()->id()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para editar esta nota.',
-                ], 403);
             }
 
             $request->validate([
@@ -129,6 +137,14 @@ class DocumentNoteController extends Controller
     public function deleteNote(Request $request, $uid, $noteId): JsonResponse
     {
         try {
+            // Verificar permiso para eliminar notas
+            if (! auth()->user()->canDocument('delete-notes')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permiso para eliminar notas.',
+                ], 403);
+            }
+
             $document = Document::findByUid($uid);
 
             if (! $document) {
@@ -145,14 +161,6 @@ class DocumentNoteController extends Controller
                     'success' => false,
                     'message' => 'Nota no encontrada.',
                 ], 404);
-            }
-
-            // Verificar que el usuario autenticado sea el autor de la nota
-            if ($note->created_by !== auth()->id()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para eliminar esta nota.',
-                ], 403);
             }
 
             $note->delete();

@@ -38,7 +38,7 @@
                         ];
                         $config = $typeConfig[$mail->email_type] ?? $typeConfig['custom'];
                     @endphp
-                    <a href="{{ route('documents.emails.preview', $mail->uid) }}"
+                    <a href="{{ route('api.documents.emails.preview', $mail->uid) }}"
                        class="email-item d-block text-decoration-none"
                        target="_blank">
                         <div class="d-flex gap-3 align-items-start">
@@ -84,7 +84,7 @@
                 @endforeach
             </div>
             <div class="border-top mt-3 pt-3" >
-                <a href="{{ route('documents.emails', $document->uid) }}"
+                <a href="{{ route('api.documents.emails', $document->uid) }}"
                    class="btn btn-primary w-100 ">
                     <i class="fas fa-history me-1"></i> Ver historial completo
                 </a>

@@ -16,10 +16,9 @@ return new class extends Migration
     {
         Schema::create('document_product_blockades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('source_id')
+            $table->unsignedBigInteger('source_id')
                 ->nullable()
-                ->constrained('document_sources')
-                ->nullOnDelete();
+                ->comment('Source ID from PrestaShop');
             $table->unsignedBigInteger('product_id')
                 ->nullable()
                 ->comment('ID del producto bloqueado (PrestaShop)');

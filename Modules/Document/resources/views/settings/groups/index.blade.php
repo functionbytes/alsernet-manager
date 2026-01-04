@@ -174,28 +174,28 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('settings.documents.groups.edit', $group->uid) }}">
-                                                        <i class="fas fa-edit me-2 text-muted"></i>Editar
+                                                        Editar
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('settings.documents.groups.configuration', $group->uid) }}">
-                                                        <i class="fas fa-cog me-2 text-muted"></i>Configuración
+                                                        Configuración
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('settings.documents.groups.permissions.edit', $group->uid) }}">
-                                                        <i class="fas fa-shield-alt me-2 text-primary"></i>Permisos
+                                                        Permisos
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
                                                     <button type="button"
-                                                            class="dropdown-item text-danger delete-btn"
+                                                            class="dropdown-item  delete-btn"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#delete-modal"
                                                             data-url="{{ route('settings.documents.groups.destroy', $group->uid) }}"
                                                             data-title="Eliminar grupo: {{ $group->name }}">
-                                                        <i class="fas fa-trash me-2"></i>Eliminar
+                                                       Eliminar
                                                     </button>
                                                 </li>
                                             </ul>

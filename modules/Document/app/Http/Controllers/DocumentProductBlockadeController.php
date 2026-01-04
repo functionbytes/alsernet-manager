@@ -17,14 +17,14 @@ class DocumentProductBlockadeController extends Controller
     /**
      * Display product blockades configuration page
      */
-    public function index()
+    public function index(Request $request)
     {
         $lastSync = Setting::get('product_blockades_last_sync');
         $syncCount = Setting::get('product_blockades_sync_count', 0);
         $totalBlockades = DocumentProductBlockade::count();
         $currentLabels = Setting::get('product_blockade_labels', 'DNI,ESCOPETA,RIFLE,CORTA');
 
-        // Get document types for blockade types
+        // Get all active document types for label association
         $documentTypes = DocumentType::where('is_active', true)
             ->orderBy('label')
             ->get();
@@ -118,168 +118,110 @@ class DocumentProductBlockadeController extends Controller
     }
 
     /**
-     * Create a new product blockade manually
+     * Add a new product blockade label
      */
-    public function store(Request $request): JsonResponse
+    public function addLabel(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'source_id' => 'required|integer',
-            'product_id' => 'nullable|integer|required_without:product_attribute_id',
-            'product_attribute_id' => 'nullable|integer|required_without:product_id',
-            'document_type_id' => 'required|integer|exists:document_types,id',
+            'label' => 'required|string|max:50',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Datos inválidos',
+                'message' => 'Etiqueta inválida',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
-            // Check if already exists
-            $exists = DocumentProductBlockade::where('source_id', $request->source_id)
-                ->where('document_type_id', $request->document_type_id)
-                ->when($request->product_id, fn ($q) => $q->where('product_id', $request->product_id))
-                ->when($request->product_attribute_id, fn ($q) => $q->where('product_attribute_id', $request->product_attribute_id))
-                ->exists();
+            $newLabel = strtoupper(trim($request->label));
+            $currentLabels = Setting::get('product_blockade_labels', '');
 
-            if ($exists) {
+            // Parse existing labels
+            $labelsArray = array_filter(array_map('trim', explode(',', $currentLabels)));
+
+            // Check if label already exists (case-insensitive)
+            $labelExists = false;
+            foreach ($labelsArray as $existingLabel) {
+                if (strtoupper($existingLabel) === $newLabel) {
+                    $labelExists = true;
+                    break;
+                }
+            }
+
+            if ($labelExists) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Este bloqueo ya existe para este producto',
-                ], 409);
+                    'message' => 'La etiqueta "'.$newLabel.'" ya existe',
+                ], 422);
             }
 
-            $blockade = DocumentProductBlockade::create([
-                'source_id' => $request->source_id,
-                'product_id' => $request->product_id,
-                'product_attribute_id' => $request->product_attribute_id,
-                'document_type_id' => $request->document_type_id,
-            ]);
+            // Add new label
+            $labelsArray[] = $newLabel;
+            $updatedLabels = implode(',', $labelsArray);
+
+            Setting::set('product_blockade_labels', $updatedLabels);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Bloqueo creado exitosamente',
-                'blockade' => $blockade->load('documentType'),
+                'message' => 'Etiqueta "'.$newLabel.'" agregada exitosamente',
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error creating product blockade: '.$e->getMessage());
+            Log::error('Error adding blockade label: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el bloqueo: '.$e->getMessage(),
+                'message' => 'Error al agregar la etiqueta: '.$e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Store multiple product blockades at once
+     * Delete a product blockade label
      */
-    public function storeBulk(Request $request): JsonResponse
+    public function deleteLabel(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'blockades' => 'required|array|min:1',
-            'blockades.*.source_id' => 'required|integer',
-            'blockades.*.product_id' => 'nullable|integer|required_without:blockades.*.product_attribute_id',
-            'blockades.*.product_attribute_id' => 'nullable|integer|required_without:blockades.*.product_id',
-            'blockades.*.document_type_id' => 'required|integer|exists:document_types,id',
+            'label' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Datos inválidos',
+                'message' => 'Etiqueta inválida',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
-            $created = 0;
-            $skipped = 0;
-            $errors = [];
+            $labelToDelete = strtoupper(trim($request->label));
+            $currentLabels = Setting::get('product_blockade_labels', '');
 
-            foreach ($request->blockades as $index => $blockadeData) {
-                // Check if blockade already exists
-                $exists = DocumentProductBlockade::where('document_type_id', $blockadeData['document_type_id'])
-                    ->where('source_id', $blockadeData['source_id'])
-                    ->when($blockadeData['product_id'] ?? null, fn ($q) => $q->where('product_id', $blockadeData['product_id']))
-                    ->when($blockadeData['product_attribute_id'] ?? null, fn ($q) => $q->where('product_attribute_id', $blockadeData['product_attribute_id']))
-                    ->exists();
+            // Parse existing labels
+            $labelsArray = array_filter(array_map('trim', explode(',', $currentLabels)));
 
-                if ($exists) {
-                    $skipped++;
-                    $errors[] = 'Fila '.($index + 1).': Bloqueo duplicado';
+            // Remove the label (case-insensitive)
+            $labelsArray = array_filter($labelsArray, function ($label) use ($labelToDelete) {
+                return strtoupper($label) !== $labelToDelete;
+            });
 
-                    continue;
-                }
-
-                DocumentProductBlockade::create([
-                    'source_id' => $blockadeData['source_id'],
-                    'product_id' => $blockadeData['product_id'] ?? null,
-                    'product_attribute_id' => $blockadeData['product_attribute_id'] ?? null,
-                    'document_type_id' => $blockadeData['document_type_id'],
-                ]);
-
-                $created++;
-            }
-
-            $message = "{$created} bloqueo(s) creado(s) exitosamente";
-            if ($skipped > 0) {
-                $message .= ", {$skipped} omitido(s) por duplicado";
-            }
+            // Update settings
+            $updatedLabels = implode(',', $labelsArray);
+            Setting::set('product_blockade_labels', $updatedLabels);
 
             return response()->json([
                 'success' => true,
-                'message' => $message,
-                'created' => $created,
-                'skipped' => $skipped,
-                'errors' => $errors,
+                'message' => 'Etiqueta "'.$labelToDelete.'" eliminada exitosamente',
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error creating bulk blockades: '.$e->getMessage());
+            Log::error('Error deleting blockade label: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear los bloqueos: '.$e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
-     * Save product blockade labels configuration
-     */
-    public function saveLabels(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'labels' => 'required|string|max:500',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Etiquetas inválidas',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        try {
-            Setting::set('product_blockade_labels', $request->labels);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Etiquetas guardadas exitosamente',
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error saving blockade labels: '.$e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al guardar las etiquetas: '.$e->getMessage(),
+                'message' => 'Error al eliminar la etiqueta: '.$e->getMessage(),
             ], 500);
         }
     }

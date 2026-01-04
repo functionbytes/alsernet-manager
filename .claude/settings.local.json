@@ -387,7 +387,9 @@
       "Bash(modules/Document/app/Commands/MigrateRequestDocumentProducts.php )",
       "Bash(modules/Document/app/Providers/DocumentsServiceProvider.php)",
       "Bash(modules/Document/resources/views/settings/configurations/index.blade.php)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(./vendor/bin/pint:*)",
+      "Bash(comm:*)"
     ],
     "deny": [],
     "ask": []

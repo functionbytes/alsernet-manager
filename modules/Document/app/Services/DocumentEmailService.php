@@ -50,6 +50,14 @@ class DocumentEmailService
         MailTemplateJob::dispatch($document, 'upload');
     }
 
+    public function sendCustomEmail(Document $document, string $subject, string $message): void
+    {
+        MailTemplateJob::dispatch($document, 'custom', [
+            'subject' => $subject,
+            'message' => $message,
+        ]);
+    }
+
     public function processDocumentUpload(Document $document): void
     {
         $document = $document->fresh();

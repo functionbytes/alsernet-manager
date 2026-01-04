@@ -10,7 +10,7 @@
             ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],
             ['label' => 'Documentos', 'url' => route('documents.index')],
             ['label' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)],
-            ['label' => 'Emails', 'url' => route('documents.emails', $document->uid)],
+            ['label' => 'Emails', 'url' => route('api.documents.emails', $document->uid)],
             ['label' => 'Vista previa', 'active' => true]
         ]
     ])
@@ -203,7 +203,7 @@
                         <button type="button" class="btn btn-info" id="btnPrintEmail">
                             Imprimir
                         </button>
-                        <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-secondary">
+                        <a href="{{ route('api.documents.emails', $document->uid) }}" class="btn btn-secondary">
                             Volver a emails
                         </a>
                         <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary">

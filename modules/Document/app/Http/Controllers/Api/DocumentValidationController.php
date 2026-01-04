@@ -140,12 +140,12 @@ class DocumentValidationController extends Controller
         $this->authorize('approve', $document);
 
         try {
-            $result = $this->emailService->sendApprovalEmail($document);
+            $this->emailService->sendApprovalEmail($document);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Email de aprobación enviado',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -167,20 +167,18 @@ class DocumentValidationController extends Controller
 
         $validated = $request->validate([
             'reason' => 'required|string|min:10',
-            'rejected_docs' => 'nullable|array',
         ]);
 
         try {
-            $result = $this->emailService->sendRejectionEmail(
+            $this->emailService->sendRejectionEmail(
                 $document,
-                $validated['reason'],
-                $validated['rejected_docs'] ?? []
+                $validated['reason']
             );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Email de rechazo enviado',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -203,21 +201,19 @@ class DocumentValidationController extends Controller
         $validated = $request->validate([
             'subject' => 'required|string|max:200',
             'message' => 'required|string|min:10',
-            'template_id' => 'nullable|exists:email_templates,id',
         ]);
 
         try {
-            $result = $this->emailService->sendCustomEmail(
+            $this->emailService->sendCustomEmail(
                 $document,
                 $validated['subject'],
-                $validated['message'],
-                $validated['template_id'] ?? null
+                $validated['message']
             );
 
             return response()->json([
                 'success' => true,
-                'message' => 'Email enviado',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'message' => 'Email enviado correctamente',
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -238,12 +234,12 @@ class DocumentValidationController extends Controller
         $this->authorize('update', $document);
 
         try {
-            $result = $this->emailService->sendReminderEmail($document);
+            $this->emailService->sendReminder($document);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Recordatorio enviado',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -263,22 +259,13 @@ class DocumentValidationController extends Controller
 
         $this->authorize('update', $document);
 
-        $validated = $request->validate([
-            'template_id' => 'nullable|exists:email_templates,id',
-            'custom_message' => 'nullable|string',
-        ]);
-
         try {
-            $result = $this->emailService->sendInitialDocumentRequest(
-                $document,
-                $validated['template_id'] ?? null,
-                $validated['custom_message'] ?? null
-            );
+            $this->emailService->sendInitialRequest($document);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Solicitud de documentos enviada',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -304,7 +291,7 @@ class DocumentValidationController extends Controller
         ]);
 
         try {
-            $result = $this->emailService->sendMissingDocumentsRequest(
+            $this->emailService->sendMissingDocumentsRequest(
                 $document,
                 $validated['missing_docs'],
                 $validated['custom_message'] ?? null
@@ -313,7 +300,7 @@ class DocumentValidationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Solicitud de documentos faltantes enviada',
-                'recipient' => $result['recipient'] ?? $document->customer->email,
+                'recipient' => $document->customer?->email,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -324,10 +311,110 @@ class DocumentValidationController extends Controller
     }
 
     /**
+     * Enviar notificación de documento
+     */
+    public function sendNotification(Request $request, string $uid): JsonResponse
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $document);
+
+        try {
+            $this->emailService->sendInitialRequest($document);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Notificación enviada',
+                'recipient' => $document->customer?->email,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Enviar confirmación de carga
+     */
+    public function sendUploadConfirmation(Request $request, string $uid): JsonResponse
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $document);
+
+        try {
+            $this->emailService->sendUploadConfirmation($document);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Confirmación de carga enviada',
+                'recipient' => $document->customer?->email,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Enviar solicitud de documentos faltantes
+     */
+    public function sendMissingDocuments(Request $request, string $uid): JsonResponse
+    {
+        return $this->requestMissingDocuments($request, $uid);
+    }
+
+    /**
+     * Obtener historial de emails
+     */
+    public function emailHistory(string $uid): JsonResponse
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('view', $document);
+
+        $emails = $document->emailHistory()
+            ->orderBy('sent_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'emails' => $emails,
+        ]);
+    }
+
+    /**
+     * Preview de email
+     */
+    public function emailPreview(string $uid, string $mailUid): JsonResponse
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('view', $document);
+
+        $email = $document->emailHistory()
+            ->where('uid', $mailUid)
+            ->firstOrFail();
+
+        return response()->json([
+            'success' => true,
+            'email' => $email,
+        ]);
+    }
+
+    /**
      * Agregar nota al documento
      */
     public function addNote(Request $request, string $uid): JsonResponse
     {
+        // Verificar permiso para agregar notas
+        if (! auth()->user()->canDocument('add-notes')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para agregar notas.',
+            ], 403);
+        }
+
         $document = Document::where('uid', $uid)->firstOrFail();
         $profile = $this->getUserProfile();
 
@@ -347,13 +434,84 @@ class DocumentValidationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Nota agregada',
+                'message' => 'Nota agregada correctamente',
                 'note' => $note,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Error al agregar nota: '.$e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Actualizar nota del documento
+     */
+    public function updateNote(Request $request, string $uid, int $noteId): JsonResponse
+    {
+        // Verificar permiso para editar notas
+        if (! auth()->user()->canDocument('edit-notes')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para editar notas.',
+            ], 403);
+        }
+
+        $document = Document::where('uid', $uid)->firstOrFail();
+
+        $note = $document->notes()->findOrFail($noteId);
+
+        $validated = $request->validate([
+            'content' => 'required|string|min:3',
+        ]);
+
+        try {
+            $note->update([
+                'content' => $validated['content'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota actualizada correctamente',
+                'note' => $note,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar nota: '.$e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Eliminar nota del documento
+     */
+    public function deleteNote(Request $request, string $uid, int $noteId): JsonResponse
+    {
+        // Verificar permiso para eliminar notas
+        if (! auth()->user()->canDocument('delete-notes')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para eliminar notas.',
+            ], 403);
+        }
+
+        $document = Document::where('uid', $uid)->firstOrFail();
+
+        $note = $document->notes()->findOrFail($noteId);
+
+        try {
+            $note->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota eliminada correctamente',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar nota: '.$e->getMessage(),
             ], 422);
         }
     }

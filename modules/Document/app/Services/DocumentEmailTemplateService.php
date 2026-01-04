@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentMail;
 use Modules\Mailer\Models\MailerTemplate;
-use Modules\Mailer\Services\Mails\MailerTemplateRendererService;
+use Modules\Mailer\Services\MailerTemplateRendererService;
 
 class DocumentEmailTemplateService
 {
@@ -180,7 +180,9 @@ class DocumentEmailTemplateService
     public static function sendCustomEmail(Document $document, string $subject, string $content): bool
     {
         try {
+
             $recipient = $document->customer_email ?? $document->customer?->email;
+
             if (! $recipient) {
                 \Log::error('Custom email: No recipient found', ['document_uid' => $document->uid]);
 

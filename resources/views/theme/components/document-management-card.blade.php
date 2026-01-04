@@ -106,4 +106,4 @@
 </div>
 
 {{-- Modal de confirmación --}}
-@include('documents::modals.confirm-configuration')
+@include('documents::documents.documents.components.management.modals.confirm-configuration')

@@ -133,7 +133,7 @@
                                         @if($document->mails()->count() > 0)
                                             <li class="border-top my-2"></li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.emails', $document->uid) }}">
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('api.documents.emails', $document->uid) }}">
                                                     Ver emails
                                                 </a>
                                             </li>

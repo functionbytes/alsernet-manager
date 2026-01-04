@@ -27,7 +27,7 @@
                                      style="background-color: #f6f7f9;"
                                      data-bs-toggle="tooltip"
                                      data-bs-title="{{ $note->author?->full_name ?? 'Sistema' }}">
-                                    {{ strtoupper(document-notes-sidebar.blade.phpsubstr($note->author->firstname ?? '', 0, 1) . substr($note->author->lastname ?? '', 0, 1)) }}
+                                    {{ strtoupper(substr($note->author->firstname ?? '', 0, 1) . substr($note->author->lastname ?? '', 0, 1)) }}
                                 </div>
                                 <div class="min-width-0">
                                     <small class="fw-semibold d-block text-truncate">
@@ -43,28 +43,18 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-1 flex-shrink-0">
-                                @if(auth()->check() && $note->created_by === auth()->user()->id)
+                                @if(auth()->check())
                                     <div class="note-actions-editable">
-                                        @if(auth()->user()->canActionDocumentComponent('document-notes', 'edit'))
+                                        @if(auth()->user()->canDocument('edit-notes'))
                                             <button class="btn-note-edit" data-note-id="{{ $note->id }}"
                                                     data-bs-toggle="tooltip" data-bs-title="Editar nota">
                                                 <i class="fas fa-pen-to-square text-black fs-2"></i>
                                             </button>
-                                        @else
-                                            <button class="btn-note-edit" disabled title="No tienes permiso para editar notas"
-                                                    style="opacity: 0.5; cursor: not-allowed;">
-                                                <i class="fas fa-pen-to-square text-black fs-2"></i>
-                                            </button>
                                         @endif
 
-                                        @if(auth()->user()->canActionDocumentComponent('document-notes', 'delete'))
+                                        @if(auth()->user()->canDocument('delete-notes'))
                                             <button class="btn-note-delete" data-note-id="{{ $note->id }}"
                                                     data-bs-toggle="tooltip" data-bs-title="Eliminar nota">
-                                                <i class="fas fa-trash text-black fs-2"></i>
-                                            </button>
-                                        @else
-                                            <button class="btn-note-delete" disabled title="No tienes permiso para eliminar notas"
-                                                    style="opacity: 0.5; cursor: not-allowed;">
                                                 <i class="fas fa-trash text-black fs-2"></i>
                                             </button>
                                         @endif
@@ -102,18 +92,24 @@
         <div class="border-top my-3"></div>
 
         <!-- Add Note Form -->
-        <form id="addNoteForm">
-            @csrf
-            <div class="mb-2">
-                <textarea class="form-control form-control-sm" id="noteContent" name="content" rows="2"
-                          placeholder="Escribe una nota..." required style="resize: none;" @if(!auth()->user()->canActionDocumentComponent('document-notes', 'add')) disabled @endif></textarea>
+        @if(auth()->user()->canDocument('add-notes'))
+            <form id="addNoteForm">
+                @csrf
+                <div class="mb-2">
+                    <textarea class="form-control form-control-sm" id="noteContent" name="content" rows="2"
+                              placeholder="Escribe una nota..." required style="resize: none;"></textarea>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-plus me-1"></i> Agregar
+                    </button>
+                </div>
+            </form>
+        @else
+            <div class="alert alert-info py-2 px-3 mb-0" role="alert">
+                <small><i class="fas fa-info-circle me-2"></i>No tienes permiso para agregar notas</small>
             </div>
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary  w-100" @if(!auth()->user()->canActionDocumentComponent('document-notes', 'add')) disabled title="No tienes permiso para agregar notas" @endif>
-                    <i class="fas fa-plus me-1"></i> Agregar
-                </button>
-            </div>
-        </form>
+        @endif
     </div>
 </div>
 
@@ -141,6 +137,10 @@
             function editNoteHandler(e) {
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
+
+                // Destroy all tooltips before editing
+                destroyAllTooltips();
+
                 const $noteItem = $(`[data-note-id="${noteId}"]`);
                 const $noteContent = $noteItem.find('.note-content');
                 const $editForm = $noteItem.find('.note-edit-form');
@@ -182,7 +182,7 @@
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
 
                 $.ajax({
-                    url: `/administrative/documents/manage/${documentUid}/update-note/${noteId}`,
+                    url: `{{ route('api.documents.notes.update', ['uid' => 'UID_PLACEHOLDER', 'noteId' => 'NOTE_PLACEHOLDER']) }}`.replace('UID_PLACEHOLDER', documentUid).replace('NOTE_PLACEHOLDER', noteId),
                     method: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': $('[name="_token"]').val()
@@ -224,57 +224,104 @@
                 });
             }
 
+            // Utility function to destroy all tooltips
+            function destroyAllTooltips() {
+                // Get all elements with tooltip instances
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(element => {
+                    const tooltipInstance = bootstrap.Tooltip.getInstance(element);
+                    if (tooltipInstance) {
+                        tooltipInstance.dispose();
+                    }
+                });
+                // Also remove any orphaned tooltip divs
+                document.querySelectorAll('.tooltip').forEach(tooltip => {
+                    tooltip.remove();
+                });
+            }
+
             // Delete Note Handler
+            let pendingDeleteNoteId = null;
+
             function deleteNoteHandler(e) {
                 e.preventDefault();
                 const noteId = $(this).data('note-id');
+
+                // Destroy all tooltips before showing modal
+                destroyAllTooltips();
+
+                // Store the note ID for deletion
+                pendingDeleteNoteId = noteId;
+
+                // Show modal
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteNoteModal'));
+                deleteModal.show();
+            }
+
+            // Clean up tooltips when modal is hidden
+            document.getElementById('deleteNoteModal').addEventListener('hidden.bs.modal', function() {
+                destroyAllTooltips();
+                pendingDeleteNoteId = null;
+            });
+
+            // Handle delete confirmation
+            $('#confirmDeleteNoteBtn').on('click', function() {
+                if (!pendingDeleteNoteId) return;
+
+                const noteId = pendingDeleteNoteId;
+                const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteNoteModal'));
+
                 const $btn = $(this);
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Eliminando...');
 
-                if (confirm('¿Estás seguro de que deseas eliminar esta nota?')) {
-                    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+                $.ajax({
+                    url: `{{ route('api.documents.notes.delete', ['uid' => 'UID_PLACEHOLDER', 'noteId' => 'NOTE_PLACEHOLDER']) }}`.replace('UID_PLACEHOLDER', documentUid).replace('NOTE_PLACEHOLDER', noteId),
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('[name="_token"]').val()
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            deleteModal.hide();
 
-                    $.ajax({
-                        url: `/administrative/documents/manage/${documentUid}/delete-note/${noteId}`,
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('[name="_token"]').val()
-                        },
-                        dataType: 'json',
-                        success: function (data) {
-                            if (data.success) {
-                                $(`[data-note-id="${noteId}"]`).remove();
+                            // Destroy all tooltips before removing element
+                            destroyAllTooltips();
 
-                                toastr.success('Nota eliminada correctamente', 'Éxito', {
-                                    closeButton: true,
-                                    progressBar: true,
-                                    positionClass: "toast-bottom-right"
-                                });
+                            // Remove the note item
+                            $(`[data-note-id="${noteId}"]`).remove();
 
-                                // Reload if no notes left
-                                if ($('.note-item').length === 0) {
-                                    setTimeout(() => location.reload(), 500);
-                                }
-                            } else {
-                                toastr.error('Error: ' + (data.message || 'No se pudo eliminar la nota'), 'Error', {
-                                    closeButton: true,
-                                    progressBar: true,
-                                    positionClass: "toast-bottom-right"
-                                });
-                                $btn.prop('disabled', false).html('<i class="fas fa-trash text-danger"></i>');
-                            }
-                        },
-                        error: function (error) {
-                            console.error('Error:', error);
-                            toastr.error('Error al eliminar la nota', 'Error', {
+                            toastr.success('Nota eliminada correctamente', 'Éxito', {
                                 closeButton: true,
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
-                            $btn.prop('disabled', false).html('<i class="fas fa-trash text-danger"></i>');
+
+                            // Reload if no notes left
+                            if ($('.note-item').length === 0) {
+                                setTimeout(() => location.reload(), 500);
+                            }
+                        } else {
+                            toastr.error('Error: ' + (data.message || 'No se pudo eliminar la nota'), 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
                         }
-                    });
-                }
-            }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                        toastr.error('Error al eliminar la nota', 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fas fa-trash me-2"></i>Eliminar');
+                        pendingDeleteNoteId = null;
+                    }
+                });
+            })
 
             // Initial binding on page load
             rebindNoteEventListeners();
@@ -298,7 +345,7 @@
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
 
                 $.ajax({
-                    url: `/administrative/documents/manage/${documentUid}/add-note`,
+                    url: `{{ route('api.documents.notes.add', ['uid' => 'PLACEHOLDER']) }}`.replace('PLACEHOLDER', documentUid),
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('[name="_token"]').val()
@@ -423,6 +470,31 @@
     </script>
 @endpush
 
+<!-- Modal de confirmación para eliminar nota -->
+<div class="modal fade" id="deleteNoteModal" tabindex="-1" aria-labelledby="deleteNoteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title" id="deleteNoteModalLabel">
+                    Eliminar nota
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-primary w-100 mb-1" id="confirmDeleteNoteBtn">
+                    <i class="fas fa-trash me-2"></i>Eliminar
+                </button>
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .notes-scroll {
         overflow-y: auto;
@@ -444,7 +516,7 @@
 
     @media (min-width: 992px) {
         .notes-scroll {
-            height: 400px;
+            height: max-content;
         }
     }
 

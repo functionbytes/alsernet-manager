@@ -30,7 +30,7 @@
                            class="form-control form-control-sm"
                            id="additionalFile"
                            name="file"
-                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled @endif>
+                           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" @if(!auth()->user()->canDocument('upload-attachments')) disabled @endif>
                     <small class="text-muted d-block mt-1">
                         <i class="fas fa-info-circle me-1"></i>
                         PDF, JPG, PNG, DOC, DOCX (máx. 10MB)
@@ -45,12 +45,12 @@
                            id="attachmentNotes"
                            name="notes"
                            placeholder="Ej: Factura proforma, Contrato firmado..."
-                           maxlength="500" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled @endif>
+                           maxlength="500" @if(!auth()->user()->canDocument('upload-attachments')) disabled @endif>
                 </div>
                 <div class="col-12">
                     <button type="submit"
                             class="btn btn-primary w-100"
-                            id="uploadAttachmentBtn" @if(!auth()->user()->canActionDocumentComponent('additional-attachments', 'upload')) disabled title="No tienes permiso para subir adjuntos" @endif>
+                            id="uploadAttachmentBtn" @if(!auth()->user()->canDocument('upload-attachments')) disabled title="No tienes permiso para subir adjuntos" @endif>
                         <i class="fas fa-upload me-2"></i>Subir documento
                     </button>
                 </div>
@@ -109,7 +109,7 @@
                                                data-bs-toggle="tooltip">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            @if(auth()->user()->canActionDocumentComponent('additional-attachments', 'delete'))
+                                            @if(auth()->user()->canDocument('delete-attachments'))
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger attachment-action-btn delete-attachment-btn"
                                                         data-media-id="{{ $attachment['id'] }}"
@@ -256,7 +256,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...');
 
             $.ajax({
-                url: "{{ route('documents.upload-attachment', $document->uid) }}",
+                url: "{{ route('api.documents.upload-attachment', $document->uid) }}",
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -294,7 +294,7 @@
         // ===== Refresh Attachments List =====
         function refreshAttachmentsList() {
             $.ajax({
-                url: "{{ route('documents.attachments', $document->uid) }}",
+                url: "{{ route('api.documents.attachments', $document->uid) }}",
                 method: 'GET',
                 success: function(response) {
                     if (response.success) {
@@ -397,7 +397,7 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
             $.ajax({
-                url: "{{ route('documents.delete-attachment', $document->uid) }}",
+                url: "{{ route('api.documents.delete-attachment', $document->uid) }}",
                 method: 'POST',
                 data: {
                     media_id: mediaId,

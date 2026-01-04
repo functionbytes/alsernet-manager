@@ -5,6 +5,7 @@ namespace Modules\Document\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentProductBlockade;
+use Modules\Document\Entities\DocumentType;
 
 class MigrateProductBlockades extends Command
 {
@@ -23,10 +24,9 @@ class MigrateProductBlockades extends Command
     protected $description = 'Migrate product blockades from PrestaShop MySQL tables to document_product_blockades';
 
     /**
-     * Default blockade labels to search for
-     * Can be overridden via backups
+     * Map blockade types to document type IDs (loaded dynamically)
      */
-    private const DEFAULT_BLOCKADE_LABELS = 'DNI,ESCOPETA,RIFLE,CORTA';
+    private array $blockadeTypeMapping = [];
 
     /**
      * Execute the console command.
@@ -34,6 +34,9 @@ class MigrateProductBlockades extends Command
     public function handle(): int
     {
         $this->info('Starting product blockades migration...');
+
+        // Load document type mapping dynamically
+        $this->loadDocumentTypeMapping();
 
         // Configure external MySQL connection
         $this->configureExternalConnection();
@@ -45,8 +48,7 @@ class MigrateProductBlockades extends Command
             $this->info('Existing blockades deleted.');
         }
 
-        // Get blockade labels from backups or use defaults
-        $blockadeLabels = \App\Models\Setting::get('product_blockade_labels', self::DEFAULT_BLOCKADE_LABELS);
+        $blockadeLabels = implode(',', array_keys($this->blockadeTypeMapping));
         $this->info("Using blockade labels: {$blockadeLabels}");
 
         // Migrate from both tables
@@ -59,6 +61,60 @@ class MigrateProductBlockades extends Command
         $this->info("Migration completed! Total records migrated: {$totalMigrated}");
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Load document type mapping from database
+     * Maps blockade type keywords to document_type_id
+     * Uses label slug matching for dynamic mapping
+     */
+    private function loadDocumentTypeMapping(): void
+    {
+        $documentTypes = DocumentType::all();
+
+        foreach ($documentTypes as $docType) {
+            // Convert label to lowercase slug for matching
+            $slug = strtolower($docType->label);
+            // Remove special characters and normalize spaces
+            $slug = preg_replace('/[^a-z0-9]/', '', $slug);
+
+            // Map by the processed slug
+            $this->blockadeTypeMapping[$slug] = $docType->id;
+
+            // Also add the original lowercase label for fuzzy matching
+            $lowerLabel = strtolower($docType->label);
+            if ($lowerLabel !== $slug) {
+                $this->blockadeTypeMapping[$lowerLabel] = $docType->id;
+            }
+        }
+
+        // Map common blockade type aliases to document types
+        $aliases = [
+            'corta' => $this->findDocumentTypeByKeyword('corta'),
+            'rifle' => $this->findDocumentTypeByKeyword('rifle'),
+            'escopeta' => $this->findDocumentTypeByKeyword('escopeta'),
+            'balines' => $this->findDocumentTypeByKeyword('balines'),
+            'dni' => $this->findDocumentTypeByKeyword('identificacion'),
+        ];
+
+        foreach ($aliases as $alias => $docTypeId) {
+            if ($docTypeId) {
+                $this->blockadeTypeMapping[$alias] = $docTypeId;
+            }
+        }
+
+        $this->info('Loaded document type mapping: '.json_encode($this->blockadeTypeMapping));
+    }
+
+    /**
+     * Find document type ID by keyword matching in label
+     */
+    private function findDocumentTypeByKeyword(string $keyword): ?int
+    {
+        $keyword = strtolower($keyword);
+        $docType = DocumentType::whereRaw('LOWER(label) LIKE ?', ["%{$keyword}%"])->first();
+
+        return $docType?->id;
     }
 
     /**
@@ -122,6 +178,7 @@ class MigrateProductBlockades extends Command
                 $data = [
                     'source_id' => $idOrigen,
                     'blockade_type' => $blockadeType,
+                    'document_type_id' => $this->blockadeTypeMapping[$blockadeType] ?? null,
                 ];
 
                 if ($type === 'product') {

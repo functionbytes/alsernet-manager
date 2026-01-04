@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\DocumentConfigurationController;
-use Modules\Document\Http\Controllers\DocumentEmailController;
-use Modules\Document\Http\Controllers\DocumentFileController;
 use Modules\Document\Http\Controllers\DocumentGroupsController;
 use Modules\Document\Http\Controllers\DocumentProductBlockadeController;
 use Modules\Document\Http\Controllers\DocumentsController;
@@ -11,9 +9,8 @@ use Modules\Document\Http\Controllers\DocumentSlaPoliciesController;
 use Modules\Document\Http\Controllers\DocumentSyncController;
 use Modules\Document\Http\Controllers\DocumentTypeController;
 use Modules\Document\Http\Controllers\DocumentValidationConditionController;
-use Modules\Document\Http\Controllers\DocumentValidationController;
-use Modules\Document\Http\Controllers\Settings\StageEmailActionController;
 use Modules\Document\Http\Controllers\Settings\DocumentGroupPermissionsController;
+use Modules\Document\Http\Controllers\Settings\StageEmailActionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,39 +40,10 @@ Route::middleware(['web', 'auth', 'role:super-admin'])->group(function () {
         Route::get('/import/api', [DocumentSyncController::class, 'importApi'])->name('import.api');
         Route::get('/import/erp', [DocumentSyncController::class, 'importErp'])->name('import.erp');
 
-        // Document CRUD
-        Route::post('/update', [DocumentsController::class, 'update'])->name('update');
+        // Document views
         Route::get('/show/{uid}', [DocumentsController::class, 'show'])->name('show');
-        Route::get('/destroy/{uid}', [DocumentsController::class, 'destroy'])->name('destroy');
         Route::get('/summary/{uid}', [DocumentsController::class, 'summary'])->name('summary');
-
-        // Vista principal de gestión
         Route::get('/manage/{uid}', [DocumentsController::class, 'manage'])->name('manage');
-
-        // Email routes - Refactored to DocumentEmailController
-        Route::get('/{uid}/emails', [DocumentEmailController::class, 'emailHistory'])->name('emails');
-        Route::get('/emails/{mailUid}/preview', [DocumentEmailController::class, 'emailPreview'])->name('emails.preview');
-        Route::post('/{uid}/send-notification', [DocumentEmailController::class, 'sendNotificationEmail'])->name('send-notification');
-        Route::post('/{uid}/send-reminder', [DocumentEmailController::class, 'sendReminderEmail'])->name('send-reminder');
-        Route::post('/{uid}/send-custom-email', [DocumentEmailController::class, 'sendCustomEmail'])->name('send-custom-email');
-        Route::post('/{uid}/send-upload-confirmation', [DocumentEmailController::class, 'sendUploadConfirmationEmail'])->name('send-upload-confirmation');
-        Route::post('/{uid}/send-approval', [DocumentEmailController::class, 'sendApprovalEmail'])->name('send-approval');
-        Route::post('/{uid}/send-rejection', [DocumentEmailController::class, 'sendRejectionEmail'])->name('send-rejection');
-        Route::post('/{uid}/send-missing', [DocumentEmailController::class, 'sendMissingDocumentsEmail'])->name('send-missing');
-
-        // Validation stages - Refactored to DocumentValidationController
-        Route::post('/{uid}/approve-stage', [DocumentValidationController::class, 'approveStage'])->name('approve-stage');
-        Route::post('/{uid}/reject-stage', [DocumentValidationController::class, 'rejectStage'])->name('reject-stage');
-
-        // File operations - Refactored to DocumentFileController
-        Route::post('/{uid}/admin-upload', [DocumentFileController::class, 'adminUploadDocument'])->name('admin-upload');
-        Route::get('/{uid}/attachments', [DocumentFileController::class, 'getAdditionalAttachments'])->name('attachments');
-        Route::post('/{uid}/upload-attachment', [DocumentFileController::class, 'uploadAdditionalAttachment'])->name('upload-attachment');
-        Route::post('/{uid}/delete-attachment', [DocumentFileController::class, 'deleteAdditionalAttachment'])->name('delete-attachment');
-
-        // Refresh operations
-        Route::get('/{uid}/refresh-section', [DocumentsController::class, 'refreshDocumentsSection'])->name('refresh-section');
-        Route::get('/{uid}/refresh-action-history', [DocumentsController::class, 'refreshActionHistory'])->name('refresh-action-history');
     });
 
     // ====================================================================
@@ -181,10 +149,9 @@ Route::middleware(['web', 'auth', 'role:super-admin'])->group(function () {
             Route::get('/status', [DocumentProductBlockadeController::class, 'status'])->name('status');
 
             // Actions
-            Route::post('/', [DocumentProductBlockadeController::class, 'store'])->name('store');
             Route::post('/sync', [DocumentProductBlockadeController::class, 'sync'])->name('sync');
-            Route::post('/store-bulk', [DocumentProductBlockadeController::class, 'storeBulk'])->name('store-bulk');
-            Route::post('/labels', [DocumentProductBlockadeController::class, 'saveLabels'])->name('save-labels');
+            Route::post('/labels/add', [DocumentProductBlockadeController::class, 'addLabel'])->name('labels.add');
+            Route::post('/labels/delete', [DocumentProductBlockadeController::class, 'deleteLabel'])->name('labels.delete');
             Route::delete('/{id}', [DocumentProductBlockadeController::class, 'destroy'])->name('destroy');
         });
 

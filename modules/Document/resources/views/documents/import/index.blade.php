@@ -2,18 +2,7 @@
 
 @section('content')
 
-    @if (!auth()->user()->canActionDocumentComponent('import-documents', 'upload') &&
-         !auth()->user()->canInDocumentModule('sync-erp') &&
-         !auth()->user()->canInDocumentModule('sync-api'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-lock me-2"></i>
-            <strong>Acceso denegado.</strong> No tienes permiso para importar documentos.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <a href="{{ route('documents.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i> Volver a documentos
-        </a>
-    @else
+
 
     @include('theme.components.card', ['title' => 'Importar Documentos'])
 
@@ -83,14 +72,13 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload') ||
-                        auth()->user()->canInDocumentModule('sync-api'))
+                        @if(auth()->user()->canDocument('route-sync-api-documents'))
                         <a href="{{ route('documents.import.api') }}" class="btn btn-primary w-100">
-                            <i class="fas fa-arrow-right me-2"></i> Importar desde prestashop
+                            Importar desde prestashop
                         </a>
                     @else
                         <button type="button" class="btn btn-primary w-100 disabled" disabled>
-                            <i class="fas fa-lock me-2"></i> Permiso requerido
+                            Permiso requerido
                         </button>
                     @endif
                 </div>
@@ -147,14 +135,13 @@
                 </div>
 
                 <div class="card-footer border-top">
-                    @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload') ||
-                        auth()->user()->canInDocumentModule('sync-erp'))
+                    @if(auth()->user()->canDocument('route-sync-erp-documents'))
                         <a href="{{ route('documents.import.erp') }}" class="btn btn-primary w-100">
-                            <i class="fas fa-arrow-right me-2"></i> Importar desde gestion
+                            Importar desde gestion
                         </a>
                     @else
                         <button type="button" class="btn btn-primary w-100 disabled" disabled>
-                            <i class="fas fa-lock me-2"></i> Permiso requerido
+                            Permiso requerido
                         </button>
                     @endif
                 </div>
@@ -163,32 +150,33 @@
 
     </div>
 
-    <!-- Información adicional -->
-    <div class="card mt-4 shadow-sm">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h6 class="fw-bold mb-2">
-                        <i class="fas fa-lightbulb text-warning me-2"></i>
-                        ¿Cuándo usar cada opción?
-                    </h6>
-                    <p class="text-muted mb-0 ">
-                        <strong>PrestaShop:</strong> Cuando la orden fue realizada en la tienda online y necesitas crear el documento de solicitud de documentación.
-                    </p>
-                    <p class="text-muted mb-0 ">
-                        <strong>Gestión ERP:</strong> Cuando el pedido fue registrado manualmente en Gestión y necesitas vincular la documentación.
-                    </p>
+    @if(auth()->user()->canDocument('route-sync-documents'))
+        <!-- Información adicional -->
+        <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="fw-bold mb-2">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                            ¿Cuándo usar cada opción?
+                        </h6>
+                        <p class="text-muted mb-0 ">
+                            <strong>PrestaShop:</strong> Cuando la orden fue realizada en la tienda online y necesitas crear el documento de solicitud de documentación.
+                        </p>
+                        <p class="text-muted mb-0 ">
+                            <strong>Gestión ERP:</strong> Cuando el pedido fue registrado manualmente en Gestión y necesitas vincular la documentación.
+                        </p>
 
-                </div>
-                <div class="col-md-4 text-end">
-                    <a href="{{ route('documents.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Volver a documentos
-                    </a>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="{{ route('documents.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Volver a documentos
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
     @endif
+
 
 @endsection

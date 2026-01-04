@@ -47,7 +47,7 @@ class MailTemplateJob implements ShouldQueue
                 'custom' => DocumentEmailTemplateService::sendCustomEmail(
                     $this->document,
                     $this->emailData['subject'] ?? '',
-                    $this->emailData['content'] ?? ''
+                    $this->emailData['message'] ?? ''
                 ),
                 default => false,
             };

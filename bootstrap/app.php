@@ -75,6 +75,9 @@ return Application::configure(basePath: dirname(__DIR__))
             // Middleware para el sistema de devoluciones
             'check.roles.permissions' => \App\Http\Middleware\CheckRolesAndPermissions::class,
 
+            // Document permission middleware
+            'document.permission' => \App\Http\Middleware\DocumentPermissionMiddleware::class,
+
         ]);
     })->withProviders([
         Illuminate\Cache\CacheServiceProvider::class, // NECESARIO para Cache::get(), Cache::put()

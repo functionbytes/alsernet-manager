@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Modules\Document\Commands\CreateSampleDocumentsFromPrestashop;
-use Modules\Document\Commands\InitializeDocumentWorkflows;
-use Modules\Document\Commands\MigrateRequestDocumentProducts;
-use Modules\Document\Commands\MigrateRequestDocuments;
-use Modules\Document\Commands\SendDocumentUploadReminders;
-use Modules\Document\Commands\SyncDocumentFields;
+use Modules\Document\Console\Commands\CreateSampleDocumentsFromPrestashop;
+use Modules\Document\Console\Commands\InitializeDocumentWorkflows;
+use Modules\Document\Console\Commands\MigrateProductBlockades;
+use Modules\Document\Console\Commands\MigrateRequestDocumentProducts;
+use Modules\Document\Console\Commands\MigrateRequestDocuments;
+use Modules\Document\Console\Commands\SendDocumentUploadReminders;
+use Modules\Document\Console\Commands\SyncDocumentFields;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
@@ -116,6 +117,7 @@ class DocumentsServiceProvider extends ServiceProvider
             SyncDocumentFields::class,
             MigrateRequestDocuments::class,
             MigrateRequestDocumentProducts::class,
+            MigrateProductBlockades::class,
         ]);
     }
 

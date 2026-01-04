@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-lg-8">
             <!-- Order Details (Permission-Controlled) -->
-            @if(auth()->user()->canViewDocumentComponent('order-details'))
+            @if(auth()->user()->canDocument('order-details'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Detalle de la orden</h5>
@@ -53,7 +53,7 @@
             @endif
 
             <!-- Customer Information (Permission-Controlled) -->
-            @if(auth()->user()->canViewDocumentComponent('customer-information'))
+            @if(auth()->user()->canDocument('customer-information'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Información del cliente</h5>
@@ -96,7 +96,7 @@
             </div>
             @endif
 
-            @if($products->count() && auth()->user()->canViewDocumentComponent('products-list'))
+            @if($products->count() && auth()->user()->canDocument('products-list'))
                 <!-- Products List (Permission-Controlled) -->
                 <div class="card mb-3">
                     <div class="card-header p-3 bg-white border-bottom">
@@ -192,7 +192,7 @@
             </div>
 
             <!-- Document Notes (Permission-Controlled) -->
-            @if(auth()->user()->canViewDocumentComponent('document-notes'))
+            @if(auth()->user()->canDocument('document-notes'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Notas del documento</h5>
@@ -276,18 +276,22 @@
                     <h5 class="mb-1 fw-bold">Acciones</h5>
                 </div>
                 <div class="card-body">
-                    <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary w-100 mb-2">
-                        Gestionar
-                    </a>
-                    @if($document->mails()->count() > 0)
-                    <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
-                       Ver emails enviados
-                       <span class="badge bg-black ms-1">{{ $document->mails()->count() }}</span>
-                    </a>
+                    @if(auth()->user()->canDocument('route-manage-documents'))
+                        <a href="{{ route('documents.manage', $document->uid) }}" class="btn btn-primary w-100 mb-2">
+                            Gestionar
+                        </a>
                     @endif
-                    <a href="{{ route('documents.index') }}" class="btn btn-secondary w-100">
-                        <i class="fas fa-arrow-left me-1"></i> Volver a documentos
-                    </a>
+                    @if($document->mails()->count() > 0 && auth()->user()->canDocument('route-mails-documents'))
+                        <a href="{{ route('api.documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
+                           Ver emails enviados
+                           <span class="badge bg-black ms-1">{{ $document->mails()->count() }}</span>
+                        </a>
+                    @endif
+                    @if(auth()->user()->canDocument('route-all-documents'))
+                        <a href="{{ route('documents.index') }}" class="btn btn-secondary w-100">
+                            <i class="fas fa-arrow-left me-1"></i> Volver a documentos
+                        </a>
+                    @endif
                 </div>
             </div>
 

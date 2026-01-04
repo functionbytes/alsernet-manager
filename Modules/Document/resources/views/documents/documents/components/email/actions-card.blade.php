@@ -14,7 +14,8 @@
                 <p class="text-muted small mb-2">
                     {{ $documentConfig['initial_request_description'] ?? 'Envía un email al cliente solicitándole que cargue los documentos requeridos.' }}
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100 send-notification-btn" data-uid="{{ $document->uid }}">
+                <button type="button" class="btn btn-outline-primary w-100 send-notification-btn"
+                        data-uid="{{ $document->uid }}">
                     Solicitar carga
                 </button>
             </div>
@@ -29,7 +30,8 @@
                 <p class="text-muted small mb-2">
                     {{ $documentConfig['missing_docs_description'] ?? 'Solicita al cliente que reenvíe documentos concretos que falten o necesiten corrección.' }}
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#missingDocsModal">
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#missingDocsModal">
                     Documentos faltantes
                 </button>
             </div>
@@ -44,7 +46,8 @@
                 <p class="text-muted small mb-2">
                     {{ $documentConfig['reminder_description'] ?? 'Envía un recordatorio al cliente si aún no ha completado la carga de documentos.' }}
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100 send-reminder-btn" data-uid="{{ $document->uid }}">
+                <button type="button" class="btn btn-outline-primary w-100 send-reminder-btn"
+                        data-uid="{{ $document->uid }}">
                     Enviar recordatorio
                 </button>
             </div>
@@ -59,7 +62,8 @@
                 <p class="text-muted small mb-2">
                     Confirma al cliente que sus documentos han sido recibidos.
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#uploadConfirmationModal">
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#uploadConfirmationModal">
                     Enviar
                 </button>
             </div>
@@ -74,7 +78,8 @@
                 <p class="text-muted small mb-2">
                     Notifica al cliente que sus documentos fueron aprobados.
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#approvalModal">
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#approvalModal">
                     Enviar
                 </button>
             </div>
@@ -89,7 +94,8 @@
                 <p class="text-muted small mb-2">
                     Notifica al cliente que sus documentos fueron rechazados.
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#rejectionModal">
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#rejectionModal">
                     Enviar rechazo
                 </button>
             </div>
@@ -104,7 +110,8 @@
                 <p class="text-muted small mb-2">
                     {{ $documentConfig['custom_email_description'] ?? 'Envía un correo con contenido personalizado al cliente.' }}
                 </p>
-                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#customEmailModal">
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#customEmailModal">
                     Redactar correo
                 </button>
             </div>
@@ -114,29 +121,29 @@
 
 {{-- MODALES DE EMAIL (Condicionales) --}}
 @if($documentConfig['enable_missing_docs'] ?? true)
-    @include('documents::documents.components.email.modals.missing-docs')
+    @include('documents::documents.documents.components.email.modals.missing-docs')
 @endif
 
 @if($documentConfig['enable_initial_request'] ?? true)
-    @include('documents::documents.components.email.modals.initial-request')
+    @include('documents::documents.documents.components.email.modals.initial-request')
 @endif
 
 @if($documentConfig['enable_reminder'] ?? true)
-    @include('documents::documents.components.email.modals.reminder')
+    @include('documents::documents.documents.components.email.modals.reminder')
 @endif
 
 @if($documentConfig['enable_upload_confirmation'] ?? true)
-    @include('documents::documents.components.email.modals.upload-confirmation')
+    @include('documents::documents.documents.components.email.modals.upload-confirmation')
 @endif
 
 @if($documentConfig['enable_approval'] ?? true)
-    @include('documents::documents.components.email.modals.approval')
+    @include('documents::documents.documents.components.email.modals.approval')
 @endif
 
 @if($documentConfig['enable_rejection'] ?? true)
-    @include('documents::documents.components.email.modals.rejection')
+    @include('documents::documents.documents.components.email.modals.rejection')
 @endif
 
 @if($documentConfig['enable_custom_email'] ?? true)
-    @include('documents::documents.components.email.modals.custom-email')
+    @include('documents::documents.documents.components.email.modals.custom-email')
 @endif

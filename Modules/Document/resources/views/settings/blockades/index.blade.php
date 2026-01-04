@@ -1,627 +1,318 @@
 @extends('layouts.theme')
 
-@section('title', 'Configuración de Bloqueos de Productos')
+@section('title', 'Bloqueos de Productos')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div>
-                    <h4 class="mb-1 fw-bold">Bloqueos de Productos</h4>
-                    <p class="text-muted mb-0">Gestiona los bloqueos de productos por tipo de documento</p>
-                </div>
-                <a href="{{ route('settings.documents.configurations') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Volver
-                </a>
-            </div>
 
-            <!-- Sync Statistics Card -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-2">Sincronización de bloqueos de productos</h6>
-                    <p class="text-muted mb-3">
-                        Sincroniza los bloqueos de productos (DNI, ESCOPETA, RIFLE, CORTA) desde la base de datos externa de PrestaShop.
-                    </p>
+    @include('theme.components.card', ['title' => 'Bloqueos de Productos'])
 
-                <div class="row mb-4">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-light-secondary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <i class="fas fa-shield-alt fs-7 text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 text-muted small">Total bloqueos</p>
-                                        <h5 class="mb-0" id="totalBlockades">{{ $totalBlockades }}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="widget-content searchable-container list">
+
+        @include('theme.components.alerts')
+
+        <div class="card">
+            <!-- Header Section -->
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Bloqueos de productos</h5>
+                        <p class="small mb-0 text-muted">Gestiona los bloqueos de productos que requieren documentación específica desde PrestaShop</p>
                     </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-light-secondary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <i class="fas fa-box fs-7 text-success"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 text-muted small">Productos únicos</p>
-                                        <h5 class="mb-0" id="uniqueProducts">{{ $uniqueProducts }}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-light-secondary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <i class="fas fa-sync fs-7 text-info"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 text-muted small">Sincronizaciones</p>
-                                        <h5 class="mb-0" id="blockadesSyncCount">{{ $syncCount }}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card bg-light-secondary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <i class="fas fa-clock fs-7 text-warning"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 text-muted small">Última sincronización</p>
-                                        <h6 class="mb-0 text-truncate" id="blockagesLastSync" title="{{ $lastSync }}">{{ $lastSync }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <label class="form-label small fw-semibold mb-1">Etiquetas a sincronizar</label>
-                            <small class="text-muted d-block">Estas etiquetas se buscarán en la columna 'etiqueta' de las tablas del sistema externo.</small>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-primary" id="addLabelRowBtn">
-                            <i class="fa fa-plus me-1"></i> Agregar etiqueta
+                    <div class="d-flex gap-2">
+                        @if(request('search'))
+                            <a href="{{ route('settings.documents.blockades.index') }}" class="btn btn-secondary">
+                                Limpiar búsqueda
+                            </a>
+                        @endif
+                        <button type="button" class="btn btn-primary" id="syncBlockadesBtn">
+                            Sincronizar
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="syncBlockadesFreshBtn">
+                            Limpiar y sincronizar
                         </button>
                     </div>
+                </div>
+            </div>
 
+            <!-- Stats Cards -->
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold" id="totalBlockades">{{ $totalBlockades }}</h4>
+                                        <small class="text-muted">Bloqueos sincronizados</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Productos únicos</h6>
+                                        <h4 class="mb-1 fw-bold" id="uniqueProducts">{{ $uniqueProducts }}</h4>
+                                        <small class="text-muted">Productos bloqueados</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Sincronizaciones</h6>
+                                        <h4 class="mb-1 fw-bold" id="blockadesSyncCount">{{ $syncCount }}</h4>
+                                        <small class="text-muted">Veces ejecutadas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-info mb-2">Última sincronización</h6>
+                                        <h6 class="mb-1 fw-bold text-truncate" id="blockagesLastSync" title="{{ $lastSync }}">{{ $lastSync }}</h6>
+                                        <small class="text-muted">Fecha</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="card-body border-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="search" id="searchLabels" class="form-control" placeholder="Buscar etiquetas o tipos de documento..." autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#labelsModal">
+                            <i class="fas fa-plus me-2"></i>Agregar etiqueta
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blockade Labels List -->
+            <div class="card-body">
+                @php
+                    $labels = array_filter(array_map('trim', explode(',', $currentLabels)));
+                @endphp
+                @if(count($labels) > 0)
                     <div class="table-responsive">
-                        <table class="table table-sm table-bordered" id="labelsTable">
+                        <table class="table table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th style="width: 15%;">#</th>
-                                    <th style="width: 70%;">Etiqueta</th>
-                                    <th style="width: 15%;">Acción</th>
-                                </tr>
+                            <tr>
+                                <th width="30%">Etiqueta</th>
+                                <th width="50%">Tipo de documento asociado</th>
+                                <th width="15%" class="text-center">Productos</th>
+                                <th width="5%" class="text-center">Acciones</th>
+                            </tr>
                             </thead>
-                            <tbody id="labelsTableBody">
-                                <!-- Rows will be added here dynamically -->
+                            <tbody>
+                            @foreach($labels as $label)
+                                @php
+                                    // Find matching document type
+                                    $docType = $documentTypes->first(function($dt) use ($label) {
+                                        return strtolower($dt->slug) === strtolower($label);
+                                    });
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <code class="text-primary">{{ strtoupper($label) }}</code>
+                                    </td>
+                                    <td>
+                                        @if($docType)
+                                            <div>
+                                                <strong>{{ $docType->label }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ $docType->description ? Str::limit($docType->description, 60) : '-' }}</small>
+                                            </div>
+                                        @else
+                                            <span class="text-muted">Sin tipo de documento asociado</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($docType && $docType->blockades_count > 0)
+                                            <span class="badge bg-light text-dark">{{ number_format($docType->blockades_count) }}</span>
+                                        @else
+                                            <span class="badge bg-light text-muted">0</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-secondary text-white delete-label-btn" data-label="{{ $label }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="alert alert-info py-2 px-3" id="noLabelsMessage">
-                        <i class="fa fa-info-circle me-2"></i>
-                        <small>Haz clic en "Agregar etiqueta" para comenzar a agregar etiquetas de sincronización</small>
-                    </div>
-
-                    <div id="saveLabelsContainer" class="d-none mt-3">
-                        <button type="button" class="btn btn-success w-100" id="saveBlockadeLabelsBtn">
-                            <i class="fa fa-save me-2"></i> Guardar etiquetas
-                        </button>
-                    </div>
-                </div>
-
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-success w-100" id="syncBlockadesBtn">
-                            <i class="fas fa-sync-alt me-2"></i> Sincronizar bloqueos
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-warning w-100" id="syncBlockadesFreshBtn">
-                            <i class="fas fa-redo me-2"></i> Sincronizar (limpiar y volver a sincronizar)
-                        </button>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            <!-- Manual Blockades Card -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0">Agregar bloqueos manuales</h6>
-                        <button type="button" class="btn btn-sm btn-primary" id="addBlockadeRowBtn">
-                            <i class="fa fa-plus me-1"></i> Agregar fila
-                        </button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered" id="blockadeTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 15%;">Source ID</th>
-                                    <th style="width: 20%;">Tipo</th>
-                                    <th style="width: 15%;">Product ID</th>
-                                    <th style="width: 15%;">Attribute ID</th>
-                                    <th style="width: 25%;">Tipo de Documento</th>
-                                    <th style="width: 10%;">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody id="blockadeTableBody">
-                                <!-- Rows will be added here dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="alert alert-info py-2 px-3" id="noRowsMessage">
-                        <i class="fa fa-info-circle me-2"></i>
-                        <small>Haz clic en "Agregar fila" para comenzar a agregar bloqueos</small>
-                    </div>
-
-                    <div id="saveBlockadesContainer" class="d-none mt-3">
-                        <button type="button" class="btn btn-success w-100" id="saveAllBlockadesBtn">
-                            <i class="fa fa-save me-2"></i> Guardar todos los bloqueos
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Statistics by Document Type Card -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-3">Bloqueos por tipo de documento</h6>
-                    <div class="row">
-                        @forelse($documentTypes as $docType)
-                            <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
-                                <div class="card border-start border-primary border-4">
-                                    <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="flex-grow-1">
-                                                <h6 class="mb-1 fw-semibold">{{ $docType->label }}</h6>
-                                                <small class="text-muted"><code>{{ $docType->slug }}</code></small>
-                                            </div>
-                                            <div class="text-end">
-                                                @if($docType->blockades_count > 0)
-                                                    <span class="badge bg-primary fs-5">{{ $docType->blockades_count }}</span>
-                                                @else
-                                                    <span class="badge bg-light text-muted fs-6">
-                                                        <i class="fa fa-minus"></i>
-                                                    </span>
-                                                @endif
-                                                <div class="small text-muted mt-1">productos</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                @else
+                    <div class="text-center py-5">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="round-48 rounded-circle bg-light-subtle text-muted mb-3 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-tags fs-7"></i>
                             </div>
-                        @empty
-                            <div class="col-12">
-                                <div class="alert alert-warning mb-0">
-                                    <i class="fa fa-exclamation-triangle me-2"></i>
-                                    No hay tipos de documento activos configurados
-                                </div>
-                            </div>
-                        @endforelse
+                            <h6 class="mb-1">No hay etiquetas configuradas</h6>
+                            <p class="text-muted mb-3">
+                                Agrega etiquetas para comenzar a sincronizar productos bloqueados
+                            </p>
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
+        </div>
+    </div>
 
-            <!-- Recent Blockades Card -->
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-3">Bloqueos recientes</h6>
-                    @if($recentBlockades->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Tipo de documento</th>
-                                        <th>Producto ID</th>
-                                        <th>Atributo ID</th>
-                                        <th>Source ID</th>
-                                        <th>Fecha creación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($recentBlockades as $blockade)
-                                        <tr>
-                                            <td>
-                                                @if($blockade->documentType)
-                                                    <span class="badge bg-primary-subtle text-primary">
-                                                        {{ $blockade->documentType->label }}
-                                                    </span>
-                                                @else
-                                                    <span class="badge bg-secondary-subtle text-secondary">N/A</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($blockade->product_id)
-                                                    <code class="bg-light px-2 py-1 rounded">#{{ $blockade->product_id }}</code>
-                                                @else
-                                                    <span class="text-muted">-</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($blockade->product_attribute_id)
-                                                    <code class="bg-light px-2 py-1 rounded">#{{ $blockade->product_attribute_id }}</code>
-                                                @else
-                                                    <span class="text-muted">-</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <code class="bg-light px-2 py-1 rounded">#{{ $blockade->source_id }}</code>
-                                            </td>
-                                            <td>
-                                                <small class="text-muted">{{ $blockade->created_at->format('d/m/Y H:i') }}</small>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+    <!-- Confirmation Modal for Delete Label -->
+    <div class="modal fade" id="confirmDeleteLabelModal" tabindex="-1" aria-labelledby="confirmDeleteLabelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <div class="round-48 rounded-circle  mx-auto mb-3 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-trash fs-9"></i>
                         </div>
-                    @else
-                        <div class="alert alert-info mb-0">
-                            <i class="fa fa-circle-info me-2"></i>
-                            No hay bloqueos registrados todavía
-                        </div>
-                    @endif
+                    </div>
+                    <h5 class="mb-2 fw-bold">¿Eliminar etiqueta?</h5>
+                    <p class="text-muted mb-0" id="deleteLabelMessage"></p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="confirmDeleteLabelBtn">Sí, eliminar</button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Confirmation Modal for Fresh Sync -->
+    <div class="modal fade" id="confirmFreshSyncModal" tabindex="-1" aria-labelledby="confirmFreshSyncModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <div class="round-48 rounded-circle bg-warning-subtle text-warning mx-auto mb-3 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-exclamation-triangle fs-9"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-bold">¿Estás seguro?</h5>
+                    <p class="text-muted mb-0">Esto eliminará todos los bloqueos actuales y los sincronizará de nuevo.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-primary w-100 mb-1" id="confirmFreshSyncBtn">Sí, sincronizar</button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Label Modal -->
+    <div class="modal fade" id="labelsModal" tabindex="-1" aria-labelledby="labelsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="labelsModalLabel">
+                        Agregar nueva etiqueta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newLabel" class="form-label">Nueva etiqueta</label>
+                        <input type="text" class="form-control text-uppercase" id="newLabel" placeholder="Ej: PISTOLA, REVOLVER" autocomplete="off">
+                        <small class="text-muted">Ingresa una etiqueta que existe en PrestaShop. La etiqueta se convertirá a mayúsculas automáticamente.</small>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Importante:</strong> Después de agregar etiquetas, debes ejecutar la sincronización para importar los productos asociados.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary mb-1 w-100" id="addLabelBtn">
+                        <i class="fas fa-plus me-2"></i>Agregar etiqueta
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <div class="round-48 rounded-circle bg-success-subtle text-success mx-auto mb-3 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-check fs-4"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-bold">Éxito</h5>
+                    <p class="text-muted mb-0" id="successMessage"></p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-success w-100" id="reloadPageBtn">Recargar página</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    let rowCounter = 0;
-    let labelRowCounter = 0;
-
-    // ========================================
-    // LABELS TABLE MANAGEMENT
-    // ========================================
-
-    // Initialize labels table with existing labels
-    const currentLabels = '{{ $currentLabels }}';
-    if (currentLabels) {
-        const labelsArray = currentLabels.split(',').map(l => l.trim()).filter(l => l);
-        labelsArray.forEach(label => {
-            addLabelRow(label);
-        });
-    }
-
-    // Add new label row
-    $('#addLabelRowBtn').on('click', function() {
-        addLabelRow();
-    });
-
-    function addLabelRow(labelValue = '') {
-        labelRowCounter++;
-        const rowId = 'label-row-' + labelRowCounter;
-
-        const row = `
-            <tr data-row-id="${rowId}">
-                <td class="text-center">
-                    <span class="badge bg-secondary">${labelRowCounter}</span>
-                </td>
-                <td>
-                    <input type="text"
-                           class="form-control form-control-sm text-uppercase"
-                           name="labels[${labelRowCounter}]"
-                           value="${labelValue}"
-                           placeholder="Ej: DNI, RIFLE, ESCOPETA"
-                           required>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-danger remove-label-btn" data-row-id="${rowId}">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-
-        $('#labelsTableBody').append(row);
-        updateLabelsVisibility();
-    }
-
-    // Remove label row
-    $(document).on('click', '.remove-label-btn', function() {
-        const rowId = $(this).data('row-id');
-        $(`tr[data-row-id="${rowId}"]`).remove();
-        updateLabelsVisibility();
-        renumberLabelRows();
-    });
-
-    // Renumber label rows after deletion
-    function renumberLabelRows() {
-        $('#labelsTableBody tr').each(function(index) {
-            $(this).find('.badge').text(index + 1);
-        });
-    }
-
-    // Update visibility of labels messages and save button
-    function updateLabelsVisibility() {
-        const rowCount = $('#labelsTableBody tr').length;
-
-        if (rowCount > 0) {
-            $('#noLabelsMessage').addClass('d-none');
-            $('#saveLabelsContainer').removeClass('d-none');
-        } else {
-            $('#noLabelsMessage').removeClass('d-none');
-            $('#saveLabelsContainer').addClass('d-none');
-        }
-    }
-
-    // ========================================
-    // BLOCKADES TABLE MANAGEMENT
-    // ========================================
-
-    // Add new blockade row
-    $('#addBlockadeRowBtn').on('click', function() {
-        addBlockadeRow();
-    });
-
-    function addBlockadeRow() {
-        rowCounter++;
-        const rowId = 'row-' + rowCounter;
-
-        const documentTypesOptions = `
-            <option value="">Seleccionar...</option>
-            @foreach($documentTypes as $type)
-                <option value="{{ $type->id }}">{{ $type->label }}</option>
-            @endforeach
-        `;
-
-        const row = `
-            <tr data-row-id="${rowId}">
-                <td>
-                    <input type="number" class="form-control form-control-sm" name="blockades[${rowCounter}][source_id]" required>
-                </td>
-                <td>
-                    <select class="form-select select2 form-select-sm product-type-select" name="blockades[${rowCounter}][type]" data-row="${rowCounter}" required>
-                        <option value="simple">Producto simple</option>
-                        <option value="combination">Combinación</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm product-id-input" name="blockades[${rowCounter}][product_id]" data-row="${rowCounter}">
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm attribute-id-input" name="blockades[${rowCounter}][attribute_id]" data-row="${rowCounter}" disabled>
-                </td>
-                <td>
-                    <select class="form-select select2 form-select-sm" name="blockades[${rowCounter}][document_type_id]" required>
-                        ${documentTypesOptions}
-                    </select>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-danger remove-row-btn" data-row-id="${rowId}">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-
-        $('#blockadeTableBody').append(row);
-        updateRowsVisibility();
-    }
-
-    // Remove row
-    $(document).on('click', '.remove-row-btn', function() {
-        const rowId = $(this).data('row-id');
-        $(`tr[data-row-id="${rowId}"]`).remove();
-        updateRowsVisibility();
-    });
-
-    // Toggle product type
-    $(document).on('change', '.product-type-select', function() {
-        const row = $(this).data('row');
-        const type = $(this).val();
-        const $productIdInput = $(`.product-id-input[data-row="${row}"]`);
-        const $attributeIdInput = $(`.attribute-id-input[data-row="${row}"]`);
-
-        if (type === 'simple') {
-            $productIdInput.prop('disabled', false).prop('required', true);
-            $attributeIdInput.prop('disabled', true).prop('required', false).val('');
-        } else {
-            $productIdInput.prop('disabled', true).prop('required', false).val('');
-            $attributeIdInput.prop('disabled', false).prop('required', true);
-        }
-    });
-
-    // Update visibility of messages and save button
-    function updateRowsVisibility() {
-        const rowCount = $('#blockadeTableBody tr').length;
-
-        if (rowCount > 0) {
-            $('#noRowsMessage').addClass('d-none');
-            $('#saveBlockadesContainer').removeClass('d-none');
-        } else {
-            $('#noRowsMessage').removeClass('d-none');
-            $('#saveBlockadesContainer').addClass('d-none');
-        }
-    }
-
-    // Save all blockades
-    $('#saveAllBlockadesBtn').on('click', function() {
-        const $rows = $('#blockadeTableBody tr');
-        const blockades = [];
-        let hasErrors = false;
-
-        $rows.each(function() {
-            const $row = $(this);
-            const sourceId = $row.find('input[name*="[source_id]"]').val();
-            const type = $row.find('select[name*="[type]"]').val();
-            const productId = $row.find('input[name*="[product_id]"]').val();
-            const attributeId = $row.find('input[name*="[attribute_id]"]').val();
-            const documentTypeId = $row.find('select[name*="[document_type_id]"]').val();
-
-            if (!sourceId || !documentTypeId) {
-                hasErrors = true;
-                return false;
-            }
-
-            if (type === 'simple' && !productId) {
-                hasErrors = true;
-                return false;
-            }
-
-            if (type === 'combination' && !attributeId) {
-                hasErrors = true;
-                return false;
-            }
-
-            blockades.push({
-                source_id: sourceId,
-                product_id: type === 'simple' ? productId : null,
-                product_attribute_id: type === 'combination' ? attributeId : null,
-                document_type_id: documentTypeId
-            });
-        });
-
-        if (hasErrors) {
-            Swal.fire('Error', 'Por favor completa todos los campos requeridos', 'error');
-            return;
-        }
-
-        if (blockades.length === 0) {
-            Swal.fire('Error', 'No hay bloqueos para guardar', 'error');
-            return;
-        }
-
-        // Send AJAX request
-        $.ajax({
-            url: '{{ route('settings.documents.blockades.store-bulk') }}',
-            method: 'POST',
-            data: {
-                blockades: blockades,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: `${response.created} bloqueo(s) creado(s) exitosamente`,
-                        icon: 'success',
-                        confirmButtonText: 'Recargar página'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.reload();
-                        }
-                    });
-                }
-            },
-            error: function(xhr) {
-                Swal.fire('Error', xhr.responseJSON?.message || 'Error al crear bloqueos', 'error');
-            }
-        });
-    });
-
-    // Save labels
-    $('#saveBlockadeLabelsBtn').on('click', function() {
-        const $rows = $('#labelsTableBody tr');
-        const labelsArray = [];
-        let hasErrors = false;
-
-        // Collect all labels from table rows
-        $rows.each(function() {
-            const $row = $(this);
-            const labelValue = $row.find('input[name*="labels"]').val().trim().toUpperCase();
-
-            if (!labelValue) {
-                hasErrors = true;
-                Swal.fire({
-                    title: 'Validación',
-                    text: 'Todas las etiquetas deben tener un valor',
-                    icon: 'warning'
-                });
-                return false;
-            }
-
-            labelsArray.push(labelValue);
-        });
-
-        if (hasErrors) {
-            return;
-        }
-
-        if (labelsArray.length === 0) {
-            Swal.fire({
-                title: 'Validación',
-                text: 'Debes agregar al menos una etiqueta',
-                icon: 'warning'
-            });
-            return;
-        }
-
-        // Convert array to comma-separated string
-        const labels = labelsArray.join(',');
-
-        $.ajax({
-            url: '{{ route('settings.documents.blockades.save-labels') }}',
-            method: 'POST',
-            data: {
-                labels: labels,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: `${labelsArray.length} etiqueta(s) guardadas exitosamente`,
-                        icon: 'success',
-                        confirmButtonText: 'Ok'
-                    });
-                }
-            },
-            error: function(xhr) {
-                Swal.fire('Error', xhr.responseJSON?.message || 'Error al guardar etiquetas', 'error');
-            }
-        });
-    });
-
     // Sync blockades
     $('#syncBlockadesBtn').on('click', function() {
         syncBlockades(false);
     });
 
     $('#syncBlockadesFreshBtn').on('click', function() {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Esto eliminará todos los bloqueos actuales y los sincronizará de nuevo.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, sincronizar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                syncBlockades(true);
-            }
-        });
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmFreshSyncModal'));
+        confirmModal.show();
+    });
+
+    // Confirm fresh sync button in modal
+    $('#confirmFreshSyncBtn').on('click', function() {
+        $('#confirmFreshSyncModal').modal('hide');
+        syncBlockades(true);
     });
 
     function syncBlockades(fresh) {
         const btn = fresh ? $('#syncBlockadesFreshBtn') : $('#syncBlockadesBtn');
-        btn.prop('disabled', true);
+        const originalText = btn.html();
+
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>' + (fresh ? 'Limpiando y sincronizando...' : 'Sincronizando...'));
 
         $.ajax({
             url: '{{ route('settings.documents.blockades.sync') }}',
@@ -632,72 +323,149 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.success) {
-                    $('#totalBlockades').text(response.total_blockades);
-                    $('#blockadesSyncCount').text(parseInt($('#blockadesSyncCount').text()) + 1);
-                    $('#blockagesLastSync').text('hace unos segundos');
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'Recargar página'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.reload();
-                        }
-                    });
+                    $('#successMessage').text(response.message);
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
                 } else {
                     Swal.fire('Advertencia', response.message, 'warning');
                 }
             },
             error: function(xhr) {
-                Swal.fire('Error', xhr.responseJSON?.message || 'Error al sincronizar', 'error');
+                Swal.fire('Error', xhr.responseJSON?.message || 'Error al sincronizar bloqueos', 'error');
             },
             complete: function() {
-                btn.prop('disabled', false);
+                btn.prop('disabled', false).html(originalText);
             }
         });
     }
 
-    // Add blockade
-    $('#formAddBlockade').on('submit', function(e) {
-        e.preventDefault();
+    // Reload page button in success modal
+    $('#reloadPageBtn').on('click', function() {
+        window.location.reload();
+    });
 
-        const formData = {
-            source_id: $('#blockadeSourceId').val(),
-            document_type_id: $('#blockadeDocumentType').val(),
-            _token: '{{ csrf_token() }}'
-        };
+    // Add new label button
+    $('#addLabelBtn').on('click', function() {
+        const newLabel = $('#newLabel').val().trim().toUpperCase();
 
-        if ($('input[name="productType"]:checked').val() === 'simple') {
-            formData.product_id = $('#blockadeIdProduct').val();
-        } else {
-            formData.product_attribute_id = $('#blockadeIdProductAttribute').val();
+        if (!newLabel) {
+            Swal.fire('Error', 'Debes ingresar una etiqueta', 'error');
+            return;
         }
 
+        const btn = $(this);
+        const originalText = btn.html();
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Agregando...');
+
         $.ajax({
-            url: '{{ route('settings.documents.blockades.store') }}',
+            url: '{{ route('settings.documents.blockades.labels.add') }}',
             method: 'POST',
-            data: formData,
+            data: {
+                label: newLabel,
+                _token: '{{ csrf_token() }}'
+            },
             success: function(response) {
                 if (response.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'Recargar página'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.reload();
-                        }
-                    });
+                    // Close add label modal and reload
+                    $('#labelsModal').modal('hide');
+                    window.location.reload();
+                } else {
+                    Swal.fire('Advertencia', response.message, 'warning');
                 }
             },
             error: function(xhr) {
-                Swal.fire('Error', xhr.responseJSON?.message || 'Error al crear bloqueo', 'error');
+                Swal.fire('Error', xhr.responseJSON?.message || 'Error al agregar la etiqueta', 'error');
+            },
+            complete: function() {
+                btn.prop('disabled', false).html(originalText);
             }
         });
+    });
+
+    // Delete label button
+    let labelToDelete = null;
+    $(document).on('click', '.delete-label-btn', function(e) {
+        e.preventDefault();
+        labelToDelete = String($(this).data('label'));
+
+        console.log('Delete button clicked, label:', labelToDelete);
+
+        // Set message in modal
+        $('#deleteLabelMessage').text(`Se eliminará la etiqueta "${labelToDelete.toUpperCase()}" de la configuración`);
+
+        // Show modal
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteLabelModal'));
+        confirmModal.show();
+    });
+
+    // Confirm delete label button in modal
+    $('#confirmDeleteLabelBtn').on('click', function() {
+        console.log('Confirm delete clicked, deleting label:', labelToDelete);
+        $('#confirmDeleteLabelModal').modal('hide');
+        if (labelToDelete) {
+            deleteLabel(labelToDelete);
+        }
+    });
+
+    function deleteLabel(label) {
+        console.log('Deleting label via AJAX:', label);
+        $.ajax({
+            url: '{{ route('settings.documents.blockades.labels.delete') }}',
+            method: 'POST',
+            data: {
+                label: label,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                console.log('Delete response:', response);
+                if (response.success) {
+                    // Reload page directly
+                    window.location.reload();
+                } else {
+                    Swal.fire('Advertencia', response.message, 'warning');
+                }
+            },
+            error: function(xhr) {
+                console.error('Delete error:', xhr);
+                Swal.fire('Error', xhr.responseJSON?.message || 'Error al eliminar la etiqueta', 'error');
+            }
+        });
+    }
+
+    @if (session('success'))
+        toastr.success('{{ session('success') }}', 'Éxito');
+    @endif
+
+    @if (session('error'))
+        toastr.error('{{ session('error') }}', 'Error');
+    @endif
+
+    // Search labels in real-time
+    $('#searchLabels').on('keyup', function() {
+        const searchText = $(this).val().toLowerCase().trim();
+        let visibleCount = 0;
+
+        $('.table tbody tr').each(function() {
+            const labelText = $(this).find('td:eq(0)').text().toLowerCase();
+            const docTypeText = $(this).find('td:eq(1)').text().toLowerCase();
+
+            if (labelText.includes(searchText) || docTypeText.includes(searchText)) {
+                $(this).show();
+                visibleCount++;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // Show message if no results
+        if (visibleCount === 0 && searchText !== '') {
+            if ($('.no-results-message').length === 0) {
+                $('.table tbody').append('<tr class="no-results-message"><td colspan="4" class="text-center text-muted py-4">No se encontraron etiquetas que coincidan con "' + searchText + '"</td></tr>');
+            }
+        } else {
+            $('.no-results-message').remove();
+        }
     });
 });
 </script>
 @endpush
-@endsection

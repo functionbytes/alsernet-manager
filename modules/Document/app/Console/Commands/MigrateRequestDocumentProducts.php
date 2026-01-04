@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Document\Commands;
+namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -69,12 +69,24 @@ class MigrateRequestDocumentProducts extends Command
 
             foreach ($sourceRecords as $source) {
                 try {
-                    // Check if parent document exists (using the legacy document_id as reference)
-                    $document = Document::where('id', $source->document_id)->first();
+                    // Get the UID from the legacy document
+                    $legacyDocument = $sourceDb->table('request_documents')
+                        ->where('id', $source->document_id)
+                        ->first();
+
+                    if (! $legacyDocument) {
+                        $errors[] = "Record {$source->id}: Legacy document {$source->document_id} not found in source database";
+                        $skipped++;
+                        $bar->advance();
+
+                        continue;
+                    }
+
+                    // Find the migrated document by UID
+                    $document = Document::where('uid', $legacyDocument->uid)->first();
 
                     if (! $document) {
-                        // Try to find the document by old ID - check if we can map it
-                        $errors[] = "Record {$source->id}: Parent document {$source->document_id} not found";
+                        $errors[] = "Record {$source->id}: Migrated document with UID {$legacyDocument->uid} not found";
                         $skipped++;
                         $bar->advance();
 

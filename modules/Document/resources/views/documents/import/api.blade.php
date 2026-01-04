@@ -2,8 +2,8 @@
 
 @section('content')
 
-    @if (!auth()->user()->canActionDocumentComponent('import-documents', 'upload') &&
-         !auth()->user()->canInDocumentModule('sync-api'))
+    @if (!auth()->user()->canDocument('import-documents') &&
+         !auth()->user()->canDocument('sync-api'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-lock me-2"></i>
             <strong>Acceso denegado.</strong> No tienes permiso para importar documentos desde PrestaShop.

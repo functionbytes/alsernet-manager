@@ -58,7 +58,7 @@ class DocumentsController extends Controller
         $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();
         $loads = DocumentLoad::where('is_active', true)->orderBy('order')->get();
 
-        return view('documents::documents.index')->with([
+        return view('documents::documents.documents.index')->with([
             'documents' => $documents,
             'searchKey' => $search,
             'statusId' => $statusId,
@@ -103,7 +103,7 @@ class DocumentsController extends Controller
         $statuses = DocumentStatus::where('is_active', true)->orderBy('order')->get();
         $loads = DocumentLoad::where('is_active', true)->orderBy('order')->get();
 
-        return view('documents::documents.pending')->with([
+        return view('documents::documents.documents.pending')->with([
             'documents' => $documents,
             'searchKey' => $search,
             'loadId' => $loadId,
@@ -119,7 +119,7 @@ class DocumentsController extends Controller
      */
     public function importIndex()
     {
-        return view('documents::documents.import.index');
+        return view('documents::documents.documents.import.index');
     }
 
     /**
@@ -127,7 +127,7 @@ class DocumentsController extends Controller
      */
     public function importApi()
     {
-        return view('documents::documents.import.api');
+        return view('documents::documents.documents.import.api');
     }
 
     /**
@@ -135,7 +135,7 @@ class DocumentsController extends Controller
      */
     public function importErp()
     {
-        return view('documents::documents.import.erp');
+        return view('documents::documents.documents.import.erp');
     }
 
     /**
@@ -534,7 +534,7 @@ class DocumentsController extends Controller
             ->firstOrFail();
         $products = $document->products;
 
-        return view('documents::documents.show')->with([
+        return view('documents::documents.documents.show')->with([
             'document' => $document,
             'products' => $products,
         ]);
@@ -1371,8 +1371,8 @@ class DocumentsController extends Controller
             'enable_upload_confirmation' => $userEmailConfig['enable_upload_confirmation'] ?? true,
         ];
 
-        // Obtener tipo de documento desde la base de datos
-        $documentType = DocumentType::where('slug', $document->type)->with('requirements')->first();
+        // Obtener tipo de documento desde la relación
+        $documentType = $document->documentType?->load('requirements');
 
         // Obtener documentos requeridos con labels (retorna array asociativo)
         $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
@@ -1391,7 +1391,7 @@ class DocumentsController extends Controller
         $missingDocs = array_diff_key($requiredDocuments, $uploadedDocs);
         $allUploaded = empty($missingDocs);
 
-        return view('documents::documents.manage')->with([
+        return view('documents::documents.documents.manage')->with([
             'document' => $document,
             'products' => $products,
             'sources' => $sources,
@@ -1884,7 +1884,7 @@ class DocumentsController extends Controller
             $allUploaded = empty($missingDocs);
 
             // Renderizar solo la sección de carga de documentos
-            $html = view('documents::documents.partials.upload-section', [
+            $html = view('documents::documents.documents.partials.upload-section', [
                 'document' => $document,
                 'requiredDocuments' => $requiredDocuments,
                 'uploadedDocs' => $uploadedDocs,
@@ -1929,7 +1929,7 @@ class DocumentsController extends Controller
             $document->load('actions.performer');
 
             // Renderizar el componente de historial de acciones
-            $html = view('documents::documents.components.action-history', [
+            $html = view('documents::documents.documents.components.action-history', [
                 'document' => $document,
             ])->render();
 
@@ -2867,7 +2867,7 @@ class DocumentsController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('documents::documents.emails.index', compact('document', 'mails'));
+        return view('documents::documents.documents.emails.index', compact('document', 'mails'));
     }
 
     /**
@@ -2878,7 +2878,7 @@ class DocumentsController extends Controller
         $mail = \Modules\Document\Entities\DocumentMail::where('uid', $mailUid)->firstOrFail();
         $document = $mail->document;
 
-        return view('documents::documents.emails.preview', compact('mail', 'document'));
+        return view('documents::documents.documents.emails.preview', compact('mail', 'document'));
     }
 
     /**

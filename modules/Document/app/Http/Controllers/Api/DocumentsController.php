@@ -1477,4 +1477,209 @@ class DocumentsController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Actualizar documento
+     */
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'uid' => 'required|exists:documents,uid',
+            'data' => 'nullable|array',
+        ]);
+
+        try {
+            $document = Document::where('uid', $validated['uid'])->firstOrFail();
+            if ($validated['data'] ?? null) {
+                $document->update($validated['data']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento actualizado',
+                'document' => $document,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Upload de archivo de admin
+     */
+    public function adminUploadDocument(Request $request, $uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $document);
+
+        $validated = $request->validate([
+            'file' => 'required|file|max:10240',
+            'type' => 'nullable|string',
+        ]);
+
+        try {
+            if ($request->hasFile('file')) {
+                $media = $document->addMediaFromRequest('file')
+                    ->toMediaCollection('documents');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Archivo cargado exitosamente',
+                    'media' => $media,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No file provided',
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Obtener adjuntos adicionales
+     */
+    public function getAdditionalAttachments($uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('view', $document);
+
+        $attachments = $document->getMedia('attachments');
+
+        return response()->json([
+            'success' => true,
+            'attachments' => $attachments,
+        ]);
+    }
+
+    /**
+     * Subir adjunto adicional
+     */
+    public function uploadAdditionalAttachment(Request $request, $uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $document);
+
+        $validated = $request->validate([
+            'attachment' => 'required|file|max:10240',
+        ]);
+
+        try {
+            if ($request->hasFile('attachment')) {
+                $media = $document->addMediaFromRequest('attachment')
+                    ->toMediaCollection('attachments');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Adjunto subido exitosamente',
+                    'media' => $media,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No file provided',
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Eliminar adjunto adicional
+     */
+    public function deleteAdditionalAttachment($uid, $attachmentId)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('update', $document);
+
+        try {
+            $media = $document->getMedia('attachments')->find($attachmentId);
+            if (! $media) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Attachment not found',
+                ], 404);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Adjunto eliminado',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Refrescar sección de documentos
+     */
+    public function refreshDocumentsSection($uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('view', $document);
+
+        return response()->json([
+            'success' => true,
+            'document' => $document->load(['media', 'actionHistory', 'emailHistory']),
+        ]);
+    }
+
+    /**
+     * Refrescar historial de acciones
+     */
+    public function refreshActionHistory($uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('view', $document);
+
+        $history = $document->actionHistory()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'history' => $history,
+        ]);
+    }
+
+    /**
+     * Destruir documento
+     */
+    public function destroy($uid)
+    {
+        $document = Document::where('uid', $uid)->firstOrFail();
+        $this->authorize('delete', $document);
+
+        try {
+            $document->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento eliminado',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
 }

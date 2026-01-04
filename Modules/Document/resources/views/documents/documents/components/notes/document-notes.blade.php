@@ -73,7 +73,7 @@
             const documentUid = '{{ $document->uid }}';
 
             $.ajax({
-                url: `/administrative/orders/manage/${documentUid}/add-note`,
+                url: `{{ route('api.documents.notes.add', ['uid' => 'PLACEHOLDER']) }}`.replace('PLACEHOLDER', documentUid),
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('[name="_token"]').val()

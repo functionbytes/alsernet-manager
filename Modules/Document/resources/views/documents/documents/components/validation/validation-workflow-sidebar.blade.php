@@ -78,7 +78,7 @@
         {{-- Action Buttons --}}
         @if($canApproveStage)
             <div class="d-grid gap-2 mb-3">
-                @if(auth()->user()->canActionDocumentComponent('validation-workflow', 'approve'))
+                @if(auth()->user()->canDocument('approve-documents'))
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#approveStageModal">
                         Aprobar
                     </button>
@@ -88,7 +88,7 @@
                     </button>
                 @endif
 
-                @if(auth()->user()->canActionDocumentComponent('validation-workflow', 'reject'))
+                @if(auth()->user()->canDocument('reject-documents'))
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rejectStageModal">
                         Rechazar
                     </button>
@@ -232,5 +232,5 @@
 @endpush
 
 {{-- MODALES DE WORKFLOW --}}
-@include('documents::documents.components.validation.modals.approve-stage')
-@include('documents::documents.components.validation.modals.reject-stage')
+@include('documents::documents.documents.components.validation.modals.approve-stage')
+@include('documents::documents.documents.components.validation.modals.reject-stage')

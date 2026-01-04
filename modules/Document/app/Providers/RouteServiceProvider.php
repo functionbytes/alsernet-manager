@@ -32,8 +32,9 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapApiRoutes(): void
     {
-        Route::middleware(['api', 'throttle:60,1'])
-            ->prefix('api/documents')
+        // Register Document API routes with proper prefix and naming
+        Route::prefix('api/documents')
+            ->middleware('api')
             ->name('api.documents.')
             ->group(function () {
                 require module_path($this->name, 'routes/api.php');

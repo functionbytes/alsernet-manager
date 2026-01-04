@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Document\Commands;
+namespace Modules\Document\Console\Commands;
 
 use App\Jobs\Documents\MailTemplateJob;
 use Illuminate\Console\Command;
