@@ -164,39 +164,64 @@
 @endif
 
 
-<!-- Missing Documents Confirmation Modal -->
-<div class="modal fade" id="confirmMissingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="confirmMissingDocumentsLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+{{-- Modal: Confirmar carga con documentos faltantes --}}
+<div class="modal fade" id="confirmMissingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="confirmMissingDocumentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="confirmMissingDocumentsLabel">Confirmar carga</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmMissingDocumentsModalLabel">
+                    Documentos faltantes
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="missingDocsList"></div>
+                <p class="mb-3">
+                    <strong>Aún faltarán por cargar los siguientes documentos:</strong>
+                </p>
+                <ul id="missingDocsList" class="list-unstyled ms-3">
+                    <!-- Se rellena dinámicamente con JavaScript -->
+                </ul>
+                <p class="mt-3 mb-0 text-muted">
+                    <small>¿Deseas continuar con la carga de todas formas?</small>
+                </p>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary confirm-missing-upload-btn">Proceder con carga</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100 mb-1" id="confirmUploadBtn">
+                    Sí, continuar
+                </button>
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Document Confirmation Modal -->
-<div class="modal fade" id="confirmDeleteDocumentModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteDocumentLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+{{-- Modal: Confirmar eliminación de documento --}}
+<div class="modal fade" id="confirmDeleteDocumentModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteDocumentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header border-0 bg-danger-subtle">
-                <h5 class="modal-title text-danger" id="confirmDeleteDocumentLabel">Confirmar eliminación</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteDocumentModalLabel">
+                    Confirmar eliminación
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer.</p>
+                <p class="mb-0">
+                    <strong>¿Estás seguro de que deseas eliminar este documento?</strong>
+                </p>
+                <p class="text-muted small mt-2 mb-0">
+                    Esta acción no se puede deshacer.
+                </p>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger confirm-delete-btn">Eliminar</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100 mb-1" id="confirmDeleteBtn">
+                    Eliminar
+                </button>
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
             </div>
         </div>
     </div>
@@ -357,35 +382,14 @@
             });
 
             // ===== Confirmar carga con documentos faltantes =====
-            $(document).on('click', '.confirm-missing-upload-btn', function(e) {
-                e.preventDefault();
-
-                const $btn = $(this);
-                const $modal = $btn.closest('.modal');
-
-                if (!window.pendingFormData) {
-                    toastr.error('Error: No hay datos de formulario para enviar', 'Error', {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-bottom-right"
-                    });
-                    return;
-                }
-
-                // Cerrar modal
-                $modal.modal('hide');
-
-                // Proceder con la carga
-                const $form = $('#adminUploadForm');
-                const $submitBtn = $form.find('button[type="submit"]');
-                const $progressBar = $('#uploadProgress');
-                const $uploadStatus = $('#uploadStatus');
-
-                performUpload($submitBtn, window.pendingFormData, $progressBar, $uploadStatus);
-
-                // Limpiar variables globales
-                window.pendingFormData = null;
-                window.pendingUpload = false;
+            $(document).on('click', '#confirmUploadBtn', function() {
+                $('#confirmMissingDocumentsModal').modal('hide');
+                performUpload(
+                    $('#adminUploadForm').find('button[type="submit"]'),
+                    window.pendingFormData,
+                    $('#uploadProgress'),
+                    $('#uploadStatus')
+                );
             });
 
             // ===== Eliminar Documento Individual =====
@@ -408,26 +412,17 @@
             });
 
             // ===== Confirmar eliminación de documento =====
-            $(document).on('click', '.confirm-delete-btn', function(e) {
-                e.preventDefault();
-
-                const $btn = $(this);
-                const $modal = $btn.closest('.modal');
-
+            $(document).on('click', '#confirmDeleteBtn', function() {
                 if (!window.pendingDelete) {
-                    toastr.error('Error: No hay documento seleccionado para eliminar', 'Error', {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-bottom-right"
-                    });
                     return;
                 }
 
-                const mediaId = window.pendingDelete.mediaId;
-                const docType = window.pendingDelete.docType;
+                const { btn: $btn, mediaId, docType } = window.pendingDelete;
 
                 $btn.prop('disabled', true);
-                $btn.html('<i class="fa fa-spinner fa-spin"></i> Eliminando...');
+                $btn.html('<i class="fa fa-spinner fa-spin"></i>');
+
+                $('#confirmDeleteDocumentModal').modal('hide');
 
                 $.ajax({
                     url: "{{ route('api.documents.delete-attachment', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid) + '/' + mediaId,
@@ -439,23 +434,20 @@
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
-                            // Recargar la sección de documentos
-                            reloadDocumentsSection(documentUid);
-                            $modal.modal('hide');
+                            // Actualizar estado sin recargar la página
+                            if (typeof reloadDocumentsSection === 'function') {
+                                reloadDocumentsSection(documentUid);
+                            }
                         } else {
-                            toastr.error(response.message || 'No se pudo eliminar el documento', 'Error', {
+                            toastr.error(response.message || 'No se pudo eliminar', 'Error', {
                                 closeButton: true,
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
                         }
                     },
-                    error: function(xhr) {
-                        let errorMsg = 'Error al procesar la solicitud';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        }
-                        toastr.error(errorMsg, 'Error', {
+                    error: function() {
+                        toastr.error('Error al procesar la solicitud', 'Error', {
                             closeButton: true,
                             progressBar: true,
                             positionClass: "toast-bottom-right"
@@ -463,7 +455,7 @@
                     },
                     complete: function() {
                         $btn.prop('disabled', false);
-                        $btn.html('Eliminar');
+                        $btn.html('<i class="fa fa-trash"></i>');
                         window.pendingDelete = null;
                     }
                 });
