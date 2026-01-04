@@ -8,7 +8,8 @@
 
     <div class="row">
         <div class="col-lg-8">
-            <!-- Order Details -->
+            <!-- Order Details (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('order-details'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Detalle de la orden</h5>
@@ -49,8 +50,10 @@
                     </div>
                 </div>
             </div>
+            @endif
 
-            <!-- Customer Information -->
+            <!-- Customer Information (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('customer-information'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Información del cliente</h5>
@@ -91,9 +94,10 @@
                     </div>
                 </div>
             </div>
+            @endif
 
-            @if($products->count())
-                <!-- Products List -->
+            @if($products->count() && auth()->user()->canViewDocumentComponent('products-list'))
+                <!-- Products List (Permission-Controlled) -->
                 <div class="card mb-3">
                     <div class="card-header p-3 bg-white border-bottom">
                         <h5 class="mb-1 fw-bold">Productos</h5>
@@ -187,7 +191,8 @@
                 @endif
             </div>
 
-            <!-- Document Notes (Read-only) -->
+            <!-- Document Notes (Permission-Controlled) -->
+            @if(auth()->user()->canViewDocumentComponent('document-notes'))
             <div class="card mb-3">
                 <div class="card-header p-3 bg-white border-bottom">
                     <h5 class="mb-1 fw-bold">Notas del documento</h5>
@@ -231,6 +236,7 @@
                     </div>
                 @endif
             </div>
+            @endif
         </div>
 
         <div class="col-lg-4">

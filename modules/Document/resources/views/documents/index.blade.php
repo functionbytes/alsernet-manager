@@ -61,11 +61,13 @@
                                     <i class="fa-duotone fa-xmark"></i>
                                 </a>
                             </div>
-                            <div class="col-auto">
-                                <a href="{{ route('documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
-                                    <i class="fa-duotone fa-file-import"></i>
-                                </a>
-                            </div>
+                            @if(auth()->user()->canActionDocumentComponent('import-documents', 'upload'))
+                                <div class="col-auto">
+                                    <a href="{{ route('documents.import') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Importar órdenes específicas">
+                                        <i class="fa-duotone fa-file-import"></i>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -122,19 +124,27 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.show', $document->uid) }}">
-                                                Ver
+                                                <i class="fas fa-eye me-2"></i> Ver
                                             </a>
                                         </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
-                                                Gestionar
-                                            </a>
-                                        </li>
-                                        @if($document->mails()->count() > 0)
+                                        @if(auth()->user()->canActionDocumentComponent('document-management', 'edit'))
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.manage', $document->uid) }}">
+                                                    <i class="fas fa-cog me-2"></i> Gestionar
+                                                </a>
+                                            </li>
+                                        @else
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3 disabled" href="#" onclick="return false;">
+                                                    <i class="fas fa-cog me-2"></i> Gestionar
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if($document->mails()->count() > 0 && auth()->user()->canViewDocumentComponent('email-history'))
                                             <li class="border-top my-2"></li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.emails', $document->uid) }}">
-                                                    Ver emails
+                                                    <i class="fas fa-envelope me-2"></i> Ver emails
                                                 </a>
                                             </li>
                                         @endif

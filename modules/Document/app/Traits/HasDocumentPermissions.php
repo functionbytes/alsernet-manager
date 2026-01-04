@@ -260,6 +260,12 @@ trait HasDocumentPermissions
                 default => false,
             },
 
+            // Import Documents
+            'import-documents' => match ($action) {
+                'upload' => $this->canInDocumentModule('import-documents'),
+                default => false,
+            },
+
             default => false,
         };
     }
