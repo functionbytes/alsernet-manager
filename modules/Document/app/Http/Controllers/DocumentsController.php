@@ -1879,9 +1879,9 @@ class DocumentsController extends Controller
             $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
 
             // Obtener documentos ya cargados organizados por tipo
-            // IMPORTANTE: Solo obtener media de colecciones que NO sean additional_attachments
+            // IMPORTANTE: Solo obtener media de la colección 'documents' (documentos requeridos)
             $uploadedDocs = [];
-            $allMedia = $document->media()->where('collection_name', '!=', 'additional_attachments')->get();
+            $allMedia = $document->media()->where('collection_name', 'documents')->get();
 
             foreach ($allMedia as $media) {
                 $docType = $media->getCustomProperty('document_type', 'documento');
