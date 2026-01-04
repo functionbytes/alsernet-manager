@@ -397,11 +397,12 @@
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
             $.ajax({
-                url: "{{ route('api.documents.delete-attachment', $document->uid) }}",
-                method: 'POST',
-                data: {
-                    media_id: mediaId,
-                    _token: '{{ csrf_token() }}'
+                url: "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
+                    .replace('UID_PLACEHOLDER', documentUid)
+                    .replace('MEDIA_PLACEHOLDER', mediaId),
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(response) {
                     if (response.success) {
