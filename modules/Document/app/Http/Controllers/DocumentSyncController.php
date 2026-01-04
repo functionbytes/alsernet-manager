@@ -22,6 +22,15 @@ class DocumentSyncController extends Controller
      */
     public function importIndex()
     {
+        if (! auth()->user()->canInDocumentModule('import-documents') &&
+            ! auth()->user()->canInDocumentModule('sync-erp') &&
+            ! auth()->user()->canInDocumentModule('sync-api')) {
+            return response()->view('documents::documents.access-denied', [
+                'message' => 'No tienes permiso para importar documentos.',
+                'action' => 'import-documents',
+            ], 403);
+        }
+
         return view('documents::documents.import.index');
     }
 
@@ -30,6 +39,14 @@ class DocumentSyncController extends Controller
      */
     public function importApi()
     {
+        if (! auth()->user()->canInDocumentModule('import-documents') &&
+            ! auth()->user()->canInDocumentModule('sync-api')) {
+            return response()->view('documents::documents.access-denied', [
+                'message' => 'No tienes permiso para importar desde PrestaShop.',
+                'action' => 'sync-api',
+            ], 403);
+        }
+
         return view('documents::documents.import.api');
     }
 
@@ -38,6 +55,14 @@ class DocumentSyncController extends Controller
      */
     public function importErp()
     {
+        if (! auth()->user()->canInDocumentModule('import-documents') &&
+            ! auth()->user()->canInDocumentModule('sync-erp')) {
+            return response()->view('documents::documents.access-denied', [
+                'message' => 'No tienes permiso para importar desde Gestión.',
+                'action' => 'sync-erp',
+            ], 403);
+        }
+
         return view('documents::documents.import.erp');
     }
 
@@ -46,6 +71,14 @@ class DocumentSyncController extends Controller
      */
     public function syncFromErp(Request $request): JsonResponse
     {
+        if (! auth()->user()->canInDocumentModule('import-documents') &&
+            ! auth()->user()->canInDocumentModule('sync-erp')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para sincronizar desde ERP.',
+            ], 403);
+        }
+
         try {
             $request->validate([
                 'order_ids' => 'nullable|array',
@@ -155,6 +188,13 @@ class DocumentSyncController extends Controller
      */
     public function getAvailableOrders(Request $request): JsonResponse
     {
+        if (! auth()->user()->canInDocumentModule('import-documents')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para obtener órdenes disponibles.',
+            ], 403);
+        }
+
         try {
             $erpService = new ErpService;
             $orders = $erpService->getAllOrders();
@@ -189,6 +229,13 @@ class DocumentSyncController extends Controller
      */
     public function syncAllDocuments(): JsonResponse
     {
+        if (! auth()->user()->canInDocumentModule('import-documents')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para sincronizar documentos.',
+            ], 403);
+        }
+
         try {
             $synced = 0;
             $failed = 0;
@@ -238,6 +285,13 @@ class DocumentSyncController extends Controller
      */
     public function syncByOrderId(Request $request): JsonResponse
     {
+        if (! auth()->user()->canInDocumentModule('import-documents')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para sincronizar este documento.',
+            ], 403);
+        }
+
         try {
             $request->validate([
                 'order_id' => 'required|string',
@@ -291,6 +345,13 @@ class DocumentSyncController extends Controller
      */
     public function syncAllDocumentFields(Request $request): JsonResponse
     {
+        if (! auth()->user()->canInDocumentModule('import-documents')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para sincronizar campos de documentos.',
+            ], 403);
+        }
+
         try {
             $updated = 0;
             $failed = 0;
