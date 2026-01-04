@@ -107,3 +107,108 @@
 
 {{-- Modal de confirmación --}}
 @include('documents::documents.components.management.modals.confirm-configuration')
+
+
+{{-- Document Management Card Scripts --}}
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            const documentUid = '{{ $document->uid }}';
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // ===== Guardar Configuración (Estado y Origen) =====
+            let configFormData = null;
+            let $configSubmitBtn = null;
+            let previousStatusId = $('#status_id').val();
+
+            // Mapeo de estados a descripciones de email (según nombres reales del sistema)
+            const statusEmailMap = {
+                'pending': {
+                    show: true,
+                    label: 'Solicitud inicial',
+                    description: 'Se enviará un email de "Solicitud inicial" solicitando al cliente que cargue los documentos requeridos.'
+                },
+                'awaiting_documents': {
+                    show: true,
+                    label: 'Recordatorio',
+                    description: 'Se enviará un email de "Recordatorio" solicitando los documentos pendientes.'
+                },
+                'received': {
+                    show: true,
+                    label: 'Confirmación de subida',
+                    description: 'Se enviará un email de "Confirmación de subida" confirmando que los documentos han sido recibidos y están en revisión.'
+                },
+                'incomplete': {
+                    show: true,
+                    label: 'Documentos específicos',
+                    description: 'Se enviará un email de "Documentos específicos" indicando los documentos que faltan y deben ser enviados.'
+                },
+                'approved': {
+                    show: true,
+                    label: 'Notificación de aprobación',
+                    description: 'Se enviará un email de "Notificación de aprobación" confirmando que los documentos han sido aprobados.'
+                },
+                'rejected': {
+                    show: true,
+                    label: 'Notificación de rechazo',
+                    description: 'Se enviará un email de "Notificación de rechazo" indicando que los documentos han sido rechazados y deben ser reenviados.'
+                },
+                'cancelled': {
+                    show: false
+                }
+            };
+
+            // Detectar cambio de estado
+            $('#status_id').on('change', function() {
+                const newStatusId = $(this).val();
+                const statusChanged = newStatusId !== previousStatusId;
+
+                if (statusChanged) {
+                    previousStatusId = newStatusId;
+                }
+            });
+
+            $(document).on('submit', '#formDocumentConfig', function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const selectedStatusId = $('#status_id').val();
+                const selectedStatusKey = $('#status_id option:selected').data('key') || '';
+
+                configFormData = {
+                    status_id: selectedStatusId,
+                    source_id: $('#source_id').val(),
+                    load_id: $('#load_id').val(),
+                    sync_id: $('#sync_id').val(),
+                    upload_id: $('#upload_id').val()
+                };
+                $configSubmitBtn = $form.find('button[type="submit"]');
+
+                // Verificar si el estado cambió y si debe mostrar opción de email
+                const statusChanged = selectedStatusId && (selectedStatusId !== previousStatusId);
+                const emailConfig = statusEmailMap[selectedStatusKey];
+
+                if (statusChanged && emailConfig && emailConfig.show) {
+                    // Mostrar sección de email
+                    $('#emailNotificationSection').show();
+                    $('#emailTypeDescription').html(
+                        `<i class="fas fa-info-circle me-1"></i><strong>${emailConfig.label}:</strong> ${emailConfig.description}`
+                    );
+                    $('#sendEmailOnStatusChange').prop('checked', true);
+                } else {
+                    // Ocultar sección de email
+                    $('#emailNotificationSection').hide();
+                }
+
+                // Open confirmation modal
+                const modal = new bootstrap.Modal(document.getElementById('confirmConfigurationModal'));
+                modal.show();
+            });
+        });
+    </script>
+@endpush

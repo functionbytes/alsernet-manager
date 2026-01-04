@@ -191,153 +191,387 @@
     </div>
 @endif
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const storageDestinationRadios = document.querySelectorAll('.storage-destination');
-    const networkDiskSelector = document.getElementById('networkDiskSelector');
-    const networkDiskSelect = document.getElementById('network_disk');
-    const adminUploadForm = document.getElementById('adminUploadForm');
-    const uploadProgressDiv = document.getElementById('uploadProgress');
-    const uploadProgressBar = document.getElementById('uploadProgressBar');
-    const uploadStatus = document.getElementById('uploadStatus');
+{{-- Upload Section Scripts --}}
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            const documentUid = '{{ $document->uid }}';
 
-    // Cargar opciones de discos de red
-    function loadNetworkDisks() {
-        fetch('{{ route("documents.network-disks") }}')
-            .then(response => response.json())
-            .then(data => {
-                if (data.disks && data.disks.length > 0) {
-                    networkDiskSelect.innerHTML = '<option value="">Selecciona una carpeta...</option>';
-                    data.disks.forEach(disk => {
-                        const option = document.createElement('option');
-                        option.value = disk.name;
-                        option.textContent = disk.label + ' (' + disk.driver + ')';
-                        networkDiskSelect.appendChild(option);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // Utility function to format bytes
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+            // Utility function to escape HTML
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, m => map[m]);
+            }
+
+            // ===== Cargar Documentos Múltiples =====
+            $(document).on('submit', '#adminUploadForm', function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const formData = new FormData(this);
+                const $submitBtn = $form.find('button[type="submit"]');
+                const $progressBar = $('#uploadProgress');
+                const $uploadStatus = $('#uploadStatus');
+
+                // Verificar que al menos un archivo esté seleccionado
+                let hasFiles = false;
+                const uploadedByType = {};
+                const filesBeingUploaded = [];
+
+                $('.document-file-input').each(function() {
+                    const $input = $(this);
+                    const docType = $input.data('doc-type');
+
+                    if ($input[0].files && $input[0].files.length > 0) {
+                        hasFiles = true;
+                        uploadedByType[docType] = true;
+
+                        const $item = $input.closest('.document-upload-item');
+                        let docLabel = $item.find('.form-label').text().trim();
+
+                        // Validar que se encontró el label
+                        if (!docLabel) {
+                            docLabel = `Documento (${docType})`;
+                        }
+
+                        filesBeingUploaded.push({
+                            type: docType,
+                            label: docLabel
+                        });
+                    }
+                });
+
+                if (!hasFiles) {
+                    toastr.warning('Por favor selecciona al menos un documento', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
                     });
-                } else {
-                    networkDiskSelect.innerHTML = '<option value="">No hay carpetas compartidas configuradas</option>';
-                }
-            })
-            .catch(error => {
-                console.error('Error loading network disks:', error);
-                networkDiskSelect.innerHTML = '<option value="">Error al cargar las opciones</option>';
-            });
-    }
-
-    // Event listeners para cambio de destino
-    storageDestinationRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.value === 'network') {
-                networkDiskSelector.style.display = 'block';
-                loadNetworkDisks();
-                if (adminUploadForm) {
-                    adminUploadForm.dataset.destination = 'network';
-                }
-            } else {
-                networkDiskSelector.style.display = 'none';
-                if (adminUploadForm) {
-                    adminUploadForm.dataset.destination = 'local';
-                }
-            }
-        });
-    });
-
-    // Manejar envío del formulario
-    if (adminUploadForm) {
-        adminUploadForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const destination = document.querySelector('input[name="storage_destination"]:checked').value;
-            const uid = '{{ $document->uid }}';
-
-            // Validar que hay archivos seleccionados
-            const fileInputs = this.querySelectorAll('input[type="file"]');
-            let hasFiles = false;
-
-            fileInputs.forEach(input => {
-                if (input.files.length > 0) {
-                    hasFiles = true;
-                }
-            });
-
-            if (!hasFiles) {
-                alert('Por favor, selecciona al menos un archivo para subir');
-                return;
-            }
-
-            // Si es destino local, usar el comportamiento actual
-            if (destination === 'local') {
-                // Mantener el comportamiento original
-                uploadToLocal();
-                return;
-            }
-
-            // Si es destino en red
-            if (destination === 'network') {
-                const networkDisk = networkDiskSelect.value;
-                if (!networkDisk) {
-                    alert('Por favor, selecciona una carpeta compartida en red');
                     return;
                 }
 
-                uploadToNetwork(uid, networkDisk);
-            }
-        });
-    }
+                // Validar que lo que se está cargando existe en los requeridos
+                let allFilesValid = true;
+                filesBeingUploaded.forEach(file => {
+                    const $item = $(`.document-upload-item[data-doc-type="${file.type}"]`);
+                    if ($item.length === 0) {
+                        toastr.error(`Documento tipo "${file.label}" no es válido`, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                        allFilesValid = false;
+                    }
+                });
 
-    async function uploadToNetwork(uid, networkDisk) {
-        const formData = new FormData();
-        formData.append('network_disk', networkDisk);
+                if (!allFilesValid) {
+                    return;
+                }
 
-        // Agregar archivos al FormData
-        const fileInputs = document.querySelectorAll('.document-file-input');
-        fileInputs.forEach(input => {
-            if (input.files.length > 0) {
-                formData.append(`documents[${input.dataset.docType}]`, input.files[0]);
-            }
-        });
+                // Advertir si aún hay documentos faltantes después de esta carga
+                const missingAfterUpload = [];
+                $('.document-upload-item').each(function() {
+                    const docType = $(this).data('doc-type');
+                    const isAlreadyUploaded = $(this).find('.uploaded-doc-info').length > 0;
 
-        // Mostrar progress bar
-        uploadProgressDiv.style.display = 'block';
-        uploadProgressBar.style.width = '0%';
-        uploadStatus.textContent = '0%';
+                    // Verificar si hay archivo seleccionado en el input
+                    const $fileInput = $(this).find('input.document-file-input');
+                    const hasFileSelected = $fileInput.length > 0 && $fileInput[0].files && $fileInput[0].files.length > 0;
 
-        try {
-            const response = await fetch(`/administrative/documents/${uid}/upload-to-network`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-                },
-                body: formData
+                    // También verificar en uploadedByType por compatibilidad
+                    const isBeingUploaded = uploadedByType[docType] || hasFileSelected;
+
+                    if (!isAlreadyUploaded && !isBeingUploaded) {
+                        const docLabel = $(this).find('.form-label').text().trim();
+                        missingAfterUpload.push({
+                            type: docType,
+                            label: docLabel
+                        });
+                    }
+                });
+
+                if (missingAfterUpload.length > 0) {
+                    // Mostrar modal con advertencia clara
+                    const missingHtml = missingAfterUpload.map(doc => `<li><strong>${doc.label}</strong></li>`).join('');
+                    const uploadingHtml = filesBeingUploaded.map(file => `<li class="text-success"><strong>${file.label}</strong></li>`).join('');
+
+                    let modalBody = `
+                        <div class="mb-3">
+                            <h6 class="text-success mb-2">Estás cargando:</h6>
+                            <ul class="list-unstyled ms-3">
+                                ${uploadingHtml}
+                            </ul>
+                        </div>
+                        <div>
+                            <h6 class="text-success mb-2">Aún faltarán después de esta carga:</h6>
+                            <ul class="list-unstyled ms-3">
+                                ${missingHtml}
+                            </ul>
+                        </div>
+                    `;
+
+                    $('#missingDocsList').html(modalBody);
+                    $('#confirmMissingDocumentsModal').modal('show');
+
+                    // Guardar formData en variable global para usarla cuando confirme
+                    window.pendingFormData = formData;
+                    window.pendingUpload = true;
+                    return;
+                }
+
+                // Si no hay documentos faltantes, proceder directamente
+                performUpload($submitBtn, formData, $progressBar, $uploadStatus);
             });
 
-            const data = await response.json();
+            // ===== Eliminar Documento Individual =====
+            $(document).on('click', '.btn-delete-single-doc', function(e) {
+                e.preventDefault();
 
-            if (data.status === 'success') {
-                uploadProgressBar.style.width = '100%';
-                uploadStatus.textContent = '100%';
+                const $btn = $(this);
+                const mediaId = $btn.data('media-id');
+                const docType = $btn.data('doc-type');
 
-                // Mostrar mensaje de éxito
-                setTimeout(() => {
-                    alert(data.message);
-                    // Recargar la página o actualizar la sección
-                    location.reload();
-                }, 500);
-            } else {
-                alert('Error: ' + (data.message || 'Error desconocido'));
-                uploadProgressDiv.style.display = 'none';
+                // Guardar datos en window global para usar en el modal
+                window.pendingDelete = {
+                    btn: $btn,
+                    mediaId: mediaId,
+                    docType: docType
+                };
+
+                // Mostrar modal
+                $('#confirmDeleteDocumentModal').modal('show');
+            });
+
+            // ===== Confirmar Carga =====
+            $(document).on('click', '.confirm-upload-btn', function(e) {
+                e.preventDefault();
+
+                if (!confirm('¿Confirmar carga del documento?')) {
+                    return;
+                }
+
+                const $btn = $(this);
+                $btn.prop('disabled', true);
+                $btn.html('<i class="fa fa-spinner fa-spin"></i> Confirmando...');
+
+                $.ajax({
+                    url: "{{ route('api.documents.confirm-upload') }}",
+                    type: 'POST',
+                    data: {
+                        uid: documentUid
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success('Carga confirmada correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            toastr.error(response.message || 'No se pudo confirmar', 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                        }
+                    },
+                    error: function() {
+                        toastr.error('Error al procesar la solicitud', 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false);
+                        $btn.html('<i class="fa fa-check"></i> Confirmar carga');
+                    }
+                });
+            });
+
+            /**
+             * Actualiza los elementos visuales de documentos ya cargados
+             */
+            function updateUploadedDocumentsUI(response) {
+                const uploadedKeys = response.uploaded_documents || [];
+                const uploadedDetails = response.uploaded_documents_details || {};
+                const uploadedDocs = uploadedKeys.reduce((acc, key) => {
+                    acc[key] = uploadedDetails[key];
+                    return acc;
+                }, {});
+
+                // Actualizar contador principal
+                const totalDocs = Object.keys(response.stats?.total_required || {}).length || $('.document-upload-item').length;
+                const uploadedCount = uploadedKeys.length;
+                $('#documentCounter').text(uploadedCount + '/' + totalDocs + ' cargados');
+
+                // Iterar sobre cada item de documento
+                $('.document-upload-item').each(function() {
+                    const docType = $(this).data('doc-type');
+                    const $badge = $(this).find('.badge');
+                    const $input = $(this).find('input[type="file"]');
+                    const $infoDiv = $(this).find('.uploaded-doc-info');
+
+                    if (uploadedDocs[docType]) {
+                        const docInfo = uploadedDocs[docType];
+
+                        // Cambiar badge a "Cargado"
+                        $badge.removeClass('bg-danger-subtle text-danger').addClass('bg-success-subtle text-success');
+                        $badge.html('<i class="fa fa-check-circle"></i> Cargado');
+
+                        // Si no existe la div de info, crearla
+                        if ($infoDiv.length === 0) {
+                            const infoDivHtml = `
+                                <div class="uploaded-doc-info mt-2 p-3 bg-light border rounded">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <p class="mb-0 fw-semibold text-dark small">
+                                                <i class="fa fa-file-pdf text-danger"></i> ${escapeHtml(docInfo.file_name)}
+                                            </p>
+                                            <small class="text-muted d-block mt-1">
+                                                ${formatBytes(docInfo.size)} • ${docInfo.created_at}
+                                            </small>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <a href="${docInfo.url}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-media-id="${docInfo.id}" data-doc-type="${docType}" title="Eliminar">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            $(this).append(infoDivHtml);
+                        } else {
+                            // Actualizar contenido existente
+                            $infoDiv.find('.fw-semibold').html(`<i class="fa fa-file-pdf text-danger"></i> ${escapeHtml(docInfo.file_name)}`);
+                            $infoDiv.find('small.text-muted').html(`${formatBytes(docInfo.size)} • ${docInfo.created_at}`);
+                        }
+
+                        // Ocultar input si existe
+                        if ($input.length) {
+                            $input.hide();
+                        }
+                    } else {
+                        // Documento NO cargado
+                        $badge.removeClass('bg-success-subtle text-success').addClass('bg-danger-subtle text-danger');
+                        $badge.html('<i class="fa fa-clock"></i> Pendiente');
+
+                        // Eliminar div de info si existe
+                        if ($infoDiv.length) {
+                            $infoDiv.remove();
+                        }
+
+                        // Si no existe input, recrearlo
+                        if ($input.length === 0) {
+                            const inputHtml = `
+                                <input
+                                    type="file"
+                                    class="form-control document-file-input"
+                                    name="documents[${docType}]"
+                                    data-doc-type="${docType}"
+                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                >
+                                <small class="text-muted d-block mt-1">
+                                    <i class="fa fa-info-circle"></i> PDF, JPG, PNG, DOC (máximo 10MB)
+                                </small>
+                            `;
+                            $(this).append(inputHtml);
+                        } else {
+                            // Si existe, asegurarse de que esté visible
+                            $input.show();
+                        }
+                    }
+                });
             }
-        } catch (error) {
-            console.error('Error uploading to network:', error);
-            alert('Error al subir los documentos a la carpeta en red');
-            uploadProgressDiv.style.display = 'none';
-        }
-    }
 
-    function uploadToLocal() {
-        // Aquí iría el código existente para subida local
-        // Por ahora solo mostramos un mensaje
-        alert('Subida local - usar el comportamiento actual');
-    }
-});
-</script>
+            /**
+             * Realiza el upload de documentos via AJAX
+             */
+            function performUpload($submitBtn, formData, $progressBar, $uploadStatus) {
+                $submitBtn.prop('disabled', true);
+                $submitBtn.html('Cargando...');
+                $progressBar.show();
+                $uploadStatus.text('Cargando documentos...');
+
+                $.ajax({
+                    url: "{{ route('documents.admin-upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                const percentComplete = (e.loaded / e.total) * 100;
+                                $('#uploadProgressBar').css('width', percentComplete + '%');
+                                $uploadStatus.text('Cargando... ' + Math.round(percentComplete) + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const uploadedCount = response.uploaded_count || 1;
+                            toastr.success('Se cargaron ' + uploadedCount + ' documento(s) correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                            // Actualizar estado del documento sin recargar la página
+                            updateDocumentState(documentUid);
+                        } else {
+                            toastr.error(response.message || 'No se pudo cargar', 'Error', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Error al procesar la solicitud';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        toastr.error(errorMsg, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $submitBtn.prop('disabled', false);
+                        $submitBtn.html('Cargar documentos');
+                        $progressBar.hide();
+                    }
+                });
+            }
+        });
+    </script>
+@endpush
