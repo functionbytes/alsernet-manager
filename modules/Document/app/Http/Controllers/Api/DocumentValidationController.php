@@ -603,7 +603,7 @@ class DocumentValidationController extends Controller
 
         $this->authorize('view', $document);
 
-        $timeline = $document->statusHistory()
+        $timeline = $document->statusHistories()
             ->with('user')
             ->orderBy('created_at', 'asc')
             ->get();
