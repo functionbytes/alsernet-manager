@@ -47,7 +47,8 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::delete('/{uid}/notes/{noteId}', [DocumentValidationController::class, 'deleteNote'])->name('notes.delete');
 
     // File operations
-    Route::post('/{uid}/admin-upload', [WebDocumentsController::class, 'UploadDocument'])->name('admin-upload');
+    Route::post('/sync/fields', [DocumentValidationController::class, 'syncAllDocumentFields'])->name('sync-fields');
+    Route::post('/{uid}/admin-upload', [DocumentValidationController::class, 'uploadDocument'])->name('upload');
     Route::post('/{uid}/attachments', [DocumentValidationController::class, 'uploadAttachment'])->name('attachments.upload');
     Route::post('/{uid}/upload-attachment', [DocumentValidationController::class, 'uploadAdditionalAttachment'])->name('upload-attachment');
     Route::delete('/attachments/{attachmentId}', [DocumentValidationController::class, 'deleteAttachment'])->name('attachments.delete');

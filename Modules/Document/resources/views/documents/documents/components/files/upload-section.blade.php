@@ -619,7 +619,7 @@
                 $uploadStatus.text('Cargando documentos...');
 
                 $.ajax({
-                    url: "{{ route('api.documents.admin-upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('api.documents.upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                     type: 'POST',
                     data: formData,
                     contentType: false,

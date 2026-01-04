@@ -5,9 +5,12 @@ namespace Modules\Document\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
+use Modules\Document\Services\DocumentTypeService;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * API Controller Genérico para Validación de Documentos
@@ -680,4 +683,243 @@ class DocumentValidationController extends Controller
             ],
         ]);
     }
+
+
+    /**
+     * Permite al administrador cargar documentos en nombre del cliente
+     * Soporta múltiples archivos con tipos específicos (dni_frontal, dni_trasera, licencia, etc)
+     */
+    public function uploadDocument(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Validar que venga al menos un archivo
+            $request->validate([
+                'documents.*' => 'nullable|file|max:10240', // Máximo 10MB por archivo
+            ]);
+
+            $uploadedCount = 0;
+            $uploadedFiles = [];
+            $type = 'documents';
+
+            // Log del inicio de la carga
+            $documentsArray = $request->file('documents') ?? [];
+            Log::info('adminUploadDocument START', [
+                'uid' => $uid,
+                'document_id' => $document->id,
+                'files_received' => count($documentsArray),
+                'array_keys' => is_array($documentsArray) ? array_keys($documentsArray) : [],
+                'array_structure' => is_array($documentsArray) ? array_map(function ($f) {
+                    return [
+                        'name' => $f instanceof \Illuminate\Http\UploadedFile ? $f->getClientOriginalName() : 'N/A',
+                        'type' => $f instanceof \Illuminate\Http\UploadedFile ? get_class($f) : gettype($f),
+                    ];
+                }, $documentsArray) : [],
+            ]);
+
+            // Procesar cada archivo del array documents
+            if ($request->hasFile('documents')) {
+                foreach ($request->file('documents') as $docType => $file) {
+                    if ($file && $file->isValid()) {
+                        Log::info('Processing file', [
+                            'docType' => $docType,
+                            'fileName' => $file->getClientOriginalName(),
+                            'fileSize' => $file->getSize(),
+                        ]);
+
+                        // Recargar media del documento para asegurar que tenemos la versión más reciente
+                        $document->load('media');
+
+                        // Eliminar archivo anterior del mismo tipo si existe
+                        $existingMedia = null;
+                        foreach ($document->media as $media) {
+                            $storedType = $media->getCustomProperty('document_type');
+                            Log::info('Checking existing media', [
+                                'mediaId' => $media->id,
+                                'storedDocType' => $storedType,
+                                'lookingFor' => $docType,
+                                'match' => $storedType === $docType,
+                            ]);
+
+                            if ($storedType === $docType) {
+                                $existingMedia = $media;
+                                break;
+                            }
+                        }
+
+                        if ($existingMedia) {
+                            Log::info('Deleting existing media', ['mediaId' => $existingMedia->id]);
+                            $existingMedia->delete();
+                        }
+
+                        // Agregar nueva media con propiedad custom para identificar el tipo
+                        $media = $document->addMedia($file)
+                            ->withCustomProperties(['document_type' => $docType])
+                            ->toMediaCollection($type);
+
+                        // Verificar que el custom property se guardó correctamente
+                        $savedProperty = $media->getCustomProperty('document_type');
+                        Log::info('Media uploaded and verified', [
+                            'mediaId' => $media->id,
+                            'fileName' => $media->file_name,
+                            'docType' => $docType,
+                            'savedProperty' => $savedProperty,
+                            'propertyMatch' => $savedProperty === $docType,
+                        ]);
+
+                        // Asegurar que el archivo es accesible al servidor web
+                        $mediaPath = $media->getPath();
+                        if (file_exists($mediaPath)) {
+                            @chmod($mediaPath, 0644);
+                        }
+                        // También cambiar permisos del directorio si es necesario
+                        $mediaDir = dirname($mediaPath);
+                        if (is_dir($mediaDir)) {
+                            @chmod($mediaDir, 0755);
+                        }
+
+                        $uploadedFiles[] = [
+                            'id' => $media->id,
+                            'uuid' => $media->uuid,
+                            'file' => $media->file_name,
+                            'size' => $media->size,
+                            'path' => $media->getUrl(),
+                            'type' => $docType,
+                        ];
+
+                        $uploadedCount++;
+                    }
+                }
+            }
+
+            Log::info('adminUploadDocument END', [
+                'uploadedCount' => $uploadedCount,
+                'totalFiles' => count($uploadedFiles),
+            ]);
+
+            if ($uploadedCount === 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se recibieron archivos válidos',
+                ], 400);
+            }
+
+            // Sincronizar JSON de documentos subidos con los archivos media actuales
+            $document->syncUploadedDocumentsJson();
+
+            // Actualizar timestamp de confirmación
+            $document->update([
+                'confirmed_at' => now(), // El admin confirma implícitamente
+            ]);
+
+            // NO enviar correo automático cuando el admin sube documentos
+            // app(DocumentEmailService::class)->processDocumentUpload($document);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento(s) cargado(s) correctamente por el administrador',
+                'uploaded_count' => $uploadedCount,
+                'statement_id' => $document->id,
+                'files' => $uploadedFiles,
+                'uploaded_documents' => $document->uploaded_documents,
+                'missing_documents' => $document->getMissingDocuments(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar documento: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Sincroniza los campos required_documents y uploaded_documents de todos los documentos
+     * Útil para migrar documentos antiguos o corregir inconsistencias
+     * Puede filtrar por tipo específico si se proporciona
+     */
+    public function syncAllDocumentFields(Request $request)
+    {
+        try {
+            $type = $request->query('type');
+            $force = $request->query('force', false);
+
+            if ($type) {
+                $documents = Document::where('type', $type)->get();
+            } else {
+                $documents = Document::all();
+            }
+
+            if ($documents->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron documentos para sincronizar',
+                ], 404);
+            }
+
+            $synced = 0;
+            $skipped = 0;
+
+            foreach ($documents as $document) {
+                // Si ya está sincronizado y no es force, omitir
+                if (! $force && ! empty($document->required_documents) && ! empty($document->uploaded_documents)) {
+                    $skipped++;
+
+                    continue;
+                }
+
+                // 1. Establecer tipo por defecto si no existe
+                if (! $document->type) {
+                    $document->type = 'general';
+                }
+
+                // 2. Generar required_documents desde DocumentTypeService
+                $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+                $document->required_documents = $requiredDocs;
+
+                // 3. Generar uploaded_documents desde media actual
+                $uploadedDocs = [];
+                foreach ($document->getMedia('documents') as $media) {
+                    $docType = $media->getCustomProperty('document_type', 'documento');
+                    $uploadedDocs[$docType] = [
+                        'id' => $media->id,
+                        'file_name' => $media->file_name,
+                        'size' => $media->size,
+                        'url' => $media->getUrl(),
+                        'created_at' => $media->created_at->format('Y-m-d H:i:s'),
+                    ];
+                }
+                $document->uploaded_documents = $uploadedDocs;
+
+                // 4. Guardar el documento
+                $document->save();
+
+                $synced++;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Sincronización completada: {$synced} sincronizados, {$skipped} omitidos",
+                'data' => [
+                    'total_documents' => $documents->count(),
+                    'synced' => $synced,
+                    'skipped' => $skipped,
+                    'type_filter' => $type ?? 'todos',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sincronizando documentos: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

@@ -13,7 +13,6 @@ use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentStatusTransition;
 use Modules\Document\Entities\DocumentSync;
-use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentUploadType;
 use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Events\DocumentStatusChanged;
@@ -1866,8 +1865,8 @@ class DocumentsController extends Controller
                 ], 404);
             }
 
-            // Obtener tipo de documento desde la base de datos (mismo método que manage.blade.php)
-            $documentType = DocumentType::where('slug', $document->type)->with('requirements')->first();
+            // Obtener tipo de documento desde la relación
+            $documentType = $document->documentType?->load('requirements');
             $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
 
             // Obtener documentos ya cargados organizados por tipo (recargando relación media)
@@ -1884,7 +1883,7 @@ class DocumentsController extends Controller
             $allUploaded = empty($missingDocs);
 
             // Renderizar solo la sección de carga de documentos
-            $html = view('documents::documents.documents.partials.upload-section', [
+            $html = view('documents::documents.documents.components.files.upload-section', [
                 'document' => $document,
                 'requiredDocuments' => $requiredDocuments,
                 'uploadedDocs' => $uploadedDocs,
