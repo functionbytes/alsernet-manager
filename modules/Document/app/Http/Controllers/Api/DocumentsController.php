@@ -1632,13 +1632,60 @@ class DocumentsController extends Controller
      */
     public function refreshDocumentsSection($uid)
     {
-        $document = Document::where('uid', $uid)->firstOrFail();
-        $this->authorize('view', $document);
+        try {
+            $document = Document::findByUid($uid);
 
-        return response()->json([
-            'success' => true,
-            'document' => $document->load(['media', 'actions', 'mails']),
-        ]);
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            $this->authorize('view', $document);
+
+            // Obtener tipo de documento desde la relación
+            $documentType = $document->documentType?->load('requirements');
+            $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
+
+            // Obtener documentos ya cargados organizados por tipo (recargando relación media)
+            $document->load('media');
+
+            $uploadedDocs = [];
+            foreach ($document->media as $media) {
+                $docType = $media->getCustomProperty('document_type', 'documento');
+                $uploadedDocs[$docType] = $media;
+            }
+
+            // Calcular documentos faltantes
+            $missingDocs = array_diff_key($requiredDocuments, $uploadedDocs);
+            $allUploaded = empty($missingDocs);
+
+            // Renderizar solo la sección de carga de documentos
+            $html = view('documents::documents.documents.components.files.upload-section', [
+                'document' => $document,
+                'requiredDocuments' => $requiredDocuments,
+                'uploadedDocs' => $uploadedDocs,
+                'missingDocs' => $missingDocs,
+                'allUploaded' => $allUploaded,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error al refrescar sección de documentos', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al refrescar la sección: '.$e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -1646,18 +1693,41 @@ class DocumentsController extends Controller
      */
     public function refreshActionHistory($uid)
     {
-        $document = Document::where('uid', $uid)->firstOrFail();
-        $this->authorize('view', $document);
+        try {
+            $document = Document::findByUid($uid);
 
-        $history = $document->actions()
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
 
-        return response()->json([
-            'success' => true,
-            'history' => $history,
-        ]);
+            $this->authorize('view', $document);
+
+            $document->load(['actions' => fn ($q) => $q->with('user')->orderBy('created_at', 'desc')]);
+
+            // Renderizar el componente de historial de acciones
+            $html = view('documents::documents.documents.components.management.action-history', [
+                'document' => $document,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error al refrescar historial de acciones', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al refrescar el historial: '.$e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

@@ -91,9 +91,9 @@
 
                 <button type="submit" class="btn btn-primary w-100 btn-upload-document" @if($allUploaded || !auth()->user()->canDocument('upload-documents')) disabled @endif>
                     @if($allUploaded)
-                        <i class="fa fa-check-circle"></i> Documentos Completos
+                        Documentos Completos
                     @else
-                        <i class="fas fa-upload me-2"></i>Cargar documentos
+                        Cargar documentos
                     @endif
                 </button>
             </form>
@@ -101,7 +101,7 @@
             @if($document->media->count() > 1 && $document->confirmed_at != null)
                 <div class="border-top mt-3 pt-3">
                     <a href="{{ route('documents.summary', $document->uid) }}" target="_blank" class="btn btn-outline-primary w-100">
-                        <i class="fa fa-file-archive"></i> Ver todos los documentos comprimidos
+                        Ver todos los documentos comprimidos
                     </a>
                 </div>
             @endif
