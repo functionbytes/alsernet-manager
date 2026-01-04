@@ -1649,7 +1649,7 @@ class DocumentsController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $this->authorize('view', $document);
 
-        $history = $document->actionHistory()
+        $history = $document->actions()
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();

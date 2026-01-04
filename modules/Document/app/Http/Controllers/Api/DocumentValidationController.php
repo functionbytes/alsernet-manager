@@ -562,7 +562,7 @@ class DocumentValidationController extends Controller
 
         $this->authorize('view', $document);
 
-        $history = $document->actionHistory()
+        $history = $document->actions()
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -683,7 +683,6 @@ class DocumentValidationController extends Controller
             ],
         ]);
     }
-
 
     /**
      * Permite al administrador cargar documentos en nombre del cliente
@@ -921,5 +920,4 @@ class DocumentValidationController extends Controller
             ], 500);
         }
     }
-
 }
