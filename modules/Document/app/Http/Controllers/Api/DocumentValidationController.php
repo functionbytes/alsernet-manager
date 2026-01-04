@@ -517,6 +517,39 @@ class DocumentValidationController extends Controller
     }
 
     /**
+     * Eliminar archivo adjunto adicional del documento
+     */
+    public function deleteAdditionalAttachment(string $uid, int $mediaId): JsonResponse
+    {
+        try {
+            $document = Document::where('uid', $uid)->firstOrFail();
+
+            $this->authorize('update', $document);
+
+            $media = Media::find($mediaId);
+
+            if (! $media || $media->model_id !== $document->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Archivo no encontrado o no pertenece a este documento',
+                ], 404);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento eliminado correctamente',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar documento: '.$e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
      * Obtener historial de acciones
      */
     public function getActionHistory(string $uid): JsonResponse

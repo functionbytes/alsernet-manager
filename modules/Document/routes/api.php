@@ -50,7 +50,7 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::post('/{uid}/attachments', [DocumentValidationController::class, 'uploadAttachment'])->name('attachments.upload');
     Route::post('/{uid}/upload-attachment', [DocumentValidationController::class, 'uploadAdditionalAttachment'])->name('upload-attachment');
     Route::delete('/attachments/{attachmentId}', [DocumentValidationController::class, 'deleteAttachment'])->name('attachments.delete');
-    Route::delete('/{uid}/delete-attachment', [DocumentValidationController::class, 'deleteAdditionalAttachment'])->name('delete-attachment');
+    Route::delete('/{uid}/delete-attachment/{mediaId}', [DocumentValidationController::class, 'deleteAdditionalAttachment'])->name('delete-attachment');
 
     // History & timeline
     Route::get('/{uid}/action-history', [DocumentValidationController::class, 'getActionHistory'])->name('action-history');
