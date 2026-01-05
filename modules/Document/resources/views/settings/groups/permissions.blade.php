@@ -270,8 +270,11 @@
     /* Hide the checkbox input but keep it functional */
     .permission-checkbox .form-check-input {
         position: absolute;
-        opacity: 0;
-        cursor: pointer;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        pointer-events: none;
     }
 
     /* Normal hover effect */
