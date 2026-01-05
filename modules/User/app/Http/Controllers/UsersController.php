@@ -34,9 +34,9 @@ class UsersController extends Controller
         // Search by name, email, or identification
         if ($searchKey) {
             $users->where(function ($query) use ($searchKey) {
-                $query->where('users.firstname', 'like', '%'.$searchKey.'%')
-                    ->orWhere('users.lastname', 'like', '%'.$searchKey.'%')
-                    ->orWhere(DB::raw("CONCAT(users.firstname, ' ', users.lastname)"), 'like', '%'.$searchKey.'%')
+                $query->where('users.first_name', 'like', '%'.$searchKey.'%')
+                    ->orWhere('users.last_name', 'like', '%'.$searchKey.'%')
+                    ->orWhere(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'like', '%'.$searchKey.'%')
                     ->orWhere('users.email', 'like', '%'.$searchKey.'%')
                     ->orWhere('users.identification', 'like', '%'.$searchKey.'%');
             });
@@ -267,21 +267,21 @@ class UsersController extends Controller
 
         $users = User::where('is_active', true)
             ->where(function ($q) use ($query) {
-                $q->where('firstname', 'like', "%{$query}%")
-                    ->orWhere('lastname', 'like', "%{$query}%")
+                $q->where('first_name', 'like', "%{$query}%")
+                    ->orWhere('last_name', 'like', "%{$query}%")
                     ->orWhere('email', 'like', "%{$query}%")
-                    ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$query}%"]);
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"]);
             })
-            ->select('id', 'firstname', 'lastname', 'email')
+            ->select('id', 'first_name', 'last_name', 'email')
             ->limit(20)
             ->get();
 
         $results = $users->map(function ($user) {
             return [
                 'id' => $user->id,
-                'text' => "{$user->firstname} {$user->lastname}",
-                'first_name' => $user->firstname,
-                'last_name' => $user->lastname,
+                'text' => "{$user->first_name} {$user->last_name}",
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
             ];
         });
