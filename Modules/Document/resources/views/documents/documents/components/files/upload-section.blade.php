@@ -691,28 +691,32 @@
 
                         if (response.success && response.html) {
                             var $container = $('#uploadSectionContainer');
-                            console.log('[reloadDocumentsSection] Container actual encontrado:', $container.length);
 
-                            // Crear un elemento temporal para parsear el HTML
-                            var $temp = $('<div/>').append(response.html);
-                            console.log('[reloadDocumentsSection] Elementos en temp:', $temp.length, 'children:', $temp.children().length);
+                            if ($container.length > 0) {
+                                // El servidor devuelve HTML completo que incluye el wrapper <div id="uploadSectionContainer">
+                                // Extraemos solo el contenido interno para evitar DIVs anidados
+                                var html = response.html;
 
-                            // Buscar el nuevo contenedor dentro del HTML parseado
-                            var $newContainer = $temp.find('#uploadSectionContainer');
-                            console.log('[reloadDocumentsSection] Contenedor nuevo encontrado:', $newContainer.length);
+                                // Si el HTML comienza con <div id="uploadSectionContainer">, extraer contenido
+                                if (html.indexOf('<div id="uploadSectionContainer">') === 0) {
+                                    // Encontrar el cierre del div
+                                    var startTag = '<div id="uploadSectionContainer">';
+                                    var endTag = '</div>';
+                                    var startIndex = html.indexOf(startTag) + startTag.length;
+                                    var endIndex = html.lastIndexOf(endTag);
 
-                            if ($newContainer.length > 0) {
-                                // Si encontramos un contenedor nuevo, reemplazar solo el contenido
-                                console.log('[reloadDocumentsSection] Reemplazando contenido del contenedor - innerHTML length:', $newContainer.html().length);
-                                $container.html($newContainer.html());
-                            } else {
-                                // Si no encontramos contenedor, asumir que el HTML es directo
-                                console.log('[reloadDocumentsSection] Reemplazando HTML directo - HTML length:', response.html.length);
-                                $container.html(response.html);
+                                    if (startIndex > startTag.length - 1 && endIndex > startIndex) {
+                                        var innerHtml = html.substring(startIndex, endIndex);
+                                        $container.html(innerHtml);
+                                    } else {
+                                        // Si no se puede extraer, reemplazar todo
+                                        $container.html(html);
+                                    }
+                                } else {
+                                    // Si no tiene el wrapper, usar el HTML tal cual
+                                    $container.html(html);
+                                }
                             }
-
-                            console.log('[reloadDocumentsSection] Recarga completada - Container actualizado');
-                            console.log('[reloadDocumentsSection] Contenedor final HTML preview:', $container.html().substring(0, 200));
                         } else {
                             console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
                             toastr.error('No se pudo actualizar la sección', 'Error', {
