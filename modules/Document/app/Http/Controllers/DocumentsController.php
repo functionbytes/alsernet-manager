@@ -1902,11 +1902,11 @@ class DocumentsController extends Controller
                 'uid' => $uid,
                 'required_documents' => array_keys($requiredDocuments),
                 'all_media_count' => $allMedia->count(),
-                'media_types' => $allMedia->map(fn ($m) => $m->getCustomProperty('document_type', 'documento'))->toArray(),
+                'media_types' => $allMedia->map(fn ($m) => $m->getCustomProperty('document_type', 'documents'))->toArray(),
             ]);
 
             foreach ($allMedia as $media) {
-                $docType = $media->getCustomProperty('document_type', 'documento');
+                $docType = $media->getCustomProperty('document_type', 'documents');
                 $uploadedDocs[$docType] = $media;
             }
 

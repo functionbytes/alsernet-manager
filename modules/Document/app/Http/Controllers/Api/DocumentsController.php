@@ -1648,11 +1648,12 @@ class DocumentsController extends Controller
             $documentType = $document->documentType?->load('requirements');
             $requiredDocuments = $documentType?->getRequiredDocuments() ?? [];
 
-            // Obtener documentos ya cargados organizados por tipo (recargando relación media)
-            $document->load('media');
-
+            // Obtener documentos ya cargados organizados por tipo
+            // IMPORTANTE: Solo obtener media de la colección 'documents' (documentos requeridos)
             $uploadedDocs = [];
-            foreach ($document->media as $media) {
+            $allMedia = $document->media()->where('collection_name', 'documents')->get();
+
+            foreach ($allMedia as $media) {
                 $docType = $media->getCustomProperty('document_type', 'documento');
                 $uploadedDocs[$docType] = $media;
             }
