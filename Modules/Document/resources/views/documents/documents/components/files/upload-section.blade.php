@@ -689,7 +689,7 @@
 
                         if (response.success && response.html) {
                             const $container = $('#uploadSectionContainer');
-                            $container.html(response.html);
+                            $container.replaceWith(response.html);
                             console.log('[reloadDocumentsSection] Recarga completada');
                         } else {
                             console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
