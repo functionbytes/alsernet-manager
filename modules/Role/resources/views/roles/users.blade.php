@@ -15,7 +15,6 @@
             <div class="row mb-4 pb-3 border-bottom">
                 <div class="col-12">
                     <h5 class="mb-2">
-                        <i class="fas fa-users me-2 text-primary"></i>
                         Usuarios con rol: <strong>{{ $role->name }}</strong>
                     </h5>
                     <p class="text-muted mb-0 small">

@@ -68,7 +68,7 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
 
     // Document operations (moved from role-specific routes)
     Route::post('/update', [DocumentsController::class, 'update'])->name('update');
-    Route::post('/sync-fields', [DocumentsController::class, 'syncAllDocumentFields'])->name('sync-fields');
+    Route::post('/sync-fields', [DocumentsController::class, 'syncAllDocumentFields'])->name('sync-fields.documents');
     Route::get('/{uid}/state', [DocumentsController::class, 'getDocumentState'])->name('state');
     Route::get('/destroy/{uid}', [DocumentsController::class, 'destroy'])->name('destroy');
     Route::delete('/{uid}', [DocumentsController::class, 'deleteSingleDocument'])->name('delete');
