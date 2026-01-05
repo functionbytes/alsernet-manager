@@ -144,17 +144,17 @@
                 </div>
 
                 {{-- Quick Actions --}}
-                <div class="card-body border-bottom bg-light">
+                <div class="card-body border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="mb-0 fw-semibold">Acciones rápidas</h6>
                         </div>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="selectAll">
-                                <i class="fas fa-check-double me-1"></i>Seleccionar todos
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="selectAll">
+                                Seleccionar todos
                             </button>
                             <button type="button" class="btn btn-outline-secondary btn-sm" id="deselectAll">
-                                <i class="fas fa-times me-1"></i>Deseleccionar todos
+                                Deseleccionar todos
                             </button>
                             @if ($permissionsByCategory->count() > 1)
                                 <div class="btn-group" role="group">
@@ -194,7 +194,6 @@
                             <div class="card-header bg-light border-bottom">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="mb-0 fw-bold text-capitalize">
-                                        <i class="fas fa-{{ $categoryIcons[$category] ?? $categoryIcons['default'] }} me-2"></i>
                                         {{ $categoryLabels[$category] ?? ucfirst($category) }}
                                     </h6>
                                     <span class="badge bg-primary category-count" data-category="{{ $category }}">
@@ -263,15 +262,80 @@
 <style>
     .permission-checkbox {
         transition: all 0.2s ease;
+        cursor: pointer;
+        border: 2px solid #dee2e6;
+        position: relative;
     }
 
+    /* Hide the checkbox input but keep it functional */
+    .permission-checkbox .form-check-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Normal hover effect */
     .permission-checkbox:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: #adb5bd;
     }
 
+    /* Checked state - green theme */
     .permission-checkbox.border-primary {
-        background-color: rgba(144, 187, 19, 0.02);
+        background-color: rgba(144, 187, 19, 0.05);
+        border-color: #90bb13 !important;
+    }
+
+    /* Checked hover - enhanced green effect */
+    .permission-checkbox.border-primary:hover {
+        background-color: rgba(144, 187, 19, 0.1);
+        border-color: #7a9e11 !important;
+        box-shadow: 0 4px 12px rgba(144, 187, 19, 0.3);
+    }
+
+    /* Visual indicator for checked state */
+    .permission-checkbox.border-primary::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        background-color: #90bb13;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+    /* Unchecked state visual indicator */
+    .permission-checkbox:not(.border-primary)::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+
+    .permission-checkbox:not(.border-primary):hover::before {
+        border-color: #adb5bd;
+        background-color: #e9ecef;
+    }
+
+    /* Make label non-selectable */
+    .permission-checkbox .form-check-label {
+        user-select: none;
+        padding-right: 40px; /* Space for the check indicator */
     }
 
     .form-check-input:checked {
@@ -307,13 +371,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = checkbox.querySelector('.permission-input');
             if (input.checked) {
                 checkbox.classList.add('border-primary');
-                checkbox.style.backgroundColor = 'rgba(144, 187, 19, 0.02)';
+                checkbox.style.backgroundColor = 'rgba(144, 187, 19, 0.05)';
             } else {
                 checkbox.classList.remove('border-primary');
                 checkbox.style.backgroundColor = '';
             }
         });
     }
+
+    // Make entire card clickable
+    document.querySelectorAll('.permission-checkbox').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't toggle if clicking directly on the checkbox
+            if (e.target.classList.contains('permission-input')) {
+                return;
+            }
+
+            const checkbox = this.querySelector('.permission-input');
+            checkbox.checked = !checkbox.checked;
+            updateSelectedCount();
+        });
+    });
 
     // Select all permissions
     document.getElementById('selectAll').addEventListener('click', function() {
