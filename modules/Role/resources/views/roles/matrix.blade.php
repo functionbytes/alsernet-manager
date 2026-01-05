@@ -183,7 +183,7 @@
 
             // Send AJAX request
             $.ajax({
-                url: "{{ route('settings.roles.update.permissions', '') }}/" + roleId,
+                url: `/settings/roles/${roleId}/permissions`,
                 type: 'POST',
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),

@@ -171,32 +171,32 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a href="{{ route('settings.roles.edit', $role->id) }}" class="dropdown-item">
-                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                        Editar
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('settings.roles.show.permissions', $role->id) }}" class="dropdown-item">
-                                                        <i class="fas fa-shield-alt me-2"></i>Gestionar Permisos
+                                                        Gestionar Permisos
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('settings.roles.show.users', $role->id) }}" class="dropdown-item">
-                                                        <i class="fas fa-users me-2"></i>Ver Usuarios
+                                                       Ver Usuarios
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <a href="#" class="dropdown-item text-danger delete-btn"
+                                                    <a href="#" class="dropdown-item delete-btn"
                                                        data-url="{{ route('settings.roles.destroy', $role->id) }}"
                                                        data-title="¿Eliminar rol {{ $role->name }}?">
-                                                        <i class="fas fa-trash me-2"></i>Eliminar
+                                                        Eliminar
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
                                     @else
                                         <span class="badge bg-warning">
-                                            <i class="fas fa-lock me-1"></i>Sistema
+                                            Sistema
                                         </span>
                                     @endif
                                 </td>

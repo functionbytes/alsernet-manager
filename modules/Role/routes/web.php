@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Role\Http\Controllers\PermissionController;
 use Modules\Role\Http\Controllers\RoleController;
+use Spatie\Permission\Models\Role;
+
+// Model binding for {role} parameter
+Route::model('role', Role::class);
 
 // Roles management routes
 Route::prefix('roles')->name('roles.')->group(function () {
