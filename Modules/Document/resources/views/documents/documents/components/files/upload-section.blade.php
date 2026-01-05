@@ -688,8 +688,24 @@
                         console.log('[reloadDocumentsSection] Response:', response);
 
                         if (response.success && response.html) {
-                            const $container = $('#uploadSectionContainer');
-                            $container.replaceWith(response.html);
+                            var $container = $('#uploadSectionContainer');
+
+                            // Crear un elemento temporal para parsear el HTML
+                            var $temp = $('<div/>').append(response.html);
+
+                            // Buscar el nuevo contenedor dentro del HTML parseado
+                            var $newContainer = $temp.find('#uploadSectionContainer');
+
+                            if ($newContainer.length > 0) {
+                                // Si encontramos un contenedor nuevo, reemplazar solo el contenido
+                                console.log('[reloadDocumentsSection] Reemplazando contenido del contenedor');
+                                $container.html($newContainer.html());
+                            } else {
+                                // Si no encontramos contenedor, asumir que el HTML es directo
+                                console.log('[reloadDocumentsSection] Reemplazando HTML directo');
+                                $container.html(response.html);
+                            }
+
                             console.log('[reloadDocumentsSection] Recarga completada');
                         } else {
                             console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
@@ -702,7 +718,7 @@
                     },
                     error: function(xhr) {
                         console.error('[reloadDocumentsSection] Error AJAX:', xhr);
-                        let errorMsg = 'Error al refrescar la sección de documentos';
+                        var errorMsg = 'Error al refrescar la sección de documentos';
 
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMsg = xhr.responseJSON.message;
