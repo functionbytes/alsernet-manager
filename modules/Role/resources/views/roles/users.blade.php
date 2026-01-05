@@ -237,9 +237,8 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="assignUsersForm" method="POST" action="{{ route('settings.roles.assign.users') }}">
+                <form id="assignUsersForm" method="POST" action="{{ route('settings.roles.assign.users', $role->id) }}">
                     @csrf
-                    <input type="hidden" name="role_id" value="{{ $role->id }}">
 
                     <div class="modal-body">
                         <div class="alert alert-info" role="alert">

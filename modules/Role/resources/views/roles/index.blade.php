@@ -176,12 +176,12 @@
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('settings.roles.show.permissions', $role->id) }}" class="dropdown-item">
-                                                        Gestionar Permisos
+                                                        Gestionar permisos
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('settings.roles.show.users', $role->id) }}" class="dropdown-item">
-                                                       Ver Usuarios
+                                                       Ver usuarios
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
