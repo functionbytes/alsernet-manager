@@ -5,6 +5,7 @@ namespace Modules\User\Providers;
 use App\Services\NavService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\User\Http\Controllers\UsersController;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,15 @@ class UserServiceProvider extends ServiceProvider
     protected function registerRoutes(): void
     {
         $modulePath = dirname(__DIR__, 2);
+
+        // Public search route FIRST (accessible to authenticated users for role assignment)
+        // Must be registered before the greedy {uid} route
+        Route::middleware(['web', 'auth'])
+            ->prefix('settings/users')
+            ->name('settings.users.')
+            ->group(function () {
+                Route::get('/search', [UsersController::class, 'search'])->name('search');
+            });
 
         // User settings routes (GET views + POST/PUT/DELETE API)
         Route::middleware(['web', 'auth', 'role:super-admin'])
