@@ -33,6 +33,70 @@
                 </div>
             </div>
 
+            {{-- Statistics Cards --}}
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    @php
+                        $totalModules = count($modules);
+                        $enabledModules = count($roleModules);
+                        $disabledModules = $totalModules - $enabledModules;
+                        $coveragePercentage = $totalModules > 0 ? round(($enabledModules / $totalModules) * 100) : 0;
+                    @endphp
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $totalModules }}</h4>
+                                        <small class="text-muted">Módulos disponibles</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Habilitados</h6>
+                                        <h4 class="mb-1 fw-bold module-total-count">{{ $enabledModules }}</h4>
+                                        <small class="text-muted">Módulos activos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Deshabilitados</h6>
+                                        <h4 class="mb-1 fw-bold module-disabled-count">{{ $disabledModules }}</h4>
+                                        <small class="text-muted">Módulos inactivos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-info mb-2">Cobertura</h6>
+                                        <h4 class="mb-1 fw-bold module-percentage">{{ $coveragePercentage }}%</h4>
+                                        <small class="text-muted">Módulos asignados</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Info Section --}}
             <div class="card-body border-bottom">
                 <div class="alert alert-info border-0 mb-0" role="alert">
@@ -229,20 +293,39 @@
 <style>
     .module-card {
         transition: all 0.2s ease;
+        border: 2px solid #dee2e6;
     }
 
     .module-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .module-card.border-primary {
         background-color: rgba(144, 187, 19, 0.02);
+        border-color: #90bb13 !important;
+    }
+
+    /* Green hover effect for checked cards */
+    .module-card.border-primary:hover {
+        background-color: rgba(144, 187, 19, 0.08);
+        border-color: #7a9e11 !important;
+        box-shadow: 0 4px 12px rgba(144, 187, 19, 0.3);
+    }
+
+    /* Normal hover for unchecked cards */
+    .module-card:not(.border-primary):hover {
+        border-color: #adb5bd;
     }
 
     .form-check-input:checked {
         background-color: #90bb13;
         border-color: #90bb13;
+    }
+
+    .form-check-input:focus {
+        border-color: #90bb13;
+        box-shadow: 0 0 0 0.25rem rgba(144, 187, 19, 0.25);
     }
 </style>
 @endpush
@@ -254,9 +337,11 @@ $(document).ready(function() {
     function updateStats() {
         const totalModules = {{ count($modules) }};
         const enabledCount = $('.module-checkbox:checked').length;
+        const disabledCount = totalModules - enabledCount;
         const percentage = totalModules > 0 ? Math.round((enabledCount / totalModules) * 100) : 0;
 
         $('.module-total-count').text(enabledCount);
+        $('.module-disabled-count').text(disabledCount);
         $('.module-percentage').text(percentage + '%');
     }
 
