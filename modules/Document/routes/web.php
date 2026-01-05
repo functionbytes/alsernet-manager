@@ -31,7 +31,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     // OPERATIONAL ROUTES - /documents
     // ====================================================================
     Route::prefix('documents')->name('documents.')
-        ->middleware(['can:documents.view'])
+        ->middleware(['can:modules.view.documents'])
         ->group(function () {
             // Listing routes
             Route::get('/', [DocumentsController::class, 'index'])->name('index');
