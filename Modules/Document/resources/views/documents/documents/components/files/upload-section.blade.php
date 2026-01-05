@@ -108,9 +108,9 @@
         </div>
     </div>
 @endif
-</div>
-<!-- Mensaje de éxito cuando todos los documentos están cargados -->
-@if($allUploaded)
+
+    <!-- Mensaje de éxito cuando todos los documentos están cargados -->
+    @if($allUploaded)
     <div class="card mb-3">
         <div class="card-header p-3 bg-white border-bottom">
             <div class="d-flex justify-content-between align-items-center">
@@ -161,8 +161,8 @@
             @endif
         </div>
     </div>
-@endif
-
+    @endif
+</div>
 
 {{-- Modal: Confirmar carga con documentos faltantes --}}
 <div class="modal fade" id="confirmMissingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="confirmMissingDocumentsModalLabel" aria-hidden="true">
@@ -678,16 +678,11 @@
              * Recarga completamente la sección de carga de documentos vía AJAX
              */
             function reloadDocumentsSection(uid = documentUid) {
-                console.log('[reloadDocumentsSection] Iniciando recarga para uid:', uid);
-
                 $.ajax({
                     url: "{{ route('api.documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        console.log('[reloadDocumentsSection] Response:', response);
-                        console.log('[reloadDocumentsSection] HTML length:', response.html ? response.html.length : 'no html');
-                        console.log('[reloadDocumentsSection] HTML preview:', response.html ? response.html.substring(0, 200) : 'no html');
 
                         if (response.success && response.html) {
                             var $container = $('#uploadSectionContainer');
@@ -718,7 +713,6 @@
                                 }
                             }
                         } else {
-                            console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
                             toastr.error('No se pudo actualizar la sección', 'Error', {
                                 closeButton: true,
                                 progressBar: true,
@@ -727,7 +721,6 @@
                         }
                     },
                     error: function(xhr) {
-                        console.error('[reloadDocumentsSection] Error AJAX:', xhr);
                         var errorMsg = 'Error al refrescar la sección de documentos';
 
                         if (xhr.responseJSON && xhr.responseJSON.message) {

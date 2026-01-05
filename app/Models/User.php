@@ -143,8 +143,6 @@ class User extends Authenticatable
      */
     public function redirectRouteName(): string
     {
-        // All users go to the generic Core dashboard
-        // The dashboard adapts its content based on the user's role via Spatie
         return 'core.dashboard';
     }
 

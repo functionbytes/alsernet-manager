@@ -1,6 +1,4 @@
 <?php
 
-use Modules\Core\Http\Controllers\DashboardController;
-
-// Dashboard route - will be named 'core.dashboard' due to name prefix in provider
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// Routes are registered in CoreServiceProvider::registerRoutes()
+// This file is kept for reference but not actively used

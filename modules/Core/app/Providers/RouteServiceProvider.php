@@ -8,8 +8,7 @@ class RouteServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        // Routes are defined in routes/web.php with middleware, prefix, and name
-        // This provider exists for consistency with module structure
-        require module_path('Core', 'routes/web.php');
+        // Routes are now registered in CoreServiceProvider::registerRoutes()
+        // Routes are NOT loaded from routes/web.php - see CoreServiceProvider for implementation
     }
 }
