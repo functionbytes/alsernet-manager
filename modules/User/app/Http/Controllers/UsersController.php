@@ -96,7 +96,6 @@ class UsersController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->available = (bool) $request->available;
-            $user->shop_id = $this->shouldAssignShop($request->role) ? $request->shop : null;
             $user->save();
 
             // Assign role using Spatie relationship
@@ -200,7 +199,6 @@ class UsersController extends Controller
             }
 
             $user->available = (bool) $request->available;
-            $user->shop_id = $this->shouldAssignShop($request->role) ? $request->shop : null;
             $user->save();
 
             // Update role
