@@ -58,23 +58,62 @@
                     </div>
                 </div>
 
-                {{-- Información del permiso --}}
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="card bg-light-subtle border-0">
+                {{-- Estadísticas del permiso --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <h6 class="mb-2 small text-muted">Roles asignados</h6>
-                                <h4 class="mb-0 fw-bold">{{ $permission->roles()->count() }}</h4>
-                                <small class="text-muted">Roles que usan este permiso</small>
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Roles asignados</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $permission->roles()->count() }}</h4>
+                                        <small class="text-muted">Roles que usan este permiso</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card bg-light-subtle border-0">
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <h6 class="mb-2 small text-muted">Fecha de creación</h6>
-                                <h4 class="mb-0 fw-bold" style="font-size: 1rem;">{{ $permission->created_at->format('d/m/Y') }}</h4>
-                                <small class="text-muted">{{ $permission->created_at->diffForHumans() }}</small>
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Usuarios afectados</h6>
+                                        <h4 class="mb-1 fw-bold">
+                                            @php
+                                                $totalUsers = $permission->roles()->withCount('users')->get()->sum('users_count');
+                                            @endphp
+                                            {{ $totalUsers }}
+                                        </h4>
+                                        <small class="text-muted">Usuarios con este permiso</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Fecha de creación</h6>
+                                        <h4 class="mb-1 fw-bold" style="font-size: 1rem;">{{ $permission->created_at->format('d/m/Y') }}</h4>
+                                        <small class="text-muted">{{ $permission->created_at->diffForHumans() }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-info mb-2">Guard</h6>
+                                        <h4 class="mb-1 fw-bold" style="font-size: 1.2rem;">{{ ucfirst($permission->guard_name) }}</h4>
+                                        <small class="text-muted">Tipo de autenticación</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
