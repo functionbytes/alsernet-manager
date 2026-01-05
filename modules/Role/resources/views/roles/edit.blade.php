@@ -18,36 +18,13 @@
                         <h5 class="mb-0">Editar Rol: {{ $role->name }}</h5>
                         <p class="text-muted mb-0 small">Actualiza la información del rol en el sistema</p>
                     </div>
-                    <div class="col-auto">
-                        <div class="btn-group" role="group">
-                            <a href="{{ route('settings.roles.show.modules', $role->id) }}"
-                               class="btn btn-secondary" title="Gestionar módulos visibles">
-                                <i class="fas fa-cube me-2"></i>Módulos
-                            </a>
-                            <a href="{{ route('settings.roles.show.permissions', $role->id) }}"
-                               class="btn btn-warning" title="Gestionar permisos">
-                                <i class="fas fa-lock me-2"></i>Permisos
-                            </a>
-                            <a href="{{ route('settings.roles.show.users', $role->id) }}"
-                               class="btn btn-info" title="Ver usuarios asignados">
-                                <i class="fas fa-users me-2"></i>Usuarios
-                            </a>
-                            @if(!in_array($role->name, ['super-admin', 'customer']))
-                                <button type="button" class="btn btn-danger delete-btn"
-                                        data-url="{{ route('settings.roles.destroy', $role->id) }}"
-                                        data-title="¿Eliminar rol {{ $role->name }}?">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            @endif
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="card-body">
                 {{-- Sección: Información básica --}}
                 <h6 class="fw-bold mb-3 border-bottom pb-2">
-                    <i class="fas fa-info-circle me-2"></i>Información básica
+                    Información básica
                 </h6>
 
                 <div class="row mb-4">
@@ -77,20 +54,20 @@
 
                 {{-- Sección: Configuración --}}
                 <h6 class="fw-bold mb-3 border-bottom pb-2">
-                    <i class="fas fa-cog me-2"></i>Configuración
+                    Configuración
                 </h6>
 
                 <div class="row mb-4">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label class="form-label">Guard <span class="text-danger">*</span></label>
-                        <select class="form-select" name="guard_name" required>
+                        <select class="form-select select2" name="guard_name" required>
                             <option value="web" {{ $role->guard_name == 'web' ? 'selected' : '' }}>Web (Navegador)</option>
                             <option value="api" {{ $role->guard_name == 'api' ? 'selected' : '' }}>API (Token/OAuth)</option>
                         </select>
                         <small class="text-muted">Define el tipo de autenticación para este rol</small>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <div class="border rounded p-3 h-100">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" name="is_default"

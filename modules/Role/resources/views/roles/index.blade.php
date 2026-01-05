@@ -195,7 +195,7 @@
                                             </ul>
                                         </div>
                                     @else
-                                        <span class="badge bg-warning">
+                                        <span class="badge bg-black">
                                             Sistema
                                         </span>
                                     @endif
