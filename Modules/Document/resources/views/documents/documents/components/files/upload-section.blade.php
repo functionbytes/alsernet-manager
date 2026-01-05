@@ -686,27 +686,33 @@
                     dataType: 'json',
                     success: function(response) {
                         console.log('[reloadDocumentsSection] Response:', response);
+                        console.log('[reloadDocumentsSection] HTML length:', response.html ? response.html.length : 'no html');
+                        console.log('[reloadDocumentsSection] HTML preview:', response.html ? response.html.substring(0, 200) : 'no html');
 
                         if (response.success && response.html) {
                             var $container = $('#uploadSectionContainer');
+                            console.log('[reloadDocumentsSection] Container actual encontrado:', $container.length);
 
                             // Crear un elemento temporal para parsear el HTML
                             var $temp = $('<div/>').append(response.html);
+                            console.log('[reloadDocumentsSection] Elementos en temp:', $temp.length, 'children:', $temp.children().length);
 
                             // Buscar el nuevo contenedor dentro del HTML parseado
                             var $newContainer = $temp.find('#uploadSectionContainer');
+                            console.log('[reloadDocumentsSection] Contenedor nuevo encontrado:', $newContainer.length);
 
                             if ($newContainer.length > 0) {
                                 // Si encontramos un contenedor nuevo, reemplazar solo el contenido
-                                console.log('[reloadDocumentsSection] Reemplazando contenido del contenedor');
+                                console.log('[reloadDocumentsSection] Reemplazando contenido del contenedor - innerHTML length:', $newContainer.html().length);
                                 $container.html($newContainer.html());
                             } else {
                                 // Si no encontramos contenedor, asumir que el HTML es directo
-                                console.log('[reloadDocumentsSection] Reemplazando HTML directo');
+                                console.log('[reloadDocumentsSection] Reemplazando HTML directo - HTML length:', response.html.length);
                                 $container.html(response.html);
                             }
 
-                            console.log('[reloadDocumentsSection] Recarga completada');
+                            console.log('[reloadDocumentsSection] Recarga completada - Container actualizado');
+                            console.log('[reloadDocumentsSection] Contenedor final HTML preview:', $container.html().substring(0, 200));
                         } else {
                             console.error('[reloadDocumentsSection] Respuesta sin success o html:', response);
                             toastr.error('No se pudo actualizar la sección', 'Error', {
