@@ -152,17 +152,17 @@
                 <input type="hidden" name="role_id" value="{{ $role->id }}">
 
                 {{-- Quick Actions Bar --}}
-                <div class="card-body border-bottom bg-light">
+                <div class="card-body border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="mb-0 fw-semibold">Acciones rápidas</h6>
                         </div>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="selectAll">
-                                <i class="fas fa-check-double me-1"></i>Seleccionar todo
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="selectAll">
+                                Seleccionar todo
                             </button>
                             <button type="button" class="btn btn-outline-secondary btn-sm" id="deselectAll">
-                                <i class="fas fa-times me-1"></i>Deseleccionar todo
+                                Deseleccionar todo
                             </button>
                         </div>
                     </div>
@@ -174,36 +174,24 @@
                         <div class="row g-3">
                             @foreach($modules as $moduleId => $moduleName)
                                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                    <div class="card h-100 border module-card {{ in_array($moduleId, $roleModules) ? 'border-primary' : '' }}">
-                                        <div class="card-body p-3">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                                        <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                             style="width: 35px; height: 35px; background-color: {{ in_array($moduleId, $roleModules) ? 'rgba(144, 187, 19, 0.1)' : '#f8f9fa' }};">
-                                                            <i class="fas fa-cube {{ in_array($moduleId, $roleModules) ? 'text-primary' : 'text-muted' }}"></i>
-                                                        </div>
-                                                        <div class="form-check form-switch mb-0">
-                                                            <input class="form-check-input module-checkbox"
-                                                                   type="checkbox"
-                                                                   name="modules[]"
-                                                                   id="module_{{ $moduleId }}"
-                                                                   value="{{ $moduleId }}"
-                                                                   {{ in_array($moduleId, $roleModules) ? 'checked' : '' }}>
-                                                        </div>
-                                                    </div>
-                                                    <label class="form-check-label d-block" for="module_{{ $moduleId }}" style="cursor: pointer;">
-                                                        <strong class="d-block mb-1">{{ $moduleName }}</strong>
-                                                        @if(in_array($moduleId, $roleModules))
-                                                            <span class="badge bg-success-subtle text-success small">Habilitado</span>
-                                                        @else
-                                                            <span class="badge bg-secondary-subtle text-secondary small">Deshabilitado</span>
-                                                        @endif
-                                                    </label>
-                                                </div>
-                                            </div>
+                                    <input type="checkbox"
+                                           class="btn-check module-checkbox"
+                                           name="modules[]"
+                                           id="module_{{ $moduleId }}"
+                                           value="{{ $moduleId }}"
+                                           autocomplete="off"
+                                           {{ in_array($moduleId, $roleModules) ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-primary w-100 text-start d-flex align-items-center gap-3 p-3"
+                                           for="module_{{ $moduleId }}">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                             style="width: 40px; height: 40px; background-color: rgba(144, 187, 19, 0.1);">
+                                            <i class="fas fa-cube"></i>
                                         </div>
-                                    </div>
+                                        <div class="flex-grow-1">
+                                            <strong class="d-block mb-1">{{ $moduleName }}</strong>
+                                            <small class="text-muted d-block">Módulo del sistema</small>
+                                        </div>
+                                    </label>
                                 </div>
                             @endforeach
                         </div>
@@ -220,64 +208,14 @@
                     </div>
                 @endif
 
-                {{-- Summary Section --}}
-                @if(count($modules) > 0)
-                    <div class="card-body border-top bg-light">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                         style="width: 45px; height: 45px; background-color: rgba(144, 187, 19, 0.1);">
-                                        <i class="fas fa-cubes text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold module-total-count">{{ count($roleModules) }}</h6>
-                                        <small class="text-muted">Módulos habilitados</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                         style="width: 45px; height: 45px; background-color: rgba(83, 109, 254, 0.1);">
-                                        <i class="fas fa-th-large text-info"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">{{ count($modules) }}</h6>
-                                        <small class="text-muted">Total módulos</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                         style="width: 45px; height: 45px; background-color: rgba(250, 137, 107, 0.1);">
-                                        <i class="fas fa-percent text-danger"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold module-percentage">{{ count($modules) > 0 ? round((count($roleModules) / count($modules)) * 100) : 0 }}%</h6>
-                                        <small class="text-muted">Cobertura</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 {{-- Footer Actions --}}
                 <div class="card-footer bg-white border-top">
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-save me-2"></i>Guardar cambios
+                            <button type="submit" class="btn btn-primary w-100 mb-1">
+                                Guardar
                             </button>
-                        </div>
-                        <div class="col-md-6">
                             <a href="{{ route('settings.roles.edit', $role->id) }}" class="btn btn-secondary w-100">
-                                <i class="fas fa-times me-2"></i>Cancelar
+                                Cancelar
                             </a>
-                        </div>
-                    </div>
                 </div>
             </form>
 
@@ -291,40 +229,37 @@
 
 @push('styles')
 <style>
-    .module-card {
-        transition: all 0.2s ease;
-        border: 2px solid #dee2e6;
-    }
-
-    .module-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .module-card.border-primary {
-        background-color: rgba(144, 187, 19, 0.02);
-        border-color: #90bb13 !important;
-    }
-
-    /* Green hover effect for checked cards */
-    .module-card.border-primary:hover {
-        background-color: rgba(144, 187, 19, 0.08);
-        border-color: #7a9e11 !important;
-        box-shadow: 0 4px 12px rgba(144, 187, 19, 0.3);
-    }
-
-    /* Normal hover for unchecked cards */
-    .module-card:not(.border-primary):hover {
-        border-color: #adb5bd;
-    }
-
-    .form-check-input:checked {
+    /* Button checkbox styles */
+    .btn-check:checked + .btn-outline-primary {
         background-color: #90bb13;
         border-color: #90bb13;
+        color: white;
     }
 
-    .form-check-input:focus {
+    .btn-check:checked + .btn-outline-primary:hover {
+        background-color: #7a9e11;
+        border-color: #7a9e11;
+    }
+
+    .btn-outline-primary {
+        border-color: #dee2e6;
+        color: #495057;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-primary:hover {
         border-color: #90bb13;
+        background-color: rgba(144, 187, 19, 0.1);
+        color: #495057;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-check:checked + .btn-outline-primary .text-muted {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .btn-check:focus + .btn-outline-primary {
         box-shadow: 0 0 0 0.25rem rgba(144, 187, 19, 0.25);
     }
 </style>
@@ -347,34 +282,19 @@ $(document).ready(function() {
 
     // Handle checkbox changes
     $('.module-checkbox').on('change', function() {
-        const $card = $(this).closest('.module-card');
-        const $badge = $card.find('.badge');
-        const $icon = $card.find('.fa-cube');
-        const $iconBg = $card.find('.rounded-circle');
-
-        if ($(this).is(':checked')) {
-            $card.addClass('border-primary');
-            $badge.removeClass('bg-secondary-subtle text-secondary').addClass('bg-success-subtle text-success').text('Habilitado');
-            $icon.removeClass('text-muted').addClass('text-primary');
-            $iconBg.css('background-color', 'rgba(144, 187, 19, 0.1)');
-        } else {
-            $card.removeClass('border-primary');
-            $badge.removeClass('bg-success-subtle text-success').addClass('bg-secondary-subtle text-secondary').text('Deshabilitado');
-            $icon.removeClass('text-primary').addClass('text-muted');
-            $iconBg.css('background-color', '#f8f9fa');
-        }
-
         updateStats();
     });
 
     // Select All
     $('#selectAll').on('click', function() {
-        $('.module-checkbox').prop('checked', true).trigger('change');
+        $('.module-checkbox').prop('checked', true);
+        updateStats();
     });
 
     // Deselect All
     $('#deselectAll').on('click', function() {
-        $('.module-checkbox').prop('checked', false).trigger('change');
+        $('.module-checkbox').prop('checked', false);
+        updateStats();
     });
 
     // Form submission
