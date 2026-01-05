@@ -228,11 +228,11 @@
 
     <!-- Modal: Assign Users -->
     <div class="modal fade" id="assignUsersModal" tabindex="-1" aria-labelledby="assignUsersModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="assignUsersModalLabel">
-                        <i class="fas fa-user-plus me-2"></i>Asignar usuarios al rol
+                        Asignar usuarios al rol
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -254,11 +254,11 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-2"></i>Cancelar
+                        <button type="submit" class="btn btn-primary w-100 mb-1" id="saveAssignBtn">
+                           Guardar
                         </button>
-                        <button type="submit" class="btn btn-primary" id="saveAssignBtn">
-                            <i class="fas fa-save me-2"></i>Guardar
+                        <button type="button" class="btn btn-secondary w-100 " data-bs-dismiss="modal">
+                            Cancelar
                         </button>
                     </div>
                 </form>
