@@ -236,4 +236,134 @@ class NavService
     {
         self::$menus = [];
     }
+
+    /**
+     * Obtener mini-items que el usuario autenticado puede ver
+     * Filtra por permisos de módulos (modules.view.{moduleId})
+     */
+    public static function getMiniItemsForUser(): Collection
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return collect([]);
+        }
+
+        return self::getMiniItems()->filter(function ($item) use ($user) {
+            $moduleId = $item['id'] ?? null;
+            if (! $moduleId) {
+                return true; // Si no tiene ID, mostrar
+            }
+
+            $permissionName = "modules.view.{$moduleId}";
+
+            // Si el usuario es super-admin, mostrar siempre
+            if ($user->hasRole('super-admin')) {
+                return true;
+            }
+
+            // Verificar si el usuario tiene permiso para este módulo
+            return $user->hasPermissionTo($permissionName);
+        });
+    }
+
+    /**
+     * Obtener sidebars que el usuario autenticado puede ver
+     * Filtra por permisos de módulos (modules.view.{moduleId})
+     */
+    public static function getSidebarsForUser(): array
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return [];
+        }
+
+        $sidebars = [];
+
+        foreach (self::getAllSidebars() as $sidebarId => $sidebar) {
+            $permissionName = "modules.view.{$sidebarId}";
+
+            // Si el usuario es super-admin, mostrar todos
+            if ($user->hasRole('super-admin')) {
+                $sidebars[$sidebarId] = $sidebar;
+
+                continue;
+            }
+
+            // Verificar si el usuario tiene permiso para este módulo
+            if ($user->hasPermissionTo($permissionName)) {
+                $sidebars[$sidebarId] = $sidebar;
+            }
+        }
+
+        return $sidebars;
+    }
+
+    /**
+     * Obtener navegación filtrada por permisos del usuario
+     */
+    public static function getNavigationForUser(): array
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return [];
+        }
+
+        $navigation = [];
+        $miniItems = self::getMiniItemsForUser();
+        $sidebars = self::getSidebarsForUser();
+
+        foreach ($miniItems as $miniItem) {
+            $sidebarId = $miniItem['sidebar_id'] ?? null;
+
+            if ($sidebarId && isset($sidebars[$sidebarId])) {
+                $sidebar = $sidebars[$sidebarId];
+
+                // Soportar nueva estructura de secciones
+                if (isset($sidebar['sections'])) {
+                    $firstSectionTitle = $sidebar['sections'][0]['title'] ?? $sidebarId;
+
+                    $navigation[$sidebarId] = [
+                        'id' => $sidebarId,
+                        'title' => $firstSectionTitle,
+                        'icon' => $miniItem['icon'],
+                        'sections' => $sidebar['sections'],
+                    ];
+                } else {
+                    // Estructura legacy
+                    $navigation[$sidebarId] = [
+                        'id' => $sidebarId,
+                        'title' => $sidebar['title'] ?? $sidebarId,
+                        'icon' => $miniItem['icon'],
+                        'items' => $sidebar['items'] ?? [],
+                    ];
+                }
+            }
+        }
+
+        return $navigation;
+    }
+
+    /**
+     * Verificar si un usuario puede ver un módulo específico
+     */
+    public static function userCanAccessModule(string $moduleId, ?\Illuminate\Foundation\Auth\User $user = null): bool
+    {
+        $user ??= auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        // Super-admin siempre tiene acceso
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        $permissionName = "modules.view.{$moduleId}";
+
+        return $user->hasPermissionTo($permissionName);
+    }
 }

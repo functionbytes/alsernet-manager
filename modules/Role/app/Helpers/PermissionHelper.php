@@ -158,4 +158,62 @@ class PermissionHelper
                 return false;
         }
     }
+
+    /**
+     * Verificar si el usuario puede ver un módulo específico
+     *
+     * @param  string  $moduleId  ID del módulo (ej: 'documents', 'users', 'warehouse')
+     */
+    public static function canViewModule($moduleId): bool
+    {
+        if (! Auth::check()) {
+            return false;
+        }
+
+        $user = Auth::user();
+
+        // Super-admin siempre ve todos los módulos
+        if ($user->hasRole('super-admin')) {
+            return true;
+        }
+
+        // Verificar permiso específico del módulo
+        $permissionName = "modules.view.{$moduleId}";
+
+        return $user->hasPermissionTo($permissionName);
+    }
+
+    /**
+     * Obtener todos los módulos visibles para el usuario actual
+     *
+     * @return array Array con IDs de módulos [' documents', 'users', ...]
+     */
+    public static function getVisibleModules(): array
+    {
+        if (! Auth::check()) {
+            return [];
+        }
+
+        $user = Auth::user();
+
+        // Si es super-admin, retornar todos los módulos
+        if ($user->hasRole('super-admin')) {
+            return [
+                'documents', 'mailers', 'media', 'users', 'events',
+                'warehouse', 'webhooks', 'roles', 'auth', 'notifications',
+                'backups', 'settings', 'helpdesk', 'campaigns', 'suppliers', 'analytics',
+            ];
+        }
+
+        // Obtener permisos del usuario y extraer IDs de módulos
+        $permissions = $user->getPermissionsViaRoles()
+            ->where('name', 'like', 'modules.view.%')
+            ->pluck('name')
+            ->map(function ($name) {
+                return str_replace('modules.view.', '', $name);
+            })
+            ->toArray();
+
+        return $permissions;
+    }
 }

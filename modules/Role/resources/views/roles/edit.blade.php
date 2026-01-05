@@ -20,6 +20,10 @@
                     </div>
                     <div class="col-auto">
                         <div class="btn-group" role="group">
+                            <a href="{{ route('settings.roles.show.modules', $role->id) }}"
+                               class="btn btn-secondary" title="Gestionar módulos visibles">
+                                <i class="fas fa-cube me-2"></i>Módulos
+                            </a>
                             <a href="{{ route('settings.roles.show.permissions', $role->id) }}"
                                class="btn btn-warning" title="Gestionar permisos">
                                 <i class="fas fa-lock me-2"></i>Permisos

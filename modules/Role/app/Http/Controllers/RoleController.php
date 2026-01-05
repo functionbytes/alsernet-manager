@@ -314,4 +314,83 @@ class RoleController extends BaseManagerController
 
         return view('role::roles.users', compact('role', 'users', 'search'));
     }
+
+    /**
+     * Show modules that can be viewed by a role
+     */
+    public function showModules(Role $role)
+    {
+        // Lista de módulos disponibles (debe coincidir con ModulePermissionsSeeder)
+        $modules = [
+            'documents' => 'Documentos',
+            'mailers' => 'Emails',
+            'media' => 'Gestor de Medios',
+            'users' => 'Usuarios',
+            'events' => 'Eventos',
+            'warehouse' => 'Almacén',
+            'webhooks' => 'Webhooks',
+            'roles' => 'Roles y Permisos',
+            'auth' => 'Seguridad',
+            'notifications' => 'Notificaciones',
+            'backups' => 'Copias de seguridad',
+            'settings' => 'Configuraciones',
+            'helpdesk' => 'Helpdesk',
+            'campaigns' => 'Campañas',
+            'suppliers' => 'Proveedores',
+            'analytics' => 'Analytics',
+        ];
+
+        // Obtener los módulos que actualmente tiene permiso este rol
+        $roleModules = $role->permissions()
+            ->where('name', 'like', 'modules.view.%')
+            ->pluck('name')
+            ->map(function ($name) {
+                return str_replace('modules.view.', '', $name);
+            })
+            ->toArray();
+
+        return view('role::roles.modules', compact('role', 'modules', 'roleModules'));
+    }
+
+    /**
+     * Update modules that can be viewed by a role
+     */
+    public function updateModules(Request $request, Role $role)
+    {
+        $request->validate([
+            'modules' => 'array',
+            'modules.*' => 'string',
+        ]);
+
+        $modules = $request->input('modules', []);
+
+        // Obtener todos los permisos de módulos para este rol
+        $modulePermissions = Permission::where('guard_name', $role->guard_name)
+            ->where('name', 'like', 'modules.view.%')
+            ->get();
+
+        // Sincronizar: solo mantener los permisos de módulos seleccionados
+        $permissionsToSync = [];
+        foreach ($modules as $moduleId) {
+            $permission = $modulePermissions->firstWhere('name', "modules.view.{$moduleId}");
+            if ($permission) {
+                $permissionsToSync[] = $permission->id;
+            }
+        }
+
+        // Primero, remover todos los permisos de módulos actuales
+        $role->permissions()
+            ->where('guard_name', $role->guard_name)
+            ->whereIn('id', $modulePermissions->pluck('id'))
+            ->detach();
+
+        // Luego, asignar los nuevos permisos de módulos
+        if (! empty($permissionsToSync)) {
+            $role->permissions()->attach($permissionsToSync);
+        }
+
+        return $this->success('Módulos actualizados correctamente', [
+            'modules' => $modules,
+        ]);
+    }
 }

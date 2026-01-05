@@ -2,8 +2,10 @@
 
 @php
     use App\Services\NavService;
-    $miniItems = NavService::getMiniItems();
-    $allSidebars = NavService::getAllSidebars();
+
+    // Obtener items y sidebars filtrados por permisos del usuario
+    $miniItems = NavService::getMiniItemsForUser();
+    $allSidebars = NavService::getSidebarsForUser();
 
     // Detectar qué sidebar debe estar activo basado en la ruta actual
     $activeSidebarId = null;
