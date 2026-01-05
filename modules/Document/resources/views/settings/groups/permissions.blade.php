@@ -158,9 +158,8 @@
                             </button>
                             @if ($permissionsByCategory->count() > 1)
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-layer-group me-1"></i>Por categoría
+                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Por categoría
                                     </button>
                                     <ul class="dropdown-menu">
                                         @foreach ($permissionsByCategory as $category => $permissions)
@@ -268,13 +267,17 @@
     }
 
     /* Hide the checkbox input but keep it functional */
-    .permission-checkbox .form-check-input {
-        position: absolute;
+    .permission-checkbox.form-check .form-check-input.permission-input,
+    .permission-checkbox .permission-input {
+        position: absolute !important;
         opacity: 0 !important;
         width: 0 !important;
         height: 0 !important;
         margin: 0 !important;
-        pointer-events: none;
+        padding: 0 !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+        visibility: hidden !important;
     }
 
     /* Normal hover effect */
