@@ -12,7 +12,7 @@
             @csrf
             <input type="hidden" name="id" id="id" value="{{ $role->id }}">
 
-            <div class="card-header bg-white border-bottom">
+            <div class="card-header bg-white">
                 <div class="row align-items-center">
                     <div class="col">
                         <h5 class="mb-0">Editar Rol: {{ $role->name }}</h5>
@@ -23,7 +23,7 @@
 
             <div class="card-body">
                 {{-- Sección: Información básica --}}
-                <h6 class="fw-bold mb-3 border-bottom pb-2">
+                <h6 class="fw-bold mb-3 pb-2">
                     Información básica
                 </h6>
 
@@ -53,7 +53,7 @@
                 </div>
 
                 {{-- Sección: Configuración --}}
-                <h6 class="fw-bold mb-3 border-bottom pb-2">
+                <h6 class="fw-bold mb-3 pb-2">
                     Configuración
                 </h6>
 
@@ -89,20 +89,16 @@
                 @endif
             </div>
 
-            <div class="card-footer bg-white border-top">
-                <div class="row">
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary w-100 mb-2">
-                            <i class="fas fa-save me-2"></i>Guardar Cambios
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{{ route('settings.roles.index') }}" class="btn btn-light w-100 mb-2">
-                            <i class="fas fa-times me-2"></i>Cancelar
-                        </a>
-                    </div>
-                </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
+                    Guardar
+                </button>
+                <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                    Volver
+                </a>
             </div>
+
+
         </form>
     </div>
 
@@ -158,7 +154,7 @@ $(document).ready(function() {
 
             $.ajax({
                 url: "{{ route('settings.roles.update', $role->id) }}",
-                type: "POST",
+                type: "PUT",
                 data: new FormData(form),
                 contentType: false,
                 processData: false,
