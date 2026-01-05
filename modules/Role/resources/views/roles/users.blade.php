@@ -362,7 +362,10 @@
                         success: function(response) {
                             if (response.success) {
                                 toastr.success(response.message, 'Éxito', { positionClass: 'toast-bottom-right' });
-                                setTimeout(() => location.reload(), 1500);
+                                // Remove the user row from the table
+                                $('button[data-user-id="' + userId + '"]').closest('tr').fadeOut(300, function() {
+                                    $(this).remove();
+                                });
                             } else {
                                 toastr.error(response.message, 'Error', { positionClass: 'toast-bottom-right' });
                             }
