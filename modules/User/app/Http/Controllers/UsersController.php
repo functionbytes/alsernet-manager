@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role as SpatieRole;
 
 class UsersController extends Controller
@@ -75,37 +74,52 @@ class UsersController extends Controller
     {
         // Validate request data
         $request->validate([
-            'firstname' => 'required|string|min:3|max:100',
-            'lastname' => 'required|string|min:3|max:100',
+            'firstname' => 'required|string|min:2|max:100',
+            'lastname' => 'required|string|min:2|max:100',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'available' => 'required|boolean',
-            'role' => 'required|numeric|exists:roles,id',
-            // 'shop' validation removed,
+            'password' => 'required|string|min:8',
+            'available' => 'required|in:0,1',
+            'role' => 'required|string|exists:roles,name',
+            'identification' => 'nullable|string|max:50',
+            'cellphone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'company' => 'nullable|string|max:100',
+            'timezone' => 'nullable|string|timezone',
+            'verified' => 'nullable|in:0,1',
         ], [
             'email.unique' => 'El correo electrónico ya está registrado en el sistema.',
             'email.required' => 'El correo electrónico es requerido.',
             'role.exists' => 'El rol seleccionado no existe.',
+            'timezone.timezone' => 'La zona horaria seleccionada no es válida.',
         ]);
 
         try {
             $user = new User;
-            $user->uid = $this->generate_uid('users');
-            $user->firstname = Str::upper($request->firstname);
-            $user->lastname = Str::upper($request->lastname);
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->available = (bool) $request->available;
+            $user->identification = $request->identification;
+            $user->cellphone = $request->cellphone;
+            $user->address = $request->address;
+            $user->company = $request->company;
+            $user->timezone = $request->timezone ?? 'UTC';
+
+            // Set email_verified_at if verified is true
+            if ($request->verified === '1' || $request->verified === 1) {
+                $user->email_verified_at = now();
+            }
+
             $user->save();
 
-            // Assign role using Spatie relationship
-            $role = SpatieRole::findOrFail($request->role);
-            $user->assignRole($role->name);
+            // Assign role using Spatie relationship (using role name)
+            $user->assignRole($request->role);
 
             Log::info('Usuario creado exitosamente', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
-                'assigned_role' => $role->name,
+                'assigned_role' => $request->role,
             ]);
 
             return response()->json([
@@ -176,29 +190,50 @@ class UsersController extends Controller
 
         // Validate request data
         $request->validate([
-            'firstname' => 'required|string|min:3|max:100',
-            'lastname' => 'required|string|min:3|max:100',
+            'firstname' => 'required|string|min:2|max:100',
+            'lastname' => 'required|string|min:2|max:100',
             'email' => "required|email|unique:users,email,{$user->id}",
-            'available' => 'required|boolean',
+            'available' => 'required|in:0,1',
             'role' => 'required|numeric|exists:roles,id',
-            // 'shop' validation removed,
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:8',
+            'identification' => 'nullable|string|max:50',
+            'cellphone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'company' => 'nullable|string|max:100',
+            'timezone' => 'nullable|string|timezone',
+            'verified' => 'nullable|in:0,1',
         ], [
             'email.unique' => 'El correo electrónico ya está registrado en otro usuario.',
             'role.exists' => 'El rol seleccionado no existe.',
+            'timezone.timezone' => 'La zona horaria seleccionada no es válida.',
         ]);
 
         try {
             // Update basic user data
-            $user->firstname = Str::upper($request->firstname);
-            $user->lastname = Str::upper($request->lastname);
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
             $user->email = $request->email;
+            $user->available = (bool) $request->available;
+            $user->identification = $request->identification;
+            $user->cellphone = $request->cellphone;
+            $user->address = $request->address;
+            $user->company = $request->company;
+            $user->timezone = $request->timezone ?? 'UTC';
 
+            // Update password if provided
             if ($request->filled('password')) {
                 $user->password = bcrypt($request->password);
             }
 
-            $user->available = (bool) $request->available;
+            // Update email verification status
+            if ($request->verified === '1' || $request->verified === 1) {
+                if (! $user->email_verified_at) {
+                    $user->email_verified_at = now();
+                }
+            } else {
+                $user->email_verified_at = null;
+            }
+
             $user->save();
 
             // Update role
