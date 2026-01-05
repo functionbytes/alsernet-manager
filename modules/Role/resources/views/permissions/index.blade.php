@@ -1,219 +1,234 @@
 @extends('layouts.theme')
 
+@section('page_title', 'Gestión de Permisos')
+
 @section('content')
 
     @include('theme.components.card', ['title' => 'Gestión de Permisos'])
 
-    {{-- Alertas --}}
-    @include('theme.components.alerts')
+    <div class="widget-content searchable-container list">
 
-    <div class="card">
-        <div class="card-header bg-white border-bottom">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h5 class="mb-0">Permisos del Sistema</h5>
-                    <p class="text-muted mb-0 small">Administra los permisos disponibles para los roles</p>
-                </div>
-                <div class="col-auto">
-                    <a href="{{ route('settings.permissions.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Crear Permiso
-                    </a>
-                </div>
-            </div>
-        </div>
+        @include('theme.components.alerts')
 
-        {{-- Stats Cards --}}
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card bg-light-primary border-0 mb-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <i class="fas fa-key fa-2x text-primary"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">{{ $permissions->total() }}</h6>
-                                    <small class="text-muted">Total Permisos</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light-success border-0 mb-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <i class="fas fa-globe fa-2x text-success"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">{{ \Spatie\Permission\Models\Permission::where('guard_name', 'web')->count() }}</h6>
-                                    <small class="text-muted">Permisos Web</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light-info border-0 mb-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <i class="fas fa-server fa-2x text-info"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">{{ \Spatie\Permission\Models\Permission::where('guard_name', 'api')->count() }}</h6>
-                                    <small class="text-muted">Permisos API</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light-warning border-0 mb-0">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <i class="fas fa-shield-alt fa-2x text-warning"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">{{ \Spatie\Permission\Models\Role::count() }}</h6>
-                                    <small class="text-muted">Roles Totales</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Search Form --}}
-        <div class="card-body border-top">
-            <form action="{{ route('settings.permissions.index') }}" method="GET">
-                <div class="row g-2">
-                    <div class="col-md-10">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text" class="form-control" name="search"
-                                   placeholder="Buscar por nombre de permiso..."
-                                   value="{{ request('search') }}">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-filter me-2"></i>Filtrar
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        {{-- Table --}}
-        <div class="card-body pt-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th width="5%">#</th>
-                            <th>Nombre del Permiso</th>
-                            <th>Guard</th>
-                            <th width="10%" class="text-center">Roles Asignados</th>
-                            <th width="15%">Fecha de Creación</th>
-                            <th width="10%" class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($permissions as $key => $permission)
-                            <tr>
-                                <td>{{ $permissions->firstItem() + $key }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-3">
-                                            <i class="fas fa-key text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0">{{ $permission->name }}</h6>
-                                            @if($permission->description)
-                                                <small class="text-muted">{{ Str::limit($permission->description, 50) }}</small>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    @if($permission->guard_name === 'web')
-                                        <span class="badge bg-light-success text-success">
-                                            <i class="fas fa-globe me-1"></i>Web
-                                        </span>
-                                    @elseif($permission->guard_name === 'api')
-                                        <span class="badge bg-light-info text-info">
-                                            <i class="fas fa-server me-1"></i>API
-                                        </span>
-                                    @else
-                                        <span class="badge bg-light-secondary text-dark">{{ $permission->guard_name }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary">{{ $permission->roles()->count() }}</span>
-                                </td>
-                                <td>
-                                    <small>{{ $permission->created_at->format('d/m/Y H:i') }}</small>
-                                </td>
-                                <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            @can('permissions.edit')
-                                                <li>
-                                                    <a href="{{ route('settings.permissions.edit', $permission->id) }}" class="dropdown-item">
-                                                        <i class="fas fa-edit me-2"></i>Editar
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('permissions.delete')
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    <a href="#" class="dropdown-item text-danger delete-btn"
-                                                       data-url="{{ route('settings.permissions.destroy', $permission->id) }}"
-                                                       data-title="¿Eliminar permiso {{ $permission->name }}?">
-                                                        <i class="fas fa-trash me-2"></i>Eliminar
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">No se encontraron permisos</p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        {{-- Pagination --}}
-        @if($permissions->hasPages())
-            <div class="card-footer bg-white">
+        <div class="card">
+            <div class="card-header p-4 border-bottom border-light">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-muted small">
-                        Mostrando {{ $permissions->firstItem() }} - {{ $permissions->lastItem() }} de {{ $permissions->total() }} resultados
-                    </div>
                     <div>
-                        {{ $permissions->links() }}
+                        <h5 class="mb-1 fw-bold">Permisos del sistema</h5>
+                        <p class="small mb-0 text-muted">Administra los permisos disponibles para los roles</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        @if(request('search'))
+                            <a href="{{ route('settings.permissions.index') }}" class="btn btn-secondary">
+                                Limpiar búsqueda
+                            </a>
+                        @endif
+                        <a href="{{ route('settings.permissions.create') }}" class="btn btn-primary">
+                            Crear Permiso
+                        </a>
                     </div>
                 </div>
             </div>
-        @endif
+
+            {{-- Stats Cards --}}
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $permissions->total() }}</h4>
+                                        <small class="text-muted">Total Permisos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Permisos Web</h6>
+                                        <h4 class="mb-1 fw-bold">{{ \Spatie\Permission\Models\Permission::where('guard_name', 'web')->count() }}</h4>
+                                        <small class="text-muted">Guard Web</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-info mb-2">Permisos API</h6>
+                                        <h4 class="mb-1 fw-bold">{{ \Spatie\Permission\Models\Permission::where('guard_name', 'api')->count() }}</h4>
+                                        <small class="text-muted">Guard API</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Roles</h6>
+                                        <h4 class="mb-1 fw-bold">{{ \Spatie\Permission\Models\Role::count() }}</h4>
+                                        <small class="text-muted">Roles Totales</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Search Section --}}
+            <div class="card-body border-bottom">
+                <form action="{{ route('settings.permissions.index') }}" method="GET">
+                    <div class="row align-items-center">
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="search" name="search" class="form-control"
+                                       placeholder="Buscar por nombre de permiso..."
+                                       value="{{ request('search') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Table --}}
+            <div class="card-body">
+                @if($permissions->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre del Permiso</th>
+                                    <th>Guard</th>
+                                    <th class="text-center">Roles Asignados</th>
+                                    <th>Fecha de Creación</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($permissions as $key => $permission)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <a href="{{ route('settings.permissions.edit', $permission->id) }}" class="text-decoration-none">
+                                                        {{ $permission->name }}
+                                                    </a>
+                                                    @if($permission->description)
+                                                        <small class="d-block text-muted">{{ Str::limit($permission->description, 50) }}</small>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if($permission->guard_name === 'web')
+                                                <span class="badge bg-success-subtle text-success">
+                                                    <i class="fas fa-globe me-1"></i>Web
+                                                </span>
+                                            @elseif($permission->guard_name === 'api')
+                                                <span class="badge bg-info-subtle text-info">
+                                                    <i class="fas fa-server me-1"></i>API
+                                                </span>
+                                            @else
+                                                <span class="badge bg-light-subtle text-black">{{ $permission->guard_name }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary-subtle text-primary">{{ $permission->roles()->count() }}</span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ $permission->created_at->format('d/m/Y H:i') }}</small>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-vertical"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    @can('permissions.edit')
+                                                        <li>
+                                                            <a href="{{ route('settings.permissions.edit', $permission->id) }}" class="dropdown-item">
+                                                                Editar
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('permissions.delete')
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li>
+                                                            <button type="button" class="dropdown-item delete-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete-modal"
+                                                                data-url="{{ route('settings.permissions.destroy', $permission->id) }}"
+                                                                data-title="Eliminar permiso: {{ $permission->name }}">
+                                                                Eliminar
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="text-center py-5">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="round-48 rounded-circle bg-light-subtle text-muted mb-3 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-key fs-7"></i>
+                            </div>
+                            <h6 class="mb-1">No hay permisos para mostrar</h6>
+                            <p class="text-muted mb-3">
+                                @if(request('search'))
+                                    No se encontraron resultados
+                                @else
+                                    Crea tu primer permiso para gestionar accesos del sistema
+                                @endif
+                            </p>
+                            @if(!request('search'))
+                                <a href="{{ route('settings.permissions.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Crear Primer Permiso
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Pagination --}}
+            @if($permissions->hasPages())
+                <div class="card-footer bg-white border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted small">
+                            Mostrando <strong>{{ $permissions->firstItem() }}</strong> a <strong>{{ $permissions->lastItem() }}</strong>
+                            de <strong>{{ $permissions->total() }}</strong> permisos
+                        </div>
+                        <nav aria-label="Page navigation">
+                            {{ $permissions->links() }}
+                        </nav>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 
     {{-- Delete Modal --}}
@@ -224,16 +239,29 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Delete confirmation
+    // Delete modal functionality
     $('.delete-btn').on('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+
         const deleteUrl = $(this).data('url');
         const deleteTitle = $(this).data('title');
 
         $('#delete-modal .modal-title').text(deleteTitle);
         $('#delete-form').attr('action', deleteUrl);
-        $('#delete-modal').modal('show');
+
+        // Show the modal explicitly
+        const deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
+        deleteModal.show();
     });
+
+    @if (session('success'))
+    toastr.success('{{ session('success') }}', 'Éxito');
+    @endif
+
+    @if (session('error'))
+    toastr.error('{{ session('error') }}', 'Error');
+    @endif
 });
 </script>
 @endpush
