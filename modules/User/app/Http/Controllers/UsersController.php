@@ -225,13 +225,13 @@ class UsersController extends Controller
                 $user->password = bcrypt($request->password);
             }
 
-            // Update email verification status
+            // Update mail verification status
             if ($request->verified === '1' || $request->verified === 1) {
-                if (! $user->email_verified_at) {
-                    $user->email_verified_at = now();
+                if (! $user->mail_verified_at) {
+                    $user->mail_verified_at = now();
                 }
             } else {
-                $user->email_verified_at = null;
+                $user->mail_verified_at = null;
             }
 
             $user->save();
