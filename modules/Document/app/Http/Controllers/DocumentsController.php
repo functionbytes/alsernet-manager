@@ -1393,10 +1393,22 @@ class DocumentsController extends Controller
         $uploadedDocs = [];
         $allMedia = $document->media()->where('collection_name', 'documents')->get();
 
+        \Log::info('[manage] Debug:', [
+            'uid' => $uid,
+            'required_documents' => array_keys($requiredDocuments),
+            'all_media_count' => $allMedia->count(),
+            'media_types' => $allMedia->map(fn ($m) => $m->getCustomProperty('document_type', 'documento'))->toArray(),
+        ]);
+
         foreach ($allMedia as $media) {
-            $docType = $media->getCustomProperty('document_type', 'documento');
+            $docType = $media->getCustomProperty('document_type', 'documents');
             $uploadedDocs[$docType] = $media;
         }
+
+        \Log::info('[manage] Uploaded docs:', [
+            'uploaded_docs_count' => count($uploadedDocs),
+            'uploaded_docs_keys' => array_keys($uploadedDocs),
+        ]);
 
         // Calcular documentos faltantes
         $missingDocs = array_diff_key($requiredDocuments, $uploadedDocs);
@@ -1886,10 +1898,22 @@ class DocumentsController extends Controller
             $uploadedDocs = [];
             $allMedia = $document->media()->where('collection_name', 'documents')->get();
 
+            \Log::info('[refreshDocumentsSection] Debug:', [
+                'uid' => $uid,
+                'required_documents' => array_keys($requiredDocuments),
+                'all_media_count' => $allMedia->count(),
+                'media_types' => $allMedia->map(fn ($m) => $m->getCustomProperty('document_type', 'documento'))->toArray(),
+            ]);
+
             foreach ($allMedia as $media) {
                 $docType = $media->getCustomProperty('document_type', 'documento');
                 $uploadedDocs[$docType] = $media;
             }
+
+            \Log::info('[refreshDocumentsSection] Uploaded docs:', [
+                'uploaded_docs_count' => count($uploadedDocs),
+                'uploaded_docs_keys' => array_keys($uploadedDocs),
+            ]);
 
             // Calcular documentos faltantes
             $missingDocs = array_diff_key($requiredDocuments, $uploadedDocs);
