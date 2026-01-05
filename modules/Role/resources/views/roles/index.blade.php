@@ -15,6 +15,9 @@
                     <p class="text-muted mb-0 small">Administra los roles y permisos de usuario</p>
                 </div>
                 <div class="col-auto">
+                    <a href="{{ route('settings.roles.matrix') }}" class="btn btn-info me-2">
+                        <i class="fas fa-table me-2"></i>Matriz de Permisos
+                    </a>
                     <a href="{{ route('settings.roles.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Crear Rol
                     </a>

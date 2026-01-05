@@ -273,6 +273,27 @@ class RoleController extends BaseManagerController
      */
     public function updatePermissions(Request $request, Role $role)
     {
+        // Handle individual permission toggle (from permission matrix)
+        if ($request->has('permission_id') && $request->has('action')) {
+            $permissionId = $request->input('permission_id');
+            $action = $request->input('action');
+
+            $permission = Permission::findOrFail($permissionId);
+
+            if ($action === 'attach') {
+                $role->givePermissionTo($permission);
+            } elseif ($action === 'detach') {
+                $role->revokePermissionTo($permission);
+            }
+
+            return $this->success('Permiso actualizado correctamente', [
+                'permission' => $permission->name,
+                'action' => $action,
+                'role' => $role->name,
+            ]);
+        }
+
+        // Handle bulk permissions update (from permissions page)
         $request->validate([
             'permissions' => 'required|array',
             'permissions.*' => 'exists:permissions,id',
@@ -284,7 +305,7 @@ class RoleController extends BaseManagerController
 
         $role->syncPermissions($permissions);
 
-        return $this->success('Permissions updated successfully', [
+        return $this->success('Permisos actualizados correctamente', [
             'assigned' => $permissions->pluck('name'),
         ]);
     }
@@ -392,5 +413,43 @@ class RoleController extends BaseManagerController
         return $this->success('Módulos actualizados correctamente', [
             'modules' => $modules,
         ]);
+    }
+
+    /**
+     * Show permission matrix for all roles
+     */
+    public function showPermissionMatrix()
+    {
+        // Get all roles
+        $roles = Role::orderBy('name')->get();
+
+        // Get all permissions grouped by module and then by category
+        $permissions = Permission::orderBy('name')->get();
+
+        // Group permissions by module, then by category/action
+        $permissionsByModule = $permissions->groupBy(function ($permission) {
+            $parts = explode('.', $permission->name);
+
+            return $parts[0] ?? 'other';
+        })->map(function ($modulePermissions) {
+            return $modulePermissions->groupBy(function ($permission) {
+                $parts = explode('.', $permission->name);
+
+                return $parts[1] ?? 'general';
+            });
+        });
+
+        // Get role permissions mapped by role_id => [permission_ids]
+        $rolePermissions = [];
+        foreach ($roles as $role) {
+            $rolePermissions[$role->id] = $role->permissions()->pluck('id')->toArray();
+        }
+
+        return view('role::roles.matrix', compact(
+            'roles',
+            'permissions',
+            'permissionsByModule',
+            'rolePermissions'
+        ));
     }
 }

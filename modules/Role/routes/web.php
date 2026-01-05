@@ -8,6 +8,7 @@ use Modules\Role\Http\Controllers\RoleController;
 Route::prefix('roles')->name('roles.')->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('index');
     Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::get('/matrix', [RoleController::class, 'showPermissionMatrix'])->name('matrix');
     Route::get('{role}/show', [RoleController::class, 'show'])->name('show');
     Route::get('{role}/edit', [RoleController::class, 'edit'])->name('edit');
     Route::get('{role}/modules', [RoleController::class, 'showModules'])->name('show.modules');
