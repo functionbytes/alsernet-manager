@@ -85,54 +85,58 @@
             <form action="{{ route('settings.documents.groups.permissions.update', $group) }}" method="POST" id="permissionsForm">
                 @csrf
 
-                {{-- Statistics Section --}}
+                {{-- Statistics Cards --}}
                 <div class="card-body border-bottom">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 50px; height: 50px; background-color: rgba(144, 187, 19, 0.1);">
-                                    <i class="fas fa-shield-alt fs-4 text-primary"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold" id="totalPermissions">{{ $permissionsByCategory->flatten()->count() }}</h6>
-                                    <small class="text-muted">Permisos disponibles</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 50px; height: 50px; background-color: rgba(19, 198, 114, 0.1);">
-                                    <i class="fas fa-check-circle fs-4 text-success"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-success" id="selectedPermissions">{{ count($currentPermissions) }}</h6>
-                                    <small class="text-muted">Permisos asignados</small>
+                            <div class="card bg-light-secondary stat-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-primary mb-2">Total</h6>
+                                            <h4 class="mb-1 fw-bold" id="totalPermissions">{{ $permissionsByCategory->flatten()->count() }}</h4>
+                                            <small class="text-muted">Permisos disponibles</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 50px; height: 50px; background-color: rgba(83, 109, 254, 0.1);">
-                                    <i class="fas fa-layer-group fs-4 text-info"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold" id="categoryCount">{{ $permissionsByCategory->count() }}</h6>
-                                    <small class="text-muted">Categorías</small>
+                            <div class="card bg-light-secondary stat-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-success mb-2">Asignados</h6>
+                                            <h4 class="mb-1 fw-bold" id="selectedPermissions">{{ count($currentPermissions) }}</h4>
+                                            <small class="text-muted">Permisos activos</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 50px; height: 50px; background-color: rgba(254, 201, 15, 0.1);">
-                                    <i class="fas fa-users fs-4 text-warning"></i>
+                            <div class="card bg-light-secondary stat-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-info mb-2">Categorías</h6>
+                                            <h4 class="mb-1 fw-bold" id="categoryCount">{{ $permissionsByCategory->count() }}</h4>
+                                            <small class="text-muted">Grupos de permisos</small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold" id="userCount">{{ $group->users()->count() }}</h6>
-                                    <small class="text-muted">Usuarios en el grupo</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light-secondary stat-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div>
+                                            <h6 class="card-title text-warning mb-2">Usuarios</h6>
+                                            <h4 class="mb-1 fw-bold" id="userCount">{{ $group->users()->count() }}</h4>
+                                            <small class="text-muted">En este grupo</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
