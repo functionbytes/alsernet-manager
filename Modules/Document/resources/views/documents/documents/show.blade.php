@@ -25,6 +25,7 @@
                             <label class="form-label fw-semibold text-muted">Referencia</label>
                             <p class="mb-0">{{ $document->order_reference ?? '-' }}</p>
                         </div>
+                        </div>
                         <div class="col-sm-12 col-md-6">
                             <label class="form-label fw-semibold text-muted">Tipo de documento</label>
                             <p class="mb-0">
@@ -289,7 +290,7 @@
                     @endif
                     @if(auth()->user()->canDocument('route-all-documents'))
                         <a href="{{ route('documents.index') }}" class="btn btn-secondary w-100">
-                            <i class="fas fa-arrow-left me-1"></i> Volver a documentos
+                            Volver a documentos
                         </a>
                     @endif
                 </div>

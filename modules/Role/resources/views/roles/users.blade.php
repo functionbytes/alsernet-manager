@@ -278,7 +278,7 @@
                 allowClear: true,
                 multiple: true,
                 ajax: {
-                    url: '{{ route("backups.users.search") }}',
+                    url: '{{ route("settings.users.search") }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
@@ -356,12 +356,10 @@
 
                 if (confirm('¿Estás seguro de que deseas remover a ' + userName + ' de este rol?')) {
                     $.ajax({
-                        url: '{{ route("backups.roles.remove.user") }}',
-                        type: 'POST',
+                        url: '{{ url("/settings/roles/" . $role->id . "/users/") }}/' + userId,
+                        type: 'DELETE',
                         data: {
-                            _token: '{{ csrf_token() }}',
-                            user_id: userId,
-                            role_id: roleId
+                            _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
                             if (response.success) {

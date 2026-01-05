@@ -259,6 +259,37 @@ class UsersController extends Controller
     }
 
     /**
+     * Search users for Select2 dropdown
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('q', '');
+
+        $users = User::where('is_active', true)
+            ->where(function ($q) use ($query) {
+                $q->where('firstname', 'like', "%{$query}%")
+                    ->orWhere('lastname', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%")
+                    ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", ["%{$query}%"]);
+            })
+            ->select('id', 'firstname', 'lastname', 'email')
+            ->limit(20)
+            ->get();
+
+        $results = $users->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'text' => "{$user->firstname} {$user->lastname}",
+                'first_name' => $user->firstname,
+                'last_name' => $user->lastname,
+                'email' => $user->email,
+            ];
+        });
+
+        return response()->json($results);
+    }
+
+    /**
      * Determine if a shop should be assigned to a user based on their role
      */
     private function shouldAssignShop($roleId): bool
