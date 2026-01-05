@@ -10,7 +10,72 @@
                     <div class="card-body">
                         <h5 class="mb-0">Gestionar permisos para el rol: <strong>{{ $role->name }}</strong></h5>
                         <p class="card-subtitle mt-1 mb-3">Selecciona los permisos que deseas asignar a este rol.</p>
+                    </div>
 
+                    <div class="card-body border-bottom">
+                        <div class="row g-3">
+                            @php
+                                $totalPermissions = $permissions->count();
+                                $assignedPermissions = count(is_array($rolePermissions) ? $rolePermissions : $rolePermissions->toArray());
+                                $unassignedPermissions = $totalPermissions - $assignedPermissions;
+                                $groupedCount = $permissions->groupBy(fn($perm) => explode('.', $perm->name)[0])->count();
+                            @endphp
+                            <div class="col-md-3">
+                                <div class="card bg-light-secondary stat-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            <div>
+                                                <h6 class="card-title text-primary mb-2">Total</h6>
+                                                <h4 class="mb-1 fw-bold">{{ $totalPermissions }}</h4>
+                                                <small class="text-muted">Permisos disponibles</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light-secondary stat-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            <div>
+                                                <h6 class="card-title text-success mb-2">Asignados</h6>
+                                                <h4 class="mb-1 fw-bold">{{ $assignedPermissions }}</h4>
+                                                <small class="text-muted">Permisos activos</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light-secondary stat-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            <div>
+                                                <h6 class="card-title text-warning mb-2">Sin asignar</h6>
+                                                <h4 class="mb-1 fw-bold">{{ $unassignedPermissions }}</h4>
+                                                <small class="text-muted">Permisos disponibles</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light-secondary stat-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            <div>
+                                                <h6 class="card-title text-info mb-2">Grupos</h6>
+                                                <h4 class="mb-1 fw-bold">{{ $groupedCount }}</h4>
+                                                <small class="text-muted">Categorías de permisos</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
                         <div class="row" id="permissionsContainer">
                             @php
                                 $rolePermissionsArray = is_array($rolePermissions) ? $rolePermissions : $rolePermissions->toArray();
