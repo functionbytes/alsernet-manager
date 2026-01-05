@@ -28,65 +28,11 @@
                     </div>
                     <div class="d-flex gap-2">
                         <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-shield-alt me-2"></i>Ver roles
+                            Ver roles
                         </a>
                         <a href="{{ route('settings.users.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Nuevo usuario
+                            Nuevo usuario
                         </a>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Stats Section --}}
-            <div class="card-body border-bottom">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                 style="width: 50px; height: 50px; background-color: rgba(144, 187, 19, 0.1);">
-                                <i class="fas fa-users fs-4 text-primary"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ $users->total() }}</h6>
-                                <small class="text-muted">Total usuarios</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                 style="width: 50px; height: 50px; background-color: rgba(19, 198, 114, 0.1);">
-                                <i class="fas fa-user-check fs-4 text-success"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ \App\Models\User::whereHas('roles', function($q) { $q->where('name', 'manager'); })->count() }}</h6>
-                                <small class="text-muted">Managers</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                 style="width: 50px; height: 50px; background-color: rgba(83, 109, 254, 0.1);">
-                                <i class="fas fa-user-tie fs-4 text-info"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ \App\Models\User::whereHas('roles', function($q) { $q->where('name', 'customer'); })->count() }}</h6>
-                                <small class="text-muted">Clientes</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                 style="width: 50px; height: 50px; background-color: rgba(254, 201, 15, 0.1);">
-                                <i class="fas fa-shield-alt fs-4 text-warning"></i>
-                            </div>
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ \Spatie\Permission\Models\Role::count() }}</h6>
-                                <small class="text-muted">Roles disponibles</small>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -98,7 +44,7 @@
                         <div class="d-flex align-items-start">
                             <i class="fa fa-exclamation-circle fs-4 me-2 mt-1"></i>
                             <div>
-                                <h6 class="alert-heading fw-bold mb-2">Errores de validación</h6>
+                                <h6 class="alert-heading fw-bold mb-2">Errores de Validación</h6>
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -129,7 +75,7 @@
             <div class="card-body border-bottom">
                 <form method="GET" action="{{ route('settings.users.index') }}">
                     <div class="row g-3 align-items-end">
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-7">
                             <label for="search" class="form-label fw-semibold">Búsqueda</label>
                             <input type="text"
                                    id="search"
@@ -153,7 +99,7 @@
                             </select>
                         </div>
 
-                        <div class="col-12 col-sm-6 col-md-4 d-flex gap-2">
+                        <div class="col-12 col-sm-6 col-md-2 d-flex gap-2">
                             <button type="submit" class="btn btn-primary flex-grow-1">
                                 <i class="fa fa-magnifying-glass me-2"></i>Buscar
                             </button>
@@ -237,7 +183,7 @@
                                                     </li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
-                                                        <button type="button" class="dropdown-item text-danger delete-btn"
+                                                        <button type="button" class="dropdown-item delete-btn"
                                                                 data-url="{{ route('settings.users.destroy', $user->uid) }}"
                                                                 data-title="¿Eliminar usuario {{ $user->firstname }} {{ $user->lastname }}?">
                                                             Eliminar
@@ -246,7 +192,7 @@
                                                 @else
                                                     <li>
                                                         <span class="dropdown-item text-muted">
-                                                            <i class="fas fa-exclamation-triangle me-2"></i>Usuario sin UID
+                                                            Usuario sin UID
                                                         </span>
                                                     </li>
                                                 @endif
@@ -277,7 +223,7 @@
                         </a>
                     @else
                         <a href="{{ route('settings.users.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Crear ahora
+                            + Crear ahora
                         </a>
                     @endif
                 </div>
