@@ -106,9 +106,9 @@ class UsersController extends Controller
             $user->company = $request->company;
             $user->timezone = $request->timezone ?? 'UTC';
 
-            // Set mail_verified_at if verified is true
+            // Set email_verified_at if verified is true
             if ($request->verified === '1' || $request->verified === 1) {
-                $user->mail_verified_at = now();
+                $user->email_verified_at = now();
             }
 
             $user->save();
@@ -141,7 +141,7 @@ class UsersController extends Controller
 
     public function view($uid)
     {
-        $user = User::uid($uid);
+        $user = User::where('uid', $uid)->first();
 
         if (! $user) {
             abort(404, 'Usuario no encontrado');
@@ -160,7 +160,7 @@ class UsersController extends Controller
 
     public function edit($uid)
     {
-        $user = User::uid($uid);
+        $user = User::where('uid', $uid)->first();
 
         if (! $user) {
             abort(404, 'Usuario no encontrado');
@@ -225,13 +225,13 @@ class UsersController extends Controller
                 $user->password = bcrypt($request->password);
             }
 
-            // Update mail verification status
+            // Update email verification status
             if ($request->verified === '1' || $request->verified === 1) {
-                if (! $user->mail_verified_at) {
-                    $user->mail_verified_at = now();
+                if (! $user->email_verified_at) {
+                    $user->email_verified_at = now();
                 }
             } else {
-                $user->mail_verified_at = null;
+                $user->email_verified_at = null;
             }
 
             $user->save();
@@ -280,7 +280,7 @@ class UsersController extends Controller
 
             $user->delete();
 
-            return redirect()->route('manager.users')
+            return redirect()->route('settings.users.index')
                 ->with('success', 'Usuario eliminado exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al eliminar usuario', [
@@ -288,7 +288,7 @@ class UsersController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
-            return redirect()->route('manager.users')
+            return redirect()->route('settings.users.index')
                 ->with('error', 'Error al eliminar el usuario.');
         }
     }
