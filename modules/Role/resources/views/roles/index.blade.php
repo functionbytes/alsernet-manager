@@ -180,6 +180,12 @@
                                                     </a>
                                                 </li>
                                                 <li>
+                                                    <a href="{{ route('settings.roles.show.modules', $role->id) }}" class="dropdown-item">
+                                                        Gestionar modulos
+                                                    </a>
+                                                </li>
+
+                                                <li>
                                                     <a href="{{ route('settings.roles.show.users', $role->id) }}" class="dropdown-item">
                                                        Ver usuarios
                                                     </a>

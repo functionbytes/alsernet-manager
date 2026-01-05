@@ -188,12 +188,12 @@
                                             @if($user->uid)
                                                 <li>
                                                     <a href="{{ route('settings.users.show', $user->uid) }}" class="dropdown-item">
-                                                        <i class="fas fa-eye me-2"></i>Ver
+                                                        Ver
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('settings.users.edit', $user->uid) }}" class="dropdown-item">
-                                                        <i class="fas fa-edit me-2"></i>Editar
+                                                        Editar
                                                     </a>
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
@@ -201,7 +201,7 @@
                                                     <a href="#" class="dropdown-item text-danger delete-btn"
                                                        data-url="{{ route('settings.users.destroy', $user->uid) }}"
                                                        data-title="¿Eliminar usuario {{ $user->firstname }} {{ $user->lastname }}?">
-                                                        <i class="fas fa-trash me-2"></i>Eliminar
+                                                        Eliminar
                                                     </a>
                                                 </li>
                                             @else
