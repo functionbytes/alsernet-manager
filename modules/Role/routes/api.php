@@ -1,12 +1,14 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Modules\Role\Http\Controllers\PermissionController;
 use Modules\Role\Http\Controllers\RoleController;
 use Spatie\Permission\Models\Role;
 
-// Model binding for {role} parameter
+// Model binding for {role} and {user} parameters
 Route::model('role', Role::class);
+Route::model('user', User::class);
 
 // Role API routes (POST, PUT, DELETE)
 Route::prefix('roles')->name('roles.')->group(function () {

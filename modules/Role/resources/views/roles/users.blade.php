@@ -350,10 +350,9 @@
                 e.preventDefault();
 
                 const userId = $(this).data('user-id');
-                const userName = $(this).data('user-name');
                 const roleId = $(this).data('role-id');
 
-                if (confirm('¿Estás seguro de que deseas remover a ' + userName + ' de este rol?')) {
+                if (confirm('¿Estás seguro de que deseas remover esto?\n\nEsta acción no se puede deshacer. Todos los datos relacionados pueden eliminarse.')) {
                     $.ajax({
                         url: '{{ url("/settings/roles/" . $role->id . "/users/") }}/' + userId,
                         type: 'DELETE',
