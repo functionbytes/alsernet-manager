@@ -442,6 +442,7 @@ class Document extends Model implements HasMedia
 
     /**
      * Get the actual value for a condition key
+     * Dynamically evaluates conditions based on DocumentType and configured conditions
      *
      * @param  string  $key  Condition key (e.g., 'requires_financing', 'is_weapon', 'is_dni_only')
      * @return mixed The actual value from the document
@@ -453,10 +454,40 @@ class Document extends Model implements HasMedia
                 return (bool) $this->requires_financing;
 
             case 'is_weapon':
-                return $this->isWeapon();
+                // Get DocumentType slug
+                if (! $this->documentType) {
+                    return false;
+                }
+
+                $documentTypeSlug = $this->documentType->slug;
+
+                // Check centralized validation condition (cached)
+                $condition = DocumentValidationCondition::getByKey('is_weapon');
+
+                if ($condition) {
+                    return $condition->matches($documentTypeSlug);
+                }
+
+                // No condition configured
+                return false;
 
             case 'is_dni_only':
-                return $this->isDniOnly();
+                // Get DocumentType slug
+                if (! $this->documentType) {
+                    return false;
+                }
+
+                $documentTypeSlug = $this->documentType->slug;
+
+                // Check centralized validation condition (cached)
+                $condition = DocumentValidationCondition::getByKey('is_dni_only');
+
+                if ($condition) {
+                    return $condition->matches($documentTypeSlug);
+                }
+
+                // No condition configured
+                return false;
 
             default:
                 // For unknown conditions, return null (will fail comparison)
@@ -466,16 +497,27 @@ class Document extends Model implements HasMedia
 
     /**
      * Determine if this document is for a weapon sale
-     * Uses centralized DocumentValidationCondition configuration
+     * Dynamically checks DocumentValidationCondition configuration
      */
     protected function isWeapon(): bool
     {
-        $saleType = $this->getSaleType();
+        // Primary: check DocumentType slug
+        if ($this->documentType) {
+            $documentTypeSlug = $this->documentType->slug;
 
-        // Fallback: use the documentType slug if no blockade type
-        if (empty($saleType) && $this->documentType) {
-            $saleType = $this->documentType->slug;
+            // Check centralized validation condition (cached)
+            $condition = DocumentValidationCondition::getByKey('is_weapon');
+
+            if ($condition) {
+                return $condition->matches($documentTypeSlug);
+            }
+
+            // No condition configured - return false
+            return false;
         }
+
+        // Fallback: check blockade/sale type if no document type
+        $saleType = $this->getSaleType();
 
         if (empty($saleType)) {
             return false;
@@ -488,30 +530,33 @@ class Document extends Model implements HasMedia
             return $condition->matches($saleType);
         }
 
-        // Fallback to hardcoded defaults if no condition configured
-        return in_array($saleType, [
-            DocumentProductBlockade::TYPE_ESCOPETA,
-            DocumentProductBlockade::TYPE_RIFLE,
-            DocumentProductBlockade::TYPE_CORTA,
-            'escopeta',
-            'rifle',
-            'corta',
-            'armas',
-        ]);
+        // No condition configured - return false
+        return false;
     }
 
     /**
      * Determine if this document only requires DNI (no weapons)
-     * Uses centralized DocumentValidationCondition configuration
+     * Dynamically checks DocumentValidationCondition configuration
      */
     protected function isDniOnly(): bool
     {
-        $saleType = $this->getSaleType();
+        // Primary: check DocumentType slug
+        if ($this->documentType) {
+            $documentTypeSlug = $this->documentType->slug;
 
-        // Fallback: use the documentType slug if no blockade type
-        if (empty($saleType) && $this->documentType) {
-            $saleType = $this->documentType->slug;
+            // Check centralized validation condition (cached)
+            $condition = DocumentValidationCondition::getByKey('is_dni_only');
+
+            if ($condition) {
+                return $condition->matches($documentTypeSlug);
+            }
+
+            // No condition configured - return false
+            return false;
         }
+
+        // Fallback: check blockade/sale type if no document type
+        $saleType = $this->getSaleType();
 
         if (empty($saleType)) {
             return false;
@@ -524,39 +569,23 @@ class Document extends Model implements HasMedia
             return $condition->matches($saleType);
         }
 
-        // Fallback to hardcoded default: DNI type and NOT a weapon
-        return $saleType === DocumentProductBlockade::TYPE_DNI && ! $this->isWeapon();
+        // No condition configured - return false
+        return false;
     }
 
     /**
-     * Legacy validation stages logic (fallback)
+     * Legacy validation stages logic (fallback) - NOW COMPLETELY DYNAMIC
      * Used when DocumentType has no configured stages
+     * All stage decisions are based on DocumentValidationCondition from database
      *
      * @return array<string>
      */
     protected function getLegacyValidationStages(): array
     {
-        $saleType = $this->getSaleType();
-
-        // Fallback: si no hay blockade, usar el campo 'type' del documento
-        if (empty($saleType) && ! empty($this->type)) {
-            $saleType = $this->type;
-        }
-
-        $isWeapon = in_array($saleType, [
-            DocumentProductBlockade::TYPE_ESCOPETA,
-            DocumentProductBlockade::TYPE_RIFLE,
-            DocumentProductBlockade::TYPE_CORTA,
-            'escopeta', // Valores directos del campo 'type'
-            'rifle',
-            'corta',
-            'armas', // Legacy type
-        ]);
-
-        // Build stages array dynamically
         $stages = ['documentacion']; // Always starts with documentation
 
-        if ($isWeapon) {
+        // Check if this is a weapon using dynamic condition
+        if ($this->isWeapon()) {
             // Weapons always need licencias validation
             $stages[] = 'licencias';
         }
@@ -579,60 +608,22 @@ class Document extends Model implements HasMedia
     }
 
     /**
-     * Detecta el tipo de documento basándose en los productos capturados
-     * Valida qué etiquetas tienen los productos (DNI, ESCOPETA, RIFLE, CORTA)
-     * Busca las features en los productos ya importados
+     * Detecta el tipo de documento basándose en blockades desde document_product_blockades
+     * Ahora completamente dinámico - usa la configuración de database, no hardcoded
+     * Retorna el slug del DocumentType asociado al primer blockade encontrado
      */
-    public function detectDocumentType()
+    public function detectDocumentType(): ?string
     {
         try {
-            // Obtener los productos ya capturados del documento
-            $products = $this->products()->get();
+            // Obtener el tipo de venta del documento desde blockades
+            $saleType = $this->getSaleType();
 
-            if ($products->isEmpty()) {
+            if (empty($saleType)) {
                 return 'general';
             }
 
-            $documentTypes = [];
-
-            foreach ($products as $docProduct) {
-
-                // Obtener las features/etiquetas del producto desde Prestashop
-                $features = DB::connection('prestashop')
-                    ->table('aalv_feature_product')
-                    ->where('id_product', $docProduct->product_id)
-                    ->where('id_feature', 23) // Feature ID para tipo de venta
-                    ->get();
-
-                foreach ($features as $feature) {
-                    if ($feature->id_feature_value == 263658) { // DNI
-                        $documentTypes['dni'] = true;
-                    } elseif ($feature->id_feature_value == 263659) { // ESCOPETA
-                        $documentTypes['escopeta'] = true;
-                    } elseif ($feature->id_feature_value == 263660) { // RIFLE
-                        $documentTypes['rifle'] = true;
-                    } elseif ($feature->id_feature_value == 263661) { // CORTA
-                        $documentTypes['corta'] = true;
-                    }
-                }
-            }
-
-            if (! empty($documentTypes)) {
-                if (isset($documentTypes['dni'])) {
-                    return 'dni';
-                }
-                if (isset($documentTypes['escopeta'])) {
-                    return 'escopeta';
-                }
-                if (isset($documentTypes['rifle'])) {
-                    return 'rifle';
-                }
-                if (isset($documentTypes['corta'])) {
-                    return 'corta';
-                }
-            }
-
-            return 'general';
+            // Return the detected sale type (which is now the DocumentType slug)
+            return $saleType;
 
         } catch (\Exception $e) {
             Log::error('Error detectando tipo de documento: '.$e->getMessage());
@@ -742,36 +733,24 @@ class Document extends Model implements HasMedia
     }
 
     /**
-     * Obtiene documentos Por defecto si no hay configuración
+     * Obtiene documentos requeridos por defecto del DocumentType configurado
+     * Ahora completamente dinámico - lee la configuración de DocumentType
+     * NO usar valores hardcodeados - todo debe venir de database
      */
     private function getDefaultDocuments(): array
     {
-        $defaults = [
-            'corta' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)',
-            ],
-            'rifle' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas largas rayadas (tipo D)',
-            ],
-            'escopeta' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de escopeta (tipo E)',
-            ],
-            'dni' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-            ],
-            'general' => [
-                'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)',
-            ],
-        ];
+        // If document has a type_id, get defaults from DocumentType
+        if ($this->type_id && $this->documentType) {
+            $defaults = $this->documentType->required_documents ?? [];
 
-        return $defaults[$this->type] ?? $defaults['general'];
+            if (! empty($defaults)) {
+                return $defaults;
+            }
+        }
+
+        // Fallback: retornar array vacío si no hay configuración
+        // El sistema debe confiar en la configuración de DocumentType, no en defaults hardcodeados
+        return [];
     }
 
     /**
@@ -969,14 +948,14 @@ class Document extends Model implements HasMedia
                 ->orWhereIn('product_attribute_id', $productIds);
         })
             ->whereHas('documentType', function ($query) {
-                $query->where('slug', DocumentProductBlockade::TYPE_DNI);
+                $query->where('slug', 'dni');
             })
             ->exists();
     }
 
     /**
      * Get the primary sale type (blockade type) for this document's products
-     * Return the first blockade type found with priority: dni > escopeta > rifle > corta
+     * Returns the DocumentType slug from the first blockade found (no hardcoded priority)
      */
     public function getSaleType(): ?string
     {
@@ -986,30 +965,16 @@ class Document extends Model implements HasMedia
             return null;
         }
 
-        // Check for blockades with priority order
-        $priorityTypes = [
-            DocumentProductBlockade::TYPE_DNI,
-            DocumentProductBlockade::TYPE_ESCOPETA,
-            DocumentProductBlockade::TYPE_RIFLE,
-            DocumentProductBlockade::TYPE_CORTA,
-        ];
+        // Get the first blockade type found for these products (no hardcoded priority)
+        // Return the actual slug from DocumentType relation
+        $blockadeType = DocumentProductBlockade::where(function ($query) use ($productIds) {
+            $query->whereIn('product_id', $productIds)
+                ->orWhereIn('product_attribute_id', $productIds);
+        })
+            ->with('documentType:id,slug')
+            ->first();
 
-        foreach ($priorityTypes as $type) {
-            $exists = DocumentProductBlockade::where(function ($query) use ($productIds) {
-                $query->whereIn('product_id', $productIds)
-                    ->orWhereIn('product_attribute_id', $productIds);
-            })
-                ->whereHas('documentType', function ($query) use ($type) {
-                    $query->where('slug', $type);
-                })
-                ->exists();
-
-            if ($exists) {
-                return $type;
-            }
-        }
-
-        return null;
+        return $blockadeType?->documentType?->slug;
     }
 
     /**

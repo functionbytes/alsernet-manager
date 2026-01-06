@@ -249,6 +249,16 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted small">Tipo de documento</label>
+                        <p class="mb-0">
+                            @if($document->documentType)
+                                <span class="badge bg-primary">{{ $document->documentType->label }}</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label fw-semibold text-muted small">Estado</label>
                         <p class="mb-0">{{ $document->status->label ?? '-' }}</p>
                     </div>

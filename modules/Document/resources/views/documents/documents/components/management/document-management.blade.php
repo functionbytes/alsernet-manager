@@ -10,6 +10,15 @@
             <input type="hidden" id="uid_config" name="uid" value="{{ $document->uid }}">
 
             <div class="row g-3">
+                {{-- Campo: Tipo de documento (Solo lectura) --}}
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Tipo de documento</label>
+                    <input type="text" class="form-control" disabled value="{{ $document->documentType?->label ?? 'Sin especificar' }}">
+                    <small class="text-muted d-block mt-1">
+                        <i class="fas fa-lock me-1"></i>Este campo no puede ser modificado
+                    </small>
+                </div>
+
                 {{-- Campo: Estado del documento --}}
                 @if(auth()->user()->canDocument('edit-status'))
                     <div class="col-12">

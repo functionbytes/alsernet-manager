@@ -14,6 +14,7 @@ use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentStatusTransition;
 use Modules\Document\Entities\DocumentSync;
 use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Events\DocumentStatusChanged;
 use Modules\Document\Jobs\MailTemplateJob;
@@ -30,14 +31,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:route-all-documents')->only(['index']);
-        $this->middleware('can:route-pending-documents|approve-documents|reject-documents')->only(['pending']);
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
+        $this->middleware('can:route-all-documents')->only(['index']);
+
         $search = trim(strtolower($request->get('search')));
         $statusId = $request->get('status_id');
         $loadId = $request->get('load_id');
@@ -76,22 +75,23 @@ class DocumentsController extends Controller
     }
 
     /**
-     * Mostrar solo documentos pendientes
+     * Mostrar solo documentos pendientes de validación
+     * Filtra por validation_status (estado de validación) no por status_id (estado operativo)
      */
     public function pending(Request $request)
     {
+
+        $this->middleware('can:route-pending-documents|approve-documents|reject-documents')->only(['pending']);
+
         $search = trim(strtolower($request->get('search')));
         $loadId = $request->get('load_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
         $perPage = paginationNumber();
 
-        // Get pending status ID
-        $pendingStatus = DocumentStatus::where('key', 'pending')->first();
-
-        // Filter only documents with pending status
+        // Filter only documents in validation workflow (pending or in_validation)
         $query = Document::filterListing($search, null, $dateFrom, $dateTo)
-            ->where('status_id', $pendingStatus?->id)
+            ->whereIn('validation_status', ['pending', 'in_validation'])
             ->when($loadId, fn ($q) => $q->where('load_id', $loadId));
 
         // FILTROS DE VALIDACIÓN: Solo aplicar restricciones si NO es super-admin
@@ -99,7 +99,7 @@ class DocumentsController extends Controller
             $query = $query->where(function ($q) {
                 $q->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
                     ->orWhereNull('current_validator_group');
-            })->whereIn('validation_status', ['pending', 'in_validation']);
+            });
         }
 
         $documents = $query->paginate($perPage);
@@ -1349,7 +1349,7 @@ class DocumentsController extends Controller
         // Get email action configurations based on document's current validator group
         $userEmailConfig = [];
         if ($document->current_validator_group) {
-            $currentGroup = \Modules\Document\Validations\ValidatorGroup::where('key', $document->current_validator_group)
+            $currentGroup = DocumentValidatorGroup::where('key', $document->current_validator_group)
                 ->where('is_active', true)
                 ->with(['configurations' => function ($q) {
                     $q->where('category', 'email_actions')

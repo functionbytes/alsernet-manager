@@ -62,40 +62,66 @@
 
         {{-- Current Stage Info --}}
         @if($isInValidation)
-            <div class="alert {{ $userIsInValidatorGroup ? 'bg-success-subtle' : 'bg-warning-subtle' }} py-3 px-3 mb-3" role="alert">
-                <div class="d-flex align-items-start">
-                    @if($userIsInValidatorGroup)
+            @if($userIsInValidatorGroup)
+                {{-- Usuario pertenece al grupo validador actual --}}
+                <div class="alert bg-light py-3 px-3 mb-3" role="alert">
+                    <div class="d-flex align-items-start">
                         <i class="fas fa-check-circle text-success me-2 mt-1" style="font-size: 0.9rem;"></i>
-                    @else
-                        <i class="fas fa-info-circle text-warning me-2 mt-1" style="font-size: 0.9rem;"></i>
-                    @endif
-                    <div>
-                        <small class="fw-semibold d-block {{ $userIsInValidatorGroup ? 'text-success' : 'text-warning' }}">
-                            Grupo validador {{ $userIsInValidatorGroup ? '(Tu grupo)' : '(No asignado)' }}
-                        </small>
-                        @if($document->current_validator_group)
-                            <small class="text-muted">{{ ucfirst($document->current_validator_group) }}</small>
-                        @else
-                            <small class="text-muted">Pendiente de asignación</small>
-                        @endif
-
-                        @if(!$userIsInValidatorGroup && $isInValidation)
-                            <small class="text-muted d-block mt-1">
-                                <i class="fas fa-info-circle me-1"></i>
-                                No puedes validar este documento en esta etapa.
+                        <div>
+                            <small class="fw-semibold d-block text-success">
+                                Grupo validador activo
                             </small>
-                        @endif
-
-                        @if($document->assigned_user_id && $document->assignedUser)
-                            <br>
-                            <small class="text-muted">
-                                <i class="fas fa-user me-1"></i>
-                                Asignado a: {{ $document->assignedUser->full_name }}
+                            <small class="text-muted d-block">{{ ucfirst($document->current_validator_group) }}</small>
+                            <small class="text-success d-block mt-1">
+                                Eres miembro de este grupo - Puedes validar este documento
                             </small>
-                        @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+            @elseif($document->current_validator_group)
+                {{-- Hay un grupo asignado pero el usuario no pertenece --}}
+                <div class="alert bg-light py-3 px-3 mb-3" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-circle-exclamation text-warning me-2 mt-1" style="font-size: 0.9rem;"></i>
+                        <div>
+                            <small class="fw-semibold d-block text-warning">
+                                Validación asignada a otro grupo
+                            </small>
+                            <small class="text-muted d-block">Grupo: {{ ucfirst($document->current_validator_group) }}</small>
+                            <small class="text-warning d-block mt-1">
+                                Esta etapa solo puede ser validada por miembros de {{ ucfirst($document->current_validator_group) }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            @else
+                {{-- No hay grupo asignado --}}
+                <div class="alert bg-light py-3 px-3 mb-3" role="alert">
+                    <div class="d-flex align-items-start">
+
+                        <div>
+                            <small class="fw-semibold d-block text-info">
+                                Pendiente de asignación
+                            </small>
+                            <small class="text-muted d-block mt-1">
+                                Esta etapa aún no ha sido asignada a ningún grupo validador
+                            </small>
+                            <small class="text-info d-block mt-1">
+                                <i class="fas fa-arrow-right me-1"></i>Se asignará cuando avance en el flujo de validación
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if($document->assigned_user_id && $document->assignedUser)
+                <div class="alert bg-light py-2 px-3 mb-3">
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="fas fa-user-check me-2"></i>
+                        <span>Asignado a: <strong>{{ $document->assignedUser->full_name }}</strong></span>
+                    </small>
+                </div>
+            @endif
         @endif
 
         {{-- Action Buttons --}}

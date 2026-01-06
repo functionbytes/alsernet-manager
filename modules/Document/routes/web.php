@@ -30,7 +30,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     // ====================================================================
     // OPERATIONAL ROUTES - /documents
     // ====================================================================
-    Route::prefix('documents')->name('documents.')->middleware(['can:modules.view.documents'])->group(function () {
+    Route::prefix('documents')->name('documents.')->group(function () {
         // Listing routes
         Route::get('/', [DocumentsController::class, 'index'])->name('index');
         Route::get('/pending', [DocumentsController::class, 'pending'])->name('pending');

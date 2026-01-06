@@ -19,32 +19,17 @@ class DocumentTypeService
 
     public static function getDefaultDocuments(string $documentType): array
     {
-        $defaults = [
-            'corta' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas cortas (tipo B) o licencia de tiro olímpico (tipo F)',
-            ],
-            'rifle' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de armas largas rayadas (tipo D)',
-            ],
-            'escopeta' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-                'doc_3' => 'Licencia de escopeta (tipo E)',
-            ],
-            'dni' => [
-                'doc_1' => 'DNI - Cara delantera',
-                'doc_2' => 'DNI - Cara trasera',
-            ],
-            'general' => [
-                'doc_1' => 'Pasaporte o carnet de conducir (ambas caras si es tarjeta)',
-            ],
-        ];
+        // Completely dynamic - NO hardcoded defaults
+        // Get defaults from DocumentType entity if it exists
+        $docType = \Modules\Document\Entities\DocumentType::where('slug', $documentType)->first();
 
-        return $defaults[$documentType] ?? $defaults['general'];
+        if ($docType && ! empty($docType->required_documents)) {
+            return $docType->required_documents;
+        }
+
+        // If no DocumentType found or no required_documents configured, return empty array
+        // The system must rely on DocumentType configuration, not hardcoded defaults
+        return [];
     }
 
     public static function getMissingDocuments(string $documentType, array $uploadedDocs): array
