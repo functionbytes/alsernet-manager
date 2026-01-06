@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders\Core;
+namespace Modules\Media\Database\Seeders;
 
 use App\Models\Setting\MediaFolder;
 use Illuminate\Database\Seeder;

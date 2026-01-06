@@ -1,8 +1,7 @@
 <?php
 
-namespace Database\Seeders\Core;
+namespace Modules\Document\Database\Seeders;
 
-use App\Models\Setting\MailVariable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

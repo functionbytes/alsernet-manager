@@ -71,8 +71,8 @@
                                         <div>
                                             <p class="mb-0 fw-semibold">{{ $attachment['name'] }}</p>
                                             @if($attachment['notes'])
-                                                <small class="text-muted d-block fst-italic mt-1">
-                                                    <i class="fas fa-sticky-note me-1"></i>{{ $attachment['notes'] }}
+                                                <small class="text-muted d-block mt-1">
+                                                    {{ $attachment['notes'] }}
                                                 </small>
                                             @endif
                                             <small class="text-muted">{{ number_format($attachment['size'] / 1024, 1) }} KB • {{ $attachment['uploaded_at'] }}</small>
@@ -332,8 +332,8 @@
                             if (total > 0) {
                                 html += `
                                     <div class="border-top mt-3 pt-3">
-                                        <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-outline-primary w-100">
-                                            <i class="fa fa-file-archive"></i> Ver todos los documentos comprimidos
+                                        <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-primary w-100">
+                                            Ver todos los documentos comprimidos
                                         </a>
                                     </div>
                                 `;

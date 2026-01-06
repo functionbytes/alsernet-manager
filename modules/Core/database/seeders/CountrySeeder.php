@@ -1,6 +1,5 @@
 <?php
 
-namespace Database\Seeders\Core;
 
 use App\Models\Country;
 use Illuminate\Database\Seeder;

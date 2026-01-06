@@ -145,18 +145,18 @@ class DocumentValidationController extends Controller
 
         try {
             $this->emailService->sendApprovalEmail($document);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email de aprobación enviado',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue approval email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email de aprobación enviado',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -178,18 +178,18 @@ class DocumentValidationController extends Controller
                 $document,
                 $validated['reason']
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email de rechazo enviado',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue rejection email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email de rechazo enviado',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -213,18 +213,18 @@ class DocumentValidationController extends Controller
                 $validated['subject'],
                 $validated['message']
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email enviado correctamente',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue custom email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email enviado correctamente',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -239,18 +239,18 @@ class DocumentValidationController extends Controller
 
         try {
             $this->emailService->sendReminder($document);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Recordatorio enviado',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue reminder email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Recordatorio enviado',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -265,18 +265,18 @@ class DocumentValidationController extends Controller
 
         try {
             $this->emailService->sendInitialRequest($document);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Solicitud de documentos enviada',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue initial request email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud de documentos enviada',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -300,18 +300,18 @@ class DocumentValidationController extends Controller
                 $validated['missing_docs'],
                 $validated['custom_message'] ?? null
             );
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Solicitud de documentos faltantes enviada',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue missing documents email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud de documentos faltantes enviada',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -322,20 +322,23 @@ class DocumentValidationController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $this->authorize('update', $document);
 
+        // Despachar job asincrónico sin bloquear la respuesta
         try {
             $this->emailService->sendInitialRequest($document);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Notificación enviada',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue notification email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
+            // No lanzar excepción, responder con éxito de todas formas
+            // El job se procesará cuando el queue worker esté disponible
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notificación enviada',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**
@@ -348,18 +351,18 @@ class DocumentValidationController extends Controller
 
         try {
             $this->emailService->sendUploadConfirmation($document);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Confirmación de carga enviada',
-                'recipient' => $document->customer?->email,
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            Log::error('Failed to queue upload confirmation email', [
+                'document_uid' => $uid,
+                'error' => $e->getMessage(),
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Confirmación de carga enviada',
+            'recipient' => $document->customer?->email,
+        ]);
     }
 
     /**

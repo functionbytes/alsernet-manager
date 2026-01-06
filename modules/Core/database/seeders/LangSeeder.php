@@ -1,6 +1,5 @@
 <?php
 
-namespace Database\Seeders\Core;
 
 use App\Models\Lang;
 use Illuminate\Database\Seeder;

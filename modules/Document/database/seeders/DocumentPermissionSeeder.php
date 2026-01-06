@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Document\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Document\Entities\DocumentPermission;
