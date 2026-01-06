@@ -2,14 +2,14 @@
 
 namespace AlsernetShopping\Carriers;
 
-use Db;
+use Address;
 use Configuration;
 use Context;
-use Address;
-use State;
 use Country;
+use Db;
+use State;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -17,7 +17,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
 {
     private $carrierId = 39;
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         parent::__construct($context);
         $this->context = $this->context ?: \Context::getContext(); // fallback
@@ -55,11 +55,12 @@ class GuardPickupHandler extends AbstractCarrierHandler
         // error_log("=== GuardPickupHandler: validateAvailability() called ===");
         $cart = $context->cart;
 
-        if (!$cart || !$cart->id) {
-            error_log("GuardPickupHandler: Invalid cart - no cart or cart ID");
+        if (! $cart || ! $cart->id) {
+            error_log('GuardPickupHandler: Invalid cart - no cart or cart ID');
+
             return [
                 'valid' => false,
-                'message' => 'Invalid cart'
+                'message' => 'Invalid cart',
             ];
         }
 
@@ -72,7 +73,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
         return [
             'valid' => $hasStores,
-            'message' => $hasStores ? 'Store pickup available' : 'No stores available for pickup'
+            'message' => $hasStores ? 'Store pickup available' : 'No stores available for pickup',
         ];
     }
 
@@ -82,14 +83,15 @@ class GuardPickupHandler extends AbstractCarrierHandler
         // error_log("GuardPickupHandler: getExtraContent called for address ID: " . $address->id);
 
         try {
-            $id_lang = (int)$context->language->id;
+            $id_lang = (int) $context->language->id;
             $state_name = $address->id_state ? State::getNameById($address->id_state) : '';
             $country_name = $address->id_country ? Country::getNameById($id_lang, $address->id_country) : '';
 
             // error_log("GuardPickupHandler: State: $state_name, Country: $country_name");
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: ERROR in initial data extraction: " . $e->getMessage());
-            return '<div class="alert alert-danger">Error extracting address data: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: ERROR in initial data extraction: '.$e->getMessage());
+
+            return '<div class="alert alert-danger">Error extracting address data: '.$e->getMessage().'</div>';
         }
 
         // Usar exactamente el código original del Store Locator
@@ -106,8 +108,9 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
             // error_log("GuardPickupHandler: Configuration loaded successfully");
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: ERROR loading configuration: " . $e->getMessage());
-            return '<div class="alert alert-danger">Error loading configuration: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: ERROR loading configuration: '.$e->getMessage());
+
+            return '<div class="alert alert-danger">Error loading configuration: '.$e->getMessage().'</div>';
         }
 
         if (empty($storeLocatorConfig)) {
@@ -127,9 +130,9 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $storeLocatorConfig['enable_store_locator'] = 1;
             $storeLocatorConfig['homepage'] = 1;
 
-            // Si no hay tienda por defecto, usar la primera disponible
+            // Si no hay tienda Por defecto, usar la primera disponible
             if (empty($storeLocatorConfig['default_store'])) {
-                $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `' . _DB_PREFIX_ . 'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
+                $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `'._DB_PREFIX_.'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
                 $storeLocatorConfig['default_store'] = $firstStore ? $firstStore['id_store'] : 1;
             }
 
@@ -137,13 +140,13 @@ class GuardPickupHandler extends AbstractCarrierHandler
             // error_log("GuardPickupHandler: Fixed store locator configuration");
         }
 
-        if (!($storeLocatorConfig['enable'] && $storeLocatorConfig['enable_store_locator'])) {
+        if (! ($storeLocatorConfig['enable'] && $storeLocatorConfig['enable_store_locator'])) {
             // error_log("GuardPickupHandler: Store locator still not enabled after fix attempt");
             return '<div class="alert alert-warning">Store locator is not enabled</div>';
         }
 
         // Código exacto del original
-        $av_store_detail = array();
+        $av_store_detail = [];
         $default_store = $storeLocatorConfig['default_store'];
         $store = new \Store($default_store, $context->language->id);
         $latitude = $store->latitude;
@@ -155,21 +158,20 @@ class GuardPickupHandler extends AbstractCarrierHandler
         $default_longitude = $store->longitude;
         $current_selected_shipping = null;
 
-
         $current_selected_shipping = current($context->cart->getDeliveryOption(null, false, false));
         if (isset($storeLocatorConfig['enable_all_store']) && $storeLocatorConfig['enable_all_store'] == 1) {
             if (version_compare(_PS_VERSION_, '1.7.4.0', '>=')) {
                 $available_store = \Db::getInstance()->executeS(
-                    'SELECT s.id_store,ss.name FROM `' . _DB_PREFIX_ . 'store` s '
-                    . 'INNER JOIN ' . _DB_PREFIX_ . 'store_lang ss '
-                    . 'on (s.id_store=ss.id_store AND ss.id_lang='
-                    . (int) $context->language->id . ') '
-                    . 'WHERE s.active=1 ORDER BY s.`id_store`'
+                    'SELECT s.id_store,ss.name FROM `'._DB_PREFIX_.'store` s '
+                    .'INNER JOIN '._DB_PREFIX_.'store_lang ss '
+                    .'on (s.id_store=ss.id_store AND ss.id_lang='
+                    .(int) $context->language->id.') '
+                    .'WHERE s.active=1 ORDER BY s.`id_store`'
                 );
             } else {
                 $available_store = \Store::getStores($context->language->id);
             }
-            $enabled_store = array();
+            $enabled_store = [];
             foreach ($available_store as $key => $value) {
                 $enabled_store[] = $value['id_store'];
             }
@@ -201,12 +203,12 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 $hoursArray = [];
                 foreach ($workingHours as $hourInfo) {
                     if (is_array($hourInfo) && isset($hourInfo['day']) && isset($hourInfo['hours'])) {
-                        $hoursArray[] = $hourInfo['day'] . ': ' . $hourInfo['hours'];
+                        $hoursArray[] = $hourInfo['day'].': '.$hourInfo['hours'];
                     }
                 }
                 $hoursString = implode(' | ', $hoursArray);
             } else {
-                $hoursString = (string)$workingHours;
+                $hoursString = (string) $workingHours;
             }
 
             $av_store_detail[$store_item['id_store']] = $hoursString;
@@ -214,17 +216,16 @@ class GuardPickupHandler extends AbstractCarrierHandler
             // Sanitizar datos de la tienda
             $available_stores[$key] = $this->sanitizeStoreData($available_stores[$key]);
 
-            // Si es la tienda por defecto, usarla como template store
+            // Si es la tienda Por defecto, usarla como template store
             if ($store_item['id_store'] == $default_store) {
                 $template_store = $available_stores[$key];
             }
         }
 
-        // Si no encontramos la tienda por defecto en disponibles, usar la primera disponible
-        if (!$template_store && !empty($available_stores)) {
+        // Si no encontramos la tienda Por defecto en disponibles, usar la primera disponible
+        if (! $template_store && ! empty($available_stores)) {
             $template_store = reset($available_stores);
         }
-
 
         // Debug: Log el template store para ver qué contiene
         // error_log("GuardPickupHandler: Template store data BEFORE sanitization: " . json_encode($template_store));
@@ -236,40 +237,40 @@ class GuardPickupHandler extends AbstractCarrierHandler
         // error_log("GuardPickupHandler: Template store AFTER sanitization: " . json_encode($template_store));
 
         $time = time();
-        $marker = $this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/marker.png?time=' . $time;
-        $exist_file = _PS_MODULE_DIR_ . 'kbgcstorelocatorpickup/views/img/user_marker.*';
+        $marker = $this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/marker.png?time='.$time;
+        $exist_file = _PS_MODULE_DIR_.'kbgcstorelocatorpickup/views/img/user_marker.*';
         $match1 = glob($exist_file);
         if (count($match1) > 0) {
             $ban = explode('/', $match1[0]);
             $ban = end($ban);
             $ban = trim($ban);
             if (file_exists($match1[0])) {
-                $marker = $this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/' . $ban . '?time=' . $time;
+                $marker = $this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/'.$ban.'?time='.$time;
             }
         }
 
         // Lógica para kb_all_stores (mapa)
-        $marker_json_data = array();
+        $marker_json_data = [];
         if ($storeLocatorConfig['show_stores'] == 0) {
             $kb_all_stores = '';
         } else {
             $radius_val = 0;
             $filter_pickup = 1;
-            $available_stores1 = array();
+            $available_stores1 = [];
 
             if (isset($storeLocatorConfig['enable_all_store']) && $storeLocatorConfig['enable_all_store'] == 1) {
                 if (version_compare(_PS_VERSION_, '1.7.4.0', '>=')) {
                     $available_store = \Db::getInstance()->executeS(
-                        'SELECT s.id_store,ss.name FROM `' . _DB_PREFIX_ . 'store` s '
-                        . 'INNER JOIN ' . _DB_PREFIX_ . 'store_lang ss '
-                        . 'on (s.id_store=ss.id_store AND ss.id_lang='
-                        . (int) $context->language->id . ') '
-                        . 'WHERE s.active=1 ORDER BY s.`id_store`'
+                        'SELECT s.id_store,ss.name FROM `'._DB_PREFIX_.'store` s '
+                        .'INNER JOIN '._DB_PREFIX_.'store_lang ss '
+                        .'on (s.id_store=ss.id_store AND ss.id_lang='
+                        .(int) $context->language->id.') '
+                        .'WHERE s.active=1 ORDER BY s.`id_store`'
                     );
                 } else {
                     $available_store = \Store::getStores($context->language->id);
                 }
-                $enabled_store = array();
+                $enabled_store = [];
                 foreach ($available_store as $key => $value) {
                     $enabled_store[] = $value['id_store'];
                 }
@@ -283,18 +284,18 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 $available_stores1 = $available_stores;
             }
 
-            $distance_unit = "M";
+            $distance_unit = 'M';
             if ($storeLocatorConfig['distance_unit'] == 'km') {
-                $distance_unit = "K";
+                $distance_unit = 'K';
             }
 
-            $near_by_store = array();
+            $near_by_store = [];
             $default_store = $storeLocatorConfig['default_store'];
 
             foreach ($available_stores1 as $key => $store1) {
                 $near_by_distance = \Tools::ps_round($this->calculateDistance($latitude, $longitude, $store1['latitude'], $store1['longitude'], $distance_unit), 2);
                 if ($near_by_distance <= $radius_val || $radius_val == 0) {
-                    $json_data = array();
+                    $json_data = [];
                     $available_stores1[$key]['store_distance'] = $near_by_distance;
 
                     if (class_exists('Kbgcstorelocatorpickup')) {
@@ -306,11 +307,11 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     $near_by_store[] = $available_stores1[$key];
 
                     // Para el JSON del mapa necesitamos el template, por ahora usamos HTML básico
-                    $popup_html = '<div class="velo-popup" data-store-id="' . (int)$store1['id_store'] . '">' .
-                        '<div class="title-address">' . htmlspecialchars($store1['name']) . '</div>' .
-                        '<div class="detail-address">' . htmlspecialchars($store1['address1']) . '</div>' .
+                    $popup_html = '<div class="velo-popup" data-store-id="'.(int) $store1['id_store'].'">'.
+                        '<div class="title-address">'.htmlspecialchars($store1['name']).'</div>'.
+                        '<div class="detail-address">'.htmlspecialchars($store1['address1']).'</div>'.
                         // Enlace de seleccionar con data-store-id para “puentear” al listado
-                        '<div class="actions"><a href="#" class="velo-store-select-link" data-store-id="' . (int)$store1['id_store'] . '">Seleccionar esta tienda</a></div>' .
+                        '<div class="actions"><a href="#" class="velo-store-select-link" data-store-id="'.(int) $store1['id_store'].'">Seleccionar esta tienda</a></div>'.
                         '</div>';
 
                     $json_data[] = $popup_html;
@@ -324,12 +325,12 @@ class GuardPickupHandler extends AbstractCarrierHandler
                         $hoursArray = [];
                         foreach ($workingHours as $hourInfo) {
                             if (is_array($hourInfo) && isset($hourInfo['day']) && isset($hourInfo['hours'])) {
-                                $hoursArray[] = $hourInfo['day'] . ': ' . $hourInfo['hours'];
+                                $hoursArray[] = $hourInfo['day'].': '.$hourInfo['hours'];
                             }
                         }
                         $hoursString = implode(' | ', $hoursArray);
                     } else {
-                        $hoursString = (string)$workingHours;
+                        $hoursString = (string) $workingHours;
                     }
                     $av_store_detail[$store1['id_store']] = $hoursString;
                 }
@@ -338,7 +339,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
         }
 
         // Configuraciones de fecha para pickup
-        if (!empty($pickup_settings)) {
+        if (! empty($pickup_settings)) {
             $date_format = str_replace(
                 ['%y', '%m', '%d', '%t24', '%t12'],
                 ['yyyy', 'mm', 'dd', $pickup_settings['time_slot'] ? 'hh:00' : '', $pickup_settings['time_slot'] ? 'HH:00 P' : ''],
@@ -351,7 +352,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $hour_gap_month = date('n', $hour_gap) - 1;
         } else {
             $date_format = 'dd/mm/yyyy';
-            $hour_gap = time() + 86400; // 1 día por defecto
+            $hour_gap = time() + 86400; // 1 día Por defecto
             $hour_gap_date = date('j', $hour_gap);
             $hour_gap_hour = date('H', $hour_gap);
             $hour_gap_month = date('n', $hour_gap) - 1;
@@ -376,8 +377,9 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
             // error_log("GuardPickupHandler: Template data sanitization completed");
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: ERROR during template data sanitization: " . $e->getMessage());
-            return '<div class="alert alert-danger">Error sanitizing template data: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: ERROR during template data sanitization: '.$e->getMessage());
+
+            return '<div class="alert alert-danger">Error sanitizing template data: '.$e->getMessage().'</div>';
         }
 
         try {
@@ -392,57 +394,58 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $templateData = [
                 'current_selected_shipping' => $current_selected_shipping,
                 'carrier' => new \Carrier($this->carrierId, $context->language->id),
-                'carrier_id' => (int)$this->carrierId,
-                'kbgcs_store_url' => (string)$context->link->getModuleLink('kbgcstorelocatorpickup', 'stores'),
-                'map_api' => (string)($storeLocatorConfig['api_key'] ?? ''),
-                'is_enabled_website_link' => (int)($storeLocatorConfig['website_link'] ?? 0),
-                'is_enabled_store_image' => (int)($storeLocatorConfig['store_image'] ?? 0),
-                'is_enabled_show_stores' => (int)($storeLocatorConfig['show_stores'] ?? 1),
-                'is_enabled_direction_link' => (int)($storeLocatorConfig['get_direction_link'] ?? 1),
-                'index_page_link' => (string)$context->link->getPageLink('index'),
+                'carrier_id' => (int) $this->carrierId,
+                'kbgcs_store_url' => (string) $context->link->getModuleLink('kbgcstorelocatorpickup', 'stores'),
+                'map_api' => (string) ($storeLocatorConfig['api_key'] ?? ''),
+                'is_enabled_website_link' => (int) ($storeLocatorConfig['website_link'] ?? 0),
+                'is_enabled_store_image' => (int) ($storeLocatorConfig['store_image'] ?? 0),
+                'is_enabled_show_stores' => (int) ($storeLocatorConfig['show_stores'] ?? 1),
+                'is_enabled_direction_link' => (int) ($storeLocatorConfig['get_direction_link'] ?? 1),
+                'index_page_link' => (string) $context->link->getPageLink('index'),
                 'selected_store' => $selected_store,
-                'lang_iso' => (string)$context->language->iso_code,
-                'zoom_level' => (int)($storeLocatorConfig['zoom_level'] ?? 10),
-                'default_latitude' => (string)$default_latitude,
-                'default_longitude' => (string)$default_longitude,
-                'display_phone' => (int)($storeLocatorConfig['display_phone'] ?? 1),
-                'default_store' => (string)$default_store,
-                'distance_unit' => (string)($storeLocatorConfig['distance_unit'] ?? 'km'),
-                'distance_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/distance.png'),
-                'phone_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/call.png'),
-                'web_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/web.png'),
-                'clock_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/clock.png'),
-                'store_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/store.png'),
-                'up_arrow' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/up_arrow.png'),
-                'down_arrow' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/down_arrow.png'),
-                'locator_icon' => (string)$marker,
-                'current_location_icon' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/current_location.png'),
+                'lang_iso' => (string) $context->language->iso_code,
+                'zoom_level' => (int) ($storeLocatorConfig['zoom_level'] ?? 10),
+                'default_latitude' => (string) $default_latitude,
+                'default_longitude' => (string) $default_longitude,
+                'display_phone' => (int) ($storeLocatorConfig['display_phone'] ?? 1),
+                'default_store' => (string) $default_store,
+                'distance_unit' => (string) ($storeLocatorConfig['distance_unit'] ?? 'km'),
+                'distance_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/distance.png'),
+                'phone_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/call.png'),
+                'web_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/web.png'),
+                'clock_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/clock.png'),
+                'store_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/store.png'),
+                'up_arrow' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/up_arrow.png'),
+                'down_arrow' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/down_arrow.png'),
+                'locator_icon' => (string) $marker,
+                'current_location_icon' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/current_location.png'),
                 'available_stores' => $sanitizedAvailableStores, // Todas las tiendas ya sanitizadas
-                'av_store_detail' => (string)json_encode($av_store_detail), // Ya son strings
-                'default_store_detail' => (string)json_encode($av_store_detail[$default_store] ?? ''),
-                'id_lang' => (int)$context->language->id,
-                'spinner' => (string)($this->getModuleDirUrl() . 'kbgcstorelocatorpickup/views/img/front/spinner.gif'),
-                'search_as_move' => (int)(isset($storeLocatorConfig['search_as_move']) && $storeLocatorConfig['search_as_move'] == 1 ? 1 : 0),
-                'kb_all_stores' => (string)$kb_all_stores, // Ya es JSON string
-                'is_all_stores_disabled' => (int)(count($available_stores) === 0 ? 1 : 0),
+                'av_store_detail' => (string) json_encode($av_store_detail), // Ya son strings
+                'default_store_detail' => (string) json_encode($av_store_detail[$default_store] ?? ''),
+                'id_lang' => (int) $context->language->id,
+                'spinner' => (string) ($this->getModuleDirUrl().'kbgcstorelocatorpickup/views/img/front/spinner.gif'),
+                'search_as_move' => (int) (isset($storeLocatorConfig['search_as_move']) && $storeLocatorConfig['search_as_move'] == 1 ? 1 : 0),
+                'kb_all_stores' => (string) $kb_all_stores, // Ya es JSON string
+                'is_all_stores_disabled' => (int) (count($available_stores) === 0 ? 1 : 0),
                 'store' => $template_store, // Ya sanitizado
-                'is_enabled_date_selcetion' => (int)(!empty($pickup_settings['enable_date_selection']) ? 1 : 0),
-                'days_gap' => (string)(!empty($pickup_settings) ? date('Y-m-d', strtotime('+' . $pickup_settings['days_gap'] . ' days')) : date('Y-m-d', strtotime('+1 day'))),
-                'maximum_days' => (string)(!empty($pickup_settings) ? date('Y-m-d', strtotime('+' . $pickup_settings['maximum_days'] . ' days')) : date('Y-m-d', strtotime('+7 days'))),
-                'time_slot' => (int)(!empty($pickup_settings) ? $pickup_settings['time_slot'] : 1),
-                'hours_gap' => (int)$hour_gap,
-                'hour_gap_date' => (int)$hour_gap_date,
-                'hour_gap_hour' => (int)$hour_gap_hour,
-                'hour_gap_month' => (int)$hour_gap_month,
-                'format' => (string)$date_format,
-                'pickup_carrier_id' => (int)$this->carrierId,
-                'cart_guard_pickup' => $cart_guard_pickup
+                'is_enabled_date_selcetion' => (int) (! empty($pickup_settings['enable_date_selection']) ? 1 : 0),
+                'days_gap' => (string) (! empty($pickup_settings) ? date('Y-m-d', strtotime('+'.$pickup_settings['days_gap'].' days')) : date('Y-m-d', strtotime('+1 day'))),
+                'maximum_days' => (string) (! empty($pickup_settings) ? date('Y-m-d', strtotime('+'.$pickup_settings['maximum_days'].' days')) : date('Y-m-d', strtotime('+7 days'))),
+                'time_slot' => (int) (! empty($pickup_settings) ? $pickup_settings['time_slot'] : 1),
+                'hours_gap' => (int) $hour_gap,
+                'hour_gap_date' => (int) $hour_gap_date,
+                'hour_gap_hour' => (int) $hour_gap_hour,
+                'hour_gap_month' => (int) $hour_gap_month,
+                'format' => (string) $date_format,
+                'pickup_carrier_id' => (int) $this->carrierId,
+                'cart_guard_pickup' => $cart_guard_pickup,
             ];
 
             // error_log("GuardPickupHandler: Template data array created successfully");
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: ERROR creating template data array: " . $e->getMessage());
-            return '<div class="alert alert-danger">Error creating template data: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: ERROR creating template data array: '.$e->getMessage());
+
+            return '<div class="alert alert-danger">Error creating template data: '.$e->getMessage().'</div>';
         }
 
         try {
@@ -451,8 +454,9 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $finalTemplateData = $this->deepSanitizeForTemplate($templateData);
             // error_log("GuardPickupHandler: Deep sanitization completed");
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: ERROR during deep sanitization: " . $e->getMessage());
-            return '<div class="alert alert-danger">Error during deep sanitization: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: ERROR during deep sanitization: '.$e->getMessage());
+
+            return '<div class="alert alert-danger">Error during deep sanitization: '.$e->getMessage().'</div>';
         }
 
         // Logging adicional para debug
@@ -490,13 +494,15 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
         try {
             $result = $this->renderTemplate($this->getTemplatePath(), $finalTemplateData);
+
             // error_log("GuardPickupHandler: Template rendered successfully, length: " . strlen($result));
             return $result;
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: Template render error: " . $e->getMessage());
-            error_log("GuardPickupHandler: Error file: " . $e->getFile() . ", Line: " . $e->getLine());
-            error_log("GuardPickupHandler: Stack trace: " . $e->getTraceAsString());
-            return '<div class="alert alert-danger">Error loading Store pickup interface: ' . $e->getMessage() . '</div>';
+            error_log('GuardPickupHandler: Template render error: '.$e->getMessage());
+            error_log('GuardPickupHandler: Error file: '.$e->getFile().', Line: '.$e->getLine());
+            error_log('GuardPickupHandler: Stack trace: '.$e->getTraceAsString());
+
+            return '<div class="alert alert-danger">Error loading Store pickup interface: '.$e->getMessage().'</div>';
         }
     }
 
@@ -521,22 +527,22 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 'id_address' => $requestData['id_address'],
                 'carrier_id' => $this->carrierId,
                 'address_id' => $requestData['id_address'],
-                'message' => 'Store pickup interface loaded successfully'
+                'message' => 'Store pickup interface loaded successfully',
             ];
 
             // error_log("GuardPickupHandler: processForm completed successfully");
             return $result;
 
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: processForm error: " . $e->getMessage());
+            error_log('GuardPickupHandler: processForm error: '.$e->getMessage());
+
             return [
                 'status' => 'error',
                 'html' => '<div class="alert alert-danger">Error processing Store pickup form</div>',
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Error: '.$e->getMessage(),
             ];
         }
     }
-
 
     private function hasAvailableStores(Context $context): bool
     {
@@ -551,13 +557,13 @@ class GuardPickupHandler extends AbstractCarrierHandler
             [
                 'type' => 'css',
                 'path' => 'modules/alsernetshopping/views/css/front/checkout/carriers/store-pickup.css',
-                'priority' => 100
+                'priority' => 100,
             ],
             [
                 'type' => 'js',
                 'path' => 'modules/alsernetshopping/views/js/front/checkout/steps/delivery/carriers/store-pickup.js',
-                'priority' => 100
-            ]
+                'priority' => 100,
+            ],
         ];
     }
 
@@ -567,28 +573,26 @@ class GuardPickupHandler extends AbstractCarrierHandler
         parent::cleanup();
     }
 
-
     public function processSelection(array $requestData, \Context $context): array
     {
 
-
         $payload = $requestData['payload'];
-        $preferred_store  = $payload['preferred_store'] ?? '';
-        $preferred_date  = $payload['preferred_date'] ?? '';
+        $preferred_store = $payload['preferred_store'] ?? '';
+        $preferred_date = $payload['preferred_date'] ?? '';
 
         if ($preferred_store === '') {
             return \ResponseHelper::warning('Debes seleccionar una punto.');
         }
 
         return [
-            'status'     => 'success',
-            'message'    => 'Punto de store seleccionada.',
+            'status' => 'success',
+            'message' => 'Punto de store seleccionada.',
             'id_carrier' => $this->getId(),
-            'selection'  => [
-                'type'        => 'pickup',
-                'id_carrier'  => $this->getId(),
-                'preferred_store'   => $preferred_store,
-                'preferred_date'   => $preferred_date,
+            'selection' => [
+                'type' => 'pickup',
+                'id_carrier' => $this->getId(),
+                'preferred_store' => $preferred_store,
+                'preferred_date' => $preferred_date,
             ],
         ];
     }
@@ -596,41 +600,40 @@ class GuardPickupHandler extends AbstractCarrierHandler
     public function persistSelection(\Context $context, array $requestData, array $handlerResult): bool
     {
         $payload = $requestData['payload'];
-        $preferred_store  = $payload['preferred_store'] ?? '';
-        $preferred_date  = $payload['preferred_date'] ?? '';
+        $preferred_store = $payload['preferred_store'] ?? '';
+        $preferred_date = $payload['preferred_date'] ?? '';
 
-        if (!empty($preferred_date) && !empty($preferred_store)) {
+        if (! empty($preferred_date) && ! empty($preferred_store)) {
             $id_cart = $context->cart->id;
             $id_customer = $context->customer->id;
             $id_shop = $context->shop->id;
-            $id_address = Db::getInstance()->getValue('SELECT id_address FROM ' . _DB_PREFIX_ . 'kb_gc_pickup_store_address_mapping where id_store=' . (int) $preferred_store);
-            $exist_data = Db::getInstance()->getValue('SELECT id_pickup FROM ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time WHERE id_cart=' . (int) $id_cart . ' AND id_customer=' . (int) $id_customer . ' AND id_shop=' . (int) $id_shop);
+            $id_address = Db::getInstance()->getValue('SELECT id_address FROM '._DB_PREFIX_.'kb_gc_pickup_store_address_mapping where id_store='.(int) $preferred_store);
+            $exist_data = Db::getInstance()->getValue('SELECT id_pickup FROM '._DB_PREFIX_.'kb_gc_pickup_at_store_time WHERE id_cart='.(int) $id_cart.' AND id_customer='.(int) $id_customer.' AND id_shop='.(int) $id_shop);
             //                $query = 0;
             if (empty($exist_data)) {
-                $query = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time set id_shop=' . (int) $id_shop . ',id_cart=' . (int) $id_cart . ',id_customer=' . (int) $id_customer . ',id_store=' . (int) $preferred_store . ',id_address_delivery=' . (int) $id_address . ',preferred_date="' . pSQL($preferred_date) . '",date_add=now(),date_upd=now()');
+                $query = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'kb_gc_pickup_at_store_time set id_shop='.(int) $id_shop.',id_cart='.(int) $id_cart.',id_customer='.(int) $id_customer.',id_store='.(int) $preferred_store.',id_address_delivery='.(int) $id_address.',preferred_date="'.pSQL($preferred_date).'",date_add=now(),date_upd=now()');
             } else {
-                $query = Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time  set id_shop=' . (int) $id_shop . ',id_store=' . (int) $preferred_store . ',id_address_delivery=' . (int) $id_address . ',preferred_date="' . pSQL($preferred_date) . '",date_upd=now() WHERE id_cart=' . (int) $id_cart . ' AND id_customer=' . (int) $id_customer . ' AND id_shop=' . (int) $id_shop);
+                $query = Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'kb_gc_pickup_at_store_time  set id_shop='.(int) $id_shop.',id_store='.(int) $preferred_store.',id_address_delivery='.(int) $id_address.',preferred_date="'.pSQL($preferred_date).'",date_upd=now() WHERE id_cart='.(int) $id_cart.' AND id_customer='.(int) $id_customer.' AND id_shop='.(int) $id_shop);
             }
         }
 
-        if (empty($preferred_date) && !empty($preferred_store)) {
+        if (empty($preferred_date) && ! empty($preferred_store)) {
             $id_cart = $context->cart->id;
             $id_customer = $context->customer->id;
             $id_shop = $context->shop->id;
-            $id_address = Db::getInstance()->getValue('SELECT id_address FROM ' . _DB_PREFIX_ . 'kb_gc_pickup_store_address_mapping where id_store=' . (int) $preferred_store);
-            $exist_data = Db::getInstance()->getValue('SELECT id_pickup FROM ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time WHERE id_cart=' . (int) $id_cart . ' AND id_customer=' . (int) $id_customer . ' AND id_shop=' . (int) $id_shop);
+            $id_address = Db::getInstance()->getValue('SELECT id_address FROM '._DB_PREFIX_.'kb_gc_pickup_store_address_mapping where id_store='.(int) $preferred_store);
+            $exist_data = Db::getInstance()->getValue('SELECT id_pickup FROM '._DB_PREFIX_.'kb_gc_pickup_at_store_time WHERE id_cart='.(int) $id_cart.' AND id_customer='.(int) $id_customer.' AND id_shop='.(int) $id_shop);
             //                $query = 0;
             if (empty($exist_data)) {
-                $query = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time set id_shop=' . (int) $id_shop . ',id_cart=' . (int) $id_cart . ',id_customer=' . (int) $id_customer . ',id_store=' . (int) $preferred_store . ',id_address_delivery=' . (int) $id_address . ',preferred_date="' . pSQL($preferred_date) . '",date_add=now(),date_upd=now()');
+                $query = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'kb_gc_pickup_at_store_time set id_shop='.(int) $id_shop.',id_cart='.(int) $id_cart.',id_customer='.(int) $id_customer.',id_store='.(int) $preferred_store.',id_address_delivery='.(int) $id_address.',preferred_date="'.pSQL($preferred_date).'",date_add=now(),date_upd=now()');
             } else {
-                $query = Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time  set id_shop=' . (int) $id_shop . ',id_store=' . (int) $preferred_store . ',id_address_delivery=' . (int) $id_address . ',preferred_date="' . pSQL($preferred_date) . '",date_upd=now() WHERE id_cart=' . (int) $id_cart . ' AND id_customer=' . (int) $id_customer . ' AND id_shop=' . (int) $id_shop);
+                $query = Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'kb_gc_pickup_at_store_time  set id_shop='.(int) $id_shop.',id_store='.(int) $preferred_store.',id_address_delivery='.(int) $id_address.',preferred_date="'.pSQL($preferred_date).'",date_upd=now() WHERE id_cart='.(int) $id_cart.' AND id_customer='.(int) $id_customer.' AND id_shop='.(int) $id_shop);
             }
         }
 
         return $query;
 
     }
-
 
     private function getRegularStorePickupData($id_address_delivery, $context)
     {
@@ -648,7 +651,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 isset($storeLocatorConfig['enable_store_locator']) && $storeLocatorConfig['enable_store_locator']) ||
             ($storeLocatorConfig && isset($storeLocatorConfig['enable_pickup']) && $storeLocatorConfig['enable_pickup']);
 
-        if (!$isEnabled) {
+        if (! $isEnabled) {
             // error_log("GuardPickupHandler: Store locator not properly enabled - using existing config with forced enablement");
             // Use the existing config but ensure it's marked as enabled
             if ($storeLocatorConfig) {
@@ -660,7 +663,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     'enable_store_locator' => 1,
                     'enable_pickup' => 1,
                     'pickup_days_ahead' => 7,
-                    'max_distance' => 50
+                    'max_distance' => 50,
                 ];
             }
             // error_log("GuardPickupHandler: Forced enablement config: " . print_r($storeLocatorConfig, true));
@@ -688,13 +691,13 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     'country' => $country->name,
                     'state' => $state->name,
                     'city' => $delivery_address->city,
-                    'postcode' => $delivery_address->postcode
+                    'postcode' => $delivery_address->postcode,
                 ],
                 'config' => [
                     'map_enabled' => isset($storeLocatorConfig['show_map']) ? $storeLocatorConfig['show_map'] : true,
-                    'max_distance' => isset($storeLocatorConfig['max_distance']) ? $storeLocatorConfig['max_distance'] : 50
-                ]
-            ]
+                    'max_distance' => isset($storeLocatorConfig['max_distance']) ? $storeLocatorConfig['max_distance'] : 50,
+                ],
+            ],
         ];
     }
 
@@ -723,32 +726,32 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 'hours' => [
                     [
                         'day' => 'Lunes',
-                        'hours' => '09:00-20:00'
+                        'hours' => '09:00-20:00',
                     ],
                     [
                         'day' => 'Martes',
-                        'hours' => '09:00-20:00'
+                        'hours' => '09:00-20:00',
                     ],
                     [
                         'day' => 'Miércoles',
-                        'hours' => '09:00-20:00'
+                        'hours' => '09:00-20:00',
                     ],
                     [
                         'day' => 'Jueves',
-                        'hours' => '09:00-20:00'
+                        'hours' => '09:00-20:00',
                     ],
                     [
                         'day' => 'Viernes',
-                        'hours' => '09:00-20:00'
+                        'hours' => '09:00-20:00',
                     ],
                     [
                         'day' => 'Sábado',
-                        'hours' => '10:00-18:00'
+                        'hours' => '10:00-18:00',
                     ],
                     [
                         'day' => 'Domingo',
-                        'hours' => ''
-                    ]
+                        'hours' => '',
+                    ],
                 ],
                 'opening_hours' => [
                     'monday' => '09:00-20:00',
@@ -757,8 +760,8 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     'thursday' => '09:00-20:00',
                     'friday' => '09:00-20:00',
                     'saturday' => '10:00-18:00',
-                    'sunday' => 'Cerrado'
-                ]
+                    'sunday' => 'Cerrado',
+                ],
             ],
             [
                 'id_store' => '2',
@@ -777,32 +780,32 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 'hours' => [
                     [
                         'day' => 'Lunes',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Martes',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Miércoles',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Jueves',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Viernes',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Sábado',
-                        'hours' => '10:00-22:00'
+                        'hours' => '10:00-22:00',
                     ],
                     [
                         'day' => 'Domingo',
-                        'hours' => '12:00-20:00'
-                    ]
+                        'hours' => '12:00-20:00',
+                    ],
                 ],
                 'opening_hours' => [
                     'monday' => '10:00-22:00',
@@ -811,9 +814,9 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     'thursday' => '10:00-22:00',
                     'friday' => '10:00-22:00',
                     'saturday' => '10:00-22:00',
-                    'sunday' => '12:00-20:00'
-                ]
-            ]
+                    'sunday' => '12:00-20:00',
+                ],
+            ],
         ];
 
         return $stores;
@@ -823,7 +826,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
     {
         $dates = [];
         $startDate = date('Y-m-d');
-        $daysAhead = isset($config['pickup_days_ahead']) ? (int)$config['pickup_days_ahead'] : 7;
+        $daysAhead = isset($config['pickup_days_ahead']) ? (int) $config['pickup_days_ahead'] : 7;
 
         // Generar fechas disponibles
         for ($i = 1; $i <= $daysAhead; $i++) {
@@ -833,7 +836,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $dates[] = [
                 'date' => $date,
                 'formatted' => date('d/m/Y', strtotime($date)),
-                'day_name' => $dayName
+                'day_name' => $dayName,
             ];
         }
 
@@ -847,11 +850,11 @@ class GuardPickupHandler extends AbstractCarrierHandler
         $existingConfig = \Configuration::get($configKey);
 
         if (empty($existingConfig)) {
-            // Obtener la primera tienda disponible para configuración por defecto
-            $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `' . _DB_PREFIX_ . 'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
+            // Obtener la primera tienda disponible para configuración Por defecto
+            $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `'._DB_PREFIX_.'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
             $defaultStoreId = $firstStore ? $firstStore['id_store'] : 1;
 
-            // Configuración por defecto para Store Locator original
+            // Configuración Por defecto para Store Locator original
             $defaultConfig = [
                 'enable' => 1,
                 'enable_store_locator' => 1,
@@ -867,7 +870,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 'search_as_move' => 0,
                 'distance_unit' => 'km',
                 'enable_all_store' => 1,
-                'avilable_store' => []
+                'avilable_store' => [],
             ];
 
             $configJson = json_encode($defaultConfig);
@@ -893,7 +896,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 $needsUpdate = true;
             }
             if (empty($config['default_store'])) {
-                $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `' . _DB_PREFIX_ . 'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
+                $firstStore = \Db::getInstance()->getRow('SELECT id_store FROM `'._DB_PREFIX_.'store` WHERE active = 1 ORDER BY id_store LIMIT 1');
                 $config['default_store'] = $firstStore ? $firstStore['id_store'] : 1;
                 $needsUpdate = true;
             }
@@ -903,12 +906,12 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 $needsUpdate = true;
             }
             // Forzar display_phone = 1 para mostrar teléfonos
-            if (!isset($config['display_phone']) || $config['display_phone'] == '0') {
+            if (! isset($config['display_phone']) || $config['display_phone'] == '0') {
                 $config['display_phone'] = '1';
                 $needsUpdate = true;
             }
             // Forzar get_direction_link = 1 para mostrar direcciones
-            if (!isset($config['get_direction_link']) || $config['get_direction_link'] == '0') {
+            if (! isset($config['get_direction_link']) || $config['get_direction_link'] == '0') {
                 $config['get_direction_link'] = '1';
                 $needsUpdate = true;
             }
@@ -930,7 +933,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 'maximum_days' => 7,
                 'hours_gap' => 2,
                 'time_slot' => 1,
-                'format' => '%d/%m/%Y'
+                'format' => '%d/%m/%Y',
             ];
 
             $pickupConfigJson = json_encode($defaultPickupConfig);
@@ -939,7 +942,6 @@ class GuardPickupHandler extends AbstractCarrierHandler
         } else {
             // error_log("GuardPickupHandler: Pickup Time Settings configuration already exists");
         }
-
 
         // Configurar también el carrier ID para pickup si no existe
         $pickupCarrierId = \Configuration::get('KB_GC_PICKUP_AT_STORE_SHIPPING');
@@ -961,7 +963,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
             'show_stores' => 1,
             'get_direction_link' => 1,
             'search_as_move' => 0,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
         ];
     }
 
@@ -972,7 +974,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
             'days_gap' => 1,
             'maximum_days' => 7,
             'hours_gap' => 2,
-            'time_slot' => 1
+            'time_slot' => 1,
         ];
     }
 
@@ -980,12 +982,12 @@ class GuardPickupHandler extends AbstractCarrierHandler
     {
         $mapData = [];
         foreach ($stores as $store) {
-            $html = '<div class="velo-popup">' .
-                '<div class="title-address">' . htmlspecialchars($store['name']) . '</div>' .
-                '<div class="detail-address">' . htmlspecialchars($store['address1']);
+            $html = '<div class="velo-popup">'.
+                '<div class="title-address">'.htmlspecialchars($store['name']).'</div>'.
+                '<div class="detail-address">'.htmlspecialchars($store['address1']);
 
-            if (!empty($store['address2'])) {
-                $html .= '<br/>' . htmlspecialchars($store['address2']);
+            if (! empty($store['address2'])) {
+                $html .= '<br/>'.htmlspecialchars($store['address2']);
             }
 
             $html .= '</div></div>';
@@ -993,9 +995,10 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $mapData[] = [
                 $html,
                 $store['latitude'] ?? '40.416775',
-                $store['longitude'] ?? '-3.703790'
+                $store['longitude'] ?? '-3.703790',
             ];
         }
+
         return $mapData;
     }
 
@@ -1008,8 +1011,8 @@ class GuardPickupHandler extends AbstractCarrierHandler
     {
         $sanitized = [];
 
-        if (!is_array($store)) {
-            return (string)$store;
+        if (! is_array($store)) {
+            return (string) $store;
         }
 
         foreach ($store as $key => $value) {
@@ -1018,19 +1021,19 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     // Si es array, convertir a string (excepto 'hours' que necesita tratamiento especial)
                     if ($key === 'hours') {
                         // Validar que hours sea un array válido con la estructura correcta
-                        if (is_array($value) && !empty($value)) {
+                        if (is_array($value) && ! empty($value)) {
                             $validHours = [];
                             foreach ($value as $hourEntry) {
                                 if (is_array($hourEntry) && isset($hourEntry['day']) && isset($hourEntry['hours'])) {
                                     $validHours[] = [
-                                        'day' => (string)$hourEntry['day'],
-                                        'hours' => (string)$hourEntry['hours']
+                                        'day' => (string) $hourEntry['day'],
+                                        'hours' => (string) $hourEntry['hours'],
                                     ];
                                 } else {
                                     // Si no tiene la estructura correcta, crear una entrada válida
                                     $validHours[] = [
-                                        'day' => is_string($hourEntry) ? (string)$hourEntry : 'N/A',
-                                        'hours' => ''
+                                        'day' => is_string($hourEntry) ? (string) $hourEntry : 'N/A',
+                                        'hours' => '',
                                     ];
                                 }
                             }
@@ -1043,24 +1046,24 @@ class GuardPickupHandler extends AbstractCarrierHandler
                         // Para otros arrays, convertir a string seguro
                         $stringValues = [];
                         foreach ($value as $item) {
-                            if (!is_array($item) && !is_object($item)) {
-                                $stringValues[] = (string)$item;
+                            if (! is_array($item) && ! is_object($item)) {
+                                $stringValues[] = (string) $item;
                             }
                         }
                         $sanitized[$key] = implode(', ', $stringValues);
                     }
                 } elseif (is_object($value)) {
                     // Para objetos, convertir a string o usar propiedades específicas
-                    $sanitized[$key] = (string)$value;
+                    $sanitized[$key] = (string) $value;
                 } elseif (is_null($value)) {
                     $sanitized[$key] = '';
                 } elseif (is_bool($value)) {
                     $sanitized[$key] = $value ? '1' : '0';
                 } else {
-                    $sanitized[$key] = (string)$value;
+                    $sanitized[$key] = (string) $value;
                 }
             } catch (\Exception $e) {
-                error_log("GuardPickupHandler: Error sanitizing key '$key': " . $e->getMessage());
+                error_log("GuardPickupHandler: Error sanitizing key '$key': ".$e->getMessage());
                 $sanitized[$key] = '';
             }
         }
@@ -1068,7 +1071,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
         // Asegurar campos obligatorios
         $required_fields = ['id_store', 'name', 'address1', 'address2', 'city', 'postcode', 'state', 'country', 'phone', 'email', 'latitude', 'longitude'];
         foreach ($required_fields as $field) {
-            if (!isset($sanitized[$field])) {
+            if (! isset($sanitized[$field])) {
                 $sanitized[$field] = '';
             }
         }
@@ -1110,13 +1113,13 @@ class GuardPickupHandler extends AbstractCarrierHandler
                                     // Cualquier otro array dentro de store convertirlo a string
                                     $stringValues = [];
                                     foreach ($storeValue as $item) {
-                                        if (!is_array($item) && !is_object($item)) {
-                                            $stringValues[] = (string)$item;
+                                        if (! is_array($item) && ! is_object($item)) {
+                                            $stringValues[] = (string) $item;
                                         }
                                     }
                                     $storeData[$storeKey] = implode(', ', $stringValues);
                                 } else {
-                                    $storeData[$storeKey] = (string)$storeValue;
+                                    $storeData[$storeKey] = (string) $storeValue;
                                 }
                             }
                             $sanitized[$key] = $storeData;
@@ -1124,8 +1127,8 @@ class GuardPickupHandler extends AbstractCarrierHandler
                             // Para cualquier otro array, convertir a string seguro
                             $stringValues = [];
                             foreach ($value as $item) {
-                                if (!is_array($item) && !is_object($item)) {
-                                    $stringValues[] = (string)$item;
+                                if (! is_array($item) && ! is_object($item)) {
+                                    $stringValues[] = (string) $item;
                                 }
                             }
                             $sanitized[$key] = implode(', ', $stringValues);
@@ -1133,10 +1136,11 @@ class GuardPickupHandler extends AbstractCarrierHandler
                             $sanitized[$key] = $this->deepSanitizeForTemplate($value);
                         }
                     } catch (\Exception $e) {
-                        error_log("GuardPickupHandler: Error in deepSanitizeForTemplate for key '$key': " . $e->getMessage());
+                        error_log("GuardPickupHandler: Error in deepSanitizeForTemplate for key '$key': ".$e->getMessage());
                         $sanitized[$key] = '';
                     }
                 }
+
                 return $sanitized;
             } elseif (is_object($data)) {
                 // Para objetos que no son Carrier, mantener como están (PrestaShop los maneja)
@@ -1149,10 +1153,11 @@ class GuardPickupHandler extends AbstractCarrierHandler
                 return '';
             } else {
                 // Para valores escalares, convertir a string
-                return (string)$data;
+                return (string) $data;
             }
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: Error in deepSanitizeForTemplate: " . $e->getMessage());
+            error_log('GuardPickupHandler: Error in deepSanitizeForTemplate: '.$e->getMessage());
+
             return '';
         }
     }
@@ -1169,10 +1174,10 @@ class GuardPickupHandler extends AbstractCarrierHandler
             $miles = $dist * 60 * 1.1515;
             $unit = strtoupper($unit);
 
-            if ($unit == "K") {
-                return ($miles * 1.609344);
-            } elseif ($unit == "N") {
-                return ($miles * 0.8684);
+            if ($unit == 'K') {
+                return $miles * 1.609344;
+            } elseif ($unit == 'N') {
+                return $miles * 0.8684;
             } else {
                 return $miles;
             }
@@ -1187,7 +1192,7 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
             // Asignar datos del template + link automáticamente para todos los carriers
             $templateData = array_merge($sanitizedData, [
-                'link' => $this->context->link
+                'link' => $this->context->link,
             ]);
 
             // Log adicional para debug específico de GuardPickupHandler
@@ -1195,14 +1200,14 @@ class GuardPickupHandler extends AbstractCarrierHandler
 
             // Verificar que no hay arrays problemáticos antes de asignar a Smarty
             foreach ($templateData as $key => $value) {
-                if (is_array($value) && !in_array($key, ['available_stores', 'store', 'selected_store', 'carrier', 'cart_guard_pickup'])) {
+                if (is_array($value) && ! in_array($key, ['available_stores', 'store', 'selected_store', 'carrier', 'cart_guard_pickup'])) {
                     // error_log("GuardPickupHandler: WARNING - Problematic array found in key '$key': " . json_encode($value));
                     // Convertir a string seguro
                     if ($key === 'hours') {
                         // Para hours, mantener como array válido
                         $templateData[$key] = $this->sanitizeHoursArray($value);
                     } else {
-                        $templateData[$key] = is_array($value) ? json_encode($value) : (string)$value;
+                        $templateData[$key] = is_array($value) ? json_encode($value) : (string) $value;
                     }
                 }
 
@@ -1212,20 +1217,20 @@ class GuardPickupHandler extends AbstractCarrierHandler
             return $this->context->smarty->fetch($template);
         } catch (\Exception $e) {
             // Log error y retornar mensaje de error
-            $errorMsg = "GuardPickupHandler template error - Template: {$template}, Error: " . $e->getMessage() . ", File: " . $e->getFile() . ", Line: " . $e->getLine();
+            $errorMsg = "GuardPickupHandler template error - Template: {$template}, Error: ".$e->getMessage().', File: '.$e->getFile().', Line: '.$e->getLine();
             error_log($errorMsg);
 
             if ($this->configuration['debug']) {
-                error_log("GuardPickupHandler debug info - Data keys: " . implode(', ', array_keys($data)));
+                error_log('GuardPickupHandler debug info - Data keys: '.implode(', ', array_keys($data)));
             }
 
-            return '<div class="alert alert-danger">Error rendering Store Pickup template: ' . htmlspecialchars($e->getMessage()) . '</div>';
+            return '<div class="alert alert-danger">Error rendering Store Pickup template: '.htmlspecialchars($e->getMessage()).'</div>';
         }
     }
 
     private function sanitizeHoursArray($hours)
     {
-        if (!is_array($hours)) {
+        if (! is_array($hours)) {
             return [];
         }
 
@@ -1233,13 +1238,13 @@ class GuardPickupHandler extends AbstractCarrierHandler
         foreach ($hours as $entry) {
             if (is_array($entry)) {
                 $sanitized[] = [
-                    'day' => isset($entry['day']) ? (string)$entry['day'] : '',
-                    'hours' => isset($entry['hours']) ? (string)$entry['hours'] : ''
+                    'day' => isset($entry['day']) ? (string) $entry['day'] : '',
+                    'hours' => isset($entry['hours']) ? (string) $entry['hours'] : '',
                 ];
             } else {
                 $sanitized[] = [
                     'day' => 'N/A',
-                    'hours' => (string)$entry
+                    'hours' => (string) $entry,
                 ];
             }
         }
@@ -1253,30 +1258,28 @@ class GuardPickupHandler extends AbstractCarrierHandler
             'enabled' => true,
             'requires_store_selection' => true,
             'show_store_details' => true,
-            'cache_ttl' => 3600
+            'cache_ttl' => 3600,
         ];
     }
 
     /**
      * Get cart guard pickup selection from database
-     * @param Context $context
-     * @return array
      */
     private function getCartGuardPickupData(Context $context): array
     {
-        if (!$context->cart || !$context->cart->id || !$context->customer || !$context->customer->id) {
+        if (! $context->cart || ! $context->cart->id || ! $context->customer || ! $context->customer->id) {
             return [];
         }
 
-        $id_cart = (int)$context->cart->id;
-        $id_customer = (int)$context->customer->id;
-        $id_shop = (int)$context->shop->id;
+        $id_cart = (int) $context->cart->id;
+        $id_customer = (int) $context->customer->id;
+        $id_shop = (int) $context->shop->id;
 
         try {
             // Use the same logic as the order confirmation hook
-            $pickup = \Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'kb_gc_pickup_at_store_time WHERE id_cart=' . (int)$id_cart . ' AND id_shop=' . (int)$id_shop . ' AND id_customer=' . (int)$id_customer);
+            $pickup = \Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'kb_gc_pickup_at_store_time WHERE id_cart='.(int) $id_cart.' AND id_shop='.(int) $id_shop.' AND id_customer='.(int) $id_customer);
 
-            if (!empty($pickup)) {
+            if (! empty($pickup)) {
                 // Get store data using Store class like in the original logic
                 $store = new \Store($pickup['id_store'], $context->language->id);
 
@@ -1298,16 +1301,16 @@ class GuardPickupHandler extends AbstractCarrierHandler
                     // Additional store data
                     'hours' => [], // Will be populated if needed
                     'country' => '', // Will be populated if needed
-                    'state' => '' // Will be populated if needed
+                    'state' => '', // Will be populated if needed
                 ];
             }
 
             return [];
 
         } catch (\Exception $e) {
-            error_log("GuardPickupHandler: Error getting cart guard pickup data: " . $e->getMessage());
+            error_log('GuardPickupHandler: Error getting cart guard pickup data: '.$e->getMessage());
+
             return [];
         }
     }
-
 }

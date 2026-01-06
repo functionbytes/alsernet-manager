@@ -189,7 +189,7 @@
                     @if($policy->is_default)
                         <div class="col-12">
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> Esta es la política SLA por defecto. Se aplicará automáticamente a todos los documentos nuevos.
+                                <i class="fas fa-info-circle"></i> Esta es la política SLA Por defecto. Se aplicará automáticamente a todos los documentos nuevos.
                             </div>
                         </div>
                     @endif

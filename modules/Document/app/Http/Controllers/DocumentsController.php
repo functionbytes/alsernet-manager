@@ -550,7 +550,7 @@ class DocumentsController extends Controller
             // Solo documentos adicionales (additional_attachments)
             $mediaItems = $document->getMedia('additional_attachments');
         } else {
-            // Todos los documentos del documento (comportamiento por defecto)
+            // Todos los documentos del documento (comportamiento Por defecto)
             $mediaItems = $document->media;
         }
 
@@ -1725,7 +1725,7 @@ class DocumentsController extends Controller
                     continue;
                 }
 
-                // 1. Establecer tipo por defecto si no existe
+                // 1. Establecer tipo Por defecto si no existe
                 if (! $document->type) {
                     $document->type = 'general';
                 }

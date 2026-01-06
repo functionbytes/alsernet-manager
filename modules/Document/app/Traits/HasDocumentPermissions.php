@@ -159,15 +159,19 @@ trait HasDocumentPermissions
             return true;
         }
 
-        // Second, try with 'view-' prefix for component visibility
-        $viewPermission = 'view-'.$name;
-        if ($this->canInDocumentModule($viewPermission)) {
-            return true;
+        // Second, try with 'view-' prefix for component visibility (but avoid double-prefixing)
+        if (! str_starts_with($name, 'view-')) {
+            $viewPermission = 'view-'.$name;
+            if ($this->canInDocumentModule($viewPermission)) {
+                return true;
+            }
         }
 
         // Third, dynamically check component mappings from database
-        // This maps component names to their required permissions
-        return $this->resolveComponentPermissions($name);
+        // Strip 'view-' prefix if present to match component names in mappings
+        $componentName = str_starts_with($name, 'view-') ? substr($name, 5) : $name;
+
+        return $this->resolveComponentPermissions($componentName);
     }
 
     /**
@@ -181,18 +185,31 @@ trait HasDocumentPermissions
         // Dynamic component-to-permissions mapping
         // Maps component names to their required permissions in the database
         $componentMappings = [
+            // Email and notification actions
             'email-actions' => ['send-initial-request', 'send-reminders', 'send-missing-docs', 'send-approval', 'send-rejection', 'send-custom-email'],
+
+            // Document management (edit, change status, etc.)
             'document-management' => ['edit-documents', 'create-documents'],
+
+            // File operations
             'document-upload' => ['upload-documents'],
-            'validation-workflow' => ['approve-documents', 'reject-documents'],
-            'document-notes' => ['add-notes', 'edit-notes', 'delete-notes'],
             'additional-attachments' => ['upload-attachments', 'delete-attachments'],
-            'action-history' => ['view-all-documents', 'view-history'],
-            'email-history' => ['view-all-documents', 'view-history'],
-            'status-timeline' => ['view-all-documents', 'view-history'],
-            'products-list' => ['view-all-documents', 'view-documents'],
-            'order-details' => ['view-all-documents', 'view-documents'],
-            'customer-information' => ['view-all-documents', 'view-documents'],
+
+            // Workflow validation
+            'validation-workflow' => ['approve-documents', 'reject-documents'],
+
+            // Document notes
+            'document-notes' => ['add-notes', 'edit-notes', 'delete-notes'],
+
+            // View-only components - require SPECIFIC view permissions, not generic ones
+            'action-history' => ['view-action-history'],
+            'email-history' => ['view-email-history'],
+            'status-timeline' => ['view-status-timeline'],
+            'products-list' => ['view-products-list'],
+            'order-details' => ['view-order-details'],
+            'customer-information' => ['view-customer-information'],
+
+            // Sync operations
             'sync-operations' => ['import-documents', 'sync-erp', 'sync-api'],
         ];
 

@@ -650,7 +650,7 @@
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
-    </div> Route [manager.settings.stage-email-actions.edit] not defined.
+    </div>
 
     <div v-else>
 

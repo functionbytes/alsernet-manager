@@ -13,16 +13,19 @@ Route::prefix('roles')->name('roles.')->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('index');
     Route::get('/create', [RoleController::class, 'create'])->name('create');
     Route::get('/matrix', [RoleController::class, 'showPermissionMatrix'])->name('matrix');
-    Route::get('{role}/show', [RoleController::class, 'show'])->name('show');
-    Route::get('{role}/edit', [RoleController::class, 'edit'])->name('edit');
-    Route::get('{role}/modules', [RoleController::class, 'showModules'])->name('show.modules');
-    Route::get('{role}/permissions', [RoleController::class, 'showPermissions'])->name('show.permissions');
-    Route::get('{role}/users', [RoleController::class, 'showUsers'])->name('show.users');
+    Route::get('/show/{role}', [RoleController::class, 'show'])->name('show');
+    Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('edit');
+    Route::get('/modules/{role}', [RoleController::class, 'showModules'])->name('show.modules');
+    Route::get('/permissions/{role}', [RoleController::class, 'showPermissions'])->name('show.permissions');
+    Route::get('/users/{role}', [RoleController::class, 'showUsers'])->name('show.users');
 });
 
 // Permissions management routes
 Route::prefix('permissions')->name('permissions.')->group(function () {
     Route::get('/', [PermissionController::class, 'index'])->name('index');
     Route::get('/create', [PermissionController::class, 'create'])->name('create');
-    Route::get('{id}/edit', [PermissionController::class, 'edit'])->name('edit');
+    Route::post('/store', [PermissionController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [PermissionController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [PermissionController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [PermissionController::class, 'destroy'])->name('destroy');
 });

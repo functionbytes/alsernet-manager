@@ -2,20 +2,18 @@
 
 namespace AlsernetShopping;
 
+use Cart;
+use Configuration;
 use Context;
+use Customer;
 use Db;
 use DbQuery;
-use Mail;
-use Configuration;
-use Customer;
-use Cart;
-use Tools;
 use Language;
-use Shop;
-use Validate;
 use PrestaShopLogger;
+use Tools;
+use Validate;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -42,21 +40,31 @@ class AbandonmentEmailService
 
     // Tipos de email
     const EMAIL_FIRST_REMINDER = 'first_reminder';
+
     const EMAIL_SECOND_REMINDER = 'second_reminder';
+
     const EMAIL_FINAL_REMINDER = 'final_reminder';
+
     const EMAIL_WELCOME_BACK = 'welcome_back';
+
     const EMAIL_DISCOUNT_OFFER = 'discount_offer';
+
     const EMAIL_STOCK_ALERT = 'stock_alert';
 
     // Estados de envío
     const STATUS_PENDING = 'pending';
+
     const STATUS_SENT = 'sent';
+
     const STATUS_OPENED = 'opened';
+
     const STATUS_CLICKED = 'clicked';
+
     const STATUS_BOUNCED = 'bounced';
+
     const STATUS_FAILED = 'failed';
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context ?: Context::getContext();
         $this->cartManager = new AbandonedCartManager($this->context);
@@ -71,19 +79,19 @@ class AbandonmentEmailService
         try {
             // Obtener datos del abandono
             $abandonment = $this->getAbandonmentData($abandonmentId);
-            if (!$abandonment) {
+            if (! $abandonment) {
                 return ['success' => false, 'error' => 'Abandonment not found'];
             }
 
             // Verificar si se puede enviar email
             $canSend = $this->canSendEmail($abandonment, $emailType);
-            if (!$canSend['allowed']) {
+            if (! $canSend['allowed']) {
                 return ['success' => false, 'error' => $canSend['reason']];
             }
 
             // Obtener plantilla de email
             $template = $this->getEmailTemplate($emailType, $abandonment['id_lang']);
-            if (!$template) {
+            if (! $template) {
                 return ['success' => false, 'error' => 'Email template not found'];
             }
 
@@ -117,14 +125,15 @@ class AbandonmentEmailService
                     'success' => true,
                     'email_type' => $emailType,
                     'tracking_token' => $trackingToken,
-                    'scheduled_next' => $this->getNextScheduledEmail($emailType)
+                    'scheduled_next' => $this->getNextScheduledEmail($emailType),
                 ];
             } else {
                 return ['success' => false, 'error' => 'Failed to send email'];
             }
 
         } catch (Exception $e) {
-            PrestaShopLogger::addLog('AbandonmentEmailService error: ' . $e->getMessage(), 3);
+            PrestaShopLogger::addLog('AbandonmentEmailService error: '.$e->getMessage(), 3);
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -138,7 +147,7 @@ class AbandonmentEmailService
             'processed' => 0,
             'sent' => 0,
             'failed' => 0,
-            'skipped' => 0
+            'skipped' => 0,
         ];
 
         $pendingEmails = $this->getPendingEmails($limit);
@@ -169,17 +178,17 @@ class AbandonmentEmailService
      */
     public function getEmailTemplate(string $emailType, int $langId): ?array
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('*')
-            ->from(_DB_PREFIX_ . 'alsernetshopping_email_templates')
-            ->where('template_type = "' . pSQL($emailType) . '"')
-            ->where('id_lang = ' . (int)$langId)
+            ->from(_DB_PREFIX_.'alsernetshopping_email_templates')
+            ->where('template_type = "'.pSQL($emailType).'"')
+            ->where('id_lang = '.(int) $langId)
             ->where('is_active = 1');
 
         $template = Db::getInstance()->getRow($sql);
 
-        if (!$template && $langId != Configuration::get('PS_LANG_DEFAULT')) {
-            // Fallback al idioma por defecto
+        if (! $template && $langId != Configuration::get('PS_LANG_DEFAULT')) {
+            // Fallback al idioma Por defecto
             return $this->getEmailTemplate($emailType, Configuration::get('PS_LANG_DEFAULT'));
         }
 
@@ -205,7 +214,7 @@ class AbandonmentEmailService
         // Variables básicas
         $vars = [
             // Datos del cliente
-            'customer_name' => $customer->firstname . ' ' . $customer->lastname,
+            'customer_name' => $customer->firstname.' '.$customer->lastname,
             'customer_firstname' => $customer->firstname,
             'customer_email' => $customer->email,
 
@@ -277,7 +286,7 @@ class AbandonmentEmailService
         // Reemplazar variables simples
         foreach ($vars as $key => $value) {
             if (is_scalar($value)) {
-                $content = str_replace('{' . $key . '}', $value, $content);
+                $content = str_replace('{'.$key.'}', $value, $content);
             }
         }
 
@@ -306,19 +315,20 @@ class AbandonmentEmailService
         foreach ($products as $product) {
             $html .= '<tr style="border-bottom: 1px solid #eee;">';
             $html .= '<td style="padding: 15px; width: 80px;">';
-            $html .= '<img src="' . $product['image'] . '" style="width: 60px; height: 60px; object-fit: cover;" alt="' . htmlspecialchars($product['name']) . '">';
+            $html .= '<img src="'.$product['image'].'" style="width: 60px; height: 60px; object-fit: cover;" alt="'.htmlspecialchars($product['name']).'">';
             $html .= '</td>';
             $html .= '<td style="padding: 15px;">';
-            $html .= '<h3 style="margin: 0 0 5px 0; font-size: 16px;">' . htmlspecialchars($product['name']) . '</h3>';
-            $html .= '<p style="margin: 0; color: #666;">Cantidad: ' . $product['quantity'] . '</p>';
+            $html .= '<h3 style="margin: 0 0 5px 0; font-size: 16px;">'.htmlspecialchars($product['name']).'</h3>';
+            $html .= '<p style="margin: 0; color: #666;">Cantidad: '.$product['quantity'].'</p>';
             $html .= '</td>';
             $html .= '<td style="padding: 15px; text-align: right;">';
-            $html .= '<strong style="font-size: 16px;">' . $product['price'] . '</strong>';
+            $html .= '<strong style="font-size: 16px;">'.$product['price'].'</strong>';
             $html .= '</td>';
             $html .= '</tr>';
         }
 
         $html .= '</table>';
+
         return $html;
     }
 
@@ -327,14 +337,14 @@ class AbandonmentEmailService
      */
     private function generateRecoveryUrl(int $abandonmentId): string
     {
-        $token = md5($abandonmentId . Configuration::get('PS_COOKIE_KEY'));
+        $token = md5($abandonmentId.Configuration::get('PS_COOKIE_KEY'));
 
         return $this->context->link->getModuleLink(
             'alsernetshopping',
             'recovery',
             [
                 'id' => $abandonmentId,
-                'token' => $token
+                'token' => $token,
             ]
         );
     }
@@ -344,7 +354,7 @@ class AbandonmentEmailService
      */
     private function generateUnsubscribeUrl(int $abandonmentId): string
     {
-        $token = md5($abandonmentId . 'unsubscribe' . Configuration::get('PS_COOKIE_KEY'));
+        $token = md5($abandonmentId.'unsubscribe'.Configuration::get('PS_COOKIE_KEY'));
 
         return $this->context->link->getModuleLink(
             'alsernetshopping',
@@ -353,7 +363,7 @@ class AbandonmentEmailService
                 'modalitie' => 'abandonment',
                 'action' => 'email_unsubscribe',
                 'abandonment_id' => $abandonmentId,
-                'token' => $token
+                'token' => $token,
             ]
         );
     }
@@ -365,10 +375,10 @@ class AbandonmentEmailService
     {
         $logoPath = Configuration::get('PS_LOGO');
         if ($logoPath) {
-            return $this->context->shop->getBaseURL(true) . 'img/' . $logoPath;
+            return $this->context->shop->getBaseURL(true).'img/'.$logoPath;
         }
 
-        return $this->context->shop->getBaseURL(true) . 'img/logo.jpg';
+        return $this->context->shop->getBaseURL(true).'img/logo.jpg';
     }
 
     /**
@@ -379,7 +389,7 @@ class AbandonmentEmailService
         $abandonTime = strtotime($timestamp);
         $currentTime = time();
 
-        return (int)floor(($currentTime - $abandonTime) / 3600);
+        return (int) floor(($currentTime - $abandonTime) / 3600);
     }
 
     /**
@@ -387,7 +397,7 @@ class AbandonmentEmailService
      */
     private function generateDiscountCode(int $abandonmentId): string
     {
-        return 'CART' . $abandonmentId . rand(100, 999);
+        return 'CART'.$abandonmentId.rand(100, 999);
     }
 
     /**
@@ -395,7 +405,7 @@ class AbandonmentEmailService
      */
     private function generateTrackingToken(int $abandonmentId, string $emailType): string
     {
-        return md5($abandonmentId . $emailType . time() . uniqid());
+        return md5($abandonmentId.$emailType.time().uniqid());
     }
 
     /**
@@ -403,7 +413,7 @@ class AbandonmentEmailService
      */
     private function registerEmailSent(int $abandonmentId, string $emailType, string $trackingToken, string $recipientEmail, array $templateVars): bool
     {
-        return Db::getInstance()->insert(_DB_PREFIX_ . 'alsernetshopping_email_log', [
+        return Db::getInstance()->insert(_DB_PREFIX_.'alsernetshopping_email_log', [
             'id_abandoned_cart' => $abandonmentId,
             'email_type' => pSQL($emailType),
             'tracking_token' => pSQL($trackingToken),
@@ -411,14 +421,14 @@ class AbandonmentEmailService
             'status' => pSQL(self::STATUS_SENT),
             'template_vars' => pSQL(json_encode($templateVars)),
             'sent_at' => date('Y-m-d H:i:s'),
-            'date_add' => date('Y-m-d H:i:s')
+            'date_add' => date('Y-m-d H:i:s'),
         ]);
     }
 
     /**
-     * Crear plantillas por defecto para todos los idiomas activos
+     * Crear plantillas Por defecto para todos los idiomas activos
      */
-    public function createDefaultTemplates(int $langId = null): bool
+    public function createDefaultTemplates(?int $langId = null): bool
     {
         $success = true;
 
@@ -432,7 +442,7 @@ class AbandonmentEmailService
 
         foreach ($languages as $language) {
             $result = $this->createTemplatesForLanguage($language['id_lang']);
-            if (!$result) {
+            if (! $result) {
                 $success = false;
             }
         }
@@ -455,17 +465,17 @@ class AbandonmentEmailService
                 continue; // Skip if already exists
             }
 
-            $result = Db::getInstance()->insert(_DB_PREFIX_ . 'alsernetshopping_email_templates', [
+            $result = Db::getInstance()->insert(_DB_PREFIX_.'alsernetshopping_email_templates', [
                 'template_type' => pSQL($type),
-                'id_lang' => (int)$langId,
+                'id_lang' => (int) $langId,
                 'subject' => pSQL($template['subject']),
                 'html_content' => pSQL($template['html_content']),
                 'is_active' => 1,
                 'date_add' => date('Y-m-d H:i:s'),
-                'date_upd' => date('Y-m-d H:i:s')
+                'date_upd' => date('Y-m-d H:i:s'),
             ]);
 
-            if (!$result) {
+            if (! $result) {
                 $success = false;
             }
         }
@@ -474,7 +484,7 @@ class AbandonmentEmailService
     }
 
     /**
-     * Obtener sujetos por defecto según el idioma
+     * Obtener sujetos Por defecto según el idioma
      */
     private function getDefaultSubjectsForLanguage(int $langId): array
     {
@@ -486,7 +496,7 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => '¡Última oportunidad! Tu carrito expira pronto',
                 self::EMAIL_DISCOUNT_OFFER => '¡Oferta especial solo para ti! {discount_percentage}% de descuento',
                 self::EMAIL_STOCK_ALERT => '⚠️ Stock limitado en tu carrito',
-                self::EMAIL_WELCOME_BACK => '🌟 ¡Bienvenido/a de vuelta!'
+                self::EMAIL_WELCOME_BACK => '🌟 ¡Bienvenido/a de vuelta!',
             ],
             // Inglés (2)
             2 => [
@@ -495,7 +505,7 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => 'Last chance! Your cart expires soon',
                 self::EMAIL_DISCOUNT_OFFER => 'Special offer just for you! {discount_percentage}% off',
                 self::EMAIL_STOCK_ALERT => '⚠️ Limited stock in your cart',
-                self::EMAIL_WELCOME_BACK => '🌟 Welcome back!'
+                self::EMAIL_WELCOME_BACK => '🌟 Welcome back!',
             ],
             // Francés (3)
             3 => [
@@ -504,7 +514,7 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => 'Dernière chance ! Votre panier expire bientôt',
                 self::EMAIL_DISCOUNT_OFFER => 'Offre spéciale rien que pour vous ! {discount_percentage}% de réduction',
                 self::EMAIL_STOCK_ALERT => '⚠️ Stock limité dans votre panier',
-                self::EMAIL_WELCOME_BACK => '🌟 Bon retour !'
+                self::EMAIL_WELCOME_BACK => '🌟 Bon retour !',
             ],
             // Italiano (4)
             4 => [
@@ -513,7 +523,7 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => 'Ultima possibilità! Il tuo carrello scade presto',
                 self::EMAIL_DISCOUNT_OFFER => 'Offerta speciale solo per te! {discount_percentage}% di sconto',
                 self::EMAIL_STOCK_ALERT => '⚠️ Stock limitato nel tuo carrello',
-                self::EMAIL_WELCOME_BACK => '🌟 Bentornato/a!'
+                self::EMAIL_WELCOME_BACK => '🌟 Bentornato/a!',
             ],
             // Portugués (5)
             5 => [
@@ -522,7 +532,7 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => 'Última chance! Seu carrinho expira em breve',
                 self::EMAIL_DISCOUNT_OFFER => 'Oferta especial só para você! {discount_percentage}% de desconto',
                 self::EMAIL_STOCK_ALERT => '⚠️ Stock limitado no seu carrinho',
-                self::EMAIL_WELCOME_BACK => '🌟 Bem-vindo/a de volta!'
+                self::EMAIL_WELCOME_BACK => '🌟 Bem-vindo/a de volta!',
             ],
             // Alemán (6)
             6 => [
@@ -531,8 +541,8 @@ class AbandonmentEmailService
                 self::EMAIL_FINAL_REMINDER => 'Letzte Chance! Ihr Warenkorb läuft bald ab',
                 self::EMAIL_DISCOUNT_OFFER => 'Sonderangebot nur für Sie! {discount_percentage}% Rabatt',
                 self::EMAIL_STOCK_ALERT => '⚠️ Begrenzter Vorrat in Ihrem Warenkorb',
-                self::EMAIL_WELCOME_BACK => '🌟 Willkommen zurück!'
-            ]
+                self::EMAIL_WELCOME_BACK => '🌟 Willkommen zurück!',
+            ],
         ];
 
         // Obtener sujetos para el idioma específico o fallback al español
@@ -542,7 +552,7 @@ class AbandonmentEmailService
         foreach ($langSubjects as $type => $subject) {
             $templates[$type] = [
                 'subject' => $subject,
-                'html_content' => $this->getDefaultTemplate($type)
+                'html_content' => $this->getDefaultTemplate($type),
             ];
         }
 
@@ -554,7 +564,7 @@ class AbandonmentEmailService
     private function canSendEmail(array $abandonment, string $emailType): array
     {
         // Verificar si el email está habilitado
-        if (!$this->config['emails_enabled']) {
+        if (! $this->config['emails_enabled']) {
             return ['allowed' => false, 'reason' => 'Email system disabled'];
         }
 
@@ -572,10 +582,10 @@ class AbandonmentEmailService
         return ['allowed' => true];
     }
 
-    private function formatProductsForEmail(array $products, int $langId = null): array
+    private function formatProductsForEmail(array $products, ?int $langId = null): array
     {
         $formatted = [];
-        $langId = $langId ?: (int)Configuration::get('PS_LANG_DEFAULT');
+        $langId = $langId ?: (int) Configuration::get('PS_LANG_DEFAULT');
 
         foreach ($products as $product) {
             // Obtener nombre del producto en el idioma correcto
@@ -590,7 +600,7 @@ class AbandonmentEmailService
                     $product['id_image'],
                     'medium_default'
                 ),
-                'url' => $this->context->link->getProductLink($product['id_product'], null, null, null, $langId)
+                'url' => $this->context->link->getProductLink($product['id_product'], null, null, null, $langId),
             ];
         }
 
@@ -600,17 +610,17 @@ class AbandonmentEmailService
     private function loadConfiguration(): void
     {
         $this->config = [
-            'emails_enabled' => (bool)Configuration::get('ALSERNETSHOPPING_EMAILS_ENABLED'),
-            'max_daily_emails' => (int)Configuration::get('ALSERNETSHOPPING_MAX_DAILY_EMAILS') ?: 3,
-            'first_reminder_delay' => (int)Configuration::get('ALSERNETSHOPPING_FIRST_REMINDER_DELAY') ?: 60, // minutos
-            'second_reminder_delay' => (int)Configuration::get('ALSERNETSHOPPING_SECOND_REMINDER_DELAY') ?: 1440, // 24 horas
-            'final_reminder_delay' => (int)Configuration::get('ALSERNETSHOPPING_FINAL_REMINDER_DELAY') ?: 4320, // 72 horas
+            'emails_enabled' => (bool) Configuration::get('ALSERNETSHOPPING_EMAILS_ENABLED'),
+            'max_daily_emails' => (int) Configuration::get('ALSERNETSHOPPING_MAX_DAILY_EMAILS') ?: 3,
+            'first_reminder_delay' => (int) Configuration::get('ALSERNETSHOPPING_FIRST_REMINDER_DELAY') ?: 60, // minutos
+            'second_reminder_delay' => (int) Configuration::get('ALSERNETSHOPPING_SECOND_REMINDER_DELAY') ?: 1440, // 24 horas
+            'final_reminder_delay' => (int) Configuration::get('ALSERNETSHOPPING_FINAL_REMINDER_DELAY') ?: 4320, // 72 horas
         ];
     }
 
     private function getDefaultTemplate(string $type): string
     {
-        $templatePath = _PS_MODULE_DIR_ . 'alsernetshopping/views/templates/email/abandoned/' . $type . '.html';
+        $templatePath = _PS_MODULE_DIR_.'alsernetshopping/views/templates/email/abandoned/'.$type.'.html';
 
         if (file_exists($templatePath)) {
             return file_get_contents($templatePath);
@@ -628,28 +638,28 @@ class AbandonmentEmailService
         $templates = [
             self::EMAIL_FIRST_REMINDER => [
                 'subject' => '👋 ¿Olvidaste algo en tu carrito?',
-                'content' => 'Hola {customer_firstname}, notamos que dejaste algunos productos en tu carrito. ¡No queremos que te los pierdas!'
+                'content' => 'Hola {customer_firstname}, notamos que dejaste algunos productos en tu carrito. ¡No queremos que te los pierdas!',
             ],
             self::EMAIL_SECOND_REMINDER => [
                 'subject' => '🎁 Tus productos + descuento especial',
-                'content' => '¡Hola {customer_firstname}! Como agradecimiento por tu interés, tenemos un descuento especial: {discount_code}'
+                'content' => '¡Hola {customer_firstname}! Como agradecimiento por tu interés, tenemos un descuento especial: {discount_code}',
             ],
             self::EMAIL_FINAL_REMINDER => [
                 'subject' => '⚡ ¡Última oportunidad!',
-                'content' => '{customer_firstname}, esta es tu última oportunidad. Tu carrito expira pronto y estos productos podrían agotarse.'
+                'content' => '{customer_firstname}, esta es tu última oportunidad. Tu carrito expira pronto y estos productos podrían agotarse.',
             ],
             self::EMAIL_DISCOUNT_OFFER => [
                 'subject' => '🎉 ¡Oferta especial solo para ti!',
-                'content' => '¡Hola {customer_firstname}! Tenemos un descuento exclusivo: {discount_code} - {discount_percentage}% OFF'
+                'content' => '¡Hola {customer_firstname}! Tenemos un descuento exclusivo: {discount_code} - {discount_percentage}% OFF',
             ],
             self::EMAIL_STOCK_ALERT => [
                 'subject' => '⚠️ Stock limitado en tu carrito',
-                'content' => '{customer_firstname}, algunos productos en tu carrito tienen stock limitado. ¡Asegura tu compra ahora!'
+                'content' => '{customer_firstname}, algunos productos en tu carrito tienen stock limitado. ¡Asegura tu compra ahora!',
             ],
             self::EMAIL_WELCOME_BACK => [
                 'subject' => '🌟 ¡Bienvenido/a de vuelta!',
-                'content' => '¡Qué alegría verte de nuevo, {customer_firstname}! Tus productos te estaban esperando.'
-            ]
+                'content' => '¡Qué alegría verte de nuevo, {customer_firstname}! Tus productos te estaban esperando.',
+            ],
         ];
 
         $template = $templates[$type] ?? $templates[self::EMAIL_FIRST_REMINDER];
@@ -659,7 +669,7 @@ class AbandonmentEmailService
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>' . $template['subject'] . '</title>
+            <title>'.$template['subject'].'</title>
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f4f4f4; }
                 .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -671,9 +681,9 @@ class AbandonmentEmailService
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>' . $template['subject'] . '</h1>
+                    <h1>'.$template['subject'].'</h1>
                 </div>
-                <p>' . $template['content'] . '</p>
+                <p>'.$template['content'].'</p>
                 {products_list}
                 <p style="text-align: center; margin: 30px 0;">
                     <a href="{cart_recovery_url}" class="cta-button">Completar Compra</a>
@@ -690,10 +700,10 @@ class AbandonmentEmailService
 
     private function getPendingEmails(int $limit): array
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('*')
-            ->from(_DB_PREFIX_ . 'alsernetshopping_email_queue')
-            ->where('status = "' . pSQL(self::STATUS_PENDING) . '"')
+            ->from(_DB_PREFIX_.'alsernetshopping_email_queue')
+            ->where('status = "'.pSQL(self::STATUS_PENDING).'"')
             ->where('scheduled_for <= NOW()')
             ->orderBy('scheduled_for ASC')
             ->limit($limit);
@@ -703,12 +713,12 @@ class AbandonmentEmailService
 
     private function getAbandonmentData(int $abandonmentId): ?array
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('ac.*, c.email, c.firstname as customer_name, c.id_lang as customer_lang, cart.id_lang as cart_lang')
-            ->from(_DB_PREFIX_ . 'alsernetshopping_abandoned_carts', 'ac')
+            ->from(_DB_PREFIX_.'alsernetshopping_abandoned_carts', 'ac')
             ->leftJoin('customer', 'c', 'c.id_customer = ac.id_customer')
             ->leftJoin('cart', 'cart', 'cart.id_cart = ac.id_cart')
-            ->where('ac.id_abandoned_cart = ' . (int)$abandonmentId);
+            ->where('ac.id_abandoned_cart = '.(int) $abandonmentId);
 
         $data = Db::getInstance()->getRow($sql);
 
@@ -716,7 +726,7 @@ class AbandonmentEmailService
             // Determinar el idioma a usar con prioridad:
             // 1. Idioma del carrito (más reciente)
             // 2. Idioma del customer
-            // 3. Idioma por defecto de la tienda
+            // 3. Idioma Por defecto de la tienda
             $data['id_lang'] = $this->determineEmailLanguage(
                 $data['cart_lang'] ?? null,
                 $data['customer_lang'] ?? null
@@ -741,8 +751,8 @@ class AbandonmentEmailService
             return $customerLang;
         }
 
-        // Prioridad 3: Idioma por defecto de la tienda
-        return (int)Configuration::get('PS_LANG_DEFAULT');
+        // Prioridad 3: Idioma Por defecto de la tienda
+        return (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     /**
@@ -750,12 +760,12 @@ class AbandonmentEmailService
      */
     private function isLanguageActive(int $langId): bool
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('active')
             ->from('lang')
-            ->where('id_lang = ' . (int)$langId);
+            ->where('id_lang = '.(int) $langId);
 
-        return (bool)Db::getInstance()->getValue($sql);
+        return (bool) Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -765,18 +775,18 @@ class AbandonmentEmailService
     {
         $language = new Language($langId);
 
-        if (!Validate::isLoadedObject($language)) {
-            $language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        if (! Validate::isLoadedObject($language)) {
+            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
         return [
-            'id_lang' => (int)$language->id,
+            'id_lang' => (int) $language->id,
             'iso_code' => $language->iso_code,
             'language_code' => $language->language_code,
             'name' => $language->name,
-            'is_rtl' => (bool)$language->is_rtl,
+            'is_rtl' => (bool) $language->is_rtl,
             'date_format_lite' => $language->date_format_lite,
-            'date_format_full' => $language->date_format_full
+            'date_format_full' => $language->date_format_full,
         ];
     }
 
@@ -787,7 +797,7 @@ class AbandonmentEmailService
     {
         $timestamp = strtotime($date);
 
-        if (!$timestamp) {
+        if (! $timestamp) {
             return $date;
         }
 
@@ -805,7 +815,7 @@ class AbandonmentEmailService
         // Intentar obtener nombre de tienda específico por idioma
         $shopName = Configuration::get('PS_SHOP_NAME', $langId);
 
-        if (!$shopName) {
+        if (! $shopName) {
             $shopName = Configuration::get('PS_SHOP_NAME');
         }
 
@@ -817,11 +827,11 @@ class AbandonmentEmailService
      */
     private function getProductNameForLanguage(int $productId, int $langId): ?string
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('name')
             ->from('product_lang')
-            ->where('id_product = ' . (int)$productId)
-            ->where('id_lang = ' . (int)$langId);
+            ->where('id_product = '.(int) $productId)
+            ->where('id_lang = '.(int) $langId);
 
         return Db::getInstance()->getValue($sql) ?: null;
     }
@@ -834,7 +844,7 @@ class AbandonmentEmailService
         $lowStockProducts = [];
 
         foreach ($products as $product) {
-            $stock = (int)Product::getQuantity($product['id_product']);
+            $stock = (int) Product::getQuantity($product['id_product']);
 
             if ($stock <= 5) { // Threshold configurable
                 $productName = $this->getProductNameForLanguage($product['id_product'], $langId) ?: $product['name'];
@@ -843,7 +853,7 @@ class AbandonmentEmailService
                     'name' => $productName,
                     'stock' => $stock,
                     'quantity_ordered' => $product['cart_quantity'],
-                    'price' => Tools::displayPrice($product['price_wt'], null, $langId)
+                    'price' => Tools::displayPrice($product['price_wt'], null, $langId),
                 ];
             }
         }
@@ -865,8 +875,8 @@ class AbandonmentEmailService
                 3 => 'Dernière chance de finaliser votre achat !', // Francés
                 4 => 'Ultima possibilità per completare il tuo acquisto!', // Italiano
                 5 => 'Última chance de completar a sua compra!', // Portugués
-                6 => 'Letzte Chance, Ihren Kauf abzuschließen!' // Alemán
-            ]
+                6 => 'Letzte Chance, Ihren Kauf abzuschließen!', // Alemán
+            ],
         ];
 
         return $translations[$key][$langId] ?? $key;
@@ -877,13 +887,13 @@ class AbandonmentEmailService
      */
     private function getDailyEmailCount(string $email): int
     {
-        $sql = new DbQuery();
+        $sql = new DbQuery;
         $sql->select('COUNT(*)')
-            ->from(_DB_PREFIX_ . 'alsernetshopping_email_log')
-            ->where('recipient_email = "' . pSQL($email) . '"')
+            ->from(_DB_PREFIX_.'alsernetshopping_email_log')
+            ->where('recipient_email = "'.pSQL($email).'"')
             ->where('DATE(sent_at) = CURDATE()');
 
-        return (int)Db::getInstance()->getValue($sql);
+        return (int) Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -897,7 +907,7 @@ class AbandonmentEmailService
             // Los otros tipos no tienen secuencia automática
         ];
 
-        if (!isset($nextEmailMap[$currentEmailType])) {
+        if (! isset($nextEmailMap[$currentEmailType])) {
             return; // No hay siguiente email programado
         }
 
@@ -906,18 +916,18 @@ class AbandonmentEmailService
 
         // Obtener email del abandonment
         $abandonment = $this->getAbandonmentData($abandonmentId);
-        if (!$abandonment) {
+        if (! $abandonment) {
             return;
         }
 
         // Programar en cola de emails
-        Db::getInstance()->insert(_DB_PREFIX_ . 'alsernetshopping_email_queue', [
+        Db::getInstance()->insert(_DB_PREFIX_.'alsernetshopping_email_queue', [
             'id_abandoned_cart' => $abandonmentId,
             'email_type' => pSQL($nextEmailType),
             'recipient_email' => pSQL($abandonment['email']),
             'scheduled_for' => date('Y-m-d H:i:s', time() + ($delay * 60)), // delay en minutos
             'status' => pSQL(self::STATUS_PENDING),
-            'date_add' => date('Y-m-d H:i:s')
+            'date_add' => date('Y-m-d H:i:s'),
         ]);
     }
 

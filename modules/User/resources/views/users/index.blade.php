@@ -15,6 +15,10 @@
         ]
     ])
 
+
+    @include('theme.components.alerts')
+
+
     <div class="widget-content searchable-container list">
 
         {{-- Main Card --}}
@@ -37,40 +41,6 @@
                 </div>
             </div>
 
-            {{-- Alerts --}}
-            @if ($errors->any())
-                <div class="card-body border-bottom">
-                    <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
-                        <div class="d-flex align-items-start">
-                            <i class="fa fa-exclamation-circle fs-4 me-2 mt-1"></i>
-                            <div>
-                                <h6 class="alert-heading fw-bold mb-2">Errores de Validación</h6>
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="card-body border-bottom">
-                    <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="fa fa-check fs-4 me-2"></i>
-                            <div>{{ session('success') }}</div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-            @endif
-
-            @include('theme.components.alerts')
-
             {{-- Filters --}}
             <div class="card-body border-bottom">
                 <form method="GET" action="{{ route('settings.users.index') }}">
@@ -87,7 +57,7 @@
 
                         <div class="col-12 col-sm-6 col-md-3">
                             <label for="role" class="form-label fw-semibold">Rol</label>
-                            <select id="role" name="role" class="form-select">
+                            <select id="role" name="role" class="form-select select2">
                                 <option value="">Todos los roles</option>
                                 @forelse($availableRoles as $roleName => $roleLabel)
                                     <option value="{{ $roleName }}" {{ ($roleFilter ?? '') === $roleName ? 'selected' : '' }}>
@@ -101,7 +71,7 @@
 
                         <div class="col-12 col-sm-6 col-md-2 d-flex gap-2">
                             <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="fa fa-magnifying-glass me-2"></i>Buscar
+                                <i class="fa fa-magnifying-glass me-2"></i>
                             </button>
                             @if ($searchKey || $roleFilter)
                                 <a href="{{ route('settings.users.index') }}" class="btn btn-outline-secondary">
@@ -123,7 +93,7 @@
                                 <th width="25%">Usuario</th>
                                 <th width="20%">Email</th>
                                 <th width="15%">Rol</th>
-                                <th width="15%">Última actualización</th>
+                                <th width="15%">Actualización</th>
                                 <th width="15%" class="text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -132,16 +102,10 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                                 style="width: 40px; height: 40px; background-color: #90bb13; color: white; font-weight: bold; font-size: 14px;">
-                                                {{ strtoupper(substr($user->firstname ?? 'U', 0, 1)) }}{{ strtoupper(substr($user->lastname ?? 'S', 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <strong class="d-block">{{ Str::title($user->firstname . ' ' . $user->lastname) }}</strong>
+                                                {{ Str::title($user->firstname . ' ' . $user->lastname) }}
                                                 @if($user->document_id)
                                                     <small class="text-muted d-block">ID: {{ $user->document_id }}</small>
                                                 @endif
-                                            </div>
                                         </div>
                                     </td>
                                     <td>
@@ -150,14 +114,8 @@
                                     <td>
                                         @php
                                             $roleName = $user->getRoleNames()->first() ?? 'Sin rol';
-                                            $badgeClass = match($roleName) {
-                                                'super-admin' => 'bg-danger-subtle text-danger',
-                                                'manager' => 'bg-success-subtle text-success',
-                                                'customer' => 'bg-info-subtle text-info',
-                                                default => 'bg-secondary-subtle text-secondary'
-                                            };
                                         @endphp
-                                        <span class="badge {{ $badgeClass }}">
+                                        <span class="badge bg-light text-black">
                                             {{ Str::title(str_replace('-', ' ', $roleName)) }}
                                         </span>
                                     </td>
@@ -258,13 +216,9 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Delete confirmation
     $('.delete-btn').on('click', function(e) {
         e.preventDefault();
         const deleteUrl = $(this).data('url');
-        const deleteTitle = $(this).data('title');
-
-        $('#delete-modal .modal-title').text(deleteTitle);
         $('#delete-form').attr('action', deleteUrl);
         $('#delete-modal').modal('show');
     });

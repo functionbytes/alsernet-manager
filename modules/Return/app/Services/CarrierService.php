@@ -355,7 +355,7 @@ class CarrierService
     {
         return $returnRequest->products->sum(function ($product) {
             $orderProduct = $product->orderProduct;
-            $weight = $orderProduct->weight ?? 0.5; // Peso por defecto si no está definido
+            $weight = $orderProduct->weight ?? 0.5; // Peso Por defecto si no está definido
 
             return $weight * $product->quantity;
         });

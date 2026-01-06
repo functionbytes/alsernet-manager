@@ -34,8 +34,8 @@
                         </p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('settings.documents.groups.edit', $group) }}" class="btn btn-secondary">
-                            Volver al grupo
+                        <a href="{{ route('settings.documents.groups.edit', $group) }}" class="btn btn-light">
+                            <i class="fas fa-arrow-left me-2"></i>Volver
                         </a>
                     </div>
                 </div>
@@ -230,23 +230,14 @@
 
                 {{-- Footer Actions --}}
                 <div class="card-footer bg-white border-top">
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-save me-2"></i>Guardar cambios
+
+                            <button type="submit" class="btn btn-primary w-100 mb-1">
+                                Guardar
                             </button>
-                        </div>
-                        <div class="col-md-6">
+
                             <a href="{{ route('settings.documents.groups.edit', $group) }}" class="btn btn-secondary w-100">
-                                <i class="fas fa-times me-2"></i>Cancelar
+                                Cancelar
                             </a>
-                        </div>
-                    </div>
-                    <div class="text-center mt-3">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>Los cambios se aplicarán inmediatamente a todos los usuarios del grupo
-                        </small>
-                    </div>
                 </div>
             </form>
 

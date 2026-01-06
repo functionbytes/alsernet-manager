@@ -18,13 +18,8 @@
                         <p class="small mb-0 text-muted">Administra los permisos disponibles para los roles</p>
                     </div>
                     <div class="d-flex gap-2">
-                        @if(request('search'))
-                            <a href="{{ route('settings.permissions.index') }}" class="btn btn-secondary">
-                                Limpiar búsqueda
-                            </a>
-                        @endif
                         <a href="{{ route('settings.permissions.create') }}" class="btn btn-primary">
-                            Crear Permiso
+                            Crear permiso
                         </a>
                     </div>
                 </div>
@@ -51,7 +46,7 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-success mb-2">Permisos Web</h6>
+                                        <h6 class="card-title text-success mb-2">Permisos web</h6>
                                         <h4 class="mb-1 fw-bold">{{ \Spatie\Permission\Models\Permission::where('guard_name', 'web')->count() }}</h4>
                                         <small class="text-muted">Guard Web</small>
                                     </div>
@@ -91,20 +86,23 @@
             {{-- Search Section --}}
             <div class="card-body border-bottom">
                 <form action="{{ route('settings.permissions.index') }}" method="GET">
-                    <div class="row align-items-center">
-                        <div class="col-md-9">
-                            <div class="input-group">
-                                <span class="input-group-text bg-white">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                                <input type="search" name="search" class="form-control"
-                                       placeholder="Buscar por nombre de permiso..."
-                                       value="{{ request('search') }}">
-                            </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="input-group flex-grow-1">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="search" name="search" class="form-control"
+                                   placeholder="Buscar por nombre de permiso..."
+                                   value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
-                        </div>
+                        <button type="submit" class="btn btn-primary" style="min-width: 100px;">
+                            <i class="fas fa-search me-2"></i>
+                        </button>
+                        @if(request('search'))
+                            <a href="{{ route('settings.permissions.index') }}" class="btn btn-secondary" style="min-width: 100px;">
+                                <i class="fas fa-times me-2"></i>
+                            </a>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -140,12 +138,12 @@
                                         </td>
                                         <td>
                                             @if($permission->guard_name === 'web')
-                                                <span class="badge bg-success-subtle text-success">
-                                                    <i class="fas fa-globe me-1"></i>Web
+                                                <span class="badge bg-info-subtle text-success">
+                                                    Web
                                                 </span>
                                             @elseif($permission->guard_name === 'api')
                                                 <span class="badge bg-info-subtle text-info">
-                                                    <i class="fas fa-server me-1"></i>API
+                                                    API
                                                 </span>
                                             @else
                                                 <span class="badge bg-light-subtle text-black">{{ $permission->guard_name }}</span>
@@ -155,7 +153,7 @@
                                             <span class="badge bg-primary-subtle text-primary">{{ $permission->roles()->count() }}</span>
                                         </td>
                                         <td>
-                                            <small class="text-muted">{{ $permission->created_at->format('d/m/Y H:i') }}</small>
+                                            {{ $permission->created_at->format('d/m/Y H:i') }}
                                         </td>
                                         <td class="text-center">
                                             <div class="dropdown">
@@ -243,11 +241,7 @@ $(document).ready(function() {
     $('.delete-btn').on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-
         const deleteUrl = $(this).data('url');
-        const deleteTitle = $(this).data('title');
-
-        $('#delete-modal .modal-title').text(deleteTitle);
         $('#delete-form').attr('action', deleteUrl);
 
         // Show the modal explicitly

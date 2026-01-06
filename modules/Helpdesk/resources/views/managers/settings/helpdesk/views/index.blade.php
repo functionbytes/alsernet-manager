@@ -141,7 +141,7 @@
                                 <th width="25%">Nombre</th>
                                 <th width="30%">Filtros</th>
                                 <th width="15%" class="text-center">Alcance</th>
-                                <th width="15%" class="text-center">Por Defecto</th>
+                                <th width="15%" class="text-center">Por defecto</th>
                                 <th width="10%" class="text-center">Acciones</th>
                             </tr>
                             </thead>

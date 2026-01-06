@@ -86,10 +86,10 @@
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
                                         <h6 class="card-title text-info mb-2">
-                                            Por Defecto
+                                            Por defecto
                                         </h6>
                                         <h4 class="mb-1 fw-bold">{{ $stats['default'] }}</h4>
-                                        <small class="text-muted">Estado por defecto</small>
+                                        <small class="text-muted">Estado Por defecto</small>
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@
                                                 <strong>{{ $status->name }}</strong>
                                                 <div class="d-flex gap-1 mt-1">
                                                     @if($status->is_default)
-                                                        <span class="badge bg-primary-subtle text-primary">Por Defecto</span>
+                                                        <span class="badge bg-primary-subtle text-primary">Por defecto</span>
                                                     @endif
                                                     @if($status->is_open)
                                                         <span class="badge bg-success-subtle text-success">Abierto</span>

@@ -169,7 +169,7 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       </trans-unit>
       <trans-unit id="1f2b974152999d549b89994879e452a3" approved="yes">
         <source>Please fill out the message fields that appear by default when you answer a thread on the customer service page.</source>
-        <target state="final">Por favor, rellena los campos pertenecientes al mensaje que aparecerá por defecto a la hora de contestar un hilo de conversación en la página del servicio de atención al cliente.</target>
+        <target state="final">Por favor, rellena los campos pertenecientes al mensaje que aparecerá Por defecto a la hora de contestar un hilo de conversación en la página del servicio de atención al cliente.</target>
         <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="61b7dba4b2704903e5a2434e1f3ab878" approved="yes">
@@ -590,7 +590,7 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
     <body>
       <trans-unit id="61010671991185f436b35030f599d327" approved="yes">
         <source>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics.</source>
-        <target state="final">En tu web, ¿dónde debe estar disponible el producto? La categoría principal es donde aparece el producto por defecto: esta es la categoría que se ve en la URL de la página de producto. 
+        <target state="final">En tu web, ¿dónde debe estar disponible el producto? La categoría principal es donde aparece el producto Por defecto: esta es la categoría que se ve en la URL de la página de producto.
 Las categorías desactivadas se muestran en cursiva.</target>
         <note>Line: 27</note>
       </trans-unit>

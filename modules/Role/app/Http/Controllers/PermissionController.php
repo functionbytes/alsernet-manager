@@ -83,7 +83,7 @@ class PermissionController extends BaseManagerController
             ]);
         }
 
-        return redirect()->route('permissions.index')
+        return redirect()->route('settings.permissions.index')
             ->with('success', 'Permiso creado correctamente.');
     }
 
@@ -100,12 +100,11 @@ class PermissionController extends BaseManagerController
     /**
      * Update the specified permission in storage
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $permission = Permission::findOrFail($request->id);
+        $permission = Permission::findOrFail($id);
 
         $validated = $request->validate([
-            'id' => 'required|exists:permissions,id',
             'name' => [
                 'required',
                 'string',
@@ -128,8 +127,6 @@ class PermissionController extends BaseManagerController
             'name.regex' => 'El nombre solo puede contener letras, números, puntos, guiones y guiones bajos.',
             'guard_name.required' => 'El guard es requerido.',
             'guard_name.in' => 'El guard debe ser "web" o "api".',
-            'id.required' => 'El ID del permiso es requerido.',
-            'id.exists' => 'El permiso no existe.',
         ]);
 
         $permission->update([
@@ -143,14 +140,14 @@ class PermissionController extends BaseManagerController
             ]);
         }
 
-        return redirect()->route('permissions.edit', $permission->id)
+        return redirect()->route('settings.permissions.edit', $permission->id)
             ->with('success', 'Permiso actualizado correctamente.');
     }
 
     /**
      * Remove the specified permission from storage
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $permission = Permission::findOrFail($id);
 
@@ -158,7 +155,7 @@ class PermissionController extends BaseManagerController
         if (Role::whereHas('permissions', function ($query) use ($permission) {
             $query->where('permissions.id', $permission->id);
         })->exists()) {
-            if (request()->expectsJson()) {
+            if ($request->expectsJson()) {
                 return $this->error('No se puede eliminar un permiso que está asignado a roles.');
             }
 
@@ -167,11 +164,11 @@ class PermissionController extends BaseManagerController
 
         $permission->delete();
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return $this->success('Permiso eliminado correctamente.');
         }
 
-        return redirect()->route('permissions.index')
+        return redirect()->route('settings.permissions.index')
             ->with('success', 'Permiso eliminado correctamente.');
     }
 }

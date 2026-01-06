@@ -19637,8 +19637,8 @@ body #search_filters .facet .facet-label a {
 
 .product-description ul {
     list-style: none; /* Elimina puntos del ul */
-    padding: 0; /* Elimina el padding por defecto */
-    margin: 0; /* Elimina el margen por defecto */
+    padding: 0; /* Elimina el padding Por defecto */
+    margin: 0; /* Elimina el margen Por defecto */
 }
 
 .product-description ul li {

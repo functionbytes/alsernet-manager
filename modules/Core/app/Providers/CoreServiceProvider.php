@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -10,11 +11,6 @@ class CoreServiceProvider extends ServiceProvider
     protected string $moduleName = 'Core';
 
     protected string $moduleNameLower = 'core';
-
-    public function register(): void
-    {
-        //
-    }
 
     public function boot(): void
     {
@@ -28,6 +24,9 @@ class CoreServiceProvider extends ServiceProvider
         $this->booted(function () {
             $this->registerRoutes();
         });
+
+        // Register menus
+        $this->registerMenus();
     }
 
     protected function registerRoutes(): void
@@ -47,13 +46,38 @@ class CoreServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(module_path($this->moduleName, 'resources/lang'), $this->moduleNameLower);
     }
 
-    public function provides(): array
-    {
-        return [];
-    }
-
     protected function registerConfig(): void
     {
-        //
+        // Register config files from module if they exist
+        $configPath = module_path($this->moduleName, 'config');
+        if (is_dir($configPath)) {
+            foreach (glob($configPath.'/*.php') as $configFile) {
+                $this->publishes([
+                    $configFile => config_path(basename($configFile)),
+                ], $this->moduleNameLower.'-config');
+            }
+        }
+    }
+
+    /**
+     * Registrar menús del módulo Core
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Core/Dashboard
+        NavService::registerMiniItem('dashboard', [
+            'icon' => 'fa-home',
+            'tooltip' => 'Panel de control',
+            'sidebar_id' => 'dashboard',
+            'order' => 10,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('dashboard', [
+            'title' => 'Panel de control',
+            'items' => [
+                ['label' => 'Dashboard', 'route' => 'core.dashboard', 'icon' => 'fa-tachometer-alt'],
+            ],
+        ]);
     }
 }

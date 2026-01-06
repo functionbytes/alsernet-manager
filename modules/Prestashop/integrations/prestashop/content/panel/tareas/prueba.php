@@ -82,7 +82,7 @@ function procesarcombinaciones($idproduct)
         }
 
         if ($idproductatributeminimo != 0) {
-            // hacer $idproductatributeminimo la combinacion por defecto
+            // hacer $idproductatributeminimo la combinacion Por defecto
 
             $product = new Product($idproduct);
             $product->deleteDefaultAttributes();

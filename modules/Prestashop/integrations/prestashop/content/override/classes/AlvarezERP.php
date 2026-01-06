@@ -906,7 +906,7 @@ class AlvarezERP
         }
 
         if ($catdef == '') {
-            $catdef = 4; // por defecto caza
+            $catdef = 4; // Por defecto caza
         }
 
         if ($catdef > 11) {
@@ -946,13 +946,13 @@ class AlvarezERP
                 $catdefault = 10; // GENERICO AVENTURA
                 break;
             default:
-                $catdefault = 5; // por defecto caza
+                $catdefault = 5; // Por defecto caza
                 break;
         }
 
         //
         // if ($deporte==0){
-        //     $deporte=5; //por defecto caza
+        //     $deporte=5; //Por defecto caza
         // }
         return $catdefault;
     }
@@ -1523,7 +1523,7 @@ class AlvarezERP
                 $cliente_idioma = 100000000; // ID DEL IDIOMAS DE GESTION EN Italiano
                 break;
             default:
-                $cliente_idioma = 2; // POR DEFECTO LOS CLIENTES VAN A TENER EL IDIOMA ID DEL IDIOMAS DE GESTION EN INLGES
+                $cliente_idioma = 2; // Por defecto LOS CLIENTES VAN A TENER EL IDIOMA ID DEL IDIOMAS DE GESTION EN INLGES
                 break;
         }
         $data['cliente_idioma'] = $cliente_idioma;

@@ -3,7 +3,6 @@
 @section('page_title', 'Email Templates')
 
 @section('content')
-<div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
     @include('theme.components.card', [
@@ -306,7 +305,6 @@
 
         </div>
 
-    </div>
 
 </div>
 

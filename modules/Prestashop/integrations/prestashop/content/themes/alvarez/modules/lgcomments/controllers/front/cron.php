@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  Please read the terms of the CLUF license attached to this module(cf "licences" folder)
  *
@@ -8,18 +9,16 @@
  *            https://www.lineagrafica.es/licenses/license_es.pdf
  *            https://www.lineagrafica.es/licenses/license_fr.pdf
  */
-
 class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFrontController
 {
-
     private function executeCron()
     {
-        $lgMailer            = new LGMailer();
-        $orders              = $lgMailer->getOrders();
+        $lgMailer = new LGMailer;
+        $orders = $lgMailer->getOrders();
         $email_sended_number = 0;
-        $orders_mail         = '';
-        $response            = array();
-        $response['status']  = 'OK'; // por defecto será ok excepto que haya algún error
+        $orders_mail = '';
+        $response = [];
+        $response['status'] = 'OK'; // Por defecto será ok excepto que haya algún error
 
         // Trace for debugging
         if ($this->lgdebug && $this->lgdebugtrace) {
@@ -32,34 +31,34 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
 
         if (count($orders) > 0) {
             foreach ($orders as $order) {
-                if (!self::isValidEmail($order['email'])) {
+                if (! self::isValidEmail($order['email'])) {
                     continue;
                 }
 
                 // Todo: OJO esta llamada paar obtener el hash es necesario antes para asignarlo si no lo tiene
                 $order['hash'] = $lgMailer->getHash($order);
                 $template_vars = $lgMailer->getTemplateVars($order);
-                $subject       = $lgMailer->getSubject($order['id_lang']);
-                $mail_dir      = $lgMailer->getTemplatePath($order['id_lang']);
-                $mail_lang     = $lgMailer->getTemplateLang($order['id_lang']);
-                $shop          = new Shop((int)$order['id_shop'], (int)$mail_lang);
+                $subject = $lgMailer->getSubject($order['id_lang']);
+                $mail_dir = $lgMailer->getTemplatePath($order['id_lang']);
+                $mail_lang = $lgMailer->getTemplateLang($order['id_lang']);
+                $shop = new Shop((int) $order['id_shop'], (int) $mail_lang);
 
                 /* JLP - 07/04/2022 - enlace reseñas google */
                 $template_vars['{link_google}'] = 'https://g.page/alvarez-deporte-y-tiempo-libre/review?gm';
 
                 if ($this->lgdebug) {
-                    $response['debug']['configuration']['dias_desde']   = $lgMailer->dias_desde;
-                    $response['debug']['configuration']['dias_hasta']   = $lgMailer->dias_hasta;
-                    $response['debug']['configuration']['sendtwice']    = $lgMailer->sendtwice;
-                    $response['debug']['configuration']['daysafter']    = $lgMailer->daysafter;
-                    $response['debug']['configuration']['email_cron']   = $lgMailer->email_cron;
+                    $response['debug']['configuration']['dias_desde'] = $lgMailer->dias_desde;
+                    $response['debug']['configuration']['dias_hasta'] = $lgMailer->dias_hasta;
+                    $response['debug']['configuration']['sendtwice'] = $lgMailer->sendtwice;
+                    $response['debug']['configuration']['daysafter'] = $lgMailer->daysafter;
+                    $response['debug']['configuration']['email_cron'] = $lgMailer->email_cron;
                     $response['debug']['configuration']['email_alerts'] = $lgMailer->email_alerts;
 
-                    $response['debug']['hash']          = $order['hash'];
+                    $response['debug']['hash'] = $order['hash'];
                     $response['debug']['$emplate_vars'] = $template_vars;
-                    $response['debug']['subject']       = $subject;
-                    $response['debug']['mail_dir']      = $mail_dir;
-                    $response['debug']['mail_lang']     = $mail_lang;
+                    $response['debug']['subject'] = $subject;
+                    $response['debug']['mail_dir'] = $mail_dir;
+                    $response['debug']['mail_lang'] = $mail_lang;
                 }
 
                 // Trace for debugging
@@ -74,7 +73,7 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                     }
 
                     if (Mail::Send(
-                        $mail_lang, //$idLang,
+                        $mail_lang, // $idLang,
                         'opinion-request', // $template,
                         $subject, // $subject,
                         $template_vars, // $templateVars,
@@ -88,8 +87,8 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                         $this->lgdebug, // $die = false,
                         $order['id_shop'], // $idShop = null,
                         null, // $bcc = null,
-                        null, //$replyTo = null,
-                        null //$replyToName = null
+                        null, // $replyTo = null,
+                        null // $replyToName = null
                     )) {
                         // Trace for debugging
                         if ($this->lgdebug && $this->lgdebugtrace) {
@@ -98,7 +97,7 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
 
                         $this->saveCommentOrder($order['id_order'], $order['id_customer'], $order['hash']);
                         $email_sended_number++;
-                        $orders_mail .= $order['id_order'] . ', ';
+                        $orders_mail .= $order['id_order'].', ';
                         $response['orders_sended']['first_time'][$order['id_order']] =
                             $this->module->l('Order').' #'.$order['id_order'];
                     } else {
@@ -108,8 +107,8 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                         }
 
                         $response['orders_sended']['first_time_errors'][$order['id_order']] = $this->module->l('Order')
-                            . ' #' . $order['id_order'] . ': '
-                            . $this->module->l('Email not sent: problem with your email configuration');
+                            .' #'.$order['id_order'].': '
+                            .$this->module->l('Email not sent: problem with your email configuration');
                     }
                 } elseif ($lgMailer->needSendAgain($order)) { // Todo esto se llevará a la clase
                     // Trace for debugging
@@ -132,8 +131,8 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                         $this->lgdebug, // $die = false,
                         $order['id_shop'], // $idShop = null,
                         null, // $bcc = null,
-                        null, //$replyTo = null,
-                        null //$replyToName = null
+                        null, // $replyTo = null,
+                        null // $replyToName = null
                     )) {
                         // Trace for debugging
                         if ($this->lgdebug && $this->lgdebugtrace) {
@@ -142,7 +141,7 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
 
                         $this->markOrderAsSendTwice($order['id_order']);
                         $email_sended_number++;
-                        $orders_mail .= $order['id_order'] . ', ';
+                        $orders_mail .= $order['id_order'].', ';
                         $response['orders_sended']['second_time'][$order['id_order']] =
                             $this->module->l('Order').' #'.$order['id_order'];
                     } else {
@@ -152,42 +151,41 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                         }
 
                         $response['orders_sended']['second_time_errors'][$order['id_order']] = $this->module->l('Order')
-                            . ' #' . $order['id_order'] . ': '
-                            . $this->module->l('Email not sent: problem with your email configuration');
+                            .' #'.$order['id_order'].': '
+                            .$this->module->l('Email not sent: problem with your email configuration');
                     }
                 } else {
                     // Trace for debugging
                     if ($this->lgdebug && $this->lgdebugtrace) {
                         $response['debug']['trace']['CRON'][$order['id_order']][] = 'MAILS SENDED, DO NOT DO NOTHING';
-                        $response['debug']['trace']['CRON'][$order['id_order']][] = array(
-                            'FIRSTIME CONDITION' => array(
-                                'order sent number of times' => (int)$order['sent'],
-                                'loidorder' => (int)isset($order['loidorder']),
+                        $response['debug']['trace']['CRON'][$order['id_order']][] = [
+                            'FIRSTIME CONDITION' => [
+                                'order sent number of times' => (int) $order['sent'],
+                                'loidorder' => (int) isset($order['loidorder']),
                                 'CONDITION' => '',
-                                'loidorder is not setted' => (int)!isset($order['loidorder']),
+                                'loidorder is not setted' => (int) ! isset($order['loidorder']),
                                 'OR' => '',
-                                'loidorder is setted AND order sent number of times == 0' =>
-                                    (int)isset($order['loidorder']) && ((int)$order['sent'] == 0),
-                                'RESULT' => (int)$lgMailer->needSendFirstTime($order),
-                            ),
-                            'SECONDTIME CONDITION' => array(
-                                'order voted' => (int)$order['voted'],
-                                'order sent'  => (int)$order['sent'],
-                                'date-email'  => DateTime::createFromFormat(
+                                'loidorder is setted AND order sent number of times == 0' => (int) isset($order['loidorder']) && ((int) $order['sent'] == 0),
+                                'RESULT' => (int) $lgMailer->needSendFirstTime($order),
+                            ],
+                            'SECONDTIME CONDITION' => [
+                                'order voted' => (int) $order['voted'],
+                                'order sent' => (int) $order['sent'],
+                                'date-email' => DateTime::createFromFormat(
                                     'Y-m-d H:i:s',
                                     $order['date_email']
                                 )->format('d-m-Y H:i:s'),
-                                'RESULT'      => (int)$lgMailer->needSendAgain($order),
-                            ),
-                        );
+                                'RESULT' => (int) $lgMailer->needSendAgain($order),
+                            ],
+                        ];
                     }
 
-                    $order_already_sended = $this->module->l('Order') . ' #' . $order['id_order'] . ': ' .
+                    $order_already_sended = $this->module->l('Order').' #'.$order['id_order'].': '.
                         $this->module->l('Email already send');
 
                     if ($order['date_email2'] != '0000-00-00 00:00:00') {
-                        $order_already_sended .= ' - ' .
-                            date("d/m/Y H:i", strtotime($order['date_email2'])) . '';
+                        $order_already_sended .= ' - '.
+                            date('d/m/Y H:i', strtotime($order['date_email2'])).'';
                     }
                     $response['orders_already_sended'][$order['id_order']] = $order_already_sended;
                 }
@@ -200,12 +198,12 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                     $response['debug']['trace']['ADMIN'][] = 'SENDING MAIL FOR ADMINISTRATOR';
                 }
 
-                $template_vars = array(
-                    '{pedidos}' => $orders_mail
-                );
+                $template_vars = [
+                    '{pedidos}' => $orders_mail,
+                ];
 
-                $mail_dir      = $lgMailer->getTemplatePath();
-                $mail_lang     = $lgMailer->getTemplateLang();
+                $mail_dir = $lgMailer->getTemplatePath();
+                $mail_lang = $lgMailer->getTemplateLang();
 
                 Mail::Send(
                     $mail_lang,
@@ -222,13 +220,13 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
                     $this->lgdebug, // $die = false,
                     $order['id_shop'], // $idShop = null,
                     null, // $bcc = null,
-                    null, //$replyTo = null,
-                    null //$replyToName = null
+                    null, // $replyTo = null,
+                    null // $replyToName = null
                 );
             }
         } else {
-            $response['orders_sended'] = $this->module->l('No email sent:') .
-                $this->module->l('you don\'t have any order that corresponds to the selected criteria.') .
+            $response['orders_sended'] = $this->module->l('No email sent:').
+                $this->module->l('you don\'t have any order that corresponds to the selected criteria.').
                 $this->module->l('Please modify your backups and expand your range of selection.');
         }
 
@@ -248,7 +246,7 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
             $date = '"'.$date.'"';
         }
 
-        $sql = 'REPLACE INTO `' . _DB_PREFIX_ . 'lgcomments_orders` '.
+        $sql = 'REPLACE INTO `'._DB_PREFIX_.'lgcomments_orders` '.
             '('.
             '   `id_order`, '.
             '   `id_customer`, '.
@@ -256,26 +254,26 @@ class LgCommentsCronModuleFrontControllerOverride extends LgCommentsCronModuleFr
             '   `voted`, '.
             '   `sent`, '.
             '   `date_email`, '.
-            '   `date_email2`' .
+            '   `date_email2`'.
             ') VALUES ('.
-                (int)$id_order . ', '.
-                (int)$id_customer . ', "'.
-                pSQL($hash) . '", '.
-                0 . ', ' .
-                1 . ', ' .
+                (int) $id_order.', '.
+                (int) $id_customer.', "'.
+                pSQL($hash).'", '.
+                0 .', '.
+                1 .', '.
                 'NOW(), '.
                 0 .
             ')';
+
         return Db::getInstance()->execute($sql);
     }
 
     private function markOrderAsSendTwice($id_order)
     {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'lgcomments_orders`
+        $sql = 'UPDATE `'._DB_PREFIX_.'lgcomments_orders`
                 SET sent = "2", date_email2 = NOW()
-                WHERE id_order = ' . (int)$id_order;
+                WHERE id_order = '.(int) $id_order;
 
         Db::getInstance()->execute($sql);
     }
-
 }

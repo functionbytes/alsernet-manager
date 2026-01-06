@@ -379,7 +379,7 @@
             <div class="col-md-6">
                 <div class="p-3 bg-light rounded h-100">
                     <label class="form-label fw-semibold mb-1">
-                        Vista por Defecto
+                        Vista Por defecto
                     </label>
                     <p class="text-muted small mb-2">Tipo de vista predeterminada para la lista de documentos.</p>
                     <select class="form-select select2" name="default_view">

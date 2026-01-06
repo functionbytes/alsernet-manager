@@ -71,7 +71,7 @@
                                         @endforeach
                                     </select>
                                     <small class="text-muted d-block mt-2">
-                                        Busca y selecciona una plantilla personalizada. Si dejas vacío, se usará la plantilla por defecto del sistema.
+                                        Busca y selecciona una plantilla personalizada. Si dejas vacío, se usará la plantilla Por defecto del sistema.
                                     </small>
                                 </div>
 
@@ -195,7 +195,7 @@
                                         @endforeach
                                     </select>
                                     <small class="text-muted d-block mt-2">
-                                        Selecciona una plantilla personalizada o deja vacío para usar la plantilla por defecto.
+                                        Selecciona una plantilla personalizada o deja vacío para usar la plantilla Por defecto.
                                     </small>
                                 </div>
                             </div>

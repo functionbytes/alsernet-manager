@@ -77,7 +77,7 @@ REVERB_SERVER_PORT=8080
 php artisan reverb:start
 ```
 
-El servidor escuchará en `0.0.0.0:8080` por defecto.
+El servidor escuchará en `0.0.0.0:8080` Por defecto.
 
 ## Uso básico
 

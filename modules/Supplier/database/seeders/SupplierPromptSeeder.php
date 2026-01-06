@@ -23,7 +23,7 @@ class SupplierPromptSeeder extends Seeder
                 'category_id' => null,
                 'source_id' => null,
                 'scope' => 'global',
-                'label' => 'Prompt Global por Defecto',
+                'label' => 'Prompt Global Por defecto',
                 'prompt_template' => $this->getGlobalPrompt(),
                 'output_language' => 'es-ES',
                 'tone' => 'commercial',

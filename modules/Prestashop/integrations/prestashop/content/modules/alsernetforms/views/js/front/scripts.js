@@ -489,7 +489,7 @@ $(document).ready(function() {
                                         case "success":
 
                                             clearFormsDemodayOrder($form_demodayorder);
-                                            
+
                                             $('.demodayorder-modal').modal('show');
 
                                             $submitButtonDemodayorder.prop('disabled', false);
@@ -1138,7 +1138,7 @@ $(document).ready(function() {
     }
 
     $('.btn-wecallyouus').on('click', function(event) {
-        event.preventDefault(); // Prevenir cualquier acción por defecto
+        event.preventDefault(); // Prevenir cualquier acción Por defecto
         $('.request-price-form').toggle(); // Alternar la visibilidad del formulario
     });
 

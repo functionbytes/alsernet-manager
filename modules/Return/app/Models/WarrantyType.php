@@ -75,7 +75,7 @@ class WarrantyType extends Model
         $percentageCost = ($productPrice * $this->cost_percentage) / 100;
         $fixedCost = $this->fixed_cost;
 
-        // Ajustar por duración si es diferente a la por defecto
+        // Ajustar por duración si es diferente a la Por defecto
         if ($months !== $this->default_duration_months && $this->default_duration_months > 0) {
             $ratio = $months / $this->default_duration_months;
             $percentageCost *= $ratio;

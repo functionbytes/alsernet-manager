@@ -742,7 +742,7 @@ class Document extends Model implements HasMedia
     }
 
     /**
-     * Obtiene documentos por defecto si no hay configuración
+     * Obtiene documentos Por defecto si no hay configuración
      */
     private function getDefaultDocuments(): array
     {

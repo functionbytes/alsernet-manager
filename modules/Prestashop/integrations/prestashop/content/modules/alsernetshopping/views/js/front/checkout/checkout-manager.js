@@ -2800,7 +2800,7 @@ if (typeof window.CheckoutManager === 'undefined') {
 
             const $btn = $(e.currentTarget);
 
-            // Elige un destino de scroll: atributo data-scroll-target o alguno por defecto
+            // Elige un destino de scroll: atributo data-scroll-target o alguno Por defecto
             const selectors = [
                 $btn.data('scrollTarget'),
                 '#stepcheckout-address',
@@ -2898,7 +2898,7 @@ if (typeof window.CheckoutManager === 'undefined') {
 
             const $btn = $(e.currentTarget);
 
-            // Elige un destino de scroll: atributo data-scroll-target o alguno por defecto
+            // Elige un destino de scroll: atributo data-scroll-target o alguno Por defecto
             const selectors = [
                 $btn.data('scrollTarget'),
                 '#stepcheckout-address',

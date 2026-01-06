@@ -5,13 +5,13 @@
         <p class="small mb-0 text-muted">Comunicación con el cliente</p>
     </div>
     <div class="card-body">
-        @if($documentConfig['enable_initial_request'] ?? true)
+        @if(auth()->user()->canDocument('send-initial-request'))
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Solicitud inicial
                 </label>
                 <p class="text-muted small mb-2">
-                    {{ $documentConfig['initial_request_description'] ?? 'Envía un email al cliente solicitándole que cargue los documentos requeridos.' }}
+                    Enviar solicitud inicial de documentos al cliente
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100 send-notification-btn"
                         data-uid="{{ $document->uid }}">
@@ -20,30 +20,30 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_missing_docs'] ?? true)
+        @if(auth()->user()->canDocument('send-missing-docs'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
-                    Documentos específicos
+                    Documentos faltantes
                 </label>
                 <p class="text-muted small mb-2">
-                    {{ $documentConfig['missing_docs_description'] ?? 'Solicita al cliente que reenvíe documentos concretos que falten o necesiten corrección.' }}
+                    Notificar al cliente sobre documentos específicos faltantes
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#missingDocsModal">
-                    Enviar solicitud documentación
+                    Enviar notificación
                 </button>
             </div>
         @endif
 
-        @if($documentConfig['enable_reminder'] ?? true)
+        @if(auth()->user()->canDocument('send-reminders'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Recordatorio
                 </label>
                 <p class="text-muted small mb-2">
-                    {{ $documentConfig['reminder_description'] ?? 'Envía un recordatorio al cliente si aún no ha completado la carga de documentos.' }}
+                    Enviar recordatorio de documentos pendientes al cliente
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100 send-reminder-btn"
                         data-uid="{{ $document->uid }}">
@@ -52,14 +52,14 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_upload_confirmation'] ?? true)
+        @if(auth()->user()->canDocument('send-upload-confirmation'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
-                    Confirmación de subida
+                    Confirmación de carga
                 </label>
                 <p class="text-muted small mb-2">
-                    Confirma al cliente que sus documentos han sido recibidos.
+                    Confirmar al cliente que sus documentos han sido recibidos
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#uploadConfirmationModal">
@@ -68,14 +68,14 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_approval'] ?? true)
+        @if(auth()->user()->canDocument('send-approval'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Notificación de aprobación
                 </label>
                 <p class="text-muted small mb-2">
-                    Notifica al cliente que sus documentos fueron aprobados.
+                    Notificar al cliente que sus documentos fueron aprobados
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#approvalModal">
@@ -84,14 +84,14 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_rejection'] ?? true)
+        @if(auth()->user()->canDocument('send-rejection'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
                     Notificación de rechazo
                 </label>
                 <p class="text-muted small mb-2">
-                    Notifica al cliente que sus documentos fueron rechazados.
+                    Notificar al cliente que sus documentos fueron rechazados
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#rejectionModal">
@@ -100,14 +100,14 @@
             </div>
         @endif
 
-        @if($documentConfig['enable_custom_email'] ?? true)
+        @if(auth()->user()->canDocument('send-custom-email'))
             <hr class="my-3">
             <div class="mb-3">
                 <label class="form-label fw-semibold mb-1">
-                    Correo personalizado
+                   Correo personalizado
                 </label>
                 <p class="text-muted small mb-2">
-                    {{ $documentConfig['custom_email_description'] ?? 'Envía un correo con contenido personalizado al cliente.' }}
+                    Enviar email con contenido personalizado al cliente
                 </p>
                 <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal"
                         data-bs-target="#customEmailModal">
@@ -118,31 +118,31 @@
     </div>
 </div>
 
-{{-- MODALES DE EMAIL (Condicionales) --}}
-@if($documentConfig['enable_missing_docs'] ?? true)
+{{-- MODALES DE EMAIL (Condicionales por permisos) --}}
+@if(auth()->user()->canDocument('send-missing-docs'))
     @include('documents::documents.documents.components.email.modals.missing')
 @endif
 
-@if($documentConfig['enable_initial_request'] ?? true)
+@if(auth()->user()->canDocument('send-initial-request'))
     @include('documents::documents.documents.components.email.modals.request')
 @endif
 
-@if($documentConfig['enable_reminder'] ?? true)
+@if(auth()->user()->canDocument('send-reminders'))
     @include('documents::documents.documents.components.email.modals.reminder')
 @endif
 
-@if($documentConfig['enable_upload_confirmation'] ?? true)
+@if(auth()->user()->canDocument('send-upload-confirmation'))
     @include('documents::documents.documents.components.email.modals.confirmation')
 @endif
 
-@if($documentConfig['enable_approval'] ?? true)
+@if(auth()->user()->canDocument('send-approval'))
     @include('documents::documents.documents.components.email.modals.approval')
 @endif
 
-@if($documentConfig['enable_rejection'] ?? true)
+@if(auth()->user()->canDocument('send-rejection'))
     @include('documents::documents.documents.components.email.modals.rejection')
 @endif
 
-@if($documentConfig['enable_custom_email'] ?? true)
+@if(auth()->user()->canDocument('send-custom-email'))
     @include('documents::documents.documents.components.email.modals.custom')
 @endif

@@ -2,9 +2,10 @@
 
 namespace Modules\Analytics\Providers;
 
-use Modules\Analytics\Analytics;
+use App\Services\NavService;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Analytics\Analytics;
 
 class AnalyticsServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,31 @@ class AnalyticsServiceProvider extends ServiceProvider
 
         // Register facade alias
         Facade::aliasNamespace('Analytics', 'Modules\\Analytics\\Facades');
+
+        // Register menus
+        $this->registerMenus();
+    }
+
+    /**
+     * Registrar menús del módulo Analytics
+     */
+    protected function registerMenus(): void
+    {
+        // Mini-nav item para Analytics
+        NavService::registerMiniItem('analytics', [
+            'icon' => 'fa-chart-line',
+            'tooltip' => 'Analítica',
+            'sidebar_id' => 'analytics',
+            'order' => 50,
+        ]);
+
+        // Sidebar con los items del módulo
+        NavService::registerSidebar('analytics', [
+            'title' => 'Analítica',
+            'items' => [
+                ['label' => 'Dashboard', 'route' => 'analytics.dashboard', 'icon' => 'fa-tachometer-alt'],
+                ['label' => 'Configuración', 'route' => 'settings.analytics.index', 'icon' => 'fa-cog'],
+            ],
+        ]);
     }
 }
-

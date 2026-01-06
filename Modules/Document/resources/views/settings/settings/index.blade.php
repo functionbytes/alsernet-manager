@@ -19,7 +19,7 @@
                         <p class="text-muted mb-0">Configura el comportamiento general, notificaciones por email y politicas SLA para la gestion de documentos</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary" id="btnResetDefaults" data-bs-toggle="tooltip" title="Restaurar valores por defecto">
+                        <button type="button" class="btn btn-outline-secondary" id="btnResetDefaults" data-bs-toggle="tooltip" title="Restaurar valores Por defecto">
                             <i class="ti ti-refresh me-1"></i> Restaurar
                         </button>
                         <button type="submit" form="documentSettingsForm" class="btn btn-primary" id="btnSaveSettings" disabled>
@@ -180,12 +180,12 @@
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title" id="resetDefaultsModalLabel">
                         <i class="ti ti-alert-triangle text-warning me-2"></i>
-                        Restaurar Valores por Defecto
+                        Restaurar Valores Por defecto
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-3">Esta accion restaurara todas las configuraciones a sus valores por defecto. Esta accion no puede deshacerse.</p>
+                    <p class="mb-3">Esta accion restaurara todas las configuraciones a sus valores Por defecto. Esta accion no puede deshacerse.</p>
                     <div class="alert alert-warning mb-0">
                         <i class="ti ti-info-circle me-2"></i>
                         <strong>Nota:</strong> Las politicas SLA existentes no seran eliminadas, solo se restauraran los ajustes generales.
@@ -456,7 +456,7 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr) {
-                toastr.error('Error al restaurar valores por defecto', 'Error');
+                toastr.error('Error al restaurar valores Por defecto', 'Error');
                 btn.prop('disabled', false).html('<i class="ti ti-refresh me-1"></i> Restaurar');
             }
         });

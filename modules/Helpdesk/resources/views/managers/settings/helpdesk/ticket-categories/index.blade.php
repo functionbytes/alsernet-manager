@@ -247,7 +247,7 @@
                                             <div>
                                                 <strong style="font-weight: 700; color: #333;">{{ $category->name }}</strong>
                                                 @if($category->is_default)
-                                                    <span class="badge ms-2" style="background: rgba(93, 135, 255, 0.2); color: #5D87FF; font-weight: 600; font-size: 0.75rem;">Por Defecto</span>
+                                                    <span class="badge ms-2" style="background: rgba(93, 135, 255, 0.2); color: #5D87FF; font-weight: 600; font-size: 0.75rem;">Por defecto</span>
                                                 @endif
                                             </div>
                                         </div>

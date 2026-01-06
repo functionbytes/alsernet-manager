@@ -11,7 +11,7 @@ class ProductReturnRulesSeeder extends Seeder
 {
     public function run(): void
     {
-        // Regla global por defecto
+        // Regla global Por defecto
         ProductReturnRule::create([
             'rule_type' => 'global',
             'is_returnable' => true,

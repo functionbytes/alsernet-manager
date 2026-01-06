@@ -1,23 +1,26 @@
 <?php
 
-
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-
 class NewslettersController extends Module
 {
     public $module;
+
     public $firstname;
+
     public $lastname;
+
     public $email;
+
     public $id_lang;
+
     public $iso;
-    //const URL_ERP = 'http://127.0.0.1:58002/api-gestion/';
+
+    // const URL_ERP = 'http://127.0.0.1:58002/api-gestion/';
     const URL_ERP = 'http://interges:8080/api-gestion/';
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->bootstrap = true;
-        $this->module =  Module::getInstanceByName("alsernetforms");
+        $this->module = Module::getInstanceByName('alsernetforms');
         parent::__construct();
     }
 
@@ -43,7 +46,7 @@ class NewslettersController extends Module
             'ids_sport' => $sports,
         ];
 
-        $sql = "INSERT INTO `"._DB_PREFIX_."susc_newsletter`
+        $sql = 'INSERT INTO `'._DB_PREFIX_."susc_newsletter`
             (`nombre`, `apellidos`, `email`, `ids_alta_baja`, `tipo`, `lopd`, `fecha`, `id_lang`, `cliente_no_info_comercial`, `cliente_no_datos_a_terceros`)
             VALUES (
                 '".pSQL($firstname)."',
@@ -53,14 +56,14 @@ class NewslettersController extends Module
                 '0',
                 '0',
                 '".pSQL(date('Y-m-d H:i:s'))."',
-                ".(int)$id_lang.",
-                ".(int)$condition.",
-                ".(int)$services."
-            )";
+                ".(int) $id_lang.',
+                '.(int) $condition.',
+                '.(int) $services.'
+            )';
 
         if (Db::getInstance()->execute($sql)) {
 
-            if (!Mail::Send(
+            if (! Mail::Send(
                 1,
                 'newslettersubscribe',
                 $this->l('Subscription request', 'formcontroller', 'es'),
@@ -68,7 +71,7 @@ class NewslettersController extends Module
                     '{firstname}' => $data['firstname'],
                     '{lastname}' => $data['lastname'],
                     '{email}' => $data['email'],
-                    '{sports}' => implode(', ', $this->processSportsTranslate($data['ids_sport']))
+                    '{sports}' => implode(', ', $this->processSportsTranslate($data['ids_sport'])),
                 ],
                 'formulariosprestashop@a-alvarez.com'
             )) {
@@ -79,16 +82,15 @@ class NewslettersController extends Module
                 ];
             }
 
-
             $dataEmail = [
                 '{token}' => md5($data['email'].Configuration::get('NW_SALT')),
-                '{url}' =>  Tools::getShopDomainSsl(true) . __PS_BASE_URI__,
+                '{url}' => Tools::getShopDomainSsl(true).__PS_BASE_URI__,
             ];
 
             $template = 'newslettersubscribecheck';
             $subject = $this->l('Welcome!', 'NewslettersController', $iso);
 
-            if (!Mail::Send($data['id_lang'],$template,$subject,$dataEmail,$data['email'])) {
+            if (! Mail::Send($data['id_lang'], $template, $subject, $dataEmail, $data['email'])) {
                 return [
                     'status' => 'warning',
                     'message' => $this->l('An error occurred while sending the notification to the customer.', 'formcontroller', $data['lang']),
@@ -106,7 +108,7 @@ class NewslettersController extends Module
 
     }
 
-    function mapCategories(string $cadena): string
+    public function mapCategories(string $cadena): string
     {
         if (strpos($cadena, '1395') !== false) {
             return $cadena;
@@ -116,22 +118,32 @@ class NewslettersController extends Module
         $catdefaults = [];
 
         foreach ($catdefs as $catdef) {
-            $catdef = (int)trim($catdef);
+            $catdef = (int) trim($catdef);
 
             switch ($catdef) {
-                case 3: $catdefault = 1; break; // GOLF
-                case 4: $catdefault = 5; break; // CAZA
-                case 5: $catdefault = 6; break; // PESCA
-                case 6: $catdefault = 3; break; // HIPICA
-                case 7: $catdefault = 4; break; // BUCEO
-                case 8: $catdefault = 2; break; // NAUTICA
-                case 9: $catdefault = 9; break; // ESQUI
-                case 10: $catdefault = 1395; break; // PADEL
-                case 11: $catdefault = 10; break; // AVENTURA
-                default: $catdefault = 5; break; // por defecto CAZA
+                case 3: $catdefault = 1;
+                    break; // GOLF
+                case 4: $catdefault = 5;
+                    break; // CAZA
+                case 5: $catdefault = 6;
+                    break; // PESCA
+                case 6: $catdefault = 3;
+                    break; // HIPICA
+                case 7: $catdefault = 4;
+                    break; // BUCEO
+                case 8: $catdefault = 2;
+                    break; // NAUTICA
+                case 9: $catdefault = 9;
+                    break; // ESQUI
+                case 10: $catdefault = 1395;
+                    break; // PADEL
+                case 11: $catdefault = 10;
+                    break; // AVENTURA
+                default: $catdefault = 5;
+                    break; // Por defecto CAZA
             }
 
-            if (!in_array($catdefault, $catdefaults)) {
+            if (! in_array($catdefault, $catdefaults)) {
                 $catdefaults[] = $catdefault;
             }
         }
@@ -139,7 +151,7 @@ class NewslettersController extends Module
         return implode(',', $catdefaults);
     }
 
-    //QUITAR TODO
+    // QUITAR TODO
 
     public function newsletterdischargersnone()
     {
@@ -148,9 +160,9 @@ class NewslettersController extends Module
 
         $iso = trim(Tools::getValue('iso'));
         $id_lang = Language::getIdByIso($iso);
-        $firstname = "";
-        $lastname = "";
-        $sports = "";
+        $firstname = '';
+        $lastname = '';
+        $sports = '';
         $fecha = date('Y-m-d H:i:s');
         $fecha_erp = str_replace(' ', 'T', date('Y-m-d H:i:s'));
         $condition = 1;
@@ -170,20 +182,19 @@ class NewslettersController extends Module
 
     }
 
-    //TERCEROS
+    // TERCEROS
     public function newsletterdischargersparties()
     {
         $context = Context::getContext();
         $email = trim(Tools::getValue('email'));
         $iso = trim(Tools::getValue('iso'));
         $id_lang = Language::getIdByIso($iso);
-        $firstname = "";
-        $lastname = "";
+        $firstname = '';
+        $lastname = '';
         $sports = Tools::getValue('sports');
 
-
         $newsletter = Db::getInstance()->executeS("SELECT id_susc_newsletter FROM aalv_susc_newsletter WHERE lopd=0 AND email='".$email."' LIMIT 1");
-        $sql = "INSERT INTO `"._DB_PREFIX_."susc_newsletter`
+        $sql = 'INSERT INTO `'._DB_PREFIX_."susc_newsletter`
             (`nombre`, `apellidos`, `email`, `ids_alta_baja`, `tipo`, `lopd`, `fecha`, `id_lang`, `cliente_no_info_comercial`, `cliente_no_datos_a_terceros`)
             VALUES (
                 '".pSQL($firstname)."',
@@ -193,23 +204,23 @@ class NewslettersController extends Module
                 '0',
                 '0',
                 '".pSQL(date('Y-m-d H:i:s'))."',
-                ".(int)$id_lang.",
+                ".(int) $id_lang.",
                '0',
                '0'
             )";
 
-            Db::getInstance()->execute($sql);
-            AlvarezERP::delsuscribircatalogosporeamilerp($email, $sports);
+        Db::getInstance()->execute($sql);
+        AlvarezERP::delsuscribircatalogosporeamilerp($email, $sports);
 
-            return [
-                'status' => 'success',
-                'message' => $this->l('You have successfully created neswletters.', 'formcontroller', $iso),
-                'data' => [],
-            ];
+        return [
+            'status' => 'success',
+            'message' => $this->l('You have successfully created neswletters.', 'formcontroller', $iso),
+            'data' => [],
+        ];
 
     }
 
-    //DEPORTES
+    // DEPORTES
     public function newsletterdischargerssports()
     {
 
@@ -217,8 +228,8 @@ class NewslettersController extends Module
         $email = trim(Tools::getValue('email'));
         $iso = trim(Tools::getValue('iso'));
         $id_lang = Language::getIdByIso($iso);
-        $firstname = "";
-        $lastname = "";
+        $firstname = '';
+        $lastname = '';
         $sports = Tools::getValue('sports');
 
         $newsletter = Db::getInstance()->executeS("SELECT id_susc_newsletter FROM aalv_susc_newsletter WHERE lopd=0 AND email='".$email."' LIMIT 1");
@@ -233,10 +244,9 @@ class NewslettersController extends Module
             'data' => [],
         ];
 
-
     }
 
-    //SUSCRIPCIONES
+    // SUSCRIPCIONES
     public function registersubscribe($data)
     {
 
@@ -260,16 +270,16 @@ class NewslettersController extends Module
             'ids_sport' => $sports,
             'birthday' => $birthday,
             'condition' => $condition,
-            'parties' => $parties
+            'parties' => $parties,
         ];
 
         $birthdayFormatted = 'NULL';
 
-        if (!empty($birthday)) {
-            $birthdayFormatted = "'" . pSQL($birthday) . "'";
+        if (! empty($birthday)) {
+            $birthdayFormatted = "'".pSQL($birthday)."'";
         }
 
-        $sql = "INSERT INTO `"._DB_PREFIX_."susc_newsletter`
+        $sql = 'INSERT INTO `'._DB_PREFIX_."susc_newsletter`
             (`nombre`, `apellidos`, `email`, `ids_alta_baja`, `tipo`, `lopd`, `fecha`, `fecha_nac`, `id_lang`)
             VALUES (
                 '".pSQL($firstname)."',
@@ -280,13 +290,12 @@ class NewslettersController extends Module
                 0,
                 '".pSQL(date('Y-m-d H:i:s'))."',
                 $birthdayFormatted,
-                ".(int)$id_lang."
-            )";
-
+                ".(int) $id_lang.'
+            )';
 
         if (Db::getInstance()->execute($sql)) {
 
-            if (!Mail::Send(
+            if (! Mail::Send(
                 1,
                 'newslettersubscribe',
                 $this->l('Subscription request', 'formcontroller', 'es'),
@@ -294,7 +303,7 @@ class NewslettersController extends Module
                     '{firstname}' => $data['firstname'],
                     '{lastname}' => $data['lastname'],
                     '{email}' => $data['email'],
-                    '{sports}' => implode(', ', $this->processSportsTranslate($data['ids_sport']))
+                    '{sports}' => implode(', ', $this->processSportsTranslate($data['ids_sport'])),
                 ],
                 'formulariosprestashop@a-alvarez.com'
             )) {
@@ -307,13 +316,13 @@ class NewslettersController extends Module
 
             $dataEmail = [
                 '{token}' => md5($data['email'].Configuration::get('NW_SALT')),
-                '{url}' =>  Tools::getShopDomainSsl(true) . __PS_BASE_URI__,
+                '{url}' => Tools::getShopDomainSsl(true).__PS_BASE_URI__,
             ];
 
             $template = 'newslettersubscribecheck';
             $subject = $this->l('Welcome!', 'formcontroller', $iso);
 
-            if (!Mail::Send($data['id_lang'],$template,$subject,$dataEmail,$data['email'])) {
+            if (! Mail::Send($data['id_lang'], $template, $subject, $dataEmail, $data['email'])) {
                 return [
                     'status' => 'warning',
                     'message' => $this->l('An error occurred while sending the notification to the customer.', 'formcontroller', $data['lang']),
@@ -326,7 +335,7 @@ class NewslettersController extends Module
 
     public function baja_retail_rocker($email)
     {
-        if (!Validate::isEmail($email)) {
+        if (! Validate::isEmail($email)) {
             return ['success' => false, 'message' => 'Invalid email format'];
         }
 
@@ -347,7 +356,7 @@ class NewslettersController extends Module
         curl_close($ch);
 
         if ($curlError) {
-            return ['success' => false, 'message' => 'cURL error: ' . $curlError];
+            return ['success' => false, 'message' => 'cURL error: '.$curlError];
         }
 
         if ($httpCode !== 200) {
@@ -357,12 +366,12 @@ class NewslettersController extends Module
         return [
             'success' => true,
             'status_code' => $httpCode,
-            'response' => $response
+            'response' => $response,
         ];
     }
 
-
-    public function l($string, $specific = false, $locale = null){
+    public function l($string, $specific = false, $locale = null)
+    {
 
         return $this->getModuleTranslation(
             $this->module,
@@ -374,7 +383,7 @@ class NewslettersController extends Module
         );
     }
 
-    public  function getModuleTranslation(
+    public function getModuleTranslation(
         $module,
         $originalString,
         $source,
@@ -393,7 +402,7 @@ class NewslettersController extends Module
 
         $name = $module->name;
 
-        if (null !== $locale) {
+        if ($locale !== null) {
             $iso = Language::getIsoByLocale($locale);
         }
 
@@ -401,51 +410,50 @@ class NewslettersController extends Module
             $iso = Context::getContext()->language->iso_code;
         }
 
-        if (!isset($translationsMerged[$name][$iso])) {
+        if (! isset($translationsMerged[$name][$iso])) {
             $filesByPriority = [
                 // PrestaShop 1.5 translations
-                _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
+                _PS_MODULE_DIR_.$name.'/translations/'.$iso.'.php',
                 // PrestaShop 1.4 translations
-                _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
+                _PS_MODULE_DIR_.$name.'/'.$iso.'.php',
                 // Translations in theme
-                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
-                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
+                _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$iso.'.php',
+                _PS_THEME_DIR_.'modules/'.$name.'/'.$iso.'.php',
             ];
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
                     include_once $file;
-                    $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+                    $_MODULES = ! empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                 }
             }
             $translationsMerged[$name][$iso] = true;
         }
 
-
         $string = preg_replace("/\\\*'/", "\'", $originalString);
         $key = md5($string);
 
-        $cacheKey = $name . '|' . $string . '|' . $source . '|' . (int) $js . '|' . $iso;
+        $cacheKey = $name.'|'.$string.'|'.$source.'|'.(int) $js.'|'.$iso;
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
-            $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
-            $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
+            $currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
+            $defaultKey = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
-            if ('controller' == substr($source, -10, 10)) {
+            if (substr($source, -10, 10) == 'controller') {
                 $file = substr($source, 0, -10);
-                $currentKeyFile = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $file) . '_' . $key;
-                $defaultKeyFile = strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
+                $currentKeyFile = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
+                $defaultKeyFile = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }
 
-            if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
+            if (isset($currentKeyFile) && ! empty($_MODULES[$currentKeyFile])) {
                 $ret = stripslashes($_MODULES[$currentKeyFile]);
-            } elseif (isset($defaultKeyFile) && !empty($_MODULES[$defaultKeyFile])) {
+            } elseif (isset($defaultKeyFile) && ! empty($_MODULES[$defaultKeyFile])) {
                 $ret = stripslashes($_MODULES[$defaultKeyFile]);
-            } elseif (!empty($_MODULES[$currentKey])) {
+            } elseif (! empty($_MODULES[$currentKey])) {
                 $ret = stripslashes($_MODULES[$currentKey]);
-            } elseif (!empty($_MODULES[$defaultKey])) {
+            } elseif (! empty($_MODULES[$defaultKey])) {
                 $ret = stripslashes($_MODULES[$defaultKey]);
-            } elseif (!empty($_LANGADM)) {
+            } elseif (! empty($_LANGADM)) {
                 // if translation was not found in module, look for it in AdminController or Helpers
                 $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
             } else {
@@ -454,8 +462,8 @@ class NewslettersController extends Module
 
             if (
                 $sprintf !== null &&
-                (!is_array($sprintf) || !empty($sprintf)) &&
-                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                (! is_array($sprintf) || ! empty($sprintf)) &&
+                ! (count($sprintf) === 1 && isset($sprintf['legacy']))
             ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
@@ -471,9 +479,9 @@ class NewslettersController extends Module
             }
         }
 
-        if (!is_array($sprintf) && null !== $sprintf) {
+        if (! is_array($sprintf) && $sprintf !== null) {
             $sprintf_for_trans = [$sprintf];
-        } elseif (null === $sprintf) {
+        } elseif ($sprintf === null) {
             $sprintf_for_trans = [];
         } else {
             $sprintf_for_trans = $sprintf;
@@ -486,7 +494,8 @@ class NewslettersController extends Module
         return $ret;
     }
 
-    function processSportsTranslate($sports) {
+    public function processSportsTranslate($sports)
+    {
 
         $sports_map = [
             1 => 'GOLF',
@@ -571,19 +580,12 @@ class NewslettersController extends Module
 
         $sportsArray = explode(',', $sports);
 
-        $sports_in_language = array_map(function($id) use ($sports_map, $sports_translation_map) {
+        $sports_in_language = array_map(function ($id) use ($sports_map, $sports_translation_map) {
             $sport_name = $sports_map[$id];
+
             return $sports_translation_map[1][$sport_name] ?? $sport_name;
         }, $sportsArray);
 
         return $sports_in_language;
     }
-
-
 }
-
-
-
-
-
-

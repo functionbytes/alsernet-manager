@@ -2,17 +2,16 @@
 
 namespace AlsernetShopping\Carriers;
 
-use Address;
-use Context;
 use Configuration;
+use Context;
 use Db;
 
 /**
  * Handler unificado para todos los carriers que usan el módulo MondialRelay
  * Maneja carriers: 100, 107, 108, 109, 110, 111
  *
- * @package AlsernetShopping\Carriers
  * @version 1.0.0
+ *
  * @since 2025-08-16
  */
 class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
@@ -26,7 +25,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'standard',
             'insurance_level' => '0',
             'country' => 'ES',
-            'theme' => 'mondialrelay'
+            'theme' => 'mondialrelay',
         ],
         107 => [ // InPost Punto Pack via MondialRelay
             'name' => 'InPost Punto Pack',
@@ -35,7 +34,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'punto_pack',
             'insurance_level' => '0',
             'country' => 'ES',
-            'theme' => 'inpost'
+            'theme' => 'inpost',
         ],
         108 => [ // InPost Locker via MondialRelay
             'name' => 'InPost Locker',
@@ -44,7 +43,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'locker',
             'insurance_level' => '1',
             'country' => 'ES',
-            'theme' => 'inpost'
+            'theme' => 'inpost',
         ],
         109 => [ // MondialRelay Punto Pack
             'name' => 'MondialRelay Punto Pack',
@@ -53,7 +52,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'punto_pack',
             'insurance_level' => '0',
             'country' => 'ES',
-            'theme' => 'mondialrelay'
+            'theme' => 'mondialrelay',
         ],
         110 => [ // MondialRelay Locker
             'name' => 'MondialRelay Locker',
@@ -62,7 +61,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'locker',
             'insurance_level' => '1',
             'country' => 'ES',
-            'theme' => 'mondialrelay'
+            'theme' => 'mondialrelay',
         ],
         111 => [ // MondialRelay Alemania
             'name' => 'MondialRelay Alemania',
@@ -71,21 +70,22 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'service_type' => 'international',
             'insurance_level' => '0',
             'country' => 'DE',
-            'theme' => 'mondialrelay'
-        ]
+            'theme' => 'mondialrelay',
+        ],
     ];
 
     private $carrierId;
+
     private $carrierConfig;
 
     /**
      * Constructor
      */
-    public function __construct(int $carrierId, Context $context = null)
+    public function __construct(int $carrierId, ?Context $context = null)
     {
         $this->carrierId = $carrierId;
 
-        if (!isset(self::CARRIER_CONFIGS[$carrierId])) {
+        if (! isset(self::CARRIER_CONFIGS[$carrierId])) {
             throw new \InvalidArgumentException("Unsupported carrier ID: {$carrierId}");
         }
 
@@ -123,8 +123,8 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
      */
     private function loadCarrierMethodFromDB(): void
     {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'mondialrelay_carrier_method` 
-                WHERE `id_carrier` = ' . (int)$this->carrierId;
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'mondialrelay_carrier_method`
+                WHERE `id_carrier` = '.(int) $this->carrierId;
 
         $result = Db::getInstance()->getRow($sql);
 
@@ -133,16 +133,16 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             $this->carrierConfig = array_merge($this->carrierConfig, [
                 'delivery_mode' => $result['delivery_mode'],
                 'delivery_type' => $result['delivery_type'],
-                'insurance_level' => $result['insurance_level']
+                'insurance_level' => $result['insurance_level'],
             ]);
         } else {
-            // Insertar configuración por defecto en la BD
+            // Insertar configuración Por defecto en la BD
             $this->createCarrierMethodInDB();
         }
 
-        $this->debug("MondialRelay carrier configuration loaded", [
+        $this->debug('MondialRelay carrier configuration loaded', [
             'carrier_id' => $this->carrierId,
-            'config' => $this->carrierConfig
+            'config' => $this->carrierConfig,
         ]);
     }
 
@@ -152,20 +152,20 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
     private function createCarrierMethodInDB(): void
     {
         try {
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mondialrelay_carrier_method` 
-                    (`id_carrier`, `delivery_mode`, `delivery_type`, `insurance_level`) 
-                    VALUES (' . (int)$this->carrierId . ', 
-                           "' . pSQL($this->carrierConfig['delivery_mode']) . '", 
-                           "' . pSQL($this->carrierConfig['delivery_type']) . '", 
-                           "' . pSQL($this->carrierConfig['insurance_level']) . '")';
+            $sql = 'INSERT INTO `'._DB_PREFIX_.'mondialrelay_carrier_method`
+                    (`id_carrier`, `delivery_mode`, `delivery_type`, `insurance_level`)
+                    VALUES ('.(int) $this->carrierId.',
+                           "'.pSQL($this->carrierConfig['delivery_mode']).'",
+                           "'.pSQL($this->carrierConfig['delivery_type']).'",
+                           "'.pSQL($this->carrierConfig['insurance_level']).'")';
 
             Db::getInstance()->execute($sql);
-            $this->debug("Carrier method created in DB", ['carrier_id' => $this->carrierId]);
+            $this->debug('Carrier method created in DB', ['carrier_id' => $this->carrierId]);
 
         } catch (\Exception $e) {
-            $this->debug("Error creating carrier method in DB", [
+            $this->debug('Error creating carrier method in DB', [
                 'carrier_id' => $this->carrierId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -175,7 +175,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
      */
     protected function getExternalModuleConfig(): array
     {
-        if (!$this->moduleEnabled) {
+        if (! $this->moduleEnabled) {
             return [];
         }
 
@@ -183,8 +183,8 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
         $baseConfig = [
             'webservice_enseigne' => Configuration::get('MONDIALRELAY_WEBSERVICE_ENSEIGNE'),
             'webservice_key' => Configuration::get('MONDIALRELAY_WEBSERVICE_KEY'),
-            'display_map' => (bool)Configuration::get('MONDIALRELAY_DISPLAY_MAP'),
-            'max_weight' => (float)Configuration::get('MONDIALRELAY_MAX_WEIGHT'),
+            'display_map' => (bool) Configuration::get('MONDIALRELAY_DISPLAY_MAP'),
+            'max_weight' => (float) Configuration::get('MONDIALRELAY_MAX_WEIGHT'),
             'country_iso' => $this->carrierConfig['country'],
             'language_iso' => $this->context->language->iso_code,
         ];
@@ -225,14 +225,15 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             return [
                 'status' => 'success',
                 'data' => $carrierData,
-                'message' => 'MondialRelay data processed successfully'
+                'message' => 'MondialRelay data processed successfully',
             ];
 
         } catch (\Exception $e) {
-            $this->debug("Error processing MondialRelay data", ['error' => $e->getMessage()]);
+            $this->debug('Error processing MondialRelay data', ['error' => $e->getMessage()]);
+
             return [
                 'status' => 'error',
-                'message' => 'Error processing MondialRelay data: ' . $e->getMessage()
+                'message' => 'Error processing MondialRelay data: '.$e->getMessage(),
             ];
         }
     }
@@ -245,7 +246,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
         $config = $this->getExternalModuleConfig();
 
         return [
-            'Target' => '#mondialrelay-widget-container-' . $this->carrierId,
+            'Target' => '#mondialrelay-widget-container-'.$this->carrierId,
             'Brand' => $config['webservice_enseigne'] ?? 'BDTEST13',
             'Country' => $config['country_iso'] ?? 'ES',
             'Language' => $config['language_iso'] ?? 'es',
@@ -255,7 +256,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'ShowResultsOnMap' => $config['display_map'],
             'DeliveryType' => $this->carrierConfig['delivery_type'],
             'InsuranceLevel' => $this->carrierConfig['insurance_level'],
-            'OnParcelShopSelected' => 'onMondialRelaySelected_' . $this->carrierId
+            'OnParcelShopSelected' => 'onMondialRelaySelected_'.$this->carrierId,
         ];
     }
 
@@ -264,13 +265,13 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
      */
     private function getSelectedRelay(Context $context): ?array
     {
-        if (!$context->cart || !$context->cart->id) {
+        if (! $context->cart || ! $context->cart->id) {
             return null;
         }
 
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'mondialrelay_selected_relay` 
-                WHERE `id_cart` = ' . (int)$context->cart->id . '
-                AND `id_customer` = ' . (int)$context->customer->id;
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'mondialrelay_selected_relay`
+                WHERE `id_cart` = '.(int) $context->cart->id.'
+                AND `id_customer` = '.(int) $context->customer->id;
 
         $result = Db::getInstance()->getRow($sql);
 
@@ -303,7 +304,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
         $assets[] = [
             'type' => 'css',
             'path' => "modules/alsernetshopping/views/css/front/carriers/{$cssFile}",
-            'priority' => 100
+            'priority' => 100,
         ];
 
         // JavaScript específico
@@ -311,7 +312,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
         $assets[] = [
             'type' => 'js',
             'path' => "modules/alsernetshopping/views/js/front/checkout/carriers/{$jsFile}",
-            'priority' => 200
+            'priority' => 200,
         ];
 
         // Widget oficial si está configurado
@@ -319,12 +320,12 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             $assets[] = [
                 'type' => 'js',
                 'path' => 'https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js',
-                'priority' => 150
+                'priority' => 150,
             ];
             $assets[] = [
                 'type' => 'css',
                 'path' => 'https://widget.mondialrelay.com/parcelshop-picker/css/mondialrelay.css',
-                'priority' => 90
+                'priority' => 90,
             ];
         }
 
@@ -354,7 +355,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
     {
         $baseValidation = parent::validateAvailability($context);
 
-        if (!$baseValidation['valid']) {
+        if (! $baseValidation['valid']) {
             return $baseValidation;
         }
 
@@ -364,22 +365,22 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
         if (empty($config['webservice_key'])) {
             return [
                 'valid' => false,
-                'message' => 'MondialRelay API key not configured'
+                'message' => 'MondialRelay API key not configured',
             ];
         }
 
         // Verificar país soportado
         $supportedCountries = ['ES', 'FR', 'BE', 'LU', 'DE', 'PL', 'UK', 'IT'];
-        if (!in_array($this->carrierConfig['country'], $supportedCountries)) {
+        if (! in_array($this->carrierConfig['country'], $supportedCountries)) {
             return [
                 'valid' => false,
-                'message' => 'Service not available in target country'
+                'message' => 'Service not available in target country',
             ];
         }
 
         return [
             'valid' => true,
-            'message' => 'MondialRelay service is available'
+            'message' => 'MondialRelay service is available',
         ];
     }
 
@@ -389,35 +390,36 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
     public function saveSelectedRelay(array $relayData, Context $context): bool
     {
         try {
-            if (!$context->cart || !$context->cart->id || !$context->customer || !$context->customer->id) {
+            if (! $context->cart || ! $context->cart->id || ! $context->customer || ! $context->customer->id) {
                 return false;
             }
 
             // Eliminar selección anterior
-            $deleteSql = 'DELETE FROM `' . _DB_PREFIX_ . 'mondialrelay_selected_relay` 
-                         WHERE `id_cart` = ' . (int)$context->cart->id;
+            $deleteSql = 'DELETE FROM `'._DB_PREFIX_.'mondialrelay_selected_relay`
+                         WHERE `id_cart` = '.(int) $context->cart->id;
             Db::getInstance()->execute($deleteSql);
 
             // Insertar nueva selección
-            $insertSql = 'INSERT INTO `' . _DB_PREFIX_ . 'mondialrelay_selected_relay` 
-                         (`id_cart`, `id_customer`, `selected_relay_num`, `selected_relay_adr1`, 
-                          `selected_relay_city`, `selected_relay_postcode`) 
-                         VALUES (' . (int)$context->cart->id . ', ' . (int)$context->customer->id . ', 
-                                "' . pSQL($relayData['num'] ?? '') . '", 
-                                "' . pSQL($relayData['name'] ?? '') . '", 
-                                "' . pSQL($relayData['city'] ?? '') . '", 
-                                "' . pSQL($relayData['postcode'] ?? '') . '")';
+            $insertSql = 'INSERT INTO `'._DB_PREFIX_.'mondialrelay_selected_relay`
+                         (`id_cart`, `id_customer`, `selected_relay_num`, `selected_relay_adr1`,
+                          `selected_relay_city`, `selected_relay_postcode`)
+                         VALUES ('.(int) $context->cart->id.', '.(int) $context->customer->id.',
+                                "'.pSQL($relayData['num'] ?? '').'",
+                                "'.pSQL($relayData['name'] ?? '').'",
+                                "'.pSQL($relayData['city'] ?? '').'",
+                                "'.pSQL($relayData['postcode'] ?? '').'")';
 
             $result = Db::getInstance()->execute($insertSql);
 
             if ($result) {
-                $this->debug("Relay saved", array_merge($relayData, ['carrier_id' => $this->carrierId]));
+                $this->debug('Relay saved', array_merge($relayData, ['carrier_id' => $this->carrierId]));
             }
 
             return $result;
 
         } catch (\Exception $e) {
-            $this->debug("Error saving relay", ['error' => $e->getMessage()]);
+            $this->debug('Error saving relay', ['error' => $e->getMessage()]);
+
             return false;
         }
     }
@@ -434,7 +436,7 @@ class MondialRelayModuleHandler extends ExternalModuleCarrierHandler
             'theme' => $this->carrierConfig['theme'],
             'country' => $this->carrierConfig['country'],
             'delivery_type' => $this->carrierConfig['delivery_type'],
-            'module_info' => $this->getExternalModuleInfo()
+            'module_info' => $this->getExternalModuleInfo(),
         ];
     }
 }

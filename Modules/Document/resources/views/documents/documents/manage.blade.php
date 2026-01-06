@@ -36,7 +36,7 @@
             @endif
 
             <!-- Email History (Permission-Controlled) -->
-            @if(auth()->user()->canDocument('view-view-email-history'))
+            @if(auth()->user()->canDocument('view-email-history'))
                 @include('documents::documents.documents.components.email.history')
             @endif
 

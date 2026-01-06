@@ -3,36 +3,44 @@
 namespace Modules\Auth\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class PasswordController extends Controller
 {
     /**
-     * Show password change form
+     * Update the user's password
      */
-    public function edit(): View
+    public function update(Request $request)
     {
-        return view('auth::settings.password.edit');
-    }
-
-    /**
-     * Update user password
-     */
-    public function update(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', 'min:8'],
+        $request->validate([
+            'current_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'La contraseña actual es obligatoria',
+            'new_password.required' => 'La nueva contraseña es obligatoria',
+            'new_password.min' => 'La nueva contraseña debe tener al menos 8 caracteres',
+            'new_password.confirmed' => 'La confirmación de contraseña no coincide',
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
+        $user = auth()->user();
+
+        // Verify current password
+        if (! Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['La contraseña actual no es correcta'],
+            ]);
+        }
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($request->new_password),
         ]);
 
-        return redirect()->route('settings.auth.password.edit')
-            ->with('success', 'Contraseña actualizada correctamente');
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña actualizada correctamente',
+        ]);
     }
 }

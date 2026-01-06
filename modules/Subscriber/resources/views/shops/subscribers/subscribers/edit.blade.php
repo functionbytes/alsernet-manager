@@ -300,7 +300,7 @@
                             let selectedValues = categorySelect.val() || []; // Obtener valores seleccionados actuales
                             let newCategoryIds = response.map(category => category.id); // IDs de las nuevas categorías disponibles
 
-                            // Limpiar select2 y agregar nueva opción por defecto
+                            // Limpiar select2 y agregar nueva opción Por defecto
                             categorySelect.empty();
                             categorySelect.append(new Option('Selecciona una categoría', '', false, false));
 

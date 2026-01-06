@@ -10,8 +10,8 @@ use Modules\Database\Http\Controllers\DatabaseSettingsController;
 |--------------------------------------------------------------------------
 |
 | Rutas para el módulo de configuración y limpieza de base de datos
-| Prefix: /backups/database (aplicado por ServiceProvider)
-| Name: manager.backups.database.* (aplicado por ServiceProvider)
+| Prefix: /settings/database (aplicado por ServiceProvider)
+| Name: backups.database.* (aplicado por ServiceProvider)
 |
 | Permisos: Usa Spatie Permission middleware
 */

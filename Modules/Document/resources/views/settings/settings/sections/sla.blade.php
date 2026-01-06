@@ -131,7 +131,7 @@
     <!-- Default Time Limits Section -->
     <div class="setting-section mb-4 sla-options {{ ($settings['sla']['monitoring_enabled'] ?? true) ? '' : 'd-none' }}">
         <h6 class="fw-semibold mb-3 text-uppercase text-muted small">
-            <i class="ti ti-clock me-1"></i> Tiempos Limite por Defecto
+            <i class="ti ti-clock me-1"></i> Tiempos Limite Por defecto
         </h6>
 
         <div class="alert alert-info mb-3">
@@ -400,7 +400,7 @@
                            name="sla_escalation_recipients"
                            value="{{ $settings['sla']['escalation_recipients'] ?? '' }}"
                            placeholder="supervisor@empresa.com, gerente@empresa.com">
-                    <small class="text-muted">Deja vacio para usar los destinatarios de admin por defecto.</small>
+                    <small class="text-muted">Deja vacio para usar los destinatarios de admin Por defecto.</small>
                 </div>
             </div>
 
@@ -583,7 +583,7 @@
                         <td>
                             <strong>{{ $policy->name }}</strong>
                             @if($policy->is_default)
-                                <span class="badge bg-primary-subtle text-primary ms-1">Por Defecto</span>
+                                <span class="badge bg-primary-subtle text-primary ms-1">Por defecto</span>
                             @endif
                         </td>
                         <td class="text-center">

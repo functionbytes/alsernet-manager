@@ -110,11 +110,11 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Niveles por Defecto</th>
+                                    <th>Niveles Por defecto</th>
                                     <td><strong>{{ $style->default_levels }}</strong></td>
                                 </tr>
                                 <tr>
-                                    <th>Secciones por Defecto</th>
+                                    <th>Secciones Por defecto</th>
                                     <td><strong>{{ $style->default_sections }}</strong></td>
                                 </tr>
                                 <tr>

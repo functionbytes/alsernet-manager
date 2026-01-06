@@ -228,7 +228,7 @@
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                         <small class="form-text text-muted">
-                                                            <i class="fas fa-info-circle me-1"></i>Dejar vacío para usar el valor por defecto del sistema
+                                                            <i class="fas fa-info-circle me-1"></i>Dejar vacío para usar el valor Por defecto del sistema
                                                         </small>
                                                     </div>
                                                 </div>

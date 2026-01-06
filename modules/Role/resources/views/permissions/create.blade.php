@@ -14,26 +14,24 @@
             <div class="card-header bg-white border-bottom">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="mb-0">Nuevo Permiso del Sistema</h5>
+                        <h5 class="mb-0">Nuevo permiso del sistema</h5>
                         <p class="text-muted mb-0 small">Complete la información para crear un nuevo permiso</p>
-                    </div>
-                    <div class="col-auto">
-                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light">
-                            <i class="fas fa-arrow-left me-2"></i>Volver
-                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
                 {{-- Sección: Información básica --}}
-                <h6 class="fw-bold mb-3 border-bottom pb-2">
-                    <i class="fas fa-info-circle me-2"></i>Información básica
+                <h6 class="">
+                    Información básica
                 </h6>
+                <p class="text-muted mb-3 small">
+                    Define el nombre único del permiso, el tipo de autenticación (guard) y una descripción clara de lo que permite hacer
+                </p>
 
                 <div class="row mb-4">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Nombre del Permiso <span class="text-danger">*</span></label>
+                        <label class="form-label">Nombre del permiso <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name"
                                placeholder="Ej: users.create" required>
                         <small class="text-muted">Use formato: módulo.acción (ej: products.view, orders.edit)</small>
@@ -41,7 +39,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Guard <span class="text-danger">*</span></label>
-                        <select class="form-select" name="guard_name" required>
+                        <select class="form-select select2" name="guard_name" required>
                             <option value="web" selected>Web (Navegador)</option>
                             <option value="api">API (Token/OAuth)</option>
                         </select>
@@ -57,26 +55,27 @@
                 </div>
 
                 {{-- Sección: Información --}}
-                <div class="alert alert-info border-info">
-                    <i class="fas fa-lightbulb me-2"></i>
-                    <strong>Convención de nombres:</strong> Use el formato "módulo.acción" para mantener consistencia.
-                    Ejemplos: <code>users.view</code>, <code>products.create</code>, <code>orders.delete</code>
+                <div class="alert alert-info border-0 mb-0" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="fa fa-circle-info fs-5 me-3 mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-0">Convención de nombres</h6>
+                            <p class="mb-0">
+                                Use el formato "módulo.acción" para mantener consistencia.
+                                Ejemplos: <code>users.view</code>, <code>products.create</code>, <code>orders.delete</code>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card-footer bg-white border-top">
-                <div class="row">
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary w-100 mb-2">
-                            <i class="fas fa-save me-2"></i>Crear Permiso
+                        <button type="submit" class="btn btn-primary w-100 mb-1">
+                            Guardar
                         </button>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light w-100 mb-2">
-                            <i class="fas fa-times me-2"></i>Cancelar
+                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-secondary w-100">
+                            Cancelar
                         </a>
-                    </div>
-                </div>
             </div>
         </form>
     </div>
@@ -116,6 +115,7 @@ $(document).ready(function() {
         },
         submitHandler: function(form) {
             const submitBtn = $(form).find('button[type="submit"]');
+            const originalHtml = submitBtn.html();
             submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Creando...');
 
             $.ajax({
@@ -131,7 +131,7 @@ $(document).ready(function() {
                     }, 1500);
                 },
                 error: function(xhr) {
-                    submitBtn.prop('disabled', false).html('<i class="fas fa-save me-2"></i>Crear Permiso');
+                    submitBtn.prop('disabled', false).html(originalHtml);
 
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastr.error(xhr.responseJSON.message);

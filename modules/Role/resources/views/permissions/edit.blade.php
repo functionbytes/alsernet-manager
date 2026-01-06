@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Editar Permiso'])
+    @include('theme.components.card', ['title' => 'Editar permiso'])
 
     {{-- Alertas --}}
     @include('theme.components.alerts')
@@ -15,26 +15,25 @@
             <div class="card-header bg-white border-bottom">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="mb-0">Editar Permiso: {{ $permission->name }}</h5>
+                        <h5 class="mb-0">Editar permiso: {{ $permission->name }}</h5>
                         <p class="text-muted mb-0 small">Actualiza la información del permiso en el sistema</p>
-                    </div>
-                    <div class="col-auto">
-                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light">
-                            <i class="fas fa-arrow-left me-2"></i>Volver
-                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
                 {{-- Sección: Información básica --}}
-                <h6 class="fw-bold mb-3 border-bottom pb-2">
-                    <i class="fas fa-info-circle me-2"></i>Información básica
+                <h6 class="">
+                    Información básica
                 </h6>
+                <p class="text-muted mb-3 small">
+                    Define el nombre único del permiso, el tipo de autenticación (guard) y una descripción clara de lo que permite hacer
+                </p>
 
-                <div class="row mb-4">
+
+                <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Nombre del Permiso <span class="text-danger">*</span></label>
+                        <label class="form-label">Nombre del permiso <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name"
                                value="{{ $permission->name }}"
                                placeholder="Ej: users.create" required>
@@ -43,14 +42,14 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Guard <span class="text-danger">*</span></label>
-                        <select class="form-select" name="guard_name" required>
+                        <select class="form-select select2" name="guard_name" required>
                             <option value="web" {{ $permission->guard_name == 'web' ? 'selected' : '' }}>Web (Navegador)</option>
                             <option value="api" {{ $permission->guard_name == 'api' ? 'selected' : '' }}>API (Token/OAuth)</option>
                         </select>
                         <small class="text-muted">Define el tipo de autenticación para este permiso</small>
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-12 mb-0">
                         <label class="form-label">Descripción</label>
                         <textarea class="form-control" name="description" rows="3"
                                   placeholder="Describe qué permite hacer este permiso...">{{ $permission->description ?? '' }}</textarea>
@@ -58,69 +57,8 @@
                     </div>
                 </div>
 
-                {{-- Estadísticas del permiso --}}
-                <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-primary mb-2">Roles asignados</h6>
-                                        <h4 class="mb-1 fw-bold">{{ $permission->roles()->count() }}</h4>
-                                        <small class="text-muted">Roles que usan este permiso</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-success mb-2">Usuarios afectados</h6>
-                                        <h4 class="mb-1 fw-bold">
-                                            @php
-                                                $totalUsers = $permission->roles()->withCount('users')->get()->sum('users_count');
-                                            @endphp
-                                            {{ $totalUsers }}
-                                        </h4>
-                                        <small class="text-muted">Usuarios con este permiso</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-warning mb-2">Fecha de creación</h6>
-                                        <h4 class="mb-1 fw-bold" style="font-size: 1rem;">{{ $permission->created_at->format('d/m/Y') }}</h4>
-                                        <small class="text-muted">{{ $permission->created_at->diffForHumans() }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-secondary stat-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-info mb-2">Guard</h6>
-                                        <h4 class="mb-1 fw-bold" style="font-size: 1.2rem;">{{ ucfirst($permission->guard_name) }}</h4>
-                                        <small class="text-muted">Tipo de autenticación</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 @if($permission->roles()->count() > 0)
-                    <div class="alert alert-warning border-warning">
+                    <div class="alert alert-light border-warning">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <strong>Atención:</strong> Este permiso está asignado a {{ $permission->roles()->count() }} rol(es).
                         Los cambios afectarán a todos los roles que lo utilizan.
@@ -129,18 +67,12 @@
             </div>
 
             <div class="card-footer bg-white border-top">
-                <div class="row">
-                    <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary w-100 mb-2">
-                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        <button type="submit" class="btn btn-primary w-100 mb-1">
+                            Guardar
                         </button>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-light w-100 mb-2">
-                            <i class="fas fa-times me-2"></i>Cancelar
+                        <a href="{{ route('settings.permissions.index') }}" class="btn btn-secondary w-100">
+                            Cancelar
                         </a>
-                    </div>
-                </div>
             </div>
         </form>
     </div>
@@ -182,12 +114,18 @@ $(document).ready(function() {
             const submitBtn = $(form).find('button[type="submit"]');
             submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
 
+            const formData = new FormData(form);
+            const permissionId = formData.get('id');
+
             $.ajax({
-                url: "{{ route('settings.permissions.update') }}",
-                type: "POST",
-                data: new FormData(form),
+                url: "{{ route('settings.permissions.update', $permission->id) }}",
+                type: "PUT",
+                data: formData,
                 contentType: false,
                 processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                },
                 success: function(response) {
                     toastr.success(response.message || 'Permiso actualizado correctamente');
                     setTimeout(function() {

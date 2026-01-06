@@ -20,7 +20,7 @@ Este módulo sigue la arquitectura modular de Laravel y está completamente aisl
 - Asignar suscriptores a listas
 - Categorías de suscriptores con sincronización automática
 - Filtros por idioma
-- Listas por defecto por idioma
+- Listas Por defecto por idioma
 
 ### 3. **Importación y Exportación**
 - Importar suscriptores desde archivos CSV/Excel

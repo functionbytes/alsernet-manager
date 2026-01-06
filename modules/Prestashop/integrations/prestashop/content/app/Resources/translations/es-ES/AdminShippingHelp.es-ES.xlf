@@ -225,7 +225,7 @@
       </trans-unit>
       <trans-unit id="d42436f136f07fe81921a4939242c3bf" approved="yes">
         <source>Your shop's default carrier.</source>
-        <target state="final">Transportista por defecto de tu tienda.</target>
+        <target state="final">Transportista Por defecto de tu tienda.</target>
         <note>Line: 88</note>
       </trans-unit>
     </body>

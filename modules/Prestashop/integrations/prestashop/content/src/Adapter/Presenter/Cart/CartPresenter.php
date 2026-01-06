@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +35,6 @@ use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
@@ -88,11 +88,11 @@ class CartPresenter implements PresenterInterface
     public function __construct()
     {
         $context = Context::getContext();
-        $this->priceFormatter = new PriceFormatter();
+        $this->priceFormatter = new PriceFormatter;
         $this->link = $context->link;
         $this->translator = $context->getTranslator();
         $this->imageRetriever = new ImageRetriever($this->link);
-        $this->taxConfiguration = new TaxConfiguration();
+        $this->taxConfiguration = new TaxConfiguration;
     }
 
     /**
@@ -104,8 +104,6 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param array $rawProduct
-     *
      * @return ProductLazyArray|ProductListingLazyArray
      */
     private function presentProduct(array $rawProduct)
@@ -148,7 +146,7 @@ class CartPresenter implements PresenterInterface
             'pack',
         ];
         foreach ($resetFields as $field) {
-            if (!array_key_exists($field, $rawProduct)) {
+            if (! array_key_exists($field, $rawProduct)) {
                 $rawProduct[$field] = '';
             }
         }
@@ -177,7 +175,7 @@ class CartPresenter implements PresenterInterface
             $this->imageRetriever,
             $this->link,
             $this->priceFormatter,
-            new ProductColorsRetriever(),
+            new ProductColorsRetriever,
             $this->translator
         );
 
@@ -189,9 +187,6 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param array $products
-     * @param Cart $cart
-     *
      * @return array
      */
     public function addCustomizedData(array $products, Cart $cart)
@@ -201,7 +196,7 @@ class CartPresenter implements PresenterInterface
 
             $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
-            if (!$data) {
+            if (! $data) {
                 $data = [];
             }
             $id_product = (int) $product['id_product'];
@@ -310,16 +305,15 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param Cart $cart
-     * @param bool $shouldSeparateGifts
-     *
+     * @param  Cart  $cart
+     * @param  bool  $shouldSeparateGifts
      * @return array
      *
      * @throws \Exception
      */
-    public function present($cart, $shouldSeparateGifts = false,$id_lang = null)
+    public function present($cart, $shouldSeparateGifts = false, $id_lang = null)
     {
-        if (!is_a($cart, 'Cart')) {
+        if (! is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
 
@@ -372,7 +366,7 @@ class CartPresenter implements PresenterInterface
             ];
         }
 
-        if (!$cart->isVirtualCart()) {
+        if (! $cart->isVirtualCart()) {
             $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         } else {
             $shippingCost = 0;
@@ -462,7 +456,7 @@ class CartPresenter implements PresenterInterface
                 return false;
             }
 
-            return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
+            return ! array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
         $result = [
@@ -490,7 +484,6 @@ class CartPresenter implements PresenterInterface
                 '',
         ];
 
-
         Hook::exec('actionPresentCart',
             ['presentedCart' => &$result]
         );
@@ -501,9 +494,9 @@ class CartPresenter implements PresenterInterface
             $events = $module->getActiveEvents();
             if ($events) {
                 foreach ($events as $event) {
-                    $languages = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'alsernet_event_manager_lang WHERE id_event = ' . $event['id_event']);
+                    $languages = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'alsernet_event_manager_lang WHERE id_event = '.$event['id_event']);
                     foreach ($languages as $language) {
-                        if ($event['iva'] > 0 && $context->language->id == (int)$language["id_lang"]) {
+                        if ($event['iva'] > 0 && $context->language->id == (int) $language['id_lang']) {
                             $iva = $this->iva($products, $id_lang, $event);
                             $result['iva'][$event['id_event']] = $iva;
                         }
@@ -512,27 +505,24 @@ class CartPresenter implements PresenterInterface
             }
         }
 
-
-
-        $result['congratulation'] = $this->validateParameters($products,'congratulation');
-        $result['card'] = $this->validateParameters($products,'card');
-        $result['lottery'] = $this->validateParameters($products,'lottery');
-        $result['armas'] = $this->validateParameters($products,'armas');
-        $result['armero'] = $this->validateParameters($products,'armero');
-        $result['cartucho'] = $this->validateParameters($products,'cartucho');
-        $result['armas_balines'] = $this->validateParameters($products,'armas_balines');
-        $result['licencia'] = $this->validateParameters($products,'licencia');
+        $result['congratulation'] = $this->validateParameters($products, 'congratulation');
+        $result['card'] = $this->validateParameters($products, 'card');
+        $result['lottery'] = $this->validateParameters($products, 'lottery');
+        $result['armas'] = $this->validateParameters($products, 'armas');
+        $result['armero'] = $this->validateParameters($products, 'armero');
+        $result['cartucho'] = $this->validateParameters($products, 'cartucho');
+        $result['armas_balines'] = $this->validateParameters($products, 'armas_balines');
+        $result['licencia'] = $this->validateParameters($products, 'licencia');
         $result['portes'] = $this->validateParameters($products, 'portes');
         $result['id'] = $cart->id;
 
         return $result;
     }
 
-
-    public function iva($items, $lang,$event)
+    public function iva($items, $lang, $event)
     {
         // Validar que event existe y tiene los datos necesarios
-        if (empty($event) || !is_array($event)) {
+        if (empty($event) || ! is_array($event)) {
             return [
                 'inventaries' => [],
                 'total_discount_iva' => 0,
@@ -542,14 +532,14 @@ class CartPresenter implements PresenterInterface
         }
 
         // Validar que lang es un valor válido
-        if (empty($lang) || !is_numeric($lang)) {
-            $lang = 1; // Idioma por defecto
+        if (empty($lang) || ! is_numeric($lang)) {
+            $lang = 1; // Idioma Por defecto
         }
 
         // Validar que existen las claves necesarias en event
         $requiredKeys = ['start_at', 'end_at', 'management', 'id_event', 'iva_max_amount', 'iva'];
         foreach ($requiredKeys as $key) {
-            if (!isset($event[$key])) {
+            if (! isset($event[$key])) {
                 return [
                     'inventaries' => [],
                     'total_discount_iva' => 0,
@@ -559,20 +549,20 @@ class CartPresenter implements PresenterInterface
             }
         }
 
-        $currentDate = new \DateTime();
+        $currentDate = new \DateTime;
         $startDate = new \DateTime($event['start_at']);
         $endDate = new \DateTime($event['end_at']);
         $ivaProducts = [];
         $eventType = $event['management'];
-        $event_text = Db::getInstance()->getValue('SELECT title FROM ' . _DB_PREFIX_ . 'alsernet_event_manager_lang WHERE id_event = ' . $event['id_event'] . ' AND id_lang = ' . $lang);
-        $maxVoucherAmount = (int)$event['iva_max_amount'];
+        $event_text = Db::getInstance()->getValue('SELECT title FROM '._DB_PREFIX_.'alsernet_event_manager_lang WHERE id_event = '.$event['id_event'].' AND id_lang = '.$lang);
+        $maxVoucherAmount = (int) $event['iva_max_amount'];
 
         $promotionActive = $currentDate >= $startDate && $currentDate <= $endDate;
 
-        if (!$promotionActive) {
+        if (! $promotionActive) {
             return [
                 'inventaries' => [],
-                'total_discount_iva' => 0
+                'total_discount_iva' => 0,
             ];
         }
 
@@ -595,7 +585,7 @@ class CartPresenter implements PresenterInterface
         foreach ($ivaProducts as $product) {
             if (isset($product['total_wt']) && isset($product['quantity'])) {
 
-                if ((int)$event['iva'] == 1) {
+                if ((int) $event['iva'] == 1) {
                     /**CODIGO PARA DEVOLVER IVA */
 
                     $ivaRate = 21;
@@ -620,7 +610,7 @@ class CartPresenter implements PresenterInterface
 
             }
         }
-        if ((int)$event['iva'] == 1) {
+        if ((int) $event['iva'] == 1) {
             /**CODIGO PARA DEVOLVER IVA */
             $totalDiscountIva = min($totalDiscountIva, $maxVoucherAmount);
         } else {
@@ -640,25 +630,22 @@ class CartPresenter implements PresenterInterface
         ];
     }
 
-
     public function validateParameters($items, $parameter)
     {
         $products = array_filter($items, function ($item) use ($parameter) {
             return isset($item[$parameter]) && $item[$parameter] == true;
         });
 
-        return !empty($products);
+        return ! empty($products);
     }
-
 
     /**
      * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly.
      * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
      * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
      *
-     * @param Cart $cart
-     * @param float $shippingCost
-     *
+     * @param  Cart  $cart
+     * @param  float  $shippingCost
      * @return string
      */
     private function getShippingDisplayValue($cart, $shippingCost)
@@ -667,7 +654,7 @@ class CartPresenter implements PresenterInterface
 
         // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
         foreach ($cart->getCartRules() as $rule) {
-            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+            if ($rule['free_shipping'] && ! $rule['carrier_restriction']) {
                 return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
             }
         }
@@ -703,7 +690,7 @@ class CartPresenter implements PresenterInterface
         $cartVouchers = $cart->getCartRules();
         $vouchers = [];
 
-        $cartHasTax = null === $cart->id ? false : $cart::getTaxesAverageUsed($cart);
+        $cartHasTax = $cart->id === null ? false : $cart::getTaxesAverageUsed($cart);
         $freeShippingAlreadySet = false;
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
@@ -727,12 +714,13 @@ class CartPresenter implements PresenterInterface
 
             $totalCartVoucherReduction = 0;
 
-            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
-                && !$this->cartVoucherHasAmountReduction($cartVoucher)
-                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+            if (! $this->cartVoucherHasPercentReduction($cartVoucher)
+                && ! $this->cartVoucherHasAmountReduction($cartVoucher)
+                && ! $this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
+
                     continue;
                 } else {
                     $freeShippingAlreadySet = true;
@@ -750,7 +738,7 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-'.$this->priceFormatter->format($totalCartVoucherReduction);
             }
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
@@ -771,18 +759,16 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param array $cartVoucher
-     *
+     * @param  array  $cartVoucher
      * @return bool
      */
     private function cartVoucherHasFreeShipping($cartVoucher)
     {
-        return !empty($cartVoucher['free_shipping']);
+        return ! empty($cartVoucher['free_shipping']);
     }
 
     /**
-     * @param array $cartVoucher
-     *
+     * @param  array  $cartVoucher
      * @return bool
      */
     private function cartVoucherHasPercentReduction($cartVoucher)
@@ -793,8 +779,7 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param array $cartVoucher
-     *
+     * @param  array  $cartVoucher
      * @return bool
      */
     private function cartVoucherHasAmountReduction($cartVoucher)
@@ -803,34 +788,32 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param array $cartVoucher
-     *
+     * @param  array  $cartVoucher
      * @return bool
      */
     private function cartVoucherHasGiftProductReduction($cartVoucher)
     {
-        return !empty($cartVoucher['gift_product']);
+        return ! empty($cartVoucher['gift_product']);
     }
 
     /**
      * Receives a string containing a list of attributes affected to the product and returns them as an array.
      *
-     * @param string $attributes
-     *
+     * @param  string  $attributes
      * @return array Converted attributes in an array
      */
     protected function getAttributesArrayFromString($attributes)
     {
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)'.$separator.'+(?!'.$separator.'([^:'.$separator.'])+:))/';
         $attributesArray = [];
         $matches = [];
-        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
+        if (! preg_match_all($pattern, $attributes.$separator, $matches)) {
             return $attributesArray;
         }
 
         foreach ($matches['attribute'] as $attribute) {
-            list($key, $value) = explode(':', $attribute);
+            [$key, $value] = explode(':', $attribute);
             $attributesArray[trim($key)] = ltrim($value);
         }
 
@@ -840,7 +823,7 @@ class CartPresenter implements PresenterInterface
     protected function getSettings(): ProductPresentationSettings
     {
         if ($this->settings === null) {
-            $this->settings = new ProductPresentationSettings();
+            $this->settings = new ProductPresentationSettings;
 
             $this->settings->catalog_mode = Configuration::isCatalogMode();
             $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');

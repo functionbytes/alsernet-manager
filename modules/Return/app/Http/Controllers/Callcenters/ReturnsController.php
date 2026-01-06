@@ -69,7 +69,7 @@ class ReturnsController extends Controller
             // Crear solicitud de devolución base
             $returnRequest = ReturnRequest::createFromOrder($order, [
                 'customer_id' => $customer->id,
-                'type_id' => 1, // Reembolso por defecto
+                'type_id' => 1, // Reembolso Por defecto
                 'description' => 'Devolución creada desde call center',
                 'created_by' => auth()->id(),
             ]);
@@ -215,7 +215,7 @@ class ReturnsController extends Controller
         // Crear solicitud de devolución base
         $returnRequest = ReturnRequest::createFromOrder($order, [
             'customer_id' => $customer->id,
-            'type_id' => 1, // Reembolso por defecto
+            'type_id' => 1, // Reembolso Por defecto
             'description' => 'Devolución creada desde call center',
             'created_by' => auth()->id(),
         ]);

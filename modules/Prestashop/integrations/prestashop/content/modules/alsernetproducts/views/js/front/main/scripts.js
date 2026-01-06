@@ -6,8 +6,8 @@ $(document).ready(function () {
       autoplay: {
         delay: 4000,
       },
-      slidesPerView: 3, // Número de elementos por defecto
-      spaceBetween: 10, // Espacio entre los elementos por defecto
+      slidesPerView: 3, // Número de elementos Por defecto
+      spaceBetween: 10, // Espacio entre los elementos Por defecto
       navigation: {
         nextEl: $(this).find('.swiper-button-next')[0],
         prevEl: $(this).find('.swiper-button-prev')[0],

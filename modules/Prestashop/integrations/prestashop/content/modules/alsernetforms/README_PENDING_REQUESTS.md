@@ -326,7 +326,7 @@ private function getDocumentTypeFromUid($uid)
         return $type;
     }
 
-    // Ejemplo 3: Valor por defecto
+    // Ejemplo 3: Valor Por defecto
     return 'dni';
 }
 ```
@@ -482,7 +482,7 @@ Edita `DocumentsEndpointLogger.php` al crear peticiones:
 
 ```php
 $this->db->insert('alsernet_forms_requests', [
-    'max_retries' => 5, // CAMBIAR este valor (por defecto es 3)
+    'max_retries' => 5, // CAMBIAR este valor (Por defecto es 3)
     // ... otros campos
 ]);
 ```

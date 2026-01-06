@@ -34224,7 +34224,7 @@ body.rtl .question-answer li .question-box .link-dislike-box {
 
     /* También oculta los td que solo tengan &nbsp; */
     .order-products-section td {
-        display: table-cell; /* asegurar que estén visibles por defecto */
+        display: table-cell; /* asegurar que estén visibles Por defecto */
     }
 
     .order-products-section td:has(> br),

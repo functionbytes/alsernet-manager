@@ -150,7 +150,7 @@
                                             <strong>{{ $status->name }}</strong>
                                             <div class="d-flex gap-1 mt-1">
                                                 @if($status->is_default)
-                                                    <span class="badge bg-primary-subtle text-primary">Por Defecto</span>
+                                                    <span class="badge bg-primary-subtle text-primary">Por defecto</span>
                                                 @endif
                                                 @if($status->is_system)
                                                     <span class="badge bg-warning-subtle text-warning">Sistema</span>

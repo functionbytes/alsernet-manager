@@ -68,7 +68,7 @@ class MailerTemplate extends Model
 
     /**
      * Obtener traducción para un idioma específico con fallback
-     * Si no existe la traducción, intenta con lang_id 1 (idioma por defecto)
+     * Si no existe la traducción, intenta con lang_id 1 (idioma Por defecto)
      */
     public function translate(?int $langId = null): ?MailerTemplateLang
     {
@@ -83,7 +83,7 @@ class MailerTemplate extends Model
             return $translation;
         }
 
-        // Si no existe, intentar con el idioma por defecto (1)
+        // Si no existe, intentar con el idioma Por defecto (1)
         if ($langId !== 1) {
             return $this->translations()
                 ->where('lang_id', 1)
@@ -180,7 +180,7 @@ class MailerTemplate extends Model
     }
 
     /**
-     * Obtener todas las variables disponibles por defecto
+     * Obtener todas las variables disponibles Por defecto
      * Estas se pueden sobrescribir por template
      */
     public static function defaultVariables($module = 'core'): array
@@ -220,7 +220,7 @@ class MailerTemplate extends Model
             return $this->variables;
         }
 
-        // Si no, usar las variables por defecto del módulo
+        // Si no, usar las variables Por defecto del módulo
         return self::defaultVariables($this->module);
     }
 

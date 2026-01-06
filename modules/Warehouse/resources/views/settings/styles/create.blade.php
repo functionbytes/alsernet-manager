@@ -100,7 +100,7 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label class="control-label col-form-label">Niveles por defecto <span class="text-danger">*</span></label>
+                                    <label class="control-label col-form-label">Niveles Por defecto <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control @error('default_levels') is-invalid @enderror" id="default_levels" name="default_levels" value="{{ old('default_levels', 3) }}"  min="1" max="20" required>
                                     @error('default_levels')
                                         <span class="invalid-feedback">{{ $message }}</span>
@@ -130,7 +130,7 @@
 
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label class="control-label col-form-label">Secciones por defecto <span class="text-danger">*</span></label>
+                                    <label class="control-label col-form-label">Secciones Por defecto <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control @error('default_sections') is-invalid @enderror" id="default_sections" name="default_sections" value="{{ old('default_sections', 5) }}"  min="1" max="30" required>
                                     @error('default_sections')
                                         <span class="invalid-feedback">{{ $message }}</span>

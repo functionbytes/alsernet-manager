@@ -3,7 +3,6 @@
 @section('page_title', 'Preview - ' . $template->name)
 
 @section('content')
-    <div class="container-fluid">
 
         {{-- Breadcrumb Card --}}
         @include('theme.components.card', [
@@ -305,7 +304,6 @@
                 </div>
             </form>
         </div>
-    </div>
 
     @push('css')
         <style>

@@ -31,7 +31,7 @@ class ReturnService
     public function createReturnRequest(array $data): ReturnRequest
     {
         return DB::transaction(function () use ($data) {
-            // Obtener el estado inicial por defecto
+            // Obtener el estado inicial Por defecto
             $initialStatus = ReturnStatus::where('active', true)
                 ->whereHas('state', function ($q) {
                     $q->where('name', 'New');
@@ -351,7 +351,7 @@ class ReturnService
     public function createReturnRequestSilent(array $data): ReturnRequest
     {
         return DB::transaction(function () use ($data) {
-            // Obtener el estado inicial por defecto
+            // Obtener el estado inicial Por defecto
             $initialStatus = ReturnStatus::where('active', true)
                 ->whereHas('state', function ($q) {
                     $q->where('name', 'New');

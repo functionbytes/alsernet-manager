@@ -48,7 +48,7 @@ class MailerTemplateRendererService
      */
     private static function render($template, array $variables = [], string $type = 'email', ?int $langId = null): string
     {
-        // Si no se especifica langId, usar el idioma por defecto (1)
+        // Si no se especifica langId, usar el idioma Por defecto (1)
         $langId = $langId ?? 1;
 
         // 1. Obtener contenido base (usando traducción si está disponible)

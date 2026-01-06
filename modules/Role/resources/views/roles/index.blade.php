@@ -24,10 +24,10 @@
                             </a>
                         @endif
                         <a href="{{ route('settings.roles.matrix') }}" class="btn btn-info">
-                            Matriz de Permisos
+                            Matriz de permisos
                         </a>
                         <a href="{{ route('settings.roles.create') }}" class="btn btn-primary">
-                            Crear Rol
+                            Crear rol
                         </a>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                                     <div>
                                         <h6 class="card-title text-primary mb-2">Total</h6>
                                         <h4 class="mb-1 fw-bold">{{ $roles->total() }}</h4>
-                                        <small class="text-muted">Total Roles</small>
+                                        <small class="text-muted">Total roles</small>
                                     </div>
                                 </div>
                             </div>
@@ -54,9 +54,9 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-success mb-2">Por Defecto</h6>
+                                        <h6 class="card-title text-success mb-2">Por defecto</h6>
                                         <h4 class="mb-1 fw-bold">{{ $roles->where('is_default', true)->count() }}</h4>
-                                        <small class="text-muted">Roles por Defecto</small>
+                                        <small class="text-muted">Roles Por defecto</small>
                                     </div>
                                 </div>
                             </div>
@@ -67,9 +67,9 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-warning mb-2">Del Sistema</h6>
+                                        <h6 class="card-title text-warning mb-2">Del sistema</h6>
                                         <h4 class="mb-1 fw-bold">{{ \Spatie\Permission\Models\Role::whereIn('name', ['super-admin', 'customer'])->count() }}</h4>
-                                        <small class="text-muted">Roles del Sistema</small>
+                                        <small class="text-muted">Roles del sistema</small>
                                     </div>
                                 </div>
                             </div>
@@ -119,27 +119,22 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="5%">#</th>
-                                    <th>Nombre del Rol</th>
+                                    <th>Nombre del rol</th>
                                     <th>Guard</th>
-                                    <th>Descripción</th>
-                                    <th width="10%" class="text-center">Usuarios</th>
-                                    <th width="10%" class="text-center">Estado</th>
-                                    <th width="10%" class="text-center">Acciones</th>
+                                    <th  class="text-center">Usuarios</th>
+                                    <th  class="text-center">Estado</th>
+                                    <th  class="text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($roles as $key => $role)
                                     <tr>
-                                        <td>{{ $roles->firstItem() + $key }}</td>
+
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="me-3">
-                                                    <i class="fas fa-shield-alt text-primary"></i>
-                                                </div>
                                                 <div>
                                                     <a href="{{ route('settings.roles.edit', $role->id) }}" class="text-decoration-none">
-                                                        <strong>{{ $role->name }}</strong>
+                                                        {{ $role->name }}
                                                     </a>
                                                     @if($role->slug)
                                                         <small class="d-block text-muted">{{ $role->slug }}</small>
@@ -148,19 +143,16 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary-subtle text-secondary">{{ $role->guard_name }}</span>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">{{ Str::limit($role->description ?? 'Sin descripción', 50) }}</small>
+                                            <span class="badge bg-light-subtle text-black">{{ $role->guard_name }}</span>
                                         </td>
                                         <td class="text-center">
                                             <span class="badge bg-primary-subtle text-primary">{{ $role->users_count ?? 0 }}</span>
                                         </td>
                                         <td class="text-center">
                                             @if($role->is_default)
-                                                <span class="badge bg-success-subtle text-success">Por defecto</span>
+                                                <span class="badge bg-light-subtle text-black">Por defecto</span>
                                             @else
-                                                <span class="badge bg-secondary-subtle text-secondary">Normal</span>
+                                                <span class="badge bg-light-subtle text-black">Normal</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -266,9 +258,7 @@ $(document).ready(function() {
         e.stopPropagation();
 
         const deleteUrl = $(this).data('url');
-        const deleteTitle = $(this).data('title');
 
-        $('#delete-modal .modal-title').text(deleteTitle);
         $('#delete-form').attr('action', deleteUrl);
 
         // Show the modal explicitly

@@ -25,7 +25,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 
 // Logout route (requires auth middleware override)
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->withoutMiddleware('guest')->middleware('auth');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout')->withoutMiddleware('guest')->middleware('auth');
 
 // Password reset routes
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequest'])->name('password.request');

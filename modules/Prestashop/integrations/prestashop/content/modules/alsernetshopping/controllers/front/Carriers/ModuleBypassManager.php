@@ -4,19 +4,19 @@ namespace AlsernetShopping\Carriers;
 
 use Hook;
 use Module;
-use Configuration;
 
 /**
  * Gestor de bypass para módulos externos
  * Evita ejecución duplicada desactivando hooks específicos
  *
- * @package AlsernetShopping\Carriers
  * @version 1.0.0
+ *
  * @since 2025-08-16
  */
 class ModuleBypassManager
 {
     private static $bypassedModules = [];
+
     private static $originalHooks = [];
 
     /**
@@ -25,18 +25,18 @@ class ModuleBypassManager
     public static function bypassModuleHooks(string $moduleName, array $hooks = []): bool
     {
         try {
-            if (!Module::isEnabled($moduleName)) {
+            if (! Module::isEnabled($moduleName)) {
                 return false;
             }
 
-            // Hooks por defecto a desactivar
+            // Hooks Por defecto a desactivar
             $defaultHooks = [
                 'displayCarrierExtraContent',
                 'displayOrderConfirmation',
                 'displayBeforeCarrier',
                 'displayAfterCarrier',
                 'actionCarrierUpdate',
-                'displayCarrierList'
+                'displayCarrierList',
             ];
 
             $hooksToBypass = empty($hooks) ? $defaultHooks : $hooks;
@@ -50,10 +50,10 @@ class ModuleBypassManager
                         self::$originalHooks[$moduleName][$hookName] = $moduleHook;
 
                         // Desactivar hook temporalmente
-                        $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module` 
-                                SET `active` = 0 
-                                WHERE `id_module` = ' . (int)$moduleHook['id_module'] . ' 
-                                AND `id_hook` = ' . (int)$moduleHook['id_hook'];
+                        $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+                                SET `active` = 0
+                                WHERE `id_module` = '.(int) $moduleHook['id_module'].'
+                                AND `id_hook` = '.(int) $moduleHook['id_hook'];
 
                         \Db::getInstance()->execute($sql);
                     }
@@ -68,7 +68,8 @@ class ModuleBypassManager
             return true;
 
         } catch (\Exception $e) {
-            error_log("ModuleBypassManager: Error bypassing {$moduleName} - " . $e->getMessage());
+            error_log("ModuleBypassManager: Error bypassing {$moduleName} - ".$e->getMessage());
+
             return false;
         }
     }
@@ -79,17 +80,17 @@ class ModuleBypassManager
     public static function restoreModuleHooks(string $moduleName): bool
     {
         try {
-            if (!isset(self::$bypassedModules[$moduleName])) {
+            if (! isset(self::$bypassedModules[$moduleName])) {
                 return true; // No estaba bypassed
             }
 
             $originalHooks = self::$originalHooks[$moduleName] ?? [];
 
             foreach ($originalHooks as $hookName => $hookData) {
-                $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module` 
-                        SET `active` = 1 
-                        WHERE `id_module` = ' . (int)$hookData['id_module'] . ' 
-                        AND `id_hook` = ' . (int)$hookData['id_hook'];
+                $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+                        SET `active` = 1
+                        WHERE `id_module` = '.(int) $hookData['id_module'].'
+                        AND `id_hook` = '.(int) $hookData['id_hook'];
 
                 \Db::getInstance()->execute($sql);
             }
@@ -103,7 +104,8 @@ class ModuleBypassManager
             return true;
 
         } catch (\Exception $e) {
-            error_log("ModuleBypassManager: Error restoring {$moduleName} - " . $e->getMessage());
+            error_log("ModuleBypassManager: Error restoring {$moduleName} - ".$e->getMessage());
+
             return false;
         }
     }
@@ -142,7 +144,7 @@ class ModuleBypassManager
         return [
             'bypassed_modules' => self::$bypassedModules,
             'original_hooks' => self::$originalHooks,
-            'active_bypasses' => count(self::$bypassedModules)
+            'active_bypasses' => count(self::$bypassedModules),
         ];
     }
 }

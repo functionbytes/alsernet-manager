@@ -260,7 +260,7 @@
         var updated_pickup_text       = "{l s='Update Pickup Store' mod='alsernetshopping'}";
         var page_name                 = "module-supercheckout-supercheckout";
 
-// Dirección por defecto
+// Dirección Por defecto
         {if !empty($default_carrier)}
         {foreach $default_carrier as $key => $def_carrier}
         var kb_defualt_id_address = "{$key}";

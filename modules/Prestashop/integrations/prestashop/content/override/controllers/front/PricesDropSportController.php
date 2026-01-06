@@ -170,7 +170,7 @@ class PricesDropSportControllerCore extends FrontController
         $id_lang = (int) $this->context->language->id;
         $iso = $this->context->language->iso_code;
 
-        // Verificar si es el idioma por defecto
+        // Verificar si es el idioma Por defecto
         $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
 
         if ($id_lang == $defaultLangId) {

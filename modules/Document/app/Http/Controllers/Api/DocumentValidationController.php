@@ -841,7 +841,7 @@ class DocumentValidationController extends Controller
                     continue;
                 }
 
-                // 1. Establecer tipo por defecto si no existe
+                // 1. Establecer tipo Por defecto si no existe
                 if (! $document->type) {
                     $document->type = 'general';
                 }

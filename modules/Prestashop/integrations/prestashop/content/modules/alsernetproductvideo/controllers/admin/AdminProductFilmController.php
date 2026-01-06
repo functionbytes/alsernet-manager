@@ -1,4 +1,5 @@
 <?php
+
 class AdminProductFilmController extends ModuleAdminController
 {
     public function __construct()
@@ -97,13 +98,13 @@ class AdminProductFilmController extends ModuleAdminController
                         'query' => [
                             [
                                 'id' => 'youtube',
-                                'name' => 'YouTube'
-                            ]
+                                'name' => 'YouTube',
+                            ],
                         ],
                         'id' => 'id',  // Usamos 'id' como valor del option
                         'name' => 'name',  // Usamos 'name' como el texto visible del option
                     ],
-                    'default_value' => 'youtube', // Establece 'youtube' como el valor por defecto
+                    'default_value' => 'youtube', // Establece 'youtube' como el valor Por defecto
                 ],
                 // [
                 //     'type' => 'select',
@@ -122,7 +123,7 @@ class AdminProductFilmController extends ModuleAdminController
                 //         'id' => 'id',  // Usamos 'id' como valor del option
                 //         'name' => 'name',  // Usamos 'name' como el texto visible del option
                 //     ],
-                //     'default_value' => 1, // Establece 1 como el valor por defecto
+                //     'default_value' => 1, // Establece 1 como el valor Por defecto
                 // ],
                 [
                     'type' => 'switch',
@@ -135,7 +136,7 @@ class AdminProductFilmController extends ModuleAdminController
                         ['value' => 0, 'label' => $this->trans('No', [], 'Admin.Global')],
                     ],
                     'required' => true,
-                    'default_value' => 1, // Establece 1 (activo) como el valor por defecto
+                    'default_value' => 1, // Establece 1 (activo) como el valor Por defecto
                 ],
             ],
             'submit' => [
@@ -152,18 +153,17 @@ class AdminProductFilmController extends ModuleAdminController
                 'name' => 'duplicate_languages',
                 'icon' => 'process-icon-copy', // Icono de duplicar
                 'class' => 'btn btn-default', // Clase para estilo
-                'id' => 'duplicate_languages_btn' // Añadir un ID para el botón
+                'id' => 'duplicate_languages_btn', // Añadir un ID para el botón
             ],
         ];
 
-
         if (Tools::getValue('id_productvideo')) {
             // Si estamos editando un registro, cargamos los datos correspondientes
-            $id_productvideo = (int)Tools::getValue('id_productvideo');
+            $id_productvideo = (int) Tools::getValue('id_productvideo');
 
             // Cargar los datos del registro
             $productFilm = Db::getInstance()->executeS(
-                'SELECT * FROM ' . _DB_PREFIX_ . 'product_film WHERE id_productvideo = ' . $id_productvideo
+                'SELECT * FROM '._DB_PREFIX_.'product_film WHERE id_productvideo = '.$id_productvideo
             );
 
             if ($productFilm) {
@@ -177,18 +177,17 @@ class AdminProductFilmController extends ModuleAdminController
                 // Cargar traducciones para cada idioma
                 $languages = Language::getLanguages(false);
                 foreach ($languages as $lang) {
-                    $lang_id = (int)$lang['id_lang'];
-
+                    $lang_id = (int) $lang['id_lang'];
 
                     // Para campos multilingües (url, id_video, title)
                     $this->fields_value['url'][$lang_id] = Db::getInstance()->getValue(
-                        'SELECT url FROM ' . _DB_PREFIX_ . 'product_film WHERE id_product = ' . $productFilm['id_product'] . ' AND id_lang = ' . $lang_id
+                        'SELECT url FROM '._DB_PREFIX_.'product_film WHERE id_product = '.$productFilm['id_product'].' AND id_lang = '.$lang_id
                     );
                     $this->fields_value['id_video'][$lang_id] = Db::getInstance()->getValue(
-                        'SELECT id_video FROM ' . _DB_PREFIX_ . 'product_film WHERE id_product = ' . $productFilm['id_product'] . ' AND id_lang = ' . $lang_id
+                        'SELECT id_video FROM '._DB_PREFIX_.'product_film WHERE id_product = '.$productFilm['id_product'].' AND id_lang = '.$lang_id
                     );
                     $this->fields_value['title'][$lang_id] = Db::getInstance()->getValue(
-                        'SELECT title FROM ' . _DB_PREFIX_ . 'product_film WHERE id_product = ' . $productFilm['id_product'] . ' AND id_lang = ' . $lang_id
+                        'SELECT title FROM '._DB_PREFIX_.'product_film WHERE id_product = '.$productFilm['id_product'].' AND id_lang = '.$lang_id
                     );
                 }
             }
@@ -196,7 +195,7 @@ class AdminProductFilmController extends ModuleAdminController
         }
 
         // Este es el bloque donde agregaremos el JavaScript
-        $this->context->controller->addJS(_PS_MODULE_DIR_ . 'alsernetproductvideo/views/js/duplicate_languages.js');
+        $this->context->controller->addJS(_PS_MODULE_DIR_.'alsernetproductvideo/views/js/duplicate_languages.js');
 
         return parent::renderForm();
     }
@@ -207,9 +206,9 @@ class AdminProductFilmController extends ModuleAdminController
     public function processSave()
     {
         // Datos que son unicos
-        $id_product = (int)Tools::getValue('id_product');
+        $id_product = (int) Tools::getValue('id_product');
         $provider = pSQL(Tools::getValue('provider'));
-        $available = (int)Tools::getValue('available');
+        $available = (int) Tools::getValue('available');
         $position = 1;
 
         // Obtener los idiomas disponibles
@@ -217,17 +216,17 @@ class AdminProductFilmController extends ModuleAdminController
 
         foreach ($languages as $language) {
 
-            $id_lang = (int)$language['id_lang'];
-            $id_video = Tools::getValue('id_video_' . $id_lang);
-            $title = Tools::getValue('title_' . $id_lang);
-            $url = Tools::getValue('url_' . $id_lang);
+            $id_lang = (int) $language['id_lang'];
+            $id_video = Tools::getValue('id_video_'.$id_lang);
+            $title = Tools::getValue('title_'.$id_lang);
+            $url = Tools::getValue('url_'.$id_lang);
 
             // Validar si los datos están presentes
             if ($id_video || $title || $url) {
                 // Primero, verificar si ya existe el registro para este producto y idioma
-                $sql = 'SELECT id_productvideo FROM ' . _DB_PREFIX_ . 'product_film
-                            WHERE id_product = ' . $id_product . '
-                            AND id_lang = ' . $id_lang;
+                $sql = 'SELECT id_productvideo FROM '._DB_PREFIX_.'product_film
+                            WHERE id_product = '.$id_product.'
+                            AND id_lang = '.$id_lang;
 
                 $existing = Db::getInstance()->getValue($sql);
 
@@ -237,7 +236,7 @@ class AdminProductFilmController extends ModuleAdminController
                     'title' => pSQL($title),
                     'provider' => $provider,
                     'url' => pSQL($url),
-                    'position' => (int)$position,
+                    'position' => (int) $position,
                     'id_lang' => $id_lang,
                     'id_shop' => 1, // Usar 1 o el ID de la tienda actual
                     'available' => pSQL($available), // Sanear el estado de disponibilidad
@@ -245,42 +244,42 @@ class AdminProductFilmController extends ModuleAdminController
 
                 if ($existing) {
                     // Si existe, realizar un UPDATE
-                    $where = 'id_productvideo = ' . (int)$existing;
-                    if (!Db::getInstance()->update('product_film', $data, $where)) {
+                    $where = 'id_productvideo = '.(int) $existing;
+                    if (! Db::getInstance()->update('product_film', $data, $where)) {
                         dump('Error al actualizar');
-                        die();
+                        exit();
                     }
                 } else {
                     // Si no existe, realizar una inserción
-                    if (!Db::getInstance()->insert('product_film', $data)) {
+                    if (! Db::getInstance()->insert('product_film', $data)) {
                         dump('Error al insertar');
-                        die();
+                        exit();
                     }
                 }
             }
         }
 
         // Realizar la solicitud GET para limpiar la caché
-        $url = "https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=" . $id_product;
+        $url = 'https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product='.$id_product;
         $response = file_get_contents($url);
 
         // Verificar si hubo una respuesta
-        if ($response === FALSE) {
-            die('Error al realizar la solicitud GET');
+        if ($response === false) {
+            exit('Error al realizar la solicitud GET');
         }
 
         // Después de guardar los datos, redirigir al listado
-        Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+        Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
     }
 
     public function processDelete()
     {
         // Obtener el ID del registro a eliminar
-        $id_productvideo = (int)Tools::getValue('id_productvideo');
+        $id_productvideo = (int) Tools::getValue('id_productvideo');
 
         if ($id_productvideo > 0) {
-            $sql = 'SELECT id_product FROM ' . _DB_PREFIX_ . 'product_film
-                            WHERE id_productvideo = ' . $id_productvideo;
+            $sql = 'SELECT id_product FROM '._DB_PREFIX_.'product_film
+                            WHERE id_productvideo = '.$id_productvideo;
 
             $existing = Db::getInstance()->getValue($sql);
 
@@ -290,12 +289,12 @@ class AdminProductFilmController extends ModuleAdminController
                 $this->confirmations[] = 'El registro se ha eliminado correctamente.';
 
                 // Realizar la solicitud GET para limpiar la caché
-                $url = "https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=" . $existing;
+                $url = 'https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product='.$existing;
                 $response = file_get_contents($url);
 
                 // Verificar si hubo una respuesta
-                if ($response === FALSE) {
-                    die('Error al realizar la solicitud GET');
+                if ($response === false) {
+                    exit('Error al realizar la solicitud GET');
                 }
             } else {
                 // Agregar mensaje de error si falla la eliminación
@@ -307,20 +306,19 @@ class AdminProductFilmController extends ModuleAdminController
         }
     }
 
-
     public function postProcess()
     {
         if (isset($_GET['statusproduct_film'])) {
-            //Tenemos que ocultar Todo
-            $dato = Db::getInstance()->getValue("SELECT available FROM " . _DB_PREFIX_ . "product_film WHERE id_productvideo = ".$_GET['id_productvideo']);
-            if($dato == 1){
-                //Desactivamos todos los idiomas
-                Db::getInstance()->execute("UPDATE " . _DB_PREFIX_ . "product_film SET available = 0 WHERE id_product = (SELECT id_product FROM " . _DB_PREFIX_ . "product_film WHERE id_productvideo = ".$_GET['id_productvideo'].")");
-            }else if($dato == 0){
-                //Activamos todo los idiomas
-                Db::getInstance()->execute("UPDATE " . _DB_PREFIX_ . "product_film SET available = 1 WHERE id_product = (SELECT id_product FROM " . _DB_PREFIX_ . "product_film WHERE id_productvideo = ".$_GET['id_productvideo'].")");
+            // Tenemos que ocultar Todo
+            $dato = Db::getInstance()->getValue('SELECT available FROM '._DB_PREFIX_.'product_film WHERE id_productvideo = '.$_GET['id_productvideo']);
+            if ($dato == 1) {
+                // Desactivamos todos los idiomas
+                Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_film SET available = 0 WHERE id_product = (SELECT id_product FROM '._DB_PREFIX_.'product_film WHERE id_productvideo = '.$_GET['id_productvideo'].')');
+            } elseif ($dato == 0) {
+                // Activamos todo los idiomas
+                Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_film SET available = 1 WHERE id_product = (SELECT id_product FROM '._DB_PREFIX_.'product_film WHERE id_productvideo = '.$_GET['id_productvideo'].')');
             }
-            Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+            Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
         }
 
         // Verificar si se está enviando el formulario
@@ -335,5 +333,4 @@ class AdminProductFilmController extends ModuleAdminController
         }
 
     }
-
 }

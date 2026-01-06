@@ -271,7 +271,7 @@
 
                     <div class="col-12 col-md-6">
                         <div class="mb-3">
-                            <label class="control-label col-form-label">Idioma por defecto</label>
+                            <label class="control-label col-form-label">Idioma Por defecto</label>
                             <select class="form-select select2 @error('lang_id') is-invalid @enderror"
                                     id="lang_id" name="lang_id">
                                 <option value="">-- Seleccionar idioma --</option>

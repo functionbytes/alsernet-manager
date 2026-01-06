@@ -589,7 +589,7 @@ class DocumentEmailTemplateService
      * Primero intenta obtener ID de plantilla desde Settings, luego busca por clave
      *
      * @param  string  $settingKey  Clave de configuración (ej: documents.email_template_reminder_id)
-     * @param  string  $fallbackKey  Clave por defecto si no hay configuración (ej: document_reminder)
+     * @param  string  $fallbackKey  Clave Por defecto si no hay configuración (ej: document_reminder)
      * @param  array<string>  $alternativeKeys  Claves alternativas si la principal no existe
      */
     private static function resolveTemplate(string $settingKey, string $fallbackKey, array $alternativeKeys = []): ?MailerTemplate

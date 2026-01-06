@@ -3,11 +3,11 @@
 namespace Modules\Returns\Models;
 
 use App\Models\Return\Order\ReturnOrder;
-use Modules\Return\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Modules\Return\Traits\HasUid;
 
 class ReturnRequest extends Model
 {
@@ -510,7 +510,7 @@ class ReturnRequest extends Model
             $canProceed = false;
         }
 
-        // Validar tiempo límite (30 días por defecto)
+        // Validar tiempo límite (30 días Por defecto)
         $daysSinceDelivery = $this->order->delivered_at ?
             now()->diffInDays($this->order->delivered_at) : null;
 

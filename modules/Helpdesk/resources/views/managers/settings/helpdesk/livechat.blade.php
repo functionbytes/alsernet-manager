@@ -264,8 +264,8 @@
                                                     <input type="checkbox" name="hide_launcher" class="form-check-input" id="hideLauncher" value="1"
                                                            {{ $settings['hide_launcher'] ?? false ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="hideLauncher">
-                                                        <strong>Ocultar Launcher por Defecto</strong>
-                                                        <small class="d-block text-muted">El botón del chat estará oculto por defecto y deberá mostrarse manualmente via API</small>
+                                                        <strong>Ocultar Launcher Por defecto</strong>
+                                                        <small class="d-block text-muted">El botón del chat estará oculto Por defecto y deberá mostrarse manualmente via API</small>
                                                     </label>
                                                 </div>
                                             </div>

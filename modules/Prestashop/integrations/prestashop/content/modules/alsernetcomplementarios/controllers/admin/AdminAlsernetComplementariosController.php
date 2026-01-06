@@ -1,5 +1,6 @@
 <?php
-require_once _PS_MODULE_DIR_ . 'alsernetcomplementarios/classes/AlcComplementario.php';
+
+require_once _PS_MODULE_DIR_.'alsernetcomplementarios/classes/AlcComplementario.php';
 
 class AdminAlsernetComplementariosController extends ModuleAdminController
 {
@@ -18,8 +19,8 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // $this->_orderBy   = 'position';
         // $this->_orderWay  = 'ASC';
         // si prefieres seguir por ID:
-        $this->_orderBy   = 'id_complementario';
-        $this->_orderWay  = 'DESC';
+        $this->_orderBy = 'id_complementario';
+        $this->_orderWay = 'DESC';
 
         $this->fields_list = [
             'id_complementario' => ['title' => $this->l('ID'), 'class' => 'fixed-width-xs'],
@@ -38,8 +39,8 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             ],
             // NUEVO: mostrar orden
             'position' => [
-                'title'   => $this->l('Orden'),
-                'align'   => 'center',
+                'title' => $this->l('Orden'),
+                'align' => 'center',
                 'orderby' => true,
             ],
             'date_add' => ['title' => $this->l('Fecha'), 'align' => 'center'],
@@ -56,7 +57,6 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         ];
     }
 
-
     public function renderList()
     {
         // Mensaje de éxito al volver del guardado
@@ -68,28 +68,31 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         }
 
         $this->toolbar_title = $this->l('Listado de complementarios');
+
         return parent::renderList();
     }
-
 
     /* ==== Callbacks columnas del listado ==== */
     public function renderTypeBadge($value, $row)
     {
         $map = [
-            'product'  => ['txt' => $this->l('Producto'),  'cls' => 'label-primary'],
+            'product' => ['txt' => $this->l('Producto'),  'cls' => 'label-primary'],
             'category' => ['txt' => $this->l('Categoría'), 'cls' => 'label-warning'],
-            'brand'    => ['txt' => $this->l('Marca'),     'cls' => 'label-info'],
-            'label'    => ['txt' => $this->l('Etiqueta'),  'cls' => 'label-success'], // ← NUEVO
+            'brand' => ['txt' => $this->l('Marca'),     'cls' => 'label-info'],
+            'label' => ['txt' => $this->l('Etiqueta'),  'cls' => 'label-success'], // ← NUEVO
         ];
         $m = isset($map[$value]) ? $map[$value] : ['txt' => $value, 'cls' => 'label-default'];
-        return '<span class="label ' . $m['cls'] . '">' . $m['txt'] . '</span>';
+
+        return '<span class="label '.$m['cls'].'">'.$m['txt'].'</span>';
     }
 
     public function renderSourceColumn($json, $row)
     {
         $ids = json_decode($json, true) ?: [];
         $type = $row['type'];
-        if (!$ids) return '<span class="text-muted">' . $this->l('Vacío') . '</span>';
+        if (! $ids) {
+            return '<span class="text-muted">'.$this->l('Vacío').'</span>';
+        }
 
         if ($type === 'product') {
             $items = $this->namesForProducts($ids);
@@ -107,9 +110,10 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // Si viene desde 'complement_refs' (CSV de refs)
         if (isset($row['complement_refs'])) {
             $refs = $this->splitRefsCsv($row['complement_refs']);
-            if (!$refs) {
+            if (! $refs) {
                 return '<span class="text-muted">-</span>';
             }
+
             // Mostramos hasta 3 y "+n"
             return $this->chipList($refs, count($refs));
         }
@@ -117,11 +121,12 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // Compatibilidad: si viniera 'complement_ids' (JSON de IDs)
         if (isset($row['complement_ids'])) {
             $ids = json_decode($row['complement_ids'], true) ?: [];
-            if (!$ids) {
+            if (! $ids) {
                 return '<span class="text-muted">-</span>';
             }
             // Opcional: convertir IDs a "Nombre [REF]" si quieres
             $items = $this->namesForProducts($ids); // ya definida en tu controlador
+
             return $this->chipList($items, count($ids));
         }
 
@@ -134,7 +139,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             return [];
         }
 
-        $csv = trim((string)$csv);
+        $csv = trim((string) $csv);
         if ($csv === '') {
             return [];
         }
@@ -156,14 +161,15 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         return $tokens;
     }
 
-
-
     public function renderExcludedColumn($json)
     {
         $ids = json_decode($json, true) ?: [];
-        if (!$ids) return '<span class="text-muted">-</span>';
+        if (! $ids) {
+            return '<span class="text-muted">-</span>';
+        }
         $items = $this->namesForProducts($ids);
-        return '<span class="label label-default">' . $this->l('Excluidos') . ': ' . (int)count($ids) . '</span> ' . $this->chipList($items, count($ids), 2);
+
+        return '<span class="label label-default">'.$this->l('Excluidos').': '.(int) count($ids).'</span> '.$this->chipList($items, count($ids), 2);
     }
 
     protected function chipList(array $items, $total, $max = 3)
@@ -171,78 +177,95 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $out = [];
         $count = 0;
         foreach ($items as $txt) {
-            $out[] = '<span class="badge" style="margin-right:4px;">' . Tools::safeOutput(Tools::substr($txt, 0, 32)) . '</span>';
-            if (++$count >= $max) break;
+            $out[] = '<span class="badge" style="margin-right:4px;">'.Tools::safeOutput(Tools::substr($txt, 0, 32)).'</span>';
+            if (++$count >= $max) {
+                break;
+            }
         }
         if ($total > $max) {
-            $out[] = '<span class="badge">+' . ($total - $max) . '</span>';
+            $out[] = '<span class="badge">+'.($total - $max).'</span>';
         }
+
         return implode(' ', $out);
     }
 
     protected function namesForProducts(array $ids)
     {
-        if (!$ids) return [];
-        $id_lang = (int)$this->context->language->id;
+        if (! $ids) {
+            return [];
+        }
+        $id_lang = (int) $this->context->language->id;
         $rows = Db::getInstance()->executeS('
             SELECT p.id_product, pl.name, p.reference
-            FROM ' . _DB_PREFIX_ . 'product p
-            INNER JOIN ' . _DB_PREFIX_ . 'product_lang pl
-              ON (pl.id_product=p.id_product AND pl.id_lang=' . (int)$id_lang . ' AND pl.id_shop=' . (int)$this->context->shop->id . ')
-            WHERE p.id_product IN (' . implode(',', array_map('intval', $ids)) . ')
+            FROM '._DB_PREFIX_.'product p
+            INNER JOIN '._DB_PREFIX_.'product_lang pl
+              ON (pl.id_product=p.id_product AND pl.id_lang='.(int) $id_lang.' AND pl.id_shop='.(int) $this->context->shop->id.')
+            WHERE p.id_product IN ('.implode(',', array_map('intval', $ids)).')
         ');
         $map = [];
         foreach ($rows as $r) {
-            $map[(int)$r['id_product']] = trim($r['name'] . ' ' . ($r['reference'] ? ('[' . $r['reference'] . ']') : ''));
+            $map[(int) $r['id_product']] = trim($r['name'].' '.($r['reference'] ? ('['.$r['reference'].']') : ''));
         }
         $ordered = [];
         foreach ($ids as $id) {
-            if (isset($map[$id])) $ordered[] = $map[$id];
+            if (isset($map[$id])) {
+                $ordered[] = $map[$id];
+            }
         }
+
         return $ordered;
     }
 
     protected function namesForCategories(array $ids)
     {
-        if (!$ids) return [];
-        $id_lang = (int)$this->context->language->id;
+        if (! $ids) {
+            return [];
+        }
+        $id_lang = (int) $this->context->language->id;
         $rows = Db::getInstance()->executeS('
             SELECT c.id_category, cl.name
-            FROM ' . _DB_PREFIX_ . 'category c
-            INNER JOIN ' . _DB_PREFIX_ . 'category_lang cl
-              ON (cl.id_category=c.id_category AND cl.id_lang=' . (int)$id_lang . ' AND cl.id_shop=' . (int)$this->context->shop->id . ')
-            WHERE c.id_category IN (' . implode(',', array_map('intval', $ids)) . ')
+            FROM '._DB_PREFIX_.'category c
+            INNER JOIN '._DB_PREFIX_.'category_lang cl
+              ON (cl.id_category=c.id_category AND cl.id_lang='.(int) $id_lang.' AND cl.id_shop='.(int) $this->context->shop->id.')
+            WHERE c.id_category IN ('.implode(',', array_map('intval', $ids)).')
         ');
         $map = [];
         foreach ($rows as $r) {
-            $map[(int)$r['id_category']] = $r['name'] . ' (#' . $r['id_category'] . ')';
+            $map[(int) $r['id_category']] = $r['name'].' (#'.$r['id_category'].')';
         }
         $ordered = [];
         foreach ($ids as $id) {
-            if (isset($map[$id])) $ordered[] = $map[$id];
+            if (isset($map[$id])) {
+                $ordered[] = $map[$id];
+            }
         }
+
         return $ordered;
     }
 
     protected function namesForManufacturers(array $ids)
     {
-        if (!$ids) return [];
+        if (! $ids) {
+            return [];
+        }
         $rows = Db::getInstance()->executeS('
             SELECT id_manufacturer, name
-            FROM ' . _DB_PREFIX_ . 'manufacturer
-            WHERE id_manufacturer IN (' . implode(',', array_map('intval', $ids)) . ')
+            FROM '._DB_PREFIX_.'manufacturer
+            WHERE id_manufacturer IN ('.implode(',', array_map('intval', $ids)).')
         ');
         $map = [];
         foreach ($rows as $r) {
-            $map[(int)$r['id_manufacturer']] = $r['name'] . ' (#' . $r['id_manufacturer'] . ')';
+            $map[(int) $r['id_manufacturer']] = $r['name'].' (#'.$r['id_manufacturer'].')';
         }
         $ordered = [];
         foreach ($ids as $id) {
-            if (isset($map[$id])) $ordered[] = $map[$id];
+            if (isset($map[$id])) {
+                $ordered[] = $map[$id];
+            }
         }
+
         return $ordered;
     }
-
 
     public function setMedia($isNewTheme = false)
     {
@@ -256,7 +279,6 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // No armes contenido aquí si usas display=view; lo haremos en renderView()
     }
 
-
     /* =========================
        ========== AJAX =========
        ========================= */
@@ -265,10 +287,10 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $list = Tools::getValue('list'); // refs
         $res = $this->resolveRefsToProducts($list);
         $data = $this->fetchProductsData($res['ids'], $res['refs']);
-        die(Tools::jsonEncode([
-            'ids'  => $res['ids'],
+        exit(Tools::jsonEncode([
+            'ids' => $res['ids'],
             'refs' => $res['refs'],
-            'data' => $data
+            'data' => $data,
         ]));
     }
 
@@ -277,10 +299,10 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $complements = Tools::getValue('complements'); // refs
         $res = $this->resolveRefsToProductsSemicolon($complements);
         $data = $this->fetchProductsData($res['ids'], $res['refs']);
-        die(Tools::jsonEncode([
-            'ids'  => $res['ids'],
+        exit(Tools::jsonEncode([
+            'ids' => $res['ids'],
             'refs' => $res['refs'],
-            'data' => $data
+            'data' => $data,
         ]));
     }
 
@@ -304,51 +326,50 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             // duplicados por COMPLEMENTOS (no por categorías fuente)
             $cmpRes = $this->resolveRefsToProductsSemicolon($complements);
             $dups = [];
-            if (!empty($cmpRes['ids'])) {
+            if (! empty($cmpRes['ids'])) {
                 $whereAnyCmp = $this->jsonArrayContainsAny('complement_ids', $cmpRes['ids']);
                 $sqlDup = '
                 SELECT id_complementario, title
-                FROM ' . _DB_PREFIX_ . 'alsernet_complementarios
+                FROM '._DB_PREFIX_.'alsernet_complementarios
                 WHERE type = "category"
-                AND ' . $whereAnyCmp . '
+                AND '.$whereAnyCmp.'
                 LIMIT 50';
                 $dups = Db::getInstance()->executeS($sqlDup) ?: [];
             }
         } elseif ($type === 'brand') {
             $dups = $this->findDuplicatesForType('brand', [], $resolvedSources);
         } elseif ($type === 'label') { // ← NUEVO
-            $labels = is_array($sources) ? $sources : $this->splitRefsCsv((string)$sources);
+            $labels = is_array($sources) ? $sources : $this->splitRefsCsv((string) $sources);
             $srcIds = $this->getProductsByLabels($labels, []); // resolvemos ids desde etiquetas
             $dups = $this->findDuplicatesForType('label', [], $srcIds);
         }
 
         foreach ($dups as $d) {
             $conflicts[] = [
-                'id'     => (int)$d['id_complementario'],
+                'id' => (int) $d['id_complementario'],
                 'reason' => 'existing_rule_for_source',
-                'title'  => $d['title'],
-                'type'   => $type,
+                'title' => $d['title'],
+                'type' => $type,
             ];
         }
 
-        die(Tools::jsonEncode(['conflicts' => $conflicts]));
+        exit(Tools::jsonEncode(['conflicts' => $conflicts]));
     }
-
 
     public function displayAjaxSaveMapping()
     {
-        $id          = (int)Tools::getValue('id');
-        $type        = Tools::getValue('type');
-        $title       = Tools::getValue('title');
-        $sources     = Tools::getValue('sources');      // para label es texto de etiquetas
+        $id = (int) Tools::getValue('id');
+        $type = Tools::getValue('type');
+        $title = Tools::getValue('title');
+        $sources = Tools::getValue('sources');      // para label es texto de etiquetas
         $complements = Tools::getValue('complements');  // refs
-        $excluded    = Tools::getValue('excluded');     // refs (opc)
-        $position    = (int)Tools::getValue('position', 0); // NUEVO: orden numérico
+        $excluded = Tools::getValue('excluded');     // refs (opc)
+        $position = (int) Tools::getValue('position', 0); // NUEVO: orden numérico
 
-        $errors    = [];
-        $excludeId = (int)$id;
+        $errors = [];
+        $excludeId = (int) $id;
 
-        if (!in_array($type, ['product', 'category', 'brand', 'label'])) {
+        if (! in_array($type, ['product', 'category', 'brand', 'label'])) {
             $errors[] = $this->l('Tipo inválido.');
         }
 
@@ -357,7 +378,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
        =============================== */
         if ($type === 'label') {
             // 1) Etiquetas de origen (texto) -> array
-            $labels = is_array($sources) ? $sources : $this->splitRefsCsv((string)$sources, true);
+            $labels = is_array($sources) ? $sources : $this->splitRefsCsv((string) $sources, true);
 
             // 2) Complementarios (refs -> ids) y Excluidos (refs -> ids)
             $cmpRes = $this->resolveRefsToProductsSemicolon($complements);
@@ -367,36 +388,36 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             $sourceIds = $this->getProductsByLabels($labels, $excRes['ids']);
 
             // 4) Normalizar para guardar
-            $source_refs         = $this->normalizeRefString($labels, true);        // CSV etiquetas original
-            $complement_refs     = $this->normalizeRefString($cmpRes['refs']);      // CSV refs complementarias
-            $source_ids_json     = json_encode(array_values($sourceIds));
+            $source_refs = $this->normalizeRefString($labels, true);        // CSV etiquetas original
+            $complement_refs = $this->normalizeRefString($cmpRes['refs']);      // CSV refs complementarias
+            $source_ids_json = json_encode(array_values($sourceIds));
             $complement_ids_json = json_encode(array_values($cmpRes['ids']));
-            $excluded_ids_json   = json_encode(array_values($excRes['ids']));
+            $excluded_ids_json = json_encode(array_values($excRes['ids']));
 
             // 5) Guardar (crear/actualizar)
             if ($id) {
                 $obj = new AlcComplementario($id);
-                if (!Validate::isLoadedObject($obj)) {
-                    die(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('Registro no encontrado.')]]));
+                if (! Validate::isLoadedObject($obj)) {
+                    exit(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('Registro no encontrado.')]]));
                 }
             } else {
-                $obj = new AlcComplementario();
+                $obj = new AlcComplementario;
                 $obj->type = 'label';
             }
 
-            $obj->title             = pSQL($title);
-            $obj->source_refs       = $source_refs;
-            $obj->complement_refs   = $complement_refs;
-            $obj->source_ids        = $source_ids_json;
-            $obj->complement_ids    = $complement_ids_json;
+            $obj->title = pSQL($title);
+            $obj->source_refs = $source_refs;
+            $obj->complement_refs = $complement_refs;
+            $obj->source_ids = $source_ids_json;
+            $obj->complement_ids = $complement_ids_json;
             $obj->excluded_products = $excluded_ids_json;
-            $obj->position          = $position; // NUEVO
+            $obj->position = $position; // NUEVO
 
             $ok = $id ? $obj->update() : $obj->add();
-            if (!$ok) {
-                die(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('No se pudo guardar el registro.')]]));
+            if (! $ok) {
+                exit(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('No se pudo guardar el registro.')]]));
             }
-            die(Tools::jsonEncode(['success' => true, 'id' => (int)$obj->id]));
+            exit(Tools::jsonEncode(['success' => true, 'id' => (int) $obj->id]));
         }
 
         /* ===============================
@@ -414,21 +435,21 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
                 $errors[] = $this->l('Debes ingresar al menos una referencia de producto complementario.');
             }
 
-            $source_refs     = $this->normalizeRefString($srcRes['refs']);
+            $source_refs = $this->normalizeRefString($srcRes['refs']);
             $complement_refs = $this->normalizeRefString($cmpRes['refs']);
-            $source_ids      = json_encode($srcRes['ids']);
-            $complement_ids  = json_encode($cmpRes['ids']);
-            $dups            = $this->findDuplicatesForType('product', $srcRes['refs'], $srcRes['ids'], $excludeId);
+            $source_ids = json_encode($srcRes['ids']);
+            $complement_ids = json_encode($cmpRes['ids']);
+            $dups = $this->findDuplicatesForType('product', $srcRes['refs'], $srcRes['ids'], $excludeId);
         } else {
             // category / brand
             $resolvedSources = $this->resolveSourceByType($type, $sources);
-            $cmpRes          = $this->resolveRefsToProductsSemicolon($complements);
+            $cmpRes = $this->resolveRefsToProductsSemicolon($complements);
 
             // marcas (ids) opcionales solo para category
             $brandIds = [];
             if ($type === 'category') {
                 $brandsIn = Tools::getValue('brands'); // array de ids
-                if (!is_array($brandsIn)) {
+                if (! is_array($brandsIn)) {
                     $brandsIn = [];
                 }
                 $brandIds = array_values(array_unique(array_map('intval', $brandsIn)));
@@ -441,31 +462,31 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
                 $errors[] = $this->l('Debes ingresar al menos una referencia de producto complementario.');
             }
 
-            $source_refs     = ''; // no aplica
+            $source_refs = ''; // no aplica
             $complement_refs = $this->normalizeRefString($cmpRes['refs']);
-            $source_ids      = json_encode($resolvedSources);
-            $complement_ids  = json_encode($cmpRes['ids']);
-            $dups            = $this->findDuplicatesForType($type, [], $resolvedSources, $excludeId);
+            $source_ids = json_encode($resolvedSources);
+            $complement_ids = json_encode($cmpRes['ids']);
+            $dups = $this->findDuplicatesForType($type, [], $resolvedSources, $excludeId);
         }
 
         $cmpIds = isset($cmpRes) ? $cmpRes['ids'] : [];
-        if (!empty($cmpIds)) {
+        if (! empty($cmpIds)) {
             $whereAnyCmp = $this->jsonArrayContainsAny('complement_ids', $cmpIds);
-            $idEx        = (int)$id;
+            $idEx = (int) $id;
 
             // ⚠️ SIN LIMIT 1 AQUÍ: Db::getRow ya lo añade
             $sqlDup = '
             SELECT id_complementario, title, complement_refs
-            FROM ' . _DB_PREFIX_ . 'alsernet_complementarios
-            WHERE type = "' . pSQL($type) . '"
-              AND ' . $whereAnyCmp . '
-              ' . ($idEx ? 'AND id_complementario <> ' . $idEx : '');
+            FROM '._DB_PREFIX_.'alsernet_complementarios
+            WHERE type = "'.pSQL($type).'"
+              AND '.$whereAnyCmp.'
+              '.($idEx ? 'AND id_complementario <> '.$idEx : '');
 
             $dup = Db::getInstance()->getRow($sqlDup);
             if ($dup) {
                 $errors[] = sprintf(
                     $this->l('Ya existe un registro (ID #%d, "%s") de tipo "%s" que contiene alguna de estas referencias de complementarios: %s'),
-                    (int)$dup['id_complementario'],
+                    (int) $dup['id_complementario'],
                     $dup['title'],
                     $type,
                     $dup['complement_refs']
@@ -473,11 +494,11 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             }
         }
 
-        if (!empty($dups)) {
+        if (! empty($dups)) {
             foreach ($dups as $d) {
                 $errors[] = sprintf(
                     $this->l('Ya existe un registro (ID %d, %s) con estas fuentes para el tipo "%s".'),
-                    (int)$d['id_complementario'],
+                    (int) $d['id_complementario'],
                     $d['title'],
                     $type
                 );
@@ -485,29 +506,29 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         }
 
         // Si hay errores, parar
-        if (!empty($errors)) {
-            die(Tools::jsonEncode(['success' => false, 'errors' => $errors]));
+        if (! empty($errors)) {
+            exit(Tools::jsonEncode(['success' => false, 'errors' => $errors]));
         }
 
         // Exclusiones
-        $resolvedExcluded  = $this->resolveRefsToProducts($excluded);
+        $resolvedExcluded = $this->resolveRefsToProducts($excluded);
         $excluded_ids_json = json_encode($resolvedExcluded['ids']);
 
         // Guardar
         if ($id) {
             $obj = new AlcComplementario($id);
-            if (!Validate::isLoadedObject($obj)) {
-                die(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('Registro no encontrado.')]]));
+            if (! Validate::isLoadedObject($obj)) {
+                exit(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('Registro no encontrado.')]]));
             }
         } else {
-            $obj = new AlcComplementario();
+            $obj = new AlcComplementario;
             $obj->type = pSQL($type);
         }
 
-        $obj->title             = pSQL($title);
-        $obj->source_refs       = $source_refs;
-        $obj->complement_refs   = $complement_refs;
-        $obj->source_ids        = $source_ids;
+        $obj->title = pSQL($title);
+        $obj->source_refs = $source_refs;
+        $obj->complement_refs = $complement_refs;
+        $obj->source_ids = $source_ids;
 
         if ($type === 'category') {
             $obj->source_brand_ids = json_encode($brandIds);
@@ -515,40 +536,38 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             $obj->source_brand_ids = null;
         }
 
-        $obj->complement_ids    = $complement_ids;
+        $obj->complement_ids = $complement_ids;
         $obj->excluded_products = $excluded_ids_json;
-        $obj->position          = $position; // NUEVO
+        $obj->position = $position; // NUEVO
 
         $ok = $id ? $obj->update() : $obj->add();
-        if (!$ok) {
-            die(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('No se pudo guardar el registro.')]]));
+        if (! $ok) {
+            exit(Tools::jsonEncode(['success' => false, 'errors' => [$this->l('No se pudo guardar el registro.')]]));
         }
 
-        die(Tools::jsonEncode(['success' => true, 'id' => (int)$obj->id]));
+        exit(Tools::jsonEncode(['success' => true, 'id' => (int) $obj->id]));
     }
-
 
     public function displayAjaxExcludeOnly()
     {
-        $type     = Tools::getValue('type');
-        $sources  = Tools::getValue('sources');
+        $type = Tools::getValue('type');
+        $sources = Tools::getValue('sources');
         $excluded = Tools::getValue('excluded');
-        $position = (int)Tools::getValue('position', 0); // NUEVO
+        $position = (int) Tools::getValue('position', 0); // NUEVO
 
-        $resolvedSources   = $this->resolveSourceByType($type, $sources);
-        $resolvedExcluded  = $this->resolveProductList($excluded);
+        $resolvedSources = $this->resolveSourceByType($type, $sources);
+        $resolvedExcluded = $this->resolveProductList($excluded);
 
-        $obj = new AlcComplementario();
-        $obj->type              = pSQL($type);
-        $obj->source_ids        = json_encode($resolvedSources);
-        $obj->complement_ids    = json_encode([]); // vacío
+        $obj = new AlcComplementario;
+        $obj->type = pSQL($type);
+        $obj->source_ids = json_encode($resolvedSources);
+        $obj->complement_ids = json_encode([]); // vacío
         $obj->excluded_products = json_encode($resolvedExcluded);
-        $obj->position          = $position;       // NUEVO
+        $obj->position = $position;       // NUEVO
         $ok = $obj->add();
 
-        die(Tools::jsonEncode(['success' => (bool)$ok, 'id' => (int)$obj->id]));
+        exit(Tools::jsonEncode(['success' => (bool) $ok, 'id' => (int) $obj->id]));
     }
-
 
     /* ===== Helpers ===== */
 
@@ -563,13 +582,13 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if (is_array($list)) {
             $tokens = $list;
         } else {
-            $tokens = preg_split('/[\s,;\r\n\t]+/', (string)$list, -1, PREG_SPLIT_NO_EMPTY);
+            $tokens = preg_split('/[\s,;\r\n\t]+/', (string) $list, -1, PREG_SPLIT_NO_EMPTY);
         }
         $tokens = array_values(array_filter(array_map('trim', $tokens), function ($t) {
             return $t !== '';
         }));
 
-        if (!$tokens) {
+        if (! $tokens) {
             return [];
         }
 
@@ -578,7 +597,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $refs = [];
         foreach ($tokens as $t) {
             if (ctype_digit($t)) {
-                $ids_direct[] = (int)$t;
+                $ids_direct[] = (int) $t;
             } else {
                 $refs[] = $t;
             }
@@ -590,11 +609,11 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if ($ids_direct) {
             $rows = Db::getInstance()->executeS('
             SELECT id_product
-            FROM ' . _DB_PREFIX_ . 'product
-            WHERE id_product IN (' . implode(',', array_map('intval', $ids_direct)) . ')
+            FROM '._DB_PREFIX_.'product
+            WHERE id_product IN ('.implode(',', array_map('intval', $ids_direct)).')
         ');
             foreach ($rows as $r) {
-                $ids[] = (int)$r['id_product'];
+                $ids[] = (int) $r['id_product'];
             }
         }
 
@@ -602,31 +621,30 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if ($refs) {
             // Sanear y armar IN (...)
             $refs_sanit = array_map(function ($r) {
-                return '"' . pSQL($r) . '"';
+                return '"'.pSQL($r).'"';
             }, array_unique($refs));
             $in = implode(',', $refs_sanit);
 
             $rows = Db::getInstance()->executeS('
             (SELECT DISTINCT p.id_product
-               FROM ' . _DB_PREFIX_ . 'product p
-              WHERE p.reference IN (' . $in . '))
+               FROM '._DB_PREFIX_.'product p
+              WHERE p.reference IN ('.$in.'))
             UNION
             (SELECT DISTINCT pa.id_product
-               FROM ' . _DB_PREFIX_ . 'product_attribute pa
-              WHERE pa.reference IN (' . $in . '))
+               FROM '._DB_PREFIX_.'product_attribute pa
+              WHERE pa.reference IN ('.$in.'))
         ');
 
             foreach ($rows as $r) {
-                $ids[] = (int)$r['id_product'];
+                $ids[] = (int) $r['id_product'];
             }
         }
 
         // 5) Unificar y devolver
         $ids = array_values(array_unique(array_filter($ids)));
+
         return $ids;
     }
-
-
 
     /**
      * Resuelve fuentes según tipo.
@@ -642,19 +660,22 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if ($type === 'category') {
             // del árbol llega en _POST['categoryBox[]'] o en $sources
             $catIds = [];
-            if (is_array($sources) && !empty($sources)) {
+            if (is_array($sources) && ! empty($sources)) {
                 $catIds = array_map('intval', $sources);
             } elseif (Tools::getIsset('categoryBox')) {
-                $catIds = array_map('intval', (array)Tools::getValue('categoryBox'));
+                $catIds = array_map('intval', (array) Tools::getValue('categoryBox'));
             }
+
             return array_values(array_unique(array_filter($catIds)));
         }
         if ($type === 'brand') {
-            if (!is_array($sources)) {
-                $sources = preg_split('/[,\n;]/', (string)$sources, -1, PREG_SPLIT_NO_EMPTY);
+            if (! is_array($sources)) {
+                $sources = preg_split('/[,\n;]/', (string) $sources, -1, PREG_SPLIT_NO_EMPTY);
             }
+
             return array_values(array_unique(array_map('intval', $sources)));
         }
+
         return [];
     }
 
@@ -663,12 +684,12 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
      */
     protected function fetchProductsData(array $ids, array $refs = [])
     {
-        if (!$ids) {
+        if (! $ids) {
             return [];
         }
 
-        $id_lang = (int)$this->context->language->id;
-        $id_shop = (int)$this->context->shop->id;
+        $id_lang = (int) $this->context->language->id;
+        $id_shop = (int) $this->context->shop->id;
 
         // 1) Traemos info base (sin precio aún)
         $rows = Db::getInstance()->executeS('
@@ -677,20 +698,20 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
                 p.reference,
                 pl.name,
                 pl.link_rewrite
-            FROM ' . _DB_PREFIX_ . 'product p
-            INNER JOIN ' . _DB_PREFIX_ . 'product_lang pl
+            FROM '._DB_PREFIX_.'product p
+            INNER JOIN '._DB_PREFIX_.'product_lang pl
                 ON (pl.id_product = p.id_product
-                AND pl.id_lang = ' . $id_lang . '
-                AND pl.id_shop = ' . $id_shop . ')
-            WHERE p.id_product IN (' . implode(',', array_map('intval', $ids)) . ')
+                AND pl.id_lang = '.$id_lang.'
+                AND pl.id_shop = '.$id_shop.')
+            WHERE p.id_product IN ('.implode(',', array_map('intval', $ids)).')
         ');
 
-        if (!$rows) {
+        if (! $rows) {
             return [];
         }
 
         foreach ($rows as $key => &$r) {
-            $id_product = (int)$r['id_product'];
+            $id_product = (int) $r['id_product'];
             $id_attribute = 0;
 
             // 2) Buscar si hay una combinación activa con cover/reference
@@ -699,36 +720,35 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             if (count($refs) == 0) {
                 $id_attribute = Db::getInstance()->executeS('
                 SELECT id_product_attribute
-                FROM ' . _DB_PREFIX_ . 'product_attribute
-                WHERE id_product = ' . $id_product . '
+                FROM '._DB_PREFIX_.'product_attribute
+                WHERE id_product = '.$id_product.'
                 ORDER BY default_on DESC, id_product_attribute ASC
                 LIMIT 1
             ');
             } else {
                 $id_attribute = Db::getInstance()->executeS('
                 SELECT id_product_attribute
-                FROM ' . _DB_PREFIX_ . 'product_attribute
-                WHERE id_product = ' . $id_product . ' and reference = "' . $refs[$key] . '"
+                FROM '._DB_PREFIX_.'product_attribute
+                WHERE id_product = '.$id_product.' and reference = "'.$refs[$key].'"
                 ORDER BY default_on DESC, id_product_attribute ASC
                 LIMIT 1
             ');
             }
 
-
             // 3) Imagen
-            $r['image_url'] = str_replace("maxi.preproduccion.", "", self::getCoverImageUrl($id_product, $id_lang, 'home_default'));
+            $r['image_url'] = str_replace('maxi.preproduccion.', '', self::getCoverImageUrl($id_product, $id_lang, 'home_default'));
 
             // 4) Precio por país (usa la combinación si existe)
-            $r['price'] = (float)self::getPriceByCountry($id_product, $id_attribute[0]['id_product_attribute'] ?: 0, 6);
+            $r['price'] = (float) self::getPriceByCountry($id_product, $id_attribute[0]['id_product_attribute'] ?: 0, 6);
 
             // 5) URL de edición
             $r['url'] = $this->context->link->getProductLink(
-                (int)$id_product,
+                (int) $id_product,
                 $r['link_rewrite'],
                 null,
                 null,
-                (int)$id_lang,
-                (int)$id_shop,
+                (int) $id_lang,
+                (int) $id_shop,
                 0,
                 false
             );
@@ -736,9 +756,6 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
 
         return $rows;
     }
-
-
-
 
     /**
      * Busca conflictos: registros existentes donde se solapen fuentes/tipo o
@@ -749,7 +766,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     {
         $conflicts = [];
         $all = Db::getInstance()->executeS('SELECT id_complementario, type, source_ids, complement_ids
-        FROM ' . _DB_PREFIX_ . 'alsernet_complementarios');
+        FROM '._DB_PREFIX_.'alsernet_complementarios');
 
         foreach ($all as $row) {
             $rowType = $row['type'];
@@ -759,8 +776,8 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
                 $src_existing = json_decode($row['source_ids'], true) ?: [];
                 if (count(array_intersect($src_existing, $sources)) > 0) {
                     $conflicts[] = [
-                        'id' => (int)$row['id_complementario'],
-                        'reason' => 'overlap_source_same_type'
+                        'id' => (int) $row['id_complementario'],
+                        'reason' => 'overlap_source_same_type',
                     ];
                 }
             }
@@ -770,15 +787,15 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
                 $cmp_existing = json_decode($row['complement_ids'], true) ?: [];
                 if (count(array_intersect($cmp_existing, $complements)) > 0) {
                     $conflicts[] = [
-                        'id' => (int)$row['id_complementario'],
-                        'reason' => 'overlap_complements_same_type'
+                        'id' => (int) $row['id_complementario'],
+                        'reason' => 'overlap_complements_same_type',
                     ];
                 }
             }
         }
+
         return $conflicts;
     }
-
 
     public function renderForm()
     {
@@ -787,100 +804,101 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $ajaxBase = $this->context->link->getAdminLink('AdminAlsernetComplementarios');
         $this->context->smarty->assign([
             'alc_ajax_base' => $ajaxBase,
-            'alc_list_url'  => $ajaxBase,
+            'alc_list_url' => $ajaxBase,
         ]);
 
-        $id = (int)Tools::getValue('id_complementario');
+        $id = (int) Tools::getValue('id_complementario');
         $obj = new AlcComplementario($id);
-        if (!Validate::isLoadedObject($obj)) {
+        if (! Validate::isLoadedObject($obj)) {
             return parent::renderForm();
         }
 
-        $type     = $obj->type;
-        $sources  = json_decode($obj->source_ids, true) ?: [];
+        $type = $obj->type;
+        $sources = json_decode($obj->source_ids, true) ?: [];
         $excluded = json_decode($obj->excluded_products, true) ?: [];
-        $position = (int)$obj->position;
+        $position = (int) $obj->position;
 
         if ($type === 'label') {
             $this->context->smarty->assign([
-                'alc_title'            => $obj->title,
-                'alc_labels_text'      => $obj->source_refs,
+                'alc_title' => $obj->title,
+                'alc_labels_text' => $obj->source_refs,
                 'alc_complements_text' => $obj->complement_refs,
-                'alc_excluded_text'    => $this->idsToRefsCsv($excluded),
-                'alc_edit_id'          => (int)$obj->id,
-                'alc_position'         => $position,          // NUEVO
+                'alc_excluded_text' => $this->idsToRefsCsv($excluded),
+                'alc_edit_id' => (int) $obj->id,
+                'alc_position' => $position,          // NUEVO
             ]);
+
             return $this->context->smarty->fetch(
-                _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/form_label.tpl'
+                _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/form_label.tpl'
             );
         }
 
         if ($type === 'product') {
             $this->context->smarty->assign([
-                'alc_title'            => $obj->title,
-                'alc_sources_text'     => $obj->source_refs,
+                'alc_title' => $obj->title,
+                'alc_sources_text' => $obj->source_refs,
                 'alc_complements_text' => $obj->complement_refs,
-                'alc_position'         => $position,          // NUEVO
+                'alc_position' => $position,          // NUEVO
             ]);
             $tpl = 'form_product.tpl';
         } elseif ($type === 'category') {
             $combinedTreeHtml = $this->renderWhitelistedCategoryTree($sources);
 
-            $mans           = Manufacturer::getManufacturers(false, $this->context->language->id, true);
+            $mans = Manufacturer::getManufacturers(false, $this->context->language->id, true);
             $selectedBrands = json_decode($obj->source_brand_ids, true) ?: [];
 
             $this->context->smarty->assign([
-                'alc_title'             => $obj->title,
-                'alc_category_tree'     => $combinedTreeHtml,
-                'alc_manufacturers'     => $mans,
-                'alc_selected_brands'   => $selectedBrands,
-                'alc_complements_text'  => $obj->complement_refs,
-                'alc_excluded_text'     => $this->idsToRefsCsv($excluded),
-                'alc_position'          => $position,        // NUEVO
+                'alc_title' => $obj->title,
+                'alc_category_tree' => $combinedTreeHtml,
+                'alc_manufacturers' => $mans,
+                'alc_selected_brands' => $selectedBrands,
+                'alc_complements_text' => $obj->complement_refs,
+                'alc_excluded_text' => $this->idsToRefsCsv($excluded),
+                'alc_position' => $position,        // NUEVO
             ]);
             $tpl = 'form_category.tpl';
         } else { // brand
             $mans = Manufacturer::getManufacturers(false, $this->context->language->id, true);
             $this->context->smarty->assign([
-                'alc_title'            => $obj->title,
-                'alc_manufacturers'    => $mans,
-                'alc_selected_brands'  => $sources,
+                'alc_title' => $obj->title,
+                'alc_manufacturers' => $mans,
+                'alc_selected_brands' => $sources,
                 'alc_complements_text' => $obj->complement_refs,
-                'alc_excluded_text'    => $this->idsToRefsCsv($excluded),
-                'alc_position'         => $position,         // NUEVO
+                'alc_excluded_text' => $this->idsToRefsCsv($excluded),
+                'alc_position' => $position,         // NUEVO
             ]);
             $tpl = 'form_brand.tpl';
         }
 
         $this->context->smarty->assign([
-            'alc_edit_id' => (int)$obj->id,
+            'alc_edit_id' => (int) $obj->id,
         ]);
 
         return $this->context->smarty->fetch(
-            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/' . $tpl
+            _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/'.$tpl
         );
     }
 
-
     public function postProcess()
     {
-        if (Tools::isSubmit('delete' . $this->table)) {
-            $id = (int)Tools::getValue($this->identifier);
+        if (Tools::isSubmit('delete'.$this->table)) {
+            $id = (int) Tools::getValue($this->identifier);
             $obj = new AlcComplementario($id);
             if ($obj->id && $obj->delete()) {
-                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
+                Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
             } else {
                 $this->errors[] = $this->l('No se pudo eliminar el registro.');
+
                 // Importante: NO seguir a parent::postProcess() porque volvería a intentar borrar
                 return;
             }
         }
 
-        if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
-            $ids = Tools::getValue($this->table . 'Box');
+        if (Tools::isSubmit('submitBulkdelete'.$this->table)) {
+            $ids = Tools::getValue($this->table.'Box');
             if (is_array($ids)) {
                 foreach ($ids as $id) {
-                    $o = new AlcComplementario((int)$id);
+                    $o = new AlcComplementario((int) $id);
                     if ($o->id) {
                         $o->delete();
                     }
@@ -903,29 +921,29 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
 
         // Botón estándar "Agregar nuevo" (opcional)
         $this->toolbar_btn['new'] = [
-            'href' => self::$currentIndex . '&addalsernet_complementarios&token=' . $this->token,
+            'href' => self::$currentIndex.'&addalsernet_complementarios&token='.$this->token,
             'desc' => $this->l('Agregar nuevo'),
             'icon' => 'process-icon-new',
         ];
 
         // Tus 3 botones de atajo
         $this->page_header_toolbar_btn['add_product'] = [
-            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios') . '&addType=product',
+            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=product',
             'desc' => $this->l('Por Producto'),
             'icon' => 'process-icon-new',
         ];
         $this->page_header_toolbar_btn['add_category'] = [
-            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios') . '&addType=category',
+            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=category',
             'desc' => $this->l('Por Categoría'),
             'icon' => 'process-icon-category',
         ];
         $this->page_header_toolbar_btn['add_brand'] = [
-            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios') . '&addType=brand',
+            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=brand',
             'desc' => $this->l('Por Marca'),
             'icon' => 'process-icon-manufacturer',
         ];
         $this->page_header_toolbar_btn['add_label'] = [
-            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios') . '&addType=label',
+            'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=label',
             'desc' => $this->l('Por Etiqueta'),
             'icon' => 'process-icon-tags', // o el que prefieras
         ];
@@ -952,11 +970,11 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     {
         $this->addJquery();
         $base = $this->module->getPathUri();
-        $ver  = '?v=' . urlencode($this->module->version);
+        $ver = '?v='.urlencode($this->module->version);
 
         // Usa la RUTA REAL de tus assets:
-        $this->context->controller->addJS($base . 'views/templates/js/admin.js' . $ver);
-        $this->context->controller->addCSS($base . 'views/templates/css/admin.css' . $ver);
+        $this->context->controller->addJS($base.'views/templates/js/admin.js'.$ver);
+        $this->context->controller->addCSS($base.'views/templates/css/admin.css'.$ver);
     }
 
     public function renderView()
@@ -967,15 +985,15 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $ajaxBase = $this->context->link->getAdminLink('AdminAlsernetComplementarios');
         $this->context->smarty->assign([
             'alc_ajax_base' => $ajaxBase,
-            'alc_list_url'  => $ajaxBase,
+            'alc_list_url' => $ajaxBase,
         ]);
 
-        // posición por defecto 0 en altas nuevas
+        // posición Por defecto 0 en altas nuevas
         $this->context->smarty->assign([
             'alc_position' => 0,
         ]);
 
-        if (!in_array($type, ['product', 'category', 'brand', 'label'])) {
+        if (! in_array($type, ['product', 'category', 'brand', 'label'])) {
             $listUrl = $this->context->link->getAdminLink('AdminAlsernetComplementarios');
             $this->context->smarty->assign('alc_list_url', $listUrl);
         }
@@ -984,74 +1002,73 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             case 'product':
                 $tpl = 'form_product.tpl';
                 $this->context->smarty->assign([
-                    'alc_title'            => '',
-                    'alc_sources_text'     => '',
+                    'alc_title' => '',
+                    'alc_sources_text' => '',
                     'alc_complements_text' => '',
                 ]);
                 break;
 
             case 'category':
-                $tpl  = 'form_category.tpl';
+                $tpl = 'form_category.tpl';
                 $mans = Manufacturer::getManufacturers(false, $this->context->language->id, true);
 
                 $this->context->smarty->assign([
-                    'alc_category_tree'    => $this->renderWhitelistedCategoryTree([]),
-                    'alc_manufacturers'    => $mans,
-                    'alc_selected_brands'  => [],
-                    'alc_title'            => '',
+                    'alc_category_tree' => $this->renderWhitelistedCategoryTree([]),
+                    'alc_manufacturers' => $mans,
+                    'alc_selected_brands' => [],
+                    'alc_title' => '',
                     'alc_complements_text' => '',
-                    'alc_excluded_text'    => '',
-                    'currentIndex'         => self::$currentIndex,
-                    'token'                => $this->token,
+                    'alc_excluded_text' => '',
+                    'currentIndex' => self::$currentIndex,
+                    'token' => $this->token,
                 ]);
                 break;
 
             case 'brand':
-                $tpl  = 'form_brand.tpl';
+                $tpl = 'form_brand.tpl';
                 $mans = Manufacturer::getManufacturers(false, $this->context->language->id, true);
                 $this->context->smarty->assign([
-                    'alc_manufacturers'    => $mans,
-                    'alc_title'            => '',
+                    'alc_manufacturers' => $mans,
+                    'alc_title' => '',
                     'alc_complements_text' => '',
-                    'alc_selected_brands'  => [],
-                    'alc_excluded_text'    => '',
+                    'alc_selected_brands' => [],
+                    'alc_excluded_text' => '',
                 ]);
                 break;
 
             case 'label':
                 $tpl = 'form_label.tpl';
                 $this->context->smarty->assign([
-                    'alc_title'            => '',
-                    'alc_labels_text'      => '',
+                    'alc_title' => '',
+                    'alc_labels_text' => '',
                     'alc_complements_text' => '',
-                    'alc_excluded_text'    => '',
+                    'alc_excluded_text' => '',
                 ]);
                 break;
         }
 
         return $this->context->smarty->fetch(
-            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/' . $tpl
+            _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/'.$tpl
         );
     }
-
-
 
     public static function getCoverImageUrl($id_product, $id_shop)
     {
         $cover = Image::getCover($id_product);
-        if (!is_array($cover) || empty($cover['id_image'])) {
+        if (! is_array($cover) || empty($cover['id_image'])) {
             return '';
         }
         $image = new Image($cover['id_image']);
         $link = Context::getContext()->link;
 
         $url = $link->getImageLink(null, $image->getExistingImgPath(), 'large_default');
-        if (!$url || strpos($url, 'default') !== false) {
+        if (! $url || strpos($url, 'default') !== false) {
             $url = $link->getImageLink(null, $image->getExistingImgPath(), 'home_default');
         }
-        if (!$url) {
-            $url = _PS_IMG_ . 'p/es-default-large_default.jpg';
+        if (! $url) {
+            $url = _PS_IMG_.'p/es-default-large_default.jpg';
         }
+
         return $url;
     }
 
@@ -1060,20 +1077,20 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
      */
     public static function getPriceByCountry($id_product, $id_product_attribute = 0, $id_country = 6)
     {
-        $id_product = (int)$id_product;
-        $id_product_attribute = (int)$id_product_attribute;
-        $id_country = (int)$id_country;
+        $id_product = (int) $id_product;
+        $id_product_attribute = (int) $id_product_attribute;
+        $id_country = (int) $id_country;
 
         $ctx = Context::getContext();
-        $id_shop = (int)$ctx->shop->id;
+        $id_shop = (int) $ctx->shop->id;
 
         $country = new Country($id_country);
-        if (!Validate::isLoadedObject($country)) {
-            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        if (! Validate::isLoadedObject($country)) {
+            $id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
         }
 
-        $id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-        $id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+        $id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $id_group = (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
         $id_customer = 0;
 
         $specific_price = null;
@@ -1101,11 +1118,11 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             0
         );
 
-        if (!$price || $price < 0) {
+        if (! $price || $price < 0) {
             $price = Product::getPriceStatic($id_product, true, $id_product_attribute);
         }
 
-        return (float)$price;
+        return (float) $price;
     }
 
     /**
@@ -1116,7 +1133,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function normalizeRefString($list, $etiqueta = false)
     {
         // 1) Obtener string base
-        $str = is_array($list) ? implode(',', $list) : (string)$list;
+        $str = is_array($list) ? implode(',', $list) : (string) $list;
 
         // 2) Tokenizar según modo
         if ($etiqueta) {
@@ -1150,12 +1167,12 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if (is_array($list)) {
             $tokens = $list;
         } else {
-            $tokens = preg_split('/[\s,;\r\n\t]+/', (string)$list, -1, PREG_SPLIT_NO_EMPTY);
+            $tokens = preg_split('/[\s,;\r\n\t]+/', (string) $list, -1, PREG_SPLIT_NO_EMPTY);
         }
         $tokens = array_values(array_filter(array_map('trim', $tokens), function ($t) {
             return $t !== '';
         }));
-        if (!$tokens) {
+        if (! $tokens) {
             return ['ids' => [], 'refs' => []];
         }
 
@@ -1163,10 +1180,10 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // refs_cand: TODOS los tokens (incluye numéricos) -> intentar como referencia (product + product_attribute)
         // ids_cand:  SOLO tokens numéricos -> intentar además como id_product
         $refs_cand = array_values(array_unique($tokens));
-        $ids_cand  = [];
+        $ids_cand = [];
         foreach ($refs_cand as $t) {
             if (ctype_digit($t)) {
-                $ids_cand[] = (int)$t;
+                $ids_cand[] = (int) $t;
             }
         }
 
@@ -1175,21 +1192,21 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // 3) Resolver por referencia (product.reference y product_attribute.reference)
         if ($refs_cand) {
             $in = implode(',', array_map(function ($r) {
-                return '"' . pSQL($r) . '"';
+                return '"'.pSQL($r).'"';
             }, $refs_cand));
 
             $rows = Db::getInstance()->executeS('
             (SELECT DISTINCT p.id_product
-               FROM ' . _DB_PREFIX_ . 'product p
-              WHERE p.reference IN (' . $in . '))
+               FROM '._DB_PREFIX_.'product p
+              WHERE p.reference IN ('.$in.'))
             UNION
             (SELECT DISTINCT pa.id_product
-               FROM ' . _DB_PREFIX_ . 'product_attribute pa
-              WHERE pa.reference IN (' . $in . '))
+               FROM '._DB_PREFIX_.'product_attribute pa
+              WHERE pa.reference IN ('.$in.'))
         ');
 
             foreach ($rows as $r) {
-                $ids[] = (int)$r['id_product'];
+                $ids[] = (int) $r['id_product'];
             }
         }
 
@@ -1197,52 +1214,51 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         if ($ids_cand && count($ids) == 0) {
             $rows = Db::getInstance()->executeS('
             SELECT id_product
-            FROM ' . _DB_PREFIX_ . 'product
-            WHERE id_product IN (' . implode(',', array_map('intval', $ids_cand)) . ')
+            FROM '._DB_PREFIX_.'product
+            WHERE id_product IN ('.implode(',', array_map('intval', $ids_cand)).')
         ');
             foreach ($rows as $r) {
-                $ids[] = (int)$r['id_product'];
+                $ids[] = (int) $r['id_product'];
             }
         }
 
         // 5) Unificar
-        $ids  = array_values(array_unique(array_filter($ids, 'intval')));
+        $ids = array_values(array_unique(array_filter($ids, 'intval')));
         $refs = array_values(array_unique($refs_cand)); // preserva numéricos también
 
         return ['ids' => $ids, 'refs' => $refs];
     }
-
 
     /**
      * Árbol único desde raíces 3..11 con carpetas plegables (cerradas al cargar).
      */
     protected function renderWhitelistedCategoryTree(array $selected = [])
     {
-        $id_lang = (int)$this->context->language->id;
-        $id_shop = (int)$this->context->shop->id;
+        $id_lang = (int) $this->context->language->id;
+        $id_shop = (int) $this->context->shop->id;
         $allowedRoots = [3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-        $html  = '<div id="alc-category-tree-wrap" class="panel">';
+        $html = '<div id="alc-category-tree-wrap" class="panel">';
         $html .= '  <div class="panel-heading" style="display:flex;gap:8px;align-items:center;">';
-        $html .= '    <button type="button" class="btn btn-default btn-sm" id="alc-expand-all"><i class="icon-plus-sign-alt"></i> ' . $this->l('Expandir todo') . '</button>';
-        $html .= '    <button type="button" class="btn btn-default btn-sm" id="alc-collapse-all"><i class="icon-minus-sign-alt"></i> ' . $this->l('Contraer todo') . '</button>';
+        $html .= '    <button type="button" class="btn btn-default btn-sm" id="alc-expand-all"><i class="icon-plus-sign-alt"></i> '.$this->l('Expandir todo').'</button>';
+        $html .= '    <button type="button" class="btn btn-default btn-sm" id="alc-collapse-all"><i class="icon-minus-sign-alt"></i> '.$this->l('Contraer todo').'</button>';
         $html .= '  </div>';
         $html .= '  <div class="panel-body">';
         $html .= '    <ul class="tree" id="alc-category-tree-root">';
 
         foreach ($allowedRoots as $rootId) {
-            $root = new Category((int)$rootId, $id_lang, $id_shop);
-            if (!Validate::isLoadedObject($root)) {
+            $root = new Category((int) $rootId, $id_lang, $id_shop);
+            if (! Validate::isLoadedObject($root)) {
                 continue;
             }
             $nested = Category::getNestedCategories(
-                (int)$rootId,
+                (int) $rootId,
                 $id_lang,
                 true,   // solo activas
                 null,   // groups
                 true    // respetar tienda
             );
-            if (is_array($nested) && !empty($nested)) {
+            if (is_array($nested) && ! empty($nested)) {
                 foreach ($nested as $node) {
                     $html .= $this->renderCategoryNodeRecursive($node, $selected);
                 }
@@ -1263,11 +1279,11 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
      */
     protected function renderCategoryNodeRecursive(array $node, array $selected = [])
     {
-        $id   = (int)$node['id_category'];
-        $name = isset($node['name']) ? $node['name'] : ('#' . $id);
+        $id = (int) $node['id_category'];
+        $name = isset($node['name']) ? $node['name'] : ('#'.$id);
         $isSelected = in_array($id, $selected);
-        $inputId = 'categoryBox_' . $id;
-        $hasChildren = !empty($node['children']) && is_array($node['children']);
+        $inputId = 'categoryBox_'.$id;
+        $hasChildren = ! empty($node['children']) && is_array($node['children']);
 
         $html = '';
 
@@ -1275,12 +1291,12 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             $html .= '<li class="tree-folder">';
             $html .= '  <span class="tree-folder-name">';
             $html .= '    <i class="icon-folder-close"></i>';
-            $html .= '    <input type="checkbox" name="categoryBox[]" id="' . htmlspecialchars($inputId) . '" value="' . $id . '" ' . ($isSelected ? 'checked="checked"' : '') . ' />';
-            $html .= '    <label for="' . htmlspecialchars($inputId) . '">' . htmlspecialchars($name) . ' (' . $id . ')</label>';
+            $html .= '    <input type="checkbox" name="categoryBox[]" id="'.htmlspecialchars($inputId).'" value="'.$id.'" '.($isSelected ? 'checked="checked"' : '').' />';
+            $html .= '    <label for="'.htmlspecialchars($inputId).'">'.htmlspecialchars($name).' ('.$id.')</label>';
 
             // ⬇️ NUEVO: selector de hijas/subhijas (no marca el padre)
-            $html .= '    <label class="alc-children-toggle" title="' . $this->l('Seleccionar solo hijas y subhijas') . '" style="margin-left:10px; font-weight:normal;">';
-            $html .= '      <input type="checkbox" class="alc-children-only" data-parent-id="' . $id . '"> ' . $this->l('Hijas');
+            $html .= '    <label class="alc-children-toggle" title="'.$this->l('Seleccionar solo hijas y subhijas').'" style="margin-left:10px; font-weight:normal;">';
+            $html .= '      <input type="checkbox" class="alc-children-only" data-parent-id="'.$id.'"> '.$this->l('Hijas');
             $html .= '    </label>';
 
             $html .= '  </span>';
@@ -1294,8 +1310,8 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             $html .= '<li class="tree-item">';
             $html .= '  <span class="tree-item-name">';
             $html .= '    <i class="tree-dot"></i>';
-            $html .= '    <input type="checkbox" name="categoryBox[]" id="' . htmlspecialchars($inputId) . '" value="' . $id . '" ' . ($isSelected ? 'checked="checked"' : '') . ' />';
-            $html .= '    <label for="' . htmlspecialchars($inputId) . '">' . htmlspecialchars($name) . ' (' . $id . ')</label>';
+            $html .= '    <input type="checkbox" name="categoryBox[]" id="'.htmlspecialchars($inputId).'" value="'.$id.'" '.($isSelected ? 'checked="checked"' : '').' />';
+            $html .= '    <label for="'.htmlspecialchars($inputId).'">'.htmlspecialchars($name).' ('.$id.')</label>';
             $html .= '  </span>';
             $html .= '</li>';
         }
@@ -1311,38 +1327,38 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function getProductsByCategories(array $categoryIds, array $excludeProductIds = [])
     {
         $categoryIds = array_values(array_unique(array_map('intval', $categoryIds)));
-        if (!$categoryIds) {
+        if (! $categoryIds) {
             return [];
         }
 
-        $idShop = (int)$this->context->shop->id;
+        $idShop = (int) $this->context->shop->id;
 
         // Productos por categoría
         $sql = '
             SELECT DISTINCT p.id_product
-            FROM ' . _DB_PREFIX_ . 'category_product cp
-            INNER JOIN ' . _DB_PREFIX_ . 'product p
+            FROM '._DB_PREFIX_.'category_product cp
+            INNER JOIN '._DB_PREFIX_.'product p
                 ON (p.id_product = cp.id_product AND p.active = 1 AND p.visibility != "none")
-            LEFT JOIN ' . _DB_PREFIX_ . 'stock_available sa
+            LEFT JOIN '._DB_PREFIX_.'stock_available sa
                 ON (sa.id_product = p.id_product
                     AND sa.id_product_attribute = 0
-                    AND (sa.id_shop = ' . (int)$idShop . ' OR sa.id_shop = 0))
-            WHERE cp.id_category IN (' . implode(',', $categoryIds) . ')
+                    AND (sa.id_shop = '.(int) $idShop.' OR sa.id_shop = 0))
+            WHERE cp.id_category IN ('.implode(',', $categoryIds).')
             AND IFNULL(sa.quantity, 0) > 0
         ';
 
         $rows = Db::getInstance()->executeS($sql);
-        if (!$rows) {
+        if (! $rows) {
             return [];
         }
 
         $ids = array_map(function ($r) {
-            return (int)$r['id_product'];
+            return (int) $r['id_product'];
         }, $rows);
         if ($excludeProductIds) {
             $exclude = array_flip(array_map('intval', $excludeProductIds));
             $ids = array_values(array_filter($ids, function ($id) use ($exclude) {
-                return !isset($exclude[$id]);
+                return ! isset($exclude[$id]);
             }));
         }
 
@@ -1359,12 +1375,16 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     {
         // Categorías (IDs)
         $sources = Tools::getValue('sources');
-        if (!is_array($sources)) $sources = [];
+        if (! is_array($sources)) {
+            $sources = [];
+        }
         $sources = array_values(array_unique(array_map('intval', $sources)));
 
         // Marcas (IDs) — NUEVO
         $brands = Tools::getValue('brands');
-        if (!is_array($brands)) $brands = [];
+        if (! is_array($brands)) {
+            $brands = [];
+        }
         $brands = array_values(array_unique(array_map('intval', $brands)));
 
         // Complementos (refs -> ids)
@@ -1379,37 +1399,36 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $originIds = $this->getProductsByCategoriesAndBrands($sources, $brands, $excIds);
 
         // Datos para tablas
-        $originData      = $this->fetchProductsData($originIds);
+        $originData = $this->fetchProductsData($originIds);
         $complementsData = $this->fetchProductsData($cmpIds);
 
-        die(Tools::jsonEncode([
-            'sources_ids'       => $originIds,
-            'sources_data'      => $originData,
-            'complement_ids'    => $cmpIds,
-            'complements_data'  => $complementsData,
-            'excluded_matched'  => $excIds,
+        exit(Tools::jsonEncode([
+            'sources_ids' => $originIds,
+            'sources_data' => $originData,
+            'complement_ids' => $cmpIds,
+            'complements_data' => $complementsData,
+            'excluded_matched' => $excIds,
         ]));
     }
 
-
     /**
      * Convierte una lista de id_product a referencias legibles (CSV).
-     * Prioriza la referencia de la combinación por defecto; si no hay, usa la referencia del producto.
+     * Prioriza la referencia de la combinación Por defecto; si no hay, usa la referencia del producto.
      */
     protected function idsToRefsCsv(array $ids)
     {
         $ids = array_values(array_unique(array_map('intval', $ids)));
-        if (!$ids) {
+        if (! $ids) {
             return '';
         }
 
         $refs = [];
         foreach ($ids as $id_product) {
-            // 1) referencia de la combinación por defecto, si existe
+            // 1) referencia de la combinación Por defecto, si existe
             $ref = Db::getInstance()->executeS('
                 SELECT pa.reference
-                FROM ' . _DB_PREFIX_ . 'product_attribute pa
-                WHERE pa.id_product = ' . (int)$id_product . ' AND pa.default_on = 1
+                FROM '._DB_PREFIX_.'product_attribute pa
+                WHERE pa.id_product = '.(int) $id_product.' AND pa.default_on = 1
                 LIMIT 1
             ');
 
@@ -1417,20 +1436,21 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             if (count($ref) == 0) {
                 $ref = Db::getInstance()->executeS('
                     SELECT p.reference
-                    FROM ' . _DB_PREFIX_ . 'product p
-                    WHERE p.id_product = ' . (int)$id_product . '
+                    FROM '._DB_PREFIX_.'product p
+                    WHERE p.id_product = '.(int) $id_product.'
                     LIMIT 1
                 ');
             }
 
             // 3) si sigue vacío, al menos devolvemos el id como marcador
-            $refs[] = $ref ? $ref[0]['reference'] : ('#' . $id_product);
+            $refs[] = $ref ? $ref[0]['reference'] : ('#'.$id_product);
         }
 
         // CSV limpio
         $refs = array_values(array_unique(array_filter(array_map('trim', $refs), function ($t) {
             return $t !== '';
         })));
+
         return implode(', ', $refs);
     }
 
@@ -1441,37 +1461,40 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function getProductsByBrands(array $brandIds, array $excludeProductIds = [])
     {
         $brandIds = array_values(array_unique(array_map('intval', $brandIds)));
-        if (!$brandIds) {
+        if (! $brandIds) {
             return [];
         }
 
-        $idShop = (int)$this->context->shop->id;
+        $idShop = (int) $this->context->shop->id;
 
         $sql = '
         SELECT DISTINCT p.id_product
-        FROM ' . _DB_PREFIX_ . 'product p
-        LEFT JOIN ' . _DB_PREFIX_ . 'stock_available sa
+        FROM '._DB_PREFIX_.'product p
+        LEFT JOIN '._DB_PREFIX_.'stock_available sa
             ON (sa.id_product = p.id_product
                 AND sa.id_product_attribute = 0
-                AND (sa.id_shop = ' . (int)$idShop . ' OR sa.id_shop = 0))
-        WHERE p.id_manufacturer IN (' . implode(',', $brandIds) . ')
+                AND (sa.id_shop = '.(int) $idShop.' OR sa.id_shop = 0))
+        WHERE p.id_manufacturer IN ('.implode(',', $brandIds).')
           AND p.active = 1
           AND p.visibility != "none"
           AND IFNULL(sa.quantity, 0) > 0
     ';
 
         $rows = Db::getInstance()->executeS($sql);
-        if (!$rows) return [];
+        if (! $rows) {
+            return [];
+        }
 
         $ids = array_map(function ($r) {
-            return (int)$r['id_product'];
+            return (int) $r['id_product'];
         }, $rows);
         if ($excludeProductIds) {
             $exclude = array_flip(array_map('intval', $excludeProductIds));
             $ids = array_values(array_filter($ids, function ($id) use ($exclude) {
-                return !isset($exclude[$id]);
+                return ! isset($exclude[$id]);
             }));
         }
+
         return $ids;
     }
 
@@ -1480,7 +1503,9 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     {
         // Marcas seleccionadas
         $brands = Tools::getValue('sources');
-        if (!is_array($brands)) $brands = [];
+        if (! is_array($brands)) {
+            $brands = [];
+        }
         $brands = array_values(array_unique(array_map('intval', $brands)));
 
         // Complementos (refs -> ids)
@@ -1499,12 +1524,12 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $originData = $this->fetchProductsData($originIds);
         $complementsData = $this->fetchProductsData($cmpIds);
 
-        die(Tools::jsonEncode([
-            'sources_ids'       => $originIds,
-            'sources_data'      => $originData,
-            'complement_ids'    => $cmpIds,
-            'complements_data'  => $complementsData,
-            'excluded_matched'  => $excIds,
+        exit(Tools::jsonEncode([
+            'sources_ids' => $originIds,
+            'sources_data' => $originData,
+            'complement_ids' => $cmpIds,
+            'complements_data' => $complementsData,
+            'excluded_matched' => $excIds,
         ]));
     }
 
@@ -1522,8 +1547,9 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     // ✅ Nueva versión: usa el mismo truco de comas que jsonArrayContainsAny
     protected function likeJsonInt($field, $int)
     {
-        $int = (int)$int;
+        $int = (int) $int;
         $wrapped = $this->sqlWrapJsonArray($field); // ",1696,1697,"
+
         return "$wrapped LIKE '%,{$int},%'";
     }
 
@@ -1534,8 +1560,10 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // Usamos [:space:] para soportar espacios/tab/nuevas líneas
         // NOTA: preg_quote para seguridad en el patrón
         $refQuoted = preg_quote($ref, '/');
-        return $field . " REGEXP '(^|[,[:space:]]+)" . $refQuoted . "([,[:space:]]+|$)'";
+
+        return $field." REGEXP '(^|[,[:space:]]+)".$refQuoted."([,[:space:]]+|$)'";
     }
+
     /**
      * Devuelve posibles duplicados por TYPE y fuentes:
      * - product: si alguna ref o id_product ya existe en source_refs/source_ids de un registro del mismo type.
@@ -1547,41 +1575,47 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function findDuplicatesForType($type, array $sourceRefs, array $sourceIds, $excludeId = 0)
     {
         $type = pSQL($type);
-        $excludeId = (int)$excludeId;
+        $excludeId = (int) $excludeId;
 
         $wheres = [];
         if ($type === 'product') {
             foreach (array_unique($sourceRefs) as $r) {
-                if ($r === '') continue;
+                if ($r === '') {
+                    continue;
+                }
                 $wheres[] = $this->regexpRefExact('source_refs', $r);
             }
             foreach (array_unique(array_map('intval', $sourceIds)) as $id) {
-                if ($id > 0) $wheres[] = $this->likeJsonInt('source_ids', $id);
+                if ($id > 0) {
+                    $wheres[] = $this->likeJsonInt('source_ids', $id);
+                }
             }
         } elseif ($type === 'brand' || $type === 'label') {
             foreach (array_unique(array_map('intval', $sourceIds)) as $id) {
-                if ($id > 0) $wheres[] = $this->likeJsonInt('source_ids', $id);
+                if ($id > 0) {
+                    $wheres[] = $this->likeJsonInt('source_ids', $id);
+                }
             }
         } elseif ($type === 'category') {
             // ✅ En categoría no buscamos duplicado por fuentes.
             return [];
         }
 
-        if (!$wheres) return [];
+        if (! $wheres) {
+            return [];
+        }
 
         $sql = '
         SELECT id_complementario, type, title
-        FROM ' . _DB_PREFIX_ . 'alsernet_complementarios
-        WHERE type = "' . $type . '"
-          AND (' . implode(' OR ', $wheres) . ')
-          ' . ($excludeId ? ' AND id_complementario != ' . $excludeId : '') . '
+        FROM '._DB_PREFIX_.'alsernet_complementarios
+        WHERE type = "'.$type.'"
+          AND ('.implode(' OR ', $wheres).')
+          '.($excludeId ? ' AND id_complementario != '.$excludeId : '').'
         ORDER BY id_complementario DESC
         LIMIT 50';
 
         return Db::getInstance()->executeS($sql) ?: [];
     }
-
-
 
     protected function sqlWrapJsonArray($col)
     {
@@ -1591,13 +1625,16 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function jsonArrayContainsAny($col, array $ints)
     {
         $ints = array_values(array_unique(array_map('intval', $ints)));
-        if (!$ints) return '0'; // false
+        if (! $ints) {
+            return '0';
+        } // false
         $wrapped = $this->sqlWrapJsonArray($col);
         $ors = [];
         foreach ($ints as $n) {
             $ors[] = "$wrapped LIKE '%,{$n},%'";
         }
-        return '(' . implode(' OR ', $ors) . ')';
+
+        return '('.implode(' OR ', $ors).')';
     }
 
     /**
@@ -1611,40 +1648,45 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $labels = array_values(array_unique(array_filter(array_map('trim', $labels), function ($s) {
             return $s !== '';
         })));
-        if (!$labels) return [];
+        if (! $labels) {
+            return [];
+        }
 
         // Escapar % y _ en LIKE, y preparar condiciones OR
         $likeParts = [];
         foreach ($labels as $lab) {
             $safe = pSQL(str_replace(['%', '_'], ['\%', '\_'], $lab));
-            $likeParts[] = "aci.etiqueta LIKE '%" . $safe . "%'";
+            $likeParts[] = "aci.etiqueta LIKE '%".$safe."%'";
         }
-        $whereLike = '(' . implode(' OR ', $likeParts) . ')';
+        $whereLike = '('.implode(' OR ', $likeParts).')';
 
         $sql = '
         SELECT apa.id_product
-        FROM ' . _DB_PREFIX_ . 'combinaciones_import aci
-        LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute apa
+        FROM '._DB_PREFIX_.'combinaciones_import aci
+        LEFT JOIN '._DB_PREFIX_.'product_attribute apa
                ON apa.id_product_attribute = aci.id_product_attribute
-        WHERE ' . $whereLike . '
+        WHERE '.$whereLike.'
         UNION
         SELECT aci.id_product
-        FROM ' . _DB_PREFIX_ . 'combinacionunica_import aci
-        WHERE ' . $whereLike;
+        FROM '._DB_PREFIX_.'combinacionunica_import aci
+        WHERE '.$whereLike;
 
         $rows = Db::getInstance()->executeS($sql);
-        if (!$rows) return [];
+        if (! $rows) {
+            return [];
+        }
 
         $ids = array_values(array_unique(array_map(function ($r) {
-            return (int)$r['id_product'];
+            return (int) $r['id_product'];
         }, $rows)));
 
         if ($excludeProductIds) {
             $exclude = array_flip(array_map('intval', $excludeProductIds));
             $ids = array_values(array_filter($ids, function ($id) use ($exclude) {
-                return !isset($exclude[$id]);
+                return ! isset($exclude[$id]);
             }));
         }
+
         return $ids;
     }
 
@@ -1652,7 +1694,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     public function displayAjaxPreviewLabel()
     {
         // Etiquetas ingresadas (texto CSV/espacios)
-        $labelsTxt = (string)Tools::getValue('sources', '');
+        $labelsTxt = (string) Tools::getValue('sources', '');
 
         $labels = $this->splitRefsCsv($labelsTxt, true); // reutilizamos splitRefsCsv() para tokenizar
 
@@ -1666,29 +1708,29 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $excRes = $this->resolveRefsToProducts(Tools::getValue('excluded'));
         $excIds = $excRes['ids'];
 
-
         // Productos de origen por etiqueta(s)
         $originIds = $this->getProductsByLabels($labels, $excIds);
 
         // Tablas
-        $originData      = $this->fetchProductsData($originIds);
+        $originData = $this->fetchProductsData($originIds);
 
         $complementsData = $this->fetchProductsData($cmpIds);
 
-        die(Tools::jsonEncode([
-            'sources_ids'       => $originIds,
-            'sources_data'      => $originData,
-            'complement_ids'    => $cmpIds,
-            'complements_data'  => $complementsData,
-            'excluded_matched'  => $excIds,
+        exit(Tools::jsonEncode([
+            'sources_ids' => $originIds,
+            'sources_data' => $originData,
+            'complement_ids' => $cmpIds,
+            'complements_data' => $complementsData,
+            'excluded_matched' => $excIds,
         ]));
     }
 
     // --- NUEVO: tokenizar solo por ; o saltos de línea, luego trim ---
     protected function tokenizeSemicolon($str)
     {
-        $tokens = preg_split('/[;\r\n]+/', (string)$str, -1, PREG_SPLIT_NO_EMPTY);
+        $tokens = preg_split('/[;\r\n]+/', (string) $str, -1, PREG_SPLIT_NO_EMPTY);
         $tokens = array_map('trim', $tokens);
+
         // quitar vacíos y duplicados
         return array_values(array_unique(array_filter($tokens, function ($t) {
             return $t !== '';
@@ -1699,12 +1741,16 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function resolveRefsToProductsSemicolon($list)
     {
         $tokens = is_array($list) ? $list : $this->tokenizeSemicolon($list);
-        if (!$tokens) return ['ids' => [], 'refs' => []];
+        if (! $tokens) {
+            return ['ids' => [], 'refs' => []];
+        }
 
         $refs_cand = array_values(array_unique($tokens));
-        $ids_cand  = [];
+        $ids_cand = [];
         foreach ($refs_cand as $t) {
-            if (ctype_digit($t)) $ids_cand[] = (int)$t;
+            if (ctype_digit($t)) {
+                $ids_cand[] = (int) $t;
+            }
         }
 
         $ids = [];
@@ -1712,27 +1758,32 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         // por referencia (product.reference + product_attribute.reference)
         if ($refs_cand) {
             $in = implode(',', array_map(function ($r) {
-                return '"' . pSQL($r) . '"';
+                return '"'.pSQL($r).'"';
             }, $refs_cand));
             $rows = Db::getInstance()->executeS('
-            (SELECT DISTINCT p.id_product FROM ' . _DB_PREFIX_ . 'product p WHERE p.reference IN (' . $in . '))
+            (SELECT DISTINCT p.id_product FROM '._DB_PREFIX_.'product p WHERE p.reference IN ('.$in.'))
             UNION
-            (SELECT DISTINCT pa.id_product FROM ' . _DB_PREFIX_ . 'product_attribute pa WHERE pa.reference IN (' . $in . '))
+            (SELECT DISTINCT pa.id_product FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.reference IN ('.$in.'))
         ');
-            foreach ($rows as $r) $ids[] = (int)$r['id_product'];
+            foreach ($rows as $r) {
+                $ids[] = (int) $r['id_product'];
+            }
         }
 
         // también aceptar IDs numéricos (si vinieran)
         if ($ids_cand) {
             $rows = Db::getInstance()->executeS('
-            SELECT id_product FROM ' . _DB_PREFIX_ . 'product
-            WHERE id_product IN (' . implode(',', array_map('intval', $ids_cand)) . ')
+            SELECT id_product FROM '._DB_PREFIX_.'product
+            WHERE id_product IN ('.implode(',', array_map('intval', $ids_cand)).')
         ');
-            foreach ($rows as $r) $ids[] = (int)$r['id_product'];
+            foreach ($rows as $r) {
+                $ids[] = (int) $r['id_product'];
+            }
         }
 
-        $ids  = array_values(array_unique(array_filter($ids, 'intval')));
+        $ids = array_values(array_unique(array_filter($ids, 'intval')));
         $refs = array_values(array_unique($refs_cand));
+
         return ['ids' => $ids, 'refs' => $refs];
     }
 
@@ -1744,37 +1795,38 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
     protected function getProductsByCategoriesAndBrands(array $categoryIds, array $brandIds = [], array $excludeProductIds = [])
     {
         $categoryIds = array_values(array_unique(array_map('intval', $categoryIds)));
-        $brandIds    = array_values(array_unique(array_map('intval', $brandIds)));
-        if (!$categoryIds) {
+        $brandIds = array_values(array_unique(array_map('intval', $brandIds)));
+        if (! $categoryIds) {
             return [];
         }
 
-        $idShop = (int)$this->context->shop->id;
+        $idShop = (int) $this->context->shop->id;
 
         $sql = '
         SELECT DISTINCT p.id_product
-        FROM ' . _DB_PREFIX_ . 'category_product cp
-        INNER JOIN ' . _DB_PREFIX_ . 'product p
+        FROM '._DB_PREFIX_.'category_product cp
+        INNER JOIN '._DB_PREFIX_.'product p
             ON (p.id_product = cp.id_product AND p.active = 1 AND p.visibility != "none")
-        LEFT JOIN ' . _DB_PREFIX_ . 'stock_available sa
+        LEFT JOIN '._DB_PREFIX_.'stock_available sa
             ON (sa.id_product = p.id_product
                 AND sa.id_product_attribute = 0
-                AND (sa.id_shop = ' . (int)$idShop . ' OR sa.id_shop = 0))
-        WHERE cp.id_category IN (' . implode(',', $categoryIds) . ')
+                AND (sa.id_shop = '.(int) $idShop.' OR sa.id_shop = 0))
+        WHERE cp.id_category IN ('.implode(',', $categoryIds).')
           AND IFNULL(sa.quantity, 0) > 0
-          ' . ($brandIds ? ' AND p.id_manufacturer IN (' . implode(',', $brandIds) . ')' : '') . '
+          '.($brandIds ? ' AND p.id_manufacturer IN ('.implode(',', $brandIds).')' : '').'
     ';
         $rows = Db::getInstance()->executeS($sql) ?: [];
         $ids = array_map(function ($r) {
-            return (int)$r['id_product'];
+            return (int) $r['id_product'];
         }, $rows);
 
         if ($excludeProductIds) {
             $exclude = array_flip(array_map('intval', $excludeProductIds));
             $ids = array_values(array_filter($ids, function ($id) use ($exclude) {
-                return !isset($exclude[$id]);
+                return ! isset($exclude[$id]);
             }));
         }
+
         return $ids;
     }
 }

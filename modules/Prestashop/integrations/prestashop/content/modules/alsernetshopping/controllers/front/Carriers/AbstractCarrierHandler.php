@@ -2,18 +2,19 @@
 
 namespace AlsernetShopping\Carriers;
 
-use Address;
-use Context;
 use Configuration;
+use Context;
 use Module;
 
 abstract class AbstractCarrierHandler implements CarrierHandlerInterface
 {
     protected $context;
+
     protected $module;
+
     protected $configuration = [];
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context ?: Context::getContext();
         $this->module = Module::getInstanceByName('alsernetshopping');
@@ -25,14 +26,14 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
         // Configuración básica común
         $this->configuration = [
             'enabled' => true,
-            'debug' => (bool)Configuration::get('ALSERNET_CARRIER_DEBUG'),
+            'debug' => (bool) Configuration::get('ALSERNET_CARRIER_DEBUG'),
             'cache_enabled' => true,
         ];
     }
 
     public function isEnabled(): bool
     {
-        return (bool)($this->configuration['enabled'] ?? true);
+        return (bool) ($this->configuration['enabled'] ?? true);
     }
 
     public function getConfiguration(): array
@@ -43,28 +44,28 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
     public function validateAvailability(Context $context): array
     {
 
-        if (!$this->isEnabled()) {
+        if (! $this->isEnabled()) {
             return [
                 'valid' => false,
-                'message' => 'Carrier is not enabled'
+                'message' => 'Carrier is not enabled',
             ];
         }
 
-        if (!$context->cart || !$context->cart->id) {
+        if (! $context->cart || ! $context->cart->id) {
             return [
                 'valid' => false,
-                'message' => 'No cart found'
+                'message' => 'No cart found',
             ];
         }
 
         return [
             'valid' => true,
-            'message' => 'Carrier is available'
+            'message' => 'Carrier is available',
         ];
     }
 
-    public function cleanup(): void{
-    }
+    public function cleanup(): void {}
+
     public function processSelection(array $requestData, \Context $context): array
     {
         return $this->processForm($requestData, $context);
@@ -72,14 +73,15 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
 
     public function getRequiredAssets(): array
     {
-        // Assets por defecto - sobrescribir en clases hijas
+        // Assets Por defecto - sobrescribir en clases hijas
         return [
             [
                 'type' => 'css',
-                'path' => 'modules/alsernetshopping/views/css/front/carriers/default.css'
-            ]
+                'path' => 'modules/alsernetshopping/views/css/front/carriers/default.css',
+            ],
         ];
     }
+
     public function getTemplatePath(): string
     {
         return 'module:alsernetshopping/views/templates/front/checkout/carriers/default/interface.tpl';
@@ -90,6 +92,7 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
         if ($this->module) {
             return $this->module->l($string, $specific ?: static::class);
         }
+
         return $string;
     }
 
@@ -98,7 +101,7 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
         try {
             // Asignar datos del template + link automáticamente para todos los carriers
             $templateData = array_merge($data, [
-                'link' => $this->context->link
+                'link' => $this->context->link,
             ]);
 
             foreach ($templateData as $key => $value) {
@@ -108,28 +111,30 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
             return $this->context->smarty->fetch($template);
         } catch (\Exception $e) {
             // Log error y retornar mensaje de error
-            $errorMsg = "CarrierHandler template error - Template: {$template}, Error: " . $e->getMessage() . ", File: " . $e->getFile() . ", Line: " . $e->getLine();
+            $errorMsg = "CarrierHandler template error - Template: {$template}, Error: ".$e->getMessage().', File: '.$e->getFile().', Line: '.$e->getLine();
             error_log($errorMsg);
 
             if ($this->configuration['debug']) {
-                error_log("CarrierHandler debug info - Data keys: " . implode(', ', array_keys($data)));
+                error_log('CarrierHandler debug info - Data keys: '.implode(', ', array_keys($data)));
             }
+
             return '<div class="alert alert-warning">Error loading carrier interface</div>';
         }
     }
+
     protected function validateData(array $data, array $required = []): array
     {
         $errors = [];
 
         foreach ($required as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
+            if (! isset($data[$field]) || empty($data[$field])) {
                 $errors[] = "Field '{$field}' is required";
             }
         }
 
         return [
             'valid' => empty($errors),
-            'errors' => $errors
+            'errors' => $errors,
         ];
     }
 
@@ -141,7 +146,7 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
             'data' => $data,
             'message' => $message,
             'carrier_id' => $this->getId(),
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
     }
 
@@ -149,7 +154,7 @@ abstract class AbstractCarrierHandler implements CarrierHandlerInterface
     {
         if ($this->configuration['debug']) {
             $carrierName = static::class;
-            $contextStr = !empty($context) ? ' | Context: ' . json_encode($context) : '';
+            $contextStr = ! empty($context) ? ' | Context: '.json_encode($context) : '';
             error_log("[$carrierName] $message$contextStr");
         }
     }

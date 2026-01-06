@@ -16,7 +16,7 @@
                         </div>
                         <h4 class="mb-3">Esta característica aún no está habilitada</h4>
                         <p class="text-muted mb-4">
-                            Por seguridad, la limpieza de base de datos está deshabilitada por defecto.
+                            Por seguridad, la limpieza de base de datos está deshabilitada Por defecto.
                         </p>
 
                         <div class="alert alert-warning" role="alert">

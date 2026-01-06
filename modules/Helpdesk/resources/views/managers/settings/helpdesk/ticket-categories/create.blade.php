@@ -115,7 +115,7 @@
 
                     <div class="col-12 col-md-6">
                         <div class="mb-3">
-                            <label class="control-label col-form-label">Política SLA por defecto</label>
+                            <label class="control-label col-form-label">Política SLA Por defecto</label>
                             <select name="default_sla_policy" class="form-select">
                                 <option value="">Sin política SLA</option>
                                 @foreach($slaPolicies ?? [] as $policy)
@@ -240,7 +240,7 @@
                                 <input type="hidden" name="is_default" value="0">
                                 <input type="checkbox" name="is_default" class="form-check-input" id="defaultCheck" value="1" {{ old('is_default') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="defaultCheck">
-                                    <strong>Categoría por defecto</strong>
+                                    <strong>Categoría Por defecto</strong>
                                     <small class="d-block text-muted">Se selecciona automáticamente al crear nuevos tickets.</small>
                                 </label>
                             </div>

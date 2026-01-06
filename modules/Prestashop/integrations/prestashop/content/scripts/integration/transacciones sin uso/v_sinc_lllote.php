@@ -66,7 +66,7 @@ class v_sinc_llloteClass
                         //     Db::getInstance()->Execute("UPDATE aalv_wk_bundle_sub_product_attribute SET quantity=".$unidades." WHERE id_sub_product_attribute=".$id_bundle_sub_product_attribute);
 
                         // }
-                        // 20230906 - Esto no hace falta ya que lo inserta con 0 por defecto
+                        // 20230906 - Esto no hace falta ya que lo inserta con 0 Por defecto
                         // else{
                         //     Db::getInstance()->Execute("UPDATE aalv_wk_bundle_sub_product_attribute SET quantity=0 WHERE id_sub_product_attribute=".$id_bundle_sub_product_attribute);
                         // }

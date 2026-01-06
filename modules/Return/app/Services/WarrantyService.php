@@ -132,7 +132,7 @@ class WarrantyService
                 ->toArray();
         }
 
-        // Tipos por defecto según el fabricante
+        // Tipos Por defecto según el fabricante
         $types = WarrantyType::active()->byPriority()->get();
 
         // Filtrar por fabricante si tiene políticas específicas

@@ -94,10 +94,11 @@ class AuthServiceProvider extends ServiceProvider
         NavService::registerSidebar('auth', [
             'title' => 'Seguridad',
             'items' => [
-                ['label' => 'Sesiones activas', 'route' => 'settings.auth.sessions.index'],
-                ['label' => 'Autenticación 2FA', 'route' => 'settings.auth.two-factor.index'],
+                ['label' => 'Mi perfil', 'route' => 'settings.auth.profile'],
+                ['label' => 'Sesiones activas', 'route' => 'settings.auth.sessions'],
+                ['label' => 'Autenticación 2FA', 'route' => 'settings.auth.two-factor'],
                 ['label' => 'Contraseña', 'route' => 'settings.auth.password.edit'],
-                ['label' => 'Dispositivos autorizados', 'route' => 'settings.auth.devices.index'],
+                ['label' => 'Dispositivos autorizados', 'route' => 'settings.auth.devices'],
             ],
         ]);
     }

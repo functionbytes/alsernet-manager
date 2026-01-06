@@ -170,7 +170,7 @@
                                 <input type="hidden" name="default" value="0">
                                 <input type="checkbox" name="default" class="form-check-input" id="defaultCheck" value="1" {{ old('default') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="defaultCheck">
-                                    <strong>Grupo por Defecto</strong>
+                                    <strong>Grupo Por defecto</strong>
                                     <small class="d-block text-muted">Las conversaciones nuevas sin grupo específico serán asignadas automáticamente a este grupo</small>
                                 </label>
                             </div>

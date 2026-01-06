@@ -2,6 +2,7 @@
 
 namespace Modules\Database\Providers;
 
+use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -22,8 +23,6 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerCommands();
-        $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -31,6 +30,9 @@ class DatabaseServiceProvider extends ServiceProvider
 
         // Register routes directly (Laravel 12 compatible)
         $this->registerRoutes();
+
+        // Register menus
+        $this->registerMenus();
     }
 
     /**
@@ -52,29 +54,10 @@ class DatabaseServiceProvider extends ServiceProvider
         // Database backups and cleanup routes
         Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/database')
-            ->name('manager.backups.database.')
+            ->name('backups.database.')
             ->group(function () use ($webPath) {
                 require $webPath;
             });
-    }
-
-    /**
-     * Register commands in the format of Command::class
-     */
-    protected function registerCommands(): void
-    {
-        // $this->commands([]);
-    }
-
-    /**
-     * Register command Schedules.
-     */
-    protected function registerCommandSchedules(): void
-    {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
     }
 
     /**
@@ -170,5 +153,20 @@ class DatabaseServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Registrar menús del módulo Database
+     */
+    protected function registerMenus(): void
+    {
+
+        NavService::registerSidebar('settings', [
+            'title' => 'Gestión de base de datos',
+            'items' => [
+                ['label' => 'Configuración', 'route' => 'backups.database.index'],
+                ['label' => 'Limpieza', 'route' => 'backups.database.cleanup.index'],
+            ],
+        ]);
     }
 }

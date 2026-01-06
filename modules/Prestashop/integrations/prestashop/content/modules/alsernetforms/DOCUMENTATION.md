@@ -665,7 +665,7 @@ private $recoveryCheckInterval = 180;  // 3 minutos en vez de 5
 ```php
 // Al crear petición, cambiar max_retries
 $this->db->insert('alsernet_forms_requests', [
-    'max_retries' => 5,  // En vez de 3 por defecto
+    'max_retries' => 5,  // En vez de 3 Por defecto
     // ... otros campos
 ]);
 ```

@@ -173,25 +173,18 @@
                     <div class="card-body">
                         <div class="row g-3">
                             @foreach($modules as $moduleId => $moduleName)
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                    <input type="checkbox"
-                                           class="btn-check module-checkbox"
-                                           name="modules[]"
-                                           id="module_{{ $moduleId }}"
-                                           value="{{ $moduleId }}"
-                                           autocomplete="off"
-                                           {{ in_array($moduleId, $roleModules) ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-primary w-100 text-start d-flex align-items-center gap-3 p-3"
-                                           for="module_{{ $moduleId }}">
-                                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                             style="width: 40px; height: 40px; background-color: rgba(144, 187, 19, 0.1);">
-                                            <i class="fas fa-cube"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <strong class="d-block mb-1">{{ $moduleName }}</strong>
-                                            <small class="text-muted d-block">Módulo del sistema</small>
-                                        </div>
-                                    </label>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-check p-3 border rounded module-checkbox {{ in_array($moduleId, $roleModules) ? 'border-primary' : '' }}"
+                                         style="{{ in_array($moduleId, $roleModules) ? 'background-color: rgba(144, 187, 19, 0.02);' : '' }}">
+                                        <input class="form-check-input module-input" type="checkbox" name="modules[]"
+                                               value="{{ $moduleId }}" id="module_{{ $moduleId }}"
+                                               {{ in_array($moduleId, $roleModules) ? 'checked' : '' }}>
+                                        <label class="form-check-label w-100" for="module_{{ $moduleId }}" style="cursor: pointer;">
+                                            <strong class="d-block">{{ $moduleName }}</strong>
+                                            <small class="text-muted d-block mt-1">Módulo del sistema</small>
+                                            <small class="badge bg-light text-dark mt-2">{{ strtolower(str_replace(' ', '-', $moduleName)) }}</small>
+                                        </label>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -229,38 +222,94 @@
 
 @push('styles')
 <style>
-    /* Button checkbox styles */
-    .btn-check:checked + .btn-outline-primary {
+    .module-checkbox {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 2px solid #dee2e6;
+        position: relative;
+    }
+
+    /* Hide the checkbox input but keep it functional */
+    .module-checkbox.form-check .form-check-input.module-input,
+    .module-checkbox .module-input {
+        position: absolute !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+        visibility: hidden !important;
+    }
+
+    /* Normal hover effect */
+    .module-checkbox:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: #adb5bd;
+    }
+
+    /* Checked state - green theme */
+    .module-checkbox.border-primary {
+        background-color: rgba(144, 187, 19, 0.05);
+        border-color: #90bb13 !important;
+    }
+
+    /* Checked hover - enhanced green effect */
+    .module-checkbox.border-primary:hover {
+        background-color: rgba(144, 187, 19, 0.1);
+        border-color: #7a9e11 !important;
+        box-shadow: 0 4px 12px rgba(144, 187, 19, 0.3);
+    }
+
+    /* Visual indicator for checked state */
+    .module-checkbox.border-primary::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
         background-color: #90bb13;
-        border-color: #90bb13;
         color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
     }
 
-    .btn-check:checked + .btn-outline-primary:hover {
-        background-color: #7a9e11;
-        border-color: #7a9e11;
-    }
-
-    .btn-outline-primary {
-        border-color: #dee2e6;
-        color: #495057;
+    /* Unchecked state visual indicator */
+    .module-checkbox:not(.border-primary)::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 50%;
         transition: all 0.2s ease;
     }
 
-    .btn-outline-primary:hover {
+    .module-checkbox:not(.border-primary):hover::before {
+        border-color: #adb5bd;
+        background-color: #e9ecef;
+    }
+
+    /* Make label non-selectable */
+    .module-checkbox .form-check-label {
+        user-select: none;
+        padding-right: 40px; /* Space for the check indicator */
+    }
+
+    .form-check-input:checked {
+        background-color: #90bb13;
         border-color: #90bb13;
-        background-color: rgba(144, 187, 19, 0.1);
-        color: #495057;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .btn-check:checked + .btn-outline-primary .text-muted {
-        color: rgba(255, 255, 255, 0.8) !important;
-    }
-
-    .btn-check:focus + .btn-outline-primary {
-        box-shadow: 0 0 0 0.25rem rgba(144, 187, 19, 0.25);
     }
 </style>
 @endpush
@@ -271,7 +320,7 @@ $(document).ready(function() {
     // Update statistics when checkboxes change
     function updateStats() {
         const totalModules = {{ count($modules) }};
-        const enabledCount = $('.module-checkbox:checked').length;
+        const enabledCount = $('.module-input:checked').length;
         const disabledCount = totalModules - enabledCount;
         const percentage = totalModules > 0 ? Math.round((enabledCount / totalModules) * 100) : 0;
 
@@ -280,21 +329,53 @@ $(document).ready(function() {
         $('.module-percentage').text(percentage + '%');
     }
 
-    // Handle checkbox changes
-    $('.module-checkbox').on('change', function() {
+    // Update visual feedback for checkboxes
+    function updateVisualFeedback() {
+        $('.module-checkbox').each(function() {
+            const $card = $(this);
+            const $input = $card.find('.module-input');
+
+            if ($input.is(':checked')) {
+                $card.addClass('border-primary');
+                $card.css('background-color', 'rgba(144, 187, 19, 0.05)');
+            } else {
+                $card.removeClass('border-primary');
+                $card.css('background-color', '');
+            }
+        });
+    }
+
+    // Make entire card clickable
+    $('.module-checkbox').on('click', function(e) {
+        // Don't toggle if clicking directly on the checkbox
+        if ($(e.target).hasClass('module-input')) {
+            return;
+        }
+
+        const $checkbox = $(this).find('.module-input');
+        $checkbox.prop('checked', !$checkbox.prop('checked'));
         updateStats();
+        updateVisualFeedback();
+    });
+
+    // Handle checkbox changes
+    $('.module-input').on('change', function() {
+        updateStats();
+        updateVisualFeedback();
     });
 
     // Select All
     $('#selectAll').on('click', function() {
-        $('.module-checkbox').prop('checked', true);
+        $('.module-input').prop('checked', true);
         updateStats();
+        updateVisualFeedback();
     });
 
     // Deselect All
     $('#deselectAll').on('click', function() {
-        $('.module-checkbox').prop('checked', false);
+        $('.module-input').prop('checked', false);
         updateStats();
+        updateVisualFeedback();
     });
 
     // Form submission

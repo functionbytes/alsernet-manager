@@ -1,20 +1,21 @@
 <?php
+
 ini_set('max_execution_time', 36000);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!defined('_PS_ADMIN_DIR_')) {
+if (! defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include _PS_ADMIN_DIR_ . '/../../config/config.inc.php';
+include _PS_ADMIN_DIR_.'/../../config/config.inc.php';
 
-
-function setDefaultCombinationWithLowestPriceInStock($id_product) {
+function setDefaultCombinationWithLowestPriceInStock($id_product)
+{
     // Obtener el objeto del producto
     $product = new Product($id_product);
 
-    // Obtener la combinación actual por defecto
+    // Obtener la combinación actual Por defecto
     $currentDefaultCombination = $product->getDefaultAttribute($id_product);
 
     // Obtener las combinaciones del producto
@@ -39,7 +40,7 @@ function setDefaultCombinationWithLowestPriceInStock($id_product) {
     if ($lowestCombination) {
         $combination = new Combination((int) $lowestCombination['id_product_attribute']);
         // Validar si la combinación más barata ya es la predeterminada
-        if($product->reference != ''){
+        if ($product->reference != '') {
             if ($currentDefaultCombination == $lowestCombination['id_product_attribute']) {
                 return null;
             }
@@ -51,14 +52,15 @@ function setDefaultCombinationWithLowestPriceInStock($id_product) {
         $product->update();
         Product::updateDefaultAttribute($id_product);
         Db::getInstance()->Execute("INSERT INTO aalv_alsernet_cache_producto values (NULL, $id_product)");
+
         // peticionget("https://www.a-alvarez.com/?fc=module&module=pagecache&controller=clearcache&token=ApbUf8KuFaGPBhAk&product=" . $id_product);
-        return "Combinación por defecto actualizada ID: " .$lowestCombination['id_product_attribute'] . " =>PRODUCT ".$id_product;
+        return 'Combinación Por defecto actualizada ID: '.$lowestCombination['id_product_attribute'].' =>PRODUCT '.$id_product;
     } else {
         return null; // No se encontró ninguna combinación con stock
     }
 }
 
-$sql = Db::getInstance()->ExecuteS("SELECT
+$sql = Db::getInstance()->ExecuteS('SELECT
                                         apa.id_product
                                     FROM
                                         aalv_product ap
@@ -68,19 +70,19 @@ $sql = Db::getInstance()->ExecuteS("SELECT
                                         AND apa.id_product IS NOT NULL
                                         and apa.id_product != 0
                                     GROUP BY apa.id_product
-                                    ORDER BY apa.id_product DESC");
+                                    ORDER BY apa.id_product DESC');
 
 $datos = '';
 foreach ($sql as $value) {
 
-    $lote = Db::getInstance()->getValue("SELECT id_ps_product FROM aalv_alsernet_lotes_copia awbp WHERE active = 0 AND id_ps_product = ".$value['id_product']);
+    $lote = Db::getInstance()->getValue('SELECT id_ps_product FROM aalv_alsernet_lotes_copia awbp WHERE active = 0 AND id_ps_product = '.$value['id_product']);
 
-    if($lote){
+    if ($lote) {
         // echo "ES LOTE\n";
         continue;
     }
 
-    if($value['id_product'] == 56764){
+    if ($value['id_product'] == 56764) {
         // ES Fitting
         continue;
     }
@@ -89,8 +91,8 @@ foreach ($sql as $value) {
     $defaultCombination = setDefaultCombinationWithLowestPriceInStock($value['id_product']);
 
     if ($defaultCombination) {
-        echo $defaultCombination . "\n";
-        $datos .= $defaultCombination."<br>";
+        echo $defaultCombination."\n";
+        $datos .= $defaultCombination.'<br>';
     } else {
         Product::updateDefaultAttribute($value['id_product']);
         echo "No se encontró ninguna combinación con stock.\n";
@@ -98,11 +100,9 @@ foreach ($sql as $value) {
 
 }
 
-
-if($datos != ''){
+if ($datos != '') {
     sendmailPruebas($datos);
 }
-
 
 function peticionget($url)
 {
@@ -120,14 +120,14 @@ function sendmailPruebas($mensaje)
 {
 
     $dest = [];
-    $dest[] = "alvarez@alsernet.es";
+    $dest[] = 'alvarez@alsernet.es';
 
     $data = ['{message}' => $mensaje];
 
     Mail::Send(
         1,
         'integracion',
-        "Productos por Default",
+        'Productos por Default',
         $data,
         $dest,
         Configuration::get('PS_SHOP_NAME'),

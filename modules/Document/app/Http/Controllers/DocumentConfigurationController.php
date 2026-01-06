@@ -975,7 +975,7 @@ class DocumentConfigurationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Configuraciones restauradas a valores por defecto',
+                'message' => 'Configuraciones restauradas a valores Por defecto',
                 'count' => count($defaultSettings),
             ]);
 
@@ -1069,7 +1069,7 @@ class DocumentConfigurationController extends Controller
                 'group' => 'general',
                 'type' => 'string',
                 'default' => 'pending',
-                'label' => 'Estado por defecto',
+                'label' => 'Estado Por defecto',
                 'description' => 'Estado inicial de los documentos nuevos',
                 'options' => ['pending', 'awaiting_upload', 'in_review', 'approved'],
             ],
@@ -1177,8 +1177,8 @@ class DocumentConfigurationController extends Controller
                 'group' => 'sla',
                 'type' => 'integer',
                 'default' => '0',
-                'label' => 'Politica SLA por defecto',
-                'description' => 'ID de la politica SLA a aplicar por defecto',
+                'label' => 'Politica SLA Por defecto',
+                'description' => 'ID de la politica SLA a aplicar Por defecto',
             ],
             'sla_track_breaches' => [
                 'group' => 'sla',

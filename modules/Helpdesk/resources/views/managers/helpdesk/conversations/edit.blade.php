@@ -243,7 +243,7 @@
                                 </label>
                             </div>
                             <small class="form-text text-muted">
-                                Las conversaciones archivadas se ocultan por defecto
+                                Las conversaciones archivadas se ocultan Por defecto
                             </small>
                         </div>
                     </div>

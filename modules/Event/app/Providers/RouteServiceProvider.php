@@ -29,8 +29,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         Route::middleware(['web', 'auth'])
-            ->prefix('manager/events')
-            ->name('manager.events.')
+            ->prefix('events')
+            ->name('events.')
             ->group(module_path('Event', 'routes/web.php'));
     }
 }

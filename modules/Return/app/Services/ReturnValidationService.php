@@ -75,7 +75,7 @@ class ReturnValidationService
             $ruleValidation = $rule->validateReturn($data);
             $results = $this->mergeValidationResults($results, $ruleValidation);
         } else {
-            // Validaciones por defecto si no hay regla
+            // Validaciones Por defecto si no hay regla
             $defaultValidation = $this->validateDefaultRules($order, $product, $data);
             $results = $this->mergeValidationResults($results, $defaultValidation);
         }
@@ -131,13 +131,13 @@ class ReturnValidationService
     }
 
     /**
-     * Validaciones por defecto cuando no hay regla específica
+     * Validaciones Por defecto cuando no hay regla específica
      */
     protected function validateDefaultRules(Order $order, Product $product, array $data): array
     {
         $results = ['valid' => true, 'errors' => [], 'warnings' => []];
 
-        // Período de devolución por defecto (30 días)
+        // Período de devolución Por defecto (30 días)
         $daysSincePurchase = $order->created_at->diffInDays(now());
         $defaultReturnPeriod = $product->category?->default_return_days ?? 30;
 

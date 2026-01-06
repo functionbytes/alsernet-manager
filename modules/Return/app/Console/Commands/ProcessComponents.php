@@ -40,7 +40,7 @@ class ProcessComponents extends Command
         }
 
         if (! $this->option('check-stock') && ! $this->option('optimize') && ! $this->option('reorder')) {
-            // Ejecutar todas las tareas por defecto
+            // Ejecutar todas las tareas Por defecto
             $this->checkStockLevels();
             $this->optimizeAllocations();
             $this->generateReorderSuggestions();

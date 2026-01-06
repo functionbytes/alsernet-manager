@@ -371,7 +371,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="phplistDefaultList" class="form-label fw-semibold">Lista por defecto (ID)</label>
+                                    <label for="phplistDefaultList" class="form-label fw-semibold">Lista Por defecto (ID)</label>
                                     <input type="number" class="form-control" id="phplistDefaultList" name="phplist_default_list" value="{{ $settings['phplist']['default_list'] }}" placeholder="1">
                                     <small class="text-muted">ID de la lista predeterminada para nuevas suscripciones</small>
                                 </div>

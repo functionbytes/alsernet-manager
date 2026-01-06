@@ -127,8 +127,8 @@
                                 <input type="hidden" name="is_default" value="0">
                                 <input type="checkbox" name="is_default" class="form-check-input" id="defaultCheck" value="1" {{ old('is_default') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="defaultCheck">
-                                    <strong>Estado por defecto</strong>
-                                    <small class="d-block text-muted">Se asigna automáticamente a todos los tickets nuevos que se creen en el sistema. Solo puede haber un estado por defecto activo.</small>
+                                    <strong>Estado Por defecto</strong>
+                                    <small class="d-block text-muted">Se asigna automáticamente a todos los tickets nuevos que se creen en el sistema. Solo puede haber un estado Por defecto activo.</small>
                                 </label>
                             </div>
                         </div>

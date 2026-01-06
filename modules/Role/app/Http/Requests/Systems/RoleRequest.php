@@ -35,19 +35,9 @@ class RoleRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'slug' => [
-                'nullable',
-                'string',
-                'max:50',
-                Rule::unique('roles', 'slug')->ignore($roleId),
-            ],
             'guard_name' => [
                 'required',
                 Rule::in(['web', 'api']),
-            ],
-            'is_default' => [
-                'nullable',
-                'boolean',
             ],
             'permissions' => [
                 'nullable',
@@ -70,7 +60,6 @@ class RoleRequest extends FormRequest
             'name.min' => 'El nombre debe contener al menos 3 caracteres.',
             'name.max' => 'El nombre no puede exceder los 50 caracteres.',
             'description.max' => 'La descripción no puede exceder los 255 caracteres.',
-            'slug.unique' => 'El slug del rol ya existe en el sistema.',
             'guard_name.required' => 'El guard es obligatorio.',
             'guard_name.in' => 'El guard debe ser "web" o "api".',
             'permissions.*.exists' => 'Uno o más permisos no existen en el sistema.',

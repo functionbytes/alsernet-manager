@@ -75,7 +75,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" name="is_default" class="form-check-input" id="defaultCheck" value="1">
-                            <label class="form-check-label" for="defaultCheck"><strong>Vista por Defecto</strong><small class="d-block text-muted">Tu vista predeterminada</small></label>
+                            <label class="form-check-label" for="defaultCheck"><strong>Vista Por defecto</strong><small class="d-block text-muted">Tu vista predeterminada</small></label>
                         </div>
                     </div>
                 </div>

@@ -156,21 +156,14 @@ class PrestashopServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Prestashop
-        NavService::registerMiniItem('prestashop', [
-            'icon' => 'fa-store',
-            'tooltip' => 'PrestaShop',
-            'sidebar_id' => 'prestashop',
-            'order' => 60,
-        ]);
 
         // Sidebar con los items del módulo
-        NavService::registerSidebar('prestashop', [
-            'title' => 'PrestaShop',
+        NavService::registerSidebar('settings', [
+            'title' => 'Configuracion prestashop',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'prestashop.index', 'icon' => 'fa-tachometer-alt'],
-                ['label' => 'Estadísticas', 'route' => 'prestashop.stats', 'icon' => 'fa-chart-line'],
-                ['label' => 'Configuración', 'route' => 'prestashop.edit', 'icon' => 'fa-cog'],
+                ['label' => 'Dashboard', 'route' => 'prestashop.index'],
+                ['label' => 'Estadísticas', 'route' => 'prestashop.stats'],
+                ['label' => 'Configuración', 'route' => 'prestashop.edit'],
             ],
         ]);
     }

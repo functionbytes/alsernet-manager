@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="78fa968db0e87c6fc302614b26f93b5d" approved="yes">
         <source>How long (in minutes) a cart is to be considered as active after the last recorded change (default: 30 min).</source>
-        <target state="final">Tiempo (en minutos) que un carrito es considerado como activo después de la última variación registrada (por defecto: 30 min).</target>
+        <target state="final">Tiempo (en minutos) que un carrito es considerado como activo después de la última variación registrada (Por defecto: 30 min).</target>
         <note>Line: 419</note>
       </trans-unit>
       <trans-unit id="47b8a33a5335cce8d4e353c4d1743f31" approved="yes">

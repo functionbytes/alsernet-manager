@@ -13,6 +13,8 @@ class Event extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
 
+    // Note: In production, this should connect to the remote PrestaShop database via 'prestashop' connection
+    // For now using default connection for development
     protected $table = 'aalv_Alsernet_event_manager';
 
     protected static $recordEvents = ['deleted', 'updated', 'created'];
@@ -39,6 +41,10 @@ class Event extends Model
         'banners_backup',
         'start_at',
         'end_at',
+        'observations',
+        'external_id',
+        'sync_status',
+        'sync_timestamp',
         'created_at',
         'updated_at',
     ];
@@ -52,6 +58,7 @@ class Event extends Model
         'processed' => 'boolean',
         'start_at' => 'datetime',
         'end_at' => 'datetime',
+        'sync_timestamp' => 'datetime',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -95,5 +102,15 @@ class Event extends Model
     public function langs(): HasMany
     {
         return $this->hasMany(EventLang::class, 'id_event');
+    }
+
+    public function observations(): HasMany
+    {
+        return $this->hasMany(EventObservation::class, 'event_id');
+    }
+
+    public function syncLogs(): HasMany
+    {
+        return $this->hasMany(EventSyncLog::class, 'event_id');
     }
 }

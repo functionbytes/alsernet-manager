@@ -1,46 +1,34 @@
 <?php
 
-
 namespace Checkout;
 
-require_once dirname(__FILE__) . '/../BaseController.php';
+require_once dirname(__FILE__).'/../BaseController.php';
 // CheckoutStoreLocatorService eliminado - lógica movida a handlers individuales
 
-use Kbgcstorelocatorpickup;
-use Kbstorelocatorpickup;
-
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Core\Checkout\ConditionsToApproveFinderCore;
-use PrestaShop\PrestaShop\Adapter\Entity\PaymentOptionsFinder;
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use DeliveryOptionsFinderCore;
 use Address;
-use AddressFormat;
 use Carrier;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Db;
+use DeliveryOptionsFinderCore;
 use Exception;
 use Hook;
-use Language;
 use Module;
-use Product;
-use State;
+use PrestaShop\PrestaShop\Adapter\Entity\PaymentOptionsFinder;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Store;
 use Tools;
-use Translate;
 use Validate;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
 class CheckoutPaymentController extends \BaseController
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -63,7 +51,7 @@ class CheckoutPaymentController extends \BaseController
         $iso = strtolower($this->context->language->iso_code);
 
         $selected_payment_option = Tools::getValue('payment_option');
-        if (!$selected_payment_option) {
+        if (! $selected_payment_option) {
             $selected_payment_option = $this->context->cookie->selected_payment_option ?? null;
         }
 
@@ -95,7 +83,7 @@ class CheckoutPaymentController extends \BaseController
 
         $billingAddress = new Address($this->context->cart->id_address_invoice);
 
-        if (!Validate::isLoadedObject($billingAddress)) {
+        if (! Validate::isLoadedObject($billingAddress)) {
             // Si no hay dirección de facturación, usar la de envío
             $this->context->cart->id_address_invoice = $this->context->cart->id_address_delivery;
             $this->context->cart->update();
@@ -103,19 +91,19 @@ class CheckoutPaymentController extends \BaseController
         }
 
         // Calculate if order is free BEFORE using PaymentOptionsFinder
-        $isFree = 0 == (float) $context->cart->getOrderTotal(true, Cart::BOTH);
+        $isFree = (float) $context->cart->getOrderTotal(true, Cart::BOTH) == 0;
 
         // Use PrestaShop's native PaymentOptionsFinder with free order support
-        $paymentOptionsFinder = new PaymentOptionsFinder();
+        $paymentOptionsFinder = new PaymentOptionsFinder;
 
         if ($isFree) {
             // For free orders, use only the native free order option
             $paymentOptions = $paymentOptionsFinder->present($isFree);
             $allPaymentOptions = [];
 
-            if (!empty($paymentOptions)) {
+            if (! empty($paymentOptions)) {
                 $flattened = array_filter(array_values($paymentOptions), 'is_array');
-                if (!empty($flattened)) {
+                if (! empty($flattened)) {
                     $allPaymentOptions = call_user_func_array('array_merge', $flattened);
                 }
             }
@@ -140,22 +128,22 @@ class CheckoutPaymentController extends \BaseController
 
             $allPaymentOptions = [];
 
-            if (!empty($paymentOptions)) {
+            if (! empty($paymentOptions)) {
                 $flattened = array_filter(array_values($paymentOptions), 'is_array');
-                if (!empty($flattened)) {
+                if (! empty($flattened)) {
                     $allPaymentOptions = call_user_func_array('array_merge', $flattened);
                 }
             }
 
             $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
-                ['module_name' => 'AddisDemoday']
+                ['module_name' => 'AddisDemoday'],
             ], 'remove');
 
             if ($armas_balines) {
                 $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                     ['module_name' => 'credit_card'],
                     ['module_name' => 'local_payment_hipay'],
-                    ['module_name' => 'klarnapayment']
+                    ['module_name' => 'klarnapayment'],
 
                 ], 'remove');
             }
@@ -167,7 +155,7 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'ps_cashondelivery'],
                     ['module_name' => 'credit_card'],
                     ['module_name' => 'local_payment_hipay'],
-                    ['module_name' => 'klarnapayment']
+                    ['module_name' => 'klarnapayment'],
                 ], 'remove');
             }
 
@@ -176,7 +164,7 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'paypal'],
                     ['module_name' => 'paypal_bnpl'],
                     ['module_name' => 'credit_card'],
-                    ['module_name' => 'local_payment_hipay']
+                    ['module_name' => 'local_payment_hipay'],
                 ], 'remove');
             }
             if ($cartucho) {
@@ -184,7 +172,7 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'ps_cashondelivery'],
                     ['module_name' => 'credit_card'],
                     ['module_name' => 'local_payment_hipay'],
-                    ['module_name' => 'klarnapayment']
+                    ['module_name' => 'klarnapayment'],
                 ], 'remove');
             }
             if ($licencia) {
@@ -196,15 +184,15 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'paypal'],
                     ['module_name' => 'paypal_bnpl'],
                     ['module_name' => 'local_payment_hipay'],
-                    ['module_name' => 'klarnapayment']
+                    ['module_name' => 'klarnapayment'],
                 ], 'remove');
             }
             if ($lottery || $card) {
 
-                 if ($lottery){
+                if ($lottery) {
                     $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                         ['module_name' => 'inespay'],
-                        ['module_name' => 'ps_wirepayment']
+                        ['module_name' => 'ps_wirepayment'],
                     ], 'remove');
                 }
 
@@ -215,76 +203,72 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'paypal'],
                     ['module_name' => 'paypal_bnpl'],
                     ['module_name' => 'local_payment_hipay'],
-                    ['module_name' => 'klarnapayment']
+                    ['module_name' => 'klarnapayment'],
                 ], 'remove');
             }
-
 
             if ($iso == 'es') {
 
                 if ($totalCart < 300) {
 
                     $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                        ['module_name' => 'banlendismart']
+                        ['module_name' => 'banlendismart'],
                     ], 'remove');
-
 
                 } elseif ($totalCart > 300) {
 
                     $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                        ['module_name' => 'sequra']
+                        ['module_name' => 'sequra'],
                     ], 'remove');
 
                 } else {
                     $filteredOptions = $allPaymentOptions;
                 }
-            }
-            elseif ($iso == 'pt') {
+            } elseif ($iso == 'pt') {
 
                 $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                     ['module_name' => 'banlendismart'],
-                    //['module_name' => 'ps_cashondelivery']
+                    // ['module_name' => 'ps_cashondelivery']
                 ], 'remove');
 
                 if ($totalCart > 3000) {
 
                     $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                        ['module_name' => 'sequra']
-                    ], 'remove');
-
-                } else {
-                    $filteredOptions = $allPaymentOptions;
-                }
-
-            }
-            elseif ($iso == 'fr') {
-
-                $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
-                    ['module_name' => 'banlendismart'],
-                    //['module_name' => 'ps_cashondelivery']
-                ], 'remove');
-
-                if ($totalCart > 3000) {
-
-                    $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                        ['module_name' => 'sequra']
+                        ['module_name' => 'sequra'],
                     ], 'remove');
 
                 } else {
                     $filteredOptions = $allPaymentOptions;
                 }
 
-            }elseif ($iso == 'it') {
+            } elseif ($iso == 'fr') {
 
                 $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
                     ['module_name' => 'banlendismart'],
-                    //['module_name' => 'ps_cashondelivery']
+                    // ['module_name' => 'ps_cashondelivery']
                 ], 'remove');
 
                 if ($totalCart > 3000) {
 
                     $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
-                        ['module_name' => 'sequra']
+                        ['module_name' => 'sequra'],
+                    ], 'remove');
+
+                } else {
+                    $filteredOptions = $allPaymentOptions;
+                }
+
+            } elseif ($iso == 'it') {
+
+                $allPaymentOptions = $this->processPaymentOptions($allPaymentOptions, [
+                    ['module_name' => 'banlendismart'],
+                    // ['module_name' => 'ps_cashondelivery']
+                ], 'remove');
+
+                if ($totalCart > 3000) {
+
+                    $filteredOptions = $this->processPaymentOptions($allPaymentOptions, [
+                        ['module_name' => 'sequra'],
                     ], 'remove');
 
                 } else {
@@ -297,7 +281,7 @@ class CheckoutPaymentController extends \BaseController
                     ['module_name' => 'banlendismart'],
                     ['module_name' => 'sequra'],
                     ['module_name' => 'ps_cashondelivery'],
-                    //['module_name' => 'inespay'],
+                    // ['module_name' => 'inespay'],
                 ], 'remove');
 
             }
@@ -306,7 +290,7 @@ class CheckoutPaymentController extends \BaseController
 
         // Convert PaymentOption objects to arrays for Smarty template AFTER filtering
         $convertedOptions = [];
-        if (!empty($filteredOptions)) {
+        if (! empty($filteredOptions)) {
             foreach ($filteredOptions as $option) {
                 if (is_object($option)) {
                     // Convert PaymentOption object to array
@@ -318,7 +302,7 @@ class CheckoutPaymentController extends \BaseController
                         'form' => method_exists($option, 'getForm') ? $option->getForm() : (isset($option->form) ? $option->form : ''),
                         'additionalInformation' => method_exists($option, 'getAdditionalInformation') ? $option->getAdditionalInformation() : (isset($option->additionalInformation) ? $option->additionalInformation : ''),
                         'action' => method_exists($option, 'getAction') ? $option->getAction() : (isset($option->action) ? $option->action : ''),
-                        'inputs' => method_exists($option, 'getInputs') ? $option->getInputs() : (isset($option->inputs) ? $option->inputs : [])
+                        'inputs' => method_exists($option, 'getInputs') ? $option->getInputs() : (isset($option->inputs) ? $option->inputs : []),
                     ];
                 } elseif (is_array($option)) {
                     // Already an array, just ensure required keys exist
@@ -330,7 +314,7 @@ class CheckoutPaymentController extends \BaseController
                         'form' => '',
                         'additionalInformation' => '',
                         'action' => '',
-                        'inputs' => []
+                        'inputs' => [],
                     ], $option);
                 }
             }
@@ -347,26 +331,24 @@ class CheckoutPaymentController extends \BaseController
         $armas = $cart['armas'];
         $armas_balines = $cart['armas_balines'];
 
-
         $pickup_time = null;
-        if ($id_carrier == (int)Configuration::get('KB_PICKUP_AT_STORE_SHIPPING')) {
+        if ($id_carrier == (int) Configuration::get('KB_PICKUP_AT_STORE_SHIPPING')) {
             // $this->context->controller->addJS($this->_path . '/views/js/front/kb_front.js');
 
-            $pickup = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'kb_pickup_at_store_time
-                    WHERE id_cart=' . $id_cart . '
-                    AND id_shop=' . (int) $this->context->shop->id . '
-                    AND id_customer=' . $id_customer);
+            $pickup = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'kb_pickup_at_store_time
+                    WHERE id_cart='.$id_cart.'
+                    AND id_shop='.(int) $this->context->shop->id.'
+                    AND id_customer='.$id_customer);
 
             if ($pickup) {
                 $pickup_time = $pickup['preferred_date'];
             }
         }
 
-
         if (isset($this->selected_payment_option)) {
             $selected_payment_option = $this->selected_payment_option;
         } else {
-            $selected_payment_option = NULL;
+            $selected_payment_option = null;
         }
 
         $store = null;
@@ -383,7 +365,7 @@ class CheckoutPaymentController extends \BaseController
 
         $deliveryOptions = $this->getDeliveryOptions();
 
-        //$conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
+        // $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
 
         $deliveryOptionKey = $context->cart->getDeliveryOption(null, false, false);
 
@@ -395,7 +377,7 @@ class CheckoutPaymentController extends \BaseController
             $customer->addresses[$addr['id_address']] = $addr;
         }
 
-        $deliveryOptionsList   = $context->cart->getDeliveryOptionList();
+        $deliveryOptionsList = $context->cart->getDeliveryOptionList();
         $deliveryOptionKeyList = $context->cart->getDeliveryOption(null, false, false);
 
         $selectedDeliveryOption = ['name' => '', 'show_name' => ''];
@@ -403,38 +385,37 @@ class CheckoutPaymentController extends \BaseController
             if (isset($deliveryOptionsList[$idAddress][$optKey])) {
                 $option = $deliveryOptionsList[$idAddress][$optKey];
                 // Tomamos el primer carrier
-                if (!empty($option['carrier_list'])) {
-                    $carrierData      = reset($option['carrier_list']);
-                    $carrierInstance  = $carrierData['instance'];
+                if (! empty($option['carrier_list'])) {
+                    $carrierData = reset($option['carrier_list']);
+                    $carrierInstance = $carrierData['instance'];
                     $selectedDeliveryOption['name'] = $carrierInstance->name;
-                    $selectedDeliveryOption['show_name'] = isset($carrierInstance->show_name)?$carrierInstance->show_name[$context->language->id]:$carrierInstance->name;
+                    $selectedDeliveryOption['show_name'] = isset($carrierInstance->show_name) ? $carrierInstance->show_name[$context->language->id] : $carrierInstance->name;
                 }
             }
             break;
         }
 
-        $store       = null;
+        $store = null;
         $pickup_time = null;
-        $idCart      = (int)$context->cart->id;
-        $idCustomer  = (int)$context->customer->id;
-        $pickIdConf  = (int)Configuration::get('KB_PICKUP_AT_STORE_SHIPPING');
+        $idCart = (int) $context->cart->id;
+        $idCustomer = (int) $context->customer->id;
+        $pickIdConf = (int) Configuration::get('KB_PICKUP_AT_STORE_SHIPPING');
 
         if ($context->cart->id_carrier == $pickIdConf) {
             $row = Db::getInstance()->getRow('
-            SELECT * FROM `' . _DB_PREFIX_ . 'kb_pickup_at_store_time`
-            WHERE id_cart = ' . $idCart . '
-              AND id_shop = ' . (int)$context->shop->id . '
-              AND id_customer = ' . $idCustomer
+            SELECT * FROM `'._DB_PREFIX_.'kb_pickup_at_store_time`
+            WHERE id_cart = '.$idCart.'
+              AND id_shop = '.(int) $context->shop->id.'
+              AND id_customer = '.$idCustomer
             );
             if ($row) {
                 $pickup_time = $row['preferred_date'];
-                if (!empty($row['id_store'])) {
+                if (! empty($row['id_store'])) {
                     // Asegúrate de que tu clase Store acepte idioma en el constructor
                     $store = new Store($row['id_store'], $context->language->id);
                 }
             }
         }
-
 
         $addresses = $customer->getAddresses($context->language->id);
         $byId = [];
@@ -443,9 +424,9 @@ class CheckoutPaymentController extends \BaseController
         }
 
         $deliveryAddress = $byId[$context->cart->id_address_delivery] ?? null;
-        $invoiceAddress  = $byId[$context->cart->id_address_invoice]  ?? null;
+        $invoiceAddress = $byId[$context->cart->id_address_invoice] ?? null;
 
-        $context    = $this->context;
+        $context = $this->context;
         $translator = $context->getTranslator();
         $finder = new \ConditionsToApproveFinderCore($context, $translator);
         $conditionsToApprove = $finder->getConditionsToApproveForTemplate();
@@ -463,11 +444,12 @@ class CheckoutPaymentController extends \BaseController
             'store' => $store,
             'pickup_time' => $pickup_time,
             'is_free' => $isFree,
-            'delivery_address'    => $deliveryAddress,
-            'invoice_address'     => $invoiceAddress,
+            'delivery_address' => $deliveryAddress,
+            'invoice_address' => $invoiceAddress,
         ];
         $template = 'module:alsernetshopping/views/templates/front/checkout/view/payment.tpl';
         $this->context->smarty->assign($data);
+
         return $this->context->smarty->fetch($template);
 
     }
@@ -479,7 +461,7 @@ class CheckoutPaymentController extends \BaseController
         $customer = $this->customer;
         $cart = $context->cart;
 
-        if (!$customer || !$customer->isLogged()) {
+        if (! $customer || ! $customer->isLogged()) {
             return [
                 'status' => 'warning',
                 'message' => $this->l('Unauthorized access.'),
@@ -487,7 +469,7 @@ class CheckoutPaymentController extends \BaseController
             ];
         }
 
-        $id_carrier = (int)Tools::getValue('id_carrier');
+        $id_carrier = (int) Tools::getValue('id_carrier');
         $id_address = $cart->id_address_delivery;
 
         return [
@@ -504,10 +486,10 @@ class CheckoutPaymentController extends \BaseController
         $cart = $this->cart;
         $customer = $this->customer;
 
-        $id_carrier = (int)Tools::getValue('id_carrier');
+        $id_carrier = (int) Tools::getValue('id_carrier');
         $type = Tools::getValue('type'); // 'delivery' o 'invoice'
 
-        if (!$customer || !$customer->isLogged()) {
+        if (! $customer || ! $customer->isLogged()) {
             return [
                 'status' => 'error',
                 'message' => $this->trans(
@@ -516,7 +498,7 @@ class CheckoutPaymentController extends \BaseController
                     'Shop.Notifications.Error',
                     $context->language->locale
                 ),
-                'data' => []
+                'data' => [],
             ];
         }
 
@@ -527,8 +509,8 @@ class CheckoutPaymentController extends \BaseController
             'status' => 'success',
             'message' => $this->l('Address updated successfully.'),
             'data' => [
-                'type' => $type
-            ]
+                'type' => $type,
+            ],
         ];
     }
 
@@ -537,24 +519,24 @@ class CheckoutPaymentController extends \BaseController
         $payment_method = Tools::getValue('payment_method');
         $accept_terms = Tools::getValue('accept_terms');
         $cart = $this->cart;
-        $language =  $this->language;
+        $language = $this->language;
         $cart->id_payment = $payment_method;
 
         // Check if order is free (total = 0)
-        $isFree = (float)$cart->getOrderTotal(true, Cart::BOTH) === 0.0;
+        $isFree = (float) $cart->getOrderTotal(true, Cart::BOTH) === 0.0;
 
-        if (Configuration::get('PS_CONDITIONS') && !$accept_terms) {
+        if (Configuration::get('PS_CONDITIONS') && ! $accept_terms) {
             return [
                 'status' => 'error',
-                'message' => $this->l('You must accept the terms and conditions.')
+                'message' => $this->l('You must accept the terms and conditions.'),
             ];
         }
 
         // Only require payment method if order is not free
-        if (!$isFree && !$payment_method) {
+        if (! $isFree && ! $payment_method) {
             return [
                 'status' => 'error',
-                'message' => $this->l('Please select a payment method.')
+                'message' => $this->l('Please select a payment method.'),
             ];
         }
 
@@ -562,23 +544,23 @@ class CheckoutPaymentController extends \BaseController
             return [
                 'status' => 'success',
                 'message' => $this->l('Payment method saved successfully.'),
-                'next_step' => 'summary'
+                'next_step' => 'summary',
             ];
         } else {
             return [
                 'status' => 'error',
-                'message' => $this->l('Error saving payment method.')
+                'message' => $this->l('Error saving payment method.'),
             ];
         }
 
     }
 
-    private function getDeliveryOptions(callable $callback = null)
+    private function getDeliveryOptions(?callable $callback = null)
     {
         $context = $this->context;
         $cart = $this->cart;
-        $priceFormatter = new PriceFormatter();
-        $objectPresenter = new ObjectPresenter();
+        $priceFormatter = new PriceFormatter;
+        $objectPresenter = new ObjectPresenter;
 
         $finder = new DeliveryOptionsFinderCore(
             $context,
@@ -590,8 +572,8 @@ class CheckoutPaymentController extends \BaseController
         $carriers_available = $finder->getDeliveryOptions();
 
         if (Module::isEnabled('kbgcstorelocatorpickup')) {
-            $id_carrier_pickup_gc = (int)Configuration::get('KB_GC_PICKUP_AT_STORE_SHIPPING');
-            $id_feature_product_type = (int)Configuration::get('BAN_PRODUCT_FEATURE_ID_PRODUCT_TYPE');
+            $id_carrier_pickup_gc = (int) Configuration::get('KB_GC_PICKUP_AT_STORE_SHIPPING');
+            $id_feature_product_type = (int) Configuration::get('BAN_PRODUCT_FEATURE_ID_PRODUCT_TYPE');
             $id_feature_value_product_type_pickup_gc = Configuration::get('BAN_PRODUCT_FEATURE_VALUE_ID_LIST_PRODUCT_TYPE_PICKUP_GC');
 
             if ($id_carrier_pickup_gc && $id_feature_product_type && $id_feature_value_product_type_pickup_gc) {
@@ -599,10 +581,10 @@ class CheckoutPaymentController extends \BaseController
 
                 $products_list = $cart->getProducts();
                 foreach ($products_list as $product) {
-                    if (!empty($product['features'])) {
+                    if (! empty($product['features'])) {
                         foreach ($product['features'] as $feature) {
-                            if ((int)$feature['id_feature'] === $id_feature_product_type &&
-                                strpos(',' . $id_feature_value_product_type_pickup_gc . ',', ',' . $feature['id_feature_value'] . ',') !== false
+                            if ((int) $feature['id_feature'] === $id_feature_product_type &&
+                                strpos(','.$id_feature_value_product_type_pickup_gc.',', ','.$feature['id_feature_value'].',') !== false
                             ) {
                                 $is_pickup_gc = true;
                                 break 2;
@@ -612,8 +594,8 @@ class CheckoutPaymentController extends \BaseController
                 }
 
                 foreach ($carriers_available as $key => $carrier) {
-                    if ((string)$key === (string)$id_carrier_pickup_gc) {
-                        if (!$is_pickup_gc) {
+                    if ((string) $key === (string) $id_carrier_pickup_gc) {
+                        if (! $is_pickup_gc) {
                             unset($carriers_available[$key]);
                         }
                     } else {
@@ -626,9 +608,9 @@ class CheckoutPaymentController extends \BaseController
         }
 
         foreach ($carriers_available as $carrierId => &$carrier) {
-            $carrier['name'] = isset($carrier['name']) ? $carrier['name'] : 'Carrier #' . (int)$carrierId;
+            $carrier['name'] = isset($carrier['name']) ? $carrier['name'] : 'Carrier #'.(int) $carrierId;
 
-            switch ((int)$carrierId) {
+            switch ((int) $carrierId) {
                 case 39:
                     $carrier['analytic'] = 'Recogida en Guardia Civil';
                     break;
@@ -652,14 +634,14 @@ class CheckoutPaymentController extends \BaseController
 
         foreach ($carrier_selected as $selectedCarrierId) {
             foreach ($carriers_available as $key => $value) {
-                if ((string)$key === (string)$selectedCarrierId) {
+                if ((string) $key === (string) $selectedCarrierId) {
                     $is_carrier_selected_in_list = true;
                     break;
                 }
             }
         }
 
-        if (!$is_carrier_selected_in_list && !empty($carriers_available)) {
+        if (! $is_carrier_selected_in_list && ! empty($carriers_available)) {
             $firstKey = array_key_first($carriers_available);
             $cart->setDeliveryOption([
                 $cart->id_address_delivery => $firstKey,
@@ -678,13 +660,13 @@ class CheckoutPaymentController extends \BaseController
                 foreach ($condition as $key => $value) {
 
                     if (is_array($value)) {
-                        if (!isset($option[$key]) || !in_array($option[$key], $value)) {
+                        if (! isset($option[$key]) || ! in_array($option[$key], $value)) {
                             $isValid = false;
                             break;
                         }
                     } else {
 
-                        if (!isset($option[$key]) || $option[$key] !== $value) {
+                        if (! isset($option[$key]) || $option[$key] !== $value) {
                             $isValid = false;
                             break;
                         }
@@ -695,6 +677,7 @@ class CheckoutPaymentController extends \BaseController
                     return true;
                 }
             }
+
             return false;
         });
     }
@@ -707,13 +690,13 @@ class CheckoutPaymentController extends \BaseController
                 foreach ($condition as $key => $value) {
 
                     if (is_array($value)) {
-                        if (!isset($option[$key]) || !in_array($option[$key], $value)) {
+                        if (! isset($option[$key]) || ! in_array($option[$key], $value)) {
                             $isValid = false;
                             break;
                         }
                     } else {
 
-                        if (!isset($option[$key]) || $option[$key] !== $value) {
+                        if (! isset($option[$key]) || $option[$key] !== $value) {
                             $isValid = false;
                             break;
                         }
@@ -731,7 +714,7 @@ class CheckoutPaymentController extends \BaseController
 
     private function processPaymentOptions(array $options, array $conditions, string $action = 'filter'): array
     {
-        if (!in_array($action, ['filter', 'remove'], true)) {
+        if (! in_array($action, ['filter', 'remove'], true)) {
             throw new InvalidArgumentException('El valor de acción debe ser "filter" o "remove".');
         }
 
@@ -744,7 +727,7 @@ class CheckoutPaymentController extends \BaseController
             // Objetos: intentar getter getKey()
             if (is_object($option)) {
                 // module_name -> getmodule_name
-                $method = 'get' . str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $key)));
+                $method = 'get'.str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $key)));
                 if (method_exists($option, $method)) {
                     return $option->{$method}();
                 }
@@ -767,7 +750,7 @@ class CheckoutPaymentController extends \BaseController
 
                     if (is_array($expected)) {
                         // "IN" semantics
-                        if (!in_array($actual, $expected, true)) {
+                        if (! in_array($actual, $expected, true)) {
                             $isValid = false;
                             break;
                         }
@@ -797,31 +780,31 @@ class CheckoutPaymentController extends \BaseController
     {
         $module = Module::getInstanceByName($moduleId);
 
-        if (!$module || !$module->active) {
+        if (! $module || ! $module->active) {
             return false;
         }
 
         // Obtener el país de la dirección de facturación
         $billingAddress = new Address($this->context->cart->id_address_invoice);
-        if (!Validate::isLoadedObject($billingAddress)) {
+        if (! Validate::isLoadedObject($billingAddress)) {
             return false;
         }
 
         $countryId = $billingAddress->id_country;
 
         // Verificar restricciones de país en la tabla ps_module_country
-        $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'module_country` mc
-                WHERE mc.id_module = ' . (int)$module->id . '
-                AND mc.id_country = ' . (int)$countryId . '
-                AND mc.id_shop = ' . (int)$this->context->shop->id;
+        $sql = 'SELECT 1 FROM `'._DB_PREFIX_.'module_country` mc
+                WHERE mc.id_module = '.(int) $module->id.'
+                AND mc.id_country = '.(int) $countryId.'
+                AND mc.id_shop = '.(int) $this->context->shop->id;
 
         $result = Db::getInstance()->getValue($sql);
 
         // Si hay registro en module_country, el módulo está permitido para este país
-        // Si no hay registros, asumir que está permitido (por defecto PrestaShop permite todos)
-        $isAllowed = !empty($result) || $this->isModuleAllowedByDefault($moduleId);
+        // Si no hay registros, asumir que está permitido (Por defecto PrestaShop permite todos)
+        $isAllowed = ! empty($result) || $this->isModuleAllowedByDefault($moduleId);
 
-        if (!$isAllowed) {
+        if (! $isAllowed) {
             error_log("🚫 Module '{$moduleId}' blocked for country ID: {$countryId}");
         }
 
@@ -829,18 +812,18 @@ class CheckoutPaymentController extends \BaseController
     }
 
     /**
-     * Verificar si un módulo está permitido por defecto (cuando no hay restricciones específicas)
+     * Verificar si un módulo está permitido Por defecto (cuando no hay restricciones específicas)
      */
     private function isModuleAllowedByDefault(string $moduleId): bool
     {
         // Verificar si hay alguna restricción configurada para este módulo
-        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'module_country` mc
-                WHERE mc.id_module = (SELECT id_module FROM `' . _DB_PREFIX_ . 'module` WHERE name = "' . pSQL($moduleId) . '")
-                AND mc.id_shop = ' . (int)$this->context->shop->id;
+        $sql = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_country` mc
+                WHERE mc.id_module = (SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "'.pSQL($moduleId).'")
+                AND mc.id_shop = '.(int) $this->context->shop->id;
 
         $restrictionsCount = Db::getInstance()->getValue($sql);
 
-        // Si no hay restricciones configuradas, el módulo está permitido por defecto
+        // Si no hay restricciones configuradas, el módulo está permitido Por defecto
         return empty($restrictionsCount);
     }
 
@@ -893,16 +876,7 @@ class CheckoutPaymentController extends \BaseController
             // }
         } catch (Exception $e) {
             // Log error but don't break the checkout process
-            error_log('🚫 Error loading HiPay media: ' . $e->getMessage());
+            error_log('🚫 Error loading HiPay media: '.$e->getMessage());
         }
     }
-
-
-
 }
-
-
-
-
-
-

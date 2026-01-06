@@ -20364,12 +20364,12 @@ textarea.form-control-lg {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-color: var(--bs-form-check-bg);
+    background-color: #ffffff;
     background-image: var(--bs-form-check-bg-image);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    border: 1.25px solid #bdc3cd;
+    border: 1.25px solid #0000001f;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact
 }
@@ -26384,7 +26384,7 @@ textarea.form-control-lg {
 }
 
 .border {
-    border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important
+    border: var(--bs-border-width) var(--bs-border-style) #00000014 !important;
 }
 
 .border-0 {

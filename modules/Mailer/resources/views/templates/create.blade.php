@@ -3,7 +3,6 @@
 @section('page_title', 'Crear Plantilla de Email')
 
 @section('content')
-<div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
     @include('theme.components.card', [
@@ -395,7 +394,6 @@
             </div>
         </div>
     </form>
-</div>
 
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.2/lib/codemirror.min.css">

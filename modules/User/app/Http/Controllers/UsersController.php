@@ -106,9 +106,9 @@ class UsersController extends Controller
             $user->company = $request->company;
             $user->timezone = $request->timezone ?? 'UTC';
 
-            // Set email_verified_at if verified is true
+            // Set mail_verified_at if verified is true
             if ($request->verified === '1' || $request->verified === 1) {
-                $user->email_verified_at = now();
+                $user->mail_verified_at = now();
             }
 
             $user->save();
@@ -227,11 +227,11 @@ class UsersController extends Controller
 
             // Update email verification status
             if ($request->verified === '1' || $request->verified === 1) {
-                if (! $user->email_verified_at) {
-                    $user->email_verified_at = now();
+                if (! $user->mail_verified_at) {
+                    $user->mail_verified_at = now();
                 }
             } else {
-                $user->email_verified_at = null;
+                $user->mail_verified_at = null;
             }
 
             $user->save();

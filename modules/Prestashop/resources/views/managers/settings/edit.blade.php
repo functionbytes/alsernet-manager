@@ -46,7 +46,7 @@
                           <label class="form-label">Puerto <span class="text-danger">*</span></label>
                           <input type="number" name="prestashop_db_port" class="form-control @error('prestashop_db_port') is-invalid @enderror"
                                  value="{{ old('prestashop_db_port', $settings['prestashop_db_port']) }}" min="1" max="65535" required>
-                          <small class="form-text text-muted">Puerto MySQL (por defecto 3306)</small>
+                          <small class="form-text text-muted">Puerto MySQL (Por defecto 3306)</small>
                           @error('prestashop_db_port')
                             <div class="invalid-feedback">{{ $message }}</div>
                           @enderror

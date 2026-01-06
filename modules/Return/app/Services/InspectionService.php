@@ -194,7 +194,7 @@ class InspectionService
             ->where('passed', false);
 
         foreach ($missingParts as $part) {
-            $partCost = $part['estimated_value'] ?? 10; // Valor por defecto
+            $partCost = $part['estimated_value'] ?? 10; // Valor Por defecto
             $costs[] = [
                 'type' => 'missing_part',
                 'amount' => $partCost,
@@ -372,7 +372,7 @@ class InspectionService
                     continue;
                 }
 
-                // Inspección rápida con valores por defecto
+                // Inspección rápida con valores Por defecto
                 $this->inspectProduct($returnItem, [
                     'condition_grade' => $defaultGrade,
                     'checklist_results' => $this->getQuickChecklistResults($defaultGrade),

@@ -116,10 +116,10 @@
 
 
                         <div class="border-top pt-1 mt-4">
-                                <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
-                                    Guardar
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-info  px-4 waves-effect waves-light mt-2 w-100">
+                                Guardar
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

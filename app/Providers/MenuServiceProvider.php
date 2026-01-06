@@ -43,15 +43,8 @@ class MenuServiceProvider extends ServiceProvider
      */
     private function registerCoreMenus(): void
     {
-        // Menú de Configuración (CORE)
-        NavService::registerMiniItem('backups', [
-            'icon' => 'fa-sliders',
-            'tooltip' => 'Configuración',
-            'sidebar_id' => 'backups',
-            'order' => 10,
-        ]);
 
-        NavService::registerSidebar('backups', [
+        NavService::registerSidebar('settings', [
             'title' => 'Configuración',
             'items' => [
                 ['label' => 'Principal', 'route' => 'manager.backups'],
@@ -59,10 +52,6 @@ class MenuServiceProvider extends ServiceProvider
                 ['label' => 'Búsqueda', 'route' => 'manager.backups.search.index'],
                 ['label' => 'Localización', 'route' => 'manager.backups.localization.index'],
                 ['label' => 'Traducciones', 'route' => 'manager.backups.translations.index'],
-                ['label' => 'Almacenamiento', 'route' => 'manager.backups.storage'],
-                ['label' => 'Base de datos', 'route' => 'manager.backups.database.index'],
-                ['label' => 'Limpieza de BD', 'route' => 'manager.backups.database.cleanup.index'],
-                ['label' => 'Reverb (WebSocket)', 'route' => 'manager.backups.reverb.index'],
             ],
         ]);
 

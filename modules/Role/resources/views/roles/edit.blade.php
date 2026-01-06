@@ -15,7 +15,7 @@
             <div class="card-header bg-white">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="mb-0">Editar Rol: {{ $role->name }}</h5>
+                        <h5 class="mb-0">Editar rol: {{ $role->name }}</h5>
                         <p class="text-muted mb-0 small">Actualiza la información del rol en el sistema</p>
                     </div>
                 </div>
@@ -23,25 +23,16 @@
 
             <div class="card-body">
                 {{-- Sección: Información básica --}}
-                <h6 class="fw-bold mb-3 pb-2">
-                    Información básica
-                </h6>
+                <h6 class="fw-bold mb-0">Información básica</h6>
+                <p class="text-muted small mb-3">Define el nombre, identificador único y descripción del rol</p>
 
                 <div class="row mb-4">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Nombre del Rol <span class="text-danger">*</span></label>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Nombre del rol <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name"
                                value="{{ $role->name }}"
                                placeholder="Ej: supervisor-inventario" required>
                         <small class="text-muted">Mínimo 3 caracteres, máximo 50. Use minúsculas y guiones</small>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Slug <span class="text-muted">(Auto-generado)</span></label>
-                        <input type="text" class="form-control bg-light" name="slug"
-                               value="{{ $role->slug ?? '' }}"
-                               placeholder="Se genera automáticamente" readonly>
-                        <small class="text-muted">Identificador único generado del nombre</small>
                     </div>
 
                     <div class="col-md-12 mb-3">
@@ -53,11 +44,10 @@
                 </div>
 
                 {{-- Sección: Configuración --}}
-                <h6 class="fw-bold mb-3 pb-2">
-                    Configuración
-                </h6>
+                <h6 class="fw-bold mb-0">Configuración</h6>
+                <p class="text-muted small mb-3">Define el tipo de autenticación para este rol</p>
 
-                <div class="row mb-4">
+                <div class="row mb-0">
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Guard <span class="text-danger">*</span></label>
                         <select class="form-select select2" name="guard_name" required>
@@ -65,19 +55,6 @@
                             <option value="api" {{ $role->guard_name == 'api' ? 'selected' : '' }}>API (Token/OAuth)</option>
                         </select>
                         <small class="text-muted">Define el tipo de autenticación para este rol</small>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="border rounded p-3 h-100">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="is_default"
-                                       id="is_default" value="1" {{ $role->is_default ? 'checked' : '' }}>
-                                <label class="form-check-label" for="is_default">
-                                    <strong>Rol por defecto</strong>
-                                    <p class="text-muted small mb-0">Asignar automáticamente a nuevos usuarios</p>
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -90,10 +67,10 @@
             </div>
 
             <div class="card-footer">
-                <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
+                <button type="submit" class="btn btn-primary mb-1 w-100">
                     Guardar
                 </button>
-                <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary  w-100">
                     Volver
                 </a>
             </div>
@@ -110,16 +87,6 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Auto-generate slug from name
-    $('input[name="name"]').on('keyup', function() {
-        const name = $(this).val();
-        const slug = name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-        $('input[name="slug"]').val(slug);
-    });
-
     // Form validation
     $("#formRoles").validate({
         rules: {

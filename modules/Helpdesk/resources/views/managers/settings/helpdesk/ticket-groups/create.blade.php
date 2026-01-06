@@ -130,7 +130,7 @@
                                 <input type="hidden" name="is_default" value="0">
                                 <input type="checkbox" name="is_default" class="form-check-input" id="defaultCheck" value="1" {{ old('is_default') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="defaultCheck">
-                                    <strong>Grupo por defecto</strong>
+                                    <strong>Grupo Por defecto</strong>
                                     <small class="d-block text-muted">Se selecciona automáticamente para nuevos tickets sin grupo asignado.</small>
                                 </label>
                             </div>

@@ -4,99 +4,188 @@
 
     @include('theme.components.card', ['title' => 'Matriz de permisos por rol'])
 
-    {{-- Alertas --}}
-    @include('theme.components.alerts')
+    <div class="widget-content searchable-container list">
 
-    <div class="card">
-        <div class="card-header bg-white border-bottom">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h5 class="mb-1">Matriz de permisos</h5>
-                    <p class="text-muted mb-0 small">Vista completa de todos los permisos asignados a cada rol del sistema</p>
-                </div>
-                <div class="col-auto">
-                    <a href="{{ route('settings.roles.index') }}" class="btn btn-light">
-                        <i class="fas fa-arrow-left me-2"></i>Atrás
-                    </a>
+        @include('theme.components.alerts')
+
+        <div class="card">
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Matriz de permisos</h5>
+                        <p class="small mb-0 text-muted">Vista completa de todos los permisos asignados a cada rol del sistema</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary">
+                            Atrás
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card-body p-0">
-            {{-- Info --}}
-            <div class="alert alert-info border-info m-3">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Información:</strong> Esta matriz muestra todos los permisos disponibles en el sistema y su asignación a cada rol.
-                Haz clic en las celdas para asignar o revocar permisos.
-            </div>
-
-            {{-- Responsive table wrapper --}}
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 permission-matrix">
-                    <thead>
-                        <tr class="bg-light">
-                            <th class="sticky-col" style="min-width: 180px;">
-                                <strong>Roles</strong>
-                            </th>
-                            @foreach ($permissionsByModule as $module => $categories)
-                                @foreach ($categories as $category => $perms)
-                                    <th class="text-center" style="min-width: 120px; background-color: #f8f9fa;">
-                                        <small class="d-block text-uppercase fw-bold">{{ $module }}</small>
-                                        <small class="d-block text-muted">{{ $category }}</small>
-                                    </th>
-                                @endforeach
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($roles as $role)
-                            <tr>
-                                <td class="sticky-col fw-bold" style="min-width: 180px;">
-                                    <div class="d-flex flex-column">
-                                        <span>{{ $role->name }}</span>
-                                        <small class="text-muted">
-                                            <span class="badge bg-info permission-count-{{ $role->id }}">
-                                                {{ count($rolePermissions[$role->id]) }} permisos
-                                            </span>
-                                        </small>
+            {{-- Statistics Cards --}}
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    @php
+                        $totalPermissions = count($permissions);
+                        $totalRoles = count($roles);
+                        $totalAssignments = collect($rolePermissions)->flatten()->count();
+                        $maxPossible = $totalPermissions * $totalRoles;
+                        $coveragePercentage = $maxPossible > 0 ? round(($totalAssignments / $maxPossible) * 100) : 0;
+                    @endphp
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total permisos</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $totalPermissions }}</h4>
+                                        <small class="text-muted">Permisos en sistema</small>
                                     </div>
-                                </td>
-
-                                @foreach ($permissionsByModule as $module => $categories)
-                                    @foreach ($categories as $category => $perms)
-                                        <td class="text-center">
-                                            @foreach ($perms as $permission)
-                                                <div class="form-check form-check-inline">
-                                                    <input
-                                                        class="form-check-input permission-checkbox"
-                                                        type="checkbox"
-                                                        id="perm_{{ $role->id }}_{{ $permission->id }}"
-                                                        data-role-id="{{ $role->id }}"
-                                                        data-permission-id="{{ $permission->id }}"
-                                                        data-role-name="{{ $role->name }}"
-                                                        data-permission-name="{{ $permission->name }}"
-                                                        {{ in_array($permission->id, $rolePermissions[$role->id]) ? 'checked' : '' }}>
-                                                    <label
-                                                        class="form-check-label d-none"
-                                                        for="perm_{{ $role->id }}_{{ $permission->id }}">
-                                                    </label>
-                                                </div>
-                                            @endforeach
-                                        </td>
-                                    @endforeach
-                                @endforeach
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Total roles</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $totalRoles }}</h4>
+                                        <small class="text-muted">Roles configurados</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Asignaciones</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $totalAssignments }}</h4>
+                                        <small class="text-muted">Permisos asignados</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-info mb-2">Cobertura</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $coveragePercentage }}%</h4>
+                                        <small class="text-muted">De asignaciones posibles</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {{-- Info Section --}}
+            <div class="card-body border-bottom">
+                <div class="alert alert-info border-0 mb-0" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="fa fa-circle-info fs-5 me-3 mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-2">Control de permisos por rol</h6>
+                            <p class="mb-0">
+                                Esta matriz muestra todos los permisos disponibles en el sistema y su asignación a cada rol.
+                                Haz clic en las celdas para asignar o revocar permisos en tiempo real.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+            {{-- Roles Grid --}}
+            <div class="row g-3">
+                @foreach ($roles as $role)
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-header bg-light border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ $role->name }}</h6>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-primary permission-count-{{ $role->id }}">
+                                            {{ count($rolePermissions[$role->id]) }} permisos
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    @foreach ($permissionsByModule as $module => $categories)
+                                        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                                            <div class="card border h-100">
+                                                <div class="card-header bg-light bg-opacity-10 border-bottom">
+                                                    <h6 class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                                                        {{ Str::title(str_replace('_', ' ', $module)) }}
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body p-3">
+                                                    @foreach ($categories as $category => $perms)
+                                                        <div class="permission-category mb-3">
+                                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                                <span class="badge bg-secondary bg-opacity-10 text-dark" style="font-size: 0.7rem;">
+                                                                    {{ Str::title(str_replace('_', ' ', $category)) }}
+                                                                </span>
+                                                                <small class="text-muted" style="font-size: 0.65rem;">{{ count($perms) }}</small>
+                                                            </div>
+                                                            <div class="d-flex flex-column gap-1">
+                                                                @foreach ($perms as $permission)
+                                                                    @php
+                                                                        $permAction = Str::afterLast($permission->name, '.');
+                                                                        $isChecked = in_array($permission->id, $rolePermissions[$role->id]);
+                                                                    @endphp
+                                                                    <label class="permission-item d-flex align-items-center gap-2 p-2 rounded"
+                                                                           for="perm_{{ $role->id }}_{{ $permission->id }}"
+                                                                           style="cursor: pointer; transition: all 0.2s;">
+                                                                        <input
+                                                                            class="form-check-input permission-checkbox m-0"
+                                                                            type="checkbox"
+                                                                            id="perm_{{ $role->id }}_{{ $permission->id }}"
+                                                                            data-role-id="{{ $role->id }}"
+                                                                            data-permission-id="{{ $permission->id }}"
+                                                                            data-role-name="{{ $role->name }}"
+                                                                            data-permission-name="{{ $permission->name }}"
+                                                                            {{ $isChecked ? 'checked' : '' }}>
+                                                                        <span class="small flex-grow-1" style="font-size: 0.75rem;">
+                                                                            {{ Str::title(str_replace('_', ' ', $permAction)) }}
+                                                                        </span>
+                                                                    </label>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
         </div>
 
         <div class="card-footer bg-white border-top">
             <div class="row">
                 <div class="col-md-6">
                     <button type="button" class="btn btn-sm btn-outline-secondary" id="exportMatrix">
-                        <i class="fas fa-download me-2"></i>Exportar matriz
+                        Exportar matriz
                     </button>
                 </div>
                 <div class="col-md-6 text-end">
@@ -108,41 +197,17 @@
         </div>
     </div>
 
+    </div>
+
 @endsection
 
 @push('styles')
 <style>
-    .permission-matrix {
-        font-size: 0.85rem;
-    }
-
-    .sticky-col {
-        position: sticky;
-        left: 0;
-        background-color: white;
-        z-index: 10;
-        box-shadow: 2px 0 3px rgba(0, 0, 0, 0.1);
-    }
-
-    thead .sticky-col {
-        background-color: #f8f9fa !important;
-        font-weight: bold;
-    }
-
-    .permission-matrix th {
-        padding: 0.75rem !important;
-        font-size: 0.8rem;
-    }
-
-    .permission-matrix td {
-        padding: 0.5rem !important;
-        vertical-align: middle;
-    }
-
     .form-check-input {
-        width: 1.1rem;
-        height: 1.1rem;
+        width: 1rem;
+        height: 1rem;
         cursor: pointer;
+        border-width: 2px;
     }
 
     .form-check-input:checked {
@@ -155,13 +220,34 @@
         cursor: not-allowed;
     }
 
-    .permission-matrix tbody tr:hover {
-        background-color: rgba(144, 187, 19, 0.05);
+    .permission-item {
+        border: 1px solid transparent;
+        transition: all 0.15s ease-in-out;
     }
 
-    .badge {
-        font-size: 0.7rem;
-        padding: 0.35rem 0.6rem;
+    .permission-item:hover {
+        background-color: rgba(144, 187, 19, 0.05) !important;
+        border-color: rgba(144, 187, 19, 0.2);
+    }
+
+    .permission-category {
+        border-bottom: 1px dashed #e9ecef;
+        padding-bottom: 0.75rem;
+    }
+
+    .permission-category:last-child {
+        border-bottom: none;
+        margin-bottom: 0 !important;
+        padding-bottom: 0;
+    }
+
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .badge.bg-secondary.bg-opacity-10 {
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
     }
 </style>
 @endpush

@@ -27,7 +27,7 @@ class SupplierAutomationSettingSeeder extends Seeder
                 'value' => '300',
                 'type' => 'integer',
                 'category' => 'connection',
-                'description' => 'Timeout por defecto para operaciones de scraping/API en segundos',
+                'description' => 'Timeout Por defecto para operaciones de scraping/API en segundos',
                 'is_sensitive' => false,
             ],
             [
@@ -187,7 +187,7 @@ class SupplierAutomationSettingSeeder extends Seeder
                 'value' => '02:00',
                 'type' => 'string',
                 'category' => 'defaults',
-                'description' => 'Hora por defecto para trabajos programados (HH:MM)',
+                'description' => 'Hora Por defecto para trabajos programados (HH:MM)',
                 'is_sensitive' => false,
             ],
             [

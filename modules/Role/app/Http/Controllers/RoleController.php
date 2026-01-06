@@ -5,7 +5,6 @@ namespace Modules\Role\Http\Controllers;
 use App\Http\Controllers\Managers\BaseManagerController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Modules\Role\Http\Requests\Systems\RoleRequest;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -54,16 +53,6 @@ class RoleController extends BaseManagerController
     {
         $data = $request->validated();
 
-        // Set default role - only one can be default
-        if ($request->has('is_default') && $request->boolean('is_default')) {
-            Role::where('guard_name', $data['guard_name'])->update(['is_default' => false]);
-        }
-
-        // Set slug from name if not provided
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
-        }
-
         // Track who created this role
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
@@ -85,7 +74,7 @@ class RoleController extends BaseManagerController
             ]);
         }
 
-        return redirect()->route('roles.edit', $role->id)
+        return redirect()->route('settings.roles.edit', $role->id)
             ->with('success', 'Rol creado correctamente.');
     }
 
@@ -128,18 +117,6 @@ class RoleController extends BaseManagerController
             return $this->error('Cannot modify system roles');
         }
 
-        // Set default role - only one can be default
-        if ($request->has('is_default') && $request->boolean('is_default')) {
-            Role::where('guard_name', $data['guard_name'])
-                ->where('id', '!=', $role->id)
-                ->update(['is_default' => false]);
-        }
-
-        // Set slug from name if not provided
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
-        }
-
         // Track who updated this role
         $data['updated_by'] = auth()->id();
 
@@ -160,7 +137,7 @@ class RoleController extends BaseManagerController
             ]);
         }
 
-        return redirect()->route('roles.edit', $role->id)
+        return redirect()->route('settings.roles.edit', $role->id)
             ->with('success', 'Rol actualizado correctamente.');
     }
 
@@ -193,7 +170,7 @@ class RoleController extends BaseManagerController
             return $this->success('Role deleted successfully');
         }
 
-        return redirect()->route('roles.index')
+        return redirect()->route('settings.roles.index')
             ->with('success', 'Rol eliminado correctamente.');
     }
 
@@ -204,8 +181,6 @@ class RoleController extends BaseManagerController
     {
         $newRole = $role->replicate();
         $newRole->name = $role->name.' (Copy)';
-        $newRole->slug = Str::slug($newRole->name).'-'.uniqid();
-        $newRole->is_default = false;
         $newRole->created_by = auth()->id();
         $newRole->updated_by = auth()->id();
         $newRole->save();

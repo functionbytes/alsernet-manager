@@ -270,7 +270,7 @@
                         <p class="mb-0">
                             @if($role->is_default)
                                 <span class="badge bg-success">
-                                    <i class="fas fa-star me-1"></i> Rol por defecto
+                                    <i class="fas fa-star me-1"></i> Rol Por defecto
                                 </span>
                             @else
                                 <span class="badge bg-secondary">Normal</span>

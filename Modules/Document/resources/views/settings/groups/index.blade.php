@@ -131,7 +131,7 @@
                                         <div>
                                             <strong>{{ $group->name }}</strong>
                                             @if($group->is_default)
-                                                <span class="badge bg-primary-subtle text-primary ms-1">Por Defecto</span>
+                                                <span class="badge bg-primary-subtle text-primary ms-1">Por defecto</span>
                                             @endif
                                         </div>
                                     </td>

@@ -80,13 +80,15 @@ class EventsController extends Controller
         $event->available = $request->available;
         $event->completed = $request->completed;
         $event->iva = $request->iva;
-        $event->processing = $request->processing;
-        $event->processed = $request->processed;
+        $event->processing = $request->processing ?? false;
+        $event->processed = $request->processed ?? false;
         $event->banners = $request->banners;
         $event->banners_unique = $request->banners_unique;
         $event->banners_backup = $request->banners_backup;
         $event->start_at = $request->start_at;
         $event->end_at = $request->end_at;
+        $event->observations = $request->observations;
+        $event->priority_flag = $request->priority_flag;
         $event->save();
 
         return response()->json([
@@ -111,13 +113,15 @@ class EventsController extends Controller
         $event->available = $request->available;
         $event->completed = $request->completed;
         $event->iva = $request->iva;
-        $event->processing = $request->processing;
-        $event->processed = $request->processed;
+        $event->processing = $request->processing ?? false;
+        $event->processed = $request->processed ?? false;
         $event->banners = $request->banners;
         $event->banners_unique = $request->banners_unique;
         $event->banners_backup = $request->banners_backup;
         $event->start_at = $request->start_at;
         $event->end_at = $request->end_at;
+        $event->observations = $request->observations;
+        $event->priority_flag = $request->priority_flag;
         $event->save();
 
         return response()->json([

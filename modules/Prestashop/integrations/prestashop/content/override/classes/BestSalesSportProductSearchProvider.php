@@ -46,7 +46,7 @@ class BestSalesSportProductSearchProvider implements ProductSearchProviderInterf
         $this->translator = $translator;
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
 
-        // por defecto, listado
+        // Por defecto, listado
         $this->list_type = self::TYPE_LIST;
     }
 

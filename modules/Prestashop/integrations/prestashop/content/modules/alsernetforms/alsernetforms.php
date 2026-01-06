@@ -2,13 +2,12 @@
 
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
 class Alsernetforms extends Module implements WidgetInterface
 {
-
     public function __construct()
     {
 
@@ -21,7 +20,7 @@ class Alsernetforms extends Module implements WidgetInterface
 
         $this->controllers = ['verification', 'unsubscribe'];
 
-        $this->displayName = "Alsernet - Formularios ";
+        $this->displayName = 'Alsernet - Formularios ';
         $this->description = $this->getTranslator()->trans('Make your customers feel at home on your store, invite them to sign in!', [], 'modules.Customersignin.Admin');
         $this->ps_versions_compliancy = ['min' => '1.7.1.0', 'max' => _PS_VERSION_];
 
@@ -34,20 +33,19 @@ class Alsernetforms extends Module implements WidgetInterface
 
     }
 
-
     private function installDB()
     {
         // Table for storing forms
-        $sql1 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms` (
+        $sql1 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms` (
             `id_form` INT(11) NOT NULL AUTO_INCREMENT,
             `data` JSON NOT NULL,
             `created_at` DATETIME NOT NULL,
             `updated_at` DATETIME NOT NULL,
             PRIMARY KEY (`id_form`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for storing newsletter subscriptions
-        $sql2 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter` (
+        $sql2 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter` (
             `id_susc_newsletter` INT(11) NOT NULL AUTO_INCREMENT,
             `firstname` VARCHAR(255) NOT NULL,
             `lastname` VARCHAR(255) NOT NULL,
@@ -65,10 +63,10 @@ class Alsernetforms extends Module implements WidgetInterface
             `created_at` DATETIME NOT NULL,
             `updated_at` DATETIME NOT NULL,
             PRIMARY KEY (`id_susc_newsletter`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for tracking changes to subscription preferences
-        $sql3 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_history` (
+        $sql3 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_history` (
             `id_history` INT(11) NOT NULL AUTO_INCREMENT,
             `id_susc_newsletter` INT(11) NOT NULL,
             `action_type` ENUM(\'none\', \'parties\', \'sports\', \'subscribe\', \'check\') NOT NULL,
@@ -77,49 +75,49 @@ class Alsernetforms extends Module implements WidgetInterface
             `synced_at` DATETIME NULL,
             `changed_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id_history`),
-            FOREIGN KEY (`id_susc_newsletter`) REFERENCES `' . _DB_PREFIX_ . 'alsernet_forms_newsletter`(`id_susc_newsletter`)
+            FOREIGN KEY (`id_susc_newsletter`) REFERENCES `'._DB_PREFIX_.'alsernet_forms_newsletter`(`id_susc_newsletter`)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for storing subscription job details
-        $sql4 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_jobs` (
+        $sql4 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_jobs` (
             `id_jobs` INT(11) NOT NULL AUTO_INCREMENT,
             `id_history` INT(11) NOT NULL,
             `action_type` ENUM(\'none\', \'parties\', \'sports\', \'subscribe\', \'check\') NOT NULL,
             `created_at` DATETIME NOT NULL,
             PRIMARY KEY (`id_jobs`),
-            FOREIGN KEY (`id_history`) REFERENCES `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_history`(`id_history`)
+            FOREIGN KEY (`id_history`) REFERENCES `'._DB_PREFIX_.'alsernet_forms_newsletter_history`(`id_history`)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for storing form lists
-        $sql5 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_lists` (
+        $sql5 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_lists` (
             `id_list` INT(11) NOT NULL AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,  -- List name (white, black, etc.)
             `description` TEXT NULL,       -- List description
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id_list`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for associating users with lists
-        $sql6 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_user_lists` (
+        $sql6 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_user_lists` (
             `id_user_list` INT(11) NOT NULL AUTO_INCREMENT,
             `id_susc_newsletter` INT(11) NOT NULL,
             `id_list` INT(11) NOT NULL,
             `added_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id_user_list`),
-            FOREIGN KEY (`id_susc_newsletter`) REFERENCES `' . _DB_PREFIX_ . 'alsernet_forms_newsletter`(`id_susc_newsletter`)
+            FOREIGN KEY (`id_susc_newsletter`) REFERENCES `'._DB_PREFIX_.'alsernet_forms_newsletter`(`id_susc_newsletter`)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE,
-            FOREIGN KEY (`id_list`) REFERENCES `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_lists`(`id_list`)
+            FOREIGN KEY (`id_list`) REFERENCES `'._DB_PREFIX_.'alsernet_forms_newsletter_lists`(`id_list`)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for storing API endpoint requests and their status
-        $sql7 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_requests` (
+        $sql7 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_forms_requests` (
             `id_alsernetforms_request` INT(11) NOT NULL AUTO_INCREMENT,
             `endpoint_type` VARCHAR(50) NOT NULL DEFAULT \'default\',
             `method` VARCHAR(10) NOT NULL,
@@ -138,10 +136,10 @@ class Alsernetforms extends Module implements WidgetInterface
             INDEX `idx_endpoint_type` (`endpoint_type`),
             INDEX `idx_next_retry` (`next_retry_at`),
             INDEX `idx_created_at` (`created_at`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Table for tracking endpoint availability
-        $sql8 = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'alsernet_endpoint_health` (
+        $sql8 = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'alsernet_endpoint_health` (
             `id_endpoint_health` INT(11) NOT NULL AUTO_INCREMENT,
             `endpoint_url` VARCHAR(255) NOT NULL,
             `endpoint_type` VARCHAR(50) NOT NULL,
@@ -155,7 +153,7 @@ class Alsernetforms extends Module implements WidgetInterface
             UNIQUE KEY `unique_endpoint` (`endpoint_url`, `endpoint_type`),
             INDEX `idx_availability` (`is_available`),
             INDEX `idx_last_check` (`last_check_at`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+        ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         // Execute all queries
         return Db::getInstance()->execute($sql1)
@@ -171,7 +169,7 @@ class Alsernetforms extends Module implements WidgetInterface
     public function uninstall()
     {
         // Ensure uninstall DB logic is called and the module can be removed
-        if (!parent::uninstall() || !$this->uninstallDB()) {
+        if (! parent::uninstall() || ! $this->uninstallDB()) {
             return false;
         }
 
@@ -181,14 +179,14 @@ class Alsernetforms extends Module implements WidgetInterface
     private function uninstallDB()
     {
         // Drop tables in reverse order of dependencies to avoid foreign key issues
-        $sql8 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_endpoint_health`;';
-        $sql7 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_requests`;';
-        $sql6 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_user_lists`;';
-        $sql5 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_lists`;';
-        $sql4 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_jobs`;';
-        $sql3 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter_history`;';
-        $sql2 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms_newsletter`;';
-        $sql1 = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'alsernet_forms`;';
+        $sql8 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_endpoint_health`;';
+        $sql7 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_requests`;';
+        $sql6 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_user_lists`;';
+        $sql5 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_lists`;';
+        $sql4 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_jobs`;';
+        $sql3 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter_history`;';
+        $sql2 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms_newsletter`;';
+        $sql1 = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'alsernet_forms`;';
 
         // Execute the queries to drop the tables
         return Db::getInstance()->execute($sql1)
@@ -213,9 +211,7 @@ class Alsernetforms extends Module implements WidgetInterface
         ];
     }
 
-    public function getWidgetVariables($hookName, array $configuration)
-    {
-    }
+    public function getWidgetVariables($hookName, array $configuration) {}
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
@@ -223,44 +219,44 @@ class Alsernetforms extends Module implements WidgetInterface
         if (isset($configuration['forms'])) { // Aquí debe coincidir con "forms"
             switch ($configuration['forms']) {
                 case 'fitting':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/fitting.tpl');
                 case 'demoday':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/demoday.tpl');
                 case 'compromise':
 
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/compromise.tpl');
                 case 'demodayorder':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/demodayorder.tpl');
                 case 'huntinginsurance':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/huntinginsurance.tpl');
                 case 'golfdiagnosis':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/golfdiagnosis.tpl');
                 case 'gunsmithworkshop':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/gunsmithworkshop.tpl');
                 case 'divingpackages':
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/divingpackages.tpl');
 
@@ -276,14 +272,14 @@ class Alsernetforms extends Module implements WidgetInterface
 
                 case 'paymentandfinancing':
 
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/paymentandfinancing.tpl');
                 case 'shipping':
 
-                    $this->smarty->assign(array(//'language' => $this->context->language,
-                    ));
+                    $this->smarty->assign([// 'language' => $this->context->language,
+                    ]);
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/shipping.tpl');
 
@@ -295,12 +291,9 @@ class Alsernetforms extends Module implements WidgetInterface
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/discharges/sports.tpl');
 
-
                 case 'newsletterdischargersnone':
 
-
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/discharges/none.tpl');
-
 
                 case 'newsletterdischargersparties':
 
@@ -354,7 +347,6 @@ class Alsernetforms extends Module implements WidgetInterface
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/workwithus.tpl');
 
-
                 case 'contact':
 
                     /*$sports = $this->getSportsByIdsAndTranslateNew();
@@ -373,15 +365,15 @@ class Alsernetforms extends Module implements WidgetInterface
                     $validation = Order::validateDniDocuments($uid);
 
                     // Generar variables trans y trans_list
-                    list($trans_remember, $trans_list) = $this->generateDocumentListOnly($uid, $validation['type']);
+                    [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $validation['type']);
 
                     $this->context->smarty->assign([
-                        'uid'    => $uid,
-                        'trans'    => $trans_remember,
-                        'trans_list'    => $trans_list,
-                        'label'    => $validation['label'],
+                        'uid' => $uid,
+                        'trans' => $trans_remember,
+                        'trans_list' => $trans_list,
+                        'label' => $validation['label'],
                         'status' => $validation['status'],
-                        'type'   => $validation['type'],
+                        'type' => $validation['type'],
                         'upload' => $validation['upload'],
                         'required_documents' => $validation['data']['required_documents'] ?? [],
                         'uploaded_documents' => $validation['data']['uploaded_documents'] ?? [],
@@ -390,15 +382,13 @@ class Alsernetforms extends Module implements WidgetInterface
 
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/gun.tpl');
 
-
-
                 default:
                     break;
             }
         }
-        return ''; // Devuelve algo por defecto si no se cumplen las condiciones
-    }
 
+        return ''; // Devuelve algo Por defecto si no se cumplen las condiciones
+    }
 
     public function generateDocumentHtml($documentNumber, $documentType)
     {
@@ -408,7 +398,7 @@ class Alsernetforms extends Module implements WidgetInterface
 
         $iso = Context::getContext()->language->iso_code;
         $link = Context::getContext()->link;
-        $documents_url = $link->getCMSLink(136) . '?token=' . urlencode($documentNumber);
+        $documents_url = $link->getCMSLink(136).'?token='.urlencode($documentNumber);
 
         // Switch según tipo de arma
         switch ($documentType) {
@@ -423,9 +413,9 @@ class Alsernetforms extends Module implements WidgetInterface
                 );
 
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of your handgun permit (type B) or Olympic shooting permit (type F)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of your handgun permit (type B) or Olympic shooting permit (type F)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'rifle':
@@ -439,9 +429,9 @@ class Alsernetforms extends Module implements WidgetInterface
                 );
 
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of your rifled long-range firearm permit (type D)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of your rifled long-range firearm permit (type D)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'escopeta':
@@ -455,9 +445,9 @@ class Alsernetforms extends Module implements WidgetInterface
                 );
 
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of a shotgun license (type E)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of a shotgun license (type E)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'dni':
@@ -471,8 +461,8 @@ class Alsernetforms extends Module implements WidgetInterface
                 );
 
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             default:
@@ -496,16 +486,16 @@ class Alsernetforms extends Module implements WidgetInterface
         // Generar HTML final
         $template = '
             <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-left: 4px solid #90bb13;">
-                <p style="margin: 0 0 5px; font-size: 14px;">' . $trans_remember . '</p>
-                ' . $trans_list . '
+                <p style="margin: 0 0 5px; font-size: 14px;">'.$trans_remember.'</p>
+                '.$trans_list.'
                 <p style="margin: 0 0 10px; font-size: 14px;">
-                    <strong>' . $trans_instruction . '</strong>
-                    <a href="' . $documents_url . '" target="_blank" style="color: #90bb13; text-decoration: underline;">
-                        ' . $trans_upload . '
+                    <strong>'.$trans_instruction.'</strong>
+                    <a href="'.$documents_url.'" target="_blank" style="color: #90bb13; text-decoration: underline;">
+                        '.$trans_upload.'
                     </a>
                 </p>
                 <p style="margin: 0; font-size: 13px; color: #666;">
-                   <strong>' . $trans_whatsapp . '</strong>
+                   <strong>'.$trans_whatsapp.'</strong>
                 </p>
             </div>';
 
@@ -531,9 +521,9 @@ class Alsernetforms extends Module implements WidgetInterface
                     ['[b]' => '<strong>', '[/b]' => '</strong>']
                 );
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of your handgun permit (type B) or Olympic shooting permit (type F)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of your handgun permit (type B) or Olympic shooting permit (type F)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'rifle':
@@ -542,9 +532,9 @@ class Alsernetforms extends Module implements WidgetInterface
                     ['[b]' => '<strong>', '[/b]' => '</strong>']
                 );
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of your rifled long-range firearm permit (type D)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of your rifled long-range firearm permit (type D)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'escopeta':
@@ -553,9 +543,9 @@ class Alsernetforms extends Module implements WidgetInterface
                     ['[b]' => '<strong>', '[/b]' => '</strong>']
                 );
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '<li>' . $this->l('A photocopy of a shotgun license (type E)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'<li>'.$this->l('A photocopy of a shotgun license (type E)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             case 'dni':
@@ -564,8 +554,8 @@ class Alsernetforms extends Module implements WidgetInterface
                     ['[b]' => '<strong>', '[/b]' => '</strong>']
                 );
                 $trans_list = '<ul style="padding-left: 20px; margin: 8px 0;">'
-                    . '<li>' . $this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso) . '</li>'
-                    . '</ul>';
+                    .'<li>'.$this->l('A photocopy of your ID (both sides)', 'alsernetforms', $iso).'</li>'
+                    .'</ul>';
                 break;
 
             default:
@@ -580,7 +570,7 @@ class Alsernetforms extends Module implements WidgetInterface
         return [$trans_remember, $trans_list];
     }
 
-    function getSportsByIdsAndTranslateNew()
+    public function getSportsByIdsAndTranslateNew()
     {
 
         $lang = $this->context->language->id;
@@ -670,21 +660,20 @@ class Alsernetforms extends Module implements WidgetInterface
 
         $sports_in_language = array_map(function ($id) use ($sports_map, $sports_translation_map, $lang) {
             $sport_name = $sports_map[$id];
+
             return [
                 'id' => $id,
                 'name' => $sports_translation_map[$lang][$sport_name] ?? $sport_name,
             ];
         }, $ids);
 
-
         return $sports_in_language;
     }
-
 
     public function assignUserToLists($id_susc_newsletter)
     {
         // Obtener los datos del usuario
-        $user = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'alsernet_forms_newsletter WHERE id_susc_newsletter = ' . (int)$id_susc_newsletter);
+        $user = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'alsernet_forms_newsletter WHERE id_susc_newsletter = '.(int) $id_susc_newsletter);
 
         // Verificar condiciones y asignar listas
         if ($user['lopd'] == 1) {
@@ -706,14 +695,14 @@ class Alsernetforms extends Module implements WidgetInterface
     private function addUserToList($id_susc_newsletter, $id_list)
     {
         // Verificar si el usuario ya está en la lista
-        $existing = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'alsernet_form_user_lists WHERE id_susc_newsletter = ' . (int)$id_susc_newsletter . ' AND id_list = ' . (int)$id_list);
+        $existing = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'alsernet_form_user_lists WHERE id_susc_newsletter = '.(int) $id_susc_newsletter.' AND id_list = '.(int) $id_list);
 
-        if (!$existing) {
+        if (! $existing) {
             // Si no está, agregarlo
             Db::getInstance()->insert('alsernet_form_user_lists', [
-                'id_susc_newsletter' => (int)$id_susc_newsletter,
-                'id_list' => (int)$id_list,
-                'added_at' => date('Y-m-d H:i:s')
+                'id_susc_newsletter' => (int) $id_susc_newsletter,
+                'id_list' => (int) $id_list,
+                'added_at' => date('Y-m-d H:i:s'),
             ]);
         }
     }
@@ -726,19 +715,16 @@ class Alsernetforms extends Module implements WidgetInterface
     public function hookHeader($params)
     {
 
-        $this->context->controller->addCSS($this->_path . 'views/css/front/style.css', 'all');
-        $this->context->controller->addCSS($this->_path . 'views/css/front/form.css', 'all');
-        //$this->context->controller->addCSS($this->_path.'views/css/front/dashboard.css','all');
+        $this->context->controller->addCSS($this->_path.'views/css/front/style.css', 'all');
+        $this->context->controller->addCSS($this->_path.'views/css/front/form.css', 'all');
+        // $this->context->controller->addCSS($this->_path.'views/css/front/dashboard.css','all');
 
-        //$this->context->controller->addJS($this->_path.'views/js/vendor/api.js');
-        $this->context->controller->addJS($this->_path . 'views/js/vendor/validate/validate.js');
-        $this->context->controller->addJS($this->_path . 'views/js/vendor/validate/messages.js');
-        $this->context->controller->addJS($this->_path . 'views/js/front/scripts.js');
-        $this->context->controller->addJS($this->_path . 'views/js/front/campaigns.js');
-        $this->context->controller->addJS($this->_path . 'views/js/front/documents.js');
-        $this->context->controller->addJS($this->_path . 'views/js/front/subscribers.js');
+        // $this->context->controller->addJS($this->_path.'views/js/vendor/api.js');
+        $this->context->controller->addJS($this->_path.'views/js/vendor/validate/validate.js');
+        $this->context->controller->addJS($this->_path.'views/js/vendor/validate/messages.js');
+        $this->context->controller->addJS($this->_path.'views/js/front/scripts.js');
+        $this->context->controller->addJS($this->_path.'views/js/front/campaigns.js');
+        $this->context->controller->addJS($this->_path.'views/js/front/documents.js');
+        $this->context->controller->addJS($this->_path.'views/js/front/subscribers.js');
     }
-
 }
-
-

@@ -16,7 +16,6 @@ use Modules\User\Http\Controllers\UsersController;
 |
 */
 
-Route::get('/search', [UsersController::class, 'search'])->name('search');
 Route::post('/', [UsersController::class, 'store'])->name('store');
 Route::post('/update', [UsersController::class, 'update'])->name('update');
 Route::delete('{uid}', [UsersController::class, 'destroy'])->name('destroy');
