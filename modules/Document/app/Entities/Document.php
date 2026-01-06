@@ -1043,5 +1043,14 @@ class Document extends Model implements HasMedia
                 $document->required_documents = $document->getRequiredDocuments();
             }
         });
+
+        static::created(function (Document $document) {
+            // Automatically initialize validation workflow when document is created
+            try {
+                $document->initializeWorkflow();
+            } catch (\Exception $e) {
+                Log::error('Error initializing workflow for document '.$document->uid.': '.$e->getMessage());
+            }
+        });
     }
 }
