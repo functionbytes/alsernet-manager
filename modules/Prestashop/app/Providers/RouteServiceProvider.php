@@ -34,8 +34,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapManagerRoutes(): void
     {
         Route::middleware(['web', 'auth', 'role:super-admin'])
-            ->prefix('manager/backups')
-            ->name('manager.backups.')
+            ->prefix('settings/prestashop')
+            ->name('prestashop.')
+            ->name('settings.prestashop.')
             ->group(module_path('Prestashop', 'routes/web.php'));
     }
 

@@ -161,9 +161,9 @@ class PrestashopServiceProvider extends ServiceProvider
         NavService::registerSidebar('settings', [
             'title' => 'Configuracion prestashop',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'prestashop.index'],
-                ['label' => 'Estadísticas', 'route' => 'prestashop.stats'],
-                ['label' => 'Configuración', 'route' => 'prestashop.edit'],
+                ['label' => 'Dashboard', 'route' => 'settings.prestashop.index'],
+                ['label' => 'Estadísticas', 'route' => 'settings.prestashop.stats'],
+                ['label' => 'Configuración', 'route' => 'settings.prestashop.edit'],
             ],
         ]);
     }

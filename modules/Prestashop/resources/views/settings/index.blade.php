@@ -19,7 +19,7 @@
       <div class="row g-2">
         <!-- Configuración -->
         <div class="col-md-3">
-          <a href="{{ route('manager.backups.prestashop.edit') }}" class="btn btn-primary w-100">
+          <a href="{{ route('settings.prestashop.edit') }}" class="btn btn-primary w-100">
             Configurar
           </a>
         </div>
@@ -377,7 +377,7 @@ $(document).ready(function() {
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: '{{ route("manager.backups.prestashop.check-connection") }}',
+            url: '{{ route("settings.prestashop.check-connection") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -406,7 +406,7 @@ $(document).ready(function() {
     // Toggle servicio
     $('#toggleServiceBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.backups.prestashop.toggle-active") }}',
+            url: '{{ route("settings.prestashop.toggle-active") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -436,7 +436,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: '{{ route("manager.backups.prestashop.reset-stats") }}',
+            url: '{{ route("settings.prestashop.reset-stats") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -461,7 +461,7 @@ $(document).ready(function() {
         btn.prop('disabled', true);
 
         $.ajax({
-            url: '{{ route("manager.backups.prestashop.test-sync") }}',
+            url: '{{ route("settings.prestashop.test-sync") }}',
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -486,7 +486,7 @@ $(document).ready(function() {
     // Refrescar estadísticas
     $('#refreshBtn').on('click', function() {
         $.ajax({
-            url: '{{ route("manager.backups.prestashop.get-stats") }}',
+            url: '{{ route("settings.prestashop.stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {
@@ -507,199 +507,8 @@ $(document).ready(function() {
         });
     });
 
-    // ========== Product Blockades Sync ==========
 
-    // Load blockades status on page load
-    loadBlockadesStatus();
 
-    function loadBlockadesStatus() {
-        $.ajax({
-            url: '{{ route("manager.backups.prestashop.blockades-status") }}',
-            method: 'GET',
-            success: function(response) {
-                if (response.success) {
-                    $('#totalBlockades').text(response.total_blockades.toLocaleString());
-                    $('#blockadesSyncCount').text(response.sync_count.toLocaleString());
-                    $('#blockagesLastSync').text(response.last_sync).attr('title', response.last_sync);
-                }
-            },
-            error: function() {
-                $('#totalBlockades').text('Error');
-                $('#blockadesSyncCount').text('Error');
-                $('#blockagesLastSync').text('Error');
-            }
-        });
-    }
-
-    // Sync blockades
-    $('#syncBlockadesBtn').on('click', function() {
-        syncBlockades(false);
-    });
-
-    // Sync blockades fresh (delete all and re-sync)
-    $('#syncBlockadesFreshBtn').on('click', function() {
-        if (!confirm('¿Estás seguro de que deseas eliminar todos los bloqueos existentes y volver a sincronizar? Esta acción no se puede deshacer.')) {
-            return;
-        }
-        syncBlockades(true);
-    });
-
-    function syncBlockades(fresh) {
-        const btn = fresh ? $('#syncBlockadesFreshBtn') : $('#syncBlockadesBtn');
-        const originalHtml = btn.html();
-
-        btn.prop('disabled', true);
-        btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Sincronizando...');
-
-        $.ajax({
-            url: '{{ route("manager.backups.prestashop.sync-blockades") }}',
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                fresh: fresh
-            },
-            success: function(response) {
-                if (response.success) {
-                    toastr.success(response.message, 'Bloqueos de Productos');
-                    loadBlockadesStatus();
-                } else {
-                    toastr.warning(response.message, 'Bloqueos de Productos');
-                }
-
-                // Show output in console for debugging
-                if (response.output) {
-                    console.log('Sync Output:', response.output);
-                }
-            },
-            error: function(xhr) {
-                const message = xhr.responseJSON?.message || 'Error al sincronizar bloqueos';
-                toastr.error(message, 'Bloqueos de Productos');
-            },
-            complete: function() {
-                btn.prop('disabled', false);
-                btn.html(originalHtml);
-            }
-        });
-    }
-
-    // ========== Manual Blockade Management ==========
-
-    // Save blockade labels
-    $('#saveBlockadeLabelsBtn').on('click', function() {
-        const labels = $('#blockadeLabels').val().trim();
-
-        if (!labels) {
-            toastr.error('Por favor ingresa al menos una etiqueta', 'Etiquetas');
-            return;
-        }
-
-        const btn = $(this);
-        const originalHtml = btn.html();
-        btn.prop('disabled', true);
-        btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Guardando...');
-
-        $.ajax({
-            url: '{{ route("manager.backups.prestashop.save-blockade-labels") }}',
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: {
-                labels: labels
-            },
-            success: function(response) {
-                if (response.success) {
-                    toastr.success(response.message, 'Etiquetas');
-                    $('#currentLabels').text(labels);
-                } else {
-                    toastr.error(response.message, 'Etiquetas');
-                }
-            },
-            error: function(xhr) {
-                const message = xhr.responseJSON?.message || 'Error al guardar las etiquetas';
-                toastr.error(message, 'Etiquetas');
-            },
-            complete: function() {
-                btn.prop('disabled', false);
-                btn.html(originalHtml);
-            }
-        });
-    });
-
-    // Toggle between simple product and combination
-    $('input[name="productType"]').on('change', function() {
-        const isSimple = $(this).val() === 'simple';
-
-        if (isSimple) {
-            $('#productIdContainer').removeClass('d-none');
-            $('#productAttributeIdContainer').addClass('d-none');
-            $('#blockadeIdProduct').prop('required', true);
-            $('#blockadeIdProductAttribute').prop('required', false).val('');
-        } else {
-            $('#productIdContainer').addClass('d-none');
-            $('#productAttributeIdContainer').removeClass('d-none');
-            $('#blockadeIdProduct').prop('required', false).val('');
-            $('#blockadeIdProductAttribute').prop('required', true);
-        }
-    });
-
-    // Show/hide custom blockade type input
-    $('#blockadeType').on('change', function() {
-        if ($(this).val() === 'custom') {
-            $('#customBlockadeTypeContainer').removeClass('d-none');
-            $('#customBlockadeType').prop('required', true);
-        } else {
-            $('#customBlockadeTypeContainer').addClass('d-none');
-            $('#customBlockadeType').prop('required', false);
-        }
-    });
-
-    // Handle add blockade form submission
-    $('#formAddBlockade').on('submit', function(e) {
-        e.preventDefault();
-
-        const blockadeType = $('#blockadeType').val();
-        const finalBlockadeType = blockadeType === 'custom' ? $('#customBlockadeType').val() : blockadeType;
-        const productType = $('input[name="productType"]:checked').val();
-
-        const data = {
-            source_id: $('#blockadeSourceId').val(),
-            blockade_type: finalBlockadeType
-        };
-
-        // Add either product_id or product_attribute_id based on product type
-        if (productType === 'simple') {
-            data.product_id = $('#blockadeIdProduct').val();
-        } else {
-            data.product_attribute_id = $('#blockadeIdProductAttribute').val();
-        }
-
-        $.ajax({
-            url: '{{ route("manager.backups.prestashop.create-blockade") }}',
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            data: data,
-            success: function(response) {
-                if (response.success) {
-                    toastr.success(response.message, 'Bloqueo Manual');
-                    $('#formAddBlockade')[0].reset();
-                    $('#customBlockadeTypeContainer').addClass('d-none');
-                    $('#addBlockadeForm').collapse('hide');
-                    loadBlockadesStatus();
-                } else {
-                    toastr.error(response.message, 'Bloqueo Manual');
-                }
-            },
-            error: function(xhr) {
-                const message = xhr.responseJSON?.message || 'Error al crear el bloqueo';
-                toastr.error(message, 'Bloqueo Manual');
-            }
-        });
-    });
 });
 </script>
 @endpush

@@ -6,7 +6,7 @@
 
   <div class="widget-content searchable-container list">
 
-      <form action="{{ route('manager.backups.prestashop.update') }}" method="POST">
+      <form action="{{ route('settings.prestashop.update') }}" method="POST">
 
           <div class="card">
 
@@ -239,7 +239,7 @@
                       <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                           Guardar
                       </button>
-                      <a href="{{ route('prestashop.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                      <a href="{{ route('settings.prestashop.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                           Volver
                       </a>
                   </div>
