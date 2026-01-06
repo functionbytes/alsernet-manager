@@ -2,45 +2,50 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Correo Entrante'])
-
     <div class="widget-content searchable-container list">
 
         @include('theme.components.alerts')
 
-        <!-- Incoming Email Settings Card -->
+        {{-- Main Card --}}
         <div class="card">
-            <div class="card-body">
-
-                <!-- Acciones -->
-                <div class="mb-4 border-bottom pb-3">
-                    <div class="row g-2">
-                        <div class="col-md-3">
-                            <a href="{{ route('settings.email.index') }}" class="btn btn-outline-primary w-100">
-                                Volver
-                            </a>
-                        </div>
+            {{-- Header Section --}}
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Configuración de correo entrante</h5>
+                        <p class="small mb-0 text-muted">Configure diferentes manejadores para convertir los correos electrónicos entrantes en tickets y respuestas</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('settings.email.index') }}" class="btn btn-light">
+                            <i class="fas fa-arrow-left me-2"></i>Volver
+                        </a>
                     </div>
                 </div>
+            </div>
 
-                <!-- Descripción -->
-                <div class="alert alert-info border-0 bg-info-subtle text-info mb-4">
+            {{-- Info Alert --}}
+            <div class="card-body border-bottom bg-light-info">
+                <div class="alert alert-info border-0 bg-info-subtle text-info mb-0">
                     <div class="d-flex align-items-start gap-2">
                         <i class="fa fa-circle-info fs-5"></i>
                         <div>
                             <strong>Manejadores de email</strong>
-                            <p class="mb-0">Configure diferentes manejadores para convertir los correos electrónicos entrantes en tickets y respuestas. Puede habilitar múltiples manejadores al mismo tiempo.</p>
+                            <p class="mb-0">Puede habilitar múltiples manejadores al mismo tiempo. Cada uno procesará los correos entrantes de forma independiente.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {{-- Handlers Content --}}
+            <div class="card-body">
 
                 <!-- IMAP Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa fa-envelope"></i> IMAP</h5>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#imapCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">IMAP</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#imapCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -89,12 +94,12 @@
                 </div>
 
                 <!-- Pipe Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fa fa-code mr-2"></i> Pipe</h6>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#pipeCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">Pipe</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#pipeCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -124,7 +129,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">
-                                    Guardar
+                                    <i class="fas fa-save me-2"></i>Guardar
                                 </button>
                             </form>
                         </div>
@@ -132,12 +137,12 @@
                 </div>
 
                 <!-- REST API Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fa fa-cloud  mr-2"></i> REST API</h6>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#apiCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">REST API</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#apiCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -177,25 +182,26 @@
                                     <input type="hidden" id="apiUrl" value="{{ ($settings['api']['api_url'] ?? '') }}">
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">
-                                    Guardar
-                                </button>
-
-                                <a href="{{ route('settings.incoming-email.api.documentation') }}" class="btn btn-outline-info ms-2" target="_blank">
-                                    <i class="fa fa-book"></i> Ver documentación completa
-                                </a>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Guardar
+                                    </button>
+                                    <a href="{{ route('settings.incoming-email.api.documentation') }}" class="btn btn-outline-info" target="_blank">
+                                        <i class="fas fa-book me-2"></i>Ver documentación
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
 
                 <!-- Gmail API Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fa-brands fa-google  mr-2"></i> Gmail API</h6>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#gmailCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">Gmail API</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#gmailCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -233,7 +239,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary mb-3">
-                                    Guardar configuración
+                                    <i class="fas fa-save me-2"></i>Guardar configuración
                                 </button>
                             </form>
 
@@ -281,12 +287,12 @@
                 </div>
 
                 <!-- Mailgun Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fa fa-envelope-open  mr-2"></i> Mailgun</h6>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#mailgunCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">Mailgun</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#mailgunCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -326,7 +332,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">
-                                    Guardar
+                                    <i class="fas fa-save me-2"></i>Guardar
                                 </button>
                             </form>
                         </div>
@@ -334,12 +340,12 @@
                 </div>
 
                 <!-- phpList Handler -->
-                <div class="card mb-3">
-                    <div class="card-header bg-light-secondary">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-light border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fa fa-list-ul mr-2"></i> phpList</h6>
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#phplistCollapse">
-                                <i class="fa fa-chevron-down"></i>
+                            <h6 class="mb-0 fw-bold">phpList</h6>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#phplistCollapse">
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
@@ -376,17 +382,23 @@
                                     <small class="text-muted">ID de la lista predeterminada para nuevas suscripciones</small>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary w-100 mb-2">
-                                    Guardar
-                                </button>
-
-                                <button type="button" class="btn btn-outline-primary  w-100  mb-2" id="testPhplistBtn">
-                                    Probar conexión
-                                </button>
-
-                                <button type="button" class="btn btn-outline-info w-100" id="loadPhplistListsBtn">
-                                    Cargar listas
-                                </button>
+                                <div class="row g-2">
+                                    <div class="col-12 col-md-4">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-save me-2"></i>Guardar
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <button type="button" class="btn btn-outline-primary w-100" id="testPhplistBtn">
+                                            <i class="fas fa-plug me-2"></i>Probar conexión
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <button type="button" class="btn btn-outline-info w-100" id="loadPhplistListsBtn">
+                                            <i class="fas fa-list me-2"></i>Cargar listas
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
 
                             <!-- phpList Lists -->
@@ -416,15 +428,14 @@
 
             </div>
         </div>
-
     </div>
 
     <!-- Modal Agregar Conexión IMAP -->
     <div class="modal fade" id="addImapConnectionModal" tabindex="-1" aria-labelledby="addImapConnectionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-light-secondary">
-                    <h5 class="modal-title" id="addImapConnectionModalLabel">
+                <div class="modal-header bg-light border-bottom">
+                    <h5 class="modal-title fw-bold" id="addImapConnectionModalLabel">
                         Agregar conexión IMAP
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -490,12 +501,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary w-100">
-                            Guardar
-                        </button>
-                        <button type="button" class="btn btn-secondary w-100 mb-2" data-bs-dismiss="modal">
+                    <div class="modal-footer bg-light border-top">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
                             Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Guardar conexión
                         </button>
                     </div>
                 </form>
@@ -518,11 +529,16 @@ function deleteImapConnection(connectionId) {
         .then(response => response.json())
         .then(data => {
             if (data.success || data.message) {
-                window.location.reload();
+                toastr.success('Conexión IMAP eliminada correctamente', 'Éxito', {
+                    positionClass: 'toast-bottom-right'
+                });
+                setTimeout(() => window.location.reload(), 1500);
             }
         })
         .catch(error => {
-            alert('Error al eliminar la conexión: ' + error.message);
+            toastr.error('Error al eliminar la conexión: ' + error.message, 'Error', {
+                positionClass: 'toast-bottom-right'
+            });
         });
     }
 }
@@ -540,11 +556,16 @@ function deleteGmailConnection(connectionId) {
         .then(response => response.json())
         .then(data => {
             if (data.success || data.message) {
-                window.location.reload();
+                toastr.success('Cuenta Gmail eliminada correctamente', 'Éxito', {
+                    positionClass: 'toast-bottom-right'
+                });
+                setTimeout(() => window.location.reload(), 1500);
             }
         })
         .catch(error => {
-            alert('Error al eliminar la cuenta Gmail: ' + error.message);
+            toastr.error('Error al eliminar la cuenta Gmail: ' + error.message, 'Error', {
+                positionClass: 'toast-bottom-right'
+            });
         });
     }
 }
@@ -557,20 +578,14 @@ function copyToClipboard(elementId) {
     const value = element.value || element.textContent;
 
     navigator.clipboard.writeText(value).then(() => {
-        // Show temporary success message
-        const btn = event.target.closest('button');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fa fa-check"></i> Copiado';
-        btn.classList.add('btn-success');
-        btn.classList.remove('btn-outline-primary', 'btn-outline-secondary');
-
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-outline-primary');
-        }, 2000);
+        toastr.success('Copiado al portapapeles', 'Éxito', {
+            positionClass: 'toast-bottom-right',
+            timeOut: 2000
+        });
     }).catch(err => {
-        alert('Error al copiar: ' + err);
+        toastr.error('Error al copiar: ' + err, 'Error', {
+            positionClass: 'toast-bottom-right'
+        });
     });
 }
 
@@ -600,13 +615,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     document.getElementById('apiKey').value = data.api_key;
-                    alert('✅ ' + data.message);
+                    toastr.success(data.message, 'API Key generada', {
+                        positionClass: 'toast-bottom-right'
+                    });
                 } else {
-                    alert('❌ ' + data.message);
+                    toastr.error(data.message, 'Error', {
+                        positionClass: 'toast-bottom-right'
+                    });
                 }
             })
             .catch(error => {
-                alert('Error: ' + error.message);
+                toastr.error('Error: ' + error.message, 'Error', {
+                    positionClass: 'toast-bottom-right'
+                });
             })
             .finally(() => {
                 btn.disabled = false;
@@ -623,7 +644,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const apiKey = document.getElementById('phplistApiKey').value;
 
             if (!apiUrl || !apiKey) {
-                alert('Por favor ingrese API URL y API Key');
+                toastr.warning('Por favor ingrese API URL y API Key', 'Campos requeridos', {
+                    positionClass: 'toast-bottom-right'
+                });
                 return;
             }
 
@@ -715,11 +738,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     container.style.display = 'block';
                 } else {
-                    alert('Error al cargar listas: ' + (data.message || 'Respuesta inválida'));
+                    toastr.error(data.message || 'Respuesta inválida', 'Error al cargar listas', {
+                        positionClass: 'toast-bottom-right'
+                    });
                 }
             })
             .catch(error => {
-                alert('Error: ' + error.message);
+                toastr.error('Error: ' + error.message, 'Error', {
+                    positionClass: 'toast-bottom-right'
+                });
             })
             .finally(() => {
                 btn.disabled = false;
