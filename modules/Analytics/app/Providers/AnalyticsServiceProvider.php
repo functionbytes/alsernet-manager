@@ -31,8 +31,8 @@ class AnalyticsServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'analytics');
 
-        // Register facade alias
-        Facade::aliasNamespace('Analytics', 'Modules\\Analytics\\Facades');
+        // Register facade alias - commented out as module is disabled
+        // Facade::aliasNamespace('Analytics', 'Modules\\Analytics\\Facades');
 
         // Register menus
         $this->registerMenus();
@@ -43,20 +43,13 @@ class AnalyticsServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Analytics
-        NavService::registerMiniItem('analytics', [
-            'icon' => 'fa-chart-line',
-            'tooltip' => 'Analítica',
-            'sidebar_id' => 'analytics',
-            'order' => 50,
-        ]);
 
         // Sidebar con los items del módulo
-        NavService::registerSidebar('analytics', [
+        NavService::registerSidebar('settings', [
             'title' => 'Analítica',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'analytics.dashboard', 'icon' => 'fa-tachometer-alt'],
-                ['label' => 'Configuración', 'route' => 'settings.analytics.index', 'icon' => 'fa-cog'],
+                ['label' => 'Dashboard', 'route' => 'analytics.dashboard'],
+                ['label' => 'Configuración', 'route' => 'settings.analytics.index'],
             ],
         ]);
     }

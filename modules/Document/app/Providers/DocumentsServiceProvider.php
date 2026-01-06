@@ -223,7 +223,8 @@ class DocumentsServiceProvider extends ServiceProvider
         NavService::registerSidebar('documents', [
             'title' => 'Documentos',
             'items' => [
-                ['label' => 'Listado de documentos', 'route' => 'documents.index'],
+                ['label' => 'Listado de documentos', 'route' => 'documents.index', 'permission' => 'route-all-documents'],
+                ['label' => 'Documentos pendientes', 'route' => 'documents.pending', 'permission' => 'route-pending-documents|approve-documents|reject-documents'],
             ],
         ]);
 
@@ -232,6 +233,7 @@ class DocumentsServiceProvider extends ServiceProvider
             'title' => 'Documentos',
             'items' => [
                 ['label' => 'Configuración global', 'route' => 'settings.documents.configurations.global'],
+                ['label' => 'Almacenamiento', 'route' => 'settings.documents.configurations.storage'],
                 ['label' => 'Tipos de documento', 'route' => 'settings.documents.types.index'],
                 ['label' => 'Condiciones de validación', 'route' => 'settings.documents.conditions.index'],
                 ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],

@@ -3,9 +3,9 @@
 namespace Modules\Analytics\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Modules\Analytics\Facades\Analytics;
 use Modules\Analytics\Period;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -18,6 +18,15 @@ class DashboardController extends Controller
         $breadcrumb = 'Analytics / Dashboard';
 
         try {
+            // Check if analytics is configured
+            $propertyId = setting('google_analytics_property_id');
+            $credentials = setting('google_analytics_credentials');
+
+            if (empty($propertyId) || empty($credentials)) {
+                return redirect()->route('settings.analytics.index')
+                    ->with('error', 'Analytics no está configurado. Por favor, configura primero tu Google Analytics.');
+            }
+
             // Obtener período seleccionado
             $range = $request->input('range', 'last_7_days');
             $period = $this->getPeriodFromRange($range);
@@ -29,7 +38,7 @@ class DashboardController extends Controller
             $topReferrers = $this->getTopReferrers($period);
             $dailyData = $this->getDailyData($period);
 
-            $isConfigured = setting('google_analytics_property_id') && setting('google_analytics_credentials');
+            $isConfigured = true;
 
             return view('analytics::dashboard.index', compact(
                 'pageTitle',
@@ -42,9 +51,16 @@ class DashboardController extends Controller
                 'dailyData',
                 'isConfigured'
             ));
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
+            // Handle credentials errors
             return redirect()->route('settings.analytics.index')
-                ->with('error', 'Analytics no está configurado. Por favor, configura primero tu Google Analytics.');
+                ->with('error', 'Error en la configuración de Analytics: '.$e->getMessage());
+        } catch (\Exception $e) {
+            // Handle other errors gracefully
+            \Log::error('Analytics dashboard error: '.$e->getMessage());
+
+            return redirect()->route('settings.analytics.index')
+                ->with('error', 'Error al cargar datos de Analytics. Por favor, verifica tu configuración.');
         }
     }
 

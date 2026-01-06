@@ -30,6 +30,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:route-all-documents')->only(['index']);
+        $this->middleware('can:route-pending-documents|approve-documents|reject-documents')->only(['pending']);
+    }
+
     public function index(Request $request)
     {
         $search = trim(strtolower($request->get('search')));

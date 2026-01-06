@@ -80,7 +80,7 @@ class WebhookServiceProvider extends ServiceProvider
         // Webhook operational routes (day-to-day webhook monitoring)
         Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('webhooks')
-            ->name('manager.webhooks.')
+            ->name('webhooks.')
             ->group(function () use ($webPath) {
                 require $webPath;
             });
@@ -88,7 +88,7 @@ class WebhookServiceProvider extends ServiceProvider
         // Webhook configuration routes (system backups)
         Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/webhooks')
-            ->name('manager.backups.webhooks.')
+            ->name('webhooks.backups.')
             ->group(function () use ($settingsPath) {
                 require $settingsPath;
             });
@@ -119,11 +119,11 @@ class WebhookServiceProvider extends ServiceProvider
         NavService::registerSidebar('webhooks', [
             'title' => 'Webhooks',
             'items' => [
-                ['label' => 'Listado de webhooks', 'route' => 'manager.webhooks.index'],
-                ['label' => 'Entregas', 'route' => 'manager.webhooks.deliveries'],
-                ['label' => 'Eventos', 'route' => 'manager.webhooks.events'],
-                ['label' => 'Integraciones', 'route' => 'manager.backups.webhooks.integrations.index'],
-                ['label' => 'Suscripciones', 'route' => 'manager.backups.webhooks.subscriptions.index'],
+                ['label' => 'Listado de webhooks', 'route' => 'webhooks.index', 'icon' => 'fa-list'],
+                ['label' => 'Entregas', 'route' => 'webhooks.deliveries', 'icon' => 'fa-truck'],
+                ['label' => 'Eventos', 'route' => 'webhooks.events', 'icon' => 'fa-bell'],
+                ['label' => 'Integraciones', 'route' => 'webhooks.backups.integrations.index', 'icon' => 'fa-plug'],
+                ['label' => 'Suscripciones', 'route' => 'webhooks.backups.subscriptions.index', 'icon' => 'fa-hand-holding-heart'],
             ],
         ]);
     }

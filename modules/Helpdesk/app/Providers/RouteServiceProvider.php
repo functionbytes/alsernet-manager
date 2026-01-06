@@ -22,10 +22,10 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapWebRoutes(): void
     {
-        // Manager backups routes
+        // Helpdesk settings routes
         Route::middleware(['web', 'auth', 'role:super-admin'])
-            ->prefix('manager/backups/helpdesk')
-            ->name('manager.backups.helpdesk.')
+            ->prefix('settings/helpdesk')
+            ->name('helpdesk.backups.')
             ->group(module_path($this->name, 'routes/web.php'));
 
         // Agent routes

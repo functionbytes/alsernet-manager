@@ -66,7 +66,7 @@
 
             <!-- Document Configuration (Permission-Controlled) -->
             @if(auth()->user()->canDocument('view-document-management'))
-                @include('theme.components.document-management-card', [
+                @include('documents::documents.documents.components.management.document-management', [
                     'document' => $document,
                     'statuses' => $statuses,
                     'documentSources' => $documentSources,

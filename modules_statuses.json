@@ -33,5 +33,6 @@
     "Webhook": true,
     "Seo": true,
     "Users": true,
-    "Core": true
+    "Core": true,
+    "Queue": true
 }

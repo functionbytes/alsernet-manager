@@ -40,7 +40,6 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }
 
@@ -54,7 +53,7 @@ class DatabaseServiceProvider extends ServiceProvider
         // Database backups and cleanup routes
         Route::middleware(['web', 'auth', 'role:super-admin'])
             ->prefix('settings/database')
-            ->name('backups.database.')
+            ->name('settings.database.')
             ->group(function () use ($webPath) {
                 require $webPath;
             });
@@ -164,8 +163,8 @@ class DatabaseServiceProvider extends ServiceProvider
         NavService::registerSidebar('settings', [
             'title' => 'Gestión de base de datos',
             'items' => [
-                ['label' => 'Configuración', 'route' => 'backups.database.index'],
-                ['label' => 'Limpieza', 'route' => 'backups.database.cleanup.index'],
+                ['label' => 'Configuración', 'route' => 'settings.database.index'],
+                ['label' => 'Limpieza', 'route' => 'settings.database.cleanup.index'],
             ],
         ]);
     }

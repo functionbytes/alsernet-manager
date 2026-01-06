@@ -43,7 +43,7 @@ class DatabaseSettingsController extends Controller
 
             Setting::setDatabaseSettings($validated);
 
-            return redirect()->route('manager.backups.database.index')
+            return redirect()->route('backups.database.index')
                 ->with('success', 'Configuración de base de datos actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->back()

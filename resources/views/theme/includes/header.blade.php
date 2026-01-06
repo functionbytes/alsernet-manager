@@ -136,7 +136,7 @@
                                 <div class="d-flex align-items-center gap-2 lh-base">
                                     @php
                                         $initials = strtoupper(substr(Auth::user()->firstname, 0, 1) . substr(Auth::user()->lastname, 0, 1));
-                                        $colors = ['#90bb13', '#13C672', '#FA896B', '#5D87FF', '#FEC90F'];
+                                        $colors = ['#cfcfcf', '#cfcfcf', '#cfcfcf', '#cfcfcf', '#cfcfcf'];
                                         $colorIndex = ord($initials[0]) % count($colors);
                                         $bgColor = $colors[$colorIndex];
                                     @endphp

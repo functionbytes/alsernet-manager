@@ -31,7 +31,7 @@
         </div>
     @endif
 
-    <form action="{{ route('settings.documents.configurations') }}" method="POST" class="needs-validation" novalidate>
+    <form action="{{ route('settings.documents.configurations.storage.update') }}" method="POST" class="needs-validation" novalidate>
         @csrf
 
         <!-- Campo oculto para razón de cambio -->
@@ -239,7 +239,7 @@ NETWORK_SHARED_URL=${APP_URL}/network</code>
                 $btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Probando...');
 
                 $.ajax({
-                    url: '{{ route("settings.documents.configurations") }}',
+                    url: '{{ route("settings.documents.configurations.storage.test") }}',
                     method: 'POST',
                     dataType: 'json',
                     contentType: 'application/json',
@@ -344,7 +344,7 @@ NETWORK_SHARED_URL=${APP_URL}/network</code>
                 const $historyContent = $('#history-content');
 
                 $.ajax({
-                    url: '{{ route("settings.documents.configurations") }}',
+                    url: '{{ route("settings.documents.configurations.storage.history") }}',
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {

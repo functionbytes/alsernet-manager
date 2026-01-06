@@ -17,7 +17,7 @@
                     </a>
                 </div>
 
-                <p class="card-subtitle mb-4">
+                <p class="card-subtitle mb-4 text-muted">
                     {{ $module['description'] ?: 'Sin descripción disponible' }}
                 </p>
 
@@ -29,7 +29,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-1">Alias</label>
                                 <div class="fw-bold">
                                     <code class="text-primary fs-6">{{ $module['alias'] }}</code>
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-1">Versión</label>
                                 <div>
                                     <span class="badge bg-light text-dark border fs-6">v{{ $module['version'] }}</span>
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-1">Prioridad</label>
                                 <div>
                                     <span class="badge bg-primary fs-6">{{ $module['priority'] }}</span>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-1">Estado</label>
                                 <div>
                                     @if($module['enabled'])
@@ -81,18 +81,18 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-2">Ruta del módulo</label>
-                                <div class="text-break">
-                                    <code class="text-dark">{{ $module['path'] }}</code>
+                                <div class="bg-dark text-white p-3 rounded-3 text-break">
+                                    <code class="text-white">{{ $module['path'] }}</code>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="p-3 bg-light rounded">
+                            <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-2">Namespace</label>
-                                <div>
-                                    <code class="text-dark">{{ $module['namespace'] }}</code>
+                                <div class="bg-dark text-white p-3 rounded-3">
+                                    <code class="text-white">{{ $module['namespace'] }}</code>
                                 </div>
                             </div>
                         </div>
@@ -100,12 +100,12 @@
 
                     @if(!empty($module['providers']))
                     <div class="mt-3">
-                        <div class="p-3 bg-light rounded">
+                        <div class="p-3 bg-light rounded-3">
                             <label class="form-label text-muted small mb-2">Service Providers</label>
-                            <div class="d-flex flex-column gap-2">
+                            <div class="bg-dark text-white p-3 rounded-3">
                                 @foreach($module['providers'] as $provider)
-                                    <div class="badge bg-white text-dark border text-start">
-                                        <code class="text-dark">{{ $provider }}</code>
+                                    <div class="mb-1">
+                                        <code class="text-white">{{ $provider }}</code>
                                     </div>
                                 @endforeach
                             </div>
@@ -115,7 +115,7 @@
 
                     @if(!empty($module['keywords']))
                     <div class="mt-3">
-                        <div class="p-3 bg-light rounded">
+                        <div class="p-3 bg-light rounded-3">
                             <label class="form-label text-muted small mb-2">Keywords</label>
                             <div class="d-flex flex-wrap gap-2">
                                 @foreach($module['keywords'] as $keyword)
@@ -172,6 +172,27 @@
                                 <span>Este módulo está protegido y no puede ser deshabilitado o desinstalado.</span>
                             </div>
                         @endif
+                    </div>
+                </div>
+
+                {{-- Additional Information Section --}}
+                <hr class="my-4">
+
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="mb-3 fw-bold">
+                            Acerca de la gestión de módulos
+                        </h6>
+                        <p class="text-muted mb-3">
+                            Los módulos permiten extender la funcionalidad del sistema de manera modular y organizada.
+                            Cada módulo puede tener sus propias rutas, controladores, modelos, vistas y migraciones.
+                        </p>
+                        <p class="small text-muted mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Para más información sobre la administración de módulos, consulta la
+                            <a href="{{ route('settings.modules.index') }}" class="text-decoration-none">lista completa de módulos</a>
+                            o la <a href="{{ route('settings.modules.uploadForm') }}" class="text-decoration-none">página de instalación</a>.
+                        </p>
                     </div>
                 </div>
             </div>

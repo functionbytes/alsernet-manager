@@ -2,7 +2,17 @@
 @php
     $hasWorkflow = $document->total_stages > 0;
     $isInValidation = in_array($document->validation_status, ['pending', 'in_validation']);
-    $canApproveStage = $hasWorkflow && $isInValidation && $document->current_stage <= $document->total_stages;
+
+    // Verificar si el usuario está en el grupo de validadores actual
+    $userIsInValidatorGroup = false;
+    if ($isInValidation && $document->current_validator_group) {
+        $userIsInValidatorGroup = auth()->user()->documentValidatorGroups()
+            ->where('key', $document->current_validator_group)
+            ->where('is_active', true)
+            ->exists();
+    }
+
+    $canApproveStage = $hasWorkflow && $isInValidation && $userIsInValidatorGroup && $document->current_stage <= $document->total_stages;
 
     // Get validation history
     $validationHistory = $document->validationHistory()->with('validator')->orderBy('validated_at', 'desc')->get();
@@ -52,15 +62,28 @@
 
         {{-- Current Stage Info --}}
         @if($isInValidation)
-            <div class="alert bg-light-subtle py-3 px-3 mb-3" role="alert">
+            <div class="alert {{ $userIsInValidatorGroup ? 'bg-success-subtle' : 'bg-warning-subtle' }} py-3 px-3 mb-3" role="alert">
                 <div class="d-flex align-items-start">
-                    <i class="fas fa-user-check text-primary me-2 mt-1" style="font-size: 0.9rem;"></i>
+                    @if($userIsInValidatorGroup)
+                        <i class="fas fa-check-circle text-success me-2 mt-1" style="font-size: 0.9rem;"></i>
+                    @else
+                        <i class="fas fa-info-circle text-warning me-2 mt-1" style="font-size: 0.9rem;"></i>
+                    @endif
                     <div>
-                        <small class="fw-semibold d-block text-dark">Grupo actual</small>
+                        <small class="fw-semibold d-block {{ $userIsInValidatorGroup ? 'text-success' : 'text-warning' }}">
+                            Grupo validador {{ $userIsInValidatorGroup ? '(Tu grupo)' : '(No asignado)' }}
+                        </small>
                         @if($document->current_validator_group)
                             <small class="text-muted">{{ ucfirst($document->current_validator_group) }}</small>
                         @else
                             <small class="text-muted">Pendiente de asignación</small>
+                        @endif
+
+                        @if(!$userIsInValidatorGroup && $isInValidation)
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                No puedes validar este documento en esta etapa.
+                            </small>
                         @endif
 
                         @if($document->assigned_user_id && $document->assignedUser)
@@ -124,44 +147,64 @@
         @if($validationHistory->count() > 0)
             <div class="border-top my-3"></div>
 
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <small class="fw-semibold text-dark">Historial de validación</small>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <small class="fw-semibold text-dark">
+                    <i class="fas fa-history me-2"></i>Historial de validación
+                </small>
                 <span class="badge bg-primary-subtle text-primary">{{ $validationHistory->count() }}</span>
             </div>
 
             <div class="validation-history-scroll">
                 @foreach($validationHistory as $history)
-                    <div class="validation-item border-bottom py-2">
+                    <div class="validation-item border-bottom py-3 px-2">
                         <div class="d-flex align-items-start gap-2">
-                            {{-- Icon - all using primary color --}}
+                            {{-- Icon --}}
                             @if($history->action === 'approved')
-                                <i class="fas fa-check-circle text-primary mt-1" style="font-size: 0.85rem;"></i>
+                                <div class="shrink-0">
+                                    <i class="fas fa-check-circle text-success mt-1" style="font-size: 0.95rem;"></i>
+                                </div>
                             @elseif($history->action === 'rejected')
-                                <i class="fas fa-times-circle text-primary mt-1" style="font-size: 0.85rem;"></i>
+                                <div class="shrink-0">
+                                    <i class="fas fa-times-circle text-danger mt-1" style="font-size: 0.95rem;"></i>
+                                </div>
                             @else
-                                <i class="fas fa-undo text-primary mt-1" style="font-size: 0.85rem;"></i>
+                                <div class="shrink-0">
+                                    <i class="fas fa-undo text-warning mt-1" style="font-size: 0.95rem;"></i>
+                                </div>
                             @endif
 
                             {{-- Content --}}
-                            <div class="flex-grow-1 min-width-0">
-                                <div class="d-flex justify-content-between align-items-start">
+                            <div class="grow min-width-0">
+                                {{-- Header --}}
+                                <div class="d-flex justify-content-between align-items-start mb-1">
                                     <div>
                                         <small class="fw-semibold d-block text-dark">
-                                            Etapa {{ $history->stage_number }} - {{ ucfirst($history->validator_group) }}
+                                            {{ $history->action === 'approved' ? '✓ Aprobado' : ($history->action === 'rejected' ? '✗ Rechazado' : '↻ Devuelto') }}
                                         </small>
-                                        <small class="text-muted">
-                                            {{ $history->action === 'approved' ? 'Aprobado' : ($history->action === 'rejected' ? 'Rechazado' : 'Devuelto') }}
-                                            por {{ $history->validator->full_name ?? 'Sistema' }}
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-user me-1"></i>{{ $history->validator->full_name ?? 'Sistema' }}
                                         </small>
                                     </div>
-                                    <small class="text-muted flex-shrink-0" style="font-size: 0.7rem;">
-                                        {{ $history->validated_at->format('d/m H:i') }}
+                                    <small class="text-muted shrink-0" style="font-size: 0.75rem; white-space: nowrap; margin-left: auto;">
+                                        <i class="fas fa-calendar-alt me-1"></i>{{ $history->validated_at->format('d/m/Y H:i') }}
                                     </small>
                                 </div>
+
+                                {{-- Stage Info --}}
+                                <small class="text-muted d-block mt-1">
+                                    <span class="badge bg-light text-dark" style="font-size: 0.7rem;">
+                                        Etapa {{ $history->stage_number }} - {{ ucfirst($history->validator_group) }}
+                                    </span>
+                                </small>
+
+                                {{-- Comments --}}
                                 @if($history->comments)
-                                    <small class="text-muted d-block mt-1 fst-italic">
-                                        "{{ Str::limit($history->comments, 80) }}"
-                                    </small>
+                                    <div class="alert alert-light py-2 px-2 mt-2 mb-0" role="alert">
+                                        <small class="text-dark d-block">
+                                            <strong>Observaciones:</strong><br>
+                                            {{ $history->comments }}
+                                        </small>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -174,7 +217,7 @@
                 <div class="d-flex align-items-start">
                     <i class="fas fa-circle-info text-primary me-2 mt-1" style="font-size: 0.9rem;"></i>
                     <div>
-                        <small class="fw-semibold d-block">Sin historial</small>
+                        <small class="fw-semibold d-block">Sin historial de validación</small>
                         <small class="text-muted">No hay acciones de validación registradas aún.</small>
                     </div>
                 </div>

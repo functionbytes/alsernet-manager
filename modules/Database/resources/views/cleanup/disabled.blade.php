@@ -12,21 +12,21 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body text-center py-5">
                         <div class="mb-4">
-                            <i class="fa fa-lock" style="font-size: 4rem; color: #dc3545;"></i>
+                            <i class="fa fa-lock" style="font-size: 4rem; color: #000;"></i>
                         </div>
                         <h4 class="mb-3">Esta característica aún no está habilitada</h4>
                         <p class="text-muted mb-4">
                             Por seguridad, la limpieza de base de datos está deshabilitada Por defecto.
                         </p>
 
-                        <div class="alert alert-warning" role="alert">
+                        <div class="alert bg-light" role="alert">
                             <h5 class="alert-heading">
                                 <i class="fa fa-triangle-exclamation"></i> Importante
                             </h5>
                             <p class="mb-2">
                                 <strong>Antes de habilitar esta característica:</strong>
                             </p>
-                            <ul class="mb-0 text-start">
+                            <ul class="mb-0 text-center">
                                 <li>Realiza una copia de seguridad de tu base de datos</li>
                                 <li>Realiza una copia de seguridad de tus archivos de script</li>
                                 <li>Ten en cuenta que esta operación eliminará datos de forma permanente</li>
@@ -37,7 +37,7 @@
                             <div class="card-body">
                                 <h6 class="mb-3">Para habilitar, añade en el archivo <code>.env</code>:</h6>
                                 <div class="bg-white p-3 rounded border" style="font-family: 'Courier New', monospace;">
-                                    <code class="text-danger">CMS_ENABLED_CLEANUP_DATABASE=true</code>
+                                    <code class="text-black">CMS_ENABLED_CLEANUP_DATABASE=true</code>
                                 </div>
                             </div>
                         </div>

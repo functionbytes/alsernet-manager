@@ -170,7 +170,7 @@
                     return;
                 }
 
-                fetch('{{ route("backups.analytics.validate-credentials") }}', {
+                fetch('{{ route("settings.analytics.validate-credentials") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -389,7 +389,14 @@
       "Bash(modules/Document/resources/views/settings/configurations/index.blade.php)",
       "Bash(awk:*)",
       "Bash(./vendor/bin/pint:*)",
-      "Bash(comm:*)"
+      "Bash(comm:*)",
+      "Bash(modules/Campaign/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Helpdesk/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Prestashop/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Return/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Reverb/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Subscriber/app/Providers/RouteServiceProvider.php )",
+      "Bash(modules/Webhook/app/Providers/WebhookServiceProvider.php)"
     ],
     "deny": [],
     "ask": []

@@ -39,20 +39,13 @@ class ErpServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para ERP
-        NavService::registerMiniItem('erp', [
-            'icon' => 'fa-server',
-            'tooltip' => 'Integración ERP',
-            'sidebar_id' => 'erp',
-            'order' => 90,
-        ]);
 
         // Sidebar con los items del módulo
-        NavService::registerSidebar('erp', [
+        NavService::registerSidebar('settings', [
             'title' => 'Integración ERP',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'settings.erp.index', 'icon' => 'fa-tachometer-alt'],
-                ['label' => 'Configuración', 'route' => 'settings.erp.edit', 'icon' => 'fa-cog'],
+                ['label' => 'Dashboard', 'route' => 'settings.erp.index'],
+                ['label' => 'Configuración', 'route' => 'settings.erp.edit'],
             ],
         ]);
     }

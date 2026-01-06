@@ -30,23 +30,21 @@ Route::middleware(['web', 'auth'])->group(function () {
     // ====================================================================
     // OPERATIONAL ROUTES - /documents
     // ====================================================================
-    Route::prefix('documents')->name('documents.')
-        ->middleware(['can:modules.view.documents'])
-        ->group(function () {
-            // Listing routes
-            Route::get('/', [DocumentsController::class, 'index'])->name('index');
-            Route::get('/pending', [DocumentsController::class, 'pending'])->name('pending');
+    Route::prefix('documents')->name('documents.')->middleware(['can:modules.view.documents'])->group(function () {
+        // Listing routes
+        Route::get('/', [DocumentsController::class, 'index'])->name('index');
+        Route::get('/pending', [DocumentsController::class, 'pending'])->name('pending');
 
-            // Import routes - Refactored to DocumentSyncController
-            Route::get('/import', [DocumentSyncController::class, 'importIndex'])->name('import');
-            Route::get('/import/api', [DocumentSyncController::class, 'importApi'])->name('import.api');
-            Route::get('/import/erp', [DocumentSyncController::class, 'importErp'])->name('import.erp');
+        // Import routes - Refactored to DocumentSyncController
+        Route::get('/import', [DocumentSyncController::class, 'importIndex'])->name('import');
+        Route::get('/import/api', [DocumentSyncController::class, 'importApi'])->name('import.api');
+        Route::get('/import/erp', [DocumentSyncController::class, 'importErp'])->name('import.erp');
 
-            // Document views
-            Route::get('/show/{uid}', [DocumentsController::class, 'show'])->name('show');
-            Route::get('/summary/{uid}', [DocumentsController::class, 'summary'])->name('summary');
-            Route::get('/manage/{uid}', [DocumentsController::class, 'manage'])->name('manage');
-        });
+        // Document views
+        Route::get('/show/{uid}', [DocumentsController::class, 'show'])->name('show');
+        Route::get('/summary/{uid}', [DocumentsController::class, 'summary'])->name('summary');
+        Route::get('/manage/{uid}', [DocumentsController::class, 'manage'])->name('manage');
+    });
 
     // ====================================================================
     // CONFIGURATION ROUTES - /settings/documents (Admin only)
@@ -66,6 +64,8 @@ Route::middleware(['web', 'auth'])->group(function () {
                 Route::get('/storage', [DocumentConfigurationController::class, 'storageSettings'])->name('storage');
                 Route::get('/storage/stats/{diskName}', [DocumentConfigurationController::class, 'getStorageStats'])->name('storage.stats');
                 Route::get('/storage/history', [DocumentConfigurationController::class, 'getStorageConfigurationHistory'])->name('storage.history');
+                Route::post('/storage/test', [DocumentConfigurationController::class, 'testStorageConnection'])->name('storage.test');
+                Route::post('/storage/update', [DocumentConfigurationController::class, 'updateStorageSettings'])->name('storage.update');
 
                 // Email and SLA settings
                 Route::get('/sla', [DocumentConfigurationController::class, 'slaSettings'])->name('sla');

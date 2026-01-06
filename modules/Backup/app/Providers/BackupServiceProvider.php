@@ -28,15 +28,7 @@ class BackupServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Backups
-        NavService::registerMiniItem('backups', [
-            'icon' => 'fa-database',
-            'tooltip' => 'Copias de seguridad',
-            'sidebar_id' => 'backups',
-            'order' => 80,
-        ]);
 
-        // Sidebar con los items del módulo
         NavService::registerSidebar('settings', [
             'title' => 'Copias de seguridad',
             'items' => [

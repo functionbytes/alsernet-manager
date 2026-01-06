@@ -2,7 +2,6 @@
 
 namespace Modules\Auth\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -80,28 +79,7 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register menus del módulo Auth
      */
-    protected function registerMenus(): void
-    {
-        // Mini-nav item para Auth Settings
-        NavService::registerMiniItem('auth', [
-            'icon' => 'fa-shield-alt',
-            'tooltip' => 'Seguridad',
-            'sidebar_id' => 'auth',
-            'order' => 50,
-        ]);
-
-        // Sidebar con los items del módulo
-        NavService::registerSidebar('auth', [
-            'title' => 'Seguridad',
-            'items' => [
-                ['label' => 'Mi perfil', 'route' => 'settings.auth.profile'],
-                ['label' => 'Sesiones activas', 'route' => 'settings.auth.sessions'],
-                ['label' => 'Autenticación 2FA', 'route' => 'settings.auth.two-factor'],
-                ['label' => 'Contraseña', 'route' => 'settings.auth.password.edit'],
-                ['label' => 'Dispositivos autorizados', 'route' => 'settings.auth.devices'],
-            ],
-        ]);
-    }
+    protected function registerMenus(): void {}
 
     /**
      * Register commands in the format of Command::class

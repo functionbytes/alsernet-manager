@@ -4,212 +4,249 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col-lg-12 d-flex align-items-stretch">
-        <div class="card w-100">
-            <form id="moduleForm" enctype="multipart/form-data" role="form" onSubmit="return false">
-                @csrf
+    @include('theme.components.card', ['title' => 'Administración de módulos'])
 
-                {{-- Success/Error Messages --}}
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>{{ $message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="widget-content searchable-container list">
+
+        @include('theme.components.alerts')
+
+        <div class="card">
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Módulos del sistema</h5>
+                        <p class="small mb-0 text-muted">Administra, habilita, deshabilita e instala módulos del sistema</p>
                     </div>
-                @endif
-
-                @if ($message = Session::get('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>{{ $message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- Modules Management Section --}}
-                <div class="card-body">
-                    <div class="d-flex no-block align-items-center justify-content-between mb-4">
-                        <h5 class="mb-0">
-                            <i class="fas fa-cube me-2"></i>Administración de módulos
-                        </h5>
-                        <a href="{{ route('settings.modules.uploadForm') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus me-2"></i>Instalar módulo
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('settings.modules.uploadForm') }}" class="btn btn-primary">
+                            Instalar módulo
                         </a>
                     </div>
+                </div>
+            </div>
 
-                    <p class="card-subtitle mb-4">
-                        Administra todos los módulos del sistema. Desde aquí puedes habilitar, deshabilitar,
-                        instalar o desinstalar módulos. Los módulos protegidos (Role y Modules) no pueden ser
-                        modificados para evitar inestabilidad del sistema.
-                    </p>
-
-                    {{-- Statistics Cards --}}
-                    <div class="row mb-4">
-                        <div class="col-md-4 mb-3">
-                            <div class="card bg-primary-subtle border-0">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                            <i class="fas fa-cubes fa-lg"></i>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h3 class="mb-0 fw-bold">{{ $totalModules }}</h3>
-                                            <small class="text-muted">Total de módulos</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card bg-success-subtle border-0">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                            <i class="fas fa-check-circle fa-lg"></i>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h3 class="mb-0 fw-bold text-success">{{ $enabledCount }}</h3>
-                                            <small class="text-muted">Habilitados</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card bg-warning-subtle border-0">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                            <i class="fas fa-pause-circle fa-lg"></i>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h3 class="mb-0 fw-bold text-warning">{{ $disabledCount }}</h3>
-                                            <small class="text-muted">Deshabilitados</small>
-                                        </div>
+            <!-- Stats Cards -->
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $totalModules }}</h4>
+                                        <small class="text-muted">Módulos instalados</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Habilitados</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $enabledCount }}</h4>
+                                        <small class="text-muted">Módulos activos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Deshabilitados</h6>
+                                        <h4 class="mb-1 fw-bold">{{ $disabledCount }}</h4>
+                                        <small class="text-muted">Módulos inactivos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    {{-- Modules Table --}}
+            <!-- Search Section -->
+            <div class="card-body border-bottom">
+                <form method="GET" action="{{ route('settings.modules.index') }}">
+                    <div class="d-flex flex-column flex-lg-row gap-3 align-items-stretch">
+                        <div class="flex-fill">
+                            <div class="input-group h-100">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="search" name="search" class="form-control border-start-0 ps-0"
+                                       placeholder="Buscar por nombre, alias o descripción..."
+                                       value="{{ request('search') }}">
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0" style="min-width: 200px;">
+                            <select name="status" class="form-select select2 h-100">
+                                <option value="">Todos los estados</option>
+                                <option value="enabled" {{ request('status') == 'enabled' ? 'selected' : '' }}>Habilitados</option>
+                                <option value="disabled" {{ request('status') == 'disabled' ? 'selected' : '' }}>Deshabilitados</option>
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2 flex-shrink-0">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-search me-1"></i>
+                            </button>
+                            @if(request('search') || request('status'))
+                                <a href="{{ route('settings.modules.index') }}"
+                                   class="btn btn-outline-secondary"
+                                   title="Limpiar filtros">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modules List -->
+            <div class="card-body">
+                @if(count($modules) > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle border-top">
-                            <thead>
-                                <tr class="border-bottom">
-                                    <th class="fw-semibold text-muted ps-3">Módulo</th>
-                                    <th class="fw-semibold text-muted">Descripción</th>
-                                    <th class="fw-semibold text-muted">Versión</th>
-                                    <th class="fw-semibold text-muted">Estado</th>
-                                    <th class="fw-semibold text-muted text-end pe-3">Acciones</th>
-                                </tr>
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th width="25%">Módulo</th>
+                                <th width="35%">Descripción</th>
+                                <th width="10%">Versión</th>
+                                <th width="15%" class="text-center">Estado</th>
+                                <th width="15%" class="text-center">Acciones</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @forelse($modules as $module)
-                                    <tr class="border-bottom">
-                                        <td class="ps-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="rounded bg-light p-2 me-3">
-                                                    <i class="fas fa-cube fa-lg text-primary"></i>
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold">{{ $module['name'] }}</div>
-                                                    <small class="text-muted">{{ $module['alias'] }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="text-muted small">{{ Str::limit($module['description'] ?: 'Sin descripción', 80) }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-light text-dark border">v{{ $module['version'] }}</span>
-                                        </td>
-                                        <td>
-                                            @if($module['enabled'])
-                                                <span class="badge bg-success-subtle text-success border border-success">
-                                                    <i class="fas fa-circle fa-2xs me-1"></i>Activo
-                                                </span>
-                                            @else
-                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary">
-                                                    <i class="fas fa-circle fa-2xs me-1"></i>Inactivo
-                                                </span>
+                            @foreach($modules as $module)
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <a href="{{ route('settings.modules.show', $module['alias']) }}" class="text-decoration-none">
+                                                <strong>{{ $module['name'] }}</strong>
+                                            </a>
+                                            @if(in_array($module['name'], ['Role', 'Modules']))
+                                                <br><small class="badge bg-primary-subtle text-primary">Módulo protegido</small>
                                             @endif
-                                        </td>
-                                        <td class="text-end pe-3">
-                                            <div class="d-flex gap-1 justify-content-end">
-                                                {{-- View Details --}}
-                                                <a href="{{ route('settings.modules.show', $module['alias']) }}"
-                                                   class="btn btn-sm btn-light border" title="Ver detalles"
-                                                   data-bs-toggle="tooltip">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-
-                                                {{-- Enable/Disable/Uninstall --}}
+                                            <small class="d-block text-muted">{{ $module['alias'] }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">{{ Str::limit($module['description'] ?: 'Sin descripción', 80) }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light-subtle text-dark">v{{ $module['version'] }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @if($module['enabled'])
+                                            <span class="badge bg-success-subtle text-success">
+                                                Activo
+                                            </span>
+                                        @else
+                                            <span class="badge bg-light text-black">
+                                                Inactivo
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-vertical"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('settings.modules.show', $module['alias']) }}">
+                                                        Ver detalles
+                                                    </a>
+                                                </li>
                                                 @if(!in_array($module['name'], ['Role', 'Modules']))
+                                                    <li><hr class="dropdown-divider"></li>
                                                     @if($module['enabled'])
-                                                        <form action="{{ route('settings.modules.disable', $module['alias']) }}"
-                                                              method="POST" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-warning-subtle border border-warning"
-                                                                    title="Deshabilitar" data-bs-toggle="tooltip"
-                                                                    onclick="return confirm('¿Deshabilitar {{ $module['name'] }}?')">
-                                                                <i class="fas fa-pause"></i>
-                                                            </button>
-                                                        </form>
+                                                        <li>
+                                                            <form action="{{ route('settings.modules.disable', $module['alias']) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item text-warning"
+                                                                        onclick="return confirm('¿Deshabilitar el módulo {{ $module['name'] }}?')">
+                                                                    Deshabilitar
+                                                                </button>
+                                                            </form>
+                                                        </li>
                                                     @else
-                                                        <form action="{{ route('settings.modules.enable', $module['alias']) }}"
-                                                              method="POST" class="d-inline">
+                                                        <li>
+                                                            <form action="{{ route('settings.modules.enable', $module['alias']) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item text-success">
+                                                                    Habilitar
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    @endif
+                                                    <li>
+                                                        <form action="{{ route('settings.modules.uninstall', $module['alias']) }}" method="POST">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-sm btn-success-subtle border border-success"
-                                                                    title="Habilitar" data-bs-toggle="tooltip">
-                                                                <i class="fas fa-play"></i>
+                                                            <button type="submit" class="dropdown-item text-danger"
+                                                                    onclick="return confirm('¿Desinstalar el módulo {{ $module['name'] }}? Esta acción es irreversible.')">
+                                                                Desinstalar
                                                             </button>
                                                         </form>
-                                                    @endif
-
-                                                    {{-- Uninstall --}}
-                                                    <form action="{{ route('settings.modules.uninstall', $module['alias']) }}"
-                                                          method="POST" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-danger-subtle border border-danger"
-                                                                title="Desinstalar" data-bs-toggle="tooltip"
-                                                                onclick="return confirm('¿Desinstalar {{ $module['name'] }}? Esta acción es irreversible.')">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <span class="badge bg-light text-muted border">
-                                                        <i class="fas fa-lock fa-xs me-1"></i>Protegido
-                                                    </span>
+                                                    </li>
                                                 @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted py-4">
-                                            <i class="fas fa-inbox me-2"></i>No hay módulos disponibles
-                                        </td>
-                                    </tr>
-                                @endforelse
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </form>
+                @else
+                    <div class="text-center py-5">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="round-48 rounded-circle bg-light-subtle text-muted mb-3 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-cube fs-7"></i>
+                            </div>
+                            <h6 class="mb-1">
+                                @if(request('search') || request('status'))
+                                    No se encontraron módulos
+                                @else
+                                    No hay módulos instalados
+                                @endif
+                            </h6>
+                            <p class="text-muted mb-3">
+                                @if(request('search') || request('status'))
+                                    No se encontraron resultados con los criterios de búsqueda
+                                @else
+                                    Instala tu primer módulo para extender la funcionalidad del sistema
+                                @endif
+                            </p>
+                            @if(!request('search') && !request('status'))
+                                <a href="{{ route('settings.modules.uploadForm') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Instalar primer módulo
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
-</div>
 
 @endsection
 
 @push('scripts')
-<script>
-    // Initialize tooltips
-    document.addEventListener('DOMContentLoaded', function() {
-        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        tooltips.forEach(tooltip => {
-            new bootstrap.Tooltip(tooltip);
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+            toastr.success('{{ session('success') }}', 'Éxito');
+            @endif
+
+            @if (session('error'))
+            toastr.error('{{ session('error') }}', 'Error');
+            @endif
         });
-    });
-</script>
+    </script>
 @endpush

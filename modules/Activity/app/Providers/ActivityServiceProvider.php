@@ -10,6 +10,8 @@ class ActivityServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerConfigurations();
+        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'activity');
 
         // Register menus
         $this->registerMenus();

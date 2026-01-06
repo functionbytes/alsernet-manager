@@ -147,13 +147,6 @@ class DocumentPermissionSeeder extends Seeder
                 'sort_order' => 31,
             ],
             [
-                'name' => 'view-all-documents',
-                'label' => 'Ver todos los documentos',
-                'category' => 'management',
-                'description' => 'Permite ver todos los documentos sin restricción',
-                'sort_order' => 32,
-            ],
-            [
                 'name' => 'add-notes',
                 'label' => 'Agregar notas',
                 'category' => 'management',
@@ -175,27 +168,71 @@ class DocumentPermissionSeeder extends Seeder
                 'sort_order' => 35,
             ],
 
+            // Field-level document editing permissions
+            [
+                'name' => 'edit-status',
+                'label' => 'Editar estado del documento',
+                'category' => 'management',
+                'description' => 'Permite editar el estado del documento',
+                'sort_order' => 36,
+            ],
+            [
+                'name' => 'edit-source',
+                'label' => 'Editar origen del documento',
+                'category' => 'management',
+                'description' => 'Permite editar el origen/canal del documento',
+                'sort_order' => 37,
+            ],
+            [
+                'name' => 'edit-load',
+                'label' => 'Editar método de carga',
+                'category' => 'management',
+                'description' => 'Permite editar el método de carga del documento',
+                'sort_order' => 38,
+            ],
+            [
+                'name' => 'edit-sync',
+                'label' => 'Editar tipo de sincronización',
+                'category' => 'management',
+                'description' => 'Permite editar el tipo de sincronización del documento',
+                'sort_order' => 39,
+            ],
+            [
+                'name' => 'edit-upload',
+                'label' => 'Editar tipo de subida',
+                'category' => 'management',
+                'description' => 'Permite editar el tipo de subida del documento',
+                'sort_order' => 40,
+            ],
+            [
+                'name' => 'edit-financing',
+                'label' => 'Editar requisito de financiación',
+                'category' => 'management',
+                'description' => 'Permite editar si el documento requiere financiación',
+                'sort_order' => 41,
+            ],
+
             // Import/Sync permissions
             [
                 'name' => 'import-documents',
                 'label' => 'Importar documentos',
                 'category' => 'sync',
                 'description' => 'Permite importar documentos desde sistemas externos',
-                'sort_order' => 40,
+                'sort_order' => 50,
             ],
             [
                 'name' => 'sync-erp',
                 'label' => 'Sincronizar con ERP',
                 'category' => 'sync',
                 'description' => 'Permite sincronizar documentos con el ERP',
-                'sort_order' => 41,
+                'sort_order' => 51,
             ],
             [
                 'name' => 'sync-api',
                 'label' => 'Sincronizar por API',
                 'category' => 'sync',
                 'description' => 'Permite sincronizar documentos mediante API',
-                'sort_order' => 42,
+                'sort_order' => 52,
             ],
 
             // Advanced permissions
@@ -204,21 +241,79 @@ class DocumentPermissionSeeder extends Seeder
                 'label' => 'Gestionar bloqueos',
                 'category' => 'advanced',
                 'description' => 'Permite gestionar bloqueos de productos',
-                'sort_order' => 50,
+                'sort_order' => 60,
             ],
             [
                 'name' => 'view-history',
                 'label' => 'Ver historial',
                 'category' => 'advanced',
                 'description' => 'Permite ver historial completo de cambios',
-                'sort_order' => 51,
+                'sort_order' => 61,
             ],
             [
                 'name' => 'export-documents',
                 'label' => 'Exportar documentos',
                 'category' => 'advanced',
                 'description' => 'Permite exportar documentos y reportes',
-                'sort_order' => 52,
+                'sort_order' => 62,
+            ],
+
+            // Route permissions - Control de acceso a rutas
+            [
+                'name' => 'route-all-documents',
+                'label' => 'Ver todos los documentos',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET / (listado completo de documentos)',
+                'sort_order' => 70,
+            ],
+            [
+                'name' => 'route-pending-documents',
+                'label' => 'Ver documentos pendientes de validación',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET /pending (documentos pendientes en etapa de validación del usuario)',
+                'sort_order' => 71,
+            ],
+            [
+                'name' => 'route-show-documents',
+                'label' => 'Ver documentos individuales',
+                'category' => 'route',
+                'description' => 'Acceso a rutas de ver documentos: show, summary',
+                'sort_order' => 72,
+            ],
+            [
+                'name' => 'route-manage-documents',
+                'label' => 'Gestionar documentos',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET /manage/{uid} (gestión detallada)',
+                'sort_order' => 73,
+            ],
+            [
+                'name' => 'route-sync-documents',
+                'label' => 'Importar documentos',
+                'category' => 'route',
+                'description' => 'Acceso general a rutas de sincronización e importación',
+                'sort_order' => 74,
+            ],
+            [
+                'name' => 'route-sync-api-documents',
+                'label' => 'Sincronizar desde API',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET /import/api (sincronización desde PrestaShop API)',
+                'sort_order' => 75,
+            ],
+            [
+                'name' => 'route-sync-erp-documents',
+                'label' => 'Sincronizar desde ERP',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET /import/erp (sincronización desde ERP)',
+                'sort_order' => 76,
+            ],
+            [
+                'name' => 'route-mails-documents',
+                'label' => 'Ver emails de documentos',
+                'category' => 'route',
+                'description' => 'Acceso a la vista de emails asociados a un documento',
+                'sort_order' => 77,
             ],
         ];
 

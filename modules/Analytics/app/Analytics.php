@@ -2,28 +2,29 @@
 
 namespace Modules\Analytics;
 
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\RunReportRequest;
+use Illuminate\Support\Facades\Cache;
 use Modules\Analytics\Traits\DateRangeTrait;
 use Modules\Analytics\Traits\DimensionTrait;
 use Modules\Analytics\Traits\FilterTrait;
 use Modules\Analytics\Traits\MetricTrait;
 use Modules\Analytics\Traits\OrderByTrait;
 use Modules\Analytics\Traits\RowOperationTrait;
-use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
-use Google\Analytics\Data\V1beta\RunReportRequest;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class Analytics
 {
     use DateRangeTrait;
-    use MetricTrait;
     use DimensionTrait;
-    use OrderByTrait;
     use FilterTrait;
+    use MetricTrait;
+    use OrderByTrait;
     use RowOperationTrait;
 
     protected string $propertyId;
+
     protected string $credentials;
+
     protected ?BetaAnalyticsDataClient $client = null;
 
     public function __construct(string $propertyId, string $credentials)
@@ -49,25 +50,31 @@ class Analytics
             return $this->client;
         }
 
-        // Guardar credenciales en almacenamiento temporal
-        $credentialsPath = storage_path('app/analytics-credentials.json');
-
-        // Crear directorio si no existe
-        if (!is_dir(dirname($credentialsPath))) {
-            mkdir(dirname($credentialsPath), 0755, true);
+        // Validate credentials are configured
+        if (empty($this->credentials)) {
+            throw new \RuntimeException('Google Analytics credentials are not configured. Please configure credentials in settings.');
         }
 
-        // Escribir credenciales JSON
-        file_put_contents($credentialsPath, $this->credentials);
+        // Decode credentials JSON
+        $credentialsArray = json_decode($this->credentials, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Invalid Google Analytics credentials JSON: '.json_last_error_msg());
+        }
+
+        if (! is_array($credentialsArray) || empty($credentialsArray)) {
+            throw new \RuntimeException('Google Analytics credentials must be a valid JSON object.');
+        }
 
         try {
+            // Pass decoded credentials array to the client
             $this->client = new BetaAnalyticsDataClient([
-                'credentials' => $credentialsPath,
+                'credentials' => $credentialsArray,
             ]);
 
             return $this->client;
         } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to initialize Google Analytics client: ' . $e->getMessage());
+            throw new \RuntimeException('Failed to initialize Google Analytics client: '.$e->getMessage());
         }
     }
 
@@ -94,7 +101,7 @@ class Analytics
 
             return new AnalyticsResponse($response);
         } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to fetch analytics data: ' . $e->getMessage());
+            throw new \RuntimeException('Failed to fetch analytics data: '.$e->getMessage());
         }
     }
 
@@ -107,13 +114,13 @@ class Analytics
             $client = $this->getClient();
 
             $params = [
-                'property' => 'properties/' . $this->getPropertyId(),
+                'property' => 'properties/'.$this->getPropertyId(),
                 'date_ranges' => $this->dateRanges,
                 'metrics' => $this->metrics,
                 'dimensions' => $this->dimensions,
             ];
 
-            if (!empty($this->orderBys)) {
+            if (! empty($this->orderBys)) {
                 $params['order_bys'] = $this->orderBys;
             }
 
@@ -135,7 +142,7 @@ class Analytics
             return $this->formatGoogleResponse($response);
         } catch (\Exception $e) {
             // Si falla Google Analytics, retornar datos de prueba
-            \Log::error('Google Analytics query failed: ' . $e->getMessage());
+            \Log::error('Google Analytics query failed: '.$e->getMessage());
 
             return $this->getMockData();
         }
@@ -159,7 +166,7 @@ class Analytics
 
             // Agregar métricas
             foreach ($row->getMetricValues() as $index => $metric) {
-                $rowData['metric_' . $index] = $metric->getValue();
+                $rowData['metric_'.$index] = $metric->getValue();
             }
 
             $rows[] = ['dimensions' => array_values($rowData), 'metricValues' => []];

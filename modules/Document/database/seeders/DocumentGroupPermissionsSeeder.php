@@ -74,8 +74,15 @@ class DocumentGroupPermissionsSeeder extends Seeder
                 'name' => 'route-show-documents',
                 'label' => 'Ver documentos individuales',
                 'category' => 'route',
-                'description' => 'Acceso a rutas de ver documentos: pending, show, summary',
+                'description' => 'Acceso a rutas de ver documentos: show, summary',
                 'sort_order' => 2,
+            ],
+            [
+                'name' => 'route-pending-documents',
+                'label' => 'Ver documentos pendientes',
+                'category' => 'route',
+                'description' => 'Acceso a la ruta GET /pending (documentos en etapa de validación)',
+                'sort_order' => 2.5,
             ],
             [
                 'name' => 'route-manage-documents',

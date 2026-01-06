@@ -154,7 +154,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Load backup status
-            fetch('{{ route("backups.backups.status") }}')
+            fetch('{{ route("settings.backups.status") }}')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {

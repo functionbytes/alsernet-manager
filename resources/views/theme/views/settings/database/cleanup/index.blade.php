@@ -166,7 +166,7 @@
                                     <button type="submit" class="btn btn-primary w-100 mb-2" id="cleanupBtn" disabled>
                                         Limpiar tablas seleccionadas
                                     </button>
-                                    <a href="{{ route('manager.backups.database.index') }}"
+                                    <a href="{{ route('backups.database.index') }}"
                                        class="btn btn-secondary w-100 ">
                                         Cancelar
                                     </a>
@@ -415,7 +415,7 @@
                 confirmCleanupBtn.disabled = true;
                 confirmCleanupBtn.innerHTML = '<i class="fa fa-spinner animate-spin"></i> Limpiando...';
 
-                fetch('{{ route("manager.backups.database.cleanup.truncate") }}', {
+                fetch('{{ route("backups.database.cleanup.truncate") }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

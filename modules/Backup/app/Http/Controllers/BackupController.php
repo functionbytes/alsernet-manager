@@ -2,13 +2,13 @@
 
 namespace Modules\Backup\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Setting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Backup\Jobs\CreateBackupJob;
-use App\Http\Controllers\Controller;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Illuminate\Http\Request;
-use App\Models\Setting;
 
 class BackupController extends Controller
 {
@@ -21,7 +21,7 @@ class BackupController extends Controller
         $pageTitle = 'Administrador de Backups';
         $breadcrumb = 'Configuración / Backups';
 
-        return view('backup::settings.index', compact('backups', 'pageTitle', 'breadcrumb'));
+        return view('backup::backups.index', compact('backups', 'pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -32,7 +32,7 @@ class BackupController extends Controller
         $pageTitle = 'Crear Nuevo Backup';
         $breadcrumb = 'Configuración / Backups / Crear';
 
-        return view('backup::settings.create', compact('pageTitle', 'breadcrumb'));
+        return view('backup::backups.create', compact('pageTitle', 'breadcrumb'));
     }
 
     /**
@@ -131,7 +131,7 @@ class BackupController extends Controller
                 return $labels[$type] ?? $type;
             }, $backupTypes);
 
-            return redirect()->route('settings.backups.index')
+            return redirect()->route('backups.backups.index')
                 ->with('success', 'Backup en progreso... Se está creando el backup incluyendo: '.implode(', ', $displayTypes).'. Esto puede tardar varios minutos.');
         } catch (\Throwable $e) {
             \Log::error('Backup creation failed: '.$e->getMessage());
@@ -162,13 +162,13 @@ class BackupController extends Controller
             }
 
             if (! $backupPath) {
-                return redirect()->route('settings.backups.index')
+                return redirect()->route('backups.backups.index')
                     ->with('error', 'El archivo de backup no existe');
             }
 
             return Storage::disk('local')->download($backupPath, $filename);
         } catch (\Exception $e) {
-            return redirect()->route('settings.backups.index')
+            return redirect()->route('backups.backups.index')
                 ->with('error', 'Error al descargar el backup: '.$e->getMessage());
         }
     }
@@ -206,7 +206,7 @@ class BackupController extends Controller
                     ], 404);
                 }
 
-                return redirect()->route('settings.backups.index')
+                return redirect()->route('backups.backups.index')
                     ->with('error', 'El archivo de backup no existe');
             }
 
@@ -219,7 +219,7 @@ class BackupController extends Controller
                 ]);
             }
 
-            return redirect()->route('settings.backups.index')
+            return redirect()->route('backups.backups.index')
                 ->with('success', 'Backup eliminado exitosamente');
         } catch (\Exception $e) {
             $isJsonRequest = $request->expectsJson() ||
@@ -233,7 +233,7 @@ class BackupController extends Controller
                 ], 500);
             }
 
-            return redirect()->route('settings.backups.index')
+            return redirect()->route('backups.backups.index')
                 ->with('error', 'Error al eliminar el backup: '.$e->getMessage());
         }
     }

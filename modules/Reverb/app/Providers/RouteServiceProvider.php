@@ -29,8 +29,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         Route::middleware(['web', 'auth', 'role:super-admin'])
-            ->prefix('manager/backups/reverb')
-            ->name('manager.backups.reverb.')
+            ->prefix('settings/reverb')
+            ->name('reverb.backups.')
             ->group(module_path('Reverb', 'routes/web.php'));
     }
 }

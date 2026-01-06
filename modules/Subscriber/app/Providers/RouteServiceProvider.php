@@ -24,8 +24,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapManagerRoutes(): void
     {
         Route::middleware(['web', 'auth', 'role:super-admin'])
-            ->prefix('manager/subscribers')
-            ->name('manager.subscribers.')
+            ->prefix('subscribers')
+            ->name('subscribers.')
             ->group(module_path($this->name, 'routes/web.php'));
     }
 

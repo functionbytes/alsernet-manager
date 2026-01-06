@@ -12,7 +12,7 @@ class ModulesController extends Controller
     /**
      * Display a listing of all modules with their status.
      */
-    public function index()
+    public function index(Request $request)
     {
         $modules = [];
 
@@ -32,12 +32,40 @@ class ModulesController extends Controller
             ];
         }
 
-        // Separate enabled and disabled modules
+        $modulesCollection = collect($modules);
+
+        // Apply search filter
+        if ($search = $request->get('search')) {
+            $modulesCollection = $modulesCollection->filter(function ($module) use ($search) {
+                $searchLower = strtolower($search);
+
+                return str_contains(strtolower($module['name']), $searchLower) ||
+                       str_contains(strtolower($module['alias']), $searchLower) ||
+                       str_contains(strtolower($module['description']), $searchLower);
+            });
+        }
+
+        // Apply status filter
+        if ($status = $request->get('status')) {
+            $modulesCollection = $modulesCollection->filter(function ($module) use ($status) {
+                if ($status === 'enabled') {
+                    return $module['enabled'];
+                } elseif ($status === 'disabled') {
+                    return $module['disabled'];
+                }
+
+                return true;
+            });
+        }
+
+        $filteredModules = $modulesCollection->values()->all();
+
+        // Calculate stats
         $enabled = collect($modules)->filter(fn ($m) => $m['enabled'])->all();
         $disabled = collect($modules)->filter(fn ($m) => $m['disabled'])->all();
 
         return view('modules::index', [
-            'modules' => $modules,
+            'modules' => $filteredModules,
             'enabledModules' => $enabled,
             'disabledModules' => $disabled,
             'totalModules' => count($modules),

@@ -28,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map(): void
     {
         $this->mapApiRoutes();
-        $this->mapManagerRoutes();
+        $this->mapCampaignRoutes();
     }
 
     /**
@@ -45,13 +45,13 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the manager routes for the application.
+     * Define the campaign routes for the application.
      */
-    protected function mapManagerRoutes(): void
+    protected function mapCampaignRoutes(): void
     {
         Route::middleware(['web', 'auth'])
-            ->prefix('manager')
-            ->name('manager.')
+            ->prefix('campaign')
+            ->name('campaign.')
             ->group(base_path('modules/Campaign/routes/web.php'));
     }
 }

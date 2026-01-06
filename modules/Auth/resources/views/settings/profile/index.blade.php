@@ -32,63 +32,6 @@
                 </div>
             </div>
 
-            {{-- Stats Cards --}}
-            <div class="card-body border-bottom">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="card bg-light-primary h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Nombre completo</h6>
-                                        <h5 style="font-weight: 700;">{{ $user->firstname }}</h5>
-                                        <small class="text-muted">{{ $user->lastname }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-success h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Rol asignado</h6>
-                                        <h5 class="text-success" style="font-weight: 700;">{{ Str::title(str_replace('-', ' ', $roleName)) }}</h5>
-                                        <small class="text-muted">Permisos del usuario</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-{{ $user->available ? 'success' : 'danger' }} h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Estado</h6>
-                                        <h5 class="text-{{ $user->available ? 'success' : 'danger' }}" style="font-weight: 700;">{{ $user->available ? 'Activo' : 'Inactivo' }}</h5>
-                                        <small class="text-muted">{{ $user->available ? 'Cuenta activa' : 'Cuenta desactivada' }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-{{ $user->email_verified_at ? 'success' : 'warning' }} h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Verificación</h6>
-                                        <h5 class="text-{{ $user->email_verified_at ? 'success' : 'warning' }}" style="font-weight: 700;">{{ $user->email_verified_at ? 'Verificado' : 'Pendiente' }}</h5>
-                                        <small class="text-muted">Estado del email</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {{-- Navigation Pills --}}
             <ul class="nav nav-pills user-profile-tab" id="user-profile-tab" role="tablist">
@@ -101,7 +44,7 @@
                             role="tab"
                             aria-controls="account"
                             aria-selected="{{ $activeTab === 'account' ? 'true' : 'false' }}">
-                        <i class="fas fa-user me-2"></i>
+
                         <span class="d-none d-md-block">Cuenta</span>
                     </button>
                 </li>
@@ -114,7 +57,7 @@
                             role="tab"
                             aria-controls="password"
                             aria-selected="{{ $activeTab === 'password' ? 'true' : 'false' }}">
-                        <i class="fas fa-key me-2"></i>
+
                         <span class="d-none d-md-block">Contraseña</span>
                     </button>
                 </li>
@@ -127,7 +70,7 @@
                             role="tab"
                             aria-controls="sessions"
                             aria-selected="{{ $activeTab === 'sessions' ? 'true' : 'false' }}">
-                        <i class="fas fa-clock me-2"></i>
+
                         <span class="d-none d-md-block">Sesiones</span>
                     </button>
                 </li>
@@ -140,7 +83,7 @@
                             role="tab"
                             aria-controls="two-factor"
                             aria-selected="{{ $activeTab === 'two-factor' ? 'true' : 'false' }}">
-                        <i class="fas fa-shield-halved me-2"></i>
+
                         <span class="d-none d-md-block">2FA</span>
                     </button>
                 </li>
@@ -153,7 +96,7 @@
                             role="tab"
                             aria-controls="devices"
                             aria-selected="{{ $activeTab === 'devices' ? 'true' : 'false' }}">
-                        <i class="fas fa-mobile-screen me-2"></i>
+
                         <span class="d-none d-md-block">Dispositivos</span>
                     </button>
                 </li>
@@ -166,7 +109,7 @@
                             role="tab"
                             aria-controls="activity"
                             aria-selected="{{ $activeTab === 'activity' ? 'true' : 'false' }}">
-                        <i class="fas fa-history me-2"></i>
+
                         <span class="d-none d-md-block">Actividad</span>
                     </button>
                 </li>

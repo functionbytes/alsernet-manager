@@ -287,6 +287,34 @@ trait HasDocumentPermissions
     }
 
     /**
+     * Check if user can edit a specific document field
+     * Allows granular control over which fields each user can edit
+     *
+     * @param  string  $fieldName  The field name (status, source, load, sync, upload, requires_financing)
+     */
+    public function canEditDocumentField(string $fieldName): bool
+    {
+        // Field-level permissions mapping
+        $fieldPermissions = [
+            'status' => 'edit-status',
+            'source' => 'edit-source',
+            'load' => 'edit-load',
+            'sync' => 'edit-sync',
+            'upload' => 'edit-upload',
+            'requires_financing' => 'edit-financing',
+        ];
+
+        $requiredPermission = $fieldPermissions[$fieldName] ?? null;
+
+        if (! $requiredPermission) {
+            // Default to generic edit-documents permission if field not mapped
+            return $this->canInDocumentModule('edit-documents');
+        }
+
+        return $this->canInDocumentModule($requiredPermission);
+    }
+
+    /**
      * Alias for backward compatibility - use canDocument() instead
      */
     public function canViewDocumentComponent(string $componentName): bool
