@@ -396,7 +396,10 @@
       "Bash(modules/Return/app/Providers/RouteServiceProvider.php )",
       "Bash(modules/Reverb/app/Providers/RouteServiceProvider.php )",
       "Bash(modules/Subscriber/app/Providers/RouteServiceProvider.php )",
-      "Bash(modules/Webhook/app/Providers/WebhookServiceProvider.php)"
+      "Bash(modules/Webhook/app/Providers/WebhookServiceProvider.php)",
+      "mcp__chrome-devtools__close_page",
+      "Bash(herd start:*)",
+      "Bash(sudo killall:*)"
     ],
     "deny": [],
     "ask": []

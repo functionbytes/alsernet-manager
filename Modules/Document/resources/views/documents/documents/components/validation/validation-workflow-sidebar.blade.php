@@ -36,7 +36,7 @@
 @if($hasWorkflow)
 <div class="card mb-3">
     <div class="card-header p-3 bg-white border-bottom">
-        <h5 class="mb-1 fw-bold">Validación Etapa</h5>
+        <h5 class="mb-1 fw-bold">Validación etapa</h5>
         <p class="small mb-0 text-muted">Progreso de validación del documento</p>
     </div>
     <div class="card-body">
@@ -182,54 +182,91 @@
 
             <div class="validation-history-scroll">
                 @foreach($validationHistory as $history)
-                    <div class="validation-item border-bottom py-3 px-2">
-                        <div class="d-flex align-items-start gap-2">
-                            {{-- Icon --}}
-                            @if($history->action === 'approved')
-                                <div class="shrink-0">
-                                    <i class="fas fa-check-circle text-success mt-1" style="font-size: 0.95rem;"></i>
+                    @php
+                        // Define colors and styles based on action type
+                        $actionConfig = match($history->action) {
+                            'approved' => [
+                                'bg' => 'bg-success-subtle',
+                                'border' => 'border-success',
+                                'icon_bg' => 'bg-success',
+                                'icon' => 'fa-check-circle',
+                                'text' => 'text-success',
+                                'label' => 'Aprobado',
+                                'symbol' => '✓'
+                            ],
+                            'rejected' => [
+                                'bg' => 'bg-danger-subtle',
+                                'border' => 'border-danger',
+                                'icon_bg' => 'bg-danger',
+                                'icon' => 'fa-times-circle',
+                                'text' => 'text-danger',
+                                'label' => 'Rechazado',
+                                'symbol' => '✗'
+                            ],
+                            default => [
+                                'bg' => 'bg-warning-subtle',
+                                'border' => 'border-warning',
+                                'icon_bg' => 'bg-warning',
+                                'icon' => 'fa-undo',
+                                'text' => 'text-warning',
+                                'label' => 'Devuelto',
+                                'symbol' => '↻'
+                            ]
+                        };
+                    @endphp
+
+                    <div class="validation-item border-bottom py-3 px-0 {{ $actionConfig['bg'] }}">
+                        <div class="d-flex align-items-start gap-3 px-3">
+                            {{-- Circular Icon Badge --}}
+                            <div class="shrink-0">
+                                <div class="rounded-circle {{ $actionConfig['icon_bg'] }} d-flex align-items-center justify-content-center"
+                                     style="width: 36px; height: 36px;">
+                                    <i class="fas {{ $actionConfig['icon'] }} text-white"></i>
                                 </div>
-                            @elseif($history->action === 'rejected')
-                                <div class="shrink-0">
-                                    <i class="fas fa-times-circle text-danger mt-1" style="font-size: 0.95rem;"></i>
-                                </div>
-                            @else
-                                <div class="shrink-0">
-                                    <i class="fas fa-undo text-warning mt-1" style="font-size: 0.95rem;"></i>
-                                </div>
-                            @endif
+                            </div>
 
                             {{-- Content --}}
-                            <div class="grow min-width-0">
-                                {{-- Header --}}
-                                <div class="d-flex justify-content-between align-items-start mb-1">
-                                    <div>
-                                        <small class="fw-semibold d-block text-dark">
-                                            {{ $history->action === 'approved' ? '✓ Aprobado' : ($history->action === 'rejected' ? '✗ Rechazado' : '↻ Devuelto') }}
-                                        </small>
-                                        <small class="text-muted d-block">
-                                            <i class="fas fa-user me-1"></i>{{ $history->validator->full_name ?? 'Sistema' }}
+                            <div class="flex-grow-1 min-width-0">
+                                {{-- Header with Action and Validator --}}
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                                        <span class="fw-bold {{ $actionConfig['text'] }}">
+                                            {{ $actionConfig['symbol'] }} {{ $actionConfig['label'] }}
+                                        </span>
+                                        <small class="text-muted shrink-0" style="font-size: 0.7rem; white-space: nowrap;">
+                                            {{ $history->validated_at->format('d/m/Y H:i') }}
                                         </small>
                                     </div>
-                                    <small class="text-muted shrink-0" style="font-size: 0.75rem; white-space: nowrap; margin-left: auto;">
-                                        <i class="fas fa-calendar-alt me-1"></i>{{ $history->validated_at->format('d/m/Y H:i') }}
+                                    <small class="text-dark d-block">
+                                        <i class="fas fa-user me-1"></i>
+                                        <strong>{{ $history->validator->full_name ?? 'Sistema' }}</strong>
                                     </small>
                                 </div>
 
-                                {{-- Stage Info --}}
-                                <small class="text-muted d-block mt-1">
-                                    <span class="badge bg-light text-dark" style="font-size: 0.7rem;">
-                                        Etapa {{ $history->stage_number }} - {{ ucfirst($history->validator_group) }}
+                                {{-- Stage Badge --}}
+                                <div class="mb-2">
+                                    <span class="badge {{ $actionConfig['border'] }} {{ $actionConfig['bg'] }} {{ $actionConfig['text'] }} border"
+                                          style="font-size: 0.7rem; padding: 0.35rem 0.65rem;">
+                                        <i class="fas fa-layer-group me-1"></i>
+                                        Etapa {{ $history->stage_number }} - {{ ucfirst(str_replace('_', ' ', $history->validator_group)) }}
                                     </span>
-                                </small>
+                                </div>
 
-                                {{-- Comments --}}
+                                {{-- Enhanced Comments Component --}}
                                 @if($history->comments)
-                                    <div class="alert alert-light py-2 px-2 mt-2 mb-0" role="alert">
-                                        <small class="text-dark d-block">
-                                            <strong>Observaciones:</strong><br>
-                                            {{ $history->comments }}
-                                        </small>
+                                    <div class="position-relative ps-3 pe-2 py-2 bg-white rounded border-start {{ $actionConfig['border'] }}"
+                                         style="border-left-width: 3px !important;">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <i class="fas fa-comment-dots {{ $actionConfig['text'] }} mt-1" style="font-size: 0.85rem;"></i>
+                                            <div class="flex-grow-1">
+                                                <small class="fw-semibold {{ $actionConfig['text'] }} d-block mb-1">
+                                                    Observaciones:
+                                                </small>
+                                                <small class="text-dark d-block" style="line-height: 1.5;">
+                                                    {{ $history->comments }}
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -265,16 +302,18 @@
     @media (min-width: 992px) { .validation-history-scroll { max-height: 280px; } }
 
     .validation-history-scroll::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
     }
 
     .validation-history-scroll::-webkit-scrollbar-track {
-        background: transparent;
+        background: #f8f9fa;
+        border-radius: 3px;
     }
 
     .validation-history-scroll::-webkit-scrollbar-thumb {
         background: #dee2e6;
-        border-radius: 2px;
+        border-radius: 3px;
+        transition: background 0.2s ease;
     }
 
     .validation-history-scroll::-webkit-scrollbar-thumb:hover {
@@ -282,12 +321,14 @@
     }
 
     .validation-item {
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         border-color: #e9ecef !important;
+        position: relative;
     }
 
     .validation-item:hover {
-        background-color: #f8f9fa;
+        transform: translateX(2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .validation-item:last-child {
@@ -296,6 +337,21 @@
 
     .min-width-0 {
         min-width: 0;
+    }
+
+    /* Circular badge pulse animation for approved items */
+    .validation-item .bg-success {
+        animation: subtle-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes subtle-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+        50% { box-shadow: 0 0 0 4px rgba(25, 135, 84, 0); }
+    }
+
+    /* Remove animation on hover for better UX */
+    .validation-item:hover .bg-success {
+        animation: none;
     }
 </style>
 @endpush

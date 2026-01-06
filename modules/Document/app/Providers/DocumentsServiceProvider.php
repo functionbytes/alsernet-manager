@@ -72,7 +72,7 @@ class DocumentsServiceProvider extends ServiceProvider
     }
 
     /**
-     * Registrar gates para autorización de settings
+     * Registrar gates para autorización de settings y documentos
      */
     protected function registerGates(): void
     {
@@ -86,6 +86,38 @@ class DocumentsServiceProvider extends ServiceProvider
         Gate::define('manage-document-sla-policies', fn ($user) => $settingsPolicy->manageSLAPolicies($user));
         Gate::define('manage-document-groups', fn ($user) => $settingsPolicy->manageGroups($user));
         Gate::define('manage-document-blockades', fn ($user) => $settingsPolicy->manageBlockades($user));
+
+        // Register dynamic gates for document permissions
+        // This allows using middleware('can:permission-name') with any permission from document_permissions table
+        Gate::before(function ($user, $ability) {
+            // Super-admin bypass
+            if ($user->hasRole('super-admin')) {
+                return true;
+            }
+
+            // Check if this ability exists in document permissions
+            if (class_exists('Modules\Document\Entities\DocumentPermission')) {
+                $permission = \Modules\Document\Entities\DocumentPermission::where('name', $ability)->first();
+
+                if ($permission) {
+                    // Get user's validator groups
+                    $userGroups = \Modules\Document\Entities\DocumentValidatorGroup::whereHas('users', function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    })->get();
+
+                    // Check if any of the user's groups have this permission
+                    foreach ($userGroups as $group) {
+                        if ($group->permissions()->where('name', $ability)->exists()) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+
+            return null; // Let other gates/policies handle it
+        });
     }
 
     /**

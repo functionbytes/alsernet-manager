@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
 use Modules\Document\Services\DocumentTypeService;
@@ -609,7 +610,7 @@ class DocumentValidationController extends Controller
             ], 422);
         }
 
-        $nextGroup = \app\Validation\ValidatorGroup::findByKey($nextGroupKey);
+        $nextGroup = DocumentValidatorGroup::findByKey($nextGroupKey);
         $users = $nextGroup ? $nextGroup->users->map(function ($user) {
             return [
                 'id' => $user->id,

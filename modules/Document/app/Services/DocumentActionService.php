@@ -2,9 +2,11 @@
 
 namespace Modules\Document\Services;
 
+use Illuminate\Support\Facades\Auth;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentAction;
 use Modules\Document\Entities\DocumentNote;
+use Modules\Document\Entities\DocumentValidationHistory;
 
 class DocumentActionService
 {
@@ -179,5 +181,104 @@ class DocumentActionService
             performedBy: $adminId,
             performedByType: 'admin'
         );
+    }
+
+    /**
+     * Approve current validation stage and advance to next stage
+     */
+    public function approveStage(Document $document, ?string $comments = null, ?int $assignedUserId = null): Document
+    {
+        $user = Auth::user();
+        $currentGroup = $document->current_validator_group;
+
+        // Create validation history record
+        DocumentValidationHistory::create([
+            'document_id' => $document->id,
+            'stage_number' => $document->current_stage,
+            'validator_group' => $currentGroup,
+            'validator_user_id' => $user->id,
+            'action' => 'approved',
+            'comments' => $comments,
+            'validated_at' => now(),
+        ]);
+
+        // Log action
+        DocumentAction::logAction(
+            documentId: $document->id,
+            actionType: 'stage_approved',
+            actionName: 'Etapa Aprobada',
+            description: "Etapa {$document->current_stage} aprobada por {$user->full_name}",
+            metadata: [
+                'stage_number' => $document->current_stage,
+                'validator_group' => $currentGroup,
+                'assigned_user_id' => $assignedUserId,
+                'comments' => $comments,
+            ],
+            performedBy: $user->id,
+            performedByType: 'validator'
+        );
+
+        // Check if this is the last stage
+        if ($document->current_stage >= $document->total_stages) {
+            // All stages completed - mark as approved
+            $document->update([
+                'validation_status' => 'approved',
+                'current_stage' => $document->total_stages,
+            ]);
+        } else {
+            // Advance to next stage
+            $stages = $document->getValidationWorkflowStages();
+            $nextStageKey = $stages[$document->current_stage] ?? null;
+
+            $document->update([
+                'current_stage' => $document->current_stage + 1,
+                'current_validator_group' => $nextStageKey,
+                'assigned_user_id' => $assignedUserId,
+                'validation_status' => 'in_validation',
+            ]);
+        }
+
+        return $document->fresh();
+    }
+
+    /**
+     * Reject current validation stage
+     */
+    public function rejectStage(Document $document, string $reason): Document
+    {
+        $user = Auth::user();
+
+        // Create validation history record
+        DocumentValidationHistory::create([
+            'document_id' => $document->id,
+            'stage_number' => $document->current_stage,
+            'validator_group' => $document->current_validator_group,
+            'validator_user_id' => $user->id,
+            'action' => 'rejected',
+            'comments' => $reason,
+            'validated_at' => now(),
+        ]);
+
+        // Log action
+        DocumentAction::logAction(
+            documentId: $document->id,
+            actionType: 'stage_rejected',
+            actionName: 'Etapa Rechazada',
+            description: "Etapa {$document->current_stage} rechazada por {$user->full_name}",
+            metadata: [
+                'stage_number' => $document->current_stage,
+                'validator_group' => $document->current_validator_group,
+                'reason' => $reason,
+            ],
+            performedBy: $user->id,
+            performedByType: 'validator'
+        );
+
+        // Reset to pending status for re-submission
+        $document->update([
+            'validation_status' => 'rejected',
+        ]);
+
+        return $document->fresh();
     }
 }
