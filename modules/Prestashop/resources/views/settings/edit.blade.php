@@ -239,7 +239,7 @@
                       <button type="submit" class="btn btn-info px-4 waves-effect waves-light mt-2 w-100">
                           Guardar
                       </button>
-                      <a href="{{ route('manager.backups.prestashop.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
+                      <a href="{{ route('prestashop.index') }}" class="btn btn-secondary px-4 waves-effect waves-light mt-2 w-100">
                           Volver
                       </a>
                   </div>

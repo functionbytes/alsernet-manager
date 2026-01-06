@@ -19,7 +19,7 @@ class PrestashopSettingsController extends Controller
         $settings = Setting::getPrestashopSettings();
         $stats = Setting::getPrestashopStats();
 
-        return view('prestashop::theme.backups.index', compact('settings', 'stats'));
+        return view('prestashop::settings.index', compact('settings', 'stats'));
     }
 
     /**
@@ -29,7 +29,7 @@ class PrestashopSettingsController extends Controller
     {
         $settings = Setting::getPrestashopSettings();
 
-        return view('prestashop::theme.backups.edit', compact('settings'));
+        return view('prestashop::settings.edit', compact('settings'));
     }
 
     /**
@@ -48,7 +48,7 @@ class PrestashopSettingsController extends Controller
 
         Setting::setPrestashopSettings($request->all());
 
-        return redirect()->route('manager.backups.prestashop.index')
+        return redirect()->route('settings.prestashop.index')
             ->with('success', 'Configuración de PrestaShop actualizada correctamente');
     }
 

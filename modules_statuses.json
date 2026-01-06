@@ -1,11 +1,12 @@
 {
-    "Analytics": false,
+    "Activity": true,
+    "Analytics": true,
     "Auth": true,
     "Backup": true,
     "Campaign": false,
     "Database": true,
     "Document": true,
-    "Erp": false,
+    "Erp": true,
     "Event": true,
     "Faq": false,
     "Helpdesk": false,
@@ -17,7 +18,7 @@
     "Media": true,
     "Modules": true,
     "Notification": true,
-    "Prestashop": false,
+    "Prestashop": true,
     "Pulse": true,
     "Return": false,
     "Returns": false,
@@ -29,5 +30,8 @@
     "Telescope": true,
     "User": true,
     "Warehouse": true,
-    "Webhook": true
+    "Webhook": true,
+    "Seo": true,
+    "Users": true,
+    "Core": true
 }

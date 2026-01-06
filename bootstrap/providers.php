@@ -6,6 +6,7 @@ return [
     App\Providers\HorizonServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
+    Modules\Activity\Providers\ActivityServiceProvider::class,
     Modules\Auth\Providers\AuthServiceProvider::class,
     Modules\Backup\Providers\BackupServiceProvider::class,
     Modules\Core\Providers\CoreServiceProvider::class,
