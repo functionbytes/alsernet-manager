@@ -1,146 +1,204 @@
 @extends('layouts.theme')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12">
-            <!-- Overall Status Card -->
-            <div class="card border shadow-none mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="card-title mb-2">
-                                <i class="fas fa-heartbeat me-2"></i>System Health Status
-                            </h4>
-                            <p class="card-subtitle text-muted mb-0">
-                                Real-time system monitoring and health checks
-                            </p>
+    @include('theme.components.card', ['title' => 'Estado del sistema'])
+
+    <div class="widget-content searchable-container list">
+
+        @include('theme.components.alerts')
+
+        <div class="card">
+            {{-- Header Section --}}
+            <div class="card-header p-4 border-bottom border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 fw-bold">Estado del sistema</h5>
+                        <p class="small mb-0 text-muted">Monitoreo en tiempo real del estado de salud del sistema</p>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        @if($overallStatus === 'ok')
+                            <div class="badge bg-success-subtle text-success fs-6 px-3 py-2">
+                                <i class="fas fa-check-circle me-2"></i>Sistema operativo
+                            </div>
+                        @elseif($overallStatus === 'warning')
+                            <div class="badge bg-warning-subtle text-warning fs-6 px-3 py-2">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Advertencia detectada
+                            </div>
+                        @else
+                            <div class="badge bg-danger-subtle text-danger fs-6 px-3 py-2">
+                                <i class="fas fa-times-circle me-2"></i>Problemas detectados
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Stats Overview --}}
+            <div class="card-body border-bottom">
+                <div class="row g-3">
+                    <div class="col-12 col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h4 class="mb-1 fw-bold">{{ count($results) }}</h4>
+                                        <small class="text-muted">Verificaciones</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-end">
-                            @if($overallStatus === 'ok')
-                                <div class="badge bg-success fs-6 px-4 py-2">
-                                    <i class="fas fa-check-circle me-2"></i>All Systems Operational
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-success mb-2">Correctos</h6>
+                                        <h4 class="mb-1 fw-bold">{{ collect($results)->where('status.value', 'ok')->count() }}</h4>
+                                        <small class="text-muted">Funcionando bien</small>
+                                    </div>
                                 </div>
-                            @elseif($overallStatus === 'warning')
-                                <div class="badge bg-warning text-dark fs-6 px-4 py-2">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>Warning Detected
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-warning mb-2">Advertencias</h6>
+                                        <h4 class="mb-1 fw-bold">{{ collect($results)->where('status.value', 'warning')->count() }}</h4>
+                                        <small class="text-muted">Requieren atención</small>
+                                    </div>
                                 </div>
-                            @else
-                                <div class="badge bg-danger fs-6 px-4 py-2">
-                                    <i class="fas fa-times-circle me-2"></i>System Issues
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="card bg-light-secondary stat-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h6 class="card-title text-danger mb-2">Errores</h6>
+                                        <h4 class="mb-1 fw-bold">{{ collect($results)->whereNotIn('status.value', ['ok', 'warning'])->count() }}</h4>
+                                        <small class="text-muted">Críticos</small>
+                                    </div>
                                 </div>
-                            @endif
-                            <div class="text-muted mt-2 small">
-                                Last checked: <span id="lastChecked">{{ now()->format('H:i:s') }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Health Checks Grid -->
-            <div class="row" id="healthChecksGrid">
-                @foreach($results as $result)
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card border-start border-4
-                            @if($result->status->value === 'ok') border-success
-                            @elseif($result->status->value === 'warning') border-warning
-                            @else border-danger
-                            @endif
-                            shadow-sm mb-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h6 class="fw-bold mb-2">
-                                            @php
-                                                $icon = match($result->check->getName()) {
-                                                    'DatabaseCheck' => 'fas fa-database',
-                                                    'RedisCheck' => 'fas fa-server',
-                                                    'CacheCheck' => 'fas fa-layer-group',
-                                                    'StorageCheck' => 'fas fa-hdd',
-                                                    'QueueCheck' => 'fas fa-tasks',
-                                                    'EnvironmentCheck' => 'fas fa-cog',
-                                                    'DebugModeCheck' => 'fas fa-bug',
-                                                    'OptimizedAppCheck' => 'fas fa-tachometer-alt',
-                                                    'UsedDiskSpaceCheck' => 'fas fa-chart-pie',
-                                                    'DatabaseConnectionCountCheck' => 'fas fa-plug',
-                                                    'ScheduleCheck' => 'fas fa-clock',
-                                                    default => 'fas fa-check-circle'
-                                                };
-                                            @endphp
-                                            <i class="{{ $icon }} me-2"></i>{{ $result->check->getLabel() }}
-                                        </h6>
-                                        <p class="mb-2 small">
-                                            {{ $result->shortSummary }}
-                                        </p>
+            {{-- Actions Bar --}}
+            <div class="card-body border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        Última verificación: <strong id="lastChecked">{{ now()->format('d/m/Y H:i:s') }}</strong>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                            <label class="form-check-label small" for="autoRefresh">
+                                Auto-actualizar (30s)
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="refreshHealthChecks()">
+                            <i class="fas fa-sync-alt me-1"></i>Actualizar ahora
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                                        @if($result->meta)
-                                            <div class="mt-2">
-                                                @foreach($result->meta as $key => $value)
-                                                    <div class="text-muted small">
-                                                        <strong>{{ str_replace('_', ' ', ucfirst($key)) }}:</strong>
-                                                        @if(is_bool($value))
-                                                            {{ $value ? 'Yes' : 'No' }}
-                                                        @elseif(is_numeric($value))
-                                                            {{ $value }}
-                                                        @else
-                                                            {{ $value }}
-                                                        @endif
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
+            {{-- Health Checks Grid --}}
+            <div class="card-body">
+                <div class="row g-3" id="healthChecksGrid">
+                    @foreach($results as $result)
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card border-start border-4
+                                @if($result->status->value === 'ok') border-success
+                                @elseif($result->status->value === 'warning') border-warning
+                                @else border-danger
+                                @endif
+                                shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="fw-bold mb-2">
+                                                @php
+                                                    $icon = match($result->check->getName()) {
+                                                        'DatabaseCheck' => 'fas fa-database',
+                                                        'RedisCheck' => 'fas fa-server',
+                                                        'CacheCheck' => 'fas fa-layer-group',
+                                                        'StorageCheck' => 'fas fa-hdd',
+                                                        'QueueCheck' => 'fas fa-tasks',
+                                                        'EnvironmentCheck' => 'fas fa-cog',
+                                                        'DebugModeCheck' => 'fas fa-bug',
+                                                        'OptimizedAppCheck' => 'fas fa-tachometer-alt',
+                                                        'UsedDiskSpaceCheck' => 'fas fa-chart-pie',
+                                                        'DatabaseConnectionCountCheck' => 'fas fa-plug',
+                                                        'ScheduleCheck' => 'fas fa-clock',
+                                                        default => 'fas fa-check-circle'
+                                                    };
+                                                @endphp
+                                                <i class="{{ $icon }} me-2 text-muted"></i>{{ $result->check->getLabel() }}
+                                            </h6>
+                                            <p class="mb-2 small text-muted">
+                                                {{ $result->shortSummary }}
+                                            </p>
 
-                                        @if($result->notificationMessage)
-                                            <div class="alert alert-danger alert-sm mt-2 mb-0 py-1 px-2">
-                                                <small>{{ $result->notificationMessage }}</small>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="ms-2">
-                                        @if($result->status->value === 'ok')
-                                            <span class="badge bg-success-subtle text-success rounded-pill">
-                                                <i class="fas fa-check"></i>
-                                            </span>
-                                        @elseif($result->status->value === 'warning')
-                                            <span class="badge bg-warning-subtle text-warning rounded-pill">
-                                                <i class="fas fa-exclamation"></i>
-                                            </span>
-                                        @else
-                                            <span class="badge bg-danger-subtle text-danger rounded-pill">
-                                                <i class="fas fa-times"></i>
-                                            </span>
-                                        @endif
+                                            @if($result->meta)
+                                                <div class="mt-2">
+                                                    @foreach($result->meta as $key => $value)
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <span class="text-muted small">{{ str_replace('_', ' ', ucfirst($key)) }}:</span>
+                                                            <span class="small fw-bold">
+                                                                @if(is_bool($value))
+                                                                    <span class="badge bg-{{ $value ? 'success' : 'danger' }}-subtle text-{{ $value ? 'success' : 'danger' }}">
+                                                                        {{ $value ? 'Sí' : 'No' }}
+                                                                    </span>
+                                                                @elseif(is_numeric($value))
+                                                                    {{ $value }}
+                                                                @else
+                                                                    {{ $value }}
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            @if($result->notificationMessage)
+                                                <div class="alert alert-danger mt-2 mb-0 py-2 px-2">
+                                                    <small><i class="fas fa-exclamation-triangle me-1"></i>{{ $result->notificationMessage }}</small>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="ms-2">
+                                            @if($result->status->value === 'ok')
+                                                <span class="badge bg-success-subtle text-success rounded-circle p-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            @elseif($result->status->value === 'warning')
+                                                <span class="badge bg-warning-subtle text-warning rounded-circle p-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-exclamation"></i>
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger-subtle text-danger rounded-circle p-2" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-times"></i>
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Actions Card -->
-            <div class="card border shadow-none">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-1">Actions</h6>
-                            <p class="text-muted small mb-0">Manage health check monitoring</p>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-primary btn-sm" onclick="refreshHealthChecks()">
-                                <i class="fas fa-sync-alt me-1"></i>Refresh Now
-                            </button>
-                            <div class="form-check form-switch mb-0 ms-3">
-                                <input class="form-check-input" type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
-                                <label class="form-check-label" for="autoRefresh">
-                                    Auto-refresh (30s)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
+
     </div>
 
     @push('scripts')
@@ -150,25 +208,30 @@
         function refreshHealthChecks() {
             const btn = event.target.closest('button');
             const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Checking...';
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Verificando...';
             btn.disabled = true;
 
             fetch('{{ route('settings.health.check') }}')
                 .then(response => response.json())
                 .then(data => {
                     // Update timestamp
-                    document.getElementById('lastChecked').textContent = new Date().toLocaleTimeString();
+                    const now = new Date();
+                    document.getElementById('lastChecked').textContent = now.toLocaleDateString('es-ES') + ' ' + now.toLocaleTimeString('es-ES');
 
-                    // Show success message
-                    showToast('Health checks completed successfully', 'success');
+                    // Show success message with toastr
+                    toastr.success('Verificaciones de salud completadas correctamente', 'Éxito', {
+                        positionClass: 'toast-bottom-right'
+                    });
 
                     // Reload page to show updated results
                     setTimeout(() => {
                         window.location.reload();
-                    }, 1000);
+                    }, 1500);
                 })
                 .catch(error => {
-                    showToast('Error running health checks', 'error');
+                    toastr.error('Error al ejecutar las verificaciones de salud', 'Error', {
+                        positionClass: 'toast-bottom-right'
+                    });
                     console.error('Health check error:', error);
                 })
                 .finally(() => {
@@ -184,39 +247,18 @@
                 autoRefreshInterval = setInterval(() => {
                     refreshHealthChecks();
                 }, 30000); // 30 seconds
-                showToast('Auto-refresh enabled (30s)', 'info');
+                toastr.info('Auto-actualización activada (cada 30 segundos)', 'Información', {
+                    positionClass: 'toast-bottom-right'
+                });
             } else {
                 if (autoRefreshInterval) {
                     clearInterval(autoRefreshInterval);
                     autoRefreshInterval = null;
                 }
-                showToast('Auto-refresh disabled', 'info');
+                toastr.info('Auto-actualización desactivada', 'Información', {
+                    positionClass: 'toast-bottom-right'
+                });
             }
-        }
-
-        function showToast(message, type = 'success') {
-            // Simple toast notification - you can enhance this with your toast library
-            const colors = {
-                success: '#13C672',
-                error: '#FA896B',
-                info: '#539BFF'
-            };
-
-            const toast = document.createElement('div');
-            toast.className = 'position-fixed bottom-0 end-0 p-3';
-            toast.style.zIndex = '9999';
-            toast.innerHTML = `
-                <div class="toast show" role="alert">
-                    <div class="toast-body bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} text-white">
-                        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle me-2"></i>${message}
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
         }
 
         // Cleanup on page unload
@@ -228,3 +270,36 @@
     </script>
     @endpush
 @endsection
+
+<style>
+    .stat-card {
+        border: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .bg-light-secondary {
+        background-color: #f8f9fa;
+    }
+
+    .bg-success-subtle {
+        background-color: rgba(19, 198, 114, 0.1);
+    }
+
+    .bg-danger-subtle {
+        background-color: rgba(250, 137, 107, 0.1);
+    }
+
+    .bg-warning-subtle {
+        background-color: rgba(254, 201, 15, 0.1);
+    }
+
+    .bg-info-subtle {
+        background-color: rgba(33, 150, 243, 0.1);
+    }
+</style>
