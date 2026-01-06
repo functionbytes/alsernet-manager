@@ -1,17 +1,9 @@
 @extends('layouts.theme')
 
 @section('content')
-<div class="container-fluid">
 
-    @include('theme.components.card', [
-        'title' => 'Historial de emails',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],
-            ['label' => 'Documentos', 'url' => route('documents.index')],
-            ['label' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)],
-            ['label' => 'Emails', 'active' => true]
-        ]
-    ])
+
+    @include('theme.components.card', ['title' => 'Emails'])
 
     <div class="widget-content searchable-container list">
 
@@ -51,7 +43,7 @@
                         </div>
                         <div class="col-md-4 text-end">
                             @if($document->status)
-                                <span class="badge" style="background-color: {{ $document->status->color ?? '#6c757d' }}">
+                                <span class="badge bg-primary" >
                                     {{ $document->status->label }}
                                 </span>
                             @endif
@@ -214,5 +206,4 @@
 
     </div>
 
-</div>
 @endsection

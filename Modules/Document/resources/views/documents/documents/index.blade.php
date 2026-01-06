@@ -142,8 +142,17 @@
                                         @if($document->mails()->count() > 0 && auth()->user()->canDocument('route-mails-documents'))
                                             <li class="border-top my-2"></li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('api.documents.emails', $document->uid) }}">
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.emails', $document->uid) }}">
                                                     Ver emails
+                                                </a>
+                                            </li>
+                                        @endif
+
+                                        @if($document->validationHistory()->count() > 1 && auth()->user()->canDocument('route-history-validation'))
+                                            <li class="border-top my-2"></li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.validation-history', $document->uid) }}">
+                                                   Historial de validación
                                                 </a>
                                             </li>
                                         @endif

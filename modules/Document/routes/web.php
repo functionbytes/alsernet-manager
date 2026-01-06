@@ -44,6 +44,12 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/show/{uid}', [DocumentsController::class, 'show'])->name('show');
         Route::get('/summary/{uid}', [DocumentsController::class, 'summary'])->name('summary');
         Route::get('/manage/{uid}', [DocumentsController::class, 'manage'])->name('manage');
+        Route::post('/manage/{uid}/update-configuration', [DocumentsController::class, 'updateConfiguration'])->name('update-configuration');
+        Route::get('/emails/{uid}', [DocumentsController::class, 'emailHistory'])->name('emails');
+        Route::get('/emails/preview/{mailUid}', [DocumentsController::class, 'emailPreview'])->name('emails.preview');
+
+        Route::get('/validation/history/{uid}', [DocumentsController::class, 'validationHistory'])->name('validation-history');
+        Route::get('/validation/history/stage/{stageNumber}', [DocumentsController::class, 'validationHistoryByStage'])->name('validation-history.stage');
     });
 
     // ====================================================================

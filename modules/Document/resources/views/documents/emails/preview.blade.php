@@ -1,19 +1,9 @@
 @extends('layouts.theme')
 
 @section('content')
-<div class="container-fluid">
 
-    {{-- Breadcrumb Card --}}
-    @include('theme.components.card', [
-        'title' => 'Vista Previa de Email',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => route('administrative.dashboard')],
-            ['label' => 'Documentos', 'url' => route('documents.index')],
-            ['label' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)],
-            ['label' => 'Emails', 'url' => route('api.documents.emails', $document->uid)],
-            ['label' => 'Vista previa', 'active' => true]
-        ]
-    ])
+
+    @include('theme.components.card', ['title' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)]])
 
     {{-- Preview Content --}}
     <div class="row g-3">

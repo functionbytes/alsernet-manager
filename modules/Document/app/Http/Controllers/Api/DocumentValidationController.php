@@ -72,7 +72,7 @@ class DocumentValidationController extends Controller
         $profile = $this->getUserProfile();
 
         // Validar permisos según perfil
-        $this->authorize('approve', $document);
+        $this->authorize('approveStage', $document);
 
         $validated = $request->validate([
             'comments' => 'nullable|string|max:1000',
@@ -108,7 +108,7 @@ class DocumentValidationController extends Controller
         $profile = $this->getUserProfile();
 
         // Validar permisos según perfil
-        $this->authorize('reject', $document);
+        $this->authorize('rejectStage', $document);
 
         $validated = $request->validate([
             'reason' => 'required|string|min:10|max:1000',
@@ -141,7 +141,7 @@ class DocumentValidationController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $profile = $this->getUserProfile();
 
-        $this->authorize('approve', $document);
+        $this->authorize('sendApproval', $document);
 
         try {
             $this->emailService->sendApprovalEmail($document);
@@ -167,7 +167,7 @@ class DocumentValidationController extends Controller
         $document = Document::where('uid', $uid)->firstOrFail();
         $profile = $this->getUserProfile();
 
-        $this->authorize('reject', $document);
+        $this->authorize('sendRejection', $document);
 
         $validated = $request->validate([
             'reason' => 'required|string|min:10',

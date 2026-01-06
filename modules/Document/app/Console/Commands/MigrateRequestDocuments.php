@@ -149,7 +149,7 @@ class MigrateRequestDocuments extends Command
                         'uid' => $source->uid,
                         'type_id' => $documentTypeId,
                         'source_id' => $sourceMap[$sourceKey],
-                        'sync_id' => 1, // 'none' - no synchronization
+                        'sync_id' => 2, // 'none' - no synchronization
                         'load_id' => 2, // 'system' - loaded by migration system
                         'status_id' => $defaultStatusId,
                         'validation_status' => 'pending',

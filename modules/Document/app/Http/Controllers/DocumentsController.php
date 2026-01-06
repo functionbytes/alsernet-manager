@@ -1443,6 +1443,107 @@ class DocumentsController extends Controller
     }
 
     /**
+     * Actualiza la configuración del documento (estado, origen, método de carga, etc.)
+     * Maneja cambios de estado y notificaciones por email
+     */
+    public function updateConfiguration(Request $request, $uid)
+    {
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Validar permisos
+            if (! auth()->user()->canDocument('edit-status')) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'No tienes permiso para editar esta configuración.',
+                ], 403);
+            }
+
+            // Validar datos
+            $validated = $request->validate([
+                'status_id' => 'nullable|exists:document_statuses,id',
+                'source_id' => 'nullable|exists:document_sources,id',
+                'load_id' => 'nullable|exists:document_loads,id',
+                'sync_id' => 'nullable|exists:document_syncs,id',
+                'upload_id' => 'nullable|exists:document_upload_types,id',
+                'requires_financing' => 'nullable|in:0,1',
+                'send_email_notification' => 'nullable|in:0,1',
+            ]);
+
+            // Almacenar estado anterior para detectar cambios
+            $previousStatus = $document->status_id;
+
+            // Actualizar campos del documento
+            if (isset($validated['status_id'])) {
+                $document->status_id = $validated['status_id'];
+            }
+            if (isset($validated['source_id'])) {
+                $document->source_id = $validated['source_id'];
+            }
+            if (isset($validated['load_id'])) {
+                $document->load_id = $validated['load_id'];
+            }
+            if (isset($validated['sync_id'])) {
+                $document->sync_id = $validated['sync_id'];
+            }
+            if (isset($validated['upload_id'])) {
+                $document->upload_id = $validated['upload_id'];
+            }
+            if (isset($validated['requires_financing'])) {
+                $document->requires_financing = (bool) $validated['requires_financing'];
+            }
+
+            $document->save();
+
+            // Registrar la acción en el historial
+            DocumentActionService::recordAction($document, 'update_configuration', auth()->user(), [
+                'status_changed' => $previousStatus !== $document->status_id,
+                'new_status_id' => $document->status_id,
+                'source_id' => $document->source_id,
+                'load_id' => $document->load_id,
+                'sync_id' => $document->sync_id,
+                'upload_id' => $document->upload_id,
+                'requires_financing' => $document->requires_financing,
+            ]);
+
+            // Enviar email si es necesario y el estado cambió
+            if ($validated['send_email_notification'] && $previousStatus !== $document->status_id) {
+                $newStatus = DocumentStatus::find($document->status_id);
+                if ($newStatus) {
+                    // Aquí podrías enviar un email al cliente notificando del cambio de estado
+                    // Por ahora solo registramos la acción
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Configuración actualizada correctamente.',
+                'data' => [
+                    'status_id' => $document->status_id,
+                    'source_id' => $document->source_id,
+                    'load_id' => $document->load_id,
+                    'sync_id' => $document->sync_id,
+                    'upload_id' => $document->upload_id,
+                    'requires_financing' => $document->requires_financing,
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Error al actualizar la configuración: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Envía email de notificación inicial al cliente
      * Solicita que cargue la documentación
      */
@@ -2909,7 +3010,7 @@ class DocumentsController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('documents::documents.documents.emails.index', compact('document', 'mails'));
+        return view('documents::documents.emails.index', compact('document', 'mails'));
     }
 
     /**
@@ -2920,7 +3021,45 @@ class DocumentsController extends Controller
         $mail = \Modules\Document\Entities\DocumentMail::where('uid', $mailUid)->firstOrFail();
         $document = $mail->document;
 
-        return view('documents::documents.documents.emails.preview', compact('mail', 'document'));
+        return view('documents::documents.emails.preview', compact('mail', 'document'));
+    }
+
+    /**
+     * Ver historial completo de validación de etapas
+     */
+    public function validationHistory($uid)
+    {
+        $this->middleware('can:route-history-validation')->only(['validationHistory']);
+
+        $document = Document::findByUid($uid);
+
+        if (! $document) {
+            return redirect()
+                ->route('documents.index')
+                ->with('error', 'Documento no encontrado');
+        }
+
+        $validationHistory = $document->validationHistory()
+            ->with('validator')
+            ->orderBy('validated_at', 'desc')
+            ->paginate(15);
+
+        return view('documents::documents.validation.history', compact('document', 'validationHistory'));
+    }
+
+    /**
+     * Ver historial de validación de una etapa específica
+     */
+    public function validationHistoryByStage($stageNumber)
+    {
+        $stage = $stageNumber;
+
+        $validationHistory = \Modules\Document\Entities\DocumentValidationHistory::where('stage_number', $stage)
+            ->with(['document', 'validator'])
+            ->orderBy('validated_at', 'desc')
+            ->paginate(15);
+
+        return view('documents::documents.validation.history-by-stage', compact('validationHistory', 'stage'));
     }
 
     /**

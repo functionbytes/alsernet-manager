@@ -139,6 +139,15 @@
                                             </li>
                                         @endif
 
+                                        @if($document->validationHistory()->count() > 1 && auth()->user()->canDocument('route-history-validation'))
+                                            <li class="border-top my-2"></li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('documents.validation-history', $document->uid) }}">
+                                                    <i class="fas fa-history me-2"></i>Historial de validación
+                                                </a>
+                                            </li>
+                                        @endif
+
                                     </ul>
                                 </div>
                             </td>
