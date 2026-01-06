@@ -28,11 +28,12 @@
                 </p>
             </div>
             <div class="modal-footer border-top">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancelar
+
+                <button type="button" class="btn btn-primary confirm-configuration-btn mb-1 w-100">
+                    Guardar cambios
                 </button>
-                <button type="button" class="btn btn-primary confirm-configuration-btn">
-                    <i class="fas fa-check me-1"></i>Guardar cambios
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    Cancelar
                 </button>
             </div>
         </div>

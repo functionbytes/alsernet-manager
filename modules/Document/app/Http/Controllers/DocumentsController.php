@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentAction;
 use Modules\Document\Entities\DocumentLoad;
 use Modules\Document\Entities\DocumentNote;
 use Modules\Document\Entities\DocumentSource;
@@ -1503,15 +1504,23 @@ class DocumentsController extends Controller
             $document->save();
 
             // Registrar la acción en el historial
-            DocumentActionService::recordAction($document, 'update_configuration', auth()->user(), [
-                'status_changed' => $previousStatus !== $document->status_id,
-                'new_status_id' => $document->status_id,
-                'source_id' => $document->source_id,
-                'load_id' => $document->load_id,
-                'sync_id' => $document->sync_id,
-                'upload_id' => $document->upload_id,
-                'requires_financing' => $document->requires_financing,
-            ]);
+            DocumentAction::logAction(
+                documentId: $document->id,
+                actionType: 'configuration_updated',
+                actionName: 'Configuración Actualizada',
+                description: 'Se actualizó la configuración del documento',
+                metadata: [
+                    'status_changed' => $previousStatus !== $document->status_id,
+                    'new_status_id' => $document->status_id,
+                    'source_id' => $document->source_id,
+                    'load_id' => $document->load_id,
+                    'sync_id' => $document->sync_id,
+                    'upload_id' => $document->upload_id,
+                    'requires_financing' => $document->requires_financing,
+                ],
+                performedBy: auth()->id(),
+                performedByType: 'admin'
+            );
 
             // Enviar email si es necesario y el estado cambió
             if ($validated['send_email_notification'] && $previousStatus !== $document->status_id) {
