@@ -290,7 +290,7 @@ NETWORK_SHARED_URL=${APP_URL}/network</code>
                 const $statsContent = $('#storage-stats-content');
 
                 $.ajax({
-                    url: '{{ route("settings.documents.configurations.storage", ":disk") }}'.replace(':disk', diskName),
+                    url: '{{ route("settings.documents.configurations.storage.stats", ":disk") }}'.replace(':disk', diskName),
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {

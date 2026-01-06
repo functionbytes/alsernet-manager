@@ -27,4 +27,5 @@ class DocumentProduct extends Model
     {
         return $this->belongsTo(Document::class, 'document_id');
     }
+
 }

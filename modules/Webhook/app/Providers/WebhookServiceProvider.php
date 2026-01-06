@@ -119,11 +119,11 @@ class WebhookServiceProvider extends ServiceProvider
         NavService::registerSidebar('webhooks', [
             'title' => 'Webhooks',
             'items' => [
-                ['label' => 'Listado de webhooks', 'route' => 'webhooks.index', 'icon' => 'fa-list'],
-                ['label' => 'Entregas', 'route' => 'webhooks.deliveries', 'icon' => 'fa-truck'],
-                ['label' => 'Eventos', 'route' => 'webhooks.events', 'icon' => 'fa-bell'],
-                ['label' => 'Integraciones', 'route' => 'webhooks.backups.integrations.index', 'icon' => 'fa-plug'],
-                ['label' => 'Suscripciones', 'route' => 'webhooks.backups.subscriptions.index', 'icon' => 'fa-hand-holding-heart'],
+                ['label' => 'Listado de webhooks', 'route' => 'webhooks.index'],
+                ['label' => 'Entregas', 'route' => 'webhooks.deliveries'],
+                ['label' => 'Eventos', 'route' => 'webhooks.events'],
+                ['label' => 'Integraciones', 'route' => 'webhooks.backups.integrations.index'],
+                ['label' => 'Suscripciones', 'route' => 'webhooks.backups.subscriptions.index'],
             ],
         ]);
     }

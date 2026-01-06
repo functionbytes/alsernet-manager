@@ -35,63 +35,6 @@
                 </div>
             </div>
 
-            {{-- Stats Cards --}}
-            <div class="card-body border-bottom">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="card bg-light-primary h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Nombre completo</h6>
-                                        <h5 style="font-weight: 700;">{{ $user->firstname }}</h5>
-                                        <small class="text-muted">{{ $user->lastname }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-success h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Rol asignado</h6>
-                                        <h5 class="text-success" style="font-weight: 700;">{{ Str::title(str_replace('-', ' ', $roleName)) }}</h5>
-                                        <small class="text-muted">Permisos del usuario</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-{{ $user->available ? 'success' : 'danger' }} h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Estado</h6>
-                                        <h5 class="text-{{ $user->available ? 'success' : 'danger' }}" style="font-weight: 700;">{{ $user->available ? 'Activo' : 'Inactivo' }}</h5>
-                                        <small class="text-muted">{{ $user->available ? 'Cuenta activa' : 'Cuenta desactivada' }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card bg-light-{{ $user->email_verified_at ? 'success' : 'warning' }} h-100">
-                            <div class="card-body position-relative">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-2">Verificación</h6>
-                                        <h5 class="text-{{ $user->email_verified_at ? 'success' : 'warning' }}" style="font-weight: 700;">{{ $user->email_verified_at ? 'Verificado' : 'Pendiente' }}</h5>
-                                        <small class="text-muted">Estado del email</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {{-- Navigation Pills --}}
             <ul class="nav nav-pills user-profile-tab" id="user-profile-tab" role="tablist">

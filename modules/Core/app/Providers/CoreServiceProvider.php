@@ -76,7 +76,7 @@ class CoreServiceProvider extends ServiceProvider
         NavService::registerSidebar('dashboard', [
             'title' => 'Panel de control',
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'core.dashboard', 'icon' => 'fa-tachometer-alt'],
+                ['label' => 'Dashboard', 'route' => 'core.dashboard'],
             ],
         ]);
     }

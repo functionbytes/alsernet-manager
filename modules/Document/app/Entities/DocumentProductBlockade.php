@@ -93,4 +93,5 @@ class DocumentProductBlockade extends Model
 
         return $blockade?->documentType?->slug;
     }
+
 }

@@ -29,20 +29,12 @@ class ActivityServiceProvider extends ServiceProvider
      */
     protected function registerMenus(): void
     {
-        // Mini-nav item para Activity
-        NavService::registerMiniItem('activity', [
-            'icon' => 'fa-history',
-            'tooltip' => 'Actividad',
-            'sidebar_id' => 'activity',
-            'order' => 85,
-        ]);
-
         // Sidebar con los items del módulo
-        NavService::registerSidebar('activity', [
+        NavService::registerSidebar('settings', [
             'title' => 'Historial de actividad',
             'items' => [
-                ['label' => 'Registro de cambios', 'route' => 'activity.logs', 'icon' => 'fa-list'],
-                ['label' => 'Auditoría', 'route' => 'activity.audit', 'icon' => 'fa-shield-alt'],
+                ['label' => 'Registro de cambios', 'route' => 'activity.logs'],
+                ['label' => 'Auditoría', 'route' => 'activity.audit'],
             ],
         ]);
     }

@@ -252,7 +252,7 @@ class Document extends Model implements HasMedia
 
     public function lang(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Lang', 'lang_id', 'id');
+        return $this->belongsTo('Modules\Prestashop\Entities\DocumentLang', 'lang_id', 'id');
     }
 
     /**
