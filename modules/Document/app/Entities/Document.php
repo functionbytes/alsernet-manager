@@ -575,27 +575,52 @@ class Document extends Model implements HasMedia
 
     /**
      * Legacy validation stages logic (fallback) - NOW COMPLETELY DYNAMIC
-     * Used when DocumentType has no configured stages
-     * All stage decisions are based on DocumentValidationCondition from database
+     * Used when getValidationWorkflowStages() returns empty
+     * Gets stages from DocumentType, evaluating conditions dynamically
+     * Zero hardcoded stage names - all from database
      *
      * @return array<string>
      */
     protected function getLegacyValidationStages(): array
     {
-        $stages = ['documentacion']; // Always starts with documentation
+        // Get all available stages from DocumentType (if exists)
+        if ($this->type_id && $this->documentType) {
+            $stagesWithConditions = $this->documentType->getValidationStagesWithConditions();
 
-        // Check if this is a weapon using dynamic condition
-        if ($this->isWeapon()) {
-            // Weapons always need licencias validation
-            $stages[] = 'licencias';
+            // Filter stages based on document conditions
+            $validStages = [];
+            foreach ($stagesWithConditions as $stage) {
+                if ($this->evaluateStageConditions($stage['conditions'] ?? [])) {
+                    $validStages[] = $stage['key'];
+                }
+            }
+
+            // Return filtered stages from DocumentType
+            if (! empty($validStages)) {
+                return $validStages;
+            }
         }
 
-        if ($this->requires_financing) {
-            // Add accounting for financing (DNI or weapons)
-            $stages[] = 'contabilidad';
+        // Final fallback: use general DocumentType stages
+        $generalType = DocumentType::where('slug', 'general')->first();
+        if ($generalType) {
+            $stagesWithConditions = $generalType->getValidationStagesWithConditions();
+
+            $validStages = [];
+            foreach ($stagesWithConditions as $stage) {
+                if ($this->evaluateStageConditions($stage['conditions'] ?? [])) {
+                    $validStages[] = $stage['key'];
+                }
+            }
+
+            if (! empty($validStages)) {
+                return $validStages;
+            }
         }
 
-        return $stages;
+        // Last resort: return empty array
+        // The system should always have a DocumentType configured
+        return [];
     }
 
     /**
