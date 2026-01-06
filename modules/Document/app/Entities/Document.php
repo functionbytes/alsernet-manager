@@ -441,58 +441,42 @@ class Document extends Model implements HasMedia
     }
 
     /**
-     * Get the actual value for a condition key
-     * Dynamically evaluates conditions based on DocumentType and configured conditions
+     * Get a condition value dynamically from database or document attributes
+     * Completely dynamic - supports any condition added to DocumentValidationCondition
+     * No hardcoded condition names - fully extensible
      *
-     * @param  string  $key  Condition key (e.g., 'requires_financing', 'is_weapon', 'is_dni_only')
-     * @return mixed The actual value from the document
+     * @param  string  $key  The condition key (e.g., 'requires_financing', 'is_weapon')
+     * @return mixed Boolean for evaluated conditions, null if not found
      */
     protected function getConditionValue(string $key): mixed
     {
-        switch ($key) {
-            case 'requires_financing':
-                return (bool) $this->requires_financing;
-
-            case 'is_weapon':
-                // Get DocumentType slug
-                if (! $this->documentType) {
-                    return false;
-                }
-
-                $documentTypeSlug = $this->documentType->slug;
-
-                // Check centralized validation condition (cached)
-                $condition = DocumentValidationCondition::getByKey('is_weapon');
-
-                if ($condition) {
-                    return $condition->matches($documentTypeSlug);
-                }
-
-                // No condition configured
-                return false;
-
-            case 'is_dni_only':
-                // Get DocumentType slug
-                if (! $this->documentType) {
-                    return false;
-                }
-
-                $documentTypeSlug = $this->documentType->slug;
-
-                // Check centralized validation condition (cached)
-                $condition = DocumentValidationCondition::getByKey('is_dni_only');
-
-                if ($condition) {
-                    return $condition->matches($documentTypeSlug);
-                }
-
-                // No condition configured
-                return false;
-
-            default:
-                // For unknown conditions, return null (will fail comparison)
-                return null;
+        // Check if this is a built-in document attribute
+        if ($key === 'requires_financing') {
+            return (bool) $this->requires_financing;
         }
+
+        // For all other conditions, dynamically query DocumentValidationCondition
+        // This makes the system completely extensible - any new condition can be added to database
+        $condition = DocumentValidationCondition::getByKey($key);
+
+        if (! $condition) {
+            // Condition not found in database
+            return null;
+        }
+
+        // Evaluate the condition against document type
+        if ($this->documentType) {
+            return $condition->matches($this->documentType->slug);
+        }
+
+        // Fallback: evaluate against sale type from blockades
+        $saleType = $this->getSaleType();
+        if ($saleType) {
+            return $condition->matches($saleType);
+        }
+
+        // No way to evaluate - return false
+        return false;
     }
 
     /**
