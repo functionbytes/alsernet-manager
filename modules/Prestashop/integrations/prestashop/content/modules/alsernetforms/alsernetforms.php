@@ -368,26 +368,37 @@ class Alsernetforms extends Module implements WidgetInterface
                     // 1️⃣ OBTENER TOKEN DEL PARÁMETRO
                     $token = Tools::getValue('token');
 
-                    // 2️⃣ VALIDAR TOKEN EN LARAVEL (donde se generó)
-                    // El token se genera en Laravel, por lo que debemos validarlo allí
+                    // 2️⃣ INCLUIR CLASES REQUERIDAS
+                    include_once dirname(__FILE__).'/classes/Actions/DocumentAction.php';
+                    include_once dirname(__FILE__).'/classes/DocumentValidator.php';
                     include_once dirname(__FILE__).'/classes/EndpointAvailabilityChecker.php';
 
-                    $checker = new EndpointAvailabilityChecker;
-                    $tokenValidationResponse = $checker->validateToken(
-                        'https://webadminpruebas.a-alvarez.com/api/documents/validate-token',
-                        $token
+                    // 3️⃣ EJECUTAR VALIDACIÓN CON CIRCUIT BREAKER
+                    // DocumentAction se encarga de:
+                    //   - Registrar la petición en BD (SIEMPRE)
+                    //   - Verificar disponibilidad del servidor
+                    //   - Si disponible: enviar inmediatamente
+                    //   - Si no disponible: dejar como pendiente para el cron
+                    $documentAction = new DocumentAction;
+                    $validation = $documentAction->validateToken(
+                        $token,
+                        [
+                            'customer_id' => $this->context->customer->id ?? null,
+                            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
+                            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+                        ]
                     );
 
-                    // 3️⃣ VERIFICAR SI EL TOKEN ES VÁLIDO
-                    if (empty($tokenValidationResponse) || ! $tokenValidationResponse['valid']) {
+                    // 4️⃣ VERIFICAR SI EL TOKEN FUE VALIDADO CORRECTAMENTE
+                    if ($validation['status'] === 'error' && empty($validation['data'])) {
                         $this->context->smarty->assign([
                             'validation_error' => true,
-                            'error_message' => 'Token inválido o expirado',
-                            'error_details' => $tokenValidationResponse['error'] ?? 'Token validation failed',
+                            'error_message' => 'Error al validar token',
+                            'error_details' => $validation['error'] ?? 'Token validation failed',
                         ]);
 
                         PrestaShopLogger::addLog(
-                            "DocumentValidator: Invalid token: {$token}",
+                            "DocumentAction: Token validation error for {$token}: {$validation['error']}",
                             3,  // Error
                             null,
                             'alsernetforms'
@@ -396,14 +407,15 @@ class Alsernetforms extends Module implements WidgetInterface
                         return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
                     }
 
-                    // 4️⃣ EXTRAER DATOS DEL TOKEN VALIDADO
-                    // Laravel devuelve: uid, document_type, order_id, reference, etc.
-                    $uid = $tokenValidationResponse['data']['uid'] ?? null;
-                    $documentType = $tokenValidationResponse['data']['document_type'] ?? 'dni';
-                    $orderId = $tokenValidationResponse['data']['order_id'] ?? null;
-                    $orderReference = $tokenValidationResponse['data']['reference'] ?? $uid;
+                    // 5️⃣ EXTRAER DATOS DEL TOKEN (puede venir de respuesta o de pendiente)
+                    $tokenData = $validation['data'] ?? [];
+                    $uid = $tokenData['uid'] ?? null;
+                    $documentType = $tokenData['document_type'] ?? 'dni';
+                    $orderId = $tokenData['order_id'] ?? null;
+                    $orderReference = $tokenData['reference'] ?? $uid;
+                    $requestId = $validation['request_id'] ?? null;
 
-                    if (empty($uid)) {
+                    if (empty($uid) && $validation['status'] !== 'pending') {
                         $this->context->smarty->assign([
                             'validation_error' => true,
                             'error_message' => 'No se pudo obtener información del token',
@@ -413,101 +425,63 @@ class Alsernetforms extends Module implements WidgetInterface
                         return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
                     }
 
-                    // 5️⃣ INCLUIR CLASES REQUERIDAS
-                    include_once dirname(__FILE__).'/classes/DocumentValidator.php';
-
-                    // 6️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
+                    // 6️⃣ VERIFICAR ESTADO DEL SERVIDOR PARA MOSTRAR AL USUARIO
+                    $checker = new EndpointAvailabilityChecker;
                     $serverAvailable = $checker->isEndpointAvailable(
                         'https://webadminpruebas.a-alvarez.com/api/health',
                         'documents'
                     );
 
-                    // 7️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
                     $serverStatus = $serverAvailable['available']
                         ? '✅ Servidor disponible'
                         : '⏳ Servidor no disponible: '.($serverAvailable['reason'] ?? 'Unknown');
 
-                    // 8️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
-                    // Si el servidor está caído:
-                    //   - NO envía petición al servidor
-                    //   - Guarda en BD con status='pending'
-                    //   - Cron procesará cuando vuelva
-                    // Si el servidor está disponible:
-                    //   - Valida inmediatamente
-                    //   - Retorna resultado completo
-                    $validator = new DocumentValidator;
-                    $validation = $validator->validateDocuments(
-                        $uid,
-                        $documentType,
-                        [
-                            'customer_id' => $this->context->customer->id ?? null,
-                            'order_id' => $orderId ?? null,
-                            'order_reference' => $orderReference ?? $uid,
-                            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
-                            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-                        ]
-                    );
+                    // 7️⃣ GENERAR TRADUCCIONES SEGÚN TIPO DE DOCUMENTO
+                    [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $documentType);
 
-                    // 9️⃣ GENERAR TRADUCCIONES
-                    [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $validation['type']);
-
-                    // 🔟 ASIGNAR VARIABLES A TEMPLATE
+                    // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
                     $this->context->smarty->assign([
                         'uid' => $uid,
                         'trans' => $trans_remember,
                         'trans_list' => $trans_list,
-                        'label' => $validation['label'],
-                        'status' => $validation['status'],  // 'success' | 'pending' | 'error'
-                        'type' => $validation['type'],
-                        'upload' => $validation['upload'],  // true si puede subir, false si está pendiente
-                        'required_documents' => $validation['data']['required_documents'] ?? [],
-                        'uploaded_documents' => $validation['data']['uploaded_documents'] ?? [],
-                        'missing_documents' => $validation['data']['missing_documents'] ?? [],
+                        'document_type' => $documentType,
+                        'request_id' => $requestId,
+                        'server_status' => $serverStatus,
+                        'validation_status' => $validation['status'],  // 'success' | 'pending' | 'error'
                     ]);
 
-                    // 1️⃣1️⃣ SI SERVIDOR NO DISPONIBLE: MOSTRAR MENSAJE ESPECIAL
+                    // 9️⃣ MANEJAR DIFERENTES ESTADOS
                     if ($validation['status'] === 'pending') {
+                        // Servidor no disponible: petición guardada en BD
                         $this->context->smarty->assign([
                             'server_unavailable' => true,
-                            'server_status' => $serverStatus,
-                            'pending_message' => $validation['message'],
-                            'request_id' => $validation['request_id'] ?? null,
-                            'reason' => $validation['reason'] ?? 'Server unavailable',
-                            'retry_info' => [
-                                'saved_at' => date('Y-m-d H:i:s'),
-                                'will_retry_at' => $validation['next_retry_at'] ?? date('Y-m-d H:i:s', time() + 300),
-                            ],
+                            'pending_message' => 'El servidor está procesando tu solicitud. Se completará en breve.',
                         ]);
 
-                        // LOG: Registrar que se guardó como pendiente
                         PrestaShopLogger::addLog(
-                            "DocumentValidator: Request queued for UID {$uid}. Request ID: {$validation['request_id']}",
+                            "DocumentAction: Token validation pending. Request ID: {$requestId}",
                             1,  // Info
                             null,
-                            'alsernetforms',
-                            $validation['request_id'] ?? null,
-                            true
+                            'alsernetforms'
                         );
                     } elseif ($validation['status'] === 'error') {
-                        // ❌ ERROR: Mostrar mensaje de error
+                        // Error en la validación
                         $this->context->smarty->assign([
                             'validation_error' => true,
-                            'error_message' => $validation['message'],
-                            'error_details' => $validation['error'] ?? null,
+                            'error_message' => 'Error al procesar tu solicitud',
+                            'error_details' => $validation['error'],
                         ]);
 
-                        // LOG: Registrar error
                         PrestaShopLogger::addLog(
-                            "DocumentValidator: Error for UID {$uid}: {$validation['error']}",
+                            "DocumentAction: Token validation error. Request ID: {$requestId}",
                             3,  // Error
                             null,
                             'alsernetforms'
                         );
                     } else {
-                        // ✅ SUCCESS: Validación completada
+                        // Token válido: usuario puede continuar
                         $this->context->smarty->assign([
                             'validation_success' => true,
-                            'server_status' => $serverStatus,
                         ]);
                     }
 
