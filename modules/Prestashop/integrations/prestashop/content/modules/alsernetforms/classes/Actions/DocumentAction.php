@@ -1,31 +1,31 @@
 <?php
 
-include_once dirname(__FILE__).'/ApiManager.php';
+include_once dirname(__FILE__).'/BaseAction.php';
 
 /**
  * DocumentAction
  *
- * Acción específica para validación de tokens de documentos.
- * Usa ApiManager que ya maneja:
- * - Verificación de disponibilidad del servidor
- * - Registro de peticiones en los loggers
- * - Circuit breaker pattern
- * - Reintentos automáticos
+ * Acción para validación de tokens de documentos.
+ * Extiende BaseAction que automatiza:
+ * - Envío a ApiManager
+ * - Verificación de disponibilidad
+ * - Logging automático
+ * - Circuit breaker con reintentos
+ *
+ * Solo necesita implementar mapResponse() para transformar respuestas.
  */
-class DocumentAction
+class DocumentAction extends BaseAction
 {
-    private $apiManager;
-
     public function __construct()
     {
-        $this->apiManager = new ApiManager;
+        parent::__construct();
+
+        $this->endpoint = 'api/documents';
+        $this->actionType = 'documents';
     }
 
     /**
      * Valida un token de documento
-     *
-     * Envía petición a /api/documents con action='validate'
-     * ApiManager se encarga de toda la lógica de disponibilidad y logging
      *
      * @param  string  $token  Token a validar
      * @param  array  $context  Contexto adicional (customer_id, order_id, etc.)
@@ -33,34 +33,29 @@ class DocumentAction
      */
     public function validateToken($token, array $context = [])
     {
-        // Preparar payload: action='validate' + uid extraído del token
         $payload = [
             'action' => 'validate',
             'uid' => $token,
         ];
 
-        // ApiManager maneja:
-        // - Verificación de disponibilidad
-        // - Si disponible: envía inmediatamente
-        // - Si NO disponible: guarda como pending y devuelve status='pending'
-        $response = $this->apiManager->sendRequest(
-            'POST',
-            'api/documents',
-            $payload,
-            'documents',
-            [],
-            true  // checkAvailability=true
-        );
+        return $this->execute($payload, $context);
+    }
 
-        // Extraer datos de la respuesta
+    /**
+     * Mapea respuesta de ApiManager a estructura estándar para templates
+     *
+     * @param array $response Respuesta de ApiManager
+     * @return array Respuesta mapeada
+     */
+    protected function mapResponse(array $response)
+    {
         $responseData = $response['response'] ?? [];
 
-        // Mapear respuesta a estructura esperada
         return [
             'status' => $response['status'],  // 'success' | 'pending' | 'error'
             'request_id' => $response['request_id'] ?? null,
             'data' => [
-                'uid' => $responseData['data']['uid'] ?? $token,
+                'uid' => $responseData['data']['uid'] ?? null,
                 'document_type' => $responseData['data']['type'] ?? 'dni',
                 'order_id' => $responseData['data']['order_id'] ?? null,
                 'reference' => $responseData['data']['reference'] ?? null,
