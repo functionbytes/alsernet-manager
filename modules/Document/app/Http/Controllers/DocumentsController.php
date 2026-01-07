@@ -49,14 +49,6 @@ class DocumentsController extends Controller
             ->when($statusId, fn ($q) => $q->where('status_id', $statusId))
             ->when($loadId, fn ($q) => $q->where('load_id', $loadId));
 
-        // FILTROS DE VALIDACIÓN: Solo aplicar restricciones si NO es super-admin
-        if (! auth()->user()->hasRole('super-admin')) {
-            $query = $query->where(function ($q) {
-                $q->whereIn('current_validator_group', $this->getUserValidatorGroups(auth()->user()))
-                    ->orWhereNull('current_validator_group');
-            })->whereIn('validation_status', ['pending', 'in_validation']);
-        }
-
         $documents = $query->paginate($perPage);
 
         // Get statuses and loads for filters
