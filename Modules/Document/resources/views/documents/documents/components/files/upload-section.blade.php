@@ -434,23 +434,45 @@
                         .replace('MEDIA_PLACEHOLDER', mediaId),
                     type: 'DELETE',
                     success: function(response) {
-                        if (response.success) {
-                            toastr.success('Documento eliminado correctamente', 'Éxito', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                            // Actualizar estado sin recargar la página
-                            if (typeof reloadDocumentsSection === 'function') {
-                                reloadDocumentsSection(documentUid);
-                            }
+                        console.log('✅ DELETE success:', response);
+                        toastr.success('Documento eliminado correctamente', 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+
+                        // Actualizar estado sin recargar la página
+                        if (typeof reloadDocumentsSection === 'function') {
+                            console.log('🔄 Llamando a reloadDocumentsSection');
+                            reloadDocumentsSection(documentUid);
                         } else {
-                            toastr.error(response.message || 'No se pudo eliminar', 'Error', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
+                            console.warn('⚠️ reloadDocumentsSection no está definida');
                         }
+
+                        // También refrescar la sección de gestión del documento
+                        const refreshUrl = '/api/documents/' + documentUid + '/refresh-management';
+                        console.log('🔄 Llamando a refresh-management:', refreshUrl);
+
+                        $.ajax({
+                            url: refreshUrl,
+                            type: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(refreshResponse) {
+                                console.log('✅ refresh-management response:', refreshResponse);
+                                if (refreshResponse.success && refreshResponse.html) {
+                                    const $managementCard = $('#documentManagementCard');
+                                    if ($managementCard.length) {
+                                        $managementCard.replaceWith(refreshResponse.html);
+                                        console.log('✅ Sección de gestión actualizada');
+                                    }
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('❌ Error refresh-management:', xhr);
+                            }
+                        });
                     },
                     error: function() {
                         toastr.error('Error al procesar la solicitud', 'Error', {
