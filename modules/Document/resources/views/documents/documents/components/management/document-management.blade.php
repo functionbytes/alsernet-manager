@@ -1,5 +1,5 @@
 {{-- Componente: Tarjeta de Gestión del Documento --}}
-<div class="card mb-3">
+<div class="card mb-3" id="documentManagementCard">
     <div class="card-header p-3 bg-white border-bottom">
         <h5 class="mb-1 fw-bold">Gestión del documento</h5>
         <p class="small mb-0 text-muted">Indica si el documento fue procesado y cómo fue recibido</p>

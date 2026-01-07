@@ -401,10 +401,12 @@
                             success: function(refreshResponse) {
                                 if (refreshResponse.success && refreshResponse.html) {
                                     // Reemplazar el contenido del componente document-management
-                                    const $managementCard = $('div.card:has(#formDocumentConfig)');
+                                    const $managementCard = $('#documentManagementCard');
                                     if ($managementCard.length) {
                                         $managementCard.replaceWith(refreshResponse.html);
                                         console.log('✅ Sección de gestión actualizada');
+                                    } else {
+                                        console.warn('⚠️ Elemento #documentManagementCard no encontrado');
                                     }
                                 }
                             },
