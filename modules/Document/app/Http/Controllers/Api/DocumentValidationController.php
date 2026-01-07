@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
@@ -963,9 +964,16 @@ class DocumentValidationController extends Controller
 
             $media->delete();
 
+            // Cambiar estado a "awaiting_documents" cuando se elimina un attachment
+            $document->status_id = DocumentStatus::where('key', 'awaiting_documents')->first()?->id;
+            $document->save();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Documento eliminado correctamente',
+                'data' => [
+                    'current_status' => $document->status?->key,
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
