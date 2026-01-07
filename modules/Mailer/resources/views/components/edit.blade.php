@@ -465,6 +465,9 @@
 // Prevent Quill from initializing on this page (we use CodeMirror instead)
 console.log('🎨 CodeMirror Email Editor Loading...');
 
+// Declare editor as global variable so it can be accessed in form submit handler
+let editor;
+
 $(document).ready(function() {
     console.log('✅ DOM Ready - Initializing CodeMirror');
 
@@ -491,7 +494,7 @@ $(document).ready(function() {
     console.log('📝 Textarea found, initializing CodeMirror...');
 
     // Initialize CodeMirror
-    const editor = CodeMirror.fromTextArea($contentTextarea[0], {
+    editor = CodeMirror.fromTextArea($contentTextarea[0], {
         mode: 'htmlmixed',
         theme: 'monokai',
         lineNumbers: true,
