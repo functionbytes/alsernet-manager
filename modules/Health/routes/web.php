@@ -24,8 +24,8 @@ Route::middleware(['web', 'auth', 'role:super-admin'])
         Route::get('/history', [HealthController::class, 'history'])->name('history');
     });
 
-// Health Check Routes (no authentication, no rate limiting - for external monitoring)
-Route::prefix('health')->group(function () {
+// Health Check API Routes (no authentication, no rate limiting - for external monitoring)
+Route::prefix('api/health')->group(function () {
     Route::get('ping', [HealthController::class, 'ping']);           // Ping simple
     Route::get('/', [HealthController::class, 'health']);            // Health check completo
     Route::get('documents', [HealthController::class, 'documentsHealth']); // Health específico documentos
