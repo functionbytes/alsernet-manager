@@ -391,6 +391,17 @@
                             positionClass: "toast-bottom-right"
                         });
 
+                        // Actualizar formulario de configuración del documento
+                        if (response.data) {
+                            $('#status_id').val(response.data.status_id).trigger('change');
+                            $('#source_id').val(response.data.source_id || '').trigger('change');
+                            $('#load_id').val(response.data.load_id || '').trigger('change');
+                            $('#sync_id').val(response.data.sync_id || '').trigger('change');
+                            $('#upload_id').val(response.data.upload_id || '').trigger('change');
+                            $('#requires_financing').val(response.data.requires_financing || '0').trigger('change');
+                            previousStatusId = response.data.status_id;
+                        }
+
                         // Refresh list
                         refreshAttachmentsList();
                     }

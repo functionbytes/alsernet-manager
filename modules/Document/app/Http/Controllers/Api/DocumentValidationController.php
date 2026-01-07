@@ -968,11 +968,21 @@ class DocumentValidationController extends Controller
             $document->status_id = DocumentStatus::where('key', 'awaiting_documents')->first()?->id;
             $document->save();
 
+            // Refrescar datos del documento
+            $document->refresh();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Documento eliminado correctamente',
                 'data' => [
+                    'status_id' => $document->status_id,
                     'current_status' => $document->status?->key,
+                    'status_label' => $document->status?->label,
+                    'source_id' => $document->source_id,
+                    'load_id' => $document->load_id,
+                    'sync_id' => $document->sync_id,
+                    'upload_id' => $document->upload_id,
+                    'requires_financing' => $document->requires_financing,
                 ],
             ]);
         } catch (\Exception $e) {
