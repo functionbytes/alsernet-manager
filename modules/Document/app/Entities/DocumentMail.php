@@ -146,7 +146,7 @@ class DocumentMail extends Model
         return self::create([
             'document_id' => $document->id,
             'email_type' => $emailType,
-            'recipient_email' => $document->customer_email ?? $document->customer?->email ?? '',
+            'recipient_email' => $document->customer_email ?? '',
             'subject' => $subject,
             'body_html' => $bodyHtml,
             'body_text' => $bodyText ?? strip_tags($bodyHtml),

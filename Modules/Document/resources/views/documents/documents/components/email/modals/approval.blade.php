@@ -13,7 +13,7 @@
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
-                    <div>Se enviará un email notificando que los documentos han sido aprobados.</div>
+                    Se enviará un email notificando que los documentos han sido aprobados.
                 </div>
             </div>
             <div class="modal-footer border-top">
@@ -50,8 +50,8 @@
                         });
                         $('#approvalModal').modal('hide');
                         // Recargar historial de acciones
-                        if (typeof reloadActionHistory === 'function') {
-                            reloadActionHistory();
+                        if (typeof window.reloadActionHistory === 'function') {
+                            window.reloadActionHistory();
                         }
                     }
                 },

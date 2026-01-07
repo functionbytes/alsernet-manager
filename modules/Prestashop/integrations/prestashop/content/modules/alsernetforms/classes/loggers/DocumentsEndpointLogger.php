@@ -2,23 +2,9 @@
 
 include_once(dirname(__FILE__).'/DefaultEndpointLogger.php');
 
-/**
- * DocumentsEndpointLogger
- *
- * Logger específico para peticiones de validación de documentos.
- * Extiende DefaultEndpointLogger añadiendo información específica del contexto de documentos.
- */
 class DocumentsEndpointLogger extends DefaultEndpointLogger
 {
-    /**
-     * Registra una petición de validación de documentos con contexto adicional
-     *
-     * @param string $method HTTP method
-     * @param string $url Endpoint URL
-     * @param array $data Payload data
-     * @param array $context Contexto adicional (uid, documentType, etc.)
-     * @return int Request ID
-     */
+
     public function logDocumentRequest($method, $url, array $data, array $context = [])
     {
         // Enriquecer el payload con información de contexto

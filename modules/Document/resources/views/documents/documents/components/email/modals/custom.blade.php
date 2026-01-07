@@ -10,21 +10,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                {{-- Plantilla configurada - Cargado via AJAX --}}
-                <div class="alert alert-info" id="templateInfo" style="display: none;">
-                    <h6 class="mb-1 fw-semibold">Plantilla configurada</h6>
-                    <p class="mb-0 small">Se usará: <span class="badge bg-primary" id="templateName"></span></p>
-                </div>
+                <form id="customEmailForm">
+                    {{-- Plantilla configurada - Cargado via AJAX --}}
+                    <div class="alert alert-info" id="templateInfo" style="display: none;">
+                        <h6 class="mb-1 fw-semibold">Plantilla configurada</h6>
+                        <p class="mb-0 small">Se usará: <span class="badge bg-primary" id="templateName"></span></p>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Asunto</label>
-                    <input type="text" class="form-control" id="emailSubject" placeholder="Asunto del correo">
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Asunto</label>
+                        <input type="text" class="form-control" id="emailSubject" name="subject" placeholder="Asunto del correo" required>
+                        <span class="invalid-feedback d-block"></span>
+                    </div>
 
-                <div class="mb-0">
-                    <label class="form-label fw-semibold">Mensaje</label>
-                    <textarea class="form-control" id="emailMessage" rows="5" placeholder="Escribe tu mensaje..."></textarea>
-                </div>
+                    <div class="mb-0">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-semibold mb-0">Mensaje</label>
+                            <small class="text-muted"><span id="charCount">0</span>/10 min</small>
+                        </div>
+                        <textarea class="form-control" id="emailMessage" name="message" rows="5" placeholder="Escribe tu mensaje..." required minlength="10"></textarea>
+                        <span class="invalid-feedback d-block"></span>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-primary w-100 mb-1" id="btnSendCustomEmail">
@@ -41,8 +48,62 @@
     $(document).ready(function() {
         let customEmailTemplateId = null;
 
+        // Inicializar validación con jQuery Validate
+        $('#customEmailForm').validate({
+            rules: {
+                subject: {
+                    required: true,
+                    minlength: 3
+                },
+                message: {
+                    required: true,
+                    minlength: 10
+                }
+            },
+            messages: {
+                subject: {
+                    required: 'El asunto es requerido',
+                    minlength: 'El asunto debe tener al menos 3 caracteres'
+                },
+                message: {
+                    required: 'El mensaje es requerido',
+                    minlength: 'El mensaje debe contener al menos 10 caracteres'
+                }
+            },
+            errorClass: 'is-invalid',
+            errorElement: 'span',
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback d-block');
+                error.insertAfter(element);
+            }
+        });
+
+        // Actualizar contador de caracteres en tiempo real
+        $('#emailMessage').on('input', function() {
+            const charCount = $(this).val().length;
+            $('#charCount').text(charCount);
+
+            // Cambiar color del contador si no hay suficientes caracteres
+            if (charCount < 10) {
+                $('#charCount').parent().css('color', '#dc3545');
+            } else {
+                $('#charCount').parent().css('color', '#6c757d');
+            }
+        });
+
         // Cargar plantilla de email cuando se abre el modal
         $('#customEmailModal').on('show.bs.modal', function() {
+            // Resetear formulario y validación
+            $('#customEmailForm').trigger('reset');
+            $('#customEmailForm').find('input, textarea').removeClass('is-invalid');
+            $('#charCount').text('0').parent().css('color', '#6c757d');
+
             $.ajax({
                 url: "{{ route('api.documents.custom-email-template') }}",
                 method: 'GET',
@@ -57,14 +118,14 @@
         });
 
         $('#btnSendCustomEmail').on('click', function() {
+            // Validar formulario
+            if (!$('#customEmailForm').valid()) {
+                return;
+            }
+
             const $btn = $(this);
             const subject = $('#emailSubject').val().trim();
             const message = $('#emailMessage').val().trim();
-
-            if (!subject || !message) {
-                toastr.warning('Completa todos los campos', 'Atención');
-                return;
-            }
 
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Enviando...');
 
@@ -81,7 +142,9 @@
                     if (response.success) {
                         toastr.success('Email enviado a: ' + response.recipient, 'Éxito');
                         $('#customEmailModal').modal('hide');
-                        $('#emailSubject, #emailMessage').val('');
+                        $('#customEmailForm').trigger('reset');
+                        $('#customEmailForm').find('input, textarea').removeClass('is-invalid');
+                        $('#charCount').text('0');
                     }
                 },
                 error: function(xhr) {

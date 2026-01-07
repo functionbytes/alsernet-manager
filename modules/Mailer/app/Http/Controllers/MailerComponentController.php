@@ -222,13 +222,21 @@ class MailerComponentController extends Controller
 
         $validated = $request->validate([
             'subject' => 'nullable|string|max:255',
-            'content' => 'nullable|string',
+            'content' => 'nullable|string',  // Allow empty strings and null
             'type' => 'required|string|in:partial,layout,component',
             'lang_id' => 'required|exists:langs,id',
             'is_protected' => 'nullable|boolean',
         ]);
 
         try {
+            \Log::info('MailerComponentController::update', [
+                'uid' => $uid,
+                'lang_id' => $validated['lang_id'],
+                'subject_length' => strlen($validated['subject'] ?? ''),
+                'content_length' => strlen($validated['content'] ?? ''),
+                'has_content' => ! empty($validated['content']),
+            ]);
+
             // Actualizar el tipo y protección del layout (metadata)
             $layout->update([
                 'type' => $validated['type'],
@@ -239,18 +247,28 @@ class MailerComponentController extends Controller
             $translation = $layout->translations()->where('lang_id', $validated['lang_id'])->first();
 
             if ($translation) {
-                // Actualizar traducción existente
+                // Actualizar traducción existente - Explicitly set content even if empty
                 $translation->update([
-                    'subject' => $validated['subject'],
-                    'content' => $validated['content'],
+                    'subject' => $validated['subject'] ?? '',
+                    'content' => $validated['content'] ?? '',  // Force update even if empty
+                ]);
+
+                \Log::info('Translation updated', [
+                    'translation_id' => $translation->id,
+                    'new_content_length' => strlen($translation->content ?? ''),
                 ]);
             } else {
                 // Crear nueva traducción si no existe
                 $translation = MailerLayoutLang::create([
                     'layout_id' => $layout->id,
                     'lang_id' => $validated['lang_id'],
-                    'subject' => $validated['subject'],
-                    'content' => $validated['content'],
+                    'subject' => $validated['subject'] ?? '',
+                    'content' => $validated['content'] ?? '',
+                ]);
+
+                \Log::info('Translation created', [
+                    'translation_id' => $translation->id,
+                    'content_length' => strlen($translation->content ?? ''),
                 ]);
             }
 
@@ -262,6 +280,12 @@ class MailerComponentController extends Controller
                 ])
                 ->with('success', 'Componente actualizado exitosamente');
         } catch (\Exception $e) {
+            \Log::error('Error updating component', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return redirect()
                 ->back()
                 ->with('error', 'Error al actualizar: '.$e->getMessage())

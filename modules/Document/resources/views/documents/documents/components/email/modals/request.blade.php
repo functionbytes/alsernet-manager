@@ -14,9 +14,8 @@
             <div class="modal-body">
                 <div class="alert alert-info" role="alert">
                     <div class="d-flex align-items-center">
-                        <div>
-                            <p class="mb-0 small">Se enviará un email solicitando que se carguen todos los documentos requeridos.</p>
-                        </div>
+
+                            Se enviará un email solicitando que se carguen todos los documentos requeridos.
                     </div>
                 </div>
             </div>
@@ -46,7 +45,7 @@
                 $btn.html('Enviando...');
 
                 $.ajax({
-                    url: "{{ route('api.documents.send-notification', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('api.documents.send-notification', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                     type: 'POST',
                     success: function(response) {
                         if (response.success) {
@@ -56,9 +55,10 @@
                                 progressBar: true,
                                 positionClass: "toast-bottom-right"
                             });
+
                             // Recargar historial de acciones
-                            if (typeof reloadActionHistory === 'function') {
-                                reloadActionHistory();
+                            if (typeof window.reloadActionHistory === 'function') {
+                                window.reloadActionHistory();
                             }
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {

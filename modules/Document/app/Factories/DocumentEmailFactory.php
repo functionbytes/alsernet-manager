@@ -7,6 +7,18 @@ use Modules\Document\Entities\Document;
 use Modules\Document\Mail\DocumentCustomMail;
 use Modules\Mailer\Models\MailerTemplate;
 
+/**
+ * @deprecated This class is deprecated and will be removed in a future version.
+ * Use DocumentEmailService instead, which provides:
+ * - Email validation before queueing
+ * - Rate limiting (60s per email type)
+ * - AdminId tracking
+ * - Consolidated logging with DocumentActionService
+ *
+ * Migration path:
+ * - Replace DocumentEmailFactory::sendByTemplateKey() with DocumentEmailService::send*() methods
+ * - Replace DocumentEmailFactory::sendCustom() with DocumentEmailService::sendCustomEmail()
+ */
 class DocumentEmailFactory
 {
     public static function sendByTemplateKey(
@@ -30,11 +42,11 @@ class DocumentEmailFactory
 
     public static function sendByTemplate(
         Document $document,
-        MailTemplate $template,
+        MailerTemplate $template,
         array $additionalVariables = []
     ): bool {
         try {
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 \Log::warning("DocumentEmailFactory: No hay email de destinatario para documento {$document->uid}");
@@ -50,8 +62,8 @@ class DocumentEmailFactory
                 $mail->setVariables($additionalVariables);
             }
 
-            // Enviar
-            Mail::to($recipient)->send($mail);
+            // Enviar (cambiar a queue para no bloquear)
+            Mail::to($recipient)->queue($mail);
 
             \Log::info("DocumentEmailFactory: Email enviado exitosamente. Template: {$template->key}, Recipient: {$recipient}");
 
@@ -66,7 +78,7 @@ class DocumentEmailFactory
     public static function sendCustom(Document $document, string $subject, string $content): bool
     {
         try {
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 \Log::warning("DocumentEmailFactory: No hay email de destinatario para documento {$document->uid}");
@@ -74,7 +86,7 @@ class DocumentEmailFactory
                 return false;
             }
 
-            Mail::to($recipient)->send(new DocumentCustomMail($document, $subject, $content));
+            Mail::to($recipient)->queue(new DocumentCustomMail($document, $subject, $content));
 
             return true;
         } catch (\Exception $e) {
@@ -122,7 +134,7 @@ class DocumentEmailFactory
                 $template
             );
 
-            Mail::to($testEmail)->send($mail);
+            Mail::to($testEmail)->queue($mail);
 
             return true;
         } catch (\Exception $e) {
@@ -132,9 +144,9 @@ class DocumentEmailFactory
         }
     }
 
-    public static function getTemplate(string $templateKey): ?MailTemplate
+    public static function getTemplate(string $templateKey): ?MailerTemplate
     {
-        return MailTemplate::where('key', $templateKey)
+        return MailerTemplate::where('key', $templateKey)
             ->where('is_enabled', true)
             ->where('module', 'documents')
             ->first();
@@ -142,7 +154,7 @@ class DocumentEmailFactory
 
     public static function getAvailableTemplates()
     {
-        return MailTemplate::where('is_enabled', true)
+        return MailerTemplate::where('is_enabled', true)
             ->where('module', 'documents')
             ->orderBy('name')
             ->get();
@@ -151,7 +163,7 @@ class DocumentEmailFactory
     public static function getTemplatesWithStats(): array
     {
         return self::getAvailableTemplates()
-            ->map(function (MailTemplate $template) {
+            ->map(function (MailerTemplate $template) {
                 return [
                     'key' => $template->key,
                     'name' => $template->name,

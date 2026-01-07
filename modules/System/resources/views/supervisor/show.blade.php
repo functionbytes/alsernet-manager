@@ -135,7 +135,7 @@
                                     </button>
                                 </div>
                                 <div class="card-body">
-                                    <div class="bg-dark p-3 rounded" style="max-height: 500px; overflow-y: auto;">
+                                    <div class="bg-black p-3 rounded" style="max-height: 500px; overflow-y: auto;">
                                         <pre id="logsContent" class="text-light mb-0" style="font-size: 12px;">
 @if(isset($logs['logs']))
                                                 {{ $logs['logs'] }}
@@ -247,7 +247,7 @@
                     if (data.success) {
                         document.getElementById('logsContent').textContent = data.logs || 'No hay logs disponibles';
                         // Auto-scroll to bottom
-                        const logsContainer = document.querySelector('.bg-dark');
+                        const logsContainer = document.querySelector('.bg-black');
                         if (logsContainer) {
                             logsContainer.scrollTop = logsContainer.scrollHeight;
                         }

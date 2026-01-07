@@ -71,7 +71,7 @@
                             <small class="fw-semibold d-block text-success">
                                 Grupo validador activo
                             </small>
-                            <small class="text-muted d-block">{{ ucfirst($document->current_validator_group) }}</small>
+                            <small class="text-muted d-block">{{ $document->getCurrentStageLabel() }}</small>
                             <small class="text-success d-block mt-1">
                                 Eres miembro de este grupo - Puedes validar este documento
                             </small>
@@ -87,9 +87,9 @@
                             <small class="fw-semibold d-block text-warning">
                                 Validación asignada a otro grupo
                             </small>
-                            <small class="text-muted d-block">Grupo: {{ ucfirst($document->current_validator_group) }}</small>
+                            <small class="text-muted d-block">Grupo: {{ $document->getCurrentStageLabel() }}</small>
                             <small class="text-warning d-block mt-1">
-                                Esta etapa solo puede ser validada por miembros de {{ ucfirst($document->current_validator_group) }}
+                                Esta etapa solo puede ser validada por miembros de {{ $document->getCurrentStageLabel() }}
                             </small>
                         </div>
                     </div>
@@ -234,8 +234,10 @@
 
                             {{-- Stage and Action Info --}}
                             <p class="mb-2 fs-2 text-muted">
-
-                                {{ ucfirst(str_replace('_', ' ', $history->validator_group)) }} -Etapa {{ $history->stage_number }}
+                                @php
+                                    $stageLabel = app(\Modules\Document\Services\ValidationPermissionService::class)->getStageLabelByKey($history->validator_group);
+                                @endphp
+                                {{ $stageLabel }} - Etapa {{ $history->stage_number }}
 
                                 <span class="text-muted fw-normal fs-2 d-block mt-2">
                                     {{ $history->validated_at->format('d/m/Y H:i') }}

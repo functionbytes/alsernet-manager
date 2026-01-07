@@ -443,6 +443,10 @@ class Alsernetforms extends Module implements WidgetInterface
                     [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $documentType);
 
                     // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
+                    // ✅ REFACTORIZADO: Obtener URL base dinámicamente para endpoints RESTful
+                    $apiManager = new \Modules\Prestashop\integrations\prestashop\content\modules\alsernetforms\classes\ApiManager;
+                    $apiBaseUrl = rtrim($apiManager->getBaseUrl(), '/').'/api/documents';
+
                     $this->context->smarty->assign([
                         'uid' => $uid,
                         'label' => $label,
@@ -455,6 +459,7 @@ class Alsernetforms extends Module implements WidgetInterface
                         'required_documents' => $tokenData['required_documents'] ?? [],
                         'uploaded_documents' => $tokenData['uploaded_documents'] ?? [],
                         'missing_documents' => $tokenData['missing_documents'] ?? [],
+                        'api_base_url' => $apiBaseUrl,  // ✅ Pasar URL dinámicamente al JS
                     ]);
 
                     // 9️⃣ MANEJAR DIFERENTES ESTADOS

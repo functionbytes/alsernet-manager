@@ -83,7 +83,7 @@
                         <div class="col-12">
                             <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-2">Ruta del módulo</label>
-                                <div class="bg-dark text-white p-3 rounded-3 text-break">
+                                <div class="bg-black text-white p-3 rounded-3 text-break">
                                     <code class="text-white">{{ $module['path'] }}</code>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                         <div class="col-12">
                             <div class="p-3 bg-light rounded-3">
                                 <label class="form-label text-muted small mb-2">Namespace</label>
-                                <div class="bg-dark text-white p-3 rounded-3">
+                                <div class="bg-black text-white p-3 rounded-3">
                                     <code class="text-white">{{ $module['namespace'] }}</code>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                     <div class="mt-3">
                         <div class="p-3 bg-light rounded-3">
                             <label class="form-label text-muted small mb-2">Service Providers</label>
-                            <div class="bg-dark text-white p-3 rounded-3">
+                            <div class="bg-black text-white p-3 rounded-3">
                                 @foreach($module['providers'] as $provider)
                                     <div class="mb-1">
                                         <code class="text-white">{{ $provider }}</code>

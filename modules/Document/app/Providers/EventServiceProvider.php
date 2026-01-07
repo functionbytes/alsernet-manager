@@ -3,29 +3,22 @@
 namespace Modules\Document\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Document\Events\DocumentCreated;
-use Modules\Document\Events\DocumentStatusChanged;
-use Modules\Document\Events\DocumentValidationStageApproved;
-use Modules\Document\Listeners\LogDocumentStatusChange;
-use Modules\Document\Listeners\SendDocumentUploadNotification;
-use Modules\Document\Listeners\SendStageNotifications;
 
 class EventServiceProvider extends ServiceProvider
 {
+    /**
+     * Event listeners registry
+     *
+     * NOTA: Actualmente no hay eventos implementados en este módulo.
+     * Las carpetas app/Events y app/Listeners no existen.
+     * Si necesitas agregar eventos, crear primero las clases correspondientes.
+     */
     protected $listen = [
-
-        DocumentCreated::class => [
-            SendDocumentUploadNotification::class,
-        ],
-
-        DocumentStatusChanged::class => [
-            LogDocumentStatusChange::class,
-        ],
-
-        DocumentValidationStageApproved::class => [
-            SendStageNotifications::class,
-        ],
-
+        // TODO: Implementar eventos cuando sea necesario
+        // Ejemplo:
+        // DocumentCreated::class => [
+        //     SendDocumentUploadNotification::class,
+        // ],
     ];
 
     public function boot(): void

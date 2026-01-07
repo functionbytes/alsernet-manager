@@ -261,7 +261,7 @@ case 'documents':
         ]);
     }
 
-    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/gun.tpl');
+    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
 ```
 
 **Añadir método auxiliar:**

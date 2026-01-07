@@ -140,7 +140,9 @@
 @endif
 
 @if(auth()->user()->canDocument('send-rejection'))
-    @include('documents::documents.documents.components.email.modals.rejection')
+    @include('documents::documents.documents.components.email.modals.rejection', [
+        'requiredDocuments' => $requiredDocuments ?? []
+    ])
 @endif
 
 @if(auth()->user()->canDocument('send-custom-email'))

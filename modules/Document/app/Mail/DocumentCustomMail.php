@@ -7,140 +7,38 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Document\Entities\Document;
 use Modules\Mailer\Models\MailerTemplate;
-use Modules\Mailer\Services\Mails\MailerTemplateRendererService;
 
 class DocumentCustomMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $document;
-
-    protected $emailSubject;
-
-    protected $emailContent;
-
-    protected $emailTemplate;
-
-    protected $templateVariables = [];
-
-    public function __construct(
-        Document $document,
-        ?string $subject = null,
-        ?string $content = null,
-        ?MailerTemplate $emailTemplate = null
-    ) {
-        $this->document = $document;
-        $this->emailSubject = $subject;
-        $this->emailContent = $content;
-        $this->emailTemplate = $emailTemplate;
-
-        // Preparar variables para reemplazo
-        $this->prepareVariables();
-    }
-
     /**
-     * Preparar variables para reemplazo en templates
+     * Crear nueva instancia del mail.
+     *
+     * @param  Document  $document  Documento (usado solo para metadatos, no para renderizado)
+     * @param  string  $emailSubject  Asunto del email (ya procesado con variables)
+     * @param  string  $emailContent  Contenido HTML completo ya renderizado por DocumentEmailTemplateService
+     * @param  MailerTemplate|null  $emailTemplate  Template usado (opcional, solo para logging)
      */
-    protected function prepareVariables(): void
-    {
-        $customerName = trim($this->document->customer_firstname.' '.$this->document->customer_lastname);
-
-        $this->templateVariables = [
-            'CUSTOMER_NAME' => $customerName ?: 'Cliente',
-            'CUSTOMER_EMAIL' => $this->document->customer_email ?? '',
-            'ORDER_ID' => $this->document->order_id ?? '',
-            'ORDER_REFERENCE' => $this->document->order_id ?? '',
-            'DOCUMENT_TYPE' => $this->document->document_type ?? 'Documento',
-            'UPLOAD_LINK' => route('order.document.upload', ['order' => $this->document->order_id]) ?? '',
-            'EXPIRATION_DATE' => $this->document->expiration_date ?? '',
-        ];
+    public function __construct(
+        protected Document $document,
+        protected string $emailSubject,
+        protected string $emailContent,
+        protected ?MailerTemplate $emailTemplate = null
+    ) {
+        // No es necesario preparar variables - todo viene ya renderizado
     }
 
     /**
      * Build the message.
      *
+     * El contenido SIEMPRE viene ya renderizado como HTML completo desde DocumentEmailTemplateService.
+     *
      * @return $this
      */
     public function build()
     {
-        // Determinar si usar template de BD o contenido personalizado
-        if ($this->emailTemplate instanceof MailerTemplate) {
-            return $this->buildFromTemplate();
-        } else {
-            return $this->buildFromCustomContent();
-        }
-    }
-
-    /**
-     * Construir email desde template de BD
-     *
-     * @return $this
-     */
-    private function buildFromTemplate(): self
-    {
-        // Renderizar template con variables
-        $htmlContent = MailerTemplateRendererService::renderEmailTemplate(
-            $this->emailTemplate,
-            $this->templateVariables
-        );
-
-        // Obtener asunto (puede tener variables también)
-        $subject = MailerTemplateRendererService::replaceVariables(
-            $this->emailTemplate->subject,
-            $this->templateVariables
-        );
-
-        return $this->subject($subject)
-            ->html($htmlContent);
-    }
-
-    /**
-     * Construir email desde contenido personalizado (legacy)
-     *
-     * @return $this
-     */
-    private function buildFromCustomContent(): self
-    {
-        // Reemplazar variables en contenido personalizado
-        $content = $this->emailContent;
-
-        if ($content) {
-            $content = MailerTemplateRendererService::replaceVariables(
-                $content,
-                $this->templateVariables
-            );
-        }
-
         return $this->subject($this->emailSubject)
-            ->view('mailers.documents.custom')
-            ->with([
-                'document' => $this->document,
-                'content' => $content,
-                'customerName' => $this->templateVariables['CUSTOMER_NAME'],
-            ]);
-    }
-
-    /**
-     * Set email template from BD
-     *
-     * @return $this
-     */
-    public function setTemplate(MailerTemplate $template): self
-    {
-        $this->emailTemplate = $template;
-
-        return $this;
-    }
-
-    /**
-     * Set additional variables
-     *
-     * @return $this
-     */
-    public function setVariables(array $variables): self
-    {
-        $this->templateVariables = array_merge($this->templateVariables, $variables);
-
-        return $this;
+            ->html($this->emailContent);
     }
 }

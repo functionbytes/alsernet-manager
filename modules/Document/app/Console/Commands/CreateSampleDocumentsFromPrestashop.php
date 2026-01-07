@@ -4,7 +4,7 @@ namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Document\Entities\Document;
-use Modules\Document\Events\DocumentCreated;
+// use Modules\Document\Events\DocumentCreated; // Event no implementado
 use Modules\Document\Services\DocumentEmailService;
 
 class CreateSampleDocumentsFromPrestashop extends Command
@@ -166,7 +166,7 @@ class CreateSampleDocumentsFromPrestashop extends Command
         }
 
         // Disparar evento de creación
-        DocumentCreated::dispatch($document);
+        // DocumentCreated::dispatch($document); // Event no implementado
 
         return $document;
     }

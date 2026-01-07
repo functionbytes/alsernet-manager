@@ -249,7 +249,7 @@ case 'documents':
         'missing_documents' => $validation['data']['missing_documents'] ?? [],
     ]);
 
-    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/gun.tpl');
+    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
 ```
 
 **DESPUÉS (código actualizado con verificación de disponibilidad):**
@@ -302,7 +302,7 @@ case 'documents':
         ]);
     }
 
-    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/gun.tpl');
+    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
 ```
 
 ### Función auxiliar para obtener tipo de documento

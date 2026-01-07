@@ -3,25 +3,29 @@
 namespace Modules\Document\Services;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentLang;
 use Modules\Document\Entities\DocumentMail;
+use Modules\Document\Mail\DocumentCustomMail;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Services\MailerTemplateRendererService;
+use Modules\Mailer\Services\MailerVariableValueService;
 
 class DocumentEmailTemplateService
 {
-    public static function sendInitialRequest(Document $document): bool
+    public static function sendInitialRequest(Document $document, ?int $adminId = null): bool
     {
         try {
 
-            $template = self::resolveTemplate('documents.email_template_initial_request_id', 'document_initial_request', ['document_request']);
+            $template = self::resolveTemplate('documents.mail_template_initial_request_id', 'document_initial_request');
 
             if (! $template) {
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -29,7 +33,6 @@ class DocumentEmailTemplateService
             // Obtener los documentos requeridos para este tipo de documento
             $documentTypeSlug = $document->documentType?->slug ?? 'general';
             $requiredDocs = DocumentTypeService::getRequiredDocuments($documentTypeSlug);
-
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
             // Get lang_id from document (defaults to 1 if not set)
@@ -44,17 +47,15 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             // Log the email
-            self::logEmail($document, 'request', $subject, $content, $template);
+            self::logEmail($document, 'request', $subject, $content, $template, [], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending initial request email', [
+            Log::error('Error sending initial request email', [
                 'document_uid' => $document->uid,
                 'error' => $e->getMessage(),
             ]);
@@ -63,17 +64,17 @@ class DocumentEmailTemplateService
         }
     }
 
-    public static function sendReminder(Document $document): bool
+    public static function sendReminder(Document $document, ?int $adminId = null): bool
     {
         try {
 
-            $template = self::resolveTemplate('documents.email_template_reminder_id', 'document_reminder');
+            $template = self::resolveTemplate('documents.mail_template_reminder_id', 'document_reminder');
 
             if (! $template) {
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -106,18 +107,16 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             self::logEmail($document, 'reminder', $subject, $content, $template, [
                 'days_since_request' => $daysSinceRequest,
-            ]);
+            ], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending reminder email', [
+            Log::error('Error sending reminder email', [
                 'document_uid' => $document->uid,
                 'error' => $e->getMessage(),
             ]);
@@ -126,17 +125,17 @@ class DocumentEmailTemplateService
         }
     }
 
-    public static function sendMissingDocuments(Document $document, array $missingDocs = [], ?string $notes = null): bool
+    public static function sendMissingDocuments(Document $document, array $missingDocs = [], ?string $notes = null, ?int $adminId = null): bool
     {
         try {
 
-            $template = self::resolveTemplate('documents.email_template_missing_docs_id', 'document_missing_documents', ['document_missing']);
+            $template = self::resolveTemplate('documents.mail_template_missing_docs_id', 'document_missing_documents', ['document_missing']);
 
             if (! $template) {
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -155,20 +154,18 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             // Log the email
             self::logEmail($document, 'missing', $subject, $content, $template, [
                 'missing_docs' => $missingDocs,
                 'notes' => $notes,
-            ]);
+            ], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending missing documents email', [
+            Log::error('Error sending missing documents email', [
                 'document_uid' => $document->uid,
                 'recipient' => $recipient ?? 'unknown',
                 'error' => $e->getMessage(),
@@ -179,14 +176,14 @@ class DocumentEmailTemplateService
         }
     }
 
-    public static function sendCustomEmail(Document $document, string $subject, string $content): bool
+    public static function sendCustomEmail(Document $document, string $subject, string $content, ?int $adminId = null): bool
     {
         try {
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
-                \Log::error('Custom email: No recipient found', ['document_uid' => $document->uid]);
+                Log::error('Custom email: No recipient found', ['document_uid' => $document->uid]);
 
                 return false;
             }
@@ -208,13 +205,13 @@ class DocumentEmailTemplateService
             $template = self::resolveTemplate('documents.mail_template_custom_email_id', 'document_custom_email');
 
             if (! $template) {
-                \Log::warning('No custom email template configured, sending plain content');
+                Log::warning('No custom email template configured, sending plain content');
                 $finalContent = $userContent;
             } else {
                 // Obtener traducción de la plantilla
                 $translation = $template->translate($langId);
                 if (! $translation || ! $translation->subject) {
-                    \Log::error('Custom email template has no translation', [
+                    Log::error('Custom email template has no translation', [
                         'template_id' => $template->id,
                         'lang_id' => $langId,
                     ]);
@@ -227,20 +224,18 @@ class DocumentEmailTemplateService
                 $finalContent = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
             }
 
-            Mail::html($finalContent, function ($message) use ($processedSubject, $recipient) {
-                $message->to($recipient)
-                    ->subject($processedSubject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $processedSubject, $finalContent));
 
             // Log the email
             self::logEmail($document, 'custom', $processedSubject, $finalContent, $template ?? null, [
                 'original_subject' => $subject,
                 'original_content' => $content,
-            ]);
+            ], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending custom email', [
+            Log::error('Error sending custom email', [
                 'document_uid' => $document->uid,
                 'recipient' => $recipient ?? 'unknown',
                 'error' => $e->getMessage(),
@@ -254,16 +249,16 @@ class DocumentEmailTemplateService
     /**
      * Enviar email de confirmación de documentos cargados
      */
-    public static function sendUploadConfirmation(Document $document): bool
+    public static function sendUploadConfirmation(Document $document, ?int $adminId = null): bool
     {
         try {
-            $template = self::resolveTemplate('documents.email_template_upload_confirmation_id', 'document_upload_confirmation', ['document_confirmation']);
+            $template = self::resolveTemplate('documents.mail_template_upload_confirmation_id', 'document_upload_confirmation', ['document_confirmation']);
 
             if (! $template) {
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -282,17 +277,15 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             // Log the email
-            self::logEmail($document, 'upload', $subject, $content, $template);
+            self::logEmail($document, 'upload', $subject, $content, $template, [], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending upload confirmation email', [
+            Log::error('Error sending upload confirmation email', [
                 'document_uid' => $document->uid,
                 'error' => $e->getMessage(),
             ]);
@@ -304,7 +297,7 @@ class DocumentEmailTemplateService
     /**
      * Enviar email de aprobación
      */
-    public static function sendApprovalEmail(Document $document): bool
+    public static function sendApprovalEmail(Document $document, ?int $adminId = null): bool
     {
         try {
             $template = self::resolveTemplate('documents.mail_template_approval_id', 'document_approval', ['approval_notification']);
@@ -313,7 +306,7 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -332,17 +325,15 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             // Log the email
-            self::logEmail($document, 'approval', $subject, $content, $template);
+            self::logEmail($document, 'approval', $subject, $content, $template, [], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending approval email', [
+            Log::error('Error sending approval email', [
                 'document_uid' => $document->uid,
                 'error' => $e->getMessage(),
             ]);
@@ -354,7 +345,7 @@ class DocumentEmailTemplateService
     /**
      * Enviar email de rechazo con razón personalizada
      */
-    public static function sendRejectionEmail(Document $document, ?string $reason = null, array $rejectedDocs = []): bool
+    public static function sendRejectionEmail(Document $document, ?string $reason = null, array $rejectedDocs = [], ?int $adminId = null): bool
     {
         try {
             $template = self::resolveTemplate('documents.mail_template_rejection_id', 'document_rejection', ['rejection_notification']);
@@ -363,7 +354,7 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return false;
             }
@@ -392,20 +383,18 @@ class DocumentEmailTemplateService
             $subject = MailerTemplateRendererService::replaceVariables($translation->subject, $variables);
             $content = MailerTemplateRendererService::renderEmailTemplate($template, $variables, $langId);
 
-            Mail::html($content, function ($message) use ($subject, $recipient) {
-                $message->to($recipient)
-                    ->subject($subject);
-            });
+            Mail::to($recipient)
+                ->queue(new DocumentCustomMail($document, $subject, $content));
 
             // Log the email
             self::logEmail($document, 'rejection', $subject, $content, $template, [
                 'reason' => $reason,
                 'rejected_docs' => $rejectedDocs,
-            ]);
+            ], true, null, $adminId);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Error sending rejection email', [
+            Log::error('Error sending rejection email', [
                 'document_uid' => $document->uid,
                 'error' => $e->getMessage(),
             ]);
@@ -423,8 +412,7 @@ class DocumentEmailTemplateService
         ?string $notes = null
     ): array {
         // Obtener el código de idioma del documento (usa lang_id para evitar cargar la relación)
-        $locale = $document->lang_id ? self::getLanguageCode($document->lang_id) : 'es';
-
+        $locale = $document->lang->iso_code ?? 'es';
         // Preparar nombre del cliente con fallback traducido
         $customerName = trim(sprintf(
             '%s %s',
@@ -442,13 +430,13 @@ class DocumentEmailTemplateService
             : null;
 
         // Generar URL de carga
-        $uploadPortalTemplate = config('documents.upload_portal_url');
+        $uploadPortalTemplate = Setting::get('documents.upload_portal_url');
         $uploadUrl = $uploadPortalTemplate
             ? str_replace('{uid}', $document->uid, rtrim($uploadPortalTemplate))
             : null;
 
         // Traducir el tipo de documento
-        $documentType = $document->type ?? 'general';
+        $documentType = $document->documentType?->slug ?? 'general';
         $documentTypeLabel = self::translateDocumentType($documentType, $locale);
         $documentInstructions = __("documents.types.{$documentType}.instructions", [], $locale);
 
@@ -511,43 +499,31 @@ class DocumentEmailTemplateService
 
     /**
      * Obtener variables del sistema (siempre disponibles)
+     * Retorna TODAS las variables de mailer_variables + mailer_variable_langs
+     * más las variables dinámicas calculadas en tiempo de ejecución
      */
     private static function getSystemVariables(string $locale = 'es', int $langId = 1): array
     {
-        // Obtener los valores reales desde la base de datos
-        $realValues = [];
-        if (class_exists(\App\Services\Mails\MailVariableValueService::class)) {
-            try {
-                $realValues = \App\Services\Mails\MailVariableValueService::getTranslatedValues($langId);
-            } catch (Exception $e) {
-                // Si el servicio falla, usar valores por defecto
-                $realValues = [];
-            }
-        }
+        // Obtener TODAS las variables traducidas desde la base de datos
+        $realValues = MailerVariableValueService::getTranslatedValues($langId);
 
-        return [
-            // Información de la empresa - usar valores reales de BD con fallback a config
-            'COMPANY_NAME' => $realValues['COMPANY_NAME'] ?? config('app.name', 'Alsernet'),
-            'SITE_NAME' => $realValues['SITE_NAME'] ?? config('app.name', 'Alsernet'),
-            'SITE_URL' => $realValues['SITE_URL'] ?? config('app.url', 'https://example.com'),
-
-            // Contacto y soporte
-            'SUPPORT_EMAIL' => $realValues['SUPPORT_EMAIL'] ?? config('mail.support.address', 'soporte@example.com'),
-            'SUPPORT_PHONE' => $realValues['SUPPORT_PHONE'] ?? config('app.support_phone', '+34 900 000 000'),
-            'CONTACT_EMAIL' => $realValues['CONTACT_EMAIL'] ?? config('mail.from.address', 'info@example.com'),
-
-            // Fechas del sistema
+        // Variables dinámicas calculadas en tiempo de ejecución (sobrescriben las de BD si existen)
+        $dynamicVariables = [
+            // Fechas del sistema (siempre calculadas en tiempo real)
             'CURRENT_YEAR' => date('Y'),
             'CURRENT_DATE' => date('d/m/Y'),
             'CURRENT_DATETIME' => date('d/m/Y H:i'),
 
-            // Idioma
+            // Idioma actual
             'LANG_CODE' => $locale,
             'LANGUAGE' => $locale,
 
             // Subject (se rellenará desde la plantilla)
             'EMAIL_SUBJECT' => '',
         ];
+
+        // Combinar: primero las de BD, luego las dinámicas (las dinámicas tienen prioridad)
+        return array_merge($realValues, $dynamicVariables);
     }
 
     /**
@@ -650,7 +626,8 @@ class DocumentEmailTemplateService
         ?MailerTemplate $template = null,
         array $metadata = [],
         bool $success = true,
-        ?string $errorMessage = null
+        ?string $errorMessage = null,
+        ?int $adminId = null
     ): ?DocumentMail {
         try {
             $mail = DocumentMail::logEmail(
@@ -660,7 +637,7 @@ class DocumentEmailTemplateService
                 $content,
                 null,
                 $template?->id,
-                auth()->id(),
+                $adminId,
                 $metadata
             );
 
@@ -672,7 +649,7 @@ class DocumentEmailTemplateService
 
             return $mail;
         } catch (\Exception $e) {
-            \Log::error('Failed to log document email', [
+            Log::error('Failed to log document email', [
                 'document_uid' => $document->uid,
                 'email_type' => $emailType,
                 'error' => $e->getMessage(),
@@ -683,18 +660,30 @@ class DocumentEmailTemplateService
     }
 
     /**
-     * Obtiene el código de idioma sin cargar la relación
+     * Obtiene el código de idioma dinámicamente desde la tabla langs
+     * Usa caché estático para mejorar rendimiento
      */
     private static function getLanguageCode(int $langId): string
     {
-        // Mapeo simple de IDs a códigos de idioma
-        $langMap = [
-            1 => 'es',
-            2 => 'en',
-            3 => 'fr',
-            4 => 'de',
-        ];
+        static $langCache = [];
 
-        return $langMap[$langId] ?? 'es';
+        // Si ya está en caché, retornarlo
+        if (isset($langCache[$langId])) {
+            return $langCache[$langId];
+        }
+
+        // Buscar dinámicamente en la tabla langs
+        $lang = DocumentLang::find($langId);
+
+        if ($lang && ! empty($lang->iso_code)) {
+            $langCache[$langId] = $lang->iso_code;
+
+            return $lang->iso_code;
+        }
+
+        // Fallback a español si no se encuentra
+        $langCache[$langId] = 'es';
+
+        return 'es';
     }
 }

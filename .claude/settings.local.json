@@ -404,7 +404,12 @@
       "Bash(supervisorctl reread:*)",
       "Bash(supervisorctl status:*)",
       "Bash(supervisorctl update:*)",
-      "Bash(supervisorctl restart:*)"
+      "Bash(supervisorctl restart:*)",
+      "Bash(timeout 5 curl:*)",
+      "Bash(kill:*)",
+      "Bash(open \"https://manager.test/mailers/components/edit/fabb0dcc-40e1-4b8a-86bb-8fa04f1b90e5?lang_id=1\")",
+      "Bash(brew services stop:*)",
+      "Bash(if grep -q \"typeof reloadActionHistory === ''function''\" \"$file\")"
     ],
     "deny": [],
     "ask": []

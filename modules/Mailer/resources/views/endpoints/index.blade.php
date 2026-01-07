@@ -271,7 +271,7 @@
             </div>
             <div class="modal-body">
                 <h6 class="fw-bold mb-2">URL Base</h6>
-                <div class="bg-dark text-light p-3 rounded mb-3">
+                <div class="bg-black text-light p-3 rounded mb-3">
                     <code>POST /api/email-endpoints/{slug}/send</code>
                 </div>
 
@@ -282,7 +282,7 @@
                 </ul>
 
                 <h6 class="fw-bold mb-2">Body (JSON)</h6>
-                <div class="bg-dark text-light p-3 rounded mb-3" style="font-size: 11px; overflow-x: auto;">
+                <div class="bg-black text-light p-3 rounded mb-3" style="font-size: 11px; overflow-x: auto;">
                     <code><pre>{
   "customer_email": "user@example.com",
   "customer_name": "Juan Pérez",
@@ -314,7 +314,7 @@
             </div>
             <div class="modal-body">
                 <h6 class="fw-bold mb-2">cURL</h6>
-                <div class="bg-dark text-light p-3 rounded mb-3" style="font-size: 11px; overflow-x: auto;">
+                <div class="bg-black text-light p-3 rounded mb-3" style="font-size: 11px; overflow-x: auto;">
                     <code><pre>curl -X POST https://tu-dominio.com/api/email-endpoints/password-reset/send \
   -H "X-API-Token: abc123xyz..." \
   -H "Content-Type: application/json" \
@@ -326,7 +326,7 @@
                 </div>
 
                 <h6 class="fw-bold mb-2">JavaScript (Fetch)</h6>
-                <div class="bg-dark text-light p-3 rounded" style="font-size: 11px; overflow-x: auto;">
+                <div class="bg-black text-light p-3 rounded" style="font-size: 11px; overflow-x: auto;">
                     <code><pre>fetch('/api/email-endpoints/password-reset/send', {
   method: 'POST',
   headers: {

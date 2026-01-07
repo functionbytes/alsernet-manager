@@ -284,9 +284,9 @@ trait HasValidationWorkflow
     /**
      * Get the validation permission service (lazy-loaded singleton).
      */
-    public function getPermissionService(): \App\Services\Documents\ValidationPermissionService
+    public function getPermissionService(): \Modules\Document\Services\ValidationPermissionService
     {
-        return app(\App\Services\Documents\ValidationPermissionService::class);
+        return app(\Modules\Document\Services\ValidationPermissionService::class);
     }
 
     /**

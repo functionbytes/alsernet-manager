@@ -14,7 +14,8 @@
             @if(auth()->user()->canDocument('email-actions'))
                 @include('documents::documents.documents.components.email.actions', [
                     'document' => $document,
-                    'documentConfig' => $documentConfig
+                    'documentConfig' => $documentConfig,
+                    'requiredDocuments' => $requiredDocuments
                 ])
             @endif
 

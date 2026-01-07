@@ -6,12 +6,27 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
-use Modules\Document\Entities\DocumentAction;
+use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailTemplateService;
 
 class MailTemplateJob implements ShouldQueue
 {
     use Queueable;
+
+    /**
+     * The number of times the job may be attempted.
+     */
+    public int $tries = 3;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 60;
+
+    /**
+     * The number of seconds to wait before retrying the job.
+     */
+    public int $backoff = 5;
 
     public function __construct(
         private Document $document,
@@ -20,74 +35,67 @@ class MailTemplateJob implements ShouldQueue
         private ?int $adminId = null,
     ) {
         $this->onQueue('emails');
-        // Capture admin ID when job is dispatched (before execution in queue)
-        if ($this->adminId === null && auth()->check()) {
-            $this->adminId = auth()->id();
-        }
     }
 
+    /**
+     * Execute the job.
+     */
     public function handle(): void
     {
-        try {
-            $result = match ($this->emailType) {
-                'request' => DocumentEmailTemplateService::sendInitialRequest($this->document),
-                'reminder' => DocumentEmailTemplateService::sendReminder($this->document),
-                'upload' => DocumentEmailTemplateService::sendUploadConfirmation($this->document),
-                'approval' => DocumentEmailTemplateService::sendApprovalEmail($this->document),
-                'rejection' => DocumentEmailTemplateService::sendRejectionEmail(
-                    $this->document,
-                    $this->emailData['reason'] ?? null,
-                    $this->emailData['rejected_docs'] ?? []
-                ),
-                'missing' => DocumentEmailTemplateService::sendMissingDocuments(
-                    $this->document,
-                    $this->emailData['missing_docs'] ?? [],
-                    $this->emailData['notes'] ?? null
-                ),
-                'custom' => DocumentEmailTemplateService::sendCustomEmail(
-                    $this->document,
-                    $this->emailData['subject'] ?? '',
-                    $this->emailData['message'] ?? ''
-                ),
-                default => false,
-            };
+        $result = match ($this->emailType) {
+            'request' => DocumentEmailTemplateService::sendInitialRequest($this->document, $this->adminId),
+            'reminder' => DocumentEmailTemplateService::sendReminder($this->document, $this->adminId),
+            'upload' => DocumentEmailTemplateService::sendUploadConfirmation($this->document, $this->adminId),
+            'approval' => DocumentEmailTemplateService::sendApprovalEmail($this->document, $this->adminId),
+            'rejection' => DocumentEmailTemplateService::sendRejectionEmail(
+                $this->document,
+                $this->emailData['reason'] ?? null,
+                $this->emailData['rejected_docs'] ?? [],
+                $this->adminId
+            ),
+            'missing' => DocumentEmailTemplateService::sendMissingDocuments(
+                $this->document,
+                $this->emailData['missing_docs'] ?? [],
+                $this->emailData['notes'] ?? null,
+                $this->adminId
+            ),
+            'custom' => DocumentEmailTemplateService::sendCustomEmail(
+                $this->document,
+                $this->emailData['subject'] ?? '',
+                $this->emailData['message'] ?? '',
+                $this->adminId
+            ),
+            default => throw new \InvalidArgumentException("Invalid email type: {$this->emailType}"),
+        };
 
-            if ($result) {
-                $this->logSuccess();
-            } else {
-                $this->logFailure('Email service returned false');
-            }
-        } catch (\Exception $e) {
-            $this->logFailure($e->getMessage());
-            throw $e;
+        if (! $result) {
+            throw new \RuntimeException('Email service returned false');
         }
+
+        $this->logSuccess();
+    }
+
+    /**
+     * Handle a job failure.
+     * Called automatically by Laravel after all retry attempts are exhausted.
+     */
+    public function failed(\Throwable $exception): void
+    {
+        $this->logFailure($exception->getMessage());
     }
 
     private function logSuccess(): void
     {
         try {
-            $actionNames = [
-                'initial_request' => 'Email de solicitud inicial enviado',
-                'reminder' => 'Email de recordatorio enviado',
-                'missing_documents' => 'Email de documentos faltantes enviado',
-                'upload_confirmation' => 'Email de confirmación de carga enviado',
-                'approval' => 'Email de aprobación enviado',
-                'rejection' => 'Email de rechazo enviado',
-                'custom' => 'Correo personalizado enviado',
-            ];
-
-            DocumentAction::create([
-                'document_id' => $this->document->id,
-                'action_type' => "email_sent_{$this->emailType}",
-                'action_name' => $actionNames[$this->emailType] ?? "Email enviado: {$this->emailType}",
-                'description' => "Email enviado: {$this->emailType}",
-                'performed_by' => $this->adminId,
-                'performed_by_type' => 'system',
-                'metadata' => [
-                    'email_type' => $this->emailType,
-                    'recipient' => $this->document->customer_email,
-                ],
-            ]);
+            // Logging ahora se maneja en DocumentEmailTemplateService::logEmail()
+            // que crea registros en document_mails
+            // Y también llamamos a DocumentActionService para crear registros en document_actions
+            DocumentActionService::logEmailSent(
+                $this->document,
+                $this->emailType,
+                $this->emailData,
+                $this->adminId
+            );
 
             Log::info('Document email sent successfully', [
                 'document_uid' => $this->document->uid,
@@ -105,28 +113,14 @@ class MailTemplateJob implements ShouldQueue
     private function logFailure(string $errorMessage): void
     {
         try {
-            $actionNames = [
-                'initial_request' => 'Fallo al enviar email de solicitud inicial',
-                'reminder' => 'Fallo al enviar email de recordatorio',
-                'missing_documents' => 'Fallo al enviar email de documentos faltantes',
-                'upload_confirmation' => 'Fallo al enviar email de confirmación',
-                'approval' => 'Fallo al enviar email de aprobación',
-                'rejection' => 'Fallo al enviar email de rechazo',
-                'custom' => 'Fallo al enviar correo personalizado',
-            ];
-
-            DocumentAction::create([
-                'document_id' => $this->document->id,
-                'action_type' => "email_failed_{$this->emailType}",
-                'action_name' => $actionNames[$this->emailType] ?? "Fallo al enviar email: {$this->emailType}",
-                'description' => "Error al enviar email: {$errorMessage}",
-                'performed_by' => $this->adminId,
-                'performed_by_type' => 'system',
-                'metadata' => [
-                    'email_type' => $this->emailType,
-                    'error' => $errorMessage,
-                ],
-            ]);
+            // Logging de fallos en DocumentActionService
+            DocumentActionService::logEmailFailed(
+                $this->document,
+                $this->emailType,
+                $errorMessage,
+                $this->emailData,
+                $this->adminId
+            );
         } catch (\Exception $e) {
             Log::error('Failed to log failed email action', [
                 'document_uid' => $this->document->uid,

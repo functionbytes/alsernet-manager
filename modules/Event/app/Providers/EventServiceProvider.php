@@ -72,8 +72,8 @@ class EventServiceProvider extends ServiceProvider
         NavService::registerSidebar('events', [
             'title' => 'Eventos',
             'items' => [
-                ['label' => 'Lista de eventos', 'route' => 'events.index'],
-                ['label' => 'Calendario', 'route' => 'events.calendar'],
+                ['label' => 'Lista de eventos', 'route' => 'manager.events.index'],
+                ['label' => 'Calendario', 'route' => 'manager.events.calendar'],
             ],
         ]);
     }

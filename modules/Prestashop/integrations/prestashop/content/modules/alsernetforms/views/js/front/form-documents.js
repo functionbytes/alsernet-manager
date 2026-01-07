@@ -1,5 +1,11 @@
 /**
  * Formulario de documentos - Control de validación y envío
+ *
+ * REFACTORIZADO: Ahora usa endpoints RESTful de Laravel en lugar de routes.php
+ * - DELETE /api/documents/{uid}/files/{docType}
+ * - POST   /api/documents/{uid}/files
+ * - GET    /api/documents/{uid}/validation
+ *
  * Maneja la lógica de habilitación/deshabilitación del botón basada en:
  * 1. Aceptación de términos (checkbox condition)
  * 2. Completación de reCAPTCHA
@@ -10,6 +16,16 @@ $(document).ready(function () {
     if (!$('#alsernet-documents').length) {
         return;
     }
+
+    // ✅ REFACTORIZADO: Obtener URL base dinámicamente del atributo data del form
+    window.API_BASE_URL = $('#alsernet-documents').data('api-base-url');
+
+    if (!window.API_BASE_URL) {
+        console.error('❌ Error: API base URL not found in form data attribute');
+        return;
+    }
+
+    console.log('✅ API Base URL initialized:', window.API_BASE_URL);
 
     // Cargar estado de documentos al inicio
     loadDocumentStatus();
@@ -218,19 +234,16 @@ $(document).ready(function () {
     $(document).on('click', '.btn-delete-single-doc', function(e) {
         e.preventDefault();
         const docType = $(this).data('doc-type');
+        const uid = $('#uid').val();
         const $btn = $(this);
 
         if (confirm("{l s='Are you sure you want to delete this document?' mod='alsernetforms'}")) {
             $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
+            // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
             $.ajax({
-                url: '/modules/alsernetforms/controllers/routes.php',
-                type: 'POST',
-                data: {
-                    action: 'delete',
-                    uid: $('#uid').val(),
-                    doc_type: docType
-                },
+                url: window.API_BASE_URL + '/' + uid + '/files/' + docType,
+                type: 'DELETE',
                 success: function(response) {
                     if (response.status === 'success') {
                         loadDocumentStatus();
@@ -291,13 +304,12 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     }
 
     const fileData = files[index];
+    const uid = $('#uid').val();
     const formData = new FormData();
 
-    // Preparar datos del archivo
+    // Preparar datos del archivo (sin action, RESTful endpoint lo maneja)
     formData.append('file[]', fileData.file);
     formData.append('document_types[]', fileData.docType);
-    formData.append('action', 'upload');
-    formData.append('uid', $('#uid').val());
     formData.append('type', $('#type').val());
 
     // Calcular y mostrar progreso
@@ -306,8 +318,9 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     $('#uploadProgressBar').css('width', progress + '%');
     $submitButton.html('<i class="fa fa-spinner fa-spin"></i> {l s="Uploading" mod="alsernetforms"} ' + (index + 1) + '/' + files.length + '...');
 
+    // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
     $.ajax({
-        url: '/modules/alsernetforms/controllers/routes.php',
+        url: window.API_BASE_URL + '/' + uid + '/files',
         type: 'POST',
         data: formData,
         processData: false,
@@ -365,13 +378,10 @@ function loadDocumentStatus() {
         return;
     }
 
+    // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
     $.ajax({
-        url: '/modules/alsernetforms/controllers/routes.php',
-        type: 'POST',
-        data: {
-            action: 'validate',
-            uid: uid
-        },
+        url: window.API_BASE_URL + '/' + uid + '/validation',
+        type: 'GET',
         success: function(response) {
             if (response.status === 'success' && response.data) {
                 updateDocumentUI(response.data);

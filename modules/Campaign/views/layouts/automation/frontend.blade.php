@@ -26,7 +26,7 @@
 <body class="navbar-top color-scheme-{{ Auth::user()->customer->getColorScheme() }}">
 
 	<header class="automation-header">
-		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-black">
 			<a class="navbar-brand left-logo" href="#">
 				@if (getThemeMode(Auth::user()->customer->theme_mode, request()->session()->get('customer-auto-theme-mode')) == 'light' &&
 					Auth::user()->customer->getColorScheme() == 'white'
@@ -61,7 +61,7 @@
 				</div>
 
 				<div class="account-info">
-					<ul class="navbar-nav mr-auto navbar-dark bg-dark"">
+					<ul class="navbar-nav mr-auto navbar-dark bg-black"">
 						<li class="nav-item dropdown">
 							<a class="account-item nav-link dropdown-toggle px-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<img class="avatar" src="" alt="">

@@ -56,7 +56,7 @@ class DocumentEmailController extends Controller
             }
 
             // Validar que el documento tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,
@@ -116,7 +116,7 @@ class DocumentEmailController extends Controller
             }
 
             // Verificar que el cliente tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,
@@ -156,7 +156,7 @@ class DocumentEmailController extends Controller
             }
 
             // Verificar que el cliente tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,

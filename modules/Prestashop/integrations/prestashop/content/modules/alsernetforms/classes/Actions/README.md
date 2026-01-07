@@ -13,21 +13,43 @@ BaseAction (abstract)
          ↓
     ApiManager
          ├─ Verificación de disponibilidad (EndpointAvailabilityChecker)
-         ├─ Logging automático (DocumentsEndpointLogger, FormEndpointLogger, etc.)
+         ├─ Logging automático (DocumentsEndpointLogger + DefaultEndpointLogger)
          └─ Circuit breaker con reintentos
 ```
 
-## Patrón Template Method
+## Patrones de Diseño
 
-`BaseAction` usa el patrón Template Method:
+`BaseAction` usa dos patrones de diseño:
+
+### 1. Template Method Pattern
 
 1. **`execute()`** - Método final que coordina el flujo
-   - Llama a `ApiManager::sendRequest()`
+   - Llama a `ApiManager::sendRequestWithoutLogging()`
    - Pasa resultado a `mapResponse()`
 
 2. **`mapResponse()`** - Método abstracto que cada acción implementa
    - Transforma respuesta de ApiManager
    - Retorna estructura estándar
+
+### 2. Factory Method Pattern
+
+**`createLogger()`** - Cada acción crea su propio logger apropiado
+
+```php
+// En DocumentAction
+protected function createLogger()
+{
+    return new DocumentsEndpointLogger();  // Logger específico con lógica de retry
+}
+
+// En FormAction
+protected function createLogger()
+{
+    return new DefaultEndpointLogger('form');  // Logger genérico con tipo
+}
+```
+
+**Ventaja**: Cada acción decide qué tipo de logger necesita sin que BaseAction tenga que conocer todos los tipos (Open/Closed Principle)
 
 ## Crear una Nueva Acción
 
@@ -37,6 +59,7 @@ BaseAction (abstract)
 <?php
 
 include_once dirname(__FILE__).'/BaseAction.php';
+include_once dirname(__FILE__).'/../loggers/DefaultEndpointLogger.php';
 
 class MyAction extends BaseAction
 {
@@ -46,6 +69,16 @@ class MyAction extends BaseAction
 
         $this->endpoint = 'api/my-endpoint';      // Endpoint de Laravel
         $this->actionType = 'my_action';           // Tipo para logger
+    }
+
+    // Factory Method: Crear el logger apropiado
+    protected function createLogger()
+    {
+        // Para la mayoría de casos, usar DefaultEndpointLogger con tipo
+        return new DefaultEndpointLogger('my_action');
+
+        // Solo crear un logger específico si necesitas lógica personalizada
+        // (circuit breaker, reintentos, estadísticas, etc.)
     }
 
     public function doSomething($param1, $param2, array $context = [])
@@ -200,9 +233,8 @@ $result = $action->sendMessage('Hola', $conversationId);
    ```
 
 4. **Registra automáticamente** en el logger apropiado
-   - `DocumentsEndpointLogger` para `type='documents'`
-   - `FormEndpointLogger` para `type='forms'`
-   - etc.
+   - `DocumentsEndpointLogger` para `type='documents'` (tiene lógica específica)
+   - `DefaultEndpointLogger($type)` para los demás tipos (form, subscription, etc.)
 
 ## Logging Automático
 

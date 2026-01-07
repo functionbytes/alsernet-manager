@@ -101,7 +101,7 @@
                     {{-- Template Info --}}
                     <div class="card-body border-bottom">
                         <div class="row g-3">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-12">
                                 <label for="name" class="form-label fw-semibold">
                                     Nombre de la plantilla
                                 </label>
@@ -156,7 +156,7 @@
 
                             <div class="col-12 col-md-12">
                                 <label for="layout_id" class="form-label fw-semibold">
-                                    Layout base <span class="text-muted small">(Opcional)</span>
+                                    Plantilla <span class="text-muted small">(Opcional)</span>
                                 </label>
                                 <select class="form-select select2 @error('layout_id') is-invalid @enderror" id="layout_id" name="layout_id">
                                     <option value="">Sin layout (solo contenido)</option>
@@ -454,31 +454,31 @@
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Guardar plantilla</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+S</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+S</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Autocompletar</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+Space</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+Space</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Comentar/Descomentar</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+/</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+/</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Expandir Emmet</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Tab</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Tab</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Envolver con Emmet</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+Alt+Enter</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+Alt+Enter</kbd>
                                 </div>
                             </div>
                         </div>

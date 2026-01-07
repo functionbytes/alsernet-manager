@@ -47,7 +47,7 @@
                 </div>
 
                 <h6 class="mt-4 mb-3">Encabezado requerido:</h6>
-                <div class="bg-dark text-white p-3 rounded">
+                <div class="bg-black text-white p-3 rounded">
                     <code class="text-white">X-API-Key: {your_api_key}</code>
                 </div>
             </div>
@@ -195,7 +195,7 @@
             <div class="card-body">
                 <h6 class="mb-3">cURL:</h6>
                 <div class="position-relative">
-                    <pre class="bg-dark text-white p-3 rounded" id="curlExample"><code>curl -X POST {{ url('/api/v1/incoming-email') }} \
+                    <pre class="bg-black text-white p-3 rounded" id="curlExample"><code>curl -X POST {{ url('/api/v1/incoming-email') }} \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your_api_key_here" \
   -d '{
@@ -219,7 +219,7 @@
 
                 <h6 class="mt-4 mb-3">JavaScript (Axios):</h6>
                 <div class="position-relative">
-                    <pre class="bg-dark text-white p-3 rounded" id="jsExample"><code>const axios = require('axios');
+                    <pre class="bg-black text-white p-3 rounded" id="jsExample"><code>const axios = require('axios');
 
 const response = await axios.post('{{ url('/api/v1/incoming-email') }}', {
   from: 'cliente@example.com',
@@ -249,7 +249,7 @@ console.log(response.data);</code></pre>
 
                 <h6 class="mt-4 mb-3">PHP (Guzzle):</h6>
                 <div class="position-relative">
-                    <pre class="bg-dark text-white p-3 rounded" id="phpExample"><code>use GuzzleHttp\Client;
+                    <pre class="bg-black text-white p-3 rounded" id="phpExample"><code>use GuzzleHttp\Client;
 
 $client = new Client();
 
@@ -291,7 +291,7 @@ $data = json_decode($response->getBody(), true);</code></pre>
             </div>
             <div class="card-body">
                 <h6 class="mb-3">Respuesta exitosa (200):</h6>
-                <pre class="bg-dark text-white p-3 rounded"><code>{
+                <pre class="bg-black text-white p-3 rounded"><code>{
   "success": true,
   "message": "Email procesado correctamente",
   "ticket_id": 12345,
@@ -299,14 +299,14 @@ $data = json_decode($response->getBody(), true);</code></pre>
 }</code></pre>
 
                 <h6 class="mt-4 mb-3">Error de autenticación (401):</h6>
-                <pre class="bg-dark text-white p-3 rounded"><code>{
+                <pre class="bg-black text-white p-3 rounded"><code>{
   "success": false,
   "message": "API Key inválida o no proporcionada",
   "error_code": "INVALID_API_KEY"
 }</code></pre>
 
                 <h6 class="mt-4 mb-3">Error de validación (422):</h6>
-                <pre class="bg-dark text-white p-3 rounded"><code>{
+                <pre class="bg-black text-white p-3 rounded"><code>{
   "success": false,
   "message": "Error de validación",
   "errors": {
@@ -316,7 +316,7 @@ $data = json_decode($response->getBody(), true);</code></pre>
 }</code></pre>
 
                 <h6 class="mt-4 mb-3">Error del servidor (500):</h6>
-                <pre class="bg-dark text-white p-3 rounded"><code>{
+                <pre class="bg-black text-white p-3 rounded"><code>{
   "success": false,
   "message": "Error interno del servidor",
   "error_code": "SERVER_ERROR"

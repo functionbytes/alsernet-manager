@@ -2,20 +2,24 @@
 
 include_once(dirname(__FILE__).'/EndpointAvailabilityChecker.php');
 include_once(dirname(__FILE__).'/ApiManager.php');
+include_once(dirname(__FILE__).'/loggers/DefaultEndpointLogger.php');
 include_once(dirname(__FILE__).'/loggers/DocumentsEndpointLogger.php');
+// Removed: FormEndpointLogger.php y SubscriptionEndpointLogger.php (deleted files)
 
 /**
  * PendingRequestsProcessor
  *
  * Procesa peticiones pendientes que no pudieron completarse debido a
  * indisponibilidad del servidor o errores temporales.
+ *
+ * REFACTORIZADO: Ahora usa DefaultEndpointLogger con tipo como parámetro
+ * en lugar de loggers específicos para cada tipo.
  */
 class PendingRequestsProcessor
 {
     private $db;
     private $availabilityChecker;
     private $apiManager;
-    private $logger;
     private $batchSize = 50;
     private $maxExecutionTime = 300; // 5 minutos
     private $startTime;
@@ -25,15 +29,10 @@ class PendingRequestsProcessor
         $this->db = \Db::getInstance();
         $this->availabilityChecker = new EndpointAvailabilityChecker();
         $this->apiManager = new ApiManager();
-        $this->logger = new DocumentsEndpointLogger();
         $this->startTime = time();
     }
 
-    /**
-     * Procesa todas las peticiones pendientes
-     *
-     * @return array Estadísticas del procesamiento
-     */
+
     public function process()
     {
         $stats = [
@@ -140,17 +139,17 @@ class PendingRequestsProcessor
             $payload = json_decode($request['payload'], true);
             $method = $request['method'];
 
-            // Realizar la petición
-            $response = $this->apiManager->sendRequest(
+            // Realizar la petición (sin logging interno - el logger ya lo maneja)
+            $response = $this->apiManager->sendRequestWithoutLogging(
                 $method,
                 $url,
                 $payload,
-                $type
+                [] // headers
             );
 
             // Verificar si la petición fue exitosa
-            if (isset($response['response']['status']) && $response['response']['status'] === 'success') {
-                $logger->updateRequestLog($requestId, 'success', $response['response']);
+            if ($response['status'] === 200 || (isset($response['response']['status']) && $response['response']['status'] === 'success')) {
+                $logger->updateRequestLog($requestId, 'success', $response['response'] ?? []);
                 return ['status' => 'success'];
             } else {
                 // La petición falló, pero el servidor está disponible
@@ -238,23 +237,21 @@ class PendingRequestsProcessor
     /**
      * Obtiene el logger apropiado para un tipo de petición
      *
+     * REFACTORIZADO: Ahora usa DefaultEndpointLogger con tipo como parámetro
+     * para subscription y form. Solo documents tiene logger específico.
+     *
      * @param string $type Tipo de endpoint
      * @return object Logger instance
      */
     private function getLoggerForType($type)
     {
-        switch ($type) {
-            case 'documents':
-                return new DocumentsEndpointLogger();
-            case 'subscription':
-                include_once(dirname(__FILE__).'/loggers/SubscriptionEndpointLogger.php');
-                return new SubscriptionEndpointLogger();
-            case 'form':
-                include_once(dirname(__FILE__).'/loggers/FormEndpointLogger.php');
-                return new FormEndpointLogger();
-            default:
-                return new DefaultEndpointLogger();
+        // DocumentsEndpointLogger tiene lógica específica (circuit breaker, retries, stats)
+        if ($type === 'documents') {
+            return new DocumentsEndpointLogger();
         }
+
+        // Para todos los demás tipos, usar DefaultEndpointLogger con tipo como parámetro
+        return new DefaultEndpointLogger($type);
     }
 
     /**

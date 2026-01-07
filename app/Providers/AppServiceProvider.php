@@ -33,9 +33,6 @@ class AppServiceProvider extends ServiceProvider
         $migrator->path(database_path('migrations/auth'));
         $migrator->path(database_path('migrations/core'));
 
-        // TODO: Enable when Return module is enabled
-        // ReturnRequest::observe(ReturnObserver::class);
-
         Schema::defaultStringLength(191);
 
         $this->changeDefaultSettings();

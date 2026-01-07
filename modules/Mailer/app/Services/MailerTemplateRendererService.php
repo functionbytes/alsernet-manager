@@ -92,6 +92,8 @@ class MailerTemplateRendererService
      * Procesar tags especiales en layouts: {{ header }} y {{ footer }}
      * Usa traducciones según el idioma especificado
      *
+     * OPTIMIZACIÓN: Usa caché de Laravel (1 hora) + caché estático para evitar consultas repetidas
+     *
      * @param  string  $content  Contenido del layout con tags {{ header }} y {{ footer }}
      * @param  array  $variables  Variables para reemplazar
      * @param  int  $langId  ID del idioma para obtener traducciones
@@ -100,11 +102,8 @@ class MailerTemplateRendererService
     {
         // Procesar {{ header }}
         if (str_contains($content, '{{ header }}')) {
-            $headerLayout = MailerLayout::where('alias', 'email_template_header')->first();
-            if ($headerLayout) {
-                // Obtener traducción del header según el idioma
-                $headerTranslation = $headerLayout->translate($langId);
-                $headerContent = $headerTranslation?->content ?? $headerLayout->content ?? '';
+            $headerContent = self::getCachedLayoutContent('email_template_header', $langId);
+            if ($headerContent !== null) {
                 $headerContent = self::replaceVariables($headerContent, $variables);
                 $content = str_replace('{{ header }}', $headerContent, $content);
             }
@@ -112,17 +111,58 @@ class MailerTemplateRendererService
 
         // Procesar {{ footer }}
         if (str_contains($content, '{{ footer }}')) {
-            $footerLayout = MailerLayout::where('alias', 'email_template_footer')->first();
-            if ($footerLayout) {
-                // Obtener traducción del footer según el idioma
-                $footerTranslation = $footerLayout->translate($langId);
-                $footerContent = $footerTranslation?->content ?? $footerLayout->content ?? '';
+            $footerContent = self::getCachedLayoutContent('email_template_footer', $langId);
+            if ($footerContent !== null) {
                 $footerContent = self::replaceVariables($footerContent, $variables);
                 $content = str_replace('{{ footer }}', $footerContent, $content);
             }
         }
 
         return $content;
+    }
+
+    /**
+     * Obtener contenido de layout con caché
+     * Usa caché de Laravel (1 hora) + caché estático para máximo rendimiento
+     */
+    private static function getCachedLayoutContent(string $alias, int $langId): ?string
+    {
+        static $staticCache = [];
+
+        $cacheKey = "layout_{$alias}_{$langId}";
+
+        // 1. Revisar caché estático primero
+        if (isset($staticCache[$cacheKey])) {
+            return $staticCache[$cacheKey];
+        }
+
+        // 2. Revisar caché de Laravel - se limpia automáticamente al guardar/editar
+        $content = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($alias, $langId) {
+            $layout = MailerLayout::where('alias', $alias)->first();
+
+            if (! $layout) {
+                return null;
+            }
+
+            $translation = $layout->translate($langId);
+
+            return $translation?->content ?? $layout->content ?? null;
+        });
+
+        // 3. Guardar en caché estático
+        $staticCache[$cacheKey] = $content;
+
+        return $content;
+    }
+
+    /**
+     * Limpiar TODO el caché de layouts y templates
+     * Se llama automáticamente desde observers cuando se guardan/actualizan
+     */
+    public static function clearCache(): void
+    {
+        // Limpiar caché de Laravel para layouts y templates
+        \Illuminate\Support\Facades\Cache::flush();
     }
 
     /**

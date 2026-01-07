@@ -1,7 +1,5 @@
 <?php
 
-include_once dirname(__FILE__).'/loggers/SubscriptionEndpointLogger.php';
-include_once dirname(__FILE__).'/loggers/FormEndpointLogger.php';
 include_once dirname(__FILE__).'/loggers/DefaultEndpointLogger.php';
 include_once dirname(__FILE__).'/loggers/DocumentsEndpointLogger.php';
 include_once dirname(__FILE__).'/EndpointAvailabilityChecker.php';
@@ -15,7 +13,7 @@ class ApiManager
 
     private $httpClient;
 
-    private $checkAvailability = true; // Flag para habilitar/deshabilitar verificación
+    private $checkAvailability = true;
 
     public function __construct()
     {
@@ -24,17 +22,49 @@ class ApiManager
         $this->httpClient = new HttpClient;
     }
 
-    /**
-     * Envía una petición HTTP con verificación de disponibilidad del servidor
-     *
-     * @param  string  $method  Método HTTP (GET, POST, PUT, DELETE)
-     * @param  string  $endpoint  Ruta del endpoint
-     * @param  array  $data  Datos a enviar
-     * @param  string  $type  Tipo de petición (default, documents, subscription, form)
-     * @param  array  $headers  Headers adicionales
-     * @param  bool  $checkAvailability  Si se debe verificar disponibilidad antes de enviar
-     * @return array Respuesta con estructura ['status' => string, 'message' => string, 'response' => array]
-     */
+    public function getBaseUrl()
+    {
+        return $this->apiBaseUrl;
+    }
+
+    public function sendRequestWithoutLogging($method, $endpoint, array $data = [], array $headers = [])
+    {
+        $url = rtrim($this->apiBaseUrl, '/').'/'.ltrim($endpoint, '/');
+
+        // Enviar petición HTTP usando HttpClient centralizado
+        $httpResponse = $this->httpClient->request($method, $url, $data, $headers);
+
+        $httpCode = $httpResponse['status'];
+        $curlError = $httpResponse['error'];
+
+        if ($curlError) {
+            return [
+                'status' => 0,
+                'message' => $this->translate('Error connecting to the server'),
+                'response' => [],
+                'error' => $curlError,
+            ];
+        }
+
+        $responseData = $this->httpClient->decodeJson($httpResponse['body']);
+
+        if ($responseData === null && ! empty($httpResponse['body'])) {
+            return [
+                'status' => 0,
+                'message' => $this->translate('Invalid JSON response'),
+                'response' => [],
+                'error' => 'Invalid JSON response',
+            ];
+        }
+
+        return [
+            'status' => $httpCode,
+            'message' => $httpCode === 200 ? 'Request successful' : 'Request failed',
+            'response' => $responseData,
+            'error' => null,
+        ];
+    }
+
     public function sendRequest($method, $endpoint, array $data = [], $type = 'default', array $headers = [], $checkAvailability = true)
     {
         $url = rtrim($this->apiBaseUrl, '/').'/'.ltrim($endpoint, '/');
@@ -99,16 +129,12 @@ class ApiManager
 
     private function getLoggerForType($type)
     {
-        switch ($type) {
-            case 'documents':
-                return new DocumentsEndpointLogger;
-            case 'form':
-                return new FormEndpointLogger;
-            case 'subscription':
-                return new SubscriptionEndpointLogger;
-            default:
-                return new DefaultEndpointLogger;
+
+        if ($type === 'documents') {
+            return new DocumentsEndpointLogger;
         }
+
+        return new DefaultEndpointLogger($type);
     }
 
     private function translate($message)

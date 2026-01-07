@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top navbar-main py-0">
+<nav class="navbar navbar-expand-xl navbar-dark bg-black fixed-top navbar-main py-0">
     <div class="container-fluid ms-0">
         <a class="navbar-brand d-flex align-items-center me-2" href="{{ route('manager.dashboard') }}">
             <img class="logo" src="{{ getSiteLogoUrl('light') }}" alt="">

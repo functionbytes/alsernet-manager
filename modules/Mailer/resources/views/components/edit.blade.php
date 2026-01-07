@@ -1077,11 +1077,16 @@ $(document).ready(function() {
         'Ctrl-/': 'toggleComment'
     });
 
-    // Sync textarea before submit
+    // Sync textarea before submit - CRITICAL: Must sync even if empty!
     $('#formEdit').on('submit', function(e) {
-        // Sync CodeMirror content to textarea
+        // Get CodeMirror content (even if empty)
         const editorContent = editor.getValue();
+
+        // Sync to textarea - this is what gets sent to server
         $('#content').val(editorContent);
+
+        console.log('Form submitted with content length:', editorContent.length);
+        console.log('Content being sent:', editorContent.substring(0, 100) + '...');
 
         // Show saving indicator
         toastr.info('Guardando cambios...', 'Información', {
@@ -1089,6 +1094,25 @@ $(document).ready(function() {
             extendedTimeOut: 0
         });
     });
+
+    // Also sync on language switch to prevent loss of data
+    $('a[data-bs-toggle="tab"]').on('click', function(e) {
+        if (editor) {
+            const currentContent = editor.getValue();
+            $('#content').val(currentContent);
+            console.log('Language switching - content synced');
+        }
+    });
+
+    // Helper function to sync before language switch
+    window.syncBeforeLangSwitch = function() {
+        if (editor) {
+            const currentContent = editor.getValue();
+            $('#content').val(currentContent);
+            console.log('Pre-navigation sync - content length:', currentContent.length);
+        }
+        return true; // Allow navigation
+    };
 });
 </script>
 @endpush

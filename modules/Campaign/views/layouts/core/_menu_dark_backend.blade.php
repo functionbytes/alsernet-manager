@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top navbar-main py-0">
+<nav class="navbar navbar-expand-xl navbar-dark bg-black fixed-top navbar-main py-0">
     <div class="container-fluid ms-0">
         <button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#mainAppNav" aria-controls="mainAppNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

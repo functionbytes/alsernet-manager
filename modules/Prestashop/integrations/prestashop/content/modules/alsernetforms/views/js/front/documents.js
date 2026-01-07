@@ -5,6 +5,16 @@ $(document).ready(function () {
         return; // Salir para evitar errores
     }
 
+    // ✅ REFACTORIZADO: Obtener URL base dinámicamente del atributo data del form
+    window.API_BASE_URL = $('#alsernet-documents').data('api-base-url');
+
+    if (!window.API_BASE_URL) {
+        console.error('❌ Error: API base URL not found in form data attribute');
+        return;
+    }
+
+    console.log('✅ API Base URL initialized:', window.API_BASE_URL);
+
     // Cargar estado de documentos al inicio
     loadDocumentStatus();
 
@@ -188,19 +198,16 @@ $(document).ready(function () {
     $(document).on('click', '.btn-delete-single-doc', function(e) {
         e.preventDefault();
         const docType = $(this).data('doc-type');
+        const uid = $('#uid').val();
         const $btn = $(this);
 
         if (confirm('Are you sure you want to delete this document?')) {
             $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
+            // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
             $.ajax({
-                url: 'https://webadminpruebas.a-alvarez.com/api/documents',
-                type: 'POST',
-                data: {
-                    action: 'delete',
-                    uid: $('#uid').val(),
-                    doc_type: docType
-                },
+                url: window.API_BASE_URL + '/' + uid + '/files/' + docType,
+                type: 'DELETE',
                 success: function(response) {
                     if (response.status === 'success') {
                         loadDocumentStatus();
@@ -267,15 +274,14 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     }
 
     const fileData = files[index];
+    const uid = $('#uid').val();
     const formData = new FormData();
 
     // Agregar archivo y tipo
     formData.append('file[]', fileData.file);
     formData.append('document_types[]', fileData.docType);
 
-    // Agregar datos del formulario
-    formData.append('action', 'upload');
-    formData.append('uid', $('#uid').val());
+    // Agregar tipo de documento (ya no se necesita uid ni action en el body)
     formData.append('type', $('#type').val());
 
     // Calcular progreso
@@ -284,8 +290,9 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     $('#uploadProgressBar').css('width', progress + '%');
     $submitButton.html('<i class="fa fa-spinner fa-spin"></i> Uploading ' + (index + 1) + '/' + files.length + '...');
 
+    // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
     $.ajax({
-        url: 'https://webadminpruebas.a-alvarez.com/api/documents',
+        url: window.API_BASE_URL + '/' + uid + '/files',
         type: 'POST',
         data: formData,
         processData: false,
@@ -344,13 +351,10 @@ function loadDocumentStatus() {
         return;
     }
 
+    // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
     $.ajax({
-        url: 'https://webadminpruebas.a-alvarez.com/api/documents',
-        type: 'POST',
-        data: {
-            action: 'validate',
-            uid: uid
-        },
+        url: window.API_BASE_URL + '/' + uid + '/validation',
+        type: 'GET',
         success: function(response) {
             if (response.status === 'success' && response.data) {
                 updateDocumentUI(response.data);

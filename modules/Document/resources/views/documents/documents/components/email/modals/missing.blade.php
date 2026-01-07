@@ -80,7 +80,7 @@
 
                 // Enviar directamente
                 $.ajax({
-                    url: "{{ route('api.documents.send-missing', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('api.documents.send-missing', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                     type: 'POST',
                     data: {
                         missing_docs: selectedDocs,
@@ -103,8 +103,8 @@
                             });
 
                             // Recargar historial de acciones
-                            if (typeof reloadActionHistory === 'function') {
-                                reloadActionHistory();
+                            if (typeof window.reloadActionHistory === 'function') {
+                                window.reloadActionHistory();
                             }
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {

@@ -2,7 +2,9 @@
 
 namespace Modules\Document\Services;
 
+use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\DocumentConfiguration;
+use Modules\Document\Entities\DocumentType;
 
 class DocumentTypeService
 {
@@ -21,7 +23,7 @@ class DocumentTypeService
     {
         // Completely dynamic - NO hardcoded defaults
         // Get defaults from DocumentType entity if it exists
-        $docType = \Modules\Document\Entities\DocumentType::where('slug', $documentType)->first();
+        $docType = DocumentType::where('slug', $documentType)->first();
 
         if ($docType && ! empty($docType->required_documents)) {
             return $docType->required_documents;

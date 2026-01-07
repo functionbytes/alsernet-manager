@@ -300,7 +300,7 @@ HTML;
         return <<<'HTML'
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; color: #333; line-height: 1.6;">
     <div style="max-width: 600px; margin: 0 auto;">
-        {{ content }}
+        {CUSTOM_CONTENT}
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; text-align: center;">
             <p>

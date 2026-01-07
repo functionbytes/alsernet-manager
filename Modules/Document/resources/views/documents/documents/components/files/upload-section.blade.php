@@ -230,8 +230,12 @@
 {{-- Upload Section Scripts --}}
 @push('scripts')
     <script>
+        // Global document UID and type for use in modals and external scripts
+        window.documentUid = '{{ $document->uid }}';
+        window.documentType = '{{ $document->documentType?->slug ?? "general" }}';
+
         $(document).ready(function() {
-            const documentUid = '{{ $document->uid }}';
+            const documentUid = window.documentUid;
 
             $.ajaxSetup({
                 headers: {
@@ -676,8 +680,9 @@
 
             /**
              * Recarga completamente la sección de carga de documentos vía AJAX
+             * Global para que los modales puedan llamarla
              */
-            function reloadDocumentsSection(uid = documentUid) {
+            window.reloadDocumentsSection = function(uid = window.documentUid) {
                 $.ajax({
                     url: "{{ route('api.documents.refresh-section', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', uid),
                     type: 'GET',
@@ -747,8 +752,9 @@
 
             /**
              * Recarga el historial de acciones
+             * Global para que los modales puedan llamarla
              */
-            function reloadActionHistory(uid = documentUid) {
+            window.reloadActionHistory = function(uid = window.documentUid) {
                 console.log('[reloadActionHistory] Iniciando recarga para uid:', uid);
 
                 $.ajax({

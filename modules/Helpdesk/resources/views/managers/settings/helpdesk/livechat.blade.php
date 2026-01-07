@@ -500,7 +500,7 @@
 
                                     <div class="mb-4">
                                         <label class="form-label fw-semibold mb-2">Código básico</label>
-                                        <div class="bg-dark text-white p-3 rounded">
+                                        <div class="bg-black text-white p-3 rounded">
                                             <pre class="mb-0 text-white"><code>&lt;script src="{{ url('/') }}/livechat-loader.js"&gt;&lt;/script&gt;</code></pre>
                                         </div>
                                     </div>
@@ -512,7 +512,7 @@
 
                                     <div>
                                         <label class="form-label fw-semibold mb-2">Código con configuración personalizada</label>
-                                        <div class="bg-dark text-white p-3 rounded">
+                                        <div class="bg-black text-white p-3 rounded">
                                             <pre class="mb-0 text-white"><code>&lt;script&gt;
   window.AlsernetChatSettings = {
     widgetDomain: "{{ url('/') }}"

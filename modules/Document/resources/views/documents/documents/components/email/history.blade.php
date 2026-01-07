@@ -19,7 +19,7 @@
     @if($recentMails->count() > 0)
         <div class="card-body p-4">
             @if($totalMails > 3)
-                <div class="alert alert-info alert-sm mb-0 mx-3 mt-3" role="alert">
+                <div class="alert alert-info alert-sm mb-3 mx-3" role="alert">
                     <small><i class="fas fa-info-circle me-1"></i> Mostrando los últimos 3 emails de {{ $totalMails }} totales</small>
                 </div>
             @endif

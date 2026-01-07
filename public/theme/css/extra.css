@@ -862,3 +862,34 @@ kbd {
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
+/* ========================================
+   SELECT2 IN MODALS FIX
+   Ensures select2 dropdowns appear above modal overlays
+   ONLY for select2 elements that are inside modals
+   ======================================== */
+
+/* Select2 container inside modal body - normal z-index */
+.modal-body .select2-container {
+    z-index: 1;
+}
+
+/* When dropdown is attached to modal (via dropdownParent) */
+.modal .select2-container--open {
+    z-index: 1056 !important;
+}
+
+/* Dropdown that is rendered inside a modal */
+.modal .select2-dropdown {
+    z-index: 1056 !important;
+}
+
+/* Select2 search input inside modal dropdowns */
+.modal .select2-search--dropdown .select2-search__field {
+    z-index: 1057 !important;
+}
+
+/* Select2 results inside modal */
+.modal .select2-results {
+    z-index: 1057 !important;
+}

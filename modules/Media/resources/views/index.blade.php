@@ -1091,7 +1091,7 @@
                                 {{-- Code Preview --}}
                                 <div v-else-if="file.type === 'code'" class="file-icon-preview bg-gradient-dark">
                                     <i class="fas fa-file-code display-4 text-dark"></i>
-                                    <div class="file-type-badge bg-dark">
+                                    <div class="file-type-badge bg-black">
                                         <i class="fas fa-code"></i>
                                     </div>
                                 </div>

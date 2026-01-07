@@ -5,6 +5,7 @@ namespace Modules\Document\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentAction;
@@ -16,8 +17,7 @@ use Modules\Document\Entities\DocumentStatusTransition;
 use Modules\Document\Entities\DocumentSync;
 use Modules\Document\Entities\DocumentUploadType;
 use Modules\Document\Entities\DocumentValidatorGroup;
-use Modules\Document\Events\DocumentCreated;
-use Modules\Document\Events\DocumentStatusChanged;
+// use Modules\Document\Events\DocumentCreated; // Event no implementado
 use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
@@ -353,7 +353,7 @@ class DocumentsController extends Controller
             $document->save();
 
             // Fire event
-            DocumentCreated::dispatch($document);
+            // DocumentCreated::dispatch($document); // Event no implementado
 
             \Log::info('Document created from ERP', [
                 'document_uid' => $document->uid,
@@ -729,12 +729,8 @@ class DocumentsController extends Controller
                     ->active()
                     ->first();
 
-                DocumentStatusChanged::dispatch(
-                    $document,
-                    $oldStatus,
-                    $newStatus,
-                    'Manual status change via admin panel'
-                );
+                // Event removed: DocumentStatusChanged no está implementado como evento
+                // El cambio de estado se registra mediante el modelo Document
 
                 // Enviar email automático según el nuevo estado (si está habilitado)
                 if ($request->input('send_email', false)) {
@@ -871,7 +867,7 @@ class DocumentsController extends Controller
             }
 
             // Validar que el cliente tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,
@@ -1230,7 +1226,7 @@ class DocumentsController extends Controller
                     }
 
                     // AHORA disparar evento después de que el documento esté sincronizado
-                    DocumentCreated::dispatch($document);
+                    // DocumentCreated::dispatch($document); // Event no implementado
 
                     $documents = collect([$document]);
                 } catch (\Exception $e) {
@@ -1477,6 +1473,7 @@ class DocumentsController extends Controller
             if (isset($validated['status_id'])) {
                 $document->status_id = $validated['status_id'];
             }
+
             if (isset($validated['source_id'])) {
                 $document->source_id = $validated['source_id'];
             }
@@ -1569,7 +1566,7 @@ class DocumentsController extends Controller
             }
 
             // Validar que el documento tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,
@@ -1619,7 +1616,7 @@ class DocumentsController extends Controller
             }
 
             // Verificar que el cliente tiene email
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
             if (! $recipient) {
                 return response()->json([
                     'success' => false,
@@ -2041,7 +2038,7 @@ class DocumentsController extends Controller
                 'html' => $html,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error al refrescar sección de documentos', [
+            Log::error('Error al refrescar sección de documentos', [
                 'uid' => $uid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -2082,7 +2079,7 @@ class DocumentsController extends Controller
                 'html' => $html,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error al refrescar historial de acciones', [
+            Log::error('Error al refrescar historial de acciones', [
                 'uid' => $uid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -2179,7 +2176,7 @@ class DocumentsController extends Controller
 
             $missingDocs = $request->input('missing_docs');
             $notes = $request->input('notes');
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 return response()->json([
@@ -2385,7 +2382,7 @@ class DocumentsController extends Controller
 
             $subject = $request->input('subject');
             $content = $request->input('content');
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 return response()->json([
@@ -2440,7 +2437,7 @@ class DocumentsController extends Controller
                 ], 403);
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 return response()->json([
@@ -2496,7 +2493,7 @@ class DocumentsController extends Controller
                 ], 403);
             }
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 return response()->json([
@@ -2556,7 +2553,7 @@ class DocumentsController extends Controller
                 'rejected_docs.*' => 'string',
             ]);
 
-            $recipient = $document->customer_email ?? $document->customer?->email;
+            $recipient = $document->customer_email;
 
             if (! $recipient) {
                 return response()->json([

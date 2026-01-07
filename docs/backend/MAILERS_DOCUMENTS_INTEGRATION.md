@@ -486,7 +486,7 @@ Email language is determined by:
 3. System default language (Lang::first()->id)
 
 // Implementation in DocumentMailService:
-private function getTemplateLanguageId(Document $document): int
+private function getTemplateLanguageId(Documen
 {
     // 1. Check customer language
     if ($document->customer?->lang_id) {

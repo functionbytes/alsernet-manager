@@ -1,6 +1,8 @@
 <?php
 
-include_once _PS_MODULE_DIR_.'alsernetforms/classes/ApiManager.php';
+include_once _PS_MODULE_DIR_.'alsernetforms/classes/ApiManager.php';  // @deprecated - Will be removed
+include_once _PS_MODULE_DIR_.'alsernetforms/classes/Actions/DocumentAction.php';
+
 class Order extends OrderCore
 {
     public function __construct($id = null, $order_presenter = null)
@@ -153,9 +155,9 @@ class Order extends OrderCore
             ];
         }
 
-        $apiManager = new ApiManager;
-        $response = $apiManager->sendRequest('POST', 'api/documents', [
-            'action' => 'request',
+        // ✅ REFACTORIZADO: Usar DocumentAction en lugar de ApiManager deprecated
+        $documentAction = new DocumentAction();
+        $response = $documentAction->requestDocument([
             'type' => $saleType,
             'order_id' => $this->id,
             'reference' => $this->reference,
@@ -175,10 +177,11 @@ class Order extends OrderCore
             'inventaries' => $mappedProducts,
             'delivery_address' => $address->address1 ?? null,
             'date_add' => $this->date_add,
-        ], 'documents');
+        ]);
 
-        $documentNumber = $response['response']['data']['uid'] ?? null;
-        $status = $response['response']['status'] ?? null;
+        // DocumentAction retorna estructura normalizada con 'data' directo
+        $documentNumber = $response['data']['uid'] ?? null;
+        $status = $response['status'] ?? null;
 
         if ($status === 'success' && ! empty($documentNumber)) {
             $this->document_type = $saleType;
@@ -322,25 +325,24 @@ class Order extends OrderCore
 
     public static function validateDniDocuments(string $uid): array
     {
-        $apiManager = new ApiManager;
-        $response = $apiManager->sendRequest('POST', 'api/documents', [
-            'action' => 'validate',
-            'uid' => $uid,
-        ], 'documents');
+        // ✅ REFACTORIZADO: Usar DocumentAction en lugar de ApiManager deprecated
+        // RESTful endpoint: GET /api/documents/{uid}/validation
+        $documentAction = new DocumentAction();
+        $response = $documentAction->validate($uid);
 
-        // Acceder a la respuesta correctamente (ApiManager envuelve en 'response')
-        $data = $response['response'] ?? [];
+        // DocumentAction retorna estructura normalizada con 'data' directo (sin 'response' wrapper)
+        $data = $response['data'] ?? [];
 
         // Retornar estructura esperada por el template
         return [
-            'label' => $data['data']['label'] ?? 'N/A',
-            'status' => $data['status'] ?? 'failed',
-            'type' => $data['data']['type'] ?? null,
-            'upload' => $data['data']['can_upload'] ?? false,
+            'label' => $data['label'] ?? 'N/A',
+            'status' => $response['status'] ?? 'failed',
+            'type' => $data['document_type'] ?? null,
+            'upload' => $data['can_upload'] ?? false,
             'data' => [
-                'required_documents' => $data['data']['required_documents'] ?? [],
-                'uploaded_documents' => $data['data']['uploaded_documents'] ?? [],
-                'missing_documents' => $data['data']['missing_documents'] ?? [],
+                'required_documents' => $data['required_documents'] ?? [],
+                'uploaded_documents' => $data['uploaded_documents'] ?? [],
+                'missing_documents' => $data['missing_documents'] ?? [],
             ],
         ];
     }
@@ -536,16 +538,19 @@ class Order extends OrderCore
 
     public function verificationDniDocuments(string $order): array
     {
-        $apiManager = new ApiManager;
-        $response = $apiManager->sendRequest('POST', 'api/documents', [
-            'action' => 'verification',
-            'order' => $order,
-        ], 'documents');
+        // ✅ REFACTORIZADO: Usar DocumentAction en lugar de ApiManager deprecated
+        // RESTful endpoint: GET /api/documents/verify?order_id={orderId}
+        // NOTA: Este método no se usa actualmente, pero se mantiene actualizado para uso futuro
+        $documentAction = new DocumentAction();
+        $response = $documentAction->verifyByOrderId($order);
+
+        // DocumentAction retorna estructura normalizada con 'data' directo (sin 'response' wrapper)
+        $data = $response['data'] ?? [];
 
         return [
-            'status' => $response['response']['status'] ?? 'failed',
-            'type' => $response['response']['data']['type'] ?? null,
-            'upload' => $response['response']['data']['can_upload'] ?? null,
+            'status' => $response['status'] ?? 'failed',
+            'type' => $data['document_type'] ?? null,
+            'upload' => $data['can_upload'] ?? null,
         ];
     }
 

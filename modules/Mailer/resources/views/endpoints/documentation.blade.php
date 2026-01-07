@@ -20,13 +20,13 @@
                 <div class="row g-4">
                     <div class="col-lg-6">
                         <h6 class="fw-bold text-primary mb-3">URL Base</h6>
-                        <div class="bg-dark text-light p-3 rounded" style="font-family: monospace; font-size: 12px; overflow-x: auto;">
+                        <div class="bg-black text-light p-3 rounded" style="font-family: monospace; font-size: 12px; overflow-x: auto;">
                             <code>{{ $appUrl }}/api/email-endpoints</code>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <h6 class="fw-bold text-primary mb-3">Headers Requeridos</h6>
-                        <div class="bg-dark text-light p-3 rounded" style="font-family: monospace; font-size: 12px;">
+                        <div class="bg-black text-light p-3 rounded" style="font-family: monospace; font-size: 12px;">
                             <code>Content-Type: application/json<br>X-API-Token: &lt;tu-token-api&gt;</code>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                     <h6 class="fw-bold text-primary mb-2">
                                         <i class="fas fa-link me-1"></i>URL del Endpoint
                                     </h6>
-                                    <div class="bg-dark text-light p-3 rounded" style="font-family: monospace; font-size: 11px; word-break: break-all;">
+                                    <div class="bg-black text-light p-3 rounded" style="font-family: monospace; font-size: 11px; word-break: break-all;">
                                         <code>POST {{ $appUrl }}/api/email-endpoints/{{ $endpoint->slug }}/send</code>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                     <h6 class="fw-bold text-primary mb-2">
                                         <i class="fas fa-key me-1"></i>Token API
                                     </h6>
-                                    <div class="bg-dark text-light p-3 rounded d-flex justify-content-between align-items-center" style="font-family: monospace; font-size: 10px; word-break: break-all;">
+                                    <div class="bg-black text-light p-3 rounded d-flex justify-content-between align-items-center" style="font-family: monospace; font-size: 10px; word-break: break-all;">
                                         <span class="text-warning">{{ substr($endpoint->api_token, 0, 20) }}...</span>
                                         <button class="btn btn-sm btn-outline-light btn-copy-token" data-token="{{ $endpoint->api_token }}" title="Copiar token completo">
                                             <i class="fas fa-copy"></i>
@@ -240,7 +240,7 @@
                         <div class="tab-content" id="endpoint-{{ $endpoint->id }}-content">
                             {{-- cURL Example --}}
                             <div class="tab-pane fade show active" id="curl-{{ $endpoint->id }}" role="tabpanel">
-                                <div class="bg-dark text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>curl -X POST {{ $appUrl }}/api/email-endpoints/{{ $endpoint->slug }}/send \
   -H "Content-Type: application/json" \
   -H "X-API-Token: {{ substr($endpoint->api_token, 0, 20) }}..." \
@@ -263,7 +263,7 @@ $vars = $endpoint->required_variables;
 
                             {{-- JavaScript Fetch Example --}}
                             <div class="tab-pane fade" id="js-{{ $endpoint->id }}" role="tabpanel">
-                                <div class="bg-dark text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>fetch('{{ $appUrl }}/api/email-endpoints/{{ $endpoint->slug }}/send', {
   method: 'POST',
   headers: {
@@ -290,7 +290,7 @@ $vars = $endpoint->required_variables;
 
                             {{-- PHP cURL Example --}}
                             <div class="tab-pane fade" id="php-{{ $endpoint->id }}" role="tabpanel">
-                                <div class="bg-dark text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>$curl = curl_init();
 
 curl_setopt_array($curl, [
@@ -324,7 +324,7 @@ echo json_encode(json_decode($response), JSON_PRETTY_PRINT);</code></pre>
 
                             {{-- Python Example --}}
                             <div class="tab-pane fade" id="python-{{ $endpoint->id }}" role="tabpanel">
-                                <div class="bg-dark text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded copy-code-block" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>import requests
 import json
 
@@ -368,7 +368,7 @@ print(json.dumps(response.json(), indent=2))</code></pre>
                                 <h6 class="small fw-bold text-success mb-2">
                                     <i class="fas fa-check-circle me-1"></i>Respuesta Exitosa (202)
                                 </h6>
-                                <div class="bg-dark text-light p-3 rounded" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>{
   "success": true,
   "message": "Email queued for sending",
@@ -383,7 +383,7 @@ print(json.dumps(response.json(), indent=2))</code></pre>
                                 <h6 class="small fw-bold text-danger mb-2">
                                     <i class="fas fa-exclamation-circle me-1"></i>Respuesta de Error (422)
                                 </h6>
-                                <div class="bg-dark text-light p-3 rounded" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; overflow-x: auto;">
+                                <div class="bg-black text-light p-3 rounded" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; overflow-x: auto;">
                                     <pre style="margin: 0;"><code>{
   "success": false,
   "message": "Missing required variables",

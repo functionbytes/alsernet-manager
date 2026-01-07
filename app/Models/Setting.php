@@ -40,15 +40,56 @@ class Setting extends Model implements HasMedia
             return 'sms';
         }
 
-        $setting = self::where('key', $name)->first();
+        // Cache settings for 10 minutes to reduce database load
+        // Cache key includes the setting name for granular invalidation
+        return cache()->remember("setting_{$name}", now()->addMinutes(10), function () use ($name, $defaultValue) {
+            $setting = self::where('key', $name)->first();
 
-        if ($setting) {
-            return $setting->value;
-        } elseif (isset(self::defaultSettings()[$name])) {
-            return self::defaultSettings()[$name]['value'];
-        } else {
-            // @todo exception case not handled
-            return $defaultValue;
+            if ($setting) {
+                return $setting->value;
+            } elseif (isset(self::defaultSettings()[$name])) {
+                return self::defaultSettings()[$name]['value'];
+            } else {
+                // @todo exception case not handled
+                return $defaultValue;
+            }
+        });
+    }
+
+    /**
+     * Get multiple settings at once by prefix
+     * Optimized to use single query instead of multiple get() calls
+     *
+     * @param  string  $prefix  Setting key prefix (e.g., 'documents')
+     * @return array Array of settings with keys and values
+     */
+    public static function getAllByPrefix(string $prefix): array
+    {
+        return cache()->remember("settings_prefix_{$prefix}", now()->addMinutes(10), function () use ($prefix) {
+            $settings = self::where('key', 'LIKE', "{$prefix}.%")->get(['key', 'value']);
+
+            $result = [];
+            foreach ($settings as $setting) {
+                $result[$setting->key] = $setting->value;
+            }
+
+            return $result;
+        });
+    }
+
+    /**
+     * Clear cache for all settings with a specific prefix
+     *
+     * @param  string  $prefix  Setting key prefix
+     */
+    public static function clearPrefixCache(string $prefix): void
+    {
+        cache()->forget("settings_prefix_{$prefix}");
+
+        // Also clear individual setting caches
+        $settings = self::where('key', 'LIKE', "{$prefix}.%")->pluck('key');
+        foreach ($settings as $key) {
+            cache()->forget("setting_{$key}");
         }
     }
 
@@ -100,6 +141,9 @@ class Setting extends Model implements HasMedia
             $option->value = $val;
         }
         $option->save();
+
+        // Invalidate cache for this specific setting
+        cache()->forget("setting_{$name}");
 
         return $option;
     }

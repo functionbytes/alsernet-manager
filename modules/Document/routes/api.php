@@ -9,7 +9,11 @@ use Modules\Document\Http\Controllers\DocumentsController as WebDocumentsControl
 // Routes will be prefixed and named by the RouteServiceProvider
 Route::middleware('throttle:60,1')->group(function () {
     Route::post('/', [DocumentsController::class, 'process'])->name('process');
-    // Webhook endpoint for PrestaShop order notifications
+    Route::get('/verify', [DocumentsController::class, 'verify'])->name('verify');
+    Route::get('/{uid}/validation', [DocumentsController::class, 'validation'])->name('validation');
+    Route::post('/create', [DocumentsController::class, 'store'])->name('store');
+    Route::post('/{uid}/files', [DocumentsController::class, 'uploadFiles'])->name('files.upload');
+    Route::delete('/{uid}/files/{docType}', [DocumentsController::class, 'deleteFile'])->name('files.delete');
     Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid'])->name('webhooks.prestashop.order-paid');
 });
 

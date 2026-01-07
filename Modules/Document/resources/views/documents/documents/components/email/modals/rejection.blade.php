@@ -12,15 +12,63 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="alert bg-light">
-                    <div>Se enviará un email notificando que los documentos han sido rechazados.</div>
+                <div class="alert bg-light border-0 mb-3">
+                    Se enviará un email notificando que los documentos han sido rechazados.
+                </div>
+
+                {{-- Razón del rechazo (requerido) --}}
+                <div class="mb-3">
+                    <label for="rejectionReason" class="form-label fw-semibold">
+                        Razón del rechazo <span class="text-danger">*</span>
+                    </label>
+                    <textarea
+                        class="form-control"
+                        id="rejectionReason"
+                        rows="4"
+                        placeholder="Ejemplo: Los documentos no cumplen con los requisitos de calidad. Por favor, envíe fotografías más claras."
+                        minlength="10"
+                        required></textarea>
+                    <div class="form-text">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Esta razón será incluida en el email enviado al cliente (mínimo 10 caracteres).
+                    </div>
+                </div>
+
+                {{-- Documentos rechazados específicos (opcional) --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Documentos rechazados específicos <span class="text-muted">(opcional)</span>
+                    </label>
+                    <div class="form-text mb-2">
+                        Si no selecciona ninguno, se asumirá que todos los documentos fueron rechazados.
+                    </div>
+                    @if(isset($requiredDocuments) && count($requiredDocuments) > 0)
+                        <div class="border rounded p-3 bg-light">
+                            @foreach($requiredDocuments as $key => $label)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="rejected_docs[]" value="{{ $key }}" id="rejected_{{ $key }}">
+                                    <label class="form-check-label" for="rejected_{{ $key }}">
+                                        {{ $label }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="border rounded p-3 bg-light">
+                            <p class="text-muted small mb-0">
+                                No hay documentos específicos configurados para este tipo de documento.
+                            </p>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-primary w-100 mb-1" id="btnSendRejection">
                     Enviar rechazo
                 </button>
-                <button type="button" class="btn btn-secondary  w-100" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
             </div>
         </div>
     </div>
@@ -34,6 +82,7 @@
                 const $btn = $(this);
                 const reason = $('#rejectionReason').val().trim();
 
+                // Validar que la razón no esté vacía y tenga al menos 10 caracteres
                 if (!reason) {
                     toastr.warning('Debes especificar la razón del rechazo', 'Atención', {
                         closeButton: true,
@@ -44,20 +93,31 @@
                     return;
                 }
 
-                // Recoger documentos rechazados seleccionados
+                if (reason.length < 10) {
+                    toastr.warning('La razón debe tener al menos 10 caracteres', 'Atención', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    $('#rejectionReason').focus();
+                    return;
+                }
+
+                // Recoger documentos rechazados seleccionados (opcional)
                 const rejectedDocs = [];
                 $('input[name="rejected_docs[]"]:checked').each(function() {
                     rejectedDocs.push($(this).val());
                 });
 
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>');
+                // Deshabilitar botón y mostrar loading
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
 
                 $.ajax({
-                    url: "{{ route('api.documents.send-rejection', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('api.documents.send-rejection', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                     method: 'POST',
                     data: {
                         reason: reason,
-                        rejected_docs: rejectedDocs
+                        rejected_docs: rejectedDocs  // Array vacío si no se seleccionó ninguno
                     },
                     success: function(response) {
                         if (response.success) {
@@ -75,8 +135,8 @@
                             $('input[name="rejected_docs[]"]').prop('checked', false);
 
                             // Recargar historial de acciones
-                            if (typeof reloadActionHistory === 'function') {
-                                reloadActionHistory();
+                            if (typeof window.reloadActionHistory === 'function') {
+                                window.reloadActionHistory();
                             }
                         }
                     },
@@ -89,7 +149,7 @@
                         });
                     },
                     complete: function() {
-                        $btn.prop('disabled', false).html('Enviar');
+                        $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar rechazo');
                     }
                 });
             });

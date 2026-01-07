@@ -10,7 +10,7 @@ class DocumentMailService
     public static function sendUploadNotification(Document $document): bool
     {
         try {
-            $email = $document->customer_email ?? $document->customer?->email;
+            $email = $document->customer_email;
 
             if (! $email) {
                 Log::warning('No email found for document notification', [
@@ -64,7 +64,7 @@ class DocumentMailService
                 return false;
             }
 
-            $email = $document->customer_email ?? $document->customer?->email;
+            $email = $document->customer_email;
 
             if (! $email) {
                 Log::warning('No email found for document reminder', [
@@ -101,7 +101,7 @@ class DocumentMailService
     public static function sendUploadedConfirmation(Document $document): bool
     {
         try {
-            $email = $document->customer_email ?? $document->customer?->email;
+            $email = $document->customer_email;
 
             if (! $email) {
                 Log::warning('No email found for document confirmation', [

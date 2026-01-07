@@ -5,6 +5,7 @@ namespace Modules\Document\Services;
 use Illuminate\Support\Facades\Config;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentStageEmailAction;
+use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Enums\ValidationAction;
 
 class ValidationPermissionService
@@ -140,9 +141,17 @@ class ValidationPermissionService
      */
     public function getStageLabelByKey(string $stageKey): string
     {
+        // First try to get from validator group database record (actual name)
+        $validatorGroup = DocumentValidatorGroup::where('key', $stageKey)->first();
+
+        if ($validatorGroup) {
+            return $validatorGroup->name;
+        }
+
+        // Fallback to config (for backwards compatibility)
         $config = $this->getStageConfig($stageKey);
 
-        return $config['label'] ?? ucfirst($stageKey);
+        return $config['label'] ?? ucfirst(str_replace('_', ' ', $stageKey));
     }
 
     /**

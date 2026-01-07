@@ -74,7 +74,7 @@
                             Estructura esperada del módulo
                         </h6>
                         <p class="text-muted mb-3">El archivo ZIP debe contener la siguiente estructura de directorios:</p>
-                        <div class="bg-dark text-white p-4 rounded-3">
+                        <div class="bg-black text-white p-4 rounded-3">
                             <pre class="mb-0 text-white" style="font-size: 0.875rem; line-height: 1.6;"><code>ModuleName/
 ├── app/
 │   ├── Http/Controllers/
@@ -97,7 +97,7 @@
                         <h6 class="mb-3 fw-bold border-bottom pb-2">
                             Contenido mínimo de module.json
                         </h6>
-                        <div class="bg-dark text-white p-4 rounded-3 position-relative">
+                        <div class="bg-black text-white p-4 rounded-3 position-relative">
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-success">Requerido</span>
                             </div>
@@ -134,7 +134,7 @@
                             ¿Necesitas crear un módulo?
                         </h6>
                         <p class="text-muted mb-3">Puedes crear un nuevo módulo usando el comando de Artisan:</p>
-                        <div class="bg-dark text-white p-3 rounded-3 mb-3">
+                        <div class="bg-black text-white p-3 rounded-3 mb-3">
                             <code class="text-success">php artisan module:make YourModuleName</code>
                         </div>
                         <p class="small text-muted mb-0">

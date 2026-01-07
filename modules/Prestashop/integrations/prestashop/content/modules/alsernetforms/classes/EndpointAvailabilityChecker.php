@@ -136,12 +136,6 @@ class EndpointAvailabilityChecker
         ];
     }
 
-    /**
-     * Obtiene la URL del endpoint de health según el tipo
-     *
-     * @param  string  $type  Tipo de endpoint
-     * @return string URL completa del health endpoint
-     */
     private function getHealthEndpointForType($type)
     {
         switch ($type) {
@@ -158,13 +152,6 @@ class EndpointAvailabilityChecker
         }
     }
 
-    /**
-     * Obtiene el registro de salud de un endpoint
-     *
-     * @param  string  $url
-     * @param  string  $type
-     * @return array|false
-     */
     private function getEndpointHealth($url, $type)
     {
         $sql = 'SELECT * FROM '._DB_PREFIX_.'alsernet_endpoint_health
@@ -227,11 +214,6 @@ class EndpointAvailabilityChecker
         }
     }
 
-    /**
-     * Obtiene estadísticas de salud de todos los endpoints
-     *
-     * @return array
-     */
     public function getHealthStats()
     {
         $sql = 'SELECT
@@ -246,13 +228,6 @@ class EndpointAvailabilityChecker
         return $this->db->executeS($sql);
     }
 
-    /**
-     * Fuerza la re-verificación de un endpoint específico
-     *
-     * @param  string  $url
-     * @param  string  $type
-     * @return array
-     */
     public function forceCheck($url, $type = 'default')
     {
         return $this->performHealthCheck($url, $type);

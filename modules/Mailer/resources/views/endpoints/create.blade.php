@@ -265,7 +265,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p class="small mb-1"><strong>Ejemplo de request:</strong></p>
-                                    <pre class="bg-dark text-light p-2 rounded mb-0" style="font-size: 10px;"><code>POST /api/email-endpoints/slug/send
+                                    <pre class="bg-black text-light p-2 rounded mb-0" style="font-size: 10px;"><code>POST /api/email-endpoints/slug/send
 Header: X-API-Token: abc123...
 {"email": "user@example.com"}</code></pre>
                                 </div>

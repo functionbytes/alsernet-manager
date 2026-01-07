@@ -14,9 +14,7 @@
             <div class="modal-body">
                 <div class="alert bg-light" role="alert">
                     <div class="d-flex align-items-center">
-                        <div>
-                            <p class="mb-0 small">Se enviará un email de recordatorio al cliente para que complete la carga de documentos.</p>
-                        </div>
+                        Se enviará un email de recordatorio al cliente para que complete la carga de documentos.
                     </div>
                 </div>
             </div>
@@ -46,7 +44,7 @@
                 $btn.html('Enviando...');
 
                 $.ajax({
-                    url: "{{ route('api.documents.send-reminder', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
+                    url: "{{ route('api.documents.send-reminder', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                     type: 'POST',
                     success: function(response) {
                         if (response.success) {
@@ -57,8 +55,8 @@
                                 positionClass: "toast-bottom-right"
                             });
                             // Recargar historial de acciones
-                            if (typeof reloadActionHistory === 'function') {
-                                reloadActionHistory();
+                            if (typeof window.reloadActionHistory === 'function') {
+                                window.reloadActionHistory();
                             }
                         } else {
                             toastr.error(response.message || 'No se pudo enviar', 'Error', {

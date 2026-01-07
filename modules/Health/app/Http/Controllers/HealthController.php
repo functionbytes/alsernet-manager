@@ -236,6 +236,7 @@ class HealthController extends Controller
         }
 
         try {
+
             $checkResults = Health::registeredChecks();
 
             $results = collect($checkResults)->map(function ($check) {

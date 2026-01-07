@@ -6,6 +6,12 @@ use App\Services\NavService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Mailer\Models\MailerLayout;
+use Modules\Mailer\Models\MailerTemplate;
+use Modules\Mailer\Models\MailerVariable;
+use Modules\Mailer\Observers\MailerLayoutObserver;
+use Modules\Mailer\Observers\MailerTemplateObserver;
+use Modules\Mailer\Observers\MailerVariableObserver;
 use Modules\Mailer\Policies\MailerSettingsPolicy;
 
 class MailerServiceProvider extends ServiceProvider
@@ -21,6 +27,9 @@ class MailerServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Register observers for automatic cache clearing
+        $this->registerObservers();
+
         // Load routes with proper prefix and middleware
         $this->registerRoutes();
 
@@ -40,6 +49,16 @@ class MailerServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mailer');
+    }
+
+    /**
+     * Register observers for automatic cache clearing when models change
+     */
+    protected function registerObservers(): void
+    {
+        MailerVariable::observe(MailerVariableObserver::class);
+        MailerTemplate::observe(MailerTemplateObserver::class);
+        MailerLayout::observe(MailerLayoutObserver::class);
     }
 
     /**

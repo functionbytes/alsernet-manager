@@ -19,7 +19,7 @@
                     </div>
                     <div>
                         <p class="mb-0 fw-semibold">Etapa {{ $document->current_stage }} de {{ $document->total_stages }}</p>
-                        <small class="text-muted">Grupo: {{ ucfirst($document->current_validator_group ?? 'Sin asignar') }}</small>
+                        <small class="text-muted">Grupo: {{ $document->getCurrentStageLabel() ?? 'Sin asignar' }}</small>
                     </div>
                 </div>
 
@@ -75,6 +75,15 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Inicializar select2 dentro del modal con configuración específica
+        function initializeModalSelect2() {
+            $('#assignToUser').select2({
+                dropdownParent: $('#approveStageModal'),
+                width: '100%',
+                minimumResultsForSearch: Infinity
+            });
+        }
+
         // Cargar información del siguiente grupo cuando se abre el modal
         $('#approveStageModal').on('show.bs.modal', function() {
             @if($document->current_stage < $document->total_stages)
@@ -104,6 +113,9 @@
                             });
                             $('#assignToUser').html(options);
                             $('#assignUserContainer').show();
+
+                            // Inicializar select2 después de cargar las opciones
+                            initializeModalSelect2();
                         }
                     }
                 },
@@ -170,7 +182,15 @@
         // Limpiar modal al cerrar
         $('#approveStageModal').on('hidden.bs.modal', function() {
             $('#approveStageComments').val('');
+
+            // Destruir select2 antes de limpiar
+            if ($('#assignToUser').hasClass('select2-hidden-accessible')) {
+                $('#assignToUser').select2('destroy');
+            }
+
             $('#assignToUser').val('');
+            $('#assignUserContainer').hide();
+
             $('#btnConfirmApproveStage')
                 .prop('disabled', false)
                 .html('<i class="fas fa-check-circle me-2"></i>Aprobar y Continuar');

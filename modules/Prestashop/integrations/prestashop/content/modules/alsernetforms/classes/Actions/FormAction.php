@@ -1,18 +1,8 @@
 <?php
 
 include_once dirname(__FILE__).'/BaseAction.php';
+include_once dirname(__FILE__).'/../loggers/DefaultEndpointLogger.php';
 
-/**
- * FormAction
- *
- * Acción para envío de formularios.
- * Este es un ejemplo de cómo reutilizar BaseAction para diferentes tipos de acciones.
- *
- * Solo necesita:
- * 1. Definir $endpoint y $actionType
- * 2. Implementar mapResponse()
- * 3. Crear métodos públicos específicos (submitForm, etc.)
- */
 class FormAction extends BaseAction
 {
     public function __construct()
@@ -23,14 +13,11 @@ class FormAction extends BaseAction
         $this->actionType = 'forms';
     }
 
-    /**
-     * Envía un formulario
-     *
-     * @param  array  $formData  Datos del formulario
-     * @param  string  $formType  Tipo de formulario (contact, newsletter, etc.)
-     * @param  array  $context  Contexto adicional
-     * @return array Resultado
-     */
+    protected function createLogger()
+    {
+        return new DefaultEndpointLogger('form');
+    }
+
     public function submitForm(array $formData, $formType = 'contact', array $context = [])
     {
         $payload = [
@@ -42,12 +29,6 @@ class FormAction extends BaseAction
         return $this->execute($payload, $context);
     }
 
-    /**
-     * Mapea respuesta de ApiManager a estructura estándar
-     *
-     * @param  array  $response  Respuesta de ApiManager
-     * @return array Respuesta mapeada
-     */
     protected function mapResponse(array $response)
     {
         $responseData = $response['response'] ?? [];

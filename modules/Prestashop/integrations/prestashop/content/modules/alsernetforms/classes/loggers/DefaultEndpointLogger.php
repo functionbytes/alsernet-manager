@@ -6,10 +6,17 @@ use PrestaShop\PrestaShop\Core\Database\Db;
 class DefaultEndpointLogger implements EndpointLoggerInterface
 {
     protected $db;
+    protected $type;
 
-    public function __construct()
+    /**
+     * Constructor
+     *
+     * @param string $type Tipo de endpoint (form, subscription, chat, etc.)
+     */
+    public function __construct($type = 'default')
     {
         $this->db = \Db::getInstance();
+        $this->type = $type;
     }
 
     public function logRequest($method, $url, array $data)
@@ -36,6 +43,6 @@ class DefaultEndpointLogger implements EndpointLoggerInterface
 
     protected function getType()
     {
-        return 'default';
+        return $this->type;
     }
 }

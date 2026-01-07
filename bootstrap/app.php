@@ -65,15 +65,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'session' => \App\Http\Middleware\CheckSession::class,
-            'roles' => \App\Http\Middleware\RoleMiddleware::class,
 
             // Spatie Permission middlewares
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-
-            // Middleware para el sistema de devoluciones
-            'check.roles.permissions' => \App\Http\Middleware\CheckRolesAndPermissions::class,
 
             // Document permission middleware
             'document.permission' => \App\Http\Middleware\DocumentPermissionMiddleware::class,

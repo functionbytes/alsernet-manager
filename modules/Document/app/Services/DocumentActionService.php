@@ -10,49 +10,65 @@ use Modules\Document\Entities\DocumentValidationHistory;
 
 class DocumentActionService
 {
-    public static function logInitialRequestEmail(Document $document, string $email, ?string $message = null): DocumentAction
+    public static function logEmailSent(Document $document, string $emailType, array $metadata = [], ?int $adminId = null): DocumentAction
     {
+        $actionNames = [
+            'request' => 'Email de solicitud inicial enviado',
+            'reminder' => 'Email de recordatorio enviado',
+            'missing' => 'Email de documentos faltantes enviado',
+            'upload' => 'Email de confirmación de carga enviado',
+            'approval' => 'Email de aprobación enviado',
+            'rejection' => 'Email de rechazo enviado',
+            'custom' => 'Correo personalizado enviado',
+        ];
+
+        $descriptions = [
+            'request' => "Se envió correo de solicitud inicial a {$document->customer_email}",
+            'reminder' => "Se envió recordatorio a {$document->customer_email}",
+            'missing' => 'Se envió solicitud de documentos faltantes a '.$document->customer_email,
+            'upload' => "Se envió confirmación de carga a {$document->customer_email}",
+            'approval' => "Se envió aprobación a {$document->customer_email}",
+            'rejection' => "Se envió notificación de rechazo a {$document->customer_email}",
+            'custom' => "Se envió correo personalizado a {$document->customer_email}",
+        ];
+
         return DocumentAction::logAction(
             documentId: $document->id,
-            actionType: 'email_initial_request',
-            actionName: 'Correo de Solicitud Inicial Enviado',
-            description: $message ?? "Se envió correo de solicitud inicial a {$email}",
-            metadata: [
-                'email' => $email,
-                'message' => $message,
-            ],
-            performedByType: 'system'
+            actionType: "email_sent_{$emailType}",
+            actionName: $actionNames[$emailType] ?? "Email enviado: {$emailType}",
+            description: $descriptions[$emailType] ?? "Email enviado a {$document->customer_email}",
+            metadata: array_merge([
+                'email_type' => $emailType,
+                'recipient' => $document->customer_email,
+            ], $metadata),
+            performedBy: $adminId,
+            performedByType: $adminId ? 'admin' : 'system'
         );
     }
 
-    public static function logReminderEmail(Document $document, string $email, ?string $message = null): DocumentAction
+    public static function logEmailFailed(Document $document, string $emailType, string $errorMessage, array $metadata = [], ?int $adminId = null): DocumentAction
     {
-        return DocumentAction::logAction(
-            documentId: $document->id,
-            actionType: 'email_reminder',
-            actionName: 'Recordatorio Enviado',
-            description: $message ?? "Se envió recordatorio a {$email}",
-            metadata: [
-                'email' => $email,
-                'message' => $message,
-            ],
-            performedByType: 'system'
-        );
-    }
+        $actionNames = [
+            'request' => 'Fallo al enviar email de solicitud inicial',
+            'reminder' => 'Fallo al enviar email de recordatorio',
+            'missing' => 'Fallo al enviar email de documentos faltantes',
+            'upload' => 'Fallo al enviar email de confirmación',
+            'approval' => 'Fallo al enviar email de aprobación',
+            'rejection' => 'Fallo al enviar email de rechazo',
+            'custom' => 'Fallo al enviar correo personalizado',
+        ];
 
-    public static function logMissingDocumentsEmail(Document $document, string $email, array $missingDocs, ?string $message = null): DocumentAction
-    {
         return DocumentAction::logAction(
             documentId: $document->id,
-            actionType: 'email_missing_documents',
-            actionName: 'Solicitud de Documentos Específicos Enviada',
-            description: $message ?? 'Se envió solicitud de '.count($missingDocs)." documentos específicos a {$email}",
-            metadata: [
-                'email' => $email,
-                'missing_documents' => $missingDocs,
-                'message' => $message,
-            ],
-            performedByType: 'system'
+            actionType: "email_failed_{$emailType}",
+            actionName: $actionNames[$emailType] ?? "Fallo al enviar email: {$emailType}",
+            description: "Error al enviar email: {$errorMessage}",
+            metadata: array_merge([
+                'email_type' => $emailType,
+                'error' => $errorMessage,
+            ], $metadata),
+            performedBy: $adminId,
+            performedByType: $adminId ? 'admin' : 'system'
         );
     }
 
