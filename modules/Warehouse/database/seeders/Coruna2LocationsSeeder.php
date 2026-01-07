@@ -5,11 +5,11 @@ namespace Modules\Warehouse\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Modules\Warehouse\Models\Warehouse;
-use Modules\Warehouse\Models\WarehouseFloor;
-use Modules\Warehouse\Models\WarehouseLocation;
-use Modules\Warehouse\Models\WarehouseLocationSection;
-use Modules\Warehouse\Models\WarehouseLocationStyle;
+use Modules\Warehouse\Entities\Warehouse;
+use Modules\Warehouse\Entities\WarehouseFloor;
+use Modules\Warehouse\Entities\WarehouseLocation;
+use Modules\Warehouse\Entities\WarehouseLocationSection;
+use Modules\Warehouse\Entities\WarehouseLocationStyle;
 
 class Coruna2LocationsSeeder extends Seeder
 {

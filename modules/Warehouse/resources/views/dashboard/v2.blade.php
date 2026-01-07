@@ -105,7 +105,7 @@
                         <div class="flex-grow-1">
                             <p class="text-dark mb-1 small fw-medium opacity-75">Pendientes</p>
                             <h4 class="fw-bold text-dark mb-2">{{ $totalPending }}</h4>
-                            <a href="{{ route('administrative.documents.pending') }}" class="badge bg-dark bg-opacity-25 text-dark text-decoration-none">
+                            <a href="{{ route('administrative.documents.pending') }}" class="badge bg-black bg-opacity-25 text-dark text-decoration-none">
                                 Ver lista <i class="fas fa-arrow-right ms-1"></i>
                             </a>
                         </div>

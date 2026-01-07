@@ -35,31 +35,31 @@ return [
                 'items' => [
                     [
                         'label' => 'Almacenes',
-                        'route' => 'manager.warehouse.index',
+                        'route' => 'settings.warehouse.index',
                         'permission' => 'warehouse.manage',
                         'icon' => 'fas fa-warehouse',
                     ],
                     [
                         'label' => 'Pisos',
-                        'route' => 'manager.warehouse.floors.index',
+                        'route' => 'settings.warehouse.floors',
                         'permission' => 'warehouse.manage',
                         'icon' => 'fas fa-layer-group',
                     ],
                     [
                         'label' => 'Estilos de ubicación',
-                        'route' => 'manager.warehouse.styles',
+                        'route' => 'settings.warehouse.styles.index',
                         'permission' => 'warehouse.manage',
                         'icon' => 'fas fa-paint-brush',
                     ],
                     [
                         'label' => 'Historial de movimientos',
-                        'route' => 'manager.warehouse.history',
+                        'route' => 'settings.warehouse.history',
                         'permission' => 'warehouse.reports',
                         'icon' => 'fas fa-history',
                     ],
                     [
                         'label' => 'Reportes',
-                        'route' => 'manager.warehouse.reports',
+                        'route' => 'settings.warehouse.reports',
                         'permission' => 'warehouse.reports',
                         'icon' => 'fas fa-chart-bar',
                     ],

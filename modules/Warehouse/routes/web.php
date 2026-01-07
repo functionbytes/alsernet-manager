@@ -24,9 +24,9 @@ use Modules\Warehouse\Http\Controllers\Settings\WarehouseReportsController;
 |--------------------------------------------------------------------------
 |
 | Routes for warehouse management by managers
-| Prefix: /backups/warehouse (applied by WarehouseServiceProvider)
+| Prefix: /settings/warehouse (applied by WarehouseServiceProvider)
 | Middleware: auth, role:super-admin (applied by WarehouseServiceProvider)
-| Name prefix: backups.warehouse. (applied by WarehouseServiceProvider)
+| Name prefix: settings.warehouse. (applied by WarehouseServiceProvider)
 |
 */
 
