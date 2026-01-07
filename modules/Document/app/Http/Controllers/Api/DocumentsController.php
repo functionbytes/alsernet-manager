@@ -116,7 +116,6 @@ class DocumentsController extends Controller
      *
      * Endpoint RESTful: GET /api/documents/verify?order_id={order_id}
      *
-     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function verify(Request $request)
@@ -213,7 +212,6 @@ class DocumentsController extends Controller
                 'required_documents' => $document->getRequiredDocumentsWithLabels(),
                 'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
                 'missing_documents' => $document->getMissingDocuments(),
-                'is_complete' => $document->hasAllRequiredDocuments(),
             ],
         ], 200);
     }
@@ -223,7 +221,6 @@ class DocumentsController extends Controller
      *
      * Endpoint RESTful: POST /api/documents
      *
-     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -487,7 +484,6 @@ class DocumentsController extends Controller
                 'required_documents' => $document->getRequiredDocumentsWithLabels(),
                 'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
                 'missing_documents' => $document->getMissingDocuments(),
-                'is_complete' => $document->hasAllRequiredDocuments(),
             ],
         ], 200);
     }
@@ -497,7 +493,6 @@ class DocumentsController extends Controller
      *
      * Endpoint RESTful: POST /api/documents/{uid}/files
      *
-     * @param  Request  $request
      * @param  string  $uid  UID del documento
      * @return \Illuminate\Http\JsonResponse
      */
@@ -522,17 +517,18 @@ class DocumentsController extends Controller
             }
 
             // Validar que el documento está en un estado que permite carga de archivos
-            $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+            // Bloquear solo estados finales (completado, aprobado, cancelado)
+            $blockedStatusKeys = ['approved', 'cancelled', 'completed'];
             $currentStatusKey = $document->status?->key;
 
-            if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
+            if ($currentStatusKey && in_array($currentStatusKey, $blockedStatusKeys)) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
+                    'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Upload is only allowed while document is in progress.",
                     'data' => [
                         'uid' => $document->uid,
                         'current_status' => $currentStatusKey,
-                        'allowed_statuses' => $allowedStatusKeys,
+                        'blocked_statuses' => $blockedStatusKeys,
                     ],
                 ], 409);
             }
@@ -617,15 +613,13 @@ class DocumentsController extends Controller
 
             // Update status based on document completion
             if ($document->hasAllRequiredDocuments()) {
-                // All documents uploaded - set to "incomplete" status
-                $document->status_id = DocumentStatus::where('key', 'incomplete')->first()?->id;
+                // All documents uploaded - set to "received" status
+                $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
                 if (! $document->confirmed_at) {
                     $document->confirmed_at = Carbon::now()->setTimezone('Europe/Madrid');
                 }
-            } else {
-                // Partial upload - set to "received" status
-                $document->status_id = DocumentStatus::where('key', 'received')->first()?->id;
             }
+            // If partial upload (some documents missing), keep current status
 
             // Set source_id to 'api', load_id to 'api', sync_id to 'automatic' and upload_id to 'automatic'
             // $apiSource = DocumentSource::where('key', 'api')->first();
@@ -662,7 +656,7 @@ class DocumentsController extends Controller
                         'updated_at' => Carbon::now()->setTimezone('Europe/Madrid'),
                     ]);
 
-                // Si se actualizó, procesar upload: cambiar status a "received" y enviar confirmación
+                // Si se actualizó, procesar upload: enviar confirmación
                 if ($updated === 1) {
                     $document->refresh();
                     app(DocumentEmailService::class)->processDocumentUpload($document);
@@ -675,7 +669,6 @@ class DocumentsController extends Controller
                 'data' => [
                     'uploaded_documents' => $uploadedDocs,
                     'missing_documents' => $document->getMissingDocuments(),
-                    'is_complete' => $document->hasAllRequiredDocuments(),
                 ],
             ], 200);
 
@@ -740,7 +733,6 @@ class DocumentsController extends Controller
                 'data' => [
                     'uploaded_documents' => $document->uploaded_documents,
                     'missing_documents' => $document->getMissingDocuments(),
-                    'is_complete' => $document->hasAllRequiredDocuments(),
                 ],
             ], 200);
 
@@ -1502,7 +1494,7 @@ class DocumentsController extends Controller
             @chmod($mediaDir, 0755);
         }
 
-        // Procesar upload: cambiar status a "received" y enviar confirmación
+        // Procesar upload: enviar confirmación
         app(DocumentEmailService::class)->processDocumentUpload($document);
 
         return response()->json([
@@ -1675,7 +1667,6 @@ class DocumentsController extends Controller
     {
         $document = Document::where('uid', $uid)->firstOrFail();
 
-
         $validated = $request->validate([
             'file' => 'required|file|max:10240',
             'type' => 'nullable|string',
@@ -1712,7 +1703,6 @@ class DocumentsController extends Controller
     {
         $document = Document::where('uid', $uid)->firstOrFail();
 
-
         $attachments = $document->getMedia('attachments');
 
         return response()->json([
@@ -1727,7 +1717,6 @@ class DocumentsController extends Controller
     public function uploadAdditionalAttachment(Request $request, $uid)
     {
         $document = Document::where('uid', $uid)->firstOrFail();
-
 
         $validated = $request->validate([
             'attachment' => 'required|file|max:10240',
@@ -1763,7 +1752,6 @@ class DocumentsController extends Controller
     public function deleteAdditionalAttachment($uid, $attachmentId)
     {
         $document = Document::where('uid', $uid)->firstOrFail();
-
 
         try {
             $media = $document->getMedia('attachments')->find($attachmentId);
@@ -1808,7 +1796,6 @@ class DocumentsController extends Controller
                     'message' => 'Documento no encontrado.',
                 ], 404);
             }
-
 
             // Obtener tipo de documento desde la relación
             $documentType = $document->documentType?->load('requirements');
@@ -1876,8 +1863,6 @@ class DocumentsController extends Controller
                 ], 404);
             }
 
-
-
             // IMPORTANTE: La relación es 'performer', no 'user'
             $document->load(['actions' => fn ($q) => $q->with('performer')->orderBy('created_at', 'desc')]);
 
@@ -1910,7 +1895,6 @@ class DocumentsController extends Controller
     public function destroy($uid)
     {
         $document = Document::where('uid', $uid)->firstOrFail();
-
 
         try {
             $document->delete();

@@ -4,6 +4,7 @@ namespace Modules\Document\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\Document\Http\Controllers\Api\DocumentsController;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapApiRoutes(): void
     {
-        // Register Document API routes with proper prefix and naming
+        // ✅ Cargar TODAS las rutas desde routes/api.php
+        // El archivo api.php define los middlewares de cada grupo (throttle, auth, etc.)
         Route::prefix('api/documents')
             ->middleware('api')
             ->name('api.documents.')

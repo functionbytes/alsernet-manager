@@ -241,9 +241,14 @@ $(document).ready(function () {
             $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
             // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
+            // IMPORTANTE: Headers necesarios para evitar redirección 302 del middleware Sanctum
             $.ajax({
                 url: window.API_BASE_URL + '/' + uid + '/files/' + docType,
                 type: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
                 success: function(response) {
                     if (response.status === 'success') {
                         loadDocumentStatus();
@@ -319,12 +324,17 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     $submitButton.html('<i class="fa fa-spinner fa-spin"></i> {l s="Uploading" mod="alsernetforms"} ' + (index + 1) + '/' + files.length + '...');
 
     // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
+    // IMPORTANTE: Headers necesarios para evitar redirección 302 del middleware Sanctum
     $.ajax({
         url: window.API_BASE_URL + '/' + uid + '/files',
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
         success: function (response) {
             if (response.status === 'success') {
                 // Continuar con el siguiente archivo
@@ -379,9 +389,14 @@ function loadDocumentStatus() {
     }
 
     // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
+    // IMPORTANTE: Headers necesarios para evitar redirección 302 del middleware Sanctum
     $.ajax({
         url: window.API_BASE_URL + '/' + uid + '/validation',
         type: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
         success: function(response) {
             if (response.status === 'success' && response.data) {
                 updateDocumentUI(response.data);

@@ -3,10 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Document\Http\Controllers\Api\DocumentValidationController;
-use Modules\Document\Http\Controllers\DocumentsController as WebDocumentsController;
 
-// Public/Webhook routes (external systems, no authentication required)
-// Routes will be prefixed and named by the RouteServiceProvider
+// ✅ Public routes with rate limiting
+// El middleware 'api' ya está aplicado por RouteServiceProvider
 Route::middleware('throttle:60,1')->group(function () {
     Route::post('/', [DocumentsController::class, 'process'])->name('process');
     Route::get('/verify', [DocumentsController::class, 'verify'])->name('verify');
@@ -18,7 +17,9 @@ Route::middleware('throttle:60,1')->group(function () {
 });
 
 // Authenticated routes - requires user authentication
-Route::middleware(['auth', 'throttle:60,1'])->group(function () {
+// ✅ El middleware 'api' ya está aplicado por RouteServiceProvider
+// Solo agregamos 'auth' para requerir autenticación
+Route::middleware('auth')->group(function () {
     // Document processing and syncing
     Route::get('/order/data/{order_id}', [DocumentsController::class, 'getOrderData'])->name('order.data');
     Route::post('/fill-order-data', [DocumentsController::class, 'fillDocumentWithOrderData'])->name('fill-order-data');
@@ -82,7 +83,8 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::get('/{uid}/refresh-action-history', [DocumentsController::class, 'refreshActionHistory'])->name('refresh-action-history');
 
     // File operations (moved from role-specific routes)
-    Route::post('/{uid}/files', [DocumentsController::class, 'storeFiles'])->name('files.store');
+    // ✅ IMPORTANTE: La ruta POST /{uid}/files está definida en RouteServiceProvider como pública (uploadFiles)
+    // No la incluimos aquí para evitar conflictos de middleware
     Route::get('/files/{id}', [DocumentsController::class, 'getFiles'])->name('files.get');
     Route::delete('/files/{id}', [DocumentsController::class, 'deleteFiles'])->name('files.delete');
 });

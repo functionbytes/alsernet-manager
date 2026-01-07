@@ -17,6 +17,9 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            // ✅ IMPORTANTE: Document module registra sus propias rutas sin middleware 'api'
+            // para permitir acceso desde sistemas externos (PrestaShop)
+            // Las rutas del Document module NO van aquí, se registran en modules/Document/app/Providers/RouteServiceProvider.php
 
             Route::prefix('api')
                 ->middleware('api')
@@ -26,7 +29,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(function () {
                     Route::group([], base_path('routes/web.php'));
                 });
-
         });
     }
 

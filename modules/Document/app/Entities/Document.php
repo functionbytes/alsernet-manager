@@ -368,6 +368,21 @@ class Document extends Model implements HasMedia
     }
 
     // =========================================================================
+    // ACCESSORS - Map type_id to readable attributes
+    // =========================================================================
+
+    /**
+     * Obtiene el slug del tipo de documento desde la relación
+     * Permite acceder como $document->type en lugar de $document->documentType->slug
+     *
+     * @return string|null El slug del tipo de documento (ej: 'dni', 'corta', etc.)
+     */
+    public function getTypeAttribute(): ?string
+    {
+        return $this->documentType?->slug;
+    }
+
+    // =========================================================================
     // VALIDATION WORKFLOW CONFIGURATION
     // =========================================================================
 
@@ -731,8 +746,8 @@ class Document extends Model implements HasMedia
      */
     public function getRequiredDocumentsWithLabels(): array
     {
-        // Obtener configuración del tipo de documento desde la tabla document_types
-        $documentType = DocumentType::where('slug', $this->type)->first();
+        // Obtener configuración del tipo de documento desde la relación type_id
+        $documentType = $this->documentType;
 
         if ($documentType) {
             return $documentType->getRequiredDocuments();

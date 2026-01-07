@@ -374,14 +374,13 @@ class Alsernetforms extends Module implements WidgetInterface
                     // 2️⃣ INCLUIR CLASES REQUERIDAS
                     include_once dirname(__FILE__).'/classes/Actions/DocumentAction.php';
                     include_once dirname(__FILE__).'/classes/DocumentValidator.php';
-                    include_once dirname(__FILE__).'/classes/EndpointAvailabilityChecker.php';
 
                     // 3️⃣ EJECUTAR VALIDACIÓN CON CIRCUIT BREAKER
                     // DocumentAction se encarga de:
                     //   - Registrar la petición en BD (SIEMPRE)
-                    //   - Verificar disponibilidad del servidor
-                    //   - Si disponible: enviar inmediatamente
-                    //   - Si no disponible: dejar como pendiente para el cron
+                    //   - Verificar disponibilidad del servidor (incluido en validateToken())
+                    //   - Si disponible: retorna 'success'
+                    //   - Si no disponible: retorna 'pending' (circuit breaker activado)
                     $documentAction = new DocumentAction;
                     $validation = $documentAction->validateToken(
                         $token,
@@ -399,13 +398,6 @@ class Alsernetforms extends Module implements WidgetInterface
                             'error_message' => 'Error al validar token',
                             'error_details' => $validation['error'] ?? 'Token validation failed',
                         ]);
-
-                        PrestaShopLogger::addLog(
-                            "DocumentAction: Token validation error for {$token}: {$validation['error']}",
-                            3,  // Error
-                            null,
-                            'alsernetforms'
-                        );
 
                         return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
                     }
@@ -431,23 +423,20 @@ class Alsernetforms extends Module implements WidgetInterface
                         return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
                     }
 
-                    // 6️⃣ VERIFICAR ESTADO DEL SERVIDOR PARA MOSTRAR AL USUARIO
-                    $checker = new EndpointAvailabilityChecker;
-                    $serverAvailable = $checker->isEndpointAvailable(
-                        'https://webadminpruebas.a-alvarez.com/api/health',
-                        'documents'
-                    );
-
-                    $serverStatus = $serverAvailable['available']
+                    // 6️⃣ OBTENER ESTADO DEL SERVIDOR DESDE LA RESPUESTA DE VALIDACIÓN
+                    // ✅ REFACTORIZADO: Remover duplicación - validateToken() ya verifica disponibilidad
+                    // Si status es 'pending', significa que el servidor no estaba disponible (circuit breaker)
+                    $isServerAvailable = $validation['status'] !== 'pending';
+                    $serverStatus = $isServerAvailable
                         ? '✅ Servidor disponible'
-                        : '⏳ Servidor no disponible: '.($serverAvailable['reason'] ?? 'Unknown');
+                        : '⏳ Servidor no disponible: '.($validation['reason'] ?? 'Unknown');
 
                     // 7️⃣ GENERAR TRADUCCIONES SEGÚN TIPO DE DOCUMENTO
                     [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $documentType);
 
                     // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
                     // ✅ REFACTORIZADO: Obtener URL base dinámicamente para endpoints RESTful
-                    $apiManager = new ApiManager();
+                    $apiManager = new ApiManager;
                     $apiBaseUrl = rtrim($apiManager->getBaseUrl(), '/').'/api/documents';
 
                     $this->context->smarty->assign([
@@ -473,12 +462,6 @@ class Alsernetforms extends Module implements WidgetInterface
                             'pending_message' => 'El servidor está procesando tu solicitud. Se completará en breve.',
                         ]);
 
-                        PrestaShopLogger::addLog(
-                            "DocumentAction: Token validation pending. Request ID: {$requestId}",
-                            1,  // Info
-                            null,
-                            'alsernetforms'
-                        );
                     } elseif ($validation['status'] === 'error') {
                         // Error en la validación
                         $this->context->smarty->assign([
@@ -487,12 +470,6 @@ class Alsernetforms extends Module implements WidgetInterface
                             'error_details' => $validation['error'],
                         ]);
 
-                        PrestaShopLogger::addLog(
-                            "DocumentAction: Token validation error. Request ID: {$requestId}",
-                            3,  // Error
-                            null,
-                            'alsernetforms'
-                        );
                     } else {
                         // Token válido: usuario puede continuar
                         $this->context->smarty->assign([

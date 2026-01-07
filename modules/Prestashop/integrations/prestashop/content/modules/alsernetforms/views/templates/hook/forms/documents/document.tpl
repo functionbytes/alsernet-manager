@@ -1,7 +1,7 @@
 <div class="documents mt-4">
     <div class="container">
         <div class="row">
-            {if $type && $upload}
+            {if $document_type && $missing_documents}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12" id="documentsContainer">
                     <div class="mb-3" id="documentsUploadCard">
                         <div class="card-header p-3 bg-white border-bottom">
@@ -40,7 +40,7 @@
                             <form id="alsernet-documents" enctype="multipart/form-data" method="post" onsubmit="return false" novalidate data-api-base-url="{$api_base_url}">
                                 {* ✅ REFACTORIZADO: Usar endpoints RESTful en lugar de routes.php deprecated *}
                                 <input type="hidden" name="uid" id="uid" value="{$uid}">
-                                <input type="hidden" name="id" id="type" value="{$type}">
+                                <input type="hidden" name="type" id="type" value="{$document_type}">
                                 <input type="hidden" name="documents" id="documents_value" value="">
                                 <input type="hidden" name="documents_status" id="documents_status" value="false">
 
