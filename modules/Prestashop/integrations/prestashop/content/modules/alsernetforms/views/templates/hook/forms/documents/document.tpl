@@ -73,7 +73,6 @@
                                 {else}
                                     {* Si no hay documentos faltantes, mostrar mensaje *}
                                     <div class="alert alert-success" role="alert">
-                                        <i class="fas fa-circle-check me-2"></i>
                                         {l s='All documents have been uploaded successfully!' mod='alsernetforms'}
                                     </div>
                                 {/if}
@@ -127,7 +126,7 @@
                                 {* Mostrar formulario de envío solo si hay documentos faltantes *}
                                 {if $missing_documents}
                                     <div class="mb-3">
-                                       <div class="g-recaptcha" id="g-recaptcha-response-compromise" data-sitekey="6LcRY40nAAAAAEFYHjowIjVbySvS7OBev7_mZsSh" data-callback="onRecaptchaChange" data-expired-callback="onRecaptchaExpire" aria-label="{l s='Complete the reCAPTCHA verification' mod='alsernetforms'}"></div>
+                                        <div class="g-recaptcha" id="g-recaptcha-response-compromise" data-sitekey="6LcRY40nAAAAAEFYHjowIjVbySvS7OBev7_mZsSh" data-callback="onRecaptchaChange" data-expired-callback="onRecaptchaExpire" aria-label="{l s='Complete the reCAPTCHA verification' mod='alsernetforms'}"></div>
                                     </div>
 
                                     {* Validación del botón *}
@@ -137,9 +136,7 @@
                                             class="btn btn-primary w-100"
                                             id="submitButton"
                                             disabled
-                                            aria-disabled="true"
-                                            style="opacity: 0.5; cursor: not-allowed; transition: opacity 0.3s, cursor 0.3s;">
-                                            <i class="fas fa-upload me-2"></i>
+                                            aria-disabled="true" >
                                             {l s='Upload Document' mod='alsernetforms'}
                                         </button>
                                         <small class="text-muted d-block mt-2" id="submitValidationHelp" role="alert">

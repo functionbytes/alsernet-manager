@@ -433,3 +433,18 @@
 .documents a:hover {
     color: #4570ea;
 }
+
+
+.documents form .form-check .check .form-check-label {
+    padding-left: 0px !important;
+}
+
+.documents ul li::before {
+    position: absolute;
+    left: 60px;
+    content: "\f192";
+    font-family: 'Font Awesome 6 Duotone';
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #90BB13;
+}

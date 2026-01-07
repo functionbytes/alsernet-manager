@@ -42,7 +42,7 @@ $(document).ready(function () {
 
         // Habilitar solo si AMBAS condiciones se cumplen
         if (isConditionChecked && isRecaptchaValid) {
-            $submitBtn.prop('disabled', false).removeAttr('style');
+            $submitBtn.prop('disabled', false).removeAttr('style').css('opacity', '1').css('cursor', 'pointer');
             console.log('✅ Submit button ENABLED');
         } else {
             $submitBtn.prop('disabled', true).css('opacity', '0.5').css('cursor', 'not-allowed');
