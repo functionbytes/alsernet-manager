@@ -48,7 +48,6 @@
         @csrf
         @method('PATCH')
         <input type="hidden" name="lang_id" value="{{ $currentLangId ?? 1 }}">
-        <input type="hidden" name="translation_uid" value="{{ $translation->uid ?? '' }}">
 
         <div class="row g-3">
             {{-- Left Column: Editor --}}
@@ -323,12 +322,11 @@
                                         @php
                                             $langTranslation = $component->translations()->where('lang_id', $lang->id)->first();
                                             $isComplete = $langTranslation && !empty($langTranslation->subject) && !empty($langTranslation->content);
-                                            $translationUid = $langTranslation?->uid;
                                             $statusBadge = $isComplete
                                                 ? ['class' => 'bg-success-subtle text-success',  'text' => 'Completa']
                                                 : ['class' => 'bg-warning-subtle text-warning', 'text' => 'Pendiente'];
                                         @endphp
-                                        <a href="{{ route('mailers.components.edit', ['uid' => $component->uid, 'translation_uid' => $translationUid]) }}"
+                                        <a href="{{ route('mailers.components.edit', ['uid' => $component->uid, 'lang_id' => $lang->id]) }}"
                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-3 py-3 hover-shadow-sm"
                                            data-bs-toggle="tooltip" title="Cambiar a {{ $lang->title }}">
                                             <div class="d-flex align-items-center gap-2 flex-grow-1">
@@ -393,31 +391,31 @@
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Guardar plantilla</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+S</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+S</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Autocompletar</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+Space</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+Space</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Comentar/Descomentar</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+/</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+/</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Expandir Emmet</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Tab</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Tab</kbd>
                                 </div>
                             </div>
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted small">Envolver con Emmet</span>
-                                    <kbd class="bg-dark text-white px-2 py-1 rounded">Ctrl+Alt+Enter</kbd>
+                                    <kbd class="bg-black text-white px-2 py-1 rounded">Ctrl+Alt+Enter</kbd>
                                 </div>
                             </div>
                         </div>

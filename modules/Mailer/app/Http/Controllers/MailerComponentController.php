@@ -168,7 +168,7 @@ class MailerComponentController extends Controller
     /**
      * Mostrar formulario para editar componente
      */
-    public function edit(Request $request, $uid, $translation_uid = null)
+    public function edit(Request $request, $uid)
     {
         $layout = MailerLayout::where('uid', $uid)->firstOrFail();
 
@@ -177,28 +177,20 @@ class MailerComponentController extends Controller
             abort(404);
         }
 
-        // Obtener traducción por translation_uid si se proporciona
-        if ($translation_uid) {
-            $translation = MailerLayoutLang::where('uid', $translation_uid)
-                ->where('layout_id', $layout->id)
-                ->firstOrFail();
-            $langId = $translation->lang_id;
-        } else {
-            // Obtener idioma actual (del request o default a 1)
-            $langId = $request->input('lang_id', 1);
+        // Obtener idioma actual (del request o default a 1)
+        $langId = $request->input('lang_id', 1);
 
-            // Obtener la traducción para el idioma actual
-            $translation = $layout->translate($langId);
+        // Obtener la traducción para el idioma actual
+        $translation = $layout->translations()->where('lang_id', $langId)->first();
 
-            // Si no existe traducción para este idioma, crear y guardar una vacía
-            if (! $translation) {
-                $translation = MailerLayoutLang::create([
-                    'layout_id' => $layout->id,
-                    'lang_id' => $langId,
-                    'subject' => '',
-                    'content' => '',
-                ]);
-            }
+        // Si no existe traducción para este idioma, crear y guardar una vacía
+        if (! $translation) {
+            $translation = MailerLayoutLang::create([
+                'layout_id' => $layout->id,
+                'lang_id' => $langId,
+                'subject' => '',
+                'content' => '',
+            ]);
         }
 
         // Obtener idiomas disponibles
@@ -233,7 +225,6 @@ class MailerComponentController extends Controller
             'content' => 'nullable|string',
             'type' => 'required|string|in:partial,layout,component',
             'lang_id' => 'required|exists:langs,id',
-            'translation_uid' => 'nullable|string',
             'is_protected' => 'nullable|boolean',
         ]);
 
@@ -244,8 +235,8 @@ class MailerComponentController extends Controller
                 'is_protected' => $validated['is_protected'] ?? false,
             ]);
 
-            // Obtener la traducción para el idioma actual
-            $translation = $layout->translate($validated['lang_id']);
+            // Obtener la traducción para el idioma actual (sin fallback)
+            $translation = $layout->translations()->where('lang_id', $validated['lang_id'])->first();
 
             if ($translation) {
                 // Actualizar traducción existente
