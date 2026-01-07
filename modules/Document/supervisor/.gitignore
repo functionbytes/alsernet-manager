@@ -1,0 +1,14 @@
+# Supervisor logs and runtime files
+*.log
+*.log.*
+.supervisor/
+
+# Generated files
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
