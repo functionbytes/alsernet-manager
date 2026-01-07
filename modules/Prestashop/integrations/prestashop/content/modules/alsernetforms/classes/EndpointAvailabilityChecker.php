@@ -1,15 +1,21 @@
 <?php
 
+include_once dirname(__FILE__).'/HttpClient.php';
+
 /**
  * EndpointAvailabilityChecker
  *
  * Verifica la disponibilidad de endpoints antes de realizar peticiones.
  * Utiliza un sistema de circuit breaker para evitar sobrecargar servidores caídos.
  * Se conecta al endpoint /api/health del servidor Laravel para verificar disponibilidad.
+ *
+ * Usa HttpClient para todas las peticiones HTTP (curl centralizado).
  */
 class EndpointAvailabilityChecker
 {
     private $db;
+
+    private $httpClient;
 
     private $checkTimeoutSeconds = 5;
 
@@ -17,11 +23,12 @@ class EndpointAvailabilityChecker
 
     private $recoveryCheckInterval = 300; // 5 minutos entre intentos cuando está marcado como no disponible
 
-    private $healthEndpointUrl = 'https://webadminpruebas.a-alvarez.com/api/health/'; // URL base del health check
+    private $healthEndpointUrl = 'https://webadminpruebas.a-alvarez.com/api/health'; // URL base del health check
 
     public function __construct()
     {
         $this->db = \Db::getInstance();
+        $this->httpClient = new HttpClient($this->checkTimeoutSeconds, $this->checkTimeoutSeconds, false);
     }
 
     /**
@@ -70,31 +77,17 @@ class EndpointAvailabilityChecker
         // Determinar qué endpoint de health usar según el tipo
         $healthUrl = $this->getHealthEndpointForType($type);
 
-        $ch = curl_init();
+        // Usar HttpClient centralizado
+        $httpResponse = $this->httpClient->get($healthUrl);
 
-        // GET request al endpoint de health
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $healthUrl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $this->checkTimeoutSeconds,
-            CURLOPT_CONNECTTIMEOUT => $this->checkTimeoutSeconds,
-            CURLOPT_SSL_VERIFYPEER => false, // Ajustar según necesidades de producción
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 3,
-            CURLOPT_HTTPHEADER => ['Accept: application/json'],
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
         $responseTime = (microtime(true) - $startTime) * 1000; // En milisegundos
-
-        curl_close($ch);
+        $httpCode = $httpResponse['status'];
+        $curlError = $httpResponse['error'];
 
         // Parsear respuesta JSON
         $healthData = null;
-        if ($response && empty($curlError)) {
-            $healthData = json_decode($response, true);
+        if (! $curlError && $httpResponse['body']) {
+            $healthData = $this->httpClient->decodeJson($httpResponse['body']);
         }
 
         // Determinar si está disponible
@@ -263,74 +256,5 @@ class EndpointAvailabilityChecker
     public function forceCheck($url, $type = 'default')
     {
         return $this->performHealthCheck($url, $type);
-    }
-
-    /**
-     * Valida un token en Laravel y obtiene la información asociada
-     *
-     * @param  string  $validationUrl  URL del endpoint de validación de token en Laravel
-     * @param  string  $token  Token a validar
-     * @return array ['valid' => bool, 'data' => [...], 'error' => string|null]
-     */
-    public function validateToken($validationUrl, $token)
-    {
-        $ch = curl_init();
-
-        $payload = json_encode([
-            'token' => $token,
-        ]);
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $validationUrl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => $this->checkTimeoutSeconds,
-            CURLOPT_CONNECTTIMEOUT => $this->checkTimeoutSeconds,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 3,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_HTTPHEADER => [
-                'Accept: application/json',
-                'Content-Type: application/json',
-            ],
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-
-        curl_close($ch);
-
-        // Si hay error de conexión
-        if ($curlError) {
-            return [
-                'valid' => false,
-                'data' => [],
-                'error' => "Connection error: {$curlError}",
-            ];
-        }
-
-        // Parsear respuesta JSON
-        $responseData = null;
-        if ($response) {
-            $responseData = json_decode($response, true);
-        }
-
-        // Si el servidor respondió bien
-        if ($httpCode === 200 && $responseData && isset($responseData['valid'])) {
-            return [
-                'valid' => (bool) $responseData['valid'],
-                'data' => $responseData['data'] ?? [],
-                'error' => $responseData['error'] ?? null,
-            ];
-        }
-
-        // Si no fue 200 o respuesta inválida
-        return [
-            'valid' => false,
-            'data' => [],
-            'error' => "HTTP {$httpCode}: ".($responseData['message'] ?? 'Invalid response'),
-        ];
     }
 }
