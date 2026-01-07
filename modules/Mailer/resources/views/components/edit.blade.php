@@ -1077,63 +1077,11 @@ $(document).ready(function() {
         'Ctrl-/': 'toggleComment'
     });
 
-    // Track original form state
-    const originalFormState = {
-        subject: $('#subject').val(),
-        content: editor.getValue(),
-        type: $('#type').val(),
-        is_protected: $('#is_protected').is(':checked')
-    };
-
-    function checkForChanges() {
-        const currentState = {
-            subject: $('#subject').val(),
-            content: editor.getValue(),
-            type: $('#type').val(),
-            is_protected: $('#is_protected').is(':checked')
-        };
-
-        const hasChanges =
-            originalFormState.subject !== currentState.subject ||
-            originalFormState.content !== currentState.content ||
-            originalFormState.type !== currentState.type ||
-            originalFormState.is_protected !== currentState.is_protected;
-
-        return hasChanges;
-    }
-
-    function updateSubmitButtonState() {
-        const $submitBtn = $('#formEdit button[type="submit"]');
-        const hasChanges = checkForChanges();
-
-        if (hasChanges) {
-            $submitBtn.prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
-            updateEditorStatus('Hay cambios sin guardar', 'exclamation-circle', 'warning');
-        } else {
-            $submitBtn.prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
-            if (!hasChanges && !editor.getValue()) {
-                updateEditorStatus('Listo', 'check-circle', 'success');
-            }
-        }
-    }
-
-    // Monitor form changes
-    $('#subject, #type, #is_protected').on('change input', updateSubmitButtonState);
-    editor.on('change', updateSubmitButtonState);
-
-    // Initial state - disable submit button
-    updateSubmitButtonState();
-
     // Sync textarea before submit
     $('#formEdit').on('submit', function(e) {
-        $('#content').val(editor.getValue());
-
-        const hasChanges = checkForChanges();
-        if (!hasChanges) {
-            e.preventDefault();
-            alert('No hay cambios para guardar. Por favor, modifica al menos un campo.');
-            return false;
-        }
+        // Sync CodeMirror content to textarea
+        const editorContent = editor.getValue();
+        $('#content').val(editorContent);
 
         // Show saving indicator
         toastr.info('Guardando cambios...', 'Información', {
