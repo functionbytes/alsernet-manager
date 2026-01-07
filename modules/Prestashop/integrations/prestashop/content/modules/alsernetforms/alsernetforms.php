@@ -365,55 +365,69 @@ class Alsernetforms extends Module implements WidgetInterface
                     // la petición se guarda en BD y se procesa automáticamente cuando vuelve
                     // ════════════════════════════════════════════════════════════════════════
 
-                    // 1️⃣ EXTRAER UID DEL TOKEN
+                    // 1️⃣ OBTENER TOKEN DEL PARÁMETRO
                     $token = Tools::getValue('token');
-                    $uid = strpos($token, '?token=') !== false
-                        ? trim(explode('?token=', $token)[1] ?? '')
-                        : trim($token);
 
-                    // 2️⃣ OBTENER LA ORDER PARA ACCEDER A document_type
-                    // El UID es el document_number del pedido
-                    $order = new Order;
-                    $orders = $order->getByDocumentNumber($uid); // Obtener orden por document_number
-
-                    if (empty($orders)) {
-                        // Si no encuentra por document_number, intentar como reference o ID
-                        $order = new Order((int) $uid);
-                        if (empty($order->id)) {
-                            // Intentar obtener por reference
-                            $sql = 'SELECT id_order FROM '._DB_PREFIX_.'orders WHERE reference = "'.pSQL($uid).'" LIMIT 1';
-                            $orderId = (int) Db::getInstance()->getValue($sql);
-                            if ($orderId) {
-                                $order = new Order($orderId);
-                            }
-                        }
-                    } else {
-                        $order = reset($orders); // Obtener primer resultado
-                    }
-
-                    // 3️⃣ INCLUIR CLASES REQUERIDAS
-                    include_once dirname(__FILE__).'/classes/DocumentValidator.php';
+                    // 2️⃣ VALIDAR TOKEN EN LARAVEL (donde se generó)
+                    // El token se genera en Laravel, por lo que debemos validarlo allí
                     include_once dirname(__FILE__).'/classes/EndpointAvailabilityChecker.php';
 
-                    // 4️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
                     $checker = new EndpointAvailabilityChecker;
+                    $tokenValidationResponse = $checker->validateToken(
+                        'https://webadminpruebas.a-alvarez.com/api/documents/validate-token',
+                        $token
+                    );
+
+                    // 3️⃣ VERIFICAR SI EL TOKEN ES VÁLIDO
+                    if (empty($tokenValidationResponse) || ! $tokenValidationResponse['valid']) {
+                        $this->context->smarty->assign([
+                            'validation_error' => true,
+                            'error_message' => 'Token inválido o expirado',
+                            'error_details' => $tokenValidationResponse['error'] ?? 'Token validation failed',
+                        ]);
+
+                        PrestaShopLogger::addLog(
+                            "DocumentValidator: Invalid token: {$token}",
+                            3,  // Error
+                            null,
+                            'alsernetforms'
+                        );
+
+                        return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
+                    }
+
+                    // 4️⃣ EXTRAER DATOS DEL TOKEN VALIDADO
+                    // Laravel devuelve: uid, document_type, order_id, reference, etc.
+                    $uid = $tokenValidationResponse['data']['uid'] ?? null;
+                    $documentType = $tokenValidationResponse['data']['document_type'] ?? 'dni';
+                    $orderId = $tokenValidationResponse['data']['order_id'] ?? null;
+                    $orderReference = $tokenValidationResponse['data']['reference'] ?? $uid;
+
+                    if (empty($uid)) {
+                        $this->context->smarty->assign([
+                            'validation_error' => true,
+                            'error_message' => 'No se pudo obtener información del token',
+                            'error_details' => 'Token validation returned no UID',
+                        ]);
+
+                        return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
+                    }
+
+                    // 5️⃣ INCLUIR CLASES REQUERIDAS
+                    include_once dirname(__FILE__).'/classes/DocumentValidator.php';
+
+                    // 6️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
                     $serverAvailable = $checker->isEndpointAvailable(
                         'https://webadminpruebas.a-alvarez.com/api/health',
                         'documents'
                     );
 
-                    // 5️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
+                    // 7️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
                     $serverStatus = $serverAvailable['available']
                         ? '✅ Servidor disponible'
                         : '⏳ Servidor no disponible: '.($serverAvailable['reason'] ?? 'Unknown');
 
-                    // 6️⃣ OBTENER TIPO DE DOCUMENTO DE LA ORDEN
-                    // El document_type YA ESTÁ guardado en la Order
-                    $documentType = ! empty($order->id) && ! empty($order->document_type)
-                        ? $order->document_type
-                        : 'dni'; // Fallback a 'dni' si no se encuentra
-
-                    // 7️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
+                    // 8️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
                     // Si el servidor está caído:
                     //   - NO envía petición al servidor
                     //   - Guarda en BD con status='pending'
@@ -427,17 +441,17 @@ class Alsernetforms extends Module implements WidgetInterface
                         $documentType,
                         [
                             'customer_id' => $this->context->customer->id ?? null,
-                            'order_id' => ! empty($order->id) ? $order->id : null,
-                            'order_reference' => ! empty($order->reference) ? $order->reference : $uid,
+                            'order_id' => $orderId ?? null,
+                            'order_reference' => $orderReference ?? $uid,
                             'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
                             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
                         ]
                     );
 
-                    // 8️⃣ GENERAR TRADUCCIONES
+                    // 9️⃣ GENERAR TRADUCCIONES
                     [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $validation['type']);
 
-                    // 9️⃣ ASIGNAR VARIABLES A TEMPLATE
+                    // 🔟 ASIGNAR VARIABLES A TEMPLATE
                     $this->context->smarty->assign([
                         'uid' => $uid,
                         'trans' => $trans_remember,
@@ -451,7 +465,7 @@ class Alsernetforms extends Module implements WidgetInterface
                         'missing_documents' => $validation['data']['missing_documents'] ?? [],
                     ]);
 
-                    // 9️⃣ SI SERVIDOR NO DISPONIBLE: MOSTRAR MENSAJE ESPECIAL
+                    // 1️⃣1️⃣ SI SERVIDOR NO DISPONIBLE: MOSTRAR MENSAJE ESPECIAL
                     if ($validation['status'] === 'pending') {
                         $this->context->smarty->assign([
                             'server_unavailable' => true,
