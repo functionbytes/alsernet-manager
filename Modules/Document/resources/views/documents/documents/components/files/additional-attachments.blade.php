@@ -366,71 +366,83 @@
 
         // ===== Confirmar eliminación de adjunto =====
         $(document).on('click', '#confirmDeleteAttachmentBtn', function() {
+            console.log('🔴 Click en confirmDeleteAttachmentBtn');
             if (!pendingDeleteMediaId || !pendingDeleteBtn) {
+                console.warn('⚠️ pendingDeleteMediaId o pendingDeleteBtn no existen');
                 return;
             }
 
+            console.log('📝 mediaId:', pendingDeleteMediaId, 'uid:', documentUid);
             pendingDeleteBtn.prop('disabled', true);
             pendingDeleteBtn.html('<i class="fas fa-spinner fa-spin"></i>');
 
             $('#confirmDeleteAttachmentModal').modal('hide');
 
+            const deleteUrl = "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
+                .replace('UID_PLACEHOLDER', documentUid)
+                .replace('MEDIA_PLACEHOLDER', pendingDeleteMediaId);
+
+            console.log('🌐 DELETE URL:', deleteUrl);
+
             $.ajax({
-                url: "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
-                    .replace('UID_PLACEHOLDER', documentUid)
-                    .replace('MEDIA_PLACEHOLDER', pendingDeleteMediaId),
+                url: deleteUrl,
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log('✅ Attachment eliminado. Response:', response);
-                    if (response.success) {
-                        toastr.success(response.message || 'Adjunto eliminado', 'Éxito', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
+                    console.log('✅ DELETE success callback ejecutado. Response:', response);
 
-                        // Refrescar la sección de gestión del documento (document-management)
-                        const refreshUrl = '/api/documents/' + documentUid + '/refresh-management';
-                        console.log('🔄 Llamando a refresh-management:', refreshUrl);
+                    toastr.success('Adjunto eliminado', 'Éxito', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
 
-                        $.ajax({
-                            url: refreshUrl,
-                            type: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            success: function(refreshResponse) {
-                                console.log('✅ refresh-management response:', refreshResponse);
-                                if (refreshResponse.success && refreshResponse.html) {
-                                    // Reemplazar el contenido del componente document-management
-                                    const $managementCard = $('#documentManagementCard');
-                                    console.log('🔍 Buscando #documentManagementCard. Encontrado:', $managementCard.length > 0);
+                    // Siempre refrescar la sección de gestión, independientemente de response.success
+                    const refreshUrl = '/api/documents/' + documentUid + '/refresh-management';
+                    console.log('🔄 Llamando a refresh-management:', refreshUrl);
 
-                                    if ($managementCard.length) {
-                                        $managementCard.replaceWith(refreshResponse.html);
-                                        console.log('✅ Sección de gestión actualizada');
-                                    } else {
-                                        console.warn('⚠️ Elemento #documentManagementCard no encontrado');
-                                    }
+                    $.ajax({
+                        url: refreshUrl,
+                        type: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        success: function(refreshResponse) {
+                            console.log('✅ refresh-management response:', refreshResponse);
+                            if (refreshResponse.success && refreshResponse.html) {
+                                // Reemplazar el contenido del componente document-management
+                                const $managementCard = $('#documentManagementCard');
+                                console.log('🔍 Buscando #documentManagementCard. Encontrado:', $managementCard.length > 0);
+
+                                if ($managementCard.length) {
+                                    $managementCard.replaceWith(refreshResponse.html);
+                                    console.log('✅ Sección de gestión actualizada');
+                                } else {
+                                    console.warn('⚠️ Elemento #documentManagementCard no encontrado');
                                 }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('❌ Error refrescando sección de gestión:', {
-                                    status: status,
-                                    error: error,
-                                    response: xhr.responseJSON
-                                });
                             }
-                        });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('❌ Error refrescando sección de gestión:', {
+                                status: status,
+                                error: error,
+                                response: xhr.responseJSON
+                            });
+                        }
+                    });
 
-                        // Refresh list
-                        refreshAttachmentsList();
-                    }
+                    // Refresh list
+                    refreshAttachmentsList();
                 },
-                error: function(xhr) {
+                error: function(xhr, status, error) {
+                    console.error('❌ Error DELETE:', {
+                        status: status,
+                        statusCode: xhr.status,
+                        error: error,
+                        response: xhr.responseJSON
+                    });
                     var message = 'Error al eliminar el archivo';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         message = xhr.responseJSON.message;
@@ -442,6 +454,7 @@
                     });
                 },
                 complete: function() {
+                    console.log('🔚 AJAX complete');
                     if (pendingDeleteBtn) {
                         pendingDeleteBtn.prop('disabled', false);
                         pendingDeleteBtn.html('<i class="fas fa-trash"></i>');
