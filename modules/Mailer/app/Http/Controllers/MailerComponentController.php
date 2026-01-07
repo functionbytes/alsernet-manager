@@ -190,9 +190,9 @@ class MailerComponentController extends Controller
             // Obtener la traducción para el idioma actual
             $translation = $layout->translate($langId);
 
-            // Si no existe traducción para este idioma, crear una vacía
+            // Si no existe traducción para este idioma, crear y guardar una vacía
             if (! $translation) {
-                $translation = new MailerLayoutLang([
+                $translation = MailerLayoutMailerLang::create([
                     'layout_id' => $layout->id,
                     'lang_id' => $langId,
                     'subject' => '',
