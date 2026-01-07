@@ -10,6 +10,7 @@
     // Detectar qué sidebar debe estar activo basado en la ruta actual
     $activeSidebarId = null;
     $currentRoute = request()->route()?->getName() ?? '';
+    $user = auth()->user();
 
     foreach ($allSidebars as $sidebarId => $sidebar) {
         // Soportar ambas estructuras: sections (nueva) e items (legacy)
@@ -17,7 +18,20 @@
             // Nueva estructura con múltiples secciones
             foreach ($sidebar['sections'] as $section) {
                 foreach ($section['items'] ?? [] as $item) {
-                    if (request()->routeIs($item['route'] . '*')) {
+                    // Validar que el usuario tenga permisos para este item
+                    $canAccessItem = true;
+                    if (!empty($item['permission']) && $user) {
+                        $permissions = array_map('trim', explode('|', $item['permission']));
+                        $canAccessItem = false;
+                        foreach ($permissions as $permission) {
+                            if ($user->can($permission)) {
+                                $canAccessItem = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($canAccessItem && request()->routeIs($item['route'] . '*')) {
                         $activeSidebarId = $sidebarId;
                         break 3;
                     }
@@ -26,7 +40,20 @@
         } else {
             // Estructura legacy con items directos
             foreach ($sidebar['items'] ?? [] as $item) {
-                if (request()->routeIs($item['route'] . '*')) {
+                // Validar que el usuario tenga permisos para este item
+                $canAccessItem = true;
+                if (!empty($item['permission']) && $user) {
+                    $permissions = array_map('trim', explode('|', $item['permission']));
+                    $canAccessItem = false;
+                    foreach ($permissions as $permission) {
+                        if ($user->can($permission)) {
+                            $canAccessItem = true;
+                            break;
+                        }
+                    }
+                }
+
+                if ($canAccessItem && request()->routeIs($item['route'] . '*')) {
                     $activeSidebarId = $sidebarId;
                     break 2;
                 }
