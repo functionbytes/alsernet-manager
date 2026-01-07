@@ -407,15 +407,18 @@ class Alsernetforms extends Module implements WidgetInterface
                         return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
                     }
 
-                    // 5️⃣ EXTRAER DATOS DEL TOKEN (puede venir de respuesta o de pendiente)
+                    // 5️⃣ EXTRAER DATOS DEL TOKEN
+                    // DocumentAction retorna data mapeada desde ApiManager
                     $tokenData = $validation['data'] ?? [];
                     $uid = $tokenData['uid'] ?? null;
                     $documentType = $tokenData['document_type'] ?? 'dni';
                     $orderId = $tokenData['order_id'] ?? null;
                     $orderReference = $tokenData['reference'] ?? $uid;
                     $requestId = $validation['request_id'] ?? null;
+                    $label = $tokenData['label'] ?? 'N/A';
 
-                    if (empty($uid) && $validation['status'] !== 'pending') {
+                    // Si status es success pero no hay uid, es error
+                    if (empty($uid) && $validation['status'] === 'success') {
                         $this->context->smarty->assign([
                             'validation_error' => true,
                             'error_message' => 'No se pudo obtener información del token',
@@ -442,12 +445,16 @@ class Alsernetforms extends Module implements WidgetInterface
                     // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
                     $this->context->smarty->assign([
                         'uid' => $uid,
+                        'label' => $label,
+                        'document_type' => $documentType,
                         'trans' => $trans_remember,
                         'trans_list' => $trans_list,
-                        'document_type' => $documentType,
                         'request_id' => $requestId,
                         'server_status' => $serverStatus,
                         'validation_status' => $validation['status'],  // 'success' | 'pending' | 'error'
+                        'required_documents' => $tokenData['required_documents'] ?? [],
+                        'uploaded_documents' => $tokenData['uploaded_documents'] ?? [],
+                        'missing_documents' => $tokenData['missing_documents'] ?? [],
                     ]);
 
                     // 9️⃣ MANEJAR DIFERENTES ESTADOS

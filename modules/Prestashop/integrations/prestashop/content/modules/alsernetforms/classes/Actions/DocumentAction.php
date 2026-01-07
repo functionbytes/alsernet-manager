@@ -1,71 +1,76 @@
 <?php
 
+include_once dirname(__FILE__).'/ApiManager.php';
+
 /**
  * DocumentAction
  *
  * Acción específica para validación de tokens de documentos.
- * Extiende AbstractAction para manejar la lógica de validación de documentos.
+ * Usa ApiManager que ya maneja:
+ * - Verificación de disponibilidad del servidor
+ * - Registro de peticiones en los loggers
+ * - Circuit breaker pattern
+ * - Reintentos automáticos
  */
-class DocumentAction extends AbstractAction
+class DocumentAction
 {
+    private $apiManager;
+
     public function __construct()
     {
-        parent::__construct();
-
-        $this->endpointUrl = 'https://webadminpruebas.a-alvarez.com/api/documents/validate-token';
-        $this->endpointType = 'documents';
-        $this->method = 'POST';
-        $this->timeout = 10;
+        $this->apiManager = new ApiManager;
     }
 
     /**
      * Valida un token de documento
      *
+     * Envía petición a /api/documents con action='validate'
+     * ApiManager se encarga de toda la lógica de disponibilidad y logging
+     *
      * @param  string  $token  Token a validar
      * @param  array  $context  Contexto adicional (customer_id, order_id, etc.)
-     * @return array Resultado con status, data, etc.
+     * @return array Resultado con status, data, request_id
      */
     public function validateToken($token, array $context = [])
     {
+        // Preparar payload: action='validate' + uid extraído del token
         $payload = [
-            'token' => $token,
+            'action' => 'validate',
+            'uid' => $token,
         ];
 
-        return $this->execute($payload, $context);
-    }
+        // ApiManager maneja:
+        // - Verificación de disponibilidad
+        // - Si disponible: envía inmediatamente
+        // - Si NO disponible: guarda como pending y devuelve status='pending'
+        $response = $this->apiManager->sendRequest(
+            'POST',
+            'api/documents',
+            $payload,
+            'documents',
+            [],
+            true  // checkAvailability=true
+        );
 
-    /**
-     * Procesa una petición pendiente (llamado por el cron)
-     *
-     * @param  int  $requestId  ID de la petición a procesar
-     * @return bool True si se procesó correctamente
-     */
-    public function processPendingRequest($requestId)
-    {
-        $sql = 'SELECT * FROM '._DB_PREFIX_.'alsernet_forms_requests WHERE id_alsernetforms_request = '.(int) $requestId;
-        $request = $this->db->getRow($sql);
+        // Extraer datos de la respuesta
+        $responseData = $response['response'] ?? [];
 
-        if (! $request || $request['endpoint_type'] !== 'documents') {
-            return false;
-        }
-
-        // Marcar como procesando
-        $this->updateRequestStatus($requestId, 'processing');
-
-        // Obtener payload
-        $payload = json_decode($request['payload'], true);
-
-        // Reintentar envío
-        $response = $this->sendRequest($payload);
-
-        if ($response['success']) {
-            $this->updateRequestStatus($requestId, 'success', $response['data']);
-
-            return true;
-        } else {
-            $this->updateRequestStatus($requestId, 'failed', null, $response['error']);
-
-            return false;
-        }
+        // Mapear respuesta a estructura esperada
+        return [
+            'status' => $response['status'],  // 'success' | 'pending' | 'error'
+            'request_id' => $response['request_id'] ?? null,
+            'data' => [
+                'uid' => $responseData['data']['uid'] ?? $token,
+                'document_type' => $responseData['data']['type'] ?? 'dni',
+                'order_id' => $responseData['data']['order_id'] ?? null,
+                'reference' => $responseData['data']['reference'] ?? null,
+                'label' => $responseData['data']['label'] ?? 'N/A',
+                'can_upload' => $responseData['data']['can_upload'] ?? false,
+                'required_documents' => $responseData['data']['required_documents'] ?? [],
+                'uploaded_documents' => $responseData['data']['uploaded_documents'] ?? [],
+                'missing_documents' => $responseData['data']['missing_documents'] ?? [],
+            ],
+            'error' => $response['message'] ?? null,
+        ];
     }
 }
