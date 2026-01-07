@@ -422,8 +422,8 @@ class DocumentEmailTemplateService
         array $missingDocs = [],
         ?string $notes = null
     ): array {
-        // Obtener el código de idioma del documento
-        $locale = $document->lang?->code ?? 'es';
+        // Obtener el código de idioma del documento (usa lang_id para evitar cargar la relación)
+        $locale = $document->lang_id ? self::getLanguageCode($document->lang_id) : 'es';
 
         // Preparar nombre del cliente con fallback traducido
         $customerName = trim(sprintf(
@@ -672,5 +672,21 @@ class DocumentEmailTemplateService
 
             return null;
         }
+    }
+
+    /**
+     * Obtiene el código de idioma sin cargar la relación
+     */
+    private static function getLanguageCode(int $langId): string
+    {
+        // Mapeo simple de IDs a códigos de idioma
+        $langMap = [
+            1 => 'es',
+            2 => 'en',
+            3 => 'fr',
+            4 => 'de',
+        ];
+
+        return $langMap[$langId] ?? 'es';
     }
 }

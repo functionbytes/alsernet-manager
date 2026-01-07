@@ -2,9 +2,9 @@
 
 namespace Modules\Document\Jobs;
 
-use Illuminate\Container\Attributes\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentAction;
 use Modules\Document\Services\DocumentEmailTemplateService;
