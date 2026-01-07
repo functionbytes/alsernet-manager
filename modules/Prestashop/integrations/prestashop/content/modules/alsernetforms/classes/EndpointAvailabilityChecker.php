@@ -10,9 +10,13 @@
 class EndpointAvailabilityChecker
 {
     private $db;
+
     private $checkTimeoutSeconds = 5;
+
     private $failureThreshold = 3; // Número de fallos consecutivos antes de marcar como no disponible
+
     private $recoveryCheckInterval = 300; // 5 minutos entre intentos cuando está marcado como no disponible
+
     private $healthEndpointUrl = 'https://webadminpruebas.a-alvarez.com/api/health/'; // URL base del health check
 
     public function __construct()
@@ -23,8 +27,8 @@ class EndpointAvailabilityChecker
     /**
      * Verifica si un endpoint está disponible
      *
-     * @param string $url URL del endpoint a verificar
-     * @param string $type Tipo de endpoint (documents, subscription, form, etc.)
+     * @param  string  $url  URL del endpoint a verificar
+     * @param  string  $type  Tipo de endpoint (documents, subscription, form, etc.)
      * @return array ['available' => bool, 'reason' => string|null]
      */
     public function isEndpointAvailable($url, $type = 'default')
@@ -32,7 +36,7 @@ class EndpointAvailabilityChecker
         $healthRecord = $this->getEndpointHealth($url, $type);
 
         // Si existe un registro y está marcado como no disponible
-        if ($healthRecord && !$healthRecord['is_available']) {
+        if ($healthRecord && ! $healthRecord['is_available']) {
             // Verificar si ha pasado el tiempo de recuperación
             $lastCheck = strtotime($healthRecord['last_check_at']);
             $now = time();
@@ -40,9 +44,9 @@ class EndpointAvailabilityChecker
             if (($now - $lastCheck) < $this->recoveryCheckInterval) {
                 return [
                     'available' => false,
-                    'reason' => 'Endpoint marcado como no disponible. Próximo intento en ' .
-                               ($this->recoveryCheckInterval - ($now - $lastCheck)) . ' segundos',
-                    'next_retry_at' => date('Y-m-d H:i:s', $lastCheck + $this->recoveryCheckInterval)
+                    'reason' => 'Endpoint marcado como no disponible. Próximo intento en '.
+                               ($this->recoveryCheckInterval - ($now - $lastCheck)).' segundos',
+                    'next_retry_at' => date('Y-m-d H:i:s', $lastCheck + $this->recoveryCheckInterval),
                 ];
             }
         }
@@ -55,8 +59,8 @@ class EndpointAvailabilityChecker
      * Realiza una verificación real de salud del endpoint
      * Usa el endpoint /api/health específico según el tipo
      *
-     * @param string $url URL original del endpoint de negocio (no se usa, solo para tracking)
-     * @param string $type Tipo de endpoint (documents, subscription, etc.)
+     * @param  string  $url  URL original del endpoint de negocio (no se usa, solo para tracking)
+     * @param  string  $type  Tipo de endpoint (documents, subscription, etc.)
      * @return array
      */
     private function performHealthCheck($url, $type)
@@ -77,7 +81,7 @@ class EndpointAvailabilityChecker
             CURLOPT_SSL_VERIFYPEER => false, // Ajustar según necesidades de producción
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 3,
-            CURLOPT_HTTPHEADER => ['Accept: application/json']
+            CURLOPT_HTTPHEADER => ['Accept: application/json'],
         ]);
 
         $response = curl_exec($ch);
@@ -106,18 +110,18 @@ class EndpointAvailabilityChecker
         // Actualizar registro de salud
         $this->updateEndpointHealth($url, $type, $isAvailable, $responseTime, $curlError ?: null);
 
-        if (!$isAvailable) {
+        if (! $isAvailable) {
             $healthRecord = $this->getEndpointHealth($url, $type);
             $reason = $curlError ?: "HTTP {$httpCode}";
 
             // Si tenemos datos de health, usar mensaje más descriptivo
             if ($healthData && isset($healthData['checks'])) {
-                $unhealthyChecks = array_filter($healthData['checks'], function($check) {
+                $unhealthyChecks = array_filter($healthData['checks'], function ($check) {
                     return $check['status'] !== 'healthy';
                 });
 
-                if (!empty($unhealthyChecks)) {
-                    $reason = 'Unhealthy checks: ' . implode(', ', array_keys($unhealthyChecks));
+                if (! empty($unhealthyChecks)) {
+                    $reason = 'Unhealthy checks: '.implode(', ', array_keys($unhealthyChecks));
                 }
             }
 
@@ -127,7 +131,7 @@ class EndpointAvailabilityChecker
                 'health_data' => $healthData,
                 'next_retry_at' => ($healthRecord && $healthRecord['consecutive_failures'] >= $this->failureThreshold)
                     ? date('Y-m-d H:i:s', time() + $this->recoveryCheckInterval)
-                    : date('Y-m-d H:i:s', time() + 60) // 1 minuto si aún no alcanza el threshold
+                    : date('Y-m-d H:i:s', time() + 60), // 1 minuto si aún no alcanza el threshold
             ];
         }
 
@@ -135,14 +139,14 @@ class EndpointAvailabilityChecker
             'available' => true,
             'reason' => null,
             'response_time_ms' => round($responseTime, 2),
-            'health_data' => $healthData
+            'health_data' => $healthData,
         ];
     }
 
     /**
      * Obtiene la URL del endpoint de health según el tipo
      *
-     * @param string $type Tipo de endpoint
+     * @param  string  $type  Tipo de endpoint
      * @return string URL completa del health endpoint
      */
     private function getHealthEndpointForType($type)
@@ -150,7 +154,7 @@ class EndpointAvailabilityChecker
         switch ($type) {
             case 'documents':
                 // Health check específico para documentos
-                return rtrim($this->healthEndpointUrl, '/') . '/documents';
+                return rtrim($this->healthEndpointUrl, '/').'/documents';
 
             case 'subscription':
             case 'form':
@@ -164,15 +168,15 @@ class EndpointAvailabilityChecker
     /**
      * Obtiene el registro de salud de un endpoint
      *
-     * @param string $url
-     * @param string $type
+     * @param  string  $url
+     * @param  string  $type
      * @return array|false
      */
     private function getEndpointHealth($url, $type)
     {
-        $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'alsernet_endpoint_health
-                WHERE endpoint_url = "' . pSQL($url) . '"
-                AND endpoint_type = "' . pSQL($type) . '"';
+        $sql = 'SELECT * FROM '._DB_PREFIX_.'alsernet_endpoint_health
+                WHERE endpoint_url = "'.pSQL($url).'"
+                AND endpoint_type = "'.pSQL($type).'"';
 
         return $this->db->getRow($sql);
     }
@@ -180,28 +184,28 @@ class EndpointAvailabilityChecker
     /**
      * Actualiza el estado de salud de un endpoint
      *
-     * @param string $url
-     * @param string $type
-     * @param bool $isAvailable
-     * @param float $responseTime
-     * @param string|null $error
+     * @param  string  $url
+     * @param  string  $type
+     * @param  bool  $isAvailable
+     * @param  float  $responseTime
+     * @param  string|null  $error
      */
     private function updateEndpointHealth($url, $type, $isAvailable, $responseTime, $error = null)
     {
         $existing = $this->getEndpointHealth($url, $type);
         $now = date('Y-m-d H:i:s');
 
-        if (!$existing) {
+        if (! $existing) {
             // Crear nuevo registro
             $this->db->insert('alsernet_endpoint_health', [
                 'endpoint_url' => pSQL($url),
                 'endpoint_type' => pSQL($type),
-                'is_available' => (int)$isAvailable,
+                'is_available' => (int) $isAvailable,
                 'last_check_at' => $now,
                 'last_success_at' => $isAvailable ? $now : null,
-                'last_failure_at' => !$isAvailable ? $now : null,
+                'last_failure_at' => ! $isAvailable ? $now : null,
                 'consecutive_failures' => $isAvailable ? 0 : 1,
-                'response_time_ms' => (int)$responseTime
+                'response_time_ms' => (int) $responseTime,
             ]);
         } else {
             // Actualizar registro existente
@@ -210,10 +214,10 @@ class EndpointAvailabilityChecker
                 : $existing['consecutive_failures'] + 1;
 
             $updateData = [
-                'is_available' => (int)($isAvailable || $consecutiveFailures < $this->failureThreshold),
+                'is_available' => (int) ($isAvailable || $consecutiveFailures < $this->failureThreshold),
                 'last_check_at' => $now,
                 'consecutive_failures' => $consecutiveFailures,
-                'response_time_ms' => (int)$responseTime
+                'response_time_ms' => (int) $responseTime,
             ];
 
             if ($isAvailable) {
@@ -225,7 +229,7 @@ class EndpointAvailabilityChecker
             $this->db->update(
                 'alsernet_endpoint_health',
                 $updateData,
-                'id_endpoint_health = ' . (int)$existing['id_endpoint_health']
+                'id_endpoint_health = '.(int) $existing['id_endpoint_health']
             );
         }
     }
@@ -243,7 +247,7 @@ class EndpointAvailabilityChecker
                     SUM(is_available) as available,
                     AVG(response_time_ms) as avg_response_time,
                     MAX(last_check_at) as last_check
-                FROM ' . _DB_PREFIX_ . 'alsernet_endpoint_health
+                FROM '._DB_PREFIX_.'alsernet_endpoint_health
                 GROUP BY endpoint_type';
 
         return $this->db->executeS($sql);
@@ -252,12 +256,81 @@ class EndpointAvailabilityChecker
     /**
      * Fuerza la re-verificación de un endpoint específico
      *
-     * @param string $url
-     * @param string $type
+     * @param  string  $url
+     * @param  string  $type
      * @return array
      */
     public function forceCheck($url, $type = 'default')
     {
         return $this->performHealthCheck($url, $type);
+    }
+
+    /**
+     * Valida un token en Laravel y obtiene la información asociada
+     *
+     * @param  string  $validationUrl  URL del endpoint de validación de token en Laravel
+     * @param  string  $token  Token a validar
+     * @return array ['valid' => bool, 'data' => [...], 'error' => string|null]
+     */
+    public function validateToken($validationUrl, $token)
+    {
+        $ch = curl_init();
+
+        $payload = json_encode([
+            'token' => $token,
+        ]);
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $validationUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => $this->checkTimeoutSeconds,
+            CURLOPT_CONNECTTIMEOUT => $this->checkTimeoutSeconds,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_HTTPHEADER => [
+                'Accept: application/json',
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+
+        curl_close($ch);
+
+        // Si hay error de conexión
+        if ($curlError) {
+            return [
+                'valid' => false,
+                'data' => [],
+                'error' => "Connection error: {$curlError}",
+            ];
+        }
+
+        // Parsear respuesta JSON
+        $responseData = null;
+        if ($response) {
+            $responseData = json_decode($response, true);
+        }
+
+        // Si el servidor respondió bien
+        if ($httpCode === 200 && $responseData && isset($responseData['valid'])) {
+            return [
+                'valid' => (bool) $responseData['valid'],
+                'data' => $responseData['data'] ?? [],
+                'error' => $responseData['error'] ?? null,
+            ];
+        }
+
+        // Si no fue 200 o respuesta inválida
+        return [
+            'valid' => false,
+            'data' => [],
+            'error' => "HTTP {$httpCode}: ".($responseData['message'] ?? 'Invalid response'),
+        ];
     }
 }
