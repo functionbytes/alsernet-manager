@@ -1,37 +1,43 @@
 <?php
 
-include_once(dirname(__FILE__).'/loggers/SubscriptionEndpointLogger.php');
-include_once(dirname(__FILE__).'/loggers/FormEndpointLogger.php');
-include_once(dirname(__FILE__).'/loggers/DefaultEndpointLogger.php');
-include_once(dirname(__FILE__).'/loggers/DocumentsEndpointLogger.php');
-include_once(dirname(__FILE__).'/EndpointAvailabilityChecker.php');
+include_once dirname(__FILE__).'/loggers/SubscriptionEndpointLogger.php';
+include_once dirname(__FILE__).'/loggers/FormEndpointLogger.php';
+include_once dirname(__FILE__).'/loggers/DefaultEndpointLogger.php';
+include_once dirname(__FILE__).'/loggers/DocumentsEndpointLogger.php';
+include_once dirname(__FILE__).'/EndpointAvailabilityChecker.php';
+include_once dirname(__FILE__).'/HttpClient.php';
 
 class ApiManager
 {
     private $apiBaseUrl;
+
     private $availabilityChecker;
+
+    private $httpClient;
+
     private $checkAvailability = true; // Flag para habilitar/deshabilitar verificación
 
     public function __construct()
     {
         $this->apiBaseUrl = 'https://webadminpruebas.a-alvarez.com/';
-        $this->availabilityChecker = new EndpointAvailabilityChecker();
+        $this->availabilityChecker = new EndpointAvailabilityChecker;
+        $this->httpClient = new HttpClient;
     }
 
     /**
      * Envía una petición HTTP con verificación de disponibilidad del servidor
      *
-     * @param string $method Método HTTP (GET, POST, PUT, DELETE)
-     * @param string $endpoint Ruta del endpoint
-     * @param array $data Datos a enviar
-     * @param string $type Tipo de petición (default, documents, subscription, form)
-     * @param array $headers Headers adicionales
-     * @param bool $checkAvailability Si se debe verificar disponibilidad antes de enviar
+     * @param  string  $method  Método HTTP (GET, POST, PUT, DELETE)
+     * @param  string  $endpoint  Ruta del endpoint
+     * @param  array  $data  Datos a enviar
+     * @param  string  $type  Tipo de petición (default, documents, subscription, form)
+     * @param  array  $headers  Headers adicionales
+     * @param  bool  $checkAvailability  Si se debe verificar disponibilidad antes de enviar
      * @return array Respuesta con estructura ['status' => string, 'message' => string, 'response' => array]
      */
     public function sendRequest($method, $endpoint, array $data = [], $type = 'default', array $headers = [], $checkAvailability = true)
     {
-        $url = rtrim($this->apiBaseUrl, '/') . '/' . ltrim($endpoint, '/');
+        $url = rtrim($this->apiBaseUrl, '/').'/'.ltrim($endpoint, '/');
         $logger = $this->getLoggerForType($type);
         $requestLog = $logger->logRequest($method, $url, $data);
 
@@ -39,7 +45,7 @@ class ApiManager
         if ($checkAvailability && $this->checkAvailability) {
             $availability = $this->availabilityChecker->isEndpointAvailable($url, $type);
 
-            if (!$availability['available']) {
+            if (! $availability['available']) {
                 // Servidor no disponible, marcar como pendiente
                 if (method_exists($logger, 'markAsServerUnavailable')) {
                     $logger->markAsServerUnavailable(
@@ -49,7 +55,7 @@ class ApiManager
                     );
                 } else {
                     $logger->updateRequestLog($requestLog, 'server_unavailable', [
-                        'error' => $availability['reason']
+                        'error' => $availability['reason'],
                     ]);
                 }
 
@@ -57,32 +63,28 @@ class ApiManager
                     'status' => 'pending',
                     'message' => $this->translate('Server unavailable. Request queued for later processing.'),
                     'reason' => $availability['reason'],
-                    'request_id' => $requestLog
+                    'request_id' => $requestLog,
                 ];
             }
         }
 
-        // Servidor disponible, proceder con la petición
-        $ch = curl_init();
-        $defaultHeaders = ['Content-Type: application/json'];
-        $headers = array_merge($defaultHeaders, $headers);
-        $this->configureCurl($ch, $method, $url, $data, $headers);
+        // Servidor disponible, proceder con la petición usando HttpClient centralizado
+        $httpResponse = $this->httpClient->request($method, $url, $data, $headers);
 
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
+        $httpCode = $httpResponse['status'];
+        $curlError = $httpResponse['error'];
 
         if ($curlError) {
-            curl_close($ch);
             $logger->updateRequestLog($requestLog, 'failed', ['error' => $curlError]);
+
             return ['status' => 'error', 'message' => $this->translate('Error connecting to the server')];
         }
 
-        curl_close($ch);
-        $responseData = json_decode($response, true);
+        $responseData = $this->httpClient->decodeJson($httpResponse['body']);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if ($responseData === null && ! empty($httpResponse['body'])) {
             $logger->updateRequestLog($requestLog, 'failed', ['error' => 'Invalid JSON response']);
+
             return ['status' => 'error', 'message' => $this->translate('Invalid JSON response')];
         }
 
@@ -95,40 +97,17 @@ class ApiManager
         ];
     }
 
-    private function configureCurl($ch, $method, &$url, array $data, array $headers)
-    {
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-        switch (strtoupper($method)) {
-            case 'GET':
-                $url .= '?' . http_build_query($data);
-                curl_setopt($ch, CURLOPT_HTTPGET, true);
-                break;
-            case 'POST':
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-                break;
-            default:
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        }
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-    }
-
     private function getLoggerForType($type)
     {
         switch ($type) {
             case 'documents':
-                return new DocumentsEndpointLogger();
+                return new DocumentsEndpointLogger;
             case 'form':
-                return new FormEndpointLogger();
+                return new FormEndpointLogger;
             case 'subscription':
-                return new SubscriptionEndpointLogger();
+                return new SubscriptionEndpointLogger;
             default:
-                return new DefaultEndpointLogger();
+                return new DefaultEndpointLogger;
         }
     }
 
@@ -136,6 +115,4 @@ class ApiManager
     {
         return Context::getContext()->getTranslator()->trans($message, [], 'modules.Tumodulo');
     }
-
-
 }
