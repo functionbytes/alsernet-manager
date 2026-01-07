@@ -6,6 +6,9 @@ if (! defined('_PS_VERSION_')) {
     exit;
 }
 
+// ✅ Incluir ApiManager para inyectar URL dinámica en templates
+require_once dirname(__FILE__).'/classes/ApiManager.php';
+
 class Alsernetforms extends Module implements WidgetInterface
 {
     public function __construct()
@@ -444,7 +447,7 @@ class Alsernetforms extends Module implements WidgetInterface
 
                     // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
                     // ✅ REFACTORIZADO: Obtener URL base dinámicamente para endpoints RESTful
-                    $apiManager = new \Modules\Prestashop\integrations\prestashop\content\modules\alsernetforms\classes\ApiManager;
+                    $apiManager = new ApiManager();
                     $apiBaseUrl = rtrim($apiManager->getBaseUrl(), '/').'/api/documents';
 
                     $this->context->smarty->assign([
