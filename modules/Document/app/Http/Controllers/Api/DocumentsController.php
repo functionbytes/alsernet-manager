@@ -726,12 +726,17 @@ class DocumentsController extends Controller
             // Actualizar JSON de documentos subidos
             $document->syncUploadedDocumentsJson();
 
+            // Cambiar estado a "awaiting_documents" cuando se elimina un archivo
+            $document->status_id = DocumentStatus::where('key', 'awaiting_documents')->first()?->id;
+            $document->save();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Document deleted successfully',
                 'data' => [
                     'uploaded_documents' => $document->uploaded_documents,
                     'missing_documents' => $document->getMissingDocuments(),
+                    'current_status' => $document->status?->key,
                 ],
             ], 200);
 
