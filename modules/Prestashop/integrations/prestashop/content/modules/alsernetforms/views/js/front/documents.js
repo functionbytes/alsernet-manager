@@ -252,7 +252,7 @@ function uploadFilesSequentially(files, index, form, $submitButton) {
     const progress = Math.round(((index + 1) / files.length) * 100);
     $('#uploadStatus').text(progress + '%');
     $('#uploadProgressBar').css('width', progress + '%');
-    $submitButton.html('<i class="fa fa-spinner fa-spin"></i> Uploading ' + (index + 1) + '/' + files.length + '...');
+    $submitButton.html('<i class="fas fa-spinner fa-spin"></i> Uploading ' + (index + 1) + '/' + files.length + '...');
 
     // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
     // IMPORTANTE: Headers necesarios para evitar redirección 302 del middleware Sanctum
@@ -421,7 +421,7 @@ function updateDocumentUI(data) {
                     accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                 >
                 <small class="text-muted d-block mt-1">
-                    <i class="fa fa-info-circle"></i> PDF, JPG, PNG, DOC (max 10MB)
+                    <i class="fas fa-circle-info"></i> PDF, JPG, PNG, DOC (max 10MB)
                 </small>
             `);
             $item.append($input);

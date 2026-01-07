@@ -66,14 +66,14 @@
                                                 accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                                             >
                                             <small class="text-muted d-block mt-1">
-                                                <i class="fa fa-info-circle"></i> {l s='PDF, JPG, PNG, DOC (max 10MB)' mod='alsernetforms'}
+                                                <i class="fas fa-circle-info"></i> {l s='PDF, JPG, PNG, DOC (max 10MB)' mod='alsernetforms'}
                                             </small>
                                         </div>
                                     {/foreach}
                                 {else}
                                     {* Si no hay documentos faltantes, mostrar mensaje *}
                                     <div class="alert alert-success" role="alert">
-                                        <i class="fa fa-check-circle me-2"></i>
+                                        <i class="fas fa-circle-check me-2"></i>
                                         {l s='All documents have been uploaded successfully!' mod='alsernetforms'}
                                     </div>
                                 {/if}
@@ -139,11 +139,11 @@
                                             disabled
                                             aria-disabled="true"
                                             style="opacity: 0.5; cursor: not-allowed; transition: opacity 0.3s, cursor 0.3s;">
-                                            <i class="fa fa-upload me-2"></i>
+                                            <i class="fas fa-upload me-2"></i>
                                             {l s='Upload Document' mod='alsernetforms'}
                                         </button>
                                         <small class="text-muted d-block mt-2" id="submitValidationHelp" role="alert">
-                                            <i class="fa fa-info-circle"></i>
+                                            <i class="fas fa-circle-info"></i>
                                             {l s='Please accept the terms and complete the reCAPTCHA to proceed' mod='alsernetforms'}
                                         </small>
                                     </div>
@@ -156,7 +156,7 @@
                 {* Pantalla de confirmación *}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 d-none" id="documentsConfirmation">
                     <div class="success-documents-container">
-                        <i class="fa fa-check-circle text-success" style="font-size: 3rem;"></i>
+                        <i class="fas fa-circle-check text-success" style="font-size: 3rem;"></i>
                         <h1>{l s='Document successfully submitted' mod='alsernetforms'}</h1>
                         <p>{l s='We will now review your documents and begin processing your order immediately. Thank you for your trust!' mod='alsernetforms'}</p>
                         <a href="/" class="btn btn-primary mt-3">{l s='Go back to homepage' mod='alsernetforms'}</a>
@@ -166,7 +166,7 @@
                 {* Pantalla de validación pendiente *}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 d-none" id="validationPending">
                     <div class="success-documents-container">
-                        <i class="fa fa-hourglass-half text-info" style="font-size: 3rem;"></i>
+                        <i class="fas fa-hourglass-end text-info" style="font-size: 3rem;"></i>
                         <h1>{l s='Documents under review' mod='alsernetforms'}</h1>
                         <p>{l s='Your documents are being reviewed. We will contact you shortly with the results.' mod='alsernetforms'}</p>
                         <a href="/" class="btn btn-primary mt-3">{l s='Go back to homepage' mod='alsernetforms'}</a>
@@ -176,7 +176,7 @@
                 {* Pantalla de error *}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 d-none" id="validationError">
                     <div class="success-documents-container">
-                        <i class="fa fa-times-circle text-danger" style="font-size: 3rem;"></i>
+                        <i class="fas fa-circle-xmark text-danger" style="font-size: 3rem;"></i>
                         <h1>{l s='Unable to upload documents' mod='alsernetforms'}</h1>
                         <p>{l s='This document request has been finalized and cannot accept new uploads. Please contact support for assistance.' mod='alsernetforms'}</p>
                         <a href="/" class="btn btn-primary mt-3">{l s='Go back to homepage' mod='alsernetforms'}</a>
@@ -186,7 +186,7 @@
             {else}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="success-documents-container">
-                        <i class="fa fa-file-check text-success" style="font-size: 3rem;"></i>
+                        <i class="fas fa-file-check text-success" style="font-size: 3rem;"></i>
                         <h1>{l s='Document already uploaded' mod='alsernetforms'}</h1>
                         <p>{l s='We have already received the required documents for this request. No further action is needed.' mod='alsernetforms'}</p>
                         <a href="/" class="btn btn-primary mt-3">{l s='Go back' mod='alsernetforms'}</a>
