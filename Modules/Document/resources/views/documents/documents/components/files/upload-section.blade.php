@@ -445,34 +445,13 @@
                         if (typeof reloadDocumentsSection === 'function') {
                             console.log('🔄 Llamando a reloadDocumentsSection');
                             reloadDocumentsSection(documentUid);
-                        } else {
-                            console.warn('⚠️ reloadDocumentsSection no está definida');
                         }
 
-                        // También refrescar la sección de gestión del documento
-                        const refreshUrl = '/api/documents/' + documentUid + '/refresh-management';
-                        console.log('🔄 Llamando a refresh-management:', refreshUrl);
-
-                        $.ajax({
-                            url: refreshUrl,
-                            type: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            success: function(refreshResponse) {
-                                console.log('✅ refresh-management response:', refreshResponse);
-                                if (refreshResponse.success && refreshResponse.html) {
-                                    const $managementCard = $('#documentManagementCard');
-                                    if ($managementCard.length) {
-                                        $managementCard.replaceWith(refreshResponse.html);
-                                        console.log('✅ Sección de gestión actualizada');
-                                    }
-                                }
-                            },
-                            error: function(xhr) {
-                                console.error('❌ Error refresh-management:', xhr);
-                            }
-                        });
+                        // Refrescar la sección de gestión del documento
+                        if (typeof refreshManagementSection === 'function') {
+                            console.log('🔄 Llamando a refreshManagementSection');
+                            refreshManagementSection(documentUid);
+                        }
                     },
                     error: function() {
                         toastr.error('Error al procesar la solicitud', 'Error', {
@@ -770,6 +749,38 @@
              */
             function updateDocumentState(uid = documentUid) {
                 reloadDocumentsSection(uid);
+            }
+
+            /**
+             * Refrescar la sección de gestión del documento (document-management)
+             * Global para que los modales y otros componentes puedan llamarla
+             */
+            window.refreshManagementSection = function(uid = window.documentUid) {
+                const refreshUrl = '/api/documents/' + uid + '/refresh-management';
+                console.log('🔄 refreshManagementSection:', refreshUrl);
+
+                $.ajax({
+                    url: refreshUrl,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(refreshResponse) {
+                        console.log('✅ refresh-management response:', refreshResponse);
+                        if (refreshResponse.success && refreshResponse.html) {
+                            const $managementCard = $('#documentManagementCard');
+                            if ($managementCard.length) {
+                                $managementCard.replaceWith(refreshResponse.html);
+                                console.log('✅ Sección de gestión actualizada');
+                            } else {
+                                console.warn('⚠️ Elemento #documentManagementCard no encontrado');
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('❌ Error refresh-management:', xhr);
+                    }
+                });
             }
 
             /**
