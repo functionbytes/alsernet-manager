@@ -195,6 +195,26 @@
                     </div>
                 </div>
 
+                {* Pantalla de validación pendiente *}
+                <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 d-none" id="validationPending">
+                    <div class="success-documents-container">
+                        <i class="fa fa-hourglass-half text-info" style="font-size: 3rem;"></i>
+                        <h1>{l s='Documents under review' mod='alsernetforms'}</h1>
+                        <p>{l s='Your documents are being reviewed. We will contact you shortly with the results.' mod='alsernetforms'}</p>
+                        <a href="/" class="btn btn-primary mt-3">{l s='Go back to homepage' mod='alsernetforms'}</a>
+                    </div>
+                </div>
+
+                {* Pantalla de error *}
+                <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12 d-none" id="validationError">
+                    <div class="success-documents-container">
+                        <i class="fa fa-times-circle text-danger" style="font-size: 3rem;"></i>
+                        <h1>{l s='Unable to upload documents' mod='alsernetforms'}</h1>
+                        <p>{l s='This document request has been finalized and cannot accept new uploads. Please contact support for assistance.' mod='alsernetforms'}</p>
+                        <a href="/" class="btn btn-primary mt-3">{l s='Go back to homepage' mod='alsernetforms'}</a>
+                    </div>
+                </div>
+
             {else}
                 <div class="col-sp-12 col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="success-documents-container">

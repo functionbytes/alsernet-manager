@@ -179,20 +179,17 @@ class DocumentsController extends Controller
             ], 404);
         }
 
-        // Validar que el documento está en un estado que permite carga de archivos
-        $allowedStatusKeys = ['incomplete', 'rejected', 'pending'];
+        // Determinar estado de validación y si puede cargar archivos
         $currentStatusKey = $document->status?->key;
+        $blockedStatusKeys = ['approved', 'cancelled', 'completed'];
+        $isComplete = $document->hasAllRequiredDocuments();
 
-        if ($currentStatusKey && ! in_array($currentStatusKey, $allowedStatusKeys)) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => "Document cannot accept file uploads in '{$currentStatusKey}' status. Allowed statuses: ".implode(', ', $allowedStatusKeys),
-                'data' => [
-                    'uid' => $document->uid,
-                    'current_status' => $currentStatusKey,
-                    'allowed_statuses' => $allowedStatusKeys,
-                ],
-            ], 409);
+        // Determinar validation_status
+        $validationStatus = 'pending';
+        if ($isComplete) {
+            $validationStatus = 'received';
+        } elseif (in_array($currentStatusKey, $blockedStatusKeys)) {
+            $validationStatus = 'error';
         }
 
         // Actualizar JSON de documentos requeridos si no existe
@@ -208,7 +205,9 @@ class DocumentsController extends Controller
                 'type' => $document->type ?? 'general',
                 'label' => $document->order_reference ?? $document->order_id,
                 'current_status' => $currentStatusKey,
-                'can_upload' => is_null($document->confirmed_at) && in_array($currentStatusKey, $allowedStatusKeys),
+                'validation_status' => $validationStatus,
+                'is_complete' => $isComplete,
+                'can_upload' => ! in_array($currentStatusKey, $blockedStatusKeys),
                 'required_documents' => $document->getRequiredDocumentsWithLabels(),
                 'uploaded_documents' => $document->getUploadedDocumentsWithDetails(),
                 'missing_documents' => $document->getMissingDocuments(),

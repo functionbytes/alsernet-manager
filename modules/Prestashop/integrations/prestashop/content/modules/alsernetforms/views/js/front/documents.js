@@ -38,7 +38,7 @@ $(document).ready(function () {
 
         // Habilitar solo si AMBAS condiciones se cumplen
         if (isConditionChecked && isRecaptchaValid) {
-            $submitBtn.prop('disabled', false).css('opacity', '1').css('cursor', 'pointer');
+            $submitBtn.prop('disabled', false).removeAttr('style');
             console.log('✅ Submit button ENABLED');
         } else {
             $submitBtn.prop('disabled', true).css('opacity', '0.5').css('cursor', 'not-allowed');
@@ -372,15 +372,30 @@ function loadDocumentStatus() {
         },
         success: function(response) {
             if (response.status === 'success' && response.data) {
-                updateDocumentUI(response.data);
+                const validationStatus = response.data.validation_status;
+                console.log('Validation status:', validationStatus);
 
-                // Actualizar contador
-                updateDocumentCounter(response.data);
-
-                // Si todos los documentos están completos, mostrar confirmación
-                if (response.data.is_complete) {
+                // Mostrar el panel apropiado según el estado de validación
+                if (validationStatus === 'received') {
+                    // Todos los documentos cargados - mostrar confirmación
                     $('#documentsConfirmation').removeClass('d-none');
                     $('#documentsContainer').addClass('d-none');
+                    $('#validationPending').addClass('d-none');
+                    $('#validationError').addClass('d-none');
+                } else if (validationStatus === 'error') {
+                    // Error: documento en estado final - mostrar error
+                    $('#validationError').removeClass('d-none');
+                    $('#documentsConfirmation').addClass('d-none');
+                    $('#documentsContainer').addClass('d-none');
+                    $('#validationPending').addClass('d-none');
+                } else {
+                    // Estado pendiente - mostrar formulario
+                    updateDocumentUI(response.data);
+                    updateDocumentCounter(response.data);
+                    $('#documentsContainer').removeClass('d-none');
+                    $('#documentsConfirmation').addClass('d-none');
+                    $('#validationError').addClass('d-none');
+                    $('#validationPending').addClass('d-none');
                 }
             }
         },
