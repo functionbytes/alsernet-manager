@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
 
     // Refresh operations
     Route::get('/{uid}/refresh-section', [DocumentsController::class, 'refreshDocumentsSection'])->name('refresh-section');
+    Route::get('/{uid}/refresh-management', [DocumentsController::class, 'refreshManagementSection'])->name('refresh-management');
     Route::get('/{uid}/refresh-action-history', [DocumentsController::class, 'refreshActionHistory'])->name('refresh-action-history');
 
     // File operations (moved from role-specific routes)

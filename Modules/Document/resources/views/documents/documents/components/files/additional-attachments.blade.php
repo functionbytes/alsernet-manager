@@ -391,20 +391,27 @@
                             positionClass: "toast-bottom-right"
                         });
 
-                        // Actualizar formulario de configuración del documento
-                        if (response.data) {
-                            $('#status_id').val(response.data.status_id).trigger('change');
-                            $('#source_id').val(response.data.source_id || '').trigger('change');
-                            $('#load_id').val(response.data.load_id || '').trigger('change');
-                            $('#sync_id').val(response.data.sync_id || '').trigger('change');
-                            $('#upload_id').val(response.data.upload_id || '').trigger('change');
-                            $('#requires_financing').val(response.data.requires_financing || '0').trigger('change');
-
-                            // Actualizar previousStatusId si la variable existe en el contexto global
-                            if (typeof previousStatusId !== 'undefined') {
-                                previousStatusId = response.data.status_id;
+                        // Refrescar la sección de gestión del documento (document-management)
+                        $.ajax({
+                            url: '/api/documents/' + documentUid + '/refresh-management',
+                            type: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(refreshResponse) {
+                                if (refreshResponse.success && refreshResponse.html) {
+                                    // Reemplazar el contenido del componente document-management
+                                    const $managementCard = $('div.card:has(#formDocumentConfig)');
+                                    if ($managementCard.length) {
+                                        $managementCard.replaceWith(refreshResponse.html);
+                                        console.log('✅ Sección de gestión actualizada');
+                                    }
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('Error refrescando sección de gestión:', xhr);
                             }
-                        }
+                        });
 
                         // Refresh list
                         refreshAttachmentsList();

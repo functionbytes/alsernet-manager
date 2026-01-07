@@ -1847,6 +1847,61 @@ class DocumentsController extends Controller
     }
 
     /**
+     * Refrescar sección de gestión del documento (document-management)
+     */
+    public function refreshManagementSection($uid)
+    {
+        if (request()->hasSession()) {
+            session()->save();
+            session()->migrate(false);
+        }
+
+        try {
+            $document = Document::findByUid($uid);
+
+            if (! $document) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Documento no encontrado.',
+                ], 404);
+            }
+
+            // Obtener datos necesarios para el componente
+            $statuses = DocumentStatus::all();
+            $documentSources = DocumentSource::all();
+            $documentLoads = DocumentLoad::all();
+            $documentSyncs = DocumentSync::all();
+            $uploadTypes = DocumentUploadType::all();
+
+            // Renderizar el componente actualizado
+            $html = view('documents::documents.documents.components.management.document-management', [
+                'document' => $document,
+                'statuses' => $statuses,
+                'documentSources' => $documentSources,
+                'documentLoads' => $documentLoads,
+                'documentSyncs' => $documentSyncs,
+                'uploadTypes' => $uploadTypes,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al refrescar sección de gestión', [
+                'uid' => $uid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al refrescar la sección: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Refrescar historial de acciones
      */
     public function refreshActionHistory($uid)
