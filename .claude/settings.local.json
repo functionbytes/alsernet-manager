@@ -399,7 +399,10 @@
       "Bash(modules/Webhook/app/Providers/WebhookServiceProvider.php)",
       "mcp__chrome-devtools__close_page",
       "Bash(herd start:*)",
-      "Bash(sudo killall:*)"
+      "Bash(sudo killall:*)",
+      "Bash(brew services:*)",
+      "Bash(supervisorctl reread:*)",
+      "Bash(supervisorctl status:*)"
     ],
     "deny": [],
     "ask": []

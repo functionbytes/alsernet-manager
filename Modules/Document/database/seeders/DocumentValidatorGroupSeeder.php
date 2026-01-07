@@ -51,6 +51,16 @@ class DocumentValidatorGroupSeeder extends Seeder
                 'sort_order' => 4,
                 'is_active' => false,
             ],
+            [
+                'uid' => Str::ulid(),
+                'name' => 'Equipo callcenter',
+                'key' => 'callcenter_team',
+                'description' => 'Equipo de callcenter para soporte y gestión de llamadas',
+                'assignment_mode' => 'round_robin',
+                'is_default' => false,
+                'sort_order' => 5,
+                'is_active' => true,
+            ],
         ];
 
         foreach ($groups as $groupData) {

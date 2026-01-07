@@ -27,7 +27,8 @@ class DocumentEmailTemplateService
             }
 
             // Obtener los documentos requeridos para este tipo de documento
-            $requiredDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
+            $documentTypeSlug = $document->documentType?->slug ?? 'general';
+            $requiredDocs = DocumentTypeService::getRequiredDocuments($documentTypeSlug);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -77,7 +78,8 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+            $documentTypeSlug = $document->documentType?->slug ?? 'general';
+            $requiredDocs = DocumentTypeService::getRequiredDocuments($documentTypeSlug);
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -369,7 +371,8 @@ class DocumentEmailTemplateService
             // Si se proporcionaron documentos rechazados específicos, usarlos
             // Si no, usar todos los documentos requeridos
             if (empty($rejectedDocs)) {
-                $rejectedDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($document->type);
+                $documentTypeSlug = $document->documentType?->slug ?? 'general';
+                $rejectedDocs = \Modules\Document\Services\DocumentTypeService::getRequiredDocuments($documentTypeSlug);
             }
 
             $variables = self::prepareDocumentVariables($document, $rejectedDocs, $reason);
