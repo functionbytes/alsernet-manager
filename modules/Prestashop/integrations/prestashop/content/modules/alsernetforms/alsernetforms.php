@@ -398,7 +398,7 @@ class Alsernetforms extends Module implements WidgetInterface
                     // 4️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
                     $checker = new EndpointAvailabilityChecker;
                     $serverAvailable = $checker->isEndpointAvailable(
-                        'https://webadminpruebas.a-alvarez.com/api/health/documents',
+                        'https://webadminpruebas.a-alvarez.com/api/health',
                         'documents'
                     );
 
