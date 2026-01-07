@@ -2,11 +2,6 @@
 
 namespace App\Models;
 
-use App\Library\AutoBillingData;
-use App\Library\Facades\Billing;
-use App\Library\Facades\SubscriptionFacade;
-use App\Models\Subscription\Subscription;
-use App\Models\Subscription\SubscriptionLog;
 use App\Traits\HasUid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,16 +13,17 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Campaign\Models\Template\Template;
+use Modules\Document\Traits\HasDocumentPermissions;
 use Modules\Subscriber\Jobs\ImportBlacklistJob;
 use Modules\Subscriber\Models\Subscriber;
+use Modules\Warehouse\Traits\HasWarehousePermissions;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
-use Modules\Document\Traits\HasDocumentPermissions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens,HasFactory , HasRoles , HasUid , LogsActivity, HasDocumentPermissions;
+    use HasApiTokens, HasDocumentPermissions, HasFactory, HasRoles, HasUid, LogsActivity;
     use Notifiable {
         routeNotificationFor as protected routeNotificationForNotifiable;
     }
@@ -966,7 +962,7 @@ class User extends Authenticatable
                 return $this->subscribersUsage(true);
             },
             'SubscribedCount' => function () {
-                return $this->getSubscriberCountByStatus(Modules\Subscriber\Models\Subscriber::STATUS_SUBSCRIBED);
+                return $this->getSubscriberCountByStatus(Subscriber::STATUS_SUBSCRIBED);
             },
             'UnsubscribedCount' => function () {
                 return $this->getSubscriberCountByStatus(Subscriber::STATUS_UNSUBSCRIBED);
