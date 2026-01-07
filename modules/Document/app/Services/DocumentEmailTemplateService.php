@@ -515,7 +515,15 @@ class DocumentEmailTemplateService
     private static function getSystemVariables(string $locale = 'es', int $langId = 1): array
     {
         // Obtener los valores reales desde la base de datos
-        $realValues = \App\Services\Mails\MailVariableValueService::getTranslatedValues($langId);
+        $realValues = [];
+        if (class_exists(\App\Services\Mails\MailVariableValueService::class)) {
+            try {
+                $realValues = \App\Services\Mails\MailVariableValueService::getTranslatedValues($langId);
+            } catch (Exception $e) {
+                // Si el servicio falla, usar valores por defecto
+                $realValues = [];
+            }
+        }
 
         return [
             // Información de la empresa - usar valores reales de BD con fallback a config
