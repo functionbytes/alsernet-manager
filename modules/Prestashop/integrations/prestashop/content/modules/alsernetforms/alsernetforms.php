@@ -371,26 +371,49 @@ class Alsernetforms extends Module implements WidgetInterface
                         ? trim(explode('?token=', $token)[1] ?? '')
                         : trim($token);
 
-                    // 2️⃣ INCLUIR CLASES REQUERIDAS
+                    // 2️⃣ OBTENER LA ORDER PARA ACCEDER A document_type
+                    // El UID es el document_number del pedido
+                    $order = new Order;
+                    $orders = $order->getByDocumentNumber($uid); // Obtener orden por document_number
+
+                    if (empty($orders)) {
+                        // Si no encuentra por document_number, intentar como reference o ID
+                        $order = new Order((int) $uid);
+                        if (empty($order->id)) {
+                            // Intentar obtener por reference
+                            $sql = 'SELECT id_order FROM '._DB_PREFIX_.'orders WHERE reference = "'.pSQL($uid).'" LIMIT 1';
+                            $orderId = (int) Db::getInstance()->getValue($sql);
+                            if ($orderId) {
+                                $order = new Order($orderId);
+                            }
+                        }
+                    } else {
+                        $order = reset($orders); // Obtener primer resultado
+                    }
+
+                    // 3️⃣ INCLUIR CLASES REQUERIDAS
                     include_once dirname(__FILE__).'/classes/DocumentValidator.php';
                     include_once dirname(__FILE__).'/classes/EndpointAvailabilityChecker.php';
 
-                    // 3️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
+                    // 4️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
                     $checker = new EndpointAvailabilityChecker;
                     $serverAvailable = $checker->isEndpointAvailable(
                         'https://webadminpruebas.a-alvarez.com/api/health/documents',
                         'documents'
                     );
 
-                    // 4️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
+                    // 5️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
                     $serverStatus = $serverAvailable['available']
                         ? '✅ Servidor disponible'
                         : '⏳ Servidor no disponible: '.($serverAvailable['reason'] ?? 'Unknown');
 
-                    // 5️⃣ DETERMINAR TIPO DE DOCUMENTO
-                    $documentType = Tools::getValue('document_type') ?? 'dni';
+                    // 6️⃣ OBTENER TIPO DE DOCUMENTO DE LA ORDEN
+                    // El document_type YA ESTÁ guardado en la Order
+                    $documentType = ! empty($order->id) && ! empty($order->document_type)
+                        ? $order->document_type
+                        : 'dni'; // Fallback a 'dni' si no se encuentra
 
-                    // 6️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
+                    // 7️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
                     // Si el servidor está caído:
                     //   - NO envía petición al servidor
                     //   - Guarda en BD con status='pending'
@@ -404,16 +427,17 @@ class Alsernetforms extends Module implements WidgetInterface
                         $documentType,
                         [
                             'customer_id' => $this->context->customer->id ?? null,
-                            'order_reference' => $uid,
+                            'order_id' => ! empty($order->id) ? $order->id : null,
+                            'order_reference' => ! empty($order->reference) ? $order->reference : $uid,
                             'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
                             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
                         ]
                     );
 
-                    // 7️⃣ GENERAR TRADUCCIONES
+                    // 8️⃣ GENERAR TRADUCCIONES
                     [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $validation['type']);
 
-                    // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
+                    // 9️⃣ ASIGNAR VARIABLES A TEMPLATE
                     $this->context->smarty->assign([
                         'uid' => $uid,
                         'trans' => $trans_remember,
