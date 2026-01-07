@@ -407,8 +407,8 @@ function updateDocumentUI(data) {
         // Mostrar el item (estaba oculto)
         $item.show();
 
-        // Remover badge anterior si existe
-        $item.find('.badge').remove();
+        // ✅ Mantener badge de "Pendiente" visible
+        // El badge es un indicador visual importante del estado del documento
 
         // Asegurar que existe el input de archivo
         if ($item.find('input[type="file"]').length === 0) {
@@ -426,9 +426,6 @@ function updateDocumentUI(data) {
             `);
             $item.append($input);
         }
-
-        // Remover info de documento cargado si existe
-        $item.find('.uploaded-doc-info').remove();
     });
 
     // ✅ REFACTORIZADO: Documentos completados se muestran en el módulo de gestión de documentos de Laravel

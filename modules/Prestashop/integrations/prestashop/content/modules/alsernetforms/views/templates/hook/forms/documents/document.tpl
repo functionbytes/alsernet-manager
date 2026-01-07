@@ -97,7 +97,7 @@
 
                                 {* Mostrar checkboxes solo si hay documentos faltantes *}
                                 {if $missing_documents}
-                                    <div class="form-check mb-3 border p-3 rounded bg-light">
+                                    <div class="form-check mb-3">
                                         <div class="check">
                                             <input
                                                 class="form-check-input fixed-size-input"
@@ -127,8 +127,7 @@
                                 {* Mostrar formulario de envío solo si hay documentos faltantes *}
                                 {if $missing_documents}
                                     <div class="mb-3">
-                                        <label class="form-label fw-semibold">{l s='Security Verification' mod='alsernetforms'}</label>
-                                        <div class="g-recaptcha" id="g-recaptcha-response-compromise" data-sitekey="6LcRY40nAAAAAEFYHjowIjVbySvS7OBev7_mZsSh" data-callback="onRecaptchaChange" data-expired-callback="onRecaptchaExpire" aria-label="{l s='Complete the reCAPTCHA verification' mod='alsernetforms'}"></div>
+                                       <div class="g-recaptcha" id="g-recaptcha-response-compromise" data-sitekey="6LcRY40nAAAAAEFYHjowIjVbySvS7OBev7_mZsSh" data-callback="onRecaptchaChange" data-expired-callback="onRecaptchaExpire" aria-label="{l s='Complete the reCAPTCHA verification' mod='alsernetforms'}"></div>
                                     </div>
 
                                     {* Validación del botón *}
