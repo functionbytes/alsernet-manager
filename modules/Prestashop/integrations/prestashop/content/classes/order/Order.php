@@ -1581,6 +1581,20 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * Get order(s) by document_number field.
+     *
+     * @param  string  $documentNumber  The document number to search for
+     * @return PrestaShopCollection The orders collection matching the document number
+     */
+    public static function getByDocumentNumber($documentNumber)
+    {
+        $orders = new PrestaShopCollection('Order');
+        $orders->where('document_number', '=', $documentNumber);
+
+        return $orders;
+    }
+
+    /**
      * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
      *
      * @param  $reference  Order reference
