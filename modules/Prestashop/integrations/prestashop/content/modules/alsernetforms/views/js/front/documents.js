@@ -15,6 +15,10 @@ $(document).ready(function () {
 
     console.log('✅ API Base URL initialized:', window.API_BASE_URL);
 
+    // ✅ NUEVO: Variable global para almacenar documentos faltantes
+    // Se actualiza cada vez que se carga el estado de documentos
+    window.missingDocuments = {};
+
     // Cargar estado de documentos al inicio
     loadDocumentStatus();
 
@@ -119,6 +123,12 @@ $(document).ready(function () {
                     const docType = $(input).data('doc-type');
 
                     if (files && files.length > 0) {
+                        // ✅ NUEVO: Validar que el docType es un documento faltante
+                        if (!window.missingDocuments || !window.missingDocuments[docType]) {
+                            showError(`The document "${docType}" is not in the list of missing documents or has already been uploaded. Please refresh the page and try again.`);
+                            return false;
+                        }
+
                         for (let i = 0; i < files.length; i++) {
                             const file = files[i];
 
@@ -194,59 +204,8 @@ $(document).ready(function () {
         });
     }
 
-    // Manejar botón de eliminar documento
-    $(document).on('click', '.btn-delete-single-doc', function(e) {
-        e.preventDefault();
-        const docType = $(this).data('doc-type');
-        const uid = $('#uid').val();
-        const $btn = $(this);
-
-        if (confirm('Are you sure you want to delete this document?')) {
-            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
-
-            // ✅ REFACTORIZADO: Usar URL dinámica en lugar de hardcodeada
-            // IMPORTANTE: Headers necesarios para evitar redirección 302 del middleware Sanctum
-            $.ajax({
-                url: window.API_BASE_URL + '/' + uid + '/files/' + docType,
-                type: 'DELETE',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        loadDocumentStatus();
-                        if (window.toastr) {
-                            toastr.success('Document deleted successfully', 'Success', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                        }
-                    } else {
-                        if (window.toastr) {
-                            toastr.error('Error deleting document', 'Error', {
-                                closeButton: true,
-                                progressBar: true,
-                                positionClass: "toast-bottom-right"
-                            });
-                        }
-                        $btn.prop('disabled', false).html('<i class="fa fa-trash"></i>');
-                    }
-                },
-                error: function() {
-                    if (window.toastr) {
-                        toastr.error('Error deleting document', 'Error', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
-                    }
-                    $btn.prop('disabled', false).html('<i class="fa fa-trash"></i>');
-                }
-            });
-        }
-    });
+    // ✅ REFACTORIZADO: Eliminar documentos se maneja en el módulo de gestión de documentos de Laravel
+    // No se permite eliminar documentos desde este formulario de Prestashop
 });
 
 /**
@@ -375,6 +334,10 @@ function loadDocumentStatus() {
                 const validationStatus = response.data.validation_status;
                 console.log('Validation status:', validationStatus);
 
+                // ✅ NUEVO: Almacenar documentos faltantes globalmente para validación
+                window.missingDocuments = response.data.missing_documents || {};
+                console.log('✅ Missing documents stored:', window.missingDocuments);
+
                 // Mostrar el panel apropiado según el estado de validación
                 if (validationStatus === 'received') {
                     // Todos los documentos cargados - mostrar confirmación
@@ -468,47 +431,8 @@ function updateDocumentUI(data) {
         $item.find('.uploaded-doc-info').remove();
     });
 
-    // Mostrar sección de documentos completados (si existen)
-    const uploadedDocs = data.uploaded_documents || {};
-    if (Object.keys(uploadedDocs).length > 0) {
-        let uploadedHTML = '<div class="mt-4 pt-3 border-top"><h6 class="fw-semibold mb-3"><i class="fa fa-check-circle text-success me-2"></i>Documentos completados</h6>';
-
-        $.each(uploadedDocs, function(docKey, docInfo) {
-            const docLabel = data.required_documents[docKey] || docKey;
-            uploadedHTML += `
-                <div class="mb-2 document-completed-item" data-doc-type="${docKey}">
-                    <div class="uploaded-doc-info p-3 bg-light-secondary border rounded">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center flex-grow-1">
-                                <div>
-                                    <p class="mb-0 fw-semibold">${docLabel}</p>
-                                    <small class="text-muted">${docInfo.file_name}</small>
-                                    <small class="text-muted d-block">${docInfo.created_at}</small>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <a href="${docInfo.url}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
-                                    <i class="fa fa-download"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-doc-type="${docKey}" title="Eliminar">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-
-        uploadedHTML += '</div>';
-
-        // Insertar antes del progress bar o al final del form
-        if ($('#uploadProgress').length) {
-            $(uploadedHTML).insertBefore('#uploadProgress');
-        } else {
-            $('#alsernet-documents').append(uploadedHTML);
-        }
-    }
+    // ✅ REFACTORIZADO: Documentos completados se muestran en el módulo de gestión de documentos de Laravel
+    // No se muestra la sección de documentos completados en este formulario
 }
 
 /**

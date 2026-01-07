@@ -101,7 +101,7 @@
                 @if($totalAttachments > 0)
                     <div class="border-top mt-3 pt-3">
                         <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-primary w-100">
-                             Ver todos los documentos comprimidos
+                            Ver todos los documentos comprimidos
                         </a>
                     </div>
                 @endif
@@ -151,137 +151,137 @@
 </div>
 
 @push('styles')
-<style>
-    .attachments-scroll {
-        overflow-y: auto;
-        max-height: 250px;
-    }
+    <style>
+        .attachments-scroll {
+            overflow-y: auto;
+            max-height: 250px;
+        }
 
-    @media (min-width: 576px) { .attachments-scroll { max-height: 280px; } }
-    @media (min-width: 768px) { .attachments-scroll { max-height: 320px; } }
-    @media (min-width: 992px) { .attachments-scroll { max-height: 350px; } }
+        @media (min-width: 576px) { .attachments-scroll { max-height: 280px; } }
+        @media (min-width: 768px) { .attachments-scroll { max-height: 320px; } }
+        @media (min-width: 992px) { .attachments-scroll { max-height: 350px; } }
 
-    .attachments-scroll::-webkit-scrollbar {
-        width: 5px;
-    }
+        .attachments-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
 
-    .attachments-scroll::-webkit-scrollbar-track {
-        background: transparent;
-    }
+        .attachments-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-    .attachments-scroll::-webkit-scrollbar-thumb {
-        background: #dee2e6;
-        border-radius: 2px;
-    }
+        .attachments-scroll::-webkit-scrollbar-thumb {
+            background: #dee2e6;
+            border-radius: 2px;
+        }
 
-    .attachments-scroll::-webkit-scrollbar-thumb:hover {
-        background: #adb5bd;
-    }
+        .attachments-scroll::-webkit-scrollbar-thumb:hover {
+            background: #adb5bd;
+        }
 
-    #uploadAdditionalAttachmentForm .form-control {
-        border-color: #dee2e6;
-    }
+        #uploadAdditionalAttachmentForm .form-control {
+            border-color: #dee2e6;
+        }
 
-    #uploadAdditionalAttachmentForm .form-control:focus {
-        border-color: #90bb13;
-        box-shadow: 0 0 0 0.2rem rgba(144, 187, 19, 0.15);
-    }
-</style>
+        #uploadAdditionalAttachmentForm .form-control:focus {
+            border-color: #90bb13;
+            box-shadow: 0 0 0 0.2rem rgba(144, 187, 19, 0.15);
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        const documentUid = '{{ $document->uid }}';
+    <script>
+        $(document).ready(function() {
+            const documentUid = '{{ $document->uid }}';
 
-        // ===== Upload Additional Attachment =====
-        $('#uploadAdditionalAttachmentForm').on('submit', function(e) {
-            e.preventDefault();
+            // ===== Upload Additional Attachment =====
+            $('#uploadAdditionalAttachmentForm').on('submit', function(e) {
+                e.preventDefault();
 
-            const $form = $(this);
-            const $btn = $('#uploadAttachmentBtn');
-            const $fileInput = $('#additionalFile');
-            const file = $fileInput[0].files[0];
+                const $form = $(this);
+                const $btn = $('#uploadAttachmentBtn');
+                const $fileInput = $('#additionalFile');
+                const file = $fileInput[0].files[0];
 
-            if (!file) {
-                toastr.warning('Por favor selecciona un archivo', 'Aviso', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
-                });
-                return;
-            }
-
-            // Validate size (10MB)
-            if (file.size > 10485760) {
-                toastr.error('El archivo es demasiado grande. Máximo 10MB', 'Error', {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-bottom-right"
-                });
-                return;
-            }
-
-            const formData = new FormData($form[0]);
-            const notes = $('#attachmentNotes').val();
-            if (notes) {
-                formData.append('notes', notes);
-            }
-
-            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...');
-
-            $.ajax({
-                url: "{{ route('api.documents.upload-attachment', $document->uid) }}",
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.success) {
-                        toastr.success(response.message || 'Documento subido correctamente', 'Éxito', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-bottom-right"
-                        });
-
-                        // Clear form
-                        $fileInput.val('');
-                        $('#attachmentNotes').val('');
-
-                        // Refresh attachments list
-                        refreshAttachmentsList();
-                    }
-                },
-                error: function(xhr) {
-                    const message = xhr.responseJSON?.message || 'Error al cargar el archivo';
-                    toastr.error(message, 'Error', {
+                if (!file) {
+                    toastr.warning('Por favor selecciona un archivo', 'Aviso', {
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-bottom-right"
                     });
-                },
-                complete: function() {
-                    $btn.prop('disabled', false).html('Subir documento');
+                    return;
                 }
+
+                // Validate size (10MB)
+                if (file.size > 10485760) {
+                    toastr.error('El archivo es demasiado grande. Máximo 10MB', 'Error', {
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-bottom-right"
+                    });
+                    return;
+                }
+
+                const formData = new FormData($form[0]);
+                const notes = $('#attachmentNotes').val();
+                if (notes) {
+                    formData.append('notes', notes);
+                }
+
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...');
+
+                $.ajax({
+                    url: "{{ route('api.documents.upload-attachment', $document->uid) }}",
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message || 'Documento subido correctamente', 'Éxito', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: "toast-bottom-right"
+                            });
+
+                            // Clear form
+                            $fileInput.val('');
+                            $('#attachmentNotes').val('');
+
+                            // Refresh attachments list
+                            refreshAttachmentsList();
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Error al cargar el archivo';
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('Subir documento');
+                    }
+                });
             });
-        });
 
-        // ===== Refresh Attachments List =====
-        function refreshAttachmentsList() {
-            $.ajax({
-                url: "{{ route('api.documents.attachments', $document->uid) }}",
-                method: 'GET',
-                success: function(response) {
-                    if (response.success) {
-                        const attachments = response.attachments;
-                        const total = response.total;
-                        const $container = $('#attachmentsList');
+            // ===== Refresh Attachments List =====
+            function refreshAttachmentsList() {
+                $.ajax({
+                    url: "{{ route('api.documents.attachments', $document->uid) }}",
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            const attachments = response.attachments;
+                            const total = response.total;
+                            const $container = $('#attachmentsList');
 
-                        // Update badge
-                        $('#attachmentCount').text(total + (total === 1 ? ' adjunto' : ' adjuntos'));
+                            // Update badge
+                            $('#attachmentCount').text(total + (total === 1 ? ' adjunto' : ' adjuntos'));
 
-                        if (attachments.length === 0) {
-                            $container.html(`
+                            if (attachments.length === 0) {
+                                $container.html(`
                                 <div class="alert bg-light-subtle py-3 px-3 mb-0" role="alert" id="noAttachmentsAlert">
                                     <div class="d-flex align-items-start">
                                         <i class="fas fa-circle-info text-muted me-2 mt-1" style="font-size: 0.9rem;"></i>
@@ -292,17 +292,17 @@
                                     </div>
                                 </div>
                             `);
-                        } else {
-                            let html = '<div class="attachments-scroll">';
-                            attachments.forEach(function(attachment) {
-                                const sizeKB = (attachment.size / 1024).toFixed(1);
+                            } else {
+                                let html = '<div class="attachments-scroll">';
+                                attachments.forEach(function(attachment) {
+                                    const sizeKB = (attachment.size / 1024).toFixed(1);
 
-                                const notesHtml = attachment.notes ?
-                                    `<small class="text-muted d-block fst-italic mt-1">
+                                    const notesHtml = attachment.notes ?
+                                        `<small class="text-muted d-block fst-italic mt-1">
                                         <i class="fas fa-sticky-note me-1"></i>${attachment.notes}
                                     </small>` : '';
 
-                                html += `
+                                    html += `
                                     <div class="mb-3" data-attachment-id="${attachment.id}">
                                         <div class="uploaded-doc-info p-3 bg-light-secondary border rounded">
                                             <div class="d-flex justify-content-between align-items-center">
@@ -325,117 +325,117 @@
                                         </div>
                                     </div>
                                 `;
-                            });
-                            html += '</div>';
+                                });
+                                html += '</div>';
 
-                            // Agregar botón de descarga si hay más de 1 attachment
-                            if (total > 0) {
-                                html += `
+                                // Agregar botón de descarga si hay más de 1 attachment
+                                if (total > 0) {
+                                    html += `
                                     <div class="border-top mt-3 pt-3">
                                         <a href="{{ route('documents.summary', $document->uid) }}?type=attachments" target="_blank" class="btn btn-primary w-100">
                                             Ver todos los documentos comprimidos
                                         </a>
                                     </div>
                                 `;
+                                }
+
+                                $container.html(html);
                             }
-
-                            $container.html(html);
                         }
+                    },
+                    error: function(xhr) {
+                        console.error('Error refreshing attachments:', xhr);
                     }
-                },
-                error: function(xhr) {
-                    console.error('Error refreshing attachments:', xhr);
-                }
-            });
-        }
-
-        // ===== Delete Attachment =====
-        var pendingDeleteMediaId = null;
-        var pendingDeleteBtn = null;
-
-        $(document).on('click', '.delete-attachment-btn', function(e) {
-            e.preventDefault();
-
-            pendingDeleteBtn = $(this);
-            pendingDeleteMediaId = pendingDeleteBtn.data('media-id');
-
-            // Mostrar modal
-            var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteAttachmentModal'));
-            confirmModal.show();
-        });
-
-        // ===== Confirmar eliminación de adjunto =====
-        $(document).on('click', '#confirmDeleteAttachmentBtn', function() {
-            console.log('🔴 Click en confirmDeleteAttachmentBtn');
-            if (!pendingDeleteMediaId || !pendingDeleteBtn) {
-                console.warn('⚠️ pendingDeleteMediaId o pendingDeleteBtn no existen');
-                return;
+                });
             }
 
-            console.log('📝 mediaId:', pendingDeleteMediaId, 'uid:', documentUid);
-            pendingDeleteBtn.prop('disabled', true);
-            pendingDeleteBtn.html('<i class="fas fa-spinner fa-spin"></i>');
+            // ===== Delete Attachment =====
+            var pendingDeleteMediaId = null;
+            var pendingDeleteBtn = null;
 
-            $('#confirmDeleteAttachmentModal').modal('hide');
+            $(document).on('click', '.delete-attachment-btn', function(e) {
+                e.preventDefault();
 
-            const deleteUrl = "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
-                .replace('UID_PLACEHOLDER', documentUid)
-                .replace('MEDIA_PLACEHOLDER', pendingDeleteMediaId);
+                pendingDeleteBtn = $(this);
+                pendingDeleteMediaId = pendingDeleteBtn.data('media-id');
 
-            console.log('🌐 DELETE URL:', deleteUrl);
+                // Mostrar modal
+                var confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteAttachmentModal'));
+                confirmModal.show();
+            });
 
-            $.ajax({
-                url: deleteUrl,
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    console.log('✅ DELETE success callback ejecutado. Response:', response);
-
-                    toastr.success('Adjunto eliminado', 'Éxito', {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-bottom-right"
-                    });
-
-                    // Refrescar la sección de gestión del documento
-                    if (typeof refreshManagementSection === 'function') {
-                        console.log('🔄 Llamando a refreshManagementSection');
-                        refreshManagementSection(documentUid);
-                    }
-
-                    // Refresh list
-                    refreshAttachmentsList();
-                },
-                error: function(xhr, status, error) {
-                    console.error('❌ Error DELETE:', {
-                        status: status,
-                        statusCode: xhr.status,
-                        error: error,
-                        response: xhr.responseJSON
-                    });
-                    var message = 'Error al eliminar el archivo';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message;
-                    }
-                    toastr.error(message, 'Error', {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-bottom-right"
-                    });
-                },
-                complete: function() {
-                    console.log('🔚 AJAX complete');
-                    if (pendingDeleteBtn) {
-                        pendingDeleteBtn.prop('disabled', false);
-                        pendingDeleteBtn.html('<i class="fas fa-trash"></i>');
-                    }
-                    pendingDeleteMediaId = null;
-                    pendingDeleteBtn = null;
+            // ===== Confirmar eliminación de adjunto =====
+            $(document).on('click', '#confirmDeleteAttachmentBtn', function() {
+                console.log('🔴 Click en confirmDeleteAttachmentBtn');
+                if (!pendingDeleteMediaId || !pendingDeleteBtn) {
+                    console.warn('⚠️ pendingDeleteMediaId o pendingDeleteBtn no existen');
+                    return;
                 }
+
+                console.log('📝 mediaId:', pendingDeleteMediaId, 'uid:', documentUid);
+                pendingDeleteBtn.prop('disabled', true);
+                pendingDeleteBtn.html('<i class="fas fa-spinner fa-spin"></i>');
+
+                $('#confirmDeleteAttachmentModal').modal('hide');
+
+                const deleteUrl = "{{ route('api.documents.delete-attachment', ['uid' => 'UID_PLACEHOLDER', 'mediaId' => 'MEDIA_PLACEHOLDER']) }}"
+                    .replace('UID_PLACEHOLDER', documentUid)
+                    .replace('MEDIA_PLACEHOLDER', pendingDeleteMediaId);
+
+                console.log('🌐 DELETE URL:', deleteUrl);
+
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        console.log('✅ DELETE success callback ejecutado. Response:', response);
+
+                        toastr.success('Adjunto eliminado', 'Éxito', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+
+                        // Refrescar la sección de gestión del documento
+                        if (typeof refreshManagementSection === 'function') {
+                            console.log('🔄 Llamando a refreshManagementSection');
+                            refreshManagementSection(documentUid);
+                        }
+
+                        // Refresh list
+                        refreshAttachmentsList();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('❌ Error DELETE:', {
+                            status: status,
+                            statusCode: xhr.status,
+                            error: error,
+                            response: xhr.responseJSON
+                        });
+                        var message = 'Error al eliminar el archivo';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        toastr.error(message, 'Error', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-bottom-right"
+                        });
+                    },
+                    complete: function() {
+                        console.log('🔚 AJAX complete');
+                        if (pendingDeleteBtn) {
+                            pendingDeleteBtn.prop('disabled', false);
+                            pendingDeleteBtn.html('<i class="fas fa-trash"></i>');
+                        }
+                        pendingDeleteMediaId = null;
+                        pendingDeleteBtn = null;
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush

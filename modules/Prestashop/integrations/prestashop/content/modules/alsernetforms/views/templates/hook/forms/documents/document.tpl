@@ -78,38 +78,7 @@
                                     </div>
                                 {/if}
 
-                                {* Mostrar documentos completados (si existen) *}
-                                {if $uploaded_documents}
-                                    <div class="mt-4 pt-3 border-top">
-                                        <h6 class="fw-semibold mb-3">
-                                            <i class="fa fa-check-circle text-success me-2"></i>
-                                            {l s='Completed documents' mod='alsernetforms'}
-                                        </h6>
-                                        {foreach from=$uploaded_documents key=docKey item=docInfo}
-                                            <div class="mb-2 document-completed-item" data-doc-type="{$docKey}">
-                                                <div class="uploaded-doc-info p-3 bg-light-secondary border rounded">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center flex-grow-1">
-                                                            <div>
-                                                                <p class="mb-0 fw-semibold">{$required_documents[$docKey]}</p>
-                                                                <small class="text-muted">{$docInfo.file_name}</small>
-                                                                <small class="text-muted d-block">{$docInfo.created_at}</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="d-flex gap-2">
-                                                            <a href="{$docInfo.url}" class="btn btn-sm btn-primary" target="_blank" title="{l s='Download' mod='alsernetforms'}">
-                                                                <i class="fa fa-download"></i>
-                                                            </a>
-                                                            <button type="button" class="btn btn-sm btn-danger btn-delete-single-doc" data-doc-type="{$docKey}" title="{l s='Delete' mod='alsernetforms'}">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {/foreach}
-                                    </div>
-                                {/if}
+                                {* ✅ REFACTORIZADO: Documentos completados se muestran en el módulo de gestión de documentos de Laravel, no aquí *}
 
                                 {* Progress Bar *}
                                 <div id="uploadProgress" style="display: none;" class="mb-3">
