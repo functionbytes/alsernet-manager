@@ -399,7 +399,11 @@
                             $('#sync_id').val(response.data.sync_id || '').trigger('change');
                             $('#upload_id').val(response.data.upload_id || '').trigger('change');
                             $('#requires_financing').val(response.data.requires_financing || '0').trigger('change');
-                            previousStatusId = response.data.status_id;
+
+                            // Actualizar previousStatusId si la variable existe en el contexto global
+                            if (typeof previousStatusId !== 'undefined') {
+                                previousStatusId = response.data.status_id;
+                            }
                         }
 
                         // Refresh list
