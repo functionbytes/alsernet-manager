@@ -263,18 +263,12 @@ class MailerComponentController extends Controller
                 ]);
             }
 
-            // Redirigir usando translation_uid si está disponible
-            if ($validated['translation_uid']) {
-                return redirect()
-                    ->route('mailers.components.edit', [
-                        'uid' => $layout->uid,
-                        'translation_uid' => $translation->uid,
-                    ])
-                    ->with('success', 'Componente actualizado exitosamente');
-            }
-
+            // Siempre redirigir a la misma URL para mantener consistencia
             return redirect()
-                ->back()
+                ->route('mailers.components.edit', [
+                    'uid' => $layout->uid,
+                    'lang_id' => $validated['lang_id'],
+                ])
                 ->with('success', 'Componente actualizado exitosamente');
         } catch (\Exception $e) {
             return redirect()
