@@ -42,16 +42,16 @@ $(document).ready(function () {
 
         // Habilitar solo si AMBAS condiciones se cumplen
         if (isConditionChecked && isRecaptchaValid) {
-            $submitBtn.prop('disabled', false).removeAttr('style').css('opacity', '1').css('cursor', 'pointer');
+            $submitBtn.prop('disabled', false).attr('style', '');
             console.log('✅ Submit button ENABLED');
         } else {
-            $submitBtn.prop('disabled', true).css('opacity', '0.5').css('cursor', 'not-allowed');
+            $submitBtn.prop('disabled', true).attr('style', 'opacity: 0.5; cursor: not-allowed;');
             console.log('❌ Submit button DISABLED');
         }
     }
 
     // Inicialmente, el botón debe estar DISABLED
-    $('button[type="submit"]').prop('disabled', true).css('opacity', '0.5').css('cursor', 'not-allowed');
+    $('button[type="submit"]').prop('disabled', true).attr('style', 'opacity: 0.5; cursor: not-allowed;');
 
     // Escuchar cambios en el checkbox de condiciones
     $('#condition').on('change', function() {
