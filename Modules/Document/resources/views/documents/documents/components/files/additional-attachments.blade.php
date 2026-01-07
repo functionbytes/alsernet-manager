@@ -384,6 +384,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(response) {
+                    console.log('✅ Attachment eliminado. Response:', response);
                     if (response.success) {
                         toastr.success(response.message || 'Adjunto eliminado', 'Éxito', {
                             closeButton: true,
@@ -392,16 +393,22 @@
                         });
 
                         // Refrescar la sección de gestión del documento (document-management)
+                        const refreshUrl = '/api/documents/' + documentUid + '/refresh-management';
+                        console.log('🔄 Llamando a refresh-management:', refreshUrl);
+
                         $.ajax({
-                            url: '/api/documents/' + documentUid + '/refresh-management',
+                            url: refreshUrl,
                             type: 'GET',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
                             success: function(refreshResponse) {
+                                console.log('✅ refresh-management response:', refreshResponse);
                                 if (refreshResponse.success && refreshResponse.html) {
                                     // Reemplazar el contenido del componente document-management
                                     const $managementCard = $('#documentManagementCard');
+                                    console.log('🔍 Buscando #documentManagementCard. Encontrado:', $managementCard.length > 0);
+
                                     if ($managementCard.length) {
                                         $managementCard.replaceWith(refreshResponse.html);
                                         console.log('✅ Sección de gestión actualizada');
@@ -410,8 +417,12 @@
                                     }
                                 }
                             },
-                            error: function(xhr) {
-                                console.error('Error refrescando sección de gestión:', xhr);
+                            error: function(xhr, status, error) {
+                                console.error('❌ Error refrescando sección de gestión:', {
+                                    status: status,
+                                    error: error,
+                                    response: xhr.responseJSON
+                                });
                             }
                         });
 
