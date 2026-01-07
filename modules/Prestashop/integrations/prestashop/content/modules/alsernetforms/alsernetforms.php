@@ -358,29 +358,122 @@ class Alsernetforms extends Module implements WidgetInterface
                     return $this->fetch('module:alsernetforms/views/templates/hook/forms/contact.tpl');
 
                 case 'documents':
+                    // ════════════════════════════════════════════════════════════════════════
+                    // VALIDACIÓN DE DOCUMENTOS CON RESILIENCIA
+                    // ════════════════════════════════════════════════════════════════════════
+                    // Este flujo garantiza que aunque el servidor Laravel esté caído,
+                    // la petición se guarda en BD y se procesa automáticamente cuando vuelve
+                    // ════════════════════════════════════════════════════════════════════════
 
+                    // 1️⃣ EXTRAER UID DEL TOKEN
                     $token = Tools::getValue('token');
-                    $uid = strpos($token, '?token=') !== false ? trim(explode('?token=', $token)[1] ?? '') : trim($token);
+                    $uid = strpos($token, '?token=') !== false
+                        ? trim(explode('?token=', $token)[1] ?? '')
+                        : trim($token);
 
-                    $validation = Order::validateDniDocuments($uid);
+                    // 2️⃣ INCLUIR CLASES REQUERIDAS
+                    include_once dirname(__FILE__).'/classes/DocumentValidator.php';
+                    include_once dirname(__FILE__).'/classes/EndpointAvailabilityChecker.php';
 
-                    // Generar variables trans y trans_list
+                    // 3️⃣ VERIFICAR DISPONIBILIDAD DEL SERVIDOR ANTES DE VALIDAR
+                    $checker = new EndpointAvailabilityChecker;
+                    $serverAvailable = $checker->isEndpointAvailable(
+                        'https://webadminpruebas.a-alvarez.com/api/health/documents',
+                        'documents'
+                    );
+
+                    // 4️⃣ MOSTRAR ESTADO DEL SERVIDOR AL USUARIO (para debugging)
+                    $serverStatus = $serverAvailable['available']
+                        ? '✅ Servidor disponible'
+                        : '⏳ Servidor no disponible: '.($serverAvailable['reason'] ?? 'Unknown');
+
+                    // 5️⃣ DETERMINAR TIPO DE DOCUMENTO
+                    $documentType = Tools::getValue('document_type') ?? 'dni';
+
+                    // 6️⃣ VALIDAR DOCUMENTOS CON CIRCUIT BREAKER PATTERN
+                    // Si el servidor está caído:
+                    //   - NO envía petición al servidor
+                    //   - Guarda en BD con status='pending'
+                    //   - Cron procesará cuando vuelva
+                    // Si el servidor está disponible:
+                    //   - Valida inmediatamente
+                    //   - Retorna resultado completo
+                    $validator = new DocumentValidator;
+                    $validation = $validator->validateDocuments(
+                        $uid,
+                        $documentType,
+                        [
+                            'customer_id' => $this->context->customer->id ?? null,
+                            'order_reference' => $uid,
+                            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
+                            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+                        ]
+                    );
+
+                    // 7️⃣ GENERAR TRADUCCIONES
                     [$trans_remember, $trans_list] = $this->generateDocumentListOnly($uid, $validation['type']);
 
+                    // 8️⃣ ASIGNAR VARIABLES A TEMPLATE
                     $this->context->smarty->assign([
                         'uid' => $uid,
                         'trans' => $trans_remember,
                         'trans_list' => $trans_list,
                         'label' => $validation['label'],
-                        'status' => $validation['status'],
+                        'status' => $validation['status'],  // 'success' | 'pending' | 'error'
                         'type' => $validation['type'],
-                        'upload' => $validation['upload'],
+                        'upload' => $validation['upload'],  // true si puede subir, false si está pendiente
                         'required_documents' => $validation['data']['required_documents'] ?? [],
                         'uploaded_documents' => $validation['data']['uploaded_documents'] ?? [],
                         'missing_documents' => $validation['data']['missing_documents'] ?? [],
                     ]);
 
-                    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/gun.tpl');
+                    // 9️⃣ SI SERVIDOR NO DISPONIBLE: MOSTRAR MENSAJE ESPECIAL
+                    if ($validation['status'] === 'pending') {
+                        $this->context->smarty->assign([
+                            'server_unavailable' => true,
+                            'server_status' => $serverStatus,
+                            'pending_message' => $validation['message'],
+                            'request_id' => $validation['request_id'] ?? null,
+                            'reason' => $validation['reason'] ?? 'Server unavailable',
+                            'retry_info' => [
+                                'saved_at' => date('Y-m-d H:i:s'),
+                                'will_retry_at' => $validation['next_retry_at'] ?? date('Y-m-d H:i:s', time() + 300),
+                            ],
+                        ]);
+
+                        // LOG: Registrar que se guardó como pendiente
+                        PrestaShopLogger::addLog(
+                            "DocumentValidator: Request queued for UID {$uid}. Request ID: {$validation['request_id']}",
+                            1,  // Info
+                            null,
+                            'alsernetforms',
+                            $validation['request_id'] ?? null,
+                            true
+                        );
+                    } elseif ($validation['status'] === 'error') {
+                        // ❌ ERROR: Mostrar mensaje de error
+                        $this->context->smarty->assign([
+                            'validation_error' => true,
+                            'error_message' => $validation['message'],
+                            'error_details' => $validation['error'] ?? null,
+                        ]);
+
+                        // LOG: Registrar error
+                        PrestaShopLogger::addLog(
+                            "DocumentValidator: Error for UID {$uid}: {$validation['error']}",
+                            3,  // Error
+                            null,
+                            'alsernetforms'
+                        );
+                    } else {
+                        // ✅ SUCCESS: Validación completada
+                        $this->context->smarty->assign([
+                            'validation_success' => true,
+                            'server_status' => $serverStatus,
+                        ]);
+                    }
+
+                    return $this->fetch('module:alsernetforms/views/templates/hook/forms/documents/document.tpl');
 
                 default:
                     break;
