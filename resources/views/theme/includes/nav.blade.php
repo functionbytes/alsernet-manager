@@ -100,19 +100,40 @@
                                         $currentRouteName = request()->route()?->getName() ?? '';
                                         $itemRoute = $item['route'];
                                         $isActive = $currentRouteName === $itemRoute;
+
+                                        // Validar permisos del item
+                                        // Si el item tiene un campo 'permission', validar que el usuario lo tenga
+                                        $canAccessItem = true;
+                                        if (!empty($item['permission'])) {
+                                            $permissions = array_map('trim', explode('|', $item['permission']));
+                                            $canAccessItem = auth()->user()->can($permissions[0]);
+
+                                            // Si es una lista de permisos (OR logic), verificar si tiene al menos uno
+                                            if (!$canAccessItem && count($permissions) > 1) {
+                                                foreach ($permissions as $permission) {
+                                                    if (auth()->user()->can($permission)) {
+                                                        $canAccessItem = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
                                     @endphp
-                                    <li class="sidebar-item">
-                                        <a href="{{ route($item['route']) }}"
-                                           data-current-route="{{ $currentRouteName }}"
-                                           data-item-route="{{ $itemRoute }}"
-                                           data-is-active="{{ $isActive ? 'true' : 'false' }}"
-                                           class="sidebar-link {{ $isActive ? 'active' : '' }}">
-                                            @if(!empty($item['icon']))
-                                                <i class="fa {{ $item['icon'] }} me-2"></i>
-                                            @endif
-                                            <span class="hide-menu">{{ $item['label'] }}</span>
-                                        </a>
-                                    </li>
+
+                                    @if($canAccessItem)
+                                        <li class="sidebar-item">
+                                            <a href="{{ route($item['route']) }}"
+                                               data-current-route="{{ $currentRouteName }}"
+                                               data-item-route="{{ $itemRoute }}"
+                                               data-is-active="{{ $isActive ? 'true' : 'false' }}"
+                                               class="sidebar-link {{ $isActive ? 'active' : '' }}">
+                                                @if(!empty($item['icon']))
+                                                    <i class="fa {{ $item['icon'] }} me-2"></i>
+                                                @endif
+                                                <span class="hide-menu">{{ $item['label'] }}</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                 @empty
                                     <li class="sidebar-item">
                                         <span class="hide-menu text-muted">Sin opciones</span>
