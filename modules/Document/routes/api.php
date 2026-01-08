@@ -16,7 +16,7 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::get('/verify', [DocumentsController::class, 'verify'])->name('verify');
     Route::get('/{uid}/validation', [DocumentsController::class, 'validation'])->name('validation');
     Route::post('/{uid}/files', [DocumentsController::class, 'uploadFiles'])->name('files.upload');
-    Route::delete('/{uid}/files/{docType}', [DocumentsController::class, 'deleteFile'])->name('files.delete');
+    Route::delete('/{uid}/files/{docType}', [DocumentsController::class, 'deleteFile'])->name('files.delete.by-type');
     Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid'])->name('webhooks.prestashop.order-paid');
 });
 
