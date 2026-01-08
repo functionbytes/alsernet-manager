@@ -40,6 +40,9 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/import/api', [DocumentSyncController::class, 'importApi'])->name('import.api');
         Route::get('/import/erp', [DocumentSyncController::class, 'importErp'])->name('import.erp');
 
+        // ERP sync routes
+        Route::post('/sync/from-erp', [DocumentsController::class, 'syncFromErp'])->name('sync.from-erp');
+
         // Document views
         Route::get('/show/{uid}', [DocumentsController::class, 'show'])->name('show');
         Route::get('/summary/{uid}', [DocumentsController::class, 'summary'])->name('summary');
