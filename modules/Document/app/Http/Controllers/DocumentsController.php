@@ -32,12 +32,14 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends Controller
 {
-    public function __construct() {}
+    public function __construct()
+    {
+        $this->middleware('can:documents.view.all|documents.manage.all')->only(['index']);
+        $this->middleware('can:documents.approve|documents.reject')->only(['pending']);
+    }
 
     public function index(Request $request)
     {
-        $this->middleware('can:route-all-documents')->only(['index']);
-
         $search = trim(strtolower($request->get('search')));
         $statusId = $request->get('status_id');
         $loadId = $request->get('load_id');
@@ -73,9 +75,6 @@ class DocumentsController extends Controller
      */
     public function pending(Request $request)
     {
-
-        $this->middleware('can:route-pending-documents|approve-documents|reject-documents')->only(['pending']);
-
         $search = trim(strtolower($request->get('search')));
         $loadId = $request->get('load_id');
         $dateFrom = $request->get('date_from');
@@ -3027,8 +3026,6 @@ class DocumentsController extends Controller
      */
     public function validationHistory($uid)
     {
-        $this->middleware('can:route-history-validation')->only(['validationHistory']);
-
         $document = Document::findByUid($uid);
 
         if (! $document) {
