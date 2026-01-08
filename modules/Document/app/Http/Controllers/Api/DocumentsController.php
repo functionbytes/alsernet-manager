@@ -318,9 +318,11 @@ class DocumentsController extends Controller
             $document->save();
 
             // Process and create products AFTER document is saved
+            // Accept both 'products' and 'inventaries' field names (PrestaShop compatibility)
             $productsCount = 0;
-            if (isset($data['products']) && is_array($data['products'])) {
-                foreach ($data['products'] as $product) {
+            $products = $data['products'] ?? $data['inventaries'] ?? null;
+            if ($products && is_array($products)) {
+                foreach ($products as $product) {
                     // Mapear campos de Prestashop correctamente
                     $productId = $product['product_id'] ?? $product['id'] ?? null;
                     $productName = $product['product_name'] ?? $product['name'] ?? null;
