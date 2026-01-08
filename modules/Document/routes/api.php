@@ -7,10 +7,14 @@ use Modules\Document\Http\Controllers\Api\DocumentValidationController;
 // ✅ Public routes with rate limiting
 // El middleware 'api' ya está aplicado por RouteServiceProvider
 Route::middleware('throttle:60,1')->group(function () {
-    Route::post('/', [DocumentsController::class, 'process'])->name('process');
+    // RESTful endpoint: POST /api/documents → creates a new document
+    Route::post('/', [DocumentsController::class, 'store'])->name('store');
+    // Deprecated: POST /api/documents/create (kept for backwards compatibility)
+    Route::post('/create', [DocumentsController::class, 'store'])->name('create');
+    // Process endpoint: Handles action-based requests (deprecated)
+    Route::post('/process', [DocumentsController::class, 'process'])->name('process');
     Route::get('/verify', [DocumentsController::class, 'verify'])->name('verify');
     Route::get('/{uid}/validation', [DocumentsController::class, 'validation'])->name('validation');
-    Route::post('/create', [DocumentsController::class, 'store'])->name('store');
     Route::post('/{uid}/files', [DocumentsController::class, 'uploadFiles'])->name('files.upload');
     Route::delete('/{uid}/files/{docType}', [DocumentsController::class, 'deleteFile'])->name('files.delete');
     Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid'])->name('webhooks.prestashop.order-paid');

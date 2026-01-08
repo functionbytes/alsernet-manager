@@ -32,11 +32,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:documents.view.all|documents.manage.all')->only(['index']);
-        $this->middleware('can:documents.approve|documents.reject')->only(['pending']);
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
