@@ -4,6 +4,7 @@ namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentType;
 // use Modules\Document\Events\DocumentCreated; // Event no implementado
 use Modules\Document\Services\DocumentEmailService;
 
@@ -139,7 +140,18 @@ class CreateSampleDocumentsFromPrestashop extends Command
         $document->order_id = $orderData['order_id'];
         $document->order_reference = $orderData['reference'];
         $document->order_date = $orderData['date_add'];
-        $document->type = $orderData['type'];
+        // Resolve document type slug to ID
+        $typeSlug = $orderData['type'] ?? 'general';
+        $documentType = DocumentType::where('slug', $typeSlug)->first();
+        if ($documentType) {
+            $document->type_id = $documentType->id;
+        } else {
+            // Fallback to 'general' type if not found
+            $generalType = DocumentType::where('slug', 'general')->first();
+            if ($generalType) {
+                $document->type_id = $generalType->id;
+            }
+        }
         $document->source = 'api'; // Simular origen desde API PrestaShop
         $document->proccess = 0;
         $document->lang_id = \App\Models\Lang::iso('es')?->id;

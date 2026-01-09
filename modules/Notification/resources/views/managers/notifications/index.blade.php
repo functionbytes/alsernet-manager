@@ -163,7 +163,7 @@
                                             {{-- Actions --}}
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @if($actionUrl)
-                                                    <a href="{{ $actionUrl }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ $actionUrl }}" target="_blank" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-external-link-alt me-1"></i>{{ $data['action_text'] ?? 'Ver detalles' }}
                                                     </a>
                                                 @endif

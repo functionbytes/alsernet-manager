@@ -27,6 +27,7 @@
     <meta content="Ace" name="author"/>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ auth()->id() ?? '' }}">
 
     <!-- Library CSS -->
     <link rel="stylesheet" href="{{ url('theme/libs/taginput/bootstrap-tagsinput.css') }}">
@@ -55,6 +56,7 @@
     @stack('css')
     @stack('scripts-head')
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 

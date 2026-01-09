@@ -783,10 +783,12 @@ class Alsernetforms extends Module implements WidgetInterface
 
         // Asignación por deporte (si tiene deportes asociados)
         $sports = explode(',', $user['ids_sports']);
+
         foreach ($sports as $sport_id) {
             // Verificar si el deporte está en la lista de deportes específicos
             $this->addUserToList($id_susc_newsletter, $sport_id);  // Asigna a la lista correspondiente al deporte
         }
+
     }
 
     private function addUserToList($id_susc_newsletter, $id_list)

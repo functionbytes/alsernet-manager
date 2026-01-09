@@ -118,7 +118,6 @@ class Order extends OrderCore
 
     public function sendDocumentRequest(): ?string
     {
-        $saleType = $this->getSaleType();
 
         if (! $saleType) {
             return null;
@@ -157,8 +156,7 @@ class Order extends OrderCore
 
         // ✅ REFACTORIZADO: Usar DocumentAction en lugar de ApiManager deprecated
         $documentAction = new DocumentAction();
-        $response = $documentAction->requestDocument([
-            'type' => $saleType,
+        dd([
             'order_id' => $this->id,
             'reference' => $this->reference,
             'cart_id' => $this->id_cart,
@@ -175,6 +173,27 @@ class Order extends OrderCore
                 'phone_mobile' => $customer->phone_mobile ?? null,
             ],
             'inventaries' => $mappedProducts,
+            'delivery_address' => $address->address1 ?? null,
+            'date_add' => $this->date_add,
+        ]);
+        $response = $documentAction->requestDocument([
+            'type' => $saleType,
+            'order_id' => $this->id,
+            'reference' => $this->reference,
+            'cart_id' => $this->id_cart,
+            'id_lang' => $id_lang,      // PrestaShop language ID
+            'iso_code' => $iso_code,     // ISO language code for mapping
+            'customer' => [
+                'id_customer' => $customer->id,
+                'firstname' => $customer->firstname,
+                'lastname' => $customer->lastname,
+                'email' => $customer->email,
+                'document_type' => $customer->document_type ?? null,
+                'company' => $address->company ?? null,
+                'phone' => $customer->phone ?? null,
+                'phone_mobile' => $customer->phone_mobile ?? null,
+                ],
+                'inventaries' => $mappedProducts,
             'delivery_address' => $address->address1 ?? null,
             'date_add' => $this->date_add,
         ]);

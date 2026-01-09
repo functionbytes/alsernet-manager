@@ -15,6 +15,7 @@ use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentStatusTransition;
 use Modules\Document\Entities\DocumentSync;
+use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentUploadType;
 use Modules\Document\Entities\DocumentValidatorGroup;
 // use Modules\Document\Events\DocumentCreated; // Event no implementado
@@ -306,7 +307,11 @@ class DocumentsController extends Controller
             $document = new Document;
             $document->order_id = $idPedidoCli;
             $document->customer_id = $cliente['idcliente'] ?? null;
-            $document->type = 'order';
+            // Type will be detected from products later, default to 'general'
+            $generalTypeId = $this->resolveDocumentTypeId('general');
+            if ($generalTypeId) {
+                $document->type_id = $generalTypeId;
+            }
             $document->source_id = $sourceId; // ERP source ID
 
             // Set source_id to 'api' (data from PrestaShop API)
@@ -330,7 +335,6 @@ class DocumentsController extends Controller
             $document->status_id = $pendingStatus?->id;
 
             $document->lang_id = 1; // español
-            $document->proccess = 0;
             $document->customer_firstname = $firstName;
             $document->customer_lastname = $lastName;
             $document->customer_email = $customerEmail;
@@ -343,8 +347,12 @@ class DocumentsController extends Controller
             // Create products from ERP data
             $this->createDocumentProductsFromErpData($document, $resource);
 
-            // Detect document type based on products
-            $document->type = $document->detectDocumentType();
+            // Detect document type based on products and blockades
+            $detectedTypeSlug = $document->detectDocumentType();
+            $detectedTypeId = $this->resolveDocumentTypeId($detectedTypeSlug);
+            if ($detectedTypeId) {
+                $document->type_id = $detectedTypeId;
+            }
             $document->save();
 
             // Fire event
@@ -669,8 +677,6 @@ class DocumentsController extends Controller
     {
         $document = Document::findByUid($request->uid);
         $oldStatusId = $document->status_id;
-        $document->proccess = $request->proccess;
-
         // Actualizar source_id si se proporciona
         if ($request->has('source_id')) {
             $document->source_id = $request->source_id ?: null;
@@ -1187,7 +1193,11 @@ class DocumentsController extends Controller
                 try {
                     $document = new Document;
                     $document->order_id = $orderId;
-                    $document->type = 'order';
+                    // Type will be detected from products, default to 'general'
+                    $generalTypeId = $this->resolveDocumentTypeId('general');
+                    if ($generalTypeId) {
+                        $document->type_id = $generalTypeId;
+                    }
 
                     // Set source_id to 'api' (data from PrestaShop API)
                     $apiSource = DocumentSource::where('key', 'api')->first();
@@ -1825,13 +1835,22 @@ class DocumentsController extends Controller
                     continue;
                 }
 
-                // 1. Establecer tipo Por defecto si no existe
-                if (! $document->type) {
-                    $document->type = 'general';
+                // 1. Ensure document has a valid type_id (default to 'general' if missing)
+                if (! $document->type_id) {
+                    $generalTypeId = $this->resolveDocumentTypeId('general');
+                    if ($generalTypeId) {
+                        $document->type_id = $generalTypeId;
+                    } else {
+                        // Can't sync without a valid document type
+                        $skipped++;
+
+                        continue;
+                    }
                 }
 
-                // 2. Generar required_documents desde DocumentTypeService
-                $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+                // 2. Get the document type slug and generate required_documents
+                $typeSlug = $document->documentType?->slug ?? 'general';
+                $requiredDocs = DocumentTypeService::getRequiredDocuments($typeSlug);
                 $document->required_documents = $requiredDocs;
 
                 // 3. Generar uploaded_documents desde media actual
@@ -2979,7 +2998,11 @@ class DocumentsController extends Controller
         $document->captureProducts();
 
         // Finalmente detectar el tipo basándose en los productos capturados
-        $document->type = $document->detectDocumentType();
+        $detectedTypeSlug = $document->detectDocumentType();
+        $detectedTypeId = $this->resolveDocumentTypeId($detectedTypeSlug ?? 'general');
+        if ($detectedTypeId) {
+            $document->type_id = $detectedTypeId;
+        }
         $document->save();
 
         return true;
@@ -3362,5 +3385,26 @@ class DocumentsController extends Controller
                 'message' => 'Error al cargar documento: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Resolve document type slug to type_id
+     *
+     * Converts a type slug (e.g., 'general', 'dni', 'escopeta') to the corresponding
+     * document_types.id by looking up the DocumentType model. This ensures the
+     * document always stores type_id (foreign key) instead of string type values.
+     *
+     * @param  string|null  $typeSlug  The type slug (e.g., 'general', 'dni', 'escopeta')
+     * @return int|null The document_types.id or null if not found
+     */
+    private function resolveDocumentTypeId(?string $typeSlug): ?int
+    {
+        if (! $typeSlug) {
+            return null;
+        }
+
+        $documentType = DocumentType::where('slug', $typeSlug)->first();
+
+        return $documentType?->id;
     }
 }

@@ -39,7 +39,6 @@ class Document extends Model implements HasMedia
     protected $fillable = [
         'uid',
         'type_id',
-        'proccess',
         'source_id',
         'load_id',
         'sync_id',
@@ -979,7 +978,7 @@ class Document extends Model implements HasMedia
 
     /**
      * Get the primary sale type (blockade type) for this document's products
-     * Returns the DocumentType slug from the first blockade found (no hardcoded priority)
+     * Returns the DocumentType slug, prioritizing weapon types over dni
      */
     public function getSaleType(): ?string
     {
@@ -989,16 +988,33 @@ class Document extends Model implements HasMedia
             return null;
         }
 
-        // Get the first blockade type found for these products (no hardcoded priority)
-        // Return the actual slug from DocumentType relation
-        $blockadeType = DocumentProductBlockade::where(function ($query) use ($productIds) {
+        // Get ALL blockade types for these products
+        $blockadeTypes = DocumentProductBlockade::where(function ($query) use ($productIds) {
             $query->whereIn('product_id', $productIds)
                 ->orWhereIn('product_attribute_id', $productIds);
         })
             ->with('documentType:id,slug')
-            ->first();
+            ->get()
+            ->pluck('documentType.slug')
+            ->filter()
+            ->unique()
+            ->toArray();
 
-        return $blockadeType?->documentType?->slug;
+        if (empty($blockadeTypes)) {
+            return null;
+        }
+
+        // Prioritize weapon types over 'dni'
+        // Weapons are more restrictive than dni-only documents
+        $weaponTypes = ['escopeta', 'rifle', 'corta'];
+        foreach ($weaponTypes as $weaponType) {
+            if (in_array($weaponType, $blockadeTypes)) {
+                return $weaponType;
+            }
+        }
+
+        // If no weapon types found, return the first blockade type
+        return $blockadeTypes[0];
     }
 
     /**
@@ -1047,11 +1063,11 @@ class Document extends Model implements HasMedia
         parent::boot();
 
         static::creating(function (Document $document) {
-            // If no type_id is set, default to 'general' type (ID 5)
+            // If no type_id is set, default to 'dni' type (fallback when no products or blockades)
             if (! $document->type_id) {
-                $generalType = DocumentType::where('slug', 'general')->first();
-                if ($generalType) {
-                    $document->type_id = $generalType->id;
+                $dniType = DocumentType::where('slug', 'dni')->first();
+                if ($dniType) {
+                    $document->type_id = $dniType->id;
                 }
             }
 
@@ -1066,12 +1082,40 @@ class Document extends Model implements HasMedia
             if ($document->isDirty('type_id') && empty($document->required_documents)) {
                 $document->required_documents = $document->getRequiredDocuments();
             }
+
+            // If requires_financing or type_id changed, reinitialize workflow to recalculate stages
+            if ($document->isDirty('requires_financing') || $document->isDirty('type_id')) {
+                try {
+                    // Get new stages based on updated attributes
+                    $stages = $document->getValidationWorkflowStages();
+
+                    // Only update workflow attributes if stages count changed
+                    if (! empty($stages) && count($stages) !== $document->total_stages) {
+                        // Update workflow attributes WITHOUT calling save() to avoid recursion
+                        $document->total_stages = count($stages);
+                        $document->current_stage = 1;
+                        $document->validation_status = Document::VALIDATION_STATUS_PENDING;
+                        $document->current_validator_group = $stages[0];
+                        $document->assigned_user_id = null;
+                        $document->validation_started_at = null;
+                        $document->validation_completed_at = null;
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Error reinitializing workflow for document '.$document->uid.': '.$e->getMessage());
+                }
+            }
         });
 
         static::created(function (Document $document) {
             // Automatically initialize validation workflow when document is created
             try {
                 $document->initializeWorkflow();
+
+                // Notify first stage validator group after successful initialization
+                if ($document->current_validator_group && $document->current_stage === 1) {
+                    // previousStage=0 indicates this is the initial creation (no previous stage)
+                    $document->notifyValidatorGroup(0, 1, $document->current_validator_group);
+                }
             } catch (\Exception $e) {
                 Log::error('Error initializing workflow for document '.$document->uid.': '.$e->getMessage());
             }

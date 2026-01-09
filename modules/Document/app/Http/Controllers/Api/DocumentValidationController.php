@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentStatus;
+use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentValidatorGroup;
 use Modules\Document\Services\DocumentActionService;
 use Modules\Document\Services\DocumentEmailService;
@@ -146,7 +147,7 @@ class DocumentValidationController extends Controller
             $request,
             $uid,
             fn ($doc, $adminId) => $this->emailService->sendApprovalEmail($doc, $adminId)
-            // Sin verificación de autorización
+        // Sin verificación de autorización
         );
     }
 
@@ -169,7 +170,7 @@ class DocumentValidationController extends Controller
                 $validated['rejected_docs'] ?? [],
                 $adminId
             )
-            // Sin verificación de autorización
+        // Sin verificación de autorización
         );
     }
 
@@ -781,13 +782,22 @@ class DocumentValidationController extends Controller
                     continue;
                 }
 
-                // 1. Establecer tipo Por defecto si no existe
-                if (! $document->type) {
-                    $document->type = 'general';
+                // 1. Ensure document has a valid type_id (default to 'general' if missing)
+                if (! $document->type_id) {
+                    $generalTypeId = $this->resolveDocumentTypeId('general');
+                    if ($generalTypeId) {
+                        $document->type_id = $generalTypeId;
+                    } else {
+                        // Can't sync without a valid document type
+                        $skipped++;
+
+                        continue;
+                    }
                 }
 
-                // 2. Generar required_documents desde DocumentTypeService
-                $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+                // 2. Get the document type slug and generate required_documents
+                $typeSlug = $document->documentType?->slug ?? 'general';
+                $requiredDocs = DocumentTypeService::getRequiredDocuments($typeSlug);
                 $document->required_documents = $requiredDocs;
 
                 // 3. Generar uploaded_documents desde media actual
@@ -991,5 +1001,22 @@ class DocumentValidationController extends Controller
                 'message' => 'Error al eliminar documento: '.$e->getMessage(),
             ], 422);
         }
+    }
+
+    /**
+     * Resolve document type slug to type_id
+     *
+     * @param  string|null  $typeSlug  The type slug (e.g., 'general', 'dni', 'escopeta')
+     * @return int|null The document_types.id or null if not found
+     */
+    private function resolveDocumentTypeId(?string $typeSlug): ?int
+    {
+        if (! $typeSlug) {
+            return null;
+        }
+
+        $documentType = DocumentType::where('slug', $typeSlug)->first();
+
+        return $documentType?->id;
     }
 }

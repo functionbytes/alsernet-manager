@@ -11,8 +11,9 @@ use Modules\Document\Entities\DocumentLoad;
 use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentSync;
-use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Entities\DocumentType;
 // use Modules\Document\Events\DocumentCreated; // Event no implementado
+use Modules\Document\Entities\DocumentUploadType;
 use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Services\DocumentEmailService;
 use Modules\Document\Services\DocumentTypeService;
@@ -277,22 +278,17 @@ class DocumentsController extends Controller
 
             $document = new Document;
             $document->order_id = $orderId;
-            $document->type = $data['type'] ?? 'general';
 
-            $apiSource = DocumentSource::where('key', 'api')->first();
-            $document->source_id = $apiSource?->id;
+            // Note: type_id will be detected from products after they're added
+            // If no products or no blockades match, model will default to 'dni' type
 
-            $apiLoad = DocumentLoad::where('key', 'api')->first();
-            $document->load_id = $apiLoad?->id;
-
-            $automaticSync = DocumentSync::where('key', 'automatic')->first();
-            $document->sync_id = $automaticSync?->id;
-
-            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
-            $document->upload_id = $automaticUpload?->id;
-
-            $document->proccess = 0;    // Estado inicial: pendiente
             $document->lang_id = $langId;  // Assign language
+
+            // Set lookup IDs for PrestaShop source
+            $document->source_id = DocumentSource::where('key', 'prestashop')->first()?->id;
+            $document->load_id = DocumentLoad::where('key', 'system')->first()?->id;
+            $document->sync_id = DocumentSync::where('key', 'none')->first()?->id;
+            $document->upload_id = DocumentUploadType::where('key', 'automatic')->first()?->id;
 
             if (isset($data['customer']) && is_array($data['customer'])) {
                 $document->customer_id = $data['customer']['id_customer'] ?? $data['customer']['id'] ?? null;
@@ -343,11 +339,14 @@ class DocumentsController extends Controller
                 }
             }
 
-            // Detectar tipo de documento basado en los productos
+            // Detectar tipo de documento basado en los productos y document_product_blockades
+            // La fuente de verdad es document_product_blockades, no PrestaShop
             if ($productsCount > 0) {
-                $detectedType = $document->detectDocumentType();
-                if ($detectedType && $detectedType !== $document->type) {
-                    $document->type = $detectedType;
+                $detectedTypeSlug = $document->detectDocumentType();
+                $detectedTypeId = $this->resolveDocumentTypeId($detectedTypeSlug);
+
+                if ($detectedTypeId && $detectedTypeId !== $document->type_id) {
+                    $document->type_id = $detectedTypeId;
                     $document->save();
                 }
             }
@@ -364,18 +363,21 @@ class DocumentsController extends Controller
             ]);
             // DocumentCreated::dispatch($document); // Event no implementado
 
+            MailTemplateJob::dispatch($document, 'request');
+
             return response()->json([
                 'status' => 'success',
                 'message' => "Document request created successfully for order {$orderId}",
                 'data' => [
                     'uid' => $document->uid,
+                    'document_type' => $document->type,
                     'order_id' => $document->order_id,
-                    'type' => $document->type,
-                    'lang_id' => $document->lang_id,
-                    'iso_code' => $data['iso_code'] ?? null,
-                    'synced' => 1,
-                    'products_count' => $productsCount,
-                    'customer_name' => trim(($document->customer_firstname ?? '').' '.($document->customer_lastname ?? '')) ?: 'N/A',
+                    'reference' => $document->order_reference,
+                    'label' => $document->documentType?->getLabel() ?? 'N/A',
+                    'can_upload' => ! $document->confirmed_at,
+                    'required_documents' => $document->getRequiredDocuments(),
+                    'uploaded_documents' => $document->getUploadedDocumentTypes(),
+                    'missing_documents' => array_keys($document->getMissingDocuments()),
                 ],
             ], 201);
 
@@ -799,7 +801,6 @@ class DocumentsController extends Controller
         }
 
         $document->confirmed_at = now();
-        $document->proccess = 1;
         $document->save();
 
         return response()->json([
@@ -918,7 +919,6 @@ class DocumentsController extends Controller
 
         // Obtener dirección de envío
         $deliveryAddress = $order->deliveryAddress;
-
         $document->customer_id = $customer->id_customer;
         // Nombre y apellido vienen de la dirección de envío
         $document->customer_firstname = $deliveryAddress?->firstname ?? $customer->firstname;
@@ -930,8 +930,9 @@ class DocumentsController extends Controller
         $document->customer_company = $deliveryAddress?->company ?? null;
         // Teléfono celular viene de la dirección de envío
         $document->customer_cellphone = $deliveryAddress?->phone_mobile ?? null;
-
         $document->save();
+
+        MailTemplateJob::dispatch($document, 'request');
 
         return response()->json([
             'status' => 'success',
@@ -1231,12 +1232,25 @@ class DocumentsController extends Controller
         $document = Document::firstOrNew(['order_id' => $order->id_order]);
         $document->customer_id = $document->customer_id ?? $order->id_customer;
         $document->cart_id = $document->cart_id ?? $order->id_cart;
-        $document->type = $payload['document_type'] ?? $document->type ?? 'general';
         $document->reference = $order->reference ?? $document->reference;
 
+        // Ensure document is saved to establish relationships
         if (! $document->exists) {
             $document->save();
-        } else {
+        }
+
+        // Capture products from PrestaShop order if not already captured
+        if ($document->products()->count() === 0) {
+            $document->captureProducts();
+        }
+
+        // Validate document type against product blockades (source of truth)
+        // PrestaShop's document_type is only a suggestion, blockades are authoritative
+        $detectedTypeSlug = $document->detectDocumentType();
+        $detectedTypeId = $this->resolveDocumentTypeId($detectedTypeSlug ?? $payload['document_type'] ?? 'general');
+
+        if ($detectedTypeId) {
+            $document->type_id = $detectedTypeId;
             $document->save();
         }
 
@@ -1285,14 +1299,18 @@ class DocumentsController extends Controller
     public function syncAllDocumentFields(Request $request)
     {
         try {
-            $type = $request->query('type');
+            $typeSlug = $request->query('type');  // Filter by type slug
             $force = $request->query('force', false);
 
-            if ($type) {
-                $documents = Document::where('type', $type)->get();
-            } else {
-                $documents = Document::all();
+            // Query documents, filtering by document type slug if provided
+            $query = Document::query();
+            if ($typeSlug) {
+                // Filter by DocumentType slug through relationship
+                $query->whereHas('documentType', function ($q) use ($typeSlug) {
+                    $q->where('slug', $typeSlug);
+                });
             }
+            $documents = $query->get();
 
             if ($documents->isEmpty()) {
                 return response()->json([
@@ -1312,13 +1330,22 @@ class DocumentsController extends Controller
                     continue;
                 }
 
-                // 1. Establecer tipo Por defecto si no existe
-                if (! $document->type) {
-                    $document->type = 'general';
+                // 1. Ensure document has a valid type_id (default to 'general' if missing)
+                if (! $document->type_id) {
+                    $generalTypeId = $this->resolveDocumentTypeId('general');
+                    if ($generalTypeId) {
+                        $document->type_id = $generalTypeId;
+                    } else {
+                        // Can't sync without a valid document type
+                        $skipped++;
+
+                        continue;
+                    }
                 }
 
-                // 2. Generar required_documents desde DocumentTypeService
-                $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+                // 2. Get the document type slug and generate required_documents
+                $typeSlug = $document->documentType?->slug ?? 'general';
+                $requiredDocs = DocumentTypeService::getRequiredDocuments($typeSlug);
                 $document->required_documents = $requiredDocs;
 
                 // 3. Generar uploaded_documents desde media actual
@@ -1903,9 +1930,6 @@ class DocumentsController extends Controller
         }
     }
 
-    /**
-     * Refrescar historial de acciones
-     */
     public function refreshActionHistory($uid)
     {
         // Liberar la sesión inmediatamente para evitar bloqueos con peticiones concurrentes
@@ -1950,9 +1974,6 @@ class DocumentsController extends Controller
         }
     }
 
-    /**
-     * Destruir documento
-     */
     public function destroy($uid)
     {
         $document = Document::where('uid', $uid)->firstOrFail();
@@ -1970,5 +1991,16 @@ class DocumentsController extends Controller
                 'message' => $e->getMessage(),
             ], 422);
         }
+    }
+
+    private function resolveDocumentTypeId(?string $typeSlug): ?int
+    {
+        if (! $typeSlug) {
+            return null;
+        }
+
+        $documentType = DocumentType::where('slug', $typeSlug)->first();
+
+        return $documentType?->id;
     }
 }

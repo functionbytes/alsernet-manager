@@ -166,6 +166,7 @@ trait HasValidationWorkflow
                 $this->assigned_user_id = null;
             } else {
                 // Move to next stage
+                $previousStage = $this->current_stage;
                 $this->current_stage++;
                 $nextGroup = $this->getStageGroupKey($this->current_stage);
                 $this->current_validator_group = $nextGroup;
@@ -176,6 +177,9 @@ trait HasValidationWorkflow
 
                 // Reset email flag if moving to intermediate stage that doesn't allow emails
                 $sendEmailThisStage = false;
+
+                // Notify all users in the next validator group
+                $this->notifyValidatorGroup($previousStage, $this->current_stage, $nextGroup);
             }
 
             $this->save();
@@ -495,6 +499,55 @@ trait HasValidationWorkflow
 
         // Fallback: keep current group
         return $this->current_validator_group;
+    }
+
+    /**
+     * Notify all users in the validator group about the new stage assignment.
+     */
+    protected function notifyValidatorGroup(int $previousStage, int $currentStage, string $groupKey): void
+    {
+        try {
+            // Get the validator group
+            $validatorGroup = DocumentValidatorGroup::findByKey($groupKey);
+
+            if (! $validatorGroup) {
+                \Log::warning("Validator group not found: {$groupKey}");
+
+                return;
+            }
+
+            // Get all users in this group
+            $users = $validatorGroup->users()->get();
+
+            if ($users->isEmpty()) {
+                \Log::warning("No active users found in validator group: {$groupKey}");
+
+                return;
+            }
+
+            // Send notification to all users in the group
+            foreach ($users as $user) {
+                $user->notify(new \Modules\Document\Notifications\DocumentStageAdvanced(
+                    $this,
+                    $previousStage,
+                    $currentStage,
+                    $groupKey
+                ));
+            }
+
+            \Log::info('Stage advancement notifications sent', [
+                'document_id' => $this->id,
+                'previous_stage' => $previousStage,
+                'current_stage' => $currentStage,
+                'validator_group' => $groupKey,
+                'users_notified' => $users->count(),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error sending stage advancement notifications: '.$e->getMessage(), [
+                'document_id' => $this->id,
+                'validator_group' => $groupKey,
+            ]);
+        }
     }
 
     // =========================================================================

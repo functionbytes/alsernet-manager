@@ -327,6 +327,25 @@
             };
 
             window.NotificationManager.init(options);
+
+            // Listen for real-time notifications via Laravel Echo/Reverb
+            if (window.Echo) {
+                const userId = $('meta[name="user-id"]').attr('content');
+                if (userId) {
+                    console.log('📧 Listening for real-time notifications on private channel');
+                    window.Echo.private(`users.${userId}`)
+                        .notification((notification) => {
+                            console.log('🔔 Real-time notification received:', notification);
+                            // Refresh notifications dropdown
+                            window.NotificationManager.refresh();
+                        })
+                        .error((error) => {
+                            console.warn('⚠️  Notification channel error:', error);
+                        });
+                }
+            } else {
+                console.warn('⚠️  Laravel Echo not initialized');
+            }
         }
     });
 })();

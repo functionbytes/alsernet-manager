@@ -4,6 +4,7 @@ namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Document\Entities\Document;
+use Modules\Document\Entities\DocumentType;
 use Modules\Document\Services\DocumentTypeService;
 
 class SyncDocumentFields extends Command
@@ -142,13 +143,20 @@ class SyncDocumentFields extends Command
         }
 
         try {
-            // 1. Establecer tipo Por defecto si no existe
-            if (! $document->type) {
-                $document->type = 'general';
+            // 1. Ensure document has a valid type_id (default to 'general' if missing)
+            if (! $document->type_id) {
+                $generalType = DocumentType::where('slug', 'general')->first();
+                if ($generalType) {
+                    $document->type_id = $generalType->id;
+                } else {
+                    // Can't sync without a valid document type
+                    return false;
+                }
             }
 
-            // 2. Generar required_documents desde DocumentTypeService
-            $requiredDocs = DocumentTypeService::getRequiredDocuments($document->type);
+            // 2. Get the document type slug and generate required_documents
+            $typeSlug = $document->documentType?->slug ?? 'general';
+            $requiredDocs = DocumentTypeService::getRequiredDocuments($typeSlug);
             $document->required_documents = $requiredDocs;
 
             // 3. Generar uploaded_documents desde media actual

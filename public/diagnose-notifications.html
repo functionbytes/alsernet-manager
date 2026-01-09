@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notificaciones - Diagnóstico</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0066cc;
+            border-radius: 4px;
+        }
+        .ok { color: green; }
+        .error { color: red; }
+        .warn { color: orange; }
+        .info { color: blue; }
+        h2 { margin-top: 0; }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnóstico de Notificaciones</h1>
+
+    <div class="section">
+        <h2>1. Verificación de Librerías</h2>
+        <div id="libs-check"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. Verificación de Echo</h2>
+        <div id="echo-check"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. Verificación de User ID</h2>
+        <div id="user-check"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Verificación de Notificaciones Module</h2>
+        <div id="notif-module-check"></div>
+    </div>
+
+    <div class="section">
+        <h2>5. Conexión a Reverb</h2>
+        <div id="reverb-check"></div>
+    </div>
+
+    <div class="section">
+        <h2>6. Console Logs</h2>
+        <pre id="console-logs"></pre>
+    </div>
+
+    <script>
+        // Capturar console logs
+        const consoleLogs = [];
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+
+        console.log = function(...args) {
+            consoleLogs.push('LOG: ' + args.join(' '));
+            originalLog.apply(console, args);
+        };
+        console.warn = function(...args) {
+            consoleLogs.push('WARN: ' + args.join(' '));
+            originalWarn.apply(console, args);
+        };
+        console.error = function(...args) {
+            consoleLogs.push('ERROR: ' + args.join(' '));
+            originalError.apply(console, args);
+        };
+
+        // Diagnósticos
+        function runDiagnostics() {
+            // 1. Librerías
+            let libsHtml = '';
+            libsHtml += `<span class="${typeof jQuery !== 'undefined' ? 'ok' : 'error'}">✓ jQuery: ${typeof jQuery !== 'undefined' ? 'OK' : 'MISSING'}</span><br/>`;
+            libsHtml += `<span class="${typeof axios !== 'undefined' ? 'ok' : 'error'}">✓ Axios: ${typeof axios !== 'undefined' ? 'OK' : 'MISSING'}</span><br/>`;
+            libsHtml += `<span class="${typeof Pusher !== 'undefined' ? 'ok' : 'error'}">✓ Pusher: ${typeof Pusher !== 'undefined' ? 'OK' : 'MISSING'}</span><br/>`;
+            document.getElementById('libs-check').innerHTML = libsHtml;
+
+            // 2. Echo
+            let echoHtml = '';
+            if (typeof window.Echo !== 'undefined') {
+                echoHtml += `<span class="ok">✓ Echo inicializado</span><br/>`;
+                echoHtml += `<span class="info">  Broadcaster: ${window.Echo.options.broadcaster}</span><br/>`;
+                echoHtml += `<span class="info">  Host: ${window.Echo.options.wsHost}</span><br/>`;
+                echoHtml += `<span class="info">  Port: ${window.Echo.options.wsPort}</span><br/>`;
+            } else {
+                echoHtml += `<span class="error">✗ Echo NO ESTÁ INICIALIZADO</span><br/>`;
+            }
+            document.getElementById('echo-check').innerHTML = echoHtml;
+
+            // 3. User ID
+            let userHtml = '';
+            const userIdMeta = document.querySelector('meta[name="user-id"]');
+            const userId = userIdMeta?.getAttribute('content');
+            if (userIdMeta && userId) {
+                userHtml += `<span class="ok">✓ Meta tag encontrado</span><br/>`;
+                userHtml += `<span class="info">  User ID: ${userId}</span><br/>`;
+            } else {
+                userHtml += `<span class="error">✗ Meta tag user-id NO ENCONTRADO</span><br/>`;
+            }
+            document.getElementById('user-check').innerHTML = userHtml;
+
+            // 4. Notification Module
+            let notifHtml = '';
+            if (typeof window.NotificationManager !== 'undefined') {
+                notifHtml += `<span class="ok">✓ NotificationManager inicializado</span><br/>`;
+                notifHtml += `<span class="info">  Unread count: ${window.NotificationManager.getUnreadCount()}</span><br/>`;
+            } else {
+                notifHtml += `<span class="error">✗ NotificationManager NO INICIALIZADO</span><br/>`;
+            }
+            document.getElementById('notif-module-check').innerHTML = notifHtml;
+
+            // 5. Reverb
+            let reverbHtml = '';
+            reverbHtml += '<pre>';
+            reverbHtml += 'Intentando conectar a Reverb...\n\n';
+            reverbHtml += `Host: ${window.Echo?.options?.wsHost || 'UNKNOWN'}\n`;
+            reverbHtml += `Port: ${window.Echo?.options?.wsPort || 'UNKNOWN'}\n`;
+            reverbHtml += `Scheme: ${window.Echo?.options?.forceTLS ? 'wss' : 'ws'}\n\n`;
+
+            if (window.Echo) {
+                reverbHtml += 'Abre la consola (F12) y busca:\n';
+                reverbHtml += '- Mensajes con "📧" (escuchando canal)\n';
+                reverbHtml += '- Mensajes con "🔔" (notificación recibida)\n';
+                reverbHtml += '- Errores de conexión\n';
+            }
+            reverbHtml += '</pre>';
+            document.getElementById('reverb-check').innerHTML = reverbHtml;
+
+            // 6. Logs
+            setTimeout(() => {
+                document.getElementById('console-logs').textContent = consoleLogs.join('\n') || 'No hay logs aún...';
+            }, 2000);
+        }
+
+        // Esperar a que carguen los scripts
+        window.addEventListener('load', runDiagnostics);
+        setTimeout(runDiagnostics, 3000);
+    </script>
+</body>
+</html>
