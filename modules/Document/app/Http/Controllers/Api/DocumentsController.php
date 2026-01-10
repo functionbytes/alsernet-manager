@@ -349,6 +349,17 @@ class DocumentsController extends Controller
                     $document->type_id = $detectedTypeId;
                     $document->save();
                 }
+            } else {
+                // FALLBACK: If no products, use the type field from the request
+                // This handles cases where PrestaShop sends type but no products
+                $typeSlug = $data['type'] ?? null;
+                if ($typeSlug) {
+                    $typeId = $this->resolveDocumentTypeId($typeSlug);
+                    if ($typeId) {
+                        $document->type_id = $typeId;
+                        $document->save();
+                    }
+                }
             }
 
             // Refresh para obtener los datos más recientes

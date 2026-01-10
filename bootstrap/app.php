@@ -11,6 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['middleware' => ['web', 'auth']],
+    )
     ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
         // SLA monitoring commands for Tickets system
         $schedule->command('tickets:check-sla-breaches')->everyFiveMinutes();

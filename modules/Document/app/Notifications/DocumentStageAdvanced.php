@@ -15,6 +15,8 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
 {
     use Queueable;
 
+    private ?int $recipientUserId = null;
+
     /**
      * Create a new notification instance.
      */
@@ -32,6 +34,9 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
      */
     public function via(object $notifiable): array
     {
+        // Store the recipient user ID for use in broadcastOn()
+        $this->recipientUserId = $notifiable->id;
+
         $channels = [];
 
         try {
@@ -108,18 +113,17 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
         return $this->toDatabase($notifiable);
     }
 
+    public function broadcastOn(): array
+    {
+        if (! $this->recipientUserId) {
+            return [];
+        }
+
+        return [new PrivateChannel('users.'.$this->recipientUserId)];
+    }
+
     public function broadcastType(): string
     {
         return 'document.stage.advanced';
-    }
-
-    /**
-     * Specify the channels that the notification should be broadcast on
-     */
-    public function broadcastOn(): array
-    {
-        return [
-            new PrivateChannel('users.'.$this->notifiable->id),
-        ];
     }
 }

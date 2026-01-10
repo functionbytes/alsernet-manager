@@ -409,7 +409,8 @@
       "Bash(kill:*)",
       "Bash(open \"https://manager.test/mailers/components/edit/fabb0dcc-40e1-4b8a-86bb-8fa04f1b90e5?lang_id=1\")",
       "Bash(brew services stop:*)",
-      "Bash(if grep -q \"typeof reloadActionHistory === ''function''\" \"$file\")"
+      "Bash(if grep -q \"typeof reloadActionHistory === ''function''\" \"$file\")",
+      "Bash(netstat:*)"
     ],
     "deny": [],
     "ask": []

@@ -10,9 +10,6 @@ Route::group(['middleware' => ['web']], function () {
     // Legacy login route alias for Laravel compatibility (redirects to auth.login)
     Route::get('/login', fn () => redirect()->route('auth.login'))->name('login');
 
-    // Broadcasting authentication route for private channels
-    \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['auth']]);
-
     // Protected routes - require authentication
     Route::middleware(['auth'])->group(function () {
         Route::redirect('/home', '/');
