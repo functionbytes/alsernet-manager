@@ -3,21 +3,21 @@
 namespace App\Models;
 
 use App\Traits\HasUid;
-use App\Traits\User\HasBasicRelations;
-use App\Traits\User\HasQuotaManagement;
-use App\Traits\User\HasSubscriptionManagement;
-use App\Traits\User\HasUserAttributes;
-use App\Traits\User\HasUserScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Auth\Traits\HasBasicRelations;
+use Modules\Auth\Traits\HasUserAttributes;
+use Modules\Auth\Traits\HasUserScopes;
 use Modules\Campaign\Traits\HasCampaignManagement;
+use Modules\Core\Traits\HasQuotaManagement;
 use Modules\Document\Traits\HasDocumentPermissions;
 use Modules\Helpdesk\Traits\HasHelpdeskRelations;
 use Modules\Mailer\Traits\HasSendingInfrastructure;
 use Modules\Notification\Traits\HasNotificationSystem;
 use Modules\Storage\Traits\HasFileSystemPaths;
+use Modules\Subscriber\Traits\HasSubscriptionManagement;
 use Modules\Warehouse\Traits\HasWarehouseManagement;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
