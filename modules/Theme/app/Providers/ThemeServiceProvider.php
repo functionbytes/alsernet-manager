@@ -2,6 +2,7 @@
 
 namespace Modules\Theme\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class ThemeServiceProvider extends ServiceProvider
@@ -23,6 +24,19 @@ class ThemeServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        // Register theme views in root namespace
+        // This allows @extends('layouts.theme') to work without any changes
+        // to the 334+ files that use it
+        View::addLocation(__DIR__.'/../../resources/views');
+
+        // Publish theme assets (CSS, JS, images, libs)
+        $this->publishes([
+            __DIR__.'/../../public/theme' => public_path('theme'),
+        ], 'theme-assets');
+
+        // Load routes if they exist
+        if (file_exists(__DIR__.'/../../routes/web.php')) {
+            $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        }
     }
 }
