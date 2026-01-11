@@ -117,46 +117,54 @@
                         <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento seleccionado.</p>
                     </div>
 
-                    {{-- Local Driver Fields --}}
+                    {{-- Local Driver Fields (Simplified) --}}
                     <div id="localFields" class="driver-fields" style="display: none;">
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Ruta raíz <span class="text-danger">*</span>
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label class="control-label col-form-label mb-3">
+                                    Ubicación del almacenamiento <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control @error('root') is-invalid @enderror"
-                                       name="root" value="{{ old('root', $disk['root'] ?? '') }}"
-                                       placeholder="{{ public_path('storage/documents') }}">
-                                <small class="form-text text-muted">
-                                    <strong>🎯 Opciones recomendadas (dentro del proyecto):</strong>
-                                    <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>{{ public_path('storage/documents') }}</code> ✅ Para archivos públicos (documentos)</li>
-                                        <li><code>{{ public_path('storage/uploads') }}</code> ✅ Para subidas de usuarios</li>
-                                        <li><code>{{ storage_path('app/documents') }}</code> ✅ Para almacenamiento privado</li>
-                                        <li><code>{{ storage_path('app/uploads') }}</code> ✅ Para archivos privados</li>
-                                    </ul>
-                                    <strong>📝 Personalizado:</strong>
-                                    <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>{{ public_path('storage/tunombre') }}</code> - Reemplaza "tunombre" con el que desees</li>
-                                        <li><code>{{ storage_path('app/tunombre') }}</code> - Para almacenamiento privado</li>
-                                    </ul>
-                                    ❌ <strong>NO permitido:</strong> Rutas fuera del proyecto, raíz del sistema (/), directorios del sistema
-                                </small>
-                                @error('root')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="storage_type" id="storagePublic"
+                                               value="public" {{ old('storage_type', $disk['storage_type'] ?? 'public') === 'public' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="storagePublic">
+                                            <strong>Público</strong>
+                                            <div class="text-muted small">Accesible desde el navegador (web-accessible)</div>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="storage_type" id="storagePrivate"
+                                               value="private" {{ old('storage_type', $disk['storage_type'] ?? '') === 'private' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="storagePrivate">
+                                            <strong>Privado</strong>
+                                            <div class="text-muted small">Solo accesible por la aplicación</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('storage_type')
+                                    <span class="field-validation-error d-block mt-2"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">URL (opcional)</label>
-                                <input type="text" class="form-control @error('url') is-invalid @enderror"
-                                       name="url" value="{{ old('url', $disk['url'] ?? '') }}"
-                                       placeholder="http://localhost/storage">
-                                <small class="form-text text-muted">URL pública para acceder a los archivos</small>
-                                @error('url')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
+
+                        {{-- Information Box --}}
+                        <div class="col-12">
+                            <div class="alert alert-info border-start border-4 border-info" role="alert">
+                                <div class="d-flex">
+                                    <div class="me-3">
+                                        <i class="fas fa-info-circle fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Ubicación actual</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li><strong>Ruta:</strong> <code>{{ $disk['root'] ?? 'N/A' }}</code></li>
+                                            @if($disk['url'])
+                                                <li><strong>URL:</strong> <code>{{ $disk['url'] }}</code></li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
