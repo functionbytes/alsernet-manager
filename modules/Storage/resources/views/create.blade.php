@@ -87,13 +87,19 @@
                                        name="root" value="{{ old('root') }}"
                                        placeholder="/mnt/storage">
                                 <small class="form-text text-muted">
-                                    Ruta absoluta en el servidor. Ejemplos:
+                                    <strong>Ruta absoluta con al menos 2 niveles de profundidad:</strong>
                                     <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>/mnt/storage</code> - Para directorios compartidos</li>
-                                        <li><code>/data/uploads</code> - Para directorios personalizados</li>
-                                        <li><code>/opt/storage</code> - Para aplicaciones</li>
+                                        <li><code>/mnt/storage</code> ✅ Recomendado para almacenamiento compartido</li>
+                                        <li><code>/data/uploads</code> ✅ Para archivos de aplicación</li>
+                                        <li><code>/opt/storage</code> ✅ Para software personalizado</li>
+                                        <li><code>/home/user/storage</code> ✅ Para directorios de usuario</li>
                                     </ul>
-                                    ⚠️ <strong>Rutas NO permitidas (por seguridad):</strong> /, /bin, /boot, /dev, /etc, /lib, /root, /sbin, /sys, /usr, /var
+                                    ❌ <strong>NO permitido (rechazado):</strong>
+                                    <ul class="mb-2" style="margin-top: 8px;">
+                                        <li>Raíz del sistema: <code>/</code></li>
+                                        <li>Un solo nivel: <code>/documents</code>, <code>/uploads</code></li>
+                                        <li>Directorios del sistema: <code>/bin, /boot, /etc, /usr, /var</code></li>
+                                    </ul>
                                 </small>
                                 @error('root')
                                     <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>

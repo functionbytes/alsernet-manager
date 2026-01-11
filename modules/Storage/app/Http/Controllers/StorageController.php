@@ -383,6 +383,19 @@ class StorageController extends Controller
             ];
         }
 
+        // Reject paths directly under root (single level like /documents, /uploads, etc)
+        // Paths must be at least 2 levels deep or under specific allowed prefixes
+        $pathParts = array_filter(explode('/', $rootPath));
+        $allowedPrefixes = ['mnt', 'data', 'opt', 'home', 'srv', 'media', 'storage'];
+        $firstPart = $pathParts[0] ?? null;
+
+        if (count($pathParts) === 1) {
+            return [
+                'success' => false,
+                'message' => "No se permiten directorios directamente bajo raíz como /{$firstPart}. Usa rutas como /mnt/storage, /data/uploads, /opt/storage, etc.",
+            ];
+        }
+
         // Validate that path doesn't contain suspicious patterns
         if (preg_match('/\$\{.*\}/', $rootPath) || preg_match('/`.*`/', $rootPath)) {
             return [
