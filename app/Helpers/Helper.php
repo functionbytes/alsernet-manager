@@ -204,3 +204,29 @@ if (! function_exists('execute_with_limits')) {
         return \Modules\Core\Helpers\execute_with_limits($rateTrackers, $creditTrackers, $task);
     }
 }
+
+// ============================================================================
+// Core Site Helpers
+// ============================================================================
+// Location: modules/Core/app/Helpers/SiteHelper.php
+
+if (! function_exists('getSiteName')) {
+    function getSiteName(): string
+    {
+        return \Modules\Core\Helpers\SiteHelper::getSiteName();
+    }
+}
+
+if (! function_exists('getSiteKeyword')) {
+    function getSiteKeyword(): string
+    {
+        return \Modules\Core\Helpers\SiteHelper::getSiteKeyword();
+    }
+}
+
+if (! function_exists('getSiteTitle')) {
+    function getSiteTitle(): string
+    {
+        return \Modules\Core\Helpers\SiteHelper::getSiteTitle();
+    }
+}
