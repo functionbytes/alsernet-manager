@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Pisos'])
+    @include('core::components.card', ['title' => 'Pisos'])
 
     @if(!$warehouse)
         <div class="alert alert-info">

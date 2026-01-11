@@ -2,9 +2,9 @@
 
 namespace Modules\Modules\Providers;
 
-use App\Services\NavService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as LaravelEventServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Modules\Theme\Services\NavService;
 
 class EventServiceProvider extends LaravelEventServiceProvider
 {

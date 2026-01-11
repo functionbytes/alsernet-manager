@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('theme.components.card', ['title' => 'Dashboard'])
+    @include('core::components.card', ['title' => 'Dashboard'])
 
     <div class="widget-content searchable-container list">
 

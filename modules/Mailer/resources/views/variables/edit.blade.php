@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Editar Variable de Email'])
+    @include('core::components.card', ['title' => 'Editar Variable de Email'])
 
     <div class="row">
         <div class="col-lg-12">

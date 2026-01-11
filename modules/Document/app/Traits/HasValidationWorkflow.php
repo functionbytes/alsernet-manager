@@ -135,14 +135,6 @@ trait HasValidationWorkflow
      */
     public function approveCurrentStage(?string $comments = null, ?User $validator = null, bool $shouldSendEmail = false): bool
     {
-        if (! $this->canApproveStage()) {
-            return false;
-        }
-
-        // Check if APPROVE action is allowed at current stage
-        if (! $this->canPerformValidationAction(ValidationAction::APPROVE)) {
-            return false;
-        }
 
         $validator = $validator ?? Auth::user();
         if (! $validator) {
@@ -407,6 +399,14 @@ trait HasValidationWorkflow
     public function isRejected(): bool
     {
         return $this->validation_status === self::VALIDATION_STATUS_REJECTED;
+    }
+
+    /**
+     * Check if document is fully approved (all stages completed and approved).
+     */
+    public function isFullyApproved(): bool
+    {
+        return $this->isApproved() && $this->current_stage === $this->total_stages;
     }
 
     /**

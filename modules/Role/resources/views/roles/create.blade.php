@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Crear Rol'])
+    @include('core::components.card', ['title' => 'Crear Rol'])
 
     {{-- Alertas --}}
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="card">
         <form id="formRoles" enctype="multipart/form-data" role="form" onSubmit="return false">

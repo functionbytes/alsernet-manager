@@ -23,8 +23,8 @@
 namespace Modules\Campaign\Library\Notification;
 
 use App\Models\Notification;
-use App\Models\Setting;
 use Carbon\Carbon;
+use Modules\Core\Models\Setting;
 
 /**
  * @property int $id

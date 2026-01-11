@@ -2,9 +2,9 @@
 
 namespace Modules\Erp\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Erp\Services\Integrations\ErpService;
+use Modules\Theme\Services\NavService;
 
 class ErpServiceProvider extends ServiceProvider
 {

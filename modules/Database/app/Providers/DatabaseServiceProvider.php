@@ -2,10 +2,11 @@
 
 namespace Modules\Database\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Models\Setting;
+use Modules\Theme\Services\NavService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -33,6 +34,9 @@ class DatabaseServiceProvider extends ServiceProvider
 
         // Register menus
         $this->registerMenus();
+
+        // Load dynamic database configuration
+        $this->loadDynamicDatabaseConfig();
     }
 
     /**
@@ -167,5 +171,70 @@ class DatabaseServiceProvider extends ServiceProvider
                 ['label' => 'Limpieza', 'route' => 'settings.database.cleanup.index'],
             ],
         ]);
+    }
+
+    /**
+     * Load dynamic database configuration from settings
+     */
+    private function loadDynamicDatabaseConfig(): void
+    {
+        // Only load if database is available
+        if ($this->app->runningInConsole() && ! $this->isDatabaseReady()) {
+            return;
+        }
+
+        try {
+            $this->loadDatabaseConfig();
+        } catch (\Exception $e) {
+            // Database config not available yet - silently fail
+        }
+    }
+
+    /**
+     * Check if database is ready and configured
+     */
+    private function isDatabaseReady(): bool
+    {
+        try {
+            \DB::connection()->getPDO();
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Load database configuration from database settings
+     */
+    private function loadDatabaseConfig(): void
+    {
+        try {
+            $dbSettings = Setting::getDatabaseSettings();
+
+            config([
+                'database.default' => $dbSettings['db_connection'],
+                'database.connections.mysql' => [
+                    'driver' => 'mysql',
+                    'host' => $dbSettings['db_host'],
+                    'port' => (int) $dbSettings['db_port'],
+                    'database' => $dbSettings['db_database'],
+                    'username' => $dbSettings['db_username'],
+                    'password' => $dbSettings['db_password'],
+                    'unix_socket' => env('DB_SOCKET', ''),
+                    'charset' => $dbSettings['db_charset'],
+                    'collation' => $dbSettings['db_collation'],
+                    'prefix' => '',
+                    'prefix_indexes' => true,
+                    'strict' => true,
+                    'engine' => null,
+                    'options' => extension_loaded('pdo_mysql') ? array_filter([
+                        \PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                    ]) : [],
+                ],
+            ]);
+        } catch (\Exception $e) {
+            // Database config not available yet
+        }
     }
 }

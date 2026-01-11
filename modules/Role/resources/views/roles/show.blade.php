@@ -4,9 +4,9 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Detalles del rol'])
+    @include('core::components.card', ['title' => 'Detalles del rol'])
 
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="row">
         <!-- Main Content -->

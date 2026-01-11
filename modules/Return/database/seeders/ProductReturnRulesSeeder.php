@@ -2,10 +2,10 @@
 
 namespace seeders;
 
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductReturnRule;
 use Illuminate\Database\Seeder;
+use Modules\Catalog\Models\Category;
 
 class ProductReturnRulesSeeder extends Seeder
 {

@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Services;
 
-use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Services\DocumentEmailService;
 use Tests\TestCase;

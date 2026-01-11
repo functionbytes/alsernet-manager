@@ -32,21 +32,21 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Middleware globales
         $middleware->append([
-            \App\Http\Middleware\TrustProxies::class,
-            \Illuminate\Http\Middleware\HandleCors::class,
-            \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+            \Modules\Core\Http\Middleware\TrustProxies::class,
+            \Modules\Core\Http\Middleware\HandleCors::class,
+            \Modules\System\Http\Middleware\PreventRequestsDuringMaintenance::class,
             \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-            \App\Http\Middleware\TrimStrings::class,
+            \Modules\Core\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         ]);
 
         // Middleware de grupos (Web y API)
         $middleware->group('web', [
-            \App\Http\Middleware\EncryptCookies::class,
+            \Modules\Core\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Modules\Core\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
@@ -57,18 +57,18 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth' => \Modules\Auth\Http\Middleware\Authenticate::class,
             'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
             'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
             'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
             'can' => \Illuminate\Auth\Middleware\Authorize::class,
-            'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'guest' => \Modules\Auth\Http\Middleware\RedirectIfAuthenticated::class,
             'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
             'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
-            'signed' => \App\Http\Middleware\ValidateSignature::class,
+            'signed' => \Modules\Core\Http\Middleware\ValidateSignature::class,
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-            'session' => \App\Http\Middleware\CheckSession::class,
+            'session' => \Modules\Auth\Http\Middleware\CheckSession::class,
 
             // Spatie Permission middlewares
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
@@ -76,7 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 
             // Document permission middleware
-            'document.permission' => \App\Http\Middleware\DocumentPermissionMiddleware::class,
+            'document.permission' => \Modules\Document\Http\Middleware\DocumentPermissionMiddleware::class,
 
         ]);
     })->withProviders([
@@ -94,15 +94,12 @@ return Application::configure(basePath: dirname(__DIR__))
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class, // NECESARIO si usas restablecimiento de contraseñas
         Illuminate\Notifications\NotificationServiceProvider::class, // NECESARIO para Notificaciones con Mail/SMS
         App\Providers\AppServiceProvider::class, // Registra configuraciones personalizadas de tu app
-        App\Providers\EventServiceProvider::class, // Registra eventos y listeners
         App\Providers\RouteServiceProvider::class, // Configura rutas y middlewares
         Illuminate\Foundation\Providers\FoundationServiceProvider::class, // NECESARIO para MaintenanceMode
         Illuminate\Encryption\EncryptionServiceProvider::class, // Agregado para corregir "encrypter"
         Illuminate\Cookie\CookieServiceProvider::class, // NECESARIO para Cookie::queue()
         Illuminate\Auth\AuthServiceProvider::class, // NECESARIO para Auth::attempt(), Auth::user()
         Illuminate\Redis\RedisServiceProvider::class, // Agregado para corregir "redis"
-        // BotMan\BotMan\BotManServiceProvider::class, // Commented out - BotMan not installed
-        App\Providers\DynamicConfigServiceProvider::class, // Load dynamic config from database
     ])
     ->withExceptions(function (Exceptions $exceptions) {
         //

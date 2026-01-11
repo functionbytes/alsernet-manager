@@ -71,7 +71,7 @@ class SubscriberCategorie extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
+        return $this->belongsTo(\Modules\Catalog\Models\Category::class, 'category_id', 'id');
     }
 
     public function subscriber(): BelongsTo

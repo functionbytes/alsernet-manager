@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 class CheckRolesAndPermissions
 {
-
     /**
      * Mapping of HTTP actions to permission suffixes
      */
@@ -39,7 +38,7 @@ class CheckRolesAndPermissions
         $user = Auth::user();
 
         if (! $user) {
-            return redirect()->route('login');
+            return redirect()->route('auth.login');
         }
 
         // Super-admin has access to everything
@@ -50,7 +49,7 @@ class CheckRolesAndPermissions
         // If roleType is specified, check if user has that role
         if ($roleType && ! $user->hasRole($roleType)) {
             $this->logAccessDenial($request, $user, "Rol '{$roleType}' no autorizado para acceder a esta sección");
-            abort(403, "No tienes permisos para acceder a esta sección.");
+            abort(403, 'No tienes permisos para acceder a esta sección.');
         }
 
         // Check specific permissions for the route

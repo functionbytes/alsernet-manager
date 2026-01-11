@@ -21,6 +21,12 @@ class ReverServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/reverb.php',
+            'reverb'
+        );
     }
 
     /**

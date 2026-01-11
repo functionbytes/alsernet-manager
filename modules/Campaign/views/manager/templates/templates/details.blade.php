@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Historico inventario'])
+    @include('core::components.card', ['title' => 'Historico inventario'])
 
     <div class="widget-content searchable-container list">
 

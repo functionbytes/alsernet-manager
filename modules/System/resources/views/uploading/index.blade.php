@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de carga de archivos'])
+    @include('core::components.card', ['title' => 'Configuración de carga de archivos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <form method="POST" action="{{ route('settings.system.uploading.update') }}">
             @csrf

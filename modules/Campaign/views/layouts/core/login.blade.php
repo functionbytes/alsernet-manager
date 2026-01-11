@@ -77,7 +77,7 @@
         </div>
         <!-- /page container -->
 
-        {!! \App\Models\Setting::get('custom_script') !!}
+        {!! Setting::get('custom_script') !!}
 
     </body>
 </html>

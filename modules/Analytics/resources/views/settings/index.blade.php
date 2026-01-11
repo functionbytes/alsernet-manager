@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Google Analytics GA4'])
+    @include('core::components.card', ['title' => 'Configuración de Google Analytics GA4'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <form method="POST" action="{{ route('settings.analytics.update') }}" id="analyticsForm">
             @csrf

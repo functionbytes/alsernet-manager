@@ -1,9 +1,9 @@
 @extends('layouts.theme')
 
 @section('content')
-    @include('theme.components.card', ['title' => 'Calendario de eventos'])
+    @include('core::components.card', ['title' => 'Calendario de eventos'])
 
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="card">
         <div class="card-header bg-white border-bottom">

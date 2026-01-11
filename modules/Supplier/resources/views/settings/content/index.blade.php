@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Revisión de Contenido'])
+    @include('core::components.card', ['title' => 'Revisión de Contenido'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             <!-- Header Section -->

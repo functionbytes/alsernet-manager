@@ -2,7 +2,7 @@
 
 namespace Modules\Document\Providers;
 
-use App\Services\NavService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +19,7 @@ use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
 use Modules\Document\Policies\SettingsPolicy;
 use Modules\Document\Services\PermissionService;
+use Modules\Theme\Services\NavService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -30,6 +31,23 @@ class DocumentsServiceProvider extends ServiceProvider
     protected string $name = 'Document';
 
     protected string $nameLower = 'documents';
+
+    public function register(): void
+    {
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/documents.php',
+            'documents'
+        );
+
+        $this->app->singleton(
+            PermissionService::class,
+            fn ($app) => new PermissionService
+        );
+
+        // Registrar DocumentPolicy
+        $this->registerPolicies();
+    }
 
     public function boot(): void
     {
@@ -45,17 +63,6 @@ class DocumentsServiceProvider extends ServiceProvider
 
         // Register routes directly (Laravel 12 compatible)
         $this->registerRoutes();
-    }
-
-    public function register(): void
-    {
-        $this->app->singleton(
-            PermissionService::class,
-            fn ($app) => new PermissionService
-        );
-
-        // Registrar DocumentPolicy
-        $this->registerPolicies();
     }
 
     /**
@@ -158,10 +165,16 @@ class DocumentsServiceProvider extends ServiceProvider
      */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Send document reminders - every 10 minutes
+            $schedule->command('documents:send-reminders')
+                ->everyTenMinutes()
+                ->withoutOverlapping()
+                ->runInBackground()
+                ->appendOutputTo(storage_path('logs/document-reminders.log'));
+        });
     }
 
     public function registerTranslations(): void

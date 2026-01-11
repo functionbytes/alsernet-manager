@@ -3,12 +3,12 @@
 namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Google\Client as GoogleClient;
 use Google\Service\Gmail;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Models\Setting;
 
 class IncomingEmailSettingsController extends Controller
 {

@@ -12,109 +12,87 @@ class InitializeDocumentWorkflows extends Command
      *
      * @var string
      */
-    protected $signature = 'documents:init-workflows
-                            {--dry-run : Run without making changes}
-                            {--force : Skip confirmation}';
+    protected $signature = 'documents:initialize-workflows
+                            {--status=pending : Filter documents by validation status (pending, in_validation, all)}
+                            {--limit=0 : Limit number of documents to process (0 = no limit)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Initialize validation workflows for documents that don\'t have them configured';
+    protected $description = 'Initialize validation workflows for existing documents that are missing them';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
-        $this->info('🔍 Buscando documentos sin workflow inicializado...');
+        $this->info('Starting document workflow initialization...');
 
-        // Find documents without workflow initialized
-        $documents = Document::whereNull('current_validator_group')
-            ->whereNotIn('validation_status', ['approved', 'rejected'])
-            ->get();
+        $status = $this->option('status');
+        $limit = (int) $this->option('limit');
 
-        $count = $documents->count();
+        // Build query for documents needing workflow initialization
+        $query = Document::whereNull('current_validator_group');
 
-        if ($count === 0) {
-            $this->info('✅ No hay documentos que necesiten inicialización de workflow.');
-
-            return Command::SUCCESS;
+        if ($status === 'all') {
+            $query = Document::whereNull('current_validator_group');
+        } else {
+            $query = $query->where('validation_status', $status);
         }
 
-        $this->info("📊 Se encontraron {$count} documentos que necesitan workflow.");
-
-        // Show sample
-        $this->table(
-            ['UID', 'Type', 'Financing', 'Status'],
-            $documents->take(5)->map(fn ($doc) => [
-                $doc->uid,
-                $doc->type,
-                $doc->requires_financing ? 'Sí' : 'No',
-                $doc->validation_status,
-            ])
-        );
-
-        if ($count > 5) {
-            $this->line("... y {$count} documentos más");
+        if ($limit > 0) {
+            $query = $query->limit($limit);
         }
 
-        // Dry run check
-        if ($this->option('dry-run')) {
-            $this->warn('🔎 Modo dry-run: no se realizarán cambios.');
+        $total = $query->count();
 
-            return Command::SUCCESS;
+        if ($total === 0) {
+            $this->warn('No documents found needing workflow initialization.');
+
+            return 0;
         }
 
-        // Confirmation
-        if (! $this->option('force')) {
-            if (! $this->confirm("¿Deseas inicializar el workflow en {$count} documentos?", true)) {
-                $this->warn('❌ Operación cancelada.');
+        $this->info("Found {$total} documents to initialize.");
 
-                return Command::FAILURE;
-            }
-        }
+        $progressBar = $this->output->createProgressBar($total);
+        $progressBar->start();
 
-        // Process documents
-        $this->info('⚙️  Inicializando workflows...');
-        $bar = $this->output->createProgressBar($count);
-        $bar->start();
-
-        $successful = 0;
+        $initialized = 0;
         $failed = 0;
+
+        $documents = $query->get();
 
         foreach ($documents as $document) {
             try {
-                $document->initializeWorkflow();
-                $successful++;
+                $stages = $document->getValidationWorkflowStages();
+
+                if (empty($stages)) {
+                    $progressBar->advance();
+                    $failed++;
+
+                    continue;
+                }
+
+                $document->initializeValidationWorkflow($stages);
+                $initialized++;
             } catch (\Exception $e) {
+                $this->error("\nError initializing document {$document->uid}: {$e->getMessage()}");
                 $failed++;
-                $this->newLine();
-                $this->error("❌ Error en documento {$document->uid}: {$e->getMessage()}");
             }
 
-            $bar->advance();
+            $progressBar->advance();
         }
 
-        $bar->finish();
+        $progressBar->finish();
+
         $this->newLine(2);
+        $this->info('✓ Workflow initialization completed!');
+        $this->line("  Initialized: <fg=green>{$initialized}</fg=green> documents");
+        $this->line("  Failed/Skipped: <fg=yellow>{$failed}</fg=yellow> documents");
+        $this->line("  Total processed: <fg=blue>{$total}</fg=blue> documents");
 
-        // Summary
-        $this->info('📈 Resumen:');
-        $this->table(
-            ['Estado', 'Cantidad'],
-            [
-                ['✅ Exitosos', $successful],
-                ['❌ Fallidos', $failed],
-                ['📊 Total', $count],
-            ]
-        );
-
-        if ($successful > 0) {
-            $this->info('✅ Workflows inicializados correctamente.');
-        }
-
-        return $failed > 0 ? Command::FAILURE : Command::SUCCESS;
+        return 0;
     }
 }

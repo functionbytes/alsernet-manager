@@ -167,7 +167,7 @@
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- System Settings Card -->
         <div class="card shadow-sm" style="border-radius: 12px; border: 1px solid #e0e0e0;">

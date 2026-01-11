@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Editar Miembro del Equipo'])
+    @include('core::components.card', ['title' => 'Editar Miembro del Equipo'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card w-100">
 

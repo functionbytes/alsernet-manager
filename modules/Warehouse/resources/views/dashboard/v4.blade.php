@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('theme.components.card', ['title' => 'Dashboard'])
+    @include('core::components.card', ['title' => 'Dashboard'])
 
     {{-- Top Stats Row - White Background --}}
     <div class="row g-3 mb-4">

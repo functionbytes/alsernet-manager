@@ -21,7 +21,7 @@
                     </a>
                 </div>
 
-                @include('theme.components.alerts')
+                @include('core::components.alerts')
 
                 <div class="row">
 

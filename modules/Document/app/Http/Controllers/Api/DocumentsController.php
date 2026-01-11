@@ -12,8 +12,8 @@ use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentSync;
 use Modules\Document\Entities\DocumentType;
-// use Modules\Document\Events\DocumentCreated; // Event no implementado
 use Modules\Document\Entities\DocumentUploadType;
+use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Services\DocumentEmailService;
 use Modules\Document\Services\DocumentTypeService;
@@ -372,7 +372,7 @@ class DocumentsController extends Controller
                 'order_id' => $document->order_id,
                 'method' => 'documentRequests',
             ]);
-            // DocumentCreated::dispatch($document); // Event no implementado
+            DocumentCreated::dispatch($document);
 
             MailTemplateJob::dispatch($document, 'request');
 
@@ -1147,9 +1147,8 @@ class DocumentsController extends Controller
         $orderId = $request->input('order_id');
 
         try {
-            // Obtener documentos asociados a la orden
-            $documents = Document::where('order_id', $orderId)
-                ->get();
+
+            $documents = Document::where('order_id', $orderId)->get();
 
             if ($documents->isEmpty()) {
                 return response()->json([

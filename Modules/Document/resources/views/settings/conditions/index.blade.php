@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Condiciones de validación'])
+    @include('core::components.card', ['title' => 'Condiciones de validación'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Validation Conditions Card -->
         <div class="card">
@@ -207,7 +207,7 @@
         </div>
     </div>
 
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
 @endsection
 

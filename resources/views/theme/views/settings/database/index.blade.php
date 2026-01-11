@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Base de Datos'])
+    @include('core::components.card', ['title' => 'Configuración de Base de Datos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         @if(isset($error))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">

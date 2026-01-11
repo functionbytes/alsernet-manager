@@ -2,10 +2,10 @@
 
 namespace Modules\Mailer\Services;
 
-use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use League\Pipeline\PipelineBuilder;
 use Modules\Campaign\Models\Template\Template;
+use Modules\Core\Models\Setting;
 use Modules\Mailer\Library\AddDoctype;
 use Modules\Mailer\Library\DecodeHtmlSpecialChars;
 use Modules\Mailer\Library\GenerateSpintax;

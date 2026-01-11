@@ -2,6 +2,7 @@
 
 namespace Modules\Returns\Providers;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
@@ -85,10 +86,23 @@ class ReturnsServiceProvider extends ServiceProvider
      */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Send return reminders daily at 10:00 AM
+            $schedule->command('returns:send-reminders')
+                ->dailyAt('10:00')
+                ->withoutOverlapping()
+                ->runInBackground()
+                ->appendOutputTo(storage_path('logs/return-reminders.log'));
+
+            // Clean up old communications weekly on Sundays at 02:00 AM
+            $schedule->command('returns:cleanup-communications --days=90')
+                ->weekly()
+                ->sundays()
+                ->at('02:00')
+                ->withoutOverlapping();
+        });
     }
 
     /**

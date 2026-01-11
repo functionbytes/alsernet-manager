@@ -3,7 +3,6 @@
 namespace Modules\Campaign\Library;
 
 use Symfony\Component\CssSelector\Exception\ParseException;
-use function App\Helpers\url_get_contents_ssl_safe;
 
 /**
  * Parses a html file and applies all embedded and external stylesheets inline

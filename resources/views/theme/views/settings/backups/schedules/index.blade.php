@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Listado de programación de copias'])
+    @include('core::components.card', ['title' => 'Listado de programación de copias'])
 
     <div class="widget-content searchable-container list">
         @if ($message = Session::get('success'))

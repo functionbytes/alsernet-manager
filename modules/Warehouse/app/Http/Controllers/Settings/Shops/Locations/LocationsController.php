@@ -4,10 +4,10 @@ namespace Modules\Warehouse\Http\Controllers\Settings\Shops\Locations;
 
 use App\Http\Controllers\Controller;
 use App\Models\Location;
-use App\Models\Shop;
 use App\Models\Warehouse\InventarieLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Catalog\Models\Shop;
 
 class LocationsController extends Controller
 {

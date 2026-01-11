@@ -4,7 +4,7 @@
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         {{-- Main Card --}}
         <div class="card">

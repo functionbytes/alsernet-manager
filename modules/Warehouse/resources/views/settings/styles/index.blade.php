@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Estilos de estanterías'])
+    @include('core::components.card', ['title' => 'Estilos de estanterías'])
 
     <div class="widget-content searchable-container list">
 

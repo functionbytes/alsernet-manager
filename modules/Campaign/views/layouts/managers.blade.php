@@ -80,7 +80,7 @@
             @yield('content')
         </div>
 
-        @include ('theme.components.delete')
+        @include ('core::components.delete')
 
     </div>
 

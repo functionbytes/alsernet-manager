@@ -37902,8 +37902,6 @@ body {
 
 .body-wrapper {
     margin-top: 72px;
-    margin-left: calc(30px / 2);
-    margin-right: calc(30px / 2);
     margin-bottom: 30px;
     background: #f5f6f8;
     min-height: calc(100% - 102px)

@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Gestión de Permisos'])
+    @include('core::components.card', ['title' => 'Gestión de Permisos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             <div class="card-header p-4 border-bottom border-light">
@@ -230,7 +230,7 @@
     </div>
 
     {{-- Delete Modal --}}
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
 @endsection
 

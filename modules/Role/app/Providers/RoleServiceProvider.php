@@ -2,9 +2,9 @@
 
 namespace Modules\Role\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class RoleServiceProvider extends ServiceProvider
 {
@@ -12,6 +12,22 @@ class RoleServiceProvider extends ServiceProvider
 
     public function register()
     {
+        // Merge module configs
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/permission.php',
+            'permission'
+        );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/permissions.php',
+            'permissions'
+        );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/validation-permissions.php',
+            'validation-permissions'
+        );
+
         // Register PermissionBladeServiceProvider
         $this->app->register(PermissionBladeServiceProvider::class);
     }

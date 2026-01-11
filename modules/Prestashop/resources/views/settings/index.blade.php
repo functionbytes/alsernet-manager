@@ -2,7 +2,7 @@
 
 @section('content')
 
-  @include('theme.components.card', ['title' => 'Configuración PrestaShop'])
+  @include('core::components.card', ['title' => 'Configuración PrestaShop'])
 
   <div class="widget-content searchable-container list">
 

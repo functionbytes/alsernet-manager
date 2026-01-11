@@ -13,10 +13,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Campaign\Models\Template\Template;
+use Modules\Core\Models\Setting;
 use Modules\Document\Traits\HasDocumentPermissions;
 use Modules\Subscriber\Jobs\ImportBlacklistJob;
 use Modules\Subscriber\Models\Subscriber;
-use Modules\Warehouse\Traits\HasWarehousePermissions;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
@@ -142,11 +142,6 @@ class User extends Authenticatable
         return 'core.dashboard';
     }
 
-    public function passwordHistories(): HasMany
-    {
-        return $this->hasMany('App\Models\Setting\PasswordHistory', 'user_id');
-    }
-
     public function sessions(): HasMany
     {
         return $this->hasMany('App\Models\Session', 'user_id');
@@ -231,7 +226,7 @@ class User extends Authenticatable
 
     public function shop(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Shop', 'shop_id', 'id');
+        return $this->belongsTo('Modules\Catalog\Models\Shop', 'shop_id', 'id');
     }
 
     /**
@@ -796,7 +791,7 @@ class User extends Authenticatable
         if (! empty($this->color_scheme)) {
             return $this->color_scheme;
         } else {
-            return \App\Models\Setting::get('frontend_scheme');
+            return Setting::get('frontend_scheme');
         }
     }
 
@@ -872,7 +867,7 @@ class User extends Authenticatable
         }
 
         // Read all check
-        if (! $request->user()->admin->can('readAll', new \App\Models\Customer)) {
+        if (! $request->user()->admin->can('readAll', new \Modules\Customer\Models\Customer)) {
             $query = $query->where('customers.admin_id', '=', $request->user()->admin->id);
         }
 
@@ -927,9 +922,9 @@ class User extends Authenticatable
      */
     public static function customersCountByTime($begin, $end, $admin = null)
     {
-        $query = \App\Models\Customer::select('customers.*');
+        $query = \Modules\Customer\Models\Customer::select('customers.*');
 
-        if (isset($admin) && ! $admin->can('readAll', new \App\Models\Customer)) {
+        if (isset($admin) && ! $admin->can('readAll', new \Modules\Customer\Models\Customer)) {
             $query = $query->where('customers.admin_id', '=', $admin->id);
         }
 
@@ -1910,7 +1905,7 @@ class User extends Authenticatable
     public static function newCustomer()
     {
         $customer = new self;
-        $customer->menu_layout = \App\Models\Setting::get('layout.menu_bar');
+        $customer->menu_layout = Setting::get('layout.menu_bar');
 
         return $customer;
     }

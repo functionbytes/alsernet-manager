@@ -4,7 +4,7 @@
 
 
 
-    @include('theme.components.card', ['title' => 'Importar Documentos'])
+    @include('core::components.card', ['title' => 'Importar Documentos'])
 
     @if ($message = session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

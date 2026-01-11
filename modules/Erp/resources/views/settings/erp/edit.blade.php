@@ -2,7 +2,7 @@
 
 @section('content')
 
-  @include('theme.components.card', ['title' => 'Editar Configuración ERP'])
+  @include('core::components.card', ['title' => 'Editar Configuración ERP'])
 
   <div class="widget-content searchable-container list">
       <form action="{{ route('settings.erp.update') }}" method="POST">

@@ -3,8 +3,8 @@
 namespace Modules\Telescope\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Laravel\Telescope\Telescope;
 use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 
 class TelescopeServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,11 @@ class TelescopeServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/telescope.php',
+            'telescope'
+        );
     }
 
     /**
@@ -30,7 +34,7 @@ class TelescopeServiceProvider extends ServiceProvider
         $this->configureAuthorization();
 
         // Only load Telescope in development or if explicitly enabled
-        if (!$this->app->environment('production')) {
+        if (! $this->app->environment('production')) {
             Telescope::night();
         }
 
@@ -113,7 +117,7 @@ class TelescopeServiceProvider extends ServiceProvider
      */
     private function registerRoutes(): void
     {
-        if (!$this->app->environment('production')) {
+        if (! $this->app->environment('production')) {
             // Load Telescope routes automatically
             Telescope::startRecording();
         }

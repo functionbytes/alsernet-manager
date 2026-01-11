@@ -3,10 +3,10 @@
 namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Modules\Core\Models\Setting;
 
 class OutgoingEmailSettingsController extends Controller
 {

@@ -2,17 +2,17 @@
 
 namespace Modules\Campaign\Library\Traits;
 
-use App\Models\Jobs\JobMonitor;
 use Exception;
 use Illuminate\Bus\Batch;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Support\Facades\Bus;
+use Modules\Horizon\Models\JobMonitor;
 
 trait TrackJobs
 {
     public function jobMonitors()
     {
-        return $this->hasMany('App\Models\Jobs\JobMonitor', 'subject_id')->where('subject_name', self::class);
+        return $this->hasMany(JobMonitor::class, 'subject_id')->where('subject_name', self::class);
     }
 
     // DO NOT USE DB TRANSACTION

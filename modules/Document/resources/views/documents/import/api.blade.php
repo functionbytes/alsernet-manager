@@ -14,7 +14,7 @@
         </a>
     @else
 
-    @include('theme.components.card', ['title' => 'Importar desde PrestaShop'])
+    @include('core::components.card', ['title' => 'Importar desde PrestaShop'])
 
     <div class="widget-content">
         <div class="card card-body">

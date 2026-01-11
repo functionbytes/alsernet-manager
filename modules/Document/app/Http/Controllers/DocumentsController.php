@@ -3,10 +3,10 @@
 namespace Modules\Document\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentAction;
 use Modules\Document\Entities\DocumentLoad;

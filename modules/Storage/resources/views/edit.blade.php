@@ -42,7 +42,7 @@
                     @if($isFromConfig)
                         <div class="col-12">
                             <div class="alert bg-light border-0 mb-3">
-                                <h6 class="mb-1 fw-semibold"><i class="fas fa-exclamation-triangle me-2"></i>Disco del archivo de configuración</h6>
+                                <h6 class="mb-1 fw-semibold">Disco del archivo de configuración</h6>
                                 <p class="mb-0">Los cambios crearán una copia en la base de datos que sobrescribirá la configuración del archivo.</p>
                             </div>
                         </div>
@@ -150,11 +150,8 @@
 
                         {{-- Information Box --}}
                         <div class="col-12">
-                            <div class="alert alert-info border-start border-4 border-info" role="alert">
+                            <div class="alert alert-info " role="alert">
                                 <div class="d-flex">
-                                    <div class="me-3">
-                                        <i class="fas fa-info-circle fa-lg"></i>
-                                    </div>
                                     <div>
                                         <strong>Ubicación actual</strong>
                                         <ul class="mb-0 mt-2">

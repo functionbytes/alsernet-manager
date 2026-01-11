@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>@yield('title') - {{ \App\Models\Setting::get("site_name") }}</title>
+	<title>@yield('title') - {{ Setting::get("site_name") }}</title>
 
 	@include('layouts.core._head')
 </head>
@@ -48,7 +48,7 @@
 	</div>
 	<!-- /page container -->
 
-    {!! \App\Models\Setting::get('custom_script') !!}
+    {!! Setting::get('custom_script') !!}
 
 </body>
 </html>

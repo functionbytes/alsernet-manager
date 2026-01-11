@@ -2,11 +2,11 @@
 
 namespace Modules\Prestashop\Services;
 
-use App\Models\Category;
 use App\Models\PrestaShopCategoryMapping;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Catalog\Models\Category;
 use Modules\Prestashop\Entities\Category as PrestaShopCategory;
 
 /**

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Documentación REST API - Incoming Email'])
+    @include('core::components.card', ['title' => 'Documentación REST API - Incoming Email'])
 
     <div class="widget-content searchable-container list">
 

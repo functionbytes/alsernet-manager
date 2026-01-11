@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Jobs;
 
-use App\Jobs\Base;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Modules\Core\Jobs\Base;
 
 class UpdateCampaignJob extends Base implements ShouldBeUnique
 {

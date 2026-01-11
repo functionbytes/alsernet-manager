@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Estadistica lista '. $list->title])
+    @include('core::components.card', ['title' => 'Estadistica lista '. $list->title])
 
 @endsection
 

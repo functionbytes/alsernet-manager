@@ -26,6 +26,6 @@
 	<!-- Admin area -->
 	@include('layouts.core._admin_area')
 
-	{!! \App\Models\Setting::get('custom_script') !!}
+	{!! Setting::get('custom_script') !!}
 </body>
 </html>

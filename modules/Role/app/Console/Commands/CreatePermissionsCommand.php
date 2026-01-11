@@ -2,8 +2,8 @@
 
 namespace Modules\Role\Console\Commands;
 
-use App\Models\AppRoute;
 use Illuminate\Console\Command;
+use Modules\Role\Models\AppRoute;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 

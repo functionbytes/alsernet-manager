@@ -2,8 +2,8 @@
 
 namespace Modules\Erp\Console\Commands;
 
-use App\Models\Setting;
 use Illuminate\Console\Command;
+use Modules\Core\Models\Setting;
 use Modules\Supplier\Services\Integrations\ErpService;
 
 class ErpCheckCommand extends Command

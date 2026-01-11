@@ -32,7 +32,7 @@ components/
 - 1 modal → `files/modals/`
 
 **Validation Components (3 files)**
-- `validation-workflow-sidebar.blade.php` → `validation/`
+- `workflow.blade.php` → `validation/`
 - 2 modals → `validation/modals/`
 
 **Document Notes Components (2 files)**
@@ -62,7 +62,7 @@ Updated all `@include()` statements to use the correct namespaced paths:
 **Files Updated:**
 1. `manage.blade.php` - 8 includes
 2. `components/email/actions-card.blade.php` - 7 email modal includes
-3. `components/validation/validation-workflow-sidebar.blade.php` - 2 workflow modal includes
+3. `components/validation/workflow.blade.php` - 2 workflow modal includes
 4. `components/management/document-management-card.blade.php` - 1 configuration modal include
 
 ### 4. Cache Clearing
@@ -103,7 +103,7 @@ Important: Views in the Document module must include the `documents` folder in t
 All view paths have been tested and verified to resolve correctly:
 - ✅ `documents::documents.components.management.action-history`
 - ✅ `documents::documents.components.email.email-history`
-- ✅ `documents::documents.components.validation.validation-workflow-sidebar`
+- ✅ `documents::documents.components.validation.workflow-sidebar`
 - ✅ All modal includes
 
 All routes have been verified:
@@ -132,7 +132,7 @@ modules/Document/resources/views/
 │   │   │   └── modals/
 │   │   │       └── confirm-delete.blade.php
 │   │   ├── validation/
-│   │   │   ├── validation-workflow-sidebar.blade.php
+│   │   │   ├── workflow.blade.php
 │   │   │   └── modals/
 │   │   │       ├── approve-stage.blade.php
 │   │   │       └── reject-stage.blade.php

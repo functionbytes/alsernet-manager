@@ -3,10 +3,10 @@
 namespace Modules\System\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Queue;
+use Modules\Core\Models\Setting;
 
 class SystemSettingsController extends Controller
 {

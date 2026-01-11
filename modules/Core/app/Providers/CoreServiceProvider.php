@@ -2,15 +2,30 @@
 
 namespace Modules\Core\Providers;
 
-use App\Services\NavService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class CoreServiceProvider extends ServiceProvider
 {
     protected string $moduleName = 'Core';
 
     protected string $moduleNameLower = 'core';
+
+    public function register(): void
+    {
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/languages.php',
+            'languages'
+        );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/localization.php',
+            'localization'
+        );
+    }
 
     public function boot(): void
     {
@@ -27,6 +42,9 @@ class CoreServiceProvider extends ServiceProvider
 
         // Register menus
         $this->registerMenus();
+
+        // Register scheduled tasks
+        $this->registerSchedules();
     }
 
     protected function registerRoutes(): void
@@ -79,5 +97,28 @@ class CoreServiceProvider extends ServiceProvider
                 ['label' => 'Dashboard', 'route' => 'core.dashboard'],
             ],
         ]);
+    }
+
+    /**
+     * Register scheduled tasks for Core module
+     */
+    protected function registerSchedules(): void
+    {
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // System cleanup - daily
+            $schedule->command('system:cleanup')->daily();
+
+            // GeoIP database check - every minute
+            $schedule->command('geoip:check')->everyMinute()->withoutOverlapping(60);
+
+            // Cache and config clearing - every 30 minutes
+            $schedule->command('cache:clear')->everyThirtyMinutes();
+            $schedule->command('config:clear')->everyThirtyMinutes();
+            $schedule->command('route:clear')->everyThirtyMinutes();
+            $schedule->command('optimize:clear')->everyThirtyMinutes();
+            $schedule->command('view:clear')->everyThirtyMinutes();
+        });
     }
 }

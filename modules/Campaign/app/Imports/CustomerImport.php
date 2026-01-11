@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Customer;
 use App\Models\CustomerSetting;
 use Exception;
 use Hash;
@@ -12,6 +11,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Modules\Customer\Models\Customer;
 
 class CustomerImport implements SkipsOnError, ToModel, WithHeadingRow, WithValidation
 {

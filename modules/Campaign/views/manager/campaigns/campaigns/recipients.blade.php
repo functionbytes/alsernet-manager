@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Crear campaña'])
+    @include('core::components.card', ['title' => 'Crear campaña'])
 
     <div class="card">
         <ul class="nav nav-pills user-profile-tab" id="pills-tab" role="tablist">

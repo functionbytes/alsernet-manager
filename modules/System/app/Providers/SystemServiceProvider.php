@@ -2,9 +2,9 @@
 
 namespace Modules\System\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
 use Modules\System\Services\SystemInfoService;
+use Modules\Theme\Services\NavService;
 
 class SystemServiceProvider extends ServiceProvider
 {

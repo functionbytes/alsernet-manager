@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Matriz de permisos por rol'])
+    @include('core::components.card', ['title' => 'Matriz de permisos por rol'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             <div class="card-header p-4 border-bottom border-light">

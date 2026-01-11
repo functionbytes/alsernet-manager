@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            @include('theme.components.card', ['title' => 'Editar evento'])
+            @include('core::components.card', ['title' => 'Editar evento'])
 
             <div class="card">
                 {{-- Header --}}

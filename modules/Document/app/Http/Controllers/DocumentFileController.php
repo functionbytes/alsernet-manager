@@ -5,6 +5,7 @@ namespace Modules\Document\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Services\DocumentEmailService;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -343,7 +344,7 @@ class DocumentFileController extends Controller
     public function getNetworkDisks(): JsonResponse
     {
         // Obtener discos de red configurados desde settings
-        $networkDisks = \App\Models\Setting::get('network_disks', '[]');
+        $networkDisks = Setting::get('network_disks', '[]');
         $disks = json_decode($networkDisks, true) ?: [];
 
         return response()->json([

@@ -4,7 +4,7 @@ namespace App\Listeners\Subscribers;
 
 use Modules\Campaign\Events\MailListSubscription;
 use Modules\Campaign\Events\MailListUnsubscription;
-use App\Models\Setting;
+use Modules\Core\Models\Setting;
 
 class SendListNotificationToOwner
 {

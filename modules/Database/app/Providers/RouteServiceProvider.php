@@ -35,7 +35,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(): void
     {
-        Route::middleware('web')->group(module_path($this->name, '/routes/web.php'));
+        // Routes are registered in DatabaseServiceProvider with proper prefix and middleware
+        // This method is kept for compatibility but actual routes are in registerRoutes()
     }
 
     /**

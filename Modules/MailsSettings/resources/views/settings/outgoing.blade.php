@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Correo Saliente'])
+    @include('core::components.card', ['title' => 'Configuración de Correo Saliente'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Outgoing Email Settings Card -->
         <div class="card">

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' =>  $pageTitle ])
+    @include('core::components.card', ['title' =>  $pageTitle ])
 
 
     <!-- Form -->

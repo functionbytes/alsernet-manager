@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Crear Conversación'])
+    @include('core::components.card', ['title' => 'Crear Conversación'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <form method="POST" action="{{ route('manager.helpdesk.conversations.store') }}">
             @csrf

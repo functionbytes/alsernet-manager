@@ -2,8 +2,8 @@
 
 namespace Modules\Subscriber\Jobs\Subscribers;
 
-use App\Jobs\Base;
 use Modules\Campaign\Library\Traits\Trackable;
+use Modules\Core\Jobs\Base;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

@@ -60,7 +60,7 @@ use Throwable;
  * @property string|null $last_error
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Customer|null $customer
+ * @property-read \Modules\Customer\Models\Customer|null $customer
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Automation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Automation newQuery()
@@ -194,7 +194,7 @@ class Automation extends Model
      */
     public function customer()
     {
-        return $this->belongsTo('App\Models\Customer');
+        return $this->belongsTo('Modules\Customer\Models\Customer');
     }
 
     /**

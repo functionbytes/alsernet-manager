@@ -109,11 +109,8 @@
 
                         {{-- Information Box --}}
                         <div class="col-12">
-                            <div class="alert alert-info border-start border-4 border-info" role="alert">
+                            <div class="alert alert-info" role="alert">
                                 <div class="d-flex">
-                                    <div class="me-3">
-                                        <i class="fas fa-info-circle fa-lg"></i>
-                                    </div>
                                     <div>
                                         <strong>¿Dónde se guardarán los archivos?</strong>
                                         <ul class="mb-0 mt-2">

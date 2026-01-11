@@ -110,7 +110,7 @@
                                     <label class="form-label fw-semibold">Categoría específica</label>
                                     <select class="form-select" name="category_id" id="categorySelect">
                                         <option value="">Seleccionar categoría...</option>
-                                        @foreach(\App\Models\Category::orderBy('title')->get() as $category)
+                                        @foreach(\Modules\Catalog\Models\Category::orderBy('title')->get() as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id', $prompt->category_id) == $category->id ? 'selected' : '' }}>
                                                 {{ $category->title }}
                                             </option>

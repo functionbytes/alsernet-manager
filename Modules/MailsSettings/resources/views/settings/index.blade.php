@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Email'])
+    @include('core::components.card', ['title' => 'Configuración de Email'])
 
         @if ($message = session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

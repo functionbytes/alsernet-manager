@@ -2,7 +2,6 @@
 
 namespace Modules\Campaign\Library\Traits;
 
-use App\Models\Setting;
 use Cache;
 use Exception;
 use League\Pipeline\PipelineBuilder;
@@ -25,6 +24,7 @@ use Modules\Campaign\Library\HtmlHandler\TransformWidgets;
 use Modules\Campaign\Library\Lockable;
 use Modules\Campaign\Library\StringHelper;
 use Modules\Campaign\Models\Template\Template;
+use Modules\Core\Models\Setting;
 use Soundasleep\Html2Text;
 
 trait HasTemplate

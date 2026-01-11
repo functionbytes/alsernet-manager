@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de IA del Helpdesk'])
+    @include('core::components.card', ['title' => 'Configuración de IA del Helpdesk'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <form method="POST" action="{{ route('manager.helpdesk.backups.ai.update') }}" id="aiForm">
             @csrf

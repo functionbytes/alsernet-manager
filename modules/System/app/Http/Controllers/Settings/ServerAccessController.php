@@ -3,9 +3,9 @@
 namespace Modules\System\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicationLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Modules\Activity\Models\ApplicationLog;
 
 class ServerAccessController extends Controller
 {

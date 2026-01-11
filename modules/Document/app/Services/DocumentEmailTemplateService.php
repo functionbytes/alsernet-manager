@@ -2,9 +2,9 @@
 
 namespace Modules\Document\Services;
 
-use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentLang;
 use Modules\Document\Entities\DocumentMail;

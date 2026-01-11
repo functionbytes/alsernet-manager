@@ -3,7 +3,7 @@
 @section('content')
 
 
-    @include('theme.components.card', ['title' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)]])
+    @include('core::components.card', ['title' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)]])
 
     {{-- Preview Content --}}
     <div class="row g-3">

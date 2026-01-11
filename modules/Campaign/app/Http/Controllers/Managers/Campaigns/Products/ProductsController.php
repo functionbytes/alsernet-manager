@@ -3,9 +3,9 @@
 namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Products;
 
 use App\Http\Controllers\Controller;
-use App\Models\App;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Catalog\Models\App;
 use Modules\Warehouse\Models\Product\Product;
 use Modules\Warehouse\Models\Product\ProductLocation;
 

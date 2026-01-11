@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Posiciones de Inventario (Inventory Slots)'])
+    @include('core::components.card', ['title' => 'Posiciones de Inventario (Inventory Slots)'])
 
     <div class="widget-content searchable-container list">
 

@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Editar Usuario'])
+    @include('core::components.card', ['title' => 'Editar Usuario'])
 
     {{-- Alertas --}}
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="card">
         <form id="formUsers" enctype="multipart/form-data" role="form" onSubmit="return false">

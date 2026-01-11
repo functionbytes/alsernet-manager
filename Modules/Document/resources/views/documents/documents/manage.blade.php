@@ -4,14 +4,28 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Gestionar Documento'])
+    @include('core::components.card', ['title' => 'Gestionar Documento'])
 
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
+
+    <!-- Read-Only Notice for Fully Approved Documents -->
+    @if($document->isFullyApproved())
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-lock me-2 fs-4"></i>
+                <div>
+                    <strong>Documento aprobado</strong><br>
+                    <small>Todas las etapas han sido completadas y el documento ha sido aprobado. Solo puede ver la información, no realizar cambios.</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-lg-4">
-            <!-- Email Actions - Sidebar (Permission-Controlled) -->
-            @if(auth()->user()->canDocument('email-actions'))
+            <!-- Email Actions - Sidebar (Permission-Controlled & Read-Only Check) -->
+            @if(auth()->user()->canDocument('email-actions') && !$document->isFullyApproved())
                 @include('documents::documents.documents.components.email.actions', [
                     'document' => $document,
                     'documentConfig' => $documentConfig,
@@ -21,7 +35,7 @@
 
             <!-- Workflow Multi-Etapa (Permission-Controlled) -->
             @if(auth()->user()->canDocument('view-validation-workflow'))
-                @include('documents::documents.documents.components.validation.validation-workflow-sidebar')
+                @include('documents::documents.documents.components.validation.workflow-sidebar')
             @endif
 
             <!-- Document Notes (Permission-Controlled) -->
@@ -65,8 +79,8 @@
                 @include('documents::documents.documents.components.management.customer-information')
             @endif
 
-            <!-- Document Configuration (Permission-Controlled) -->
-            @if(auth()->user()->canDocument('view-document-management'))
+            <!-- Document Configuration (Permission-Controlled & Read-Only Check) -->
+            @if(auth()->user()->canDocument('view-document-management') && !$document->isFullyApproved())
                 @include('documents::documents.documents.components.management.document-management', [
                     'document' => $document,
                     'statuses' => $statuses,
@@ -77,8 +91,8 @@
                 ])
             @endif
 
-            <!-- Upload Section (Permission-Controlled) -->
-            @if(auth()->user()->canDocument('view-document-upload'))
+            <!-- Upload Section (Permission-Controlled & Read-Only Check) -->
+            @if(auth()->user()->canDocument('view-document-upload') && !$document->isFullyApproved())
                     @include('documents::documents.documents.components.files.upload-section', [
                         'document' => $document,
                         'requiredDocuments' => $requiredDocuments,
@@ -88,8 +102,8 @@
                     ])
             @endif
 
-            <!-- Additional Attachments Section (Permission-Controlled) -->
-            @if(auth()->user()->canDocument('view-additional-attachments'))
+            <!-- Additional Attachments Section (Permission-Controlled & Read-Only Check) -->
+            @if(auth()->user()->canDocument('view-additional-attachments') && !$document->isFullyApproved())
                 @include('documents::documents.documents.components.files.additional-attachments')
             @endif
 
@@ -97,11 +111,11 @@
 
     </div>
 
-        @if(auth()->user()->canDocument('view-document-upload'))
+        @if(auth()->user()->canDocument('view-document-upload') && !$document->isFullyApproved())
             @include('documents::documents.documents.components.management.modals.confirm-missing-docs')
         @endif
 
-        @if(auth()->user()->canDocument('view-document-upload'))
+        @if(auth()->user()->canDocument('view-document-upload') && !$document->isFullyApproved())
             @include('documents::documents.documents.components.files.modals.confirm-delete')
         @endif
 

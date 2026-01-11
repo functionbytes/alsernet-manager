@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Almacenamiento'])
+    @include('core::components.card', ['title' => 'Configuración de Almacenamiento'])
 
     <!-- Mensajes de estado -->
     @if ($message = session('success'))

@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Automatización de Proveedores'])
+    @include('core::components.card', ['title' => 'Automatización de Proveedores'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Main Card -->
         <div class="card">

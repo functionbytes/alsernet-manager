@@ -2,13 +2,13 @@
 
 namespace Modules\Notification\Http\Controllers\Settings;
 
-use App\Http\Controllers\Managers\BaseManagerController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class NotificationSettingsController extends BaseManagerController
+class NotificationSettingsController extends Controller
 {
     public function index(): View
     {

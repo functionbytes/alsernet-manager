@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Modules\Core\Models\Setting;
 use Modules\System\Services\SupervisorService;
 
 class SupervisorController extends Controller
@@ -562,7 +563,7 @@ class SupervisorController extends Controller
     public function downloadBackup($backupId)
     {
         try {
-            $backup = \App\Models\Setting\Backup\SupervisorBackup::findOrFail($backupId);
+            $backup = Setting\Backup\SupervisorBackup::findOrFail($backupId);
 
             $filename = 'supervisor-backup-'.$backup->environment.'-'.$backup->backed_up_at->format('Y-m-d-His').'.json';
 

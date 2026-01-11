@@ -3,10 +3,10 @@
 namespace Modules\Backup\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Backup\Jobs\CreateBackupJob;
+use Modules\Core\Models\Setting;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 

@@ -3,12 +3,12 @@
 namespace Modules\Document\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\DocumentProductBlockade;
 use Modules\Document\Entities\DocumentType;
 

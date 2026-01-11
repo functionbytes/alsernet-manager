@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
+    @include('core::components.card', ['title' => 'Fuentes de Datos - ' . $supplier->name])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Sources Card -->
         <div class="card">

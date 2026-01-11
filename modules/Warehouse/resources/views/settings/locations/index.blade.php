@@ -1,7 +1,7 @@
 @extends('layouts.theme')
 
 @section('content')
-    @include('theme.components.card', ['title' => "Estanterías piso - {$floor->name}"])
+    @include('core::components.card', ['title' => "Estanterías piso - {$floor->name}"])
 
     <div class="widget-content searchable-container list">
 

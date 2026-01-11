@@ -26,6 +26,6 @@
 	<!-- display flash message -->
 	@include('layouts.core._flash')
 
-    {!! \App\Models\Setting::get('custom_script') !!}
+    {!! Setting::get('custom_script') !!}
 </body>
 </html>

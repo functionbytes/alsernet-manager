@@ -2,8 +2,8 @@
 
 namespace Modules\Activity\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class ActivityServiceProvider extends ServiceProvider
 {

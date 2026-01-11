@@ -27,7 +27,7 @@ File upload and attachment handling:
 
 ### **Validation/Workflow Components** (`components/validation/`)
 Multi-stage approval workflow:
-- `validation-workflow-sidebar.blade.php` - Workflow progress and approval/rejection buttons
+- `workflow.blade.php` - Workflow progress and approval/rejection buttons
 - **Modals** (`modals/`)
   - `approve-stage.blade.php` - Stage approval modal
   - `reject-stage.blade.php` - Stage rejection modal
@@ -53,7 +53,7 @@ All view includes have been updated to reference the new organized structure:
 
 ### In `manage.blade.php`
 ```blade
-@include('documents::components.validation.validation-workflow-sidebar')
+@include('documents::components.validation.workflow-sidebar')
 @include('documents::components.notes.document-notes-sidebar')
 @include('documents::components.management.action-history')
 @include('documents::components.email.email-history')
@@ -69,7 +69,7 @@ All email modals now use:
 @include('documents::components.email.modals.{modal-name}')
 ```
 
-### In `validation-workflow-sidebar.blade.php`
+### In `workflow.blade.php`
 Validation modals now use:
 ```blade
 @include('documents::components.validation.modals.{modal-name}')

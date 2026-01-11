@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Models\Setting;
 
 class ErpService
 {
@@ -736,7 +737,7 @@ class ErpService
     public function getStats(): ?array
     {
         try {
-            $stats = \App\Models\Setting::getErpStats();
+            $stats = Setting::getErpStats();
 
             if (! $stats) {
                 return null;
@@ -849,7 +850,7 @@ class ErpService
     public function getCambiosPendientes(int $limit = 10, int $offset = 0): ?array
     {
         try {
-            $erpSettings = \App\Models\Setting::getErpSettings();
+            $erpSettings = Setting::getErpSettings();
 
             if (! $erpSettings || ! $erpSettings['erp_sync_url']) {
                 Log::warning('Configuración de sincronización no disponible');

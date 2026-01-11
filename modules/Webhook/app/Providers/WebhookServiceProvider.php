@@ -2,11 +2,11 @@
 
 namespace Modules\Webhook\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 use Modules\Webhook\Models\WebhookIntegration;
 use Modules\Webhook\Policies\SettingsPolicy;
 use Modules\Webhook\Policies\WebhookPolicy;

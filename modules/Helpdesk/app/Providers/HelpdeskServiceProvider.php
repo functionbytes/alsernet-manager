@@ -13,6 +13,7 @@ class HelpdeskServiceProvider extends ServiceProvider
     use PathNamespace;
 
     protected string $name = 'Helpdesk';
+
     protected string $nameLower = 'helpdesk';
 
     public function boot(): void
@@ -61,13 +62,31 @@ class HelpdeskServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(\Illuminate\Console\Scheduling\Schedule::class);
 
+            // Email to ticket processing
+            $schedule->command('imap:emailticket')->everyMinute();
+
+            // Auto-close tickets
+            $schedule->command('ticket:autoclose')->everyMinute();
+
+            // Auto-overdue ticket detection
+            $schedule->command('ticket:autooverdue')->everyMinute();
+
+            // Auto-response for tickets
+            $schedule->command('ticket:autoresponseticket')->everyMinute();
+
+            // Clean up trashed tickets
+            $schedule->command('trashedticket:autodelete')->everyMinute();
+
+            // SLA breach checking
             $schedule->job(new \Modules\Helpdesk\Jobs\CheckSlaBreaches)
                 ->everyFifteenMinutes()
                 ->withoutOverlapping();
 
+            // SLA warning notifications
             $schedule->job(new \Modules\Helpdesk\Jobs\SendSlaWarnings)
                 ->everyThirtyMinutes();
 
+            // Clean up old closed tickets
             $schedule->job(new \Modules\Helpdesk\Jobs\CleanupOldTickets)
                 ->daily()
                 ->at('02:00');

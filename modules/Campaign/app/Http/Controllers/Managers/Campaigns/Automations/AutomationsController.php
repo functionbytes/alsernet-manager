@@ -5,16 +5,16 @@ namespace Modules\Campaign\Http\Controllers\Managers\Campaigns\Automations;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Managers\Automations\Email;
 use App\Http\Controllers\Managers\Automations\MailList;
-use Modules\Campaign\Jobs\ForceTriggerAutomation;
 use App\Models\Attachment;
 use App\Models\Automation2;
 use App\Models\Segment;
-use App\Models\Setting;
-use Modules\Subscriber\Models\Subscriber;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Campaign\Jobs\ForceTriggerAutomation;
+use Modules\Core\Models\Setting;
+use Modules\Subscriber\Models\Subscriber;
 use Validator;
 
 class AutomationsController extends Controller

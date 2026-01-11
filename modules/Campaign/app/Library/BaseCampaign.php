@@ -19,7 +19,7 @@ use Throwable;
 
 /**
  * @property-read \App\Models\User|null $customer
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Horizon\Models\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BaseCampaign byStatus($status)

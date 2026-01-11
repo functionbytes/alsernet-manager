@@ -1,7 +1,7 @@
 <!-- Sidebar Start - Menu Dinámico con NavService -->
 
 @php
-    use App\Services\NavService;
+    use Modules\Theme\Services\NavService;
 
     // Obtener items y sidebars filtrados por permisos del usuario
     $miniItems = NavService::getMiniItemsForUser();
@@ -126,7 +126,8 @@
                                     @php
                                         $currentRouteName = request()->route()?->getName() ?? '';
                                         $itemRoute = $item['route'];
-                                        $isActive = $currentRouteName === $itemRoute;
+                                        // Usar comparación con wildcard para que todas las rutas hijas se marquen como activas
+                                        $isActive = request()->routeIs($itemRoute . '*');
 
                                         // Validar permisos del item
                                         // Si el item tiene un campo 'permission', validar que el usuario lo tenga

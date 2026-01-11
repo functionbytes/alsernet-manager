@@ -4,7 +4,7 @@
 <div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
-    @include('theme.components.card', [
+    @include('core::components.card', [
         'title' => 'Gestionar módulos del rol',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
@@ -145,7 +145,7 @@
                 </div>
             @endif
 
-            @include('theme.components.alerts')
+            @include('core::components.alerts')
 
             <form id="formModules" enctype="multipart/form-data" onSubmit="return false">
                 @csrf

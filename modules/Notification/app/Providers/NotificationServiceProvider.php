@@ -2,10 +2,12 @@
 
 namespace Modules\Notification\Providers;
 
-use App\Services\NavService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Models\Setting;
 use Modules\Notification\Console\Commands\CleanOldNotifications;
+use Modules\Theme\Services\NavService;
 
 class NotificationServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,14 @@ class NotificationServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'notification');
+
+        // Configure WebSocket/Pusher settings (deferred to avoid boot issues)
+        $this->app->booted(function () {
+            $this->configureWebSocketSettings();
+        });
+
+        // Register scheduled tasks
+        $this->registerSchedules();
 
         // Register routes
         $this->registerRoutes();
@@ -91,6 +101,39 @@ class NotificationServiceProvider extends ServiceProvider
     }
 
     /**
+     * Configure WebSocket and Pusher settings from database
+     */
+    protected function configureWebSocketSettings(): void
+    {
+        $settings = $this->getSettings();
+        if ($settings) {
+            config([
+                'websockets.dashboard.port' => $settings->liveChatPort ?? env('LIVE_CHAT_PORT', 6001),
+                'broadcasting.connections.pusher.options.port' => $settings->liveChatPort ?? env('LIVE_CHAT_PORT', 6001),
+                'broadcasting.connections.pusher.options.host' => parse_url(url('/'))['host'] ?? env('PUSHER_HOST', 'localhost'),
+            ]);
+        }
+    }
+
+    /**
+     * Get settings from database
+     */
+    private function getSettings(): ?Setting
+    {
+        try {
+            return cache()->remember('notification_settings', now()->addMinutes(10), function () {
+                // Use fully qualified class name to ensure correct model resolution
+                $settingClass = \Modules\Core\Models\Setting::class;
+
+                return $settingClass::query()->first();
+            });
+        } catch (\Exception $e) {
+            // Database not ready yet, return null gracefully
+            return null;
+        }
+    }
+
+    /**
      * Registrar menús del módulo Notification
      */
     protected function registerMenus(): void
@@ -110,5 +153,18 @@ class NotificationServiceProvider extends ServiceProvider
                 ['label' => 'Todas las notificaciones', 'route' => 'notifications.index'],
             ],
         ]);
+    }
+
+    /**
+     * Register scheduled tasks for Notification module
+     */
+    protected function registerSchedules(): void
+    {
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Auto-delete old notifications - every minute
+            $schedule->command('notification:autodelete')->everyMinute();
+        });
     }
 }

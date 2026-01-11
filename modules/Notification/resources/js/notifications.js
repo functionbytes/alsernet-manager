@@ -12,7 +12,7 @@
         apiIndexRoute: null,
         apiReadRoute: null,
         markAllReadRoute: null,
-        refreshInterval: 60000, // 60 seconds
+        refreshInterval: 3000, // 3 seconds
         limit: 4,
     };
 
@@ -20,6 +20,8 @@
     let state = {
         unreadCount: 0,
         refreshTimer: null,
+        notificationPermission: 'default', // 'granted', 'denied', or 'default'
+        shownNotifications: new Set(), // Track which notifications have been shown as desktop notifications
     };
 
     /**
@@ -37,11 +39,18 @@
                 return;
             }
 
+            // Request browser notification permission
+            requestNotificationPermission();
+
             // Load initial notifications
             loadNotifications();
 
             // Set up auto-refresh
-            state.refreshTimer = setInterval(loadNotifications, config.refreshInterval);
+            state.refreshTimer = setInterval(function() {
+                console.log('⏰ Auto-refresh triggered (every 3s)');
+                loadNotifications();
+            }, config.refreshInterval);
+            console.log('✅ Auto-refresh timer started. Interval: ' + config.refreshInterval + 'ms');
 
             // Set up event listeners
             setupEventListeners();
@@ -73,6 +82,193 @@
     };
 
     /**
+     * Request browser notification permission
+     */
+    function requestNotificationPermission() {
+        // Check if browser supports notifications
+        if (!('Notification' in window)) {
+            console.warn('⚠️  This browser does not support desktop notifications');
+            return;
+        }
+
+        // Check current permission status
+        state.notificationPermission = Notification.permission;
+        console.log('🔔 Current notification permission status:', state.notificationPermission);
+
+        // If already denied, don't ask again
+        if (state.notificationPermission === 'denied') {
+            console.warn('⚠️  Notification permission was previously denied');
+            return;
+        }
+
+        // If already granted, don't ask again
+        if (state.notificationPermission === 'granted') {
+            console.log('✅ Notification permission already granted - desktop notifications enabled');
+            return;
+        }
+
+        // Request permission (for 'default' state)
+        if (state.notificationPermission === 'default') {
+            console.log('🔔 Requesting notification permission from user...');
+            Notification.requestPermission().then(function(permission) {
+                state.notificationPermission = permission;
+                if (permission === 'granted') {
+                    console.log('✅ Notification permission granted');
+                } else {
+                    console.warn('⚠️  Notification permission denied');
+                }
+            });
+        }
+    }
+
+    /**
+     * Play notification sound
+     */
+    function playNotificationSound() {
+        try {
+            // Create a simple beep sound using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800; // Frequency in Hz
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+
+            console.log('🔊 Notification sound played');
+        } catch (error) {
+            console.log('Could not play notification sound:', error);
+        }
+    }
+
+    /**
+     * Show a desktop notification
+     */
+    function showDesktopNotification(notification) {
+        // Check if we have permission
+        if (state.notificationPermission !== 'granted') {
+            console.log('📵 Cannot show desktop notification - permission not granted. Current permission:', state.notificationPermission);
+            return;
+        }
+
+        // Check if browser supports notifications
+        if (!('Notification' in window)) {
+            console.warn('⚠️  This browser does not support desktop notifications');
+            return;
+        }
+
+        try {
+            const title = notification.title || 'Nueva notificación';
+            const message = notification.message || '';
+
+            console.log('📲 Attempting to show desktop notification:', {
+                title: title,
+                message: message.substring(0, 50) + '...',
+                notificationId: notification.id,
+            });
+
+            const options = {
+                body: message,
+                icon: '/favicon.ico',
+                badge: '/favicon.ico',
+                tag: 'notification-' + notification.id,
+                requireInteraction: true, // Require user interaction to dismiss
+                timestamp: notification.created_at_full ? new Date(notification.created_at_full).getTime() : Date.now(),
+                silent: false, // Enable sound/vibration
+            };
+
+            // Create and show the OS notification
+            const desktopNotification = new Notification(title, options);
+
+            // Click handler - navigate to the action URL
+            desktopNotification.onclick = function(event) {
+                event.preventDefault();
+                window.focus();
+                if (notification.action_url) {
+                    window.location.href = notification.action_url;
+                }
+                desktopNotification.close();
+            };
+
+            // Close handler
+            desktopNotification.onclose = function() {
+                console.log('🔔 Desktop notification closed');
+            };
+
+            console.log('🔔 Desktop notification shown successfully:', title);
+        } catch (error) {
+            console.error('❌ Error showing desktop notification:', error);
+        }
+    }
+
+    /**
+     * Show a toast notification using toastr
+     */
+    function showToastNotification(notification) {
+        console.log('🍞 showToastNotification() called', {
+            notification: notification,
+            toastrExists: typeof toastr !== 'undefined'
+        });
+
+        if (typeof toastr === 'undefined') {
+            console.warn('⚠️  Toastr library not loaded');
+            return;
+        }
+
+        try {
+            const title = notification.title || 'Nueva notificación';
+            const message = notification.message || '';
+
+            console.log('🍞 Showing toast notification:', title);
+
+            // Configure toastr options for this notification
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: 'toast-top-right',
+                timeOut: 5000,
+                extendedTimeOut: 2000,
+                showEasing: 'swing',
+                hideEasing: 'linear',
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut',
+                onclick: function() {
+                    // Navigate to action URL when clicking the toast
+                    if (notification.action_url && notification.action_url !== '#') {
+                        window.location.href = notification.action_url;
+                    }
+                }
+            };
+
+            // Determine toast type based on priority/color
+            const color = notification.color || 'primary';
+            const priority = notification.priority || 'normal';
+
+            if (priority === 'high' || color === 'danger') {
+                toastr.error(message, title);
+            } else if (color === 'warning') {
+                toastr.warning(message, title);
+            } else if (color === 'success') {
+                toastr.success(message, title);
+            } else {
+                toastr.info(message, title);
+            }
+
+            console.log('✅ Toast notification shown successfully');
+        } catch (error) {
+            console.error('❌ Error showing toast notification:', error);
+        }
+    }
+
+    /**
      * Load notifications from API
      */
     function loadNotifications() {
@@ -80,6 +276,8 @@
         const url = new URL(config.apiIndexRoute, window.location.origin);
         url.searchParams.append('limit', config.limit);
         url.searchParams.append('unread', 'true');
+
+        console.log('📡 Loading notifications from API:', url.toString());
 
         $.ajax({
             url: url.toString(),
@@ -92,7 +290,10 @@
                 withCredentials: true,
             },
             success: function(response) {
+                console.log('✅ API Response received:', response);
                 state.unreadCount = response.unread_count;
+                console.log('📊 Unread count: ' + state.unreadCount);
+
                 updateBadge(state.unreadCount);
                 renderNotifications(response.notifications);
 
@@ -104,7 +305,8 @@
                 updateRemainingText(state.unreadCount);
             },
             error: function(xhr) {
-                console.error('Error loading notifications:', xhr);
+                console.error('❌ Error loading notifications:', xhr.status, xhr.statusText);
+                console.error('Response:', xhr.responseText);
                 handleLoadError();
             },
         });
@@ -151,10 +353,22 @@
      */
     function updateBadge(count) {
         const $badge = $('#notification-badge');
+        const $notificationIcon = $('#notifications-dropdown .nav-link');
+
+        console.log('🔔 updateBadge() called with count:', count);
+        console.log('Badge element found:', $badge.length > 0 ? 'YES' : 'NO');
+        console.log('Icon element found:', $notificationIcon.length > 0 ? 'YES' : 'NO');
+
         if (count > 0) {
-            $badge.show();
+            // Use CSS class to show badge with animation
+            $badge.addClass('badge-pulse');
+            $notificationIcon.addClass('has-unread-notifications');
+            console.log('✅ Badge SHOWN with pulse animation. Count: ' + count);
         } else {
-            $badge.hide();
+            // Remove class to hide badge
+            $badge.removeClass('badge-pulse');
+            $notificationIcon.removeClass('has-unread-notifications');
+            console.log('❌ Badge HIDDEN. No unread notifications.');
         }
     }
 
@@ -244,6 +458,15 @@
             `;
 
             $list.append(notificationHtml);
+
+            // Show desktop notification for unread notifications that haven't been shown yet
+            if (isUnread && !state.shownNotifications.has(notification.id)) {
+                console.log('🆕 New unread notification detected, showing desktop notification for:', notification.title);
+                showDesktopNotification(notification);
+                showToastNotification(notification); // Show toast notification
+                playNotificationSound(); // Play sound when new notification arrives
+                state.shownNotifications.add(notification.id);
+            }
         });
 
         // Add hover effects
@@ -332,10 +555,22 @@
             if (window.Echo) {
                 const userId = $('meta[name="user-id"]').attr('content');
                 if (userId) {
-                    console.log('📧 Listening for real-time notifications on private channel');
-                    window.Echo.private(`users.${userId}`)
+                    console.log('📧 Listening for real-time notifications on public channel');
+                    // Use public channel instead of private to avoid WebSocket auth issues
+                    // Public channel: no session cookies needed for WebSocket auth
+                    window.Echo.channel(`public-notifications.${userId}`)
                         .notification((notification) => {
                             console.log('🔔 Real-time notification received:', notification);
+
+                            // Show desktop notification (if permission granted)
+                            showDesktopNotification(notification);
+
+                            // Show toast notification
+                            showToastNotification(notification);
+
+                            // Play sound for real-time notifications
+                            playNotificationSound();
+
                             // Refresh notifications dropdown
                             window.NotificationManager.refresh();
                         })

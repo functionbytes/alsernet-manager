@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de localización'])
+    @include('core::components.card', ['title' => 'Configuración de localización'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
         <form method="POST" action="{{ route('manager.backups.localization.update') }}">
             @csrf
             @method('PUT')

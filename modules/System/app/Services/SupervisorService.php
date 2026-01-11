@@ -2,9 +2,9 @@
 
 namespace Modules\System\Services;
 
-use App\Models\Setting\Backup\SupervisorBackup;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Models\Setting;
 use Symfony\Component\Process\Process;
 
 class SupervisorService
@@ -307,7 +307,7 @@ class SupervisorService
             $configFiles = self::readConfigFiles();
             $supervisorStatus = self::getStatus();
 
-            $backup = SupervisorBackup::create([
+            $backup = Setting\Backup\SupervisorBackup::create([
                 'name' => $name,
                 'description' => $description,
                 'environment' => $environment,
@@ -341,7 +341,7 @@ class SupervisorService
     public static function restoreBackup($backupId, $userId = null)
     {
         try {
-            $backup = SupervisorBackup::findOrFail($backupId);
+            $backup = Setting\Backup\SupervisorBackup::findOrFail($backupId);
 
             // Write config files back
             if ($backup->config_files) {
@@ -381,7 +381,7 @@ class SupervisorService
     public static function deleteBackup($backupId)
     {
         try {
-            $backup = SupervisorBackup::findOrFail($backupId);
+            $backup = Setting\Backup\SupervisorBackup::findOrFail($backupId);
             $backup->delete();
 
             Log::info('Supervisor backup deleted', ['backup_id' => $backupId]);
@@ -503,7 +503,7 @@ class SupervisorService
      */
     public static function getBackups($environment = null, $limit = 50)
     {
-        $query = SupervisorBackup::orderBy('backed_up_at', 'desc');
+        $query = Setting\Backup\SupervisorBackup::orderBy('backed_up_at', 'desc');
 
         if ($environment) {
             $query->where('environment', $environment);
@@ -554,7 +554,7 @@ class SupervisorService
         try {
             // Create backup before updating
             if (file_exists($filePath)) {
-                $backup = SupervisorBackup::create([
+                $backup = Setting\Backup\SupervisorBackup::create([
                     'name' => 'Auto backup before edit: '.basename($filePath),
                     'environment' => app()->environment() === 'production' ? 'prod' : 'dev',
                     'config_files' => [$filePath => file_get_contents($filePath)],

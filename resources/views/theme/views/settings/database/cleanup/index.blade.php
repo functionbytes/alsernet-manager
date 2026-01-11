@@ -3,9 +3,9 @@
 @section('content')
     <div class="container-fluid">
 
-        @include('theme.components.card', ['title' => 'Limpieza de Base de Datos'])
+        @include('core::components.card', ['title' => 'Limpieza de Base de Datos'])
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Warning Alert -->
         <div class="row justify-content-center">

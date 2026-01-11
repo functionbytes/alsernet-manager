@@ -3,9 +3,9 @@
 namespace Modules\Document\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentMail;
 use Modules\Document\Jobs\MailTemplateJob;
@@ -21,6 +21,7 @@ use Modules\Document\Traits\ValidatesDocumentPermissions;
 class DocumentEmailController extends Controller
 {
     use ValidatesDocumentPermissions;
+
     /**
      * Send notification email to customer (initial request)
      */

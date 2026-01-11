@@ -16,7 +16,7 @@
                             <small class="text-muted">La autenticación de dos factores está desactivada</small>
                         </div>
                     </div>
-                    <span class="badge bg-warning">Desactivada</span>
+                    <span class="badge bg-black">Desactivada</span>
                 </div>
 
                 {{-- Setup Instructions --}}

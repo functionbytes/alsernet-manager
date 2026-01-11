@@ -2,15 +2,21 @@
 
 namespace Modules\Horizon\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class HorizonServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/horizon.php',
+            'horizon'
+        );
     }
 
     public function boot(): void

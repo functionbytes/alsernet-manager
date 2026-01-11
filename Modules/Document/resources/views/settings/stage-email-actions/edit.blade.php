@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
+    @include('core::components.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
 
     <div class="widget-content">
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <form action="{{ route('settings.documents.stage-email-actions.update', $stage) }}" method="POST">
             @csrf

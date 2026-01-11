@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Gestionar usuarios del rol'])
+    @include('core::components.card', ['title' => 'Gestionar usuarios del rol'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             {{-- Header Section --}}

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentAction;
 use Modules\Document\Entities\DocumentNote;
-use Modules\Document\Entities\DocumentValidationHistory;
 
 class DocumentActionService
 {
@@ -201,32 +200,30 @@ class DocumentActionService
 
     /**
      * Approve current validation stage and advance to next stage
+     * Delegates to the Document model's trait method which handles notifications
      */
     public function approveStage(Document $document, ?string $comments = null, ?int $assignedUserId = null): Document
     {
         $user = Auth::user();
-        $currentGroup = $document->current_validator_group;
+        $previousStage = $document->current_stage;
+        $previousGroup = $document->current_validator_group;
 
-        // Create validation history record
-        DocumentValidationHistory::create([
-            'document_id' => $document->id,
-            'stage_number' => $document->current_stage,
-            'validator_group' => $currentGroup,
-            'validator_user_id' => $user->id,
-            'action' => 'approved',
-            'comments' => $comments,
-            'validated_at' => now(),
-        ]);
+        // Use the model's approveCurrentStage method which includes notification logic
+        $success = $document->approveCurrentStage($comments, $user, false);
 
-        // Log action
+        if (! $success) {
+            throw new \Exception('No se pudo aprobar la etapa. Verifica que el documento esté en validación y que tengas permisos.');
+        }
+
+        // Log action in DocumentAction system
         DocumentAction::logAction(
             documentId: $document->id,
             actionType: 'stage_approved',
             actionName: 'Etapa Aprobada',
-            description: "Etapa {$document->current_stage} aprobada por {$user->full_name}",
+            description: "Etapa {$previousStage} aprobada por {$user->full_name}",
             metadata: [
-                'stage_number' => $document->current_stage,
-                'validator_group' => $currentGroup,
+                'stage_number' => $previousStage,
+                'validator_group' => $previousGroup,
                 'assigned_user_id' => $assignedUserId,
                 'comments' => $comments,
             ],
@@ -234,24 +231,9 @@ class DocumentActionService
             performedByType: 'validator'
         );
 
-        // Check if this is the last stage
-        if ($document->current_stage >= $document->total_stages) {
-            // All stages completed - mark as approved
-            $document->update([
-                'validation_status' => 'approved',
-                'current_stage' => $document->total_stages,
-            ]);
-        } else {
-            // Advance to next stage
-            $stages = $document->getValidationWorkflowStages();
-            $nextStageKey = $stages[$document->current_stage] ?? null;
-
-            $document->update([
-                'current_stage' => $document->current_stage + 1,
-                'current_validator_group' => $nextStageKey,
-                'assigned_user_id' => $assignedUserId,
-                'validation_status' => 'in_validation',
-            ]);
+        // If a specific user was assigned, update it
+        if ($assignedUserId) {
+            $document->update(['assigned_user_id' => $assignedUserId]);
         }
 
         return $document->fresh();
@@ -259,41 +241,35 @@ class DocumentActionService
 
     /**
      * Reject current validation stage
+     * Delegates to the Document model's trait method
      */
     public function rejectStage(Document $document, string $reason): Document
     {
         $user = Auth::user();
+        $currentStage = $document->current_stage;
+        $currentGroup = $document->current_validator_group;
 
-        // Create validation history record
-        DocumentValidationHistory::create([
-            'document_id' => $document->id,
-            'stage_number' => $document->current_stage,
-            'validator_group' => $document->current_validator_group,
-            'validator_user_id' => $user->id,
-            'action' => 'rejected',
-            'comments' => $reason,
-            'validated_at' => now(),
-        ]);
+        // Use the model's rejectValidation method for consistency
+        $success = $document->rejectValidation($reason, $user);
 
-        // Log action
+        if (! $success) {
+            throw new \Exception('No se pudo rechazar el documento. Verifica que el documento esté en validación y que tengas permisos.');
+        }
+
+        // Log action in DocumentAction system
         DocumentAction::logAction(
             documentId: $document->id,
             actionType: 'stage_rejected',
             actionName: 'Etapa Rechazada',
-            description: "Etapa {$document->current_stage} rechazada por {$user->full_name}",
+            description: "Etapa {$currentStage} rechazada por {$user->full_name}",
             metadata: [
-                'stage_number' => $document->current_stage,
-                'validator_group' => $document->current_validator_group,
+                'stage_number' => $currentStage,
+                'validator_group' => $currentGroup,
                 'reason' => $reason,
             ],
             performedBy: $user->id,
             performedByType: 'validator'
         );
-
-        // Reset to pending status for re-submission
-        $document->update([
-            'validation_status' => 'rejected',
-        ]);
 
         return $document->fresh();
     }

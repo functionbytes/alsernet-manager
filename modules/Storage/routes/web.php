@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Storage\Http\Controllers\StorageController;
 
-Route::middleware(['web', 'auth', 'role:super-admin'])
-    ->prefix('storage')
-    ->name('settings.storage')
+Route::prefix('storage')
+    ->name('storage')
     ->group(function () {
         Route::get('/', [StorageController::class, 'index'])->name('');
         Route::post('/', [StorageController::class, 'update'])->name('.update');

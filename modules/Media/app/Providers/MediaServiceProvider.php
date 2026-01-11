@@ -2,15 +2,20 @@
 
 namespace Modules\Media\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class MediaServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Merge module config
+        // Merge module configs
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/media-library.php',
+            'media-library'
+        );
+
         $this->mergeConfigFrom(
             __DIR__.'/../../config/media.php',
             'media'

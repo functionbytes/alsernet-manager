@@ -151,7 +151,7 @@
                                     <label class="form-label fw-semibold">Categoría específica</label>
                                     <select class="form-select" name="category_id" id="categorySelect">
                                         <option value="">Seleccionar categoría...</option>
-                                        @foreach(\App\Models\Category::where('available', true)->orderBy('title')->get() as $category)
+                                        @foreach(\Modules\Catalog\Models\Category::where('available', true)->orderBy('title')->get() as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                                 {{ $category->title }}
                                             </option>

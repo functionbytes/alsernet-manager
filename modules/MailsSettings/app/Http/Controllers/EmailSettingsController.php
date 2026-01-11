@@ -3,7 +3,7 @@
 namespace Modules\MailsSettings\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
+use Modules\Core\Models\Setting;
 
 class EmailSettingsController extends Controller
 {

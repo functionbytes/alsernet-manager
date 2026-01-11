@@ -16,7 +16,7 @@
                     </div>
 
                     <div class="card-body">
-                        @include('theme.components.alerts')
+                        @include('core::components.alerts')
 
                         <!-- Tabs Navigation -->
                         <ul class="nav nav-tabs mb-4" id="documentTypeTabs" role="tablist">

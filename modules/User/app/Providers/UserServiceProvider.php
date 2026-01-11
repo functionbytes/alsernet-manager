@@ -2,9 +2,9 @@
 
 namespace Modules\User\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 use Modules\User\Http\Controllers\UsersController;
 
 class UserServiceProvider extends ServiceProvider

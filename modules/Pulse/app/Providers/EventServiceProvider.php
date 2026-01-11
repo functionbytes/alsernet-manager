@@ -2,10 +2,10 @@
 
 namespace Modules\Pulse\Providers;
 
-use App\Services\NavService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as LaravelEventServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Modules\Theme\Services\NavService;
 
 class EventServiceProvider extends LaravelEventServiceProvider
 {
@@ -26,6 +26,12 @@ class EventServiceProvider extends LaravelEventServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/pulse.php',
+            'pulse'
+        );
     }
 
     public function boot(): void

@@ -2,11 +2,11 @@
 
 namespace Modules\Health\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Health\Checks\DatabaseCheck;
 use Modules\Health\Checks\RedisCheck;
 use Modules\Health\Checks\StorageCheck;
+use Modules\Theme\Services\NavService;
 use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Checks\Checks\DatabaseConnectionCountCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
@@ -22,6 +22,12 @@ class HealthServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/health.php',
+            'health'
+        );
     }
 
     public function boot(): void

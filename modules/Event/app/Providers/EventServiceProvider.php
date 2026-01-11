@@ -2,8 +2,8 @@
 
 namespace Modules\Event\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class EventServiceProvider extends ServiceProvider
 {

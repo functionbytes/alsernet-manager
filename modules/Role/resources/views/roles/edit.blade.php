@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Editar Rol'])
+    @include('core::components.card', ['title' => 'Editar Rol'])
 
     {{-- Alertas --}}
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="card">
         <form id="formRoles" enctype="multipart/form-data" role="form" onSubmit="return false">
@@ -80,7 +80,7 @@
     </div>
 
     {{-- Delete Modal --}}
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
 @endsection
 

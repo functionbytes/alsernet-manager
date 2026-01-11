@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Dashboard de Almacén'])
+    @include('core::components.card', ['title' => 'Dashboard de Almacén'])
 
     {{-- Alertas --}}
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="row">
         <div class="col-12">

@@ -2,8 +2,8 @@
 
 namespace Modules\Campaign\Jobs;
 
-use App\Jobs\Base;
 use Modules\Campaign\Library\Traits\Trackable;
+use Modules\Core\Jobs\Base;
 
 class ExportCampaignLog extends Base
 {

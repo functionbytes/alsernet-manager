@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración del sistema'])
+    @include('core::components.card', ['title' => 'Configuración del sistema'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- System Settings Card -->
         <div class="card">

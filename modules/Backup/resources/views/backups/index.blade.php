@@ -31,7 +31,7 @@
                         </div>
                     </div>
 
-                    @include('theme.components.alerts')
+                    @include('core::components.alerts')
 
                     <!-- Backup Status Cards -->
                     <div class="row">
@@ -149,7 +149,7 @@
 
     </div>
 
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

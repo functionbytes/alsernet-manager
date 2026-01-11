@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         {{-- Breadcrumb Card --}}
-        @include('theme.components.card', [
+        @include('core::components.card', [
             'title' => 'Gestión de almacenamiento',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],

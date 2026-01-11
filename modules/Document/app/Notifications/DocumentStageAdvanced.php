@@ -2,7 +2,7 @@
 
 namespace Modules\Document\Notifications;
 
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,13 +15,13 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
 {
     use Queueable;
 
-    private ?int $recipientUserId = null;
+    public ?int $recipientUserId = null;
 
     /**
      * Create a new notification instance.
      */
     public function __construct(
-        public Document $document,
+        public object $document, // Accept Document or mock objects for testing
         public int $previousStage,
         public int $currentStage,
         public string $currentValidatorGroup
@@ -90,8 +90,10 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
     {
         $stageLabel = $this->document->getCurrentStageLabel();
         $orderRef = $this->document->order_reference ?? $this->document->order_id;
+        $now = now();
 
         return new BroadcastMessage([
+            'id' => $this->id ?? uniqid(),
             'document_id' => $this->document->id,
             'document_uid' => $this->document->uid,
             'order_id' => $this->document->order_id,
@@ -104,7 +106,12 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
             'icon' => 'fas fa-file-check',
             'color' => 'primary',
             'action_url' => route('documents.manage', $this->document->uid),
-            'created_at' => now()->toIso8601String(),
+            'action_text' => 'Ver documento',
+            'is_read' => false,
+            'created_at' => $now->format('H:i'),
+            'created_at_full' => $now->toIso8601String(),
+            'badge' => '/favicon.ico',
+            'priority' => 'high',
         ]);
     }
 
@@ -119,7 +126,9 @@ class DocumentStageAdvanced extends Notification implements ShouldBroadcast, Sho
             return [];
         }
 
-        return [new PrivateChannel('users.'.$this->recipientUserId)];
+        // Use public channel instead of private to avoid WebSocket auth issues
+        // Public channels don't require session auth, which WebSocket clients can't provide
+        return [new Channel('public-notifications.'.$this->recipientUserId)];
     }
 
     public function broadcastType(): string

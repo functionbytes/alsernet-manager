@@ -636,15 +636,9 @@
 
 @section('content')
 <div id="mediaManagerApp">
-    {{-- Breadcrumb --}}
-    @include('theme.components.card', [
-        'title' => 'Gestor de Medios',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => route('manager.dashboard')],
-            ['label' => 'Configuración', 'url' => '#'],
-            ['label' => 'Gestor de Medios', 'active' => true],
-        ],
-    ])
+
+
+    @include('core::components.card', ['title' => 'Gestor de Medios'])
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 400px;">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">

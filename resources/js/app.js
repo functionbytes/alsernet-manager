@@ -18,19 +18,35 @@ function handleSidebar() {
         }
     }
 
-    // Evento para el botón hamburger
-    document.querySelectorAll(".sidebartoggler").forEach((element) => {
-        element.addEventListener("click", function (e) {
+    function openSidebarOnMobile() {
+        // Solo abrir en vista móvil
+        if (isMobileView()) {
+            mainWrapper.classList.add("show-sidebar");
+        }
+    }
+
+    // Evento para el botón hamburger - usar event delegation
+    document.addEventListener("click", function (e) {
+        const hamburger = e.target.closest(".sidebartoggler");
+        if (hamburger) {
             e.preventDefault();
-            e.stopPropagation(); // Prevenir que el evento suba al document listener
-            mainWrapper.classList.toggle("show-sidebar");
+            e.stopPropagation();
+
+            // Si está cerrado, abrir. Si está abierto, cerrar.
+            if (mainWrapper.classList.contains("show-sidebar")) {
+                mainWrapper.classList.remove("show-sidebar");
+            } else {
+                openSidebarOnMobile();
+            }
+
+            // Cambiar data-sidebartype
             const dataTheme = document.body.getAttribute("data-sidebartype");
             if (dataTheme === "full") {
                 document.body.setAttribute("data-sidebartype", "mini-sidebar");
             } else {
                 document.body.setAttribute("data-sidebartype", "full");
             }
-        });
+        }
     });
 
     // Cerrar sidebar al hacer clic en un enlace del menú (en móvil)

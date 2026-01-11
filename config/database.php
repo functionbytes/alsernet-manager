@@ -75,30 +75,6 @@ return [
             'password' => 'Jun.007862',
         ],
 
-        'prestashop12' => [
-            'driver' => 'mysql',
-            'host' => '192.168.1.120',
-            'port' => 3306,
-            'database' => 'alvarez_cristia',
-            'username' => 'alvarez_cristia',
-            'password' => 'Abr.755441',
-        ],
-
-        'prestashops' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST_PRESTASHOP'),
-            'port' => env('DB_PORT_PRESTASHOP'),
-            'database' => env('DB_DATABASE_PRESTASHOP'),
-            'username' => env('DB_USERNAME_PRESTASHOP'),
-            'password' => env('DB_PASSWORD_PRESTASHOP'),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
-
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -147,22 +123,6 @@ return [
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
-        ],
-
-        'helpdesk' => [
-            'driver' => 'mysql',
-            'host' => env('HELPDESK_DB_HOST', env('DB_HOST', '127.0.0.1')),
-            'port' => env('HELPDESK_DB_PORT', env('DB_PORT', '3306')),
-            'database' => env('HELPDESK_DB_DATABASE', 'Alsernet_helpdesk'),
-            'username' => env('HELPDESK_DB_USERNAME', env('DB_USERNAME', 'root')),
-            'password' => env('HELPDESK_DB_PASSWORD', env('DB_PASSWORD', '')),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
         ],
 
         'legacy' => [

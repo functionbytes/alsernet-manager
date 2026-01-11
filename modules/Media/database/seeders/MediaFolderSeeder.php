@@ -2,9 +2,9 @@
 
 namespace Modules\Media\Database\Seeders;
 
-use App\Models\Setting\MediaFolder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Modules\Core\Models\Setting;
 
 class MediaFolderSeeder extends Seeder
 {
@@ -220,7 +220,7 @@ class MediaFolderSeeder extends Seeder
         ];
 
         foreach ($folders as $folder) {
-            MediaFolder::firstOrCreate(
+            Setting\MediaFolder::firstOrCreate(
                 ['key' => $folder['key']],
                 $folder
             );

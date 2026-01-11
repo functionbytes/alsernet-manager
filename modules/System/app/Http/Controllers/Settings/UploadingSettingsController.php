@@ -3,8 +3,8 @@
 namespace Modules\System\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
+use Modules\Core\Models\Setting;
 
 class UploadingSettingsController extends Controller
 {

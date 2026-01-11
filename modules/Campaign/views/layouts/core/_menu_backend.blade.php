@@ -28,7 +28,7 @@
 					</a>
 				</li>
 
-				@if (Auth::user()->can("read", new App\Models\Customer()))
+				@if (Auth::user()->can("read", new \Modules\Customer\Models\Customer()))
 					<li class="nav-item dropdown {{ in_array($menu, ['customer','subscription']) ? 'active' : '' }}">
 						<a role="button" class="nav-link lvl-1 dropdown-toggle d-flex align-items-center {{ request()->session()->get('admin-leftbar-state') != 'closed' && Auth::user()->admin->getMenuLayout() == 'left' && in_array($menu, ['customer','subscription']) ? 'show' : '' }}" data-bs-toggle="dropdown">
 							<i class="navbar-icon">
@@ -38,7 +38,7 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu {{ request()->session()->get('admin-leftbar-state') != 'closed' && Auth::user()->admin->getMenuLayout() == 'left' && in_array($menu, ['customer','subscription']) ? 'show' : '' }}">
-							@if (Auth::user()->can("read", new App\Models\Customer()))
+							@if (Auth::user()->can("read", new \Modules\Customer\Models\Customer()))
 								<li class="nav-item {{ $menu == 'customer' ? 'active' : '' }}">
 									<a href="{{ route('Admin\CustomerController@index') }}" class="dropdown-item d-flex align-items-center">
 										<i class="navbar-icon">

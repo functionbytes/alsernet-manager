@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use app\Library\StringHelper;
 use App\Models\ClickLog;
 use App\Models\IpLocation;
-use App\Models\Jobs\JobMonitor;
 use App\Models\OpenLog;
-use App\Models\Setting;
 use App\Models\Template;
 use App\Models\TemplateCategory;
 use App\Models\TrackingLog;
@@ -19,6 +17,8 @@ use Illuminate\Support\Facades\Log as LaravelLog;
 use Modules\Campaign\Entities\Campaign;
 use Modules\Campaign\Events\CampaignUpdated;
 use Modules\Campaign\Jobs\ExportCampaignLog;
+use Modules\Core\Models\Setting;
+use Modules\Horizon\Models\JobMonitor;
 use Modules\Subscriber\Models\Subscriber;
 use Validator;
 
@@ -425,7 +425,7 @@ class CampaignsController extends Controller
         // validate and save posted data
         if ($request->isMethod('post') && $campaign->step() >= 5) {
             // Japan + not license
-            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),
@@ -1077,7 +1077,7 @@ class CampaignsController extends Controller
         $items = Campaign::whereIn('uid', $request->uids);
 
         // Japan + not license
-        if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
+        if (config('custom.japan') && ! Setting::get('license')) {
             return response()->json([
                 'status' => 'error',
                 'message' => trans('messages.license.required'),
@@ -1235,7 +1235,7 @@ class CampaignsController extends Controller
 
         if ($request->isMethod('post')) {
             // Japan + not license
-            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),
@@ -1386,7 +1386,7 @@ class CampaignsController extends Controller
         // do resend with option: $request->option : not_receive|not_open|not_click
         if ($request->isMethod('post')) {
             // Japan + not license
-            if (config('custom.japan') && ! \App\Models\Setting::get('license')) {
+            if (config('custom.japan') && ! Setting::get('license')) {
                 return response()->json([
                     'status' => 'error',
                     'message' => trans('messages.license.required'),

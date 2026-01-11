@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Prompts de IA'])
+    @include('core::components.card', ['title' => 'Prompts de IA'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             <!-- Header Section -->
@@ -242,7 +242,7 @@
         </div>
     </div>
 
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
 @endsection
 

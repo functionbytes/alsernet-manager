@@ -2,9 +2,13 @@
 
 namespace Modules\Auth\Providers;
 
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Auth\Http\Controllers\LoginController;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -18,6 +22,15 @@ class AuthServiceProvider extends ServiceProvider
     protected string $nameLower = 'auth';
 
     /**
+     * Event listeners for the Auth module
+     */
+    protected array $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+    ];
+
+    /**
      * Boot the application events.
      */
     public function boot(): void
@@ -28,6 +41,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerMenus();
+        $this->registerEvents();
+        $this->registerGates();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
 
         // Register routes directly (Laravel 12 compatible)
@@ -39,7 +54,16 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Merge module configs
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/verification.php',
+            'verification'
+        );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/sanctum.php',
+            'sanctum'
+        );
     }
 
     /**
@@ -51,10 +75,13 @@ class AuthServiceProvider extends ServiceProvider
         $settingsPath = module_path($this->name, 'routes/settings.php');
         $apiPath = module_path($this->name, 'routes/api.php');
 
+        // Root route - handles both authenticated and guest users
+        Route::middleware(['web'])
+            ->get('/', [LoginController::class, 'home'])
+            ->name('auth.home');
+
         // Public authentication routes (login, register, password reset)
         Route::middleware(['web', 'guest'])
-            ->prefix('auth')
-            ->name('auth.')
             ->group(function () use ($webPath) {
                 require $webPath;
             });
@@ -80,6 +107,29 @@ class AuthServiceProvider extends ServiceProvider
      * Register menus del módulo Auth
      */
     protected function registerMenus(): void {}
+
+    /**
+     * Register event listeners for the Auth module
+     */
+    protected function registerEvents(): void
+    {
+        foreach ($this->listen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                $this->app['events']->listen($event, $listener);
+            }
+        }
+    }
+
+    /**
+     * Register authorization gates for the Auth module
+     */
+    protected function registerGates(): void
+    {
+        // Super admin gate - grants all permissions to users with super-admin role
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('super-admin') ? true : null;
+        });
+    }
 
     /**
      * Register commands in the format of Command::class

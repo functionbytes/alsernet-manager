@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de búsqueda'])
+    @include('core::components.card', ['title' => 'Configuración de búsqueda'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Search Settings Card -->
         <div class="card">

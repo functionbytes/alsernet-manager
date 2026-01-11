@@ -5,7 +5,7 @@
 @section('content')
 
         {{-- Breadcrumb Card --}}
-        @include('theme.components.card', [
+        @include('core::components.card', [
             'title' => 'Vista Previa de Plantilla',
             'breadcrumbs' => [
                 ['label' => 'Dashboard', 'url' => url('/home')],

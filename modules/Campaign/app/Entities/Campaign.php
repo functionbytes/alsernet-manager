@@ -41,7 +41,7 @@ use Modules\Campaign\Library\Traits\HasTemplate;
  * @property-read int|null $campaign_webhooks_count
  * @property-read \App\Models\User|null $customer
  * @property-read \Modules\Campaign\Entities\CampaignMaillist|null $defaultMailList
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Horizon\Models\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignListsSegment> $listsSegments
  * @property-read int|null $lists_segments_count
@@ -192,7 +192,7 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
 
     public function jobMonitors()
     {
-        return $this->hasMany('App\Models\Jobs\JobMonitor');
+        return $this->hasMany(\Modules\Horizon\Models\JobMonitor::class);
     }
 
     public function listsSegments()

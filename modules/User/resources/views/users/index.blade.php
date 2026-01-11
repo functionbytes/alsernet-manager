@@ -3,10 +3,9 @@
 @section('page_title', 'Usuarios')
 
 @section('content')
-<div class="container-fluid">
 
     {{-- Breadcrumb Card --}}
-    @include('theme.components.card', [
+    @include('core::components.card', [
         'title' => 'Gestión de usuarios',
         'breadcrumbs' => [
             ['label' => 'Dashboard', 'url' => url('/home')],
@@ -16,7 +15,7 @@
     ])
 
 
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
 
     <div class="widget-content searchable-container list">
@@ -206,10 +205,9 @@
 
     </div>
 
-</div>
 
 {{-- Delete Modal --}}
-@include('theme.components.delete')
+@include('core::components.delete')
 
 @endsection
 

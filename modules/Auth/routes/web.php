@@ -14,31 +14,29 @@ use Modules\Auth\Http\Controllers\VerificationController;
 |--------------------------------------------------------------------------
 |
 | Rutas públicas de autenticación (login, register, password reset)
-| Prefix: /auth (aplicado por ServiceProvider)
-| Name: auth.* (aplicado por ServiceProvider)
 | Middleware: web, guest
 |
 */
 
 // Login routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('auth.login');
+Route::post('/login', [LoginController::class, 'login'])->name('auth.login.post');
 
 // Logout route (requires auth middleware override)
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout')->withoutMiddleware('guest')->middleware('auth');
+Route::get('/logout', [LoginController::class, 'logout'])->name('auth.logout')->withoutMiddleware('guest')->middleware('auth');
 
 // Password reset routes
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequest'])->name('password.request');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequest'])->name('auth.password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('auth.password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('auth.password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('auth.password.update');
 
 // Email verification routes
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('auth.verification.verify');
+Route::get('/email/resend', [VerificationController::class, 'resend'])->name('auth.verification.resend');
 
 // Validation route
-Route::get('/validation', [ValidationController::class, 'show'])->name('validation');
+Route::get('/validation', [ValidationController::class, 'show'])->name('auth.validation');
 
 // Register routes (uncomment when ready to enable registration)
 // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-                    @include('theme.components.alerts')
+                    @include('core::components.alerts')
 
                     <!-- Stats Cards -->
                     <div class="row g-3 mb-4">
@@ -264,7 +264,7 @@
         </div>
     </div>
 
-    @include('theme.components.delete')
+    @include('core::components.delete')
 @endsection
 
 @push('scripts')

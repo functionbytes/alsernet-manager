@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de acciones de email por etapa'])
+    @include('core::components.card', ['title' => 'Configuración de acciones de email por etapa'])
 
     <div class="widget-content">
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         @if($configurations->isEmpty())
             <div class="alert alert-info mb-4">

@@ -2,8 +2,8 @@
 
 namespace Modules\Prestashop\Console\Commands;
 
-use App\Models\Category;
 use Illuminate\Console\Command;
+use Modules\Catalog\Models\Category;
 use Modules\Prestashop\Services\CategorySyncService;
 
 class SyncPrestaShopCategories extends Command

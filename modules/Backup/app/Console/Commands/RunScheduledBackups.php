@@ -2,10 +2,10 @@
 
 namespace Modules\Backup\Console\Commands;
 
-use App\Models\Setting;
 use Illuminate\Console\Command;
 use Modules\Backup\Jobs\CreateBackupJob;
 use Modules\Backup\Models\BackupSchedule;
+use Modules\Core\Models\Setting;
 
 class RunScheduledBackups extends Command
 {

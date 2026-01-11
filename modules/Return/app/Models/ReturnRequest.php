@@ -85,7 +85,7 @@ class ReturnRequest extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Customer', 'customer_id', 'id');
+        return $this->belongsTo('Modules\Customer\Models\Customer', 'customer_id', 'id');
     }
 
     public function products(): HasMany

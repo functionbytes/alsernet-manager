@@ -3,9 +3,9 @@
 namespace Modules\System\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Modules\Core\Models\Setting;
 use Symfony\Component\Process\Process;
 
 class SystemCacheController extends Controller

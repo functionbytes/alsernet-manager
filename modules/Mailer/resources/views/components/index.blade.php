@@ -5,15 +5,7 @@
 @section('content')
 
 
-    {{-- Breadcrumb Card --}}
-    @include('theme.components.card', [
-        'title' => 'Componentes de Email',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.backups')],
-            ['label' => 'Componentes de correo', 'active' => true]
-        ]
-    ])
+    @include('core::components.card', ['title' => 'Componentes de Email'])
 
     <div class="widget-content searchable-container list">
 

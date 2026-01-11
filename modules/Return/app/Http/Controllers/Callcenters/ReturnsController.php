@@ -4,7 +4,6 @@ namespace Modules\Returns\Http\Controllers\Callcenters;
 
 use App\Http\Controllers\Controller;
 use app\Library\Log;
-use App\Models\Customer;
 use App\Models\Return\Order\ReturnOrder;
 use App\Models\Return\Order\ReturnOrderProduct;
 use App\Models\Return\ReturnRequest;
@@ -13,6 +12,7 @@ use App\Services\Returns\BarcodeService;
 use App\Services\Returns\DocumentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\Customer\Models\Customer;
 use Modules\Supplier\Services\Integrations\ErpService;
 
 class ReturnsController extends Controller

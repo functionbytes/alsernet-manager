@@ -2,12 +2,12 @@
 
 namespace Modules\Supplier\Entities;
 
-use App\Models\Category;
 use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Modules\Catalog\Models\Category;
 
 /**
  * SupplierCategory Pivot Model
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Supplier\Supplier $supplier
- * @property-read \App\Models\Category $category
+ * @property-read \Modules\Catalog\Models\Category $category
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Supplier\SupplierPrompt> $prompts
  */
 class SupplierCategory extends Pivot

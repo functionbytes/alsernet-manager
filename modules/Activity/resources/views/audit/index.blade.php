@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Auditoría'])
+    @include('core::components.card', ['title' => 'Auditoría'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Filters Card -->
         <div class="card mb-3">

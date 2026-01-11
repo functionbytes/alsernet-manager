@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Crear Permiso'])
+    @include('core::components.card', ['title' => 'Crear Permiso'])
 
     {{-- Alertas --}}
-    @include('theme.components.alerts')
+    @include('core::components.alerts')
 
     <div class="card">
         <form id="formPermissions" enctype="multipart/form-data" role="form" onSubmit="return false">

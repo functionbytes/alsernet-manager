@@ -3,7 +3,7 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-// use App\Models\Shop; // Removed
+// use Modules\Catalog\Models\Shop; // Removed
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

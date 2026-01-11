@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración Global de Documentos'])
+    @include('core::components.card', ['title' => 'Configuración Global de Documentos'])
 
 
         @if ($message = session('success'))

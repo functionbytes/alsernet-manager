@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Gestionar Variables de Email'])
+    @include('core::components.card', ['title' => 'Gestionar Variables de Email'])
 
     <div class="widget-content searchable-container list">
 

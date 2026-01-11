@@ -2,20 +2,36 @@
 
 namespace Modules\Mailer\Providers;
 
-use App\Services\NavService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Mailer\Models\MailerEndpoint;
 use Modules\Mailer\Models\MailerLayout;
 use Modules\Mailer\Models\MailerTemplate;
 use Modules\Mailer\Models\MailerVariable;
 use Modules\Mailer\Observers\MailerLayoutObserver;
 use Modules\Mailer\Observers\MailerTemplateObserver;
 use Modules\Mailer\Observers\MailerVariableObserver;
+use Modules\Mailer\Policies\MailerComponentPolicy;
+use Modules\Mailer\Policies\MailerEndpointPolicy;
 use Modules\Mailer\Policies\MailerSettingsPolicy;
+use Modules\Mailer\Policies\MailerTemplatePolicy;
+use Modules\Mailer\Policies\MailerVariablePolicy;
+use Modules\Theme\Services\NavService;
 
 class MailerServiceProvider extends ServiceProvider
 {
+    /**
+     * Authorization policies for Mailer models
+     */
+    protected $policies = [
+        MailerTemplate::class => MailerTemplatePolicy::class,
+        MailerLayout::class => MailerComponentPolicy::class,
+        MailerVariable::class => MailerVariablePolicy::class,
+        MailerEndpoint::class => MailerEndpointPolicy::class,
+    ];
+
     public function register(): void
     {
         // Merge module config
@@ -27,6 +43,9 @@ class MailerServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Register authorization policies
+        $this->registerPolicies();
+
         // Register observers for automatic cache clearing
         $this->registerObservers();
 
@@ -39,6 +58,9 @@ class MailerServiceProvider extends ServiceProvider
         // Register authorization gates
         $this->registerGates();
 
+        // Register scheduled tasks
+        $this->registerSchedules();
+
         // Publish config
         $this->publishes([
             __DIR__.'/../../config/mailer.php' => config_path('mailer.php'),
@@ -49,6 +71,16 @@ class MailerServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'mailer');
+    }
+
+    /**
+     * Register authorization policies for Mailer models
+     */
+    protected function registerPolicies(): void
+    {
+        foreach ($this->policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
     }
 
     /**
@@ -115,5 +147,21 @@ class MailerServiceProvider extends ServiceProvider
         Gate::define('manage-mailer-components', fn ($user) => $settingsPolicy->manageComponents($user));
         Gate::define('manage-mailer-variables', fn ($user) => $settingsPolicy->manageVariables($user));
         Gate::define('manage-mailer-endpoints', fn ($user) => $settingsPolicy->manageEndpoints($user));
+    }
+
+    /**
+     * Register scheduled tasks for Mailer module
+     */
+    protected function registerSchedules(): void
+    {
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Handle bounce and feedback loop - every 30 minutes
+            $schedule->command('handler:run')->everyThirtyMinutes();
+
+            // Verify sender - every 5 minutes
+            $schedule->command('sender:verify')->everyFiveMinutes();
+        });
     }
 }

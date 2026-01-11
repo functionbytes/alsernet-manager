@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Información del Sistema'])
+    @include('core::components.card', ['title' => 'Información del Sistema'])
 
     <div class="widget-content searchable-container list">
         <!-- System Information Card - Alsernet Green (#90bb13) -->

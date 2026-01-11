@@ -1,7 +1,6 @@
 <?php
 
 namespace Modules\Campaign\Jobs;
-use App\Jobs\Base;
 
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Ver Documento'])
+    @include('core::components.card', ['title' => 'Ver Documento'])
 
     <div class="row">
         <div class="col-lg-8">

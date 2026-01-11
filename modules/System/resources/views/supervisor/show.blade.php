@@ -23,7 +23,7 @@
                         </div>
                     </div>
 
-                    @include('theme.components.alerts')
+                    @include('core::components.alerts')
 
                     <!-- Process Status Information -->
                     <div class="row mb-4">

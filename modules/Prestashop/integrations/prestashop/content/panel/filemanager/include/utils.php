@@ -1,5 +1,7 @@
 <?php
 
+use filemanager\include\imageLib;
+
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     exit('forbiden');
 }

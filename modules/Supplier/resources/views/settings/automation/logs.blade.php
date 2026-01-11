@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Logs del Sistema de Automatización'])
+    @include('core::components.card', ['title' => 'Logs del Sistema de Automatización'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- System Logs Card -->
         <div class="card">

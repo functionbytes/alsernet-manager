@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 
-    @include('theme.components.card', ['title' => 'Dashboard v1 - Cards Compactas'])
+    @include('core::components.card', ['title' => 'Dashboard v1 - Cards Compactas'])
 
     <div class="row g-3">
         {{-- Left Column --}}

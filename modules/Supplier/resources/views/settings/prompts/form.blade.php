@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => isset($prompt) ? 'Editar Prompt' : 'Nuevo Prompt'])
+    @include('core::components.card', ['title' => isset($prompt) ? 'Editar Prompt' : 'Nuevo Prompt'])
 
     <div class="widget-content searchable-container list">
 

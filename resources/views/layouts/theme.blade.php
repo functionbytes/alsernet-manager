@@ -11,7 +11,7 @@
 
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <meta charset="utf-8"/>
-    <title>INOQUALAB - E-Learning</title>
+    <title>{{ getSiteTitle() }}</title>
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
     <link rel="apple-touch-icon" href="pages/ico/60.png">
@@ -83,7 +83,7 @@
                 @yield('content')
             </div>
 
-            @include ('theme.components.delete')
+            @include ('core::components.delete')
 
         </div>
 

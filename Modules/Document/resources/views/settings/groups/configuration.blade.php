@@ -4,10 +4,10 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Grupo: ' . $group->name])
+    @include('core::components.card', ['title' => 'Configuración de Grupo: ' . $group->name])
 
     <div class="widget-content">
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="row">
 

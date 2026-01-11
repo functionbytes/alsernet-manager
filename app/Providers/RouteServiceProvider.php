@@ -10,20 +10,13 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    public const HOME = '/home';
+    public const HOME = '/';
 
     public function boot(): void
     {
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            // ✅ IMPORTANTE: Document module registra sus propias rutas sin middleware 'api'
-            // para permitir acceso desde sistemas externos (PrestaShop)
-            // Las rutas del Document module NO van aquí, se registran en modules/Document/app/Providers/RouteServiceProvider.php
-
-            Route::prefix('api')
-                ->middleware('api')
-                ->group(base_path('routes/api/api.php'));
 
             Route::middleware('web')
                 ->group(function () {

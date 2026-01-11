@@ -134,6 +134,15 @@
                     var $submitButton = $('button[type="submit"]');
                     $submitButton.prop('disabled', true);
 
+                    const handleLoginError = (response) => {
+                        $submitButton.prop('disabled', false);
+                        const data = response.responseJSON;
+                        const $errorDiv = $('.errors');
+                        const errors = { email: data.message };
+                        $('#formLogin').validate().showErrors(errors);
+                        $errorDiv.text(data.message).removeClass('d-none');
+                    };
+
                     $.ajax({
                         url: "{{ route('auth.login') }}",
                         headers: {
@@ -144,14 +153,12 @@
                         processData: false,
                         data: formData,
                         success: function(response) {
-                            if(response.success == true){
-                                window.location.href = response.redirect;
-                            }else{
-                                $submitButton.prop('disabled', false);
-                                error = response.message;
-                                $('.errors').text(error);
-                                $('.errors').removeClass('d-none');
-                            }
+                            window.location.href = response.redirect;
+                        },
+                        statusCode: {
+                            422: handleLoginError,
+                            429: handleLoginError,
+                            403: handleLoginError
                         }
                     });
                 }

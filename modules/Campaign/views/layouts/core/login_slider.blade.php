@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>@yield('title') - {{ \App\Models\Setting::get("site_name") }}</title>
+        <title>@yield('title') - {{ Setting::get("site_name") }}</title>
 
         <!-- Required meta tags -->
         <meta charset="utf-8">

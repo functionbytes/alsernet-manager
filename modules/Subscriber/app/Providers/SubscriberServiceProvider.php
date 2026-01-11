@@ -2,9 +2,10 @@
 
 namespace Modules\Subscriber\Providers;
 
-use App\Services\NavService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 
 class SubscriberServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,7 @@ class SubscriberServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
         $this->registerEventListeners();
         $this->registerMenus();
+        $this->registerSchedules();
     }
 
     public function register(): void
@@ -105,6 +107,22 @@ class SubscriberServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [];
+    }
+
+    /**
+     * Register scheduled tasks for Subscriber module
+     */
+    protected function registerSchedules(): void
+    {
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Update disposable email list weekly
+            $schedule->command('disposable:update')->weekly();
+
+            // Remove inactive customers every minute
+            $schedule->command('customer:inactive_delete')->everyMinute();
+        });
     }
 
     /**

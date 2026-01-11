@@ -6,7 +6,6 @@ use App;
 use App\Jobs\Subscribers\ImportSubscribers2;
 use App\Jobs\Subscribers\ImportSubscribersJob;
 use App\Jobs\Subscribers\ImportSubscribersListsJob;
-use App\Models\Setting;
 use App\Models\Subscriber\Subscriber;
 use App\Models\Subscriber\SubscriberList;
 use App\Traits\HasUid;
@@ -26,6 +25,7 @@ use Modules\Campaign\Library\StringHelper;
 use Modules\Campaign\Library\Traits\HasCache;
 use Modules\Campaign\Library\Traits\QueryHelper;
 use Modules\Campaign\Library\Traits\TrackJobs;
+use Modules\Core\Models\Setting;
 use Modules\Subscriber\Jobs\ExportSubscribersJob;
 use Modules\Subscriber\Jobs\VerifyMailListJob;
 
@@ -54,7 +54,7 @@ use Modules\Subscriber\Jobs\VerifyMailListJob;
  * @property-read int|null $campaigns_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignField> $fields
  * @property-read int|null $fields_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Jobs\JobMonitor> $jobMonitors
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Horizon\Models\JobMonitor> $jobMonitors
  * @property-read int|null $job_monitors_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Modules\Campaign\Entities\CampaignSegment> $segments
  * @property-read int|null $segments_count

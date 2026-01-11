@@ -5,6 +5,7 @@ namespace Modules\Warehouse\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Modules\Theme\Services\NavService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -248,7 +249,7 @@ class WarehouseServiceProvider extends ServiceProvider
     protected function registerMenus(): void
     {
         // Mini-nav item for Warehouse
-        \App\Services\NavService::registerMiniItem('warehouse', [
+        NavService::registerMiniItem('warehouse', [
             'icon' => 'fa-warehouse',
             'tooltip' => 'Almacén',
             'sidebar_id' => 'warehouse',
@@ -256,7 +257,7 @@ class WarehouseServiceProvider extends ServiceProvider
         ]);
 
         // Sidebar with menu items
-        \App\Services\NavService::registerSidebar('warehouse', [
+        NavService::registerSidebar('warehouse', [
             'title' => 'Almacén',
             'items' => [
                 ['label' => 'Almacenes', 'route' => 'settings.warehouse.index'],

@@ -28,7 +28,7 @@ class LoginController extends Controller
     protected int $decayMinutes = 1;
 
     /**
-     * Show the login form
+     * Show the login form or redirect to dashboard if authenticated
      */
     public function showLoginForm(): View|RedirectResponse
     {
@@ -38,6 +38,20 @@ class LoginController extends Controller
         }
 
         return view('auth::auth.login');
+    }
+
+    /**
+     * Handle root route - redirect based on authentication status
+     */
+    public function home(): RedirectResponse
+    {
+        // If authenticated, redirect to user's dashboard
+        if (Auth::check()) {
+            return redirect()->route(Auth::user()->redirectRouteName());
+        }
+
+        // If not authenticated, show login form
+        return redirect()->route('auth.login');
     }
 
     /**

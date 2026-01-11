@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Analytics Dashboard'])
+    @include('core::components.card', ['title' => 'Analytics Dashboard'])
 
     <div class="widget-content">
 

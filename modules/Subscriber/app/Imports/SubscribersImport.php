@@ -3,8 +3,6 @@
 namespace Modules\Subscriber\Imports;
 
 use App\Exports\Suscribers\SubscribersFailedExport;
-use App\Models\Customer;
-use Modules\Subscriber\Models\Subscriber;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -13,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Customer\Models\Customer;
+use Modules\Subscriber\Models\Subscriber;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SubscribersImport implements ToCollection, WithHeadingRow

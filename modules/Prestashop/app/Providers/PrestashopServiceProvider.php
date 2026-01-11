@@ -2,9 +2,10 @@
 
 namespace Modules\Prestashop\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Models\Setting;
+use Modules\Theme\Services\NavService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -28,6 +29,7 @@ class PrestashopServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
         $this->registerMenus();
+        $this->loadDynamicPrestashopConfig();
     }
 
     /**
@@ -166,5 +168,69 @@ class PrestashopServiceProvider extends ServiceProvider
                 ['label' => 'Configuración', 'route' => 'settings.prestashop.edit'],
             ],
         ]);
+    }
+
+    /**
+     * Load dynamic PrestaShop configuration from settings
+     */
+    private function loadDynamicPrestashopConfig(): void
+    {
+        // Only load if database is available
+        if ($this->app->runningInConsole() && ! $this->isDatabaseReady()) {
+            return;
+        }
+
+        try {
+            $this->loadPrestashopConfig();
+        } catch (\Exception $e) {
+            // PrestaShop config not available yet - silently fail
+        }
+    }
+
+    /**
+     * Check if database is ready and configured
+     */
+    private function isDatabaseReady(): bool
+    {
+        try {
+            \DB::connection()->getPDO();
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Load PrestaShop configuration from database settings
+     */
+    private function loadPrestashopConfig(): void
+    {
+        try {
+            $psSettings = Setting::getPrestashopSettings();
+
+            config([
+                'prestashop' => [
+                    'enabled' => $psSettings['prestashop_enabled'] === 'yes',
+                    'db_host' => $psSettings['prestashop_db_host'],
+                    'db_port' => (int) $psSettings['prestashop_db_port'],
+                    'db_database' => $psSettings['prestashop_db_database'],
+                    'db_username' => $psSettings['prestashop_db_username'],
+                    'db_password' => $psSettings['prestashop_db_password'],
+                    'url' => $psSettings['prestashop_url'],
+                    'api_key' => $psSettings['prestashop_api_key'],
+                    'timeout' => (int) $psSettings['prestashop_timeout'],
+                    'connect_timeout' => (int) $psSettings['prestashop_connect_timeout'],
+                    'sync_enabled' => $psSettings['prestashop_sync_enabled'] === 'yes',
+                    'sync_products' => $psSettings['prestashop_sync_products'] === 'yes',
+                    'sync_orders' => $psSettings['prestashop_sync_orders'] === 'yes',
+                    'sync_customers' => $psSettings['prestashop_sync_customers'] === 'yes',
+                    'documents_portal_url' => $psSettings['prestashop_documents_portal_url'],
+                    'documents_paid_status_ids' => $psSettings['prestashop_documents_paid_status_ids'],
+                ],
+            ]);
+        } catch (\Exception $e) {
+            // PrestaShop config not available yet
+        }
     }
 }

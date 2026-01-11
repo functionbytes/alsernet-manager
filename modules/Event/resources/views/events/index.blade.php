@@ -1,11 +1,11 @@
 @extends('layouts.theme')
 
 @section('content')
-    @include('theme.components.card', ['title' => 'Gestión de eventos'])
+    @include('core::components.card', ['title' => 'Gestión de eventos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             {{-- Header Section --}}

@@ -14,7 +14,7 @@
         </a>
     @else
 
-    @include('theme.components.card', ['title' => 'Importar desde gestión'])
+    @include('core::components.card', ['title' => 'Importar desde gestión'])
 
     <div class="widget-content">
         <div class="card card-body">

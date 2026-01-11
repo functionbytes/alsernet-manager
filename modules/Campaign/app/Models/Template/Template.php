@@ -27,8 +27,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use KubAT\PhpSimple\HtmlDomParser;
 use League\Pipeline\PipelineBuilder;
-use function App\Helpers\is_non_web_link;
-use function App\Helpers\url_get_contents_ssl_safe;
 
 class Template extends Model
 {

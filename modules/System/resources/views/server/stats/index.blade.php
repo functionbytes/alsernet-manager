@@ -2,11 +2,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Estadísticas del Servidor'])
+    @include('core::components.card', ['title' => 'Estadísticas del Servidor'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- Quick Stats Overview -->
         <div class="card mb-3">

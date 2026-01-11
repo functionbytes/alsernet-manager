@@ -1,7 +1,8 @@
 <?php
 
 namespace Modules\Subscriber\Jobs;
-use App\Jobs\Base;
+
+use Modules\Core\Jobs\Base;
 
 class UpdateSegmentJob extends Base
 {

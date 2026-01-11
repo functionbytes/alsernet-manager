@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Configuración de Subida de Archivos'])
+    @include('core::components.card', ['title' => 'Configuración de Subida de Archivos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card w-100">
 

@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Tipos de Documentos'])
+    @include('core::components.card', ['title' => 'Tipos de Documentos'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <!-- System Settings Card -->
         <div class="card">
@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    @include('theme.components.delete')
+    @include('core::components.delete')
 
 @endsection
 

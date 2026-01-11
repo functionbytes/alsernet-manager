@@ -1,12 +1,12 @@
 @extends('layouts.managers')
 
 @php
-    use app\Library\Tool;use App\Models\Setting;
+    use app\Library\Tool;use Modules\Core\Models\Setting;
 @endphp
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Importar suscripciones - '. $list->title])
+    @include('core::components.card', ['title' => 'Importar suscripciones - '. $list->title])
 
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">

@@ -2,7 +2,7 @@
 
 namespace Modules\Campaign\Library\Traits;
 
-use App\Models\Jobs\JobMonitor;
+use Modules\Horizon\Models\JobMonitor;
 
 trait Trackable
 {

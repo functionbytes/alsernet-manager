@@ -2,10 +2,10 @@
 
 namespace Modules\Analytics\Providers;
 
-use App\Services\NavService;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Modules\Analytics\Analytics;
+use Modules\Theme\Services\NavService;
 
 class AnalyticsServiceProvider extends ServiceProvider
 {

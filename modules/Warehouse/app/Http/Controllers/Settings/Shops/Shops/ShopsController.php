@@ -3,9 +3,9 @@
 namespace Modules\Warehouse\Http\Controllers\Settings\Shops\Shops;
 
 use App\Http\Controllers\Controller;
-use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Catalog\Models\Shop;
 
 class ShopsController extends Controller
 {

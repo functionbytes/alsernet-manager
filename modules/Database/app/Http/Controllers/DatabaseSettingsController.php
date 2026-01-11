@@ -3,8 +3,8 @@
 namespace Modules\Database\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
+use Modules\Core\Models\Setting;
 
 class DatabaseSettingsController extends Controller
 {

@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Importar suscripciones '. $import->uid])
+    @include('core::components.card', ['title' => 'Importar suscripciones '. $import->uid])
 
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">

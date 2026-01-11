@@ -2,14 +2,14 @@
 
 namespace Modules\Role\Http\Controllers;
 
-use App\Http\Controllers\Managers\BaseManagerController;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Modules\Role\Http\Requests\Systems\RoleRequest;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleController extends BaseManagerController
+class RoleController extends Controller
 {
     /**
      * Display a listing of roles

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Mantenimiento del sistema'])
+    @include('core::components.card', ['title' => 'Mantenimiento del sistema'])
 
     @if ($message = session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -18,7 +18,7 @@
                             la base de datos o ambos.
                         </p>
 
-                        @include('theme.components.alerts')
+                        @include('core::components.alerts')
 
                         <div>
                             <div class="d-flex justify-content-between align-items-center mb-4">

@@ -4,11 +4,11 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Notificaciones'])
+    @include('core::components.card', ['title' => 'Notificaciones'])
 
     <div class="widget-content searchable-container list">
 
-        @include('theme.components.alerts')
+        @include('core::components.alerts')
 
         <div class="card">
             {{-- Header Section --}}
@@ -19,11 +19,9 @@
                         <p class="small mb-0 text-muted">Administra y revisa todas tus notificaciones del sistema</p>
                     </div>
                     <div class="d-flex gap-2">
-                        @if($unreadCount > 0)
-                            <button type="button" class="btn btn-primary mark-all-read-btn">
-                                <i class="fas fa-check-double me-2"></i>Marcar todas como leídas
-                            </button>
-                        @endif
+                        <button type="button" class="btn btn-primary mark-all-read-btn" @if($unreadCount === 0) disabled @endif>
+                            <i class="fas fa-check-double me-2"></i>Marcar todas como leídas
+                        </button>
                     </div>
                 </div>
             </div>
@@ -127,57 +125,64 @@
                                 $actionUrl = $data['action_url'] ?? null;
                             @endphp
 
-                            <div class="notification-item card mb-3 {{ $isUnread ? 'border-primary' : 'border' }}" data-notification-id="{{ $notification->id }}">
-                                <div class="card-body">
+                            <div class="notification-item card mb-3 {{ $isUnread ? 'border-start border-' . $colorClass . ' border-3' : '' }} {{ $actionUrl ? 'notification-clickable' : '' }}"
+                                 data-notification-id="{{ $notification->id }}"
+                                 data-action-url="{{ $actionUrl }}"
+                                 style="position: relative; transition: all 0.2s ease; {{ $isUnread ? 'background-color: rgba(144, 187, 19, 0.02);' : '' }} {{ $actionUrl ? 'cursor: pointer;' : '' }}">
+
+                                {{-- Delete button in top-right corner --}}
+                                <button type="button" class="btn btn-sm btn-light delete-notification-btn"
+                                        style="position: absolute; top: 12px; right: 12px; padding: 6px 10px; z-index: 10;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+
+                                <div class="card-body p-4">
                                     <div class="d-flex gap-3 align-items-start">
                                         {{-- Icon --}}
                                         <div class="flex-shrink-0">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center {{ $isUnread ? 'bg-primary' : 'bg-light-secondary' }}"
-                                                 style="width: 48px; height: 48px;">
-                                                <i class="{{ $iconClass }} fs-5 {{ $isUnread ? 'text-white' : 'text-muted' }}"></i>
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-{{ $colorClass }}-subtle"
+                                                 style="width: 56px; height: 56px;">
+                                                <i class="{{ $iconClass }} fs-4 text-{{ $colorClass }}"></i>
                                             </div>
                                         </div>
 
                                         {{-- Content --}}
-                                        <div class="flex-grow-1" style="min-width: 0;">
-                                            <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
-                                                <div>
-                                                    <h6 class="mb-1 fw-bold">
-                                                        {{ $data['title'] ?? 'Notificación' }}
-                                                    </h6>
-                                                    @if($isUnread)
-                                                        <span class="badge bg-primary-subtle text-primary" style="font-size: 10px;">
-                                                            <i class="fas fa-circle me-1" style="font-size: 6px;"></i>NUEVO
-                                                        </span>
-                                                    @endif
+                                        <div class="flex-grow-1" style="min-width: 0; padding-right: 30px;">
+                                            <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                                        <h6 class="mb-0 fw-semibold" style="font-size: 15px;">
+                                                            {{ $data['title'] ?? 'Notificación' }}
+                                                        </h6>
+                                                        @if($isUnread)
+                                                            <span class="badge rounded-pill bg-success" style="font-size: 9px; padding: 3px 8px;">
+                                                                NUEVO
+                                                            </span>
+                                                        @endif
+                                                        @if(isset($data['priority']) && $data['priority'] === 'high')
+                                                            <i class="fas fa-exclamation-circle text-danger" title="Prioridad alta"></i>
+                                                        @endif
+                                                    </div>
+                                                    <small class="text-muted d-block" style="font-size: 12px;">
+                                                        <i class="fas fa-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
+                                                    </small>
                                                 </div>
-                                                <small class="text-muted text-nowrap">
-                                                    <i class="fas fa-clock me-1"></i>{{ $notification->created_at->diffForHumans() }}
-                                                </small>
                                             </div>
 
                                             @if(isset($data['message']) && $data['message'])
-                                                <p class="mb-3 text-muted">{{ $data['message'] }}</p>
+                                                <p class="mb-3 text-muted" style="font-size: 13px; line-height: 1.6;">
+                                                    {{ $data['message'] }}
+                                                </p>
                                             @endif
 
                                             {{-- Actions --}}
-                                            <div class="d-flex gap-2 flex-wrap">
-                                                @if($actionUrl)
-                                                    <a href="{{ $actionUrl }}" target="_blank" class="btn btn-sm btn-primary">
-                                                        <i class="fas fa-external-link-alt me-1"></i>{{ $data['action_text'] ?? 'Ver detalles' }}
-                                                    </a>
-                                                @endif
-
-                                                @if($isUnread)
+                                            @if($isUnread)
+                                                <div class="d-flex gap-2 flex-wrap align-items-center">
                                                     <button type="button" class="btn btn-sm btn-outline-success mark-as-read-btn">
-                                                        <i class="fas fa-check me-1"></i>Marcar como leída
+                                                        <i class="fas fa-check-circle me-1"></i>Marcar como leída
                                                     </button>
-                                                @endif
-
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-notification-btn">
-                                                    <i class="fas fa-trash me-1"></i>Eliminar
-                                                </button>
-                                            </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -223,6 +228,62 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal for Mark All as Read -->
+    <div class="modal fade" id="markAllAsReadModal" tabindex="-1" aria-labelledby="markAllAsReadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="markAllAsReadModalLabel">
+                        Marcar todas como leídas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        ¿Estás seguro de que deseas marcar <strong>todas las notificaciones como leídas</strong>?
+                        Esta acción no se puede deshacer.
+                    </p>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-primary  w-100  mb-1" id="confirmMarkAllReadBtn">
+                        Sí, marcar todas
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary w-100 " data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal for Delete Notification -->
+    <div class="modal fade" id="deleteNotificationModal" tabindex="-1" aria-labelledby="deleteNotificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="deleteNotificationModalLabel">
+                        <i class="fas fa-trash text-danger me-2"></i>Eliminar notificación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        ¿Estás seguro de que deseas eliminar esta notificación?
+                        Esta acción no se puede deshacer.
+                    </p>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i>Sí, eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('styles')
@@ -246,6 +307,23 @@
         box-shadow: 0 4px 12px rgba(144, 187, 19, 0.2);
     }
 
+    .notification-clickable {
+        user-select: none;
+    }
+
+    .delete-notification-btn {
+        transition: all 0.15s ease;
+        border-radius: 4px;
+        color: #6c757d;
+    }
+
+    .delete-notification-btn:hover {
+        background-color: #dc3545 !important;
+        color: white !important;
+        border-color: #dc3545 !important;
+        transform: scale(1.1);
+    }
+
     .stat-card {
         transition: all 0.2s ease;
     }
@@ -260,6 +338,23 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
+    let currentDeleteBtn = null;
+    const markAllReadModal = new bootstrap.Modal(document.getElementById('markAllAsReadModal'));
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteNotificationModal'));
+
+    // Make notification clickable to open document
+    $('.notification-clickable').on('click', function(e) {
+        // Don't trigger if clicking on buttons
+        if ($(e.target).closest('button').length > 0) {
+            return;
+        }
+
+        const actionUrl = $(this).data('action-url');
+        if (actionUrl) {
+            window.open(actionUrl, '_blank');
+        }
+    });
+
     // Mark as read functionality (individual)
     $('.mark-as-read-btn').on('click', function() {
         const btn = $(this);
@@ -299,19 +394,23 @@ $(document).ready(function() {
         });
     });
 
-    // Delete notification functionality
+    // Delete notification functionality - Show modal
     $('.delete-notification-btn').on('click', function() {
-        const btn = $(this);
+        currentDeleteBtn = $(this);
+        deleteModal.show();
+    });
+
+    // Confirm delete from modal
+    $('#confirmDeleteBtn').on('click', function() {
+        if (!currentDeleteBtn) return;
+
+        const btn = currentDeleteBtn;
         const notificationCard = btn.closest('.notification-item');
         const notificationId = notificationCard.data('notification-id');
         const url = '{{ url('/api/notifications') }}/' + notificationId;
 
-        // Show confirmation with toastr-like style (using native confirm for now)
-        if (!confirm('¿Estás seguro de que deseas eliminar esta notificación?')) {
-            return;
-        }
-
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Eliminando...');
+        deleteModal.hide();
 
         $.ajax({
             url: url,
@@ -343,16 +442,21 @@ $(document).ready(function() {
         });
     });
 
-    // Mark all as read functionality
+    // Mark all as read functionality - Show modal
     $('.mark-all-read-btn').on('click', function() {
-        const btn = $(this);
-
-        if (!confirm('¿Marcar todas las notificaciones como leídas?')) {
+        // Don't proceed if button is disabled (no unread notifications)
+        if ($(this).prop('disabled')) {
             return;
         }
+        markAllReadModal.show();
+    });
 
+    // Confirm mark all as read from modal
+    $('#confirmMarkAllReadBtn').on('click', function() {
+        const btn = $('.mark-all-read-btn');
         const originalHtml = btn.html();
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Procesando...');
+        markAllReadModal.hide();
 
         $.ajax({
             url: '{{ route('api.notifications.mark-all-read') }}',

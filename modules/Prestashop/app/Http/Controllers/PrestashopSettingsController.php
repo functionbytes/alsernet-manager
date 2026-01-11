@@ -3,10 +3,10 @@
 namespace Modules\Prestashop\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Models\Setting;
 use Modules\Prestashop\Entities\ProductBlockade;
 
 class PrestashopSettingsController extends Controller

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', [
+    @include('core::components.card', [
         'title' => 'Editar Traducciones',
         'subtitle' => $locale_label . ' - ' . $file_label
     ])

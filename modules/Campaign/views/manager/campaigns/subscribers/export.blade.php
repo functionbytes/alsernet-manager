@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('theme.components.card', ['title' => 'Exportar suscripciones - '. $list->title])
+    @include('core::components.card', ['title' => 'Exportar suscripciones - '. $list->title])
 
 
 

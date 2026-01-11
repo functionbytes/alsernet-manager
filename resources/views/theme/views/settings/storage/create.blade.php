@@ -19,7 +19,7 @@
             </div>
 
             <div class="card-body">
-                @include('theme.components.alerts')
+                @include('core::components.alerts')
 
                 <div class="row">
 

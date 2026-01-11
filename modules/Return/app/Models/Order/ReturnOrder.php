@@ -164,7 +164,7 @@ class ReturnOrder extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Customer::class, 'customer_id', 'id');
+        return $this->belongsTo(\Modules\Customer\Models\Customer::class, 'customer_id', 'id');
     }
 
     public function returns(): HasMany
