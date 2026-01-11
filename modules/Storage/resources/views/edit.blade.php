@@ -126,21 +126,21 @@
                                 </label>
                                 <input type="text" class="form-control @error('root') is-invalid @enderror"
                                        name="root" value="{{ old('root', $disk['root'] ?? '') }}"
-                                       placeholder="/mnt/storage">
+                                       placeholder="{{ public_path('storage/documents') }}">
                                 <small class="form-text text-muted">
-                                    <strong>Ruta absoluta con al menos 2 niveles de profundidad:</strong>
+                                    <strong>🎯 Opciones recomendadas (dentro del proyecto):</strong>
                                     <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>/mnt/storage</code> ✅ Recomendado para almacenamiento compartido</li>
-                                        <li><code>/data/uploads</code> ✅ Para archivos de aplicación</li>
-                                        <li><code>/opt/storage</code> ✅ Para software personalizado</li>
-                                        <li><code>/home/user/storage</code> ✅ Para directorios de usuario</li>
+                                        <li><code>{{ public_path('storage/documents') }}</code> ✅ Para archivos públicos (documentos)</li>
+                                        <li><code>{{ public_path('storage/uploads') }}</code> ✅ Para subidas de usuarios</li>
+                                        <li><code>{{ storage_path('app/documents') }}</code> ✅ Para almacenamiento privado</li>
+                                        <li><code>{{ storage_path('app/uploads') }}</code> ✅ Para archivos privados</li>
                                     </ul>
-                                    ❌ <strong>NO permitido (rechazado):</strong>
+                                    <strong>📝 Personalizado:</strong>
                                     <ul class="mb-2" style="margin-top: 8px;">
-                                        <li>Raíz del sistema: <code>/</code></li>
-                                        <li>Un solo nivel: <code>/documents</code>, <code>/uploads</code></li>
-                                        <li>Directorios del sistema: <code>/bin, /boot, /etc, /usr, /var</code></li>
+                                        <li><code>{{ public_path('storage/tunombre') }}</code> - Reemplaza "tunombre" con el que desees</li>
+                                        <li><code>{{ storage_path('app/tunombre') }}</code> - Para almacenamiento privado</li>
                                     </ul>
+                                    ❌ <strong>NO permitido:</strong> Rutas fuera del proyecto, raíz del sistema (/), directorios del sistema
                                 </small>
                                 @error('root')
                                     <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
