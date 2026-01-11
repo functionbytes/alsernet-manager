@@ -247,7 +247,8 @@ class StorageController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:50',
             'driver' => 'required|string|in:local,ftp,sftp,s3',
-            'root' => 'required_if:driver,local|nullable|string',
+            'storage_type' => 'required_if:driver,local|nullable|string|in:public,private',
+            'root' => 'nullable|string',
             'url' => 'nullable|string',
             'host' => 'required_if:driver,ftp,sftp|nullable|string',
             'username' => 'required_if:driver,ftp,sftp|nullable|string',
@@ -266,10 +267,21 @@ class StorageController extends Controller
             ];
 
             if ($validated['driver'] === 'local') {
-                $diskData['root'] = $validated['root'];
-                $diskData['url'] = $validated['url'] ?? null;
+                // Generate path and URL based on storage type
+                $pathInfo = $this->generateStoragePath($validated['name'], $validated['storage_type']);
 
-                $validation = $this->validateAndPrepareLocalDisk($validated['root']);
+                if (! $pathInfo['success']) {
+                    return back()
+                        ->withInput()
+                        ->with('error', $pathInfo['message']);
+                }
+
+                $diskData['root'] = $pathInfo['root'];
+                $diskData['url'] = $pathInfo['url'];
+                $diskData['storage_type'] = $validated['storage_type'];
+
+                // Validate and prepare the disk
+                $validation = $this->validateAndPrepareLocalDisk($pathInfo['root']);
                 if (! $validation['success']) {
                     return back()
                         ->withInput()
