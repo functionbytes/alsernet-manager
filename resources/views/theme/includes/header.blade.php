@@ -5,6 +5,14 @@
         <!-- ---------------------------------- -->
         <nav class="navbar navbar-expand-lg p-0">
 
+            <ul class="navbar-nav">
+                <li class="nav-item d-flex d-xl-none">
+                    <a class="nav-link nav-icon-hover-bg rounded-circle sidebartoggler" id="headerCollapse" href="javascript:void(0)">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+
             <div class="navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav flex-row ms-auto align-items-center">
 
@@ -42,10 +50,7 @@
                                 </div>
                                 <div class="message-body">
                                     <a href="{{ route('settings.auth.profile') }}" class="p-2 dropdown-item h6 rounded-1">
-                                        <i class="fas fa-user me-2"></i>Perfil
-                                    </a>
-                                    <a href="{{ route('settings.auth.profile') }}" class="p-2 dropdown-item h6 rounded-1">
-                                        <i class="fas fa-gear me-2"></i>Configuración
+                                       Configuración
                                     </a>
                                     <a href="{{ route('auth.logout') }}" class="btn btn-info px-4 waves-effect waves-light w-100">Salir</a>
                                 </div>
