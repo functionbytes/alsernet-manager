@@ -34,10 +34,11 @@ function handleSidebar() {
     });
 
     // Cerrar sidebar al hacer clic en un enlace del menú (en móvil)
-    document.querySelectorAll(".sidebar-link").forEach((link) => {
-        link.addEventListener("click", function () {
+    // Usar event delegation para capturar clicks en todos los links, incluso dinámicos
+    document.addEventListener("click", function (e) {
+        if (e.target.closest(".sidebar-link")) {
             closeSidebarOnMobile();
-        });
+        }
     });
 
     // Cerrar sidebar al hacer clic fuera (en la zona oscura)
