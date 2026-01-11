@@ -370,7 +370,8 @@ class StorageController extends Controller
     {
         try {
             if ($storageType === 'public') {
-                $root = public_path('storage/'.$diskName);
+                // Use storage/app/public directly instead of symlink
+                $root = storage_path('app/public/'.$diskName);
                 $url = '/storage/'.$diskName;
             } elseif ($storageType === 'private') {
                 $root = storage_path($diskName);
