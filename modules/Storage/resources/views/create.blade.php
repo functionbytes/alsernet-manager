@@ -13,7 +13,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="mb-1 fw-bold">Agregar disco de almacenamiento</h5>
-                        <p class="mb-0 text-muted small">Configura un nuevo disco de almacenamiento personalizado</p>
+                        <p class="mb-0 text-muted small">Configura un nuevo nombre para tu almacenamiento</p>
                     </div>
                 </div>
             </div>
@@ -22,258 +22,73 @@
 
                 @include('core::components.alerts')
 
-
                 <div class="row">
 
-                    {{-- Basic Information Section --}}
+                    {{-- Disk Name --}}
                     <div class="col-12">
-                        <h6 class="fw-bold mb-0">
-                            Configuración básica
-                        </h6>
-                        <p class="text-muted mb-4">Define el nombre y tipo del disco de almacenamiento.</p>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label class="control-label col-form-label">
                                 Nombre del disco <span class="text-danger">*</span>
                             </label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name') }}"
-                                   placeholder="Ej: network_shared" required>
-                            <small class="form-text text-muted">Sin espacios, solo letras, números y guiones bajos</small>
+                                   placeholder="Ej: documents, uploads, media"
+                                   pattern="^[a-z0-9_]+$"
+                                   title="Solo letras minúsculas, números y guiones bajos"
+                                   required>
+                            <small class="form-text text-muted">
+                                Solo letras minúsculas, números y guiones bajos. Ejemplos: documents, user_uploads, media_files
+                            </small>
                             @error('name')
                                 <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <div class="mb-3">
-                            <label class="control-label col-form-label">
+                    {{-- Storage Type Selection --}}
+                    <div class="col-12">
+                        <div class="mb-4">
+                            <label class="control-label col-form-label mb-3">
                                 Tipo de almacenamiento <span class="text-danger">*</span>
                             </label>
-                            <select class="select2 form-select @error('driver') is-invalid @enderror"
-                                    id="driver" name="driver" required>
-                                <option value="">Selecciona un tipo</option>
-                                @foreach($driverOptions as $driverKey => $driverLabel)
-                                    <option value="{{ $driverKey }}" {{ old('driver') == $driverKey ? 'selected' : '' }}>
-                                        {{ $driverLabel }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('driver')
-                                <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="storage_type" id="storagePublic"
+                                           value="public" {{ old('storage_type') === 'public' || !old('storage_type') ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="storagePublic">
+                                        <strong>Público</strong>
+                                        <div class="text-muted small">Accesible desde el navegador (web-accessible)</div>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="storage_type" id="storagePrivate"
+                                           value="private" {{ old('storage_type') === 'private' ? 'checked' : '' }} required>
+                                    <label class="form-check-label" for="storagePrivate">
+                                        <strong>Privado</strong>
+                                        <div class="text-muted small">Solo accesible por la aplicación (no público)</div>
+                                    </label>
+                                </div>
+                            </div>
+                            @error('storage_type')
+                                <span class="field-validation-error d-block mt-2"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    {{-- Driver-specific Configuration --}}
+                    {{-- Information Box --}}
                     <div class="col-12">
-                        <h6 class="fw-bold mb-0 mt-4">
-                            Configuración específica
-                        </h6>
-                        <p class="text-muted mb-4">Configuración específica para el tipo de almacenamiento seleccionado.</p>
-                    </div>
-
-                    {{-- Local Driver Fields --}}
-                    <div id="localFields" class="driver-fields" style="display: none;">
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Ruta raíz <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('root') is-invalid @enderror"
-                                       name="root" value="{{ old('root') }}"
-                                       placeholder="{{ public_path('storage/documents') }}">
-                                <small class="form-text text-muted">
-                                    <strong>🎯 Opciones recomendadas (dentro del proyecto):</strong>
-                                    <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>{{ public_path('storage/documents') }}</code> ✅ Para archivos públicos (documentos)</li>
-                                        <li><code>{{ public_path('storage/uploads') }}</code> ✅ Para subidas de usuarios</li>
-                                        <li><code>{{ storage_path('app/documents') }}</code> ✅ Para almacenamiento privado</li>
-                                        <li><code>{{ storage_path('app/uploads') }}</code> ✅ Para archivos privados</li>
+                        <div class="alert alert-info border-start border-4 border-info mb-4" role="alert">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-info-circle fa-lg"></i>
+                                </div>
+                                <div>
+                                    <strong>¿Dónde se guardarán los archivos?</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li><strong>Público:</strong> Los archivos se guardarán en <code>public/storage/{{ old('name') || 'nombre' }}</code> y serán accesibles directamente desde el navegador</li>
+                                        <li><strong>Privado:</strong> Los archivos se guardarán en <code>storage/app/{{ old('name') || 'nombre' }}</code> y solo la aplicación podrá accederlos</li>
                                     </ul>
-                                    <strong>📝 Personalizado:</strong>
-                                    <ul class="mb-2" style="margin-top: 8px;">
-                                        <li><code>{{ public_path('storage/tunombre') }}</code> - Reemplaza "tunombre" con el que desees</li>
-                                        <li><code>{{ storage_path('app/tunombre') }}</code> - Para almacenamiento privado</li>
-                                    </ul>
-                                    ❌ <strong>NO permitido:</strong> Rutas fuera del proyecto, raíz del sistema (/), directorios del sistema
-                                </small>
-                                @error('root')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">URL (opcional)</label>
-                                <input type="text" class="form-control @error('url') is-invalid @enderror"
-                                       name="url" value="{{ old('url') }}"
-                                       placeholder="http://localhost/storage">
-                                <small class="form-text text-muted">URL pública para acceder a los archivos</small>
-                                @error('url')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FTP Driver Fields --}}
-                    <div id="ftpFields" class="driver-fields row" style="display: none;">
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Host <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('host') is-invalid @enderror"
-                                       name="host" value="{{ old('host') }}"
-                                       placeholder="ftp.ejemplo.com">
-                                @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">Puerto</label>
-                                <input type="number" class="form-control @error('port') is-invalid @enderror"
-                                       name="port" value="{{ old('port', '21') }}"
-                                       placeholder="21">
-                                @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Usuario <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                       name="username" value="{{ old('username') }}">
-                                @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">Contraseña</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                       name="password" value="{{ old('password') }}"
-                                       placeholder="Contraseña FTP">
-                                @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- SFTP Driver Fields --}}
-                    <div id="sftpFields" class="driver-fields row" style="display: none;">
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Host <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('host') is-invalid @enderror"
-                                       name="host" value="{{ old('host') }}"
-                                       placeholder="sftp.ejemplo.com">
-                                @error('host')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">Puerto</label>
-                                <input type="number" class="form-control @error('port') is-invalid @enderror"
-                                       name="port" value="{{ old('port', '22') }}"
-                                       placeholder="22">
-                                @error('port')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Usuario <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                       name="username" value="{{ old('username') }}">
-                                @error('username')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">Contraseña</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                       name="password" value="{{ old('password') }}"
-                                       placeholder="Contraseña SFTP">
-                                @error('password')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- S3 Driver Fields --}}
-                    <div id="s3Fields" class="driver-fields" style="display: none;">
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Bucket <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('bucket') is-invalid @enderror"
-                                       name="bucket" value="{{ old('bucket') }}"
-                                       placeholder="mi-bucket">
-                                @error('bucket')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Región <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('region') is-invalid @enderror"
-                                       name="region" value="{{ old('region') }}"
-                                       placeholder="us-east-1">
-                                <small class="form-text text-muted">Región de AWS donde está el bucket</small>
-                                @error('region')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Access Key ID <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control @error('key') is-invalid @enderror"
-                                       name="key" value="{{ old('key') }}">
-                                @error('key')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label col-form-label">
-                                    Secret Access Key <span class="text-danger">*</span>
-                                </label>
-                                <input type="password" class="form-control @error('secret') is-invalid @enderror"
-                                       name="secret" value="{{ old('secret') }}"
-                                       placeholder="Secret key de AWS">
-                                @error('secret')
-                                    <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
-                                @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -283,13 +98,12 @@
             </div>
 
             <div class="card-footer border-top">
-
-                    <button type="submit" class="btn btn-primary w-100 mb-1">
-                        Guardar
-                    </button>
-                    <a href="{{ route('settings.storage') }}" class="btn btn-secondary w-100">
-                        Cancelar
-                    </a>
+                <button type="submit" class="btn btn-primary w-100 mb-1">
+                    <i class="fas fa-save me-2"></i>Guardar
+                </button>
+                <a href="{{ route('settings.storage') }}" class="btn btn-secondary w-100">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
             </div>
 
         </form>
@@ -301,30 +115,20 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Show driver-specific fields based on driver selection
-    function toggleDriverFields() {
-        const selectedDriver = $('#driver').val();
+    // Update the info box when name changes
+    $('input[name="name"]').on('input', function() {
+        const diskName = $(this).val() || 'nombre';
+        const isPublic = $('input[name="storage_type"]:checked').val() === 'public';
+        const path = isPublic
+            ? `public/storage/${diskName}`
+            : `storage/app/${diskName}`;
+        $('.storage-path-info').text(path);
+    });
 
-        // Hide all driver fields
-        $('.driver-fields').hide();
-
-        // Show fields for selected driver
-        if (selectedDriver === 'local') {
-            $('#localFields').show();
-        } else if (selectedDriver === 'ftp') {
-            $('#ftpFields').show();
-        } else if (selectedDriver === 'sftp') {
-            $('#sftpFields').show();
-        } else if (selectedDriver === 's3') {
-            $('#s3Fields').show();
-        }
-    }
-
-    // Initialize on page load
-    toggleDriverFields();
-
-    // Toggle on driver change
-    $('#driver').on('change', toggleDriverFields);
+    // Update path when storage type changes
+    $('input[name="storage_type"]').on('change', function() {
+        $('input[name="name"]').trigger('input');
+    });
 
     // Show toastr notifications
     @if (session('success'))
