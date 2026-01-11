@@ -451,57 +451,55 @@ class StorageController extends Controller
         if (! is_dir($rootPath)) {
             $parentDir = dirname($rootPath);
 
-            // Try to create parent directory if it doesn't exist
+            // Create parent directory structure if needed
             if (! is_dir($parentDir)) {
                 try {
-                    if (! mkdir($parentDir, 0755, true)) {
+                    @mkdir($parentDir, 0755, true);
+                    // Verify parent was created
+                    if (! is_dir($parentDir)) {
                         return [
                             'success' => false,
-                            'message' => "No se pudo crear el directorio padre: {$parentDir}. Verifica los permisos del servidor o crea el directorio manualmente.",
+                            'message' => "No se pudo crear el directorio padre: {$parentDir}",
                         ];
                     }
-                    \Log::info('Storage parent directory created', [
-                        'path' => $parentDir,
-                        'permissions' => '0755',
-                    ]);
+                    \Log::info('Storage parent directory created', ['path' => $parentDir]);
                 } catch (\Exception $e) {
                     return [
                         'success' => false,
-                        'message' => "Error al crear el directorio padre {$parentDir}: {$e->getMessage()}. Verifica los permisos o crea el directorio manualmente.",
+                        'message' => "Error al crear directorio padre: {$e->getMessage()}",
                     ];
                 }
             }
 
-            // Check if parent directory is writable
+            // Verify parent directory is writable
             if (! is_writable($parentDir)) {
                 return [
                     'success' => false,
-                    'message' => "No tienes permisos de escritura en: {$parentDir}. Contacta al administrador del servidor para cambiar los permisos.",
+                    'message' => "Sin permisos de escritura en: {$parentDir}",
                 ];
             }
 
+            // Create the storage directory
             try {
-                if (! mkdir($rootPath, 0755, true)) {
+                @mkdir($rootPath, 0755, true);
+
+                // Verify directory was created
+                if (! is_dir($rootPath)) {
                     return [
                         'success' => false,
-                        'message' => "No se pudo crear el directorio: {$rootPath}. Verifica los permisos del servidor.",
+                        'message' => "No se pudo crear el directorio: {$rootPath}",
                     ];
                 }
 
-                $gitignorePath = $rootPath.'/.gitignore';
-                file_put_contents($gitignorePath, "*\n!.gitignore\n!.gitkeep\n");
+                // Create .gitignore and .gitkeep files
+                file_put_contents($rootPath.'/.gitignore', "*\n!.gitignore\n!.gitkeep\n");
+                file_put_contents($rootPath.'/.gitkeep', '');
 
-                $gitkeepPath = $rootPath.'/.gitkeep';
-                file_put_contents($gitkeepPath, '');
-
-                \Log::info('Storage directory created', [
-                    'path' => $rootPath,
-                    'permissions' => '0755',
-                ]);
+                \Log::info('Storage directory created', ['path' => $rootPath]);
             } catch (\Exception $e) {
                 return [
                     'success' => false,
-                    'message' => "Error al crear el directorio: {$e->getMessage()}. Verifica los permisos del sistema de archivos.",
+                    'message' => "Error al crear directorio: {$e->getMessage()}",
                 ];
             }
         }
