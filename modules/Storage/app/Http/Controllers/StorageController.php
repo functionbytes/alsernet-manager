@@ -405,13 +405,27 @@ class StorageController extends Controller
         }
 
         if (! is_dir($rootPath)) {
-            // Check if parent directory exists
             $parentDir = dirname($rootPath);
+
+            // Try to create parent directory if it doesn't exist
             if (! is_dir($parentDir)) {
-                return [
-                    'success' => false,
-                    'message' => "El directorio padre no existe: {$parentDir}. Crea el directorio primero o usa una ruta que exista.",
-                ];
+                try {
+                    if (! mkdir($parentDir, 0755, true)) {
+                        return [
+                            'success' => false,
+                            'message' => "No se pudo crear el directorio padre: {$parentDir}. Verifica los permisos del servidor o crea el directorio manualmente.",
+                        ];
+                    }
+                    \Log::info('Storage parent directory created', [
+                        'path' => $parentDir,
+                        'permissions' => '0755',
+                    ]);
+                } catch (\Exception $e) {
+                    return [
+                        'success' => false,
+                        'message' => "Error al crear el directorio padre {$parentDir}: {$e->getMessage()}. Verifica los permisos o crea el directorio manualmente.",
+                    ];
+                }
             }
 
             // Check if parent directory is writable
