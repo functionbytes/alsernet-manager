@@ -113,12 +113,48 @@ class StorageController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50|regex:/^[a-z0-9_]+$/',
-            'storage_type' => 'required|string|in:public,private',
+            'name' => 'required|string|max:50',
+            'driver' => 'required|string|in:local,ftp,sftp,s3',
+            'root' => 'required_if:driver,local|nullable|string',
+            'url' => 'nullable|string',
+            'host' => 'required_if:driver,ftp,sftp|nullable|string',
+            'username' => 'required_if:driver,ftp,sftp|nullable|string',
+            'password' => 'nullable|string',
+            'port' => 'nullable|integer',
+            'bucket' => 'required_if:driver,s3|nullable|string',
+            'key' => 'required_if:driver,s3|nullable|string',
+            'secret' => 'required_if:driver,s3|nullable|string',
+            'region' => 'required_if:driver,s3|nullable|string',
         ]);
 
         try {
-            // Check if disk name already exists
+            $diskData = [
+                'name' => $validated['name'],
+                'driver' => $validated['driver'],
+            ];
+
+            if ($validated['driver'] === 'local') {
+                $diskData['root'] = $validated['root'];
+                $diskData['url'] = $validated['url'] ?? null;
+
+                $validation = $this->validateAndPrepareLocalDisk($validated['root']);
+                if (! $validation['success']) {
+                    return back()
+                        ->withInput()
+                        ->with('error', $validation['message']);
+                }
+            } elseif ($validated['driver'] === 'ftp' || $validated['driver'] === 'sftp') {
+                $diskData['host'] = $validated['host'];
+                $diskData['username'] = $validated['username'];
+                $diskData['password'] = $validated['password'] ?? null;
+                $diskData['port'] = $validated['port'] ?? null;
+            } elseif ($validated['driver'] === 's3') {
+                $diskData['bucket'] = $validated['bucket'];
+                $diskData['region'] = $validated['region'];
+                $diskData['key'] = $validated['key'];
+                $diskData['secret'] = $validated['secret'] ?? null;
+            }
+
             $customDisksJson = Setting::get('system.custom_storage_disks', '[]');
             $existingDisks = json_decode($customDisksJson, true) ?: [];
 
@@ -135,32 +171,6 @@ class StorageController extends Controller
                     ->withInput()
                     ->with('error', 'Ya existe un disco del sistema con ese nombre');
             }
-
-            // Generate path and URL based on storage type
-            $pathInfo = $this->generateStoragePath($validated['name'], $validated['storage_type']);
-
-            if (! $pathInfo['success']) {
-                return back()
-                    ->withInput()
-                    ->with('error', $pathInfo['message']);
-            }
-
-            // Validate and prepare the disk
-            $validation = $this->validateAndPrepareLocalDisk($pathInfo['root']);
-            if (! $validation['success']) {
-                return back()
-                    ->withInput()
-                    ->with('error', $validation['message']);
-            }
-
-            // Create disk configuration
-            $diskData = [
-                'name' => $validated['name'],
-                'driver' => 'local',
-                'root' => $pathInfo['root'],
-                'url' => $pathInfo['url'],
-                'storage_type' => $validated['storage_type'],
-            ];
 
             $existingDisks[] = $diskData;
             Setting::set('system.custom_storage_disks', json_encode($existingDisks));
@@ -342,124 +352,133 @@ class StorageController extends Controller
     }
 
     /**
-     * Generate storage path and URL based on disk name and storage type
-     */
-    private function generateStoragePath(string $diskName, string $storageType): array
-    {
-        try {
-            if ($storageType === 'public') {
-                $root = public_path('storage/'.$diskName);
-                $url = '/storage/'.$diskName;
-            } elseif ($storageType === 'private') {
-                $root = storage_path('app/'.$diskName);
-                $url = null;
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'Tipo de almacenamiento no válido',
-                ];
-            }
-
-            return [
-                'success' => true,
-                'root' => $root,
-                'url' => $url,
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Error al generar la ruta: '.$e->getMessage(),
-            ];
-        }
-    }
-
-    /**
      * Validate and prepare local storage disk
-     *
-     * Since paths are now auto-generated and always within project structure,
-     * validation is simplified to create directories and verify permissions
      */
     private function validateAndPrepareLocalDisk(string $rootPath): array
     {
+        // Validate that path is not empty
         if (empty(trim($rootPath))) {
             return [
                 'success' => false,
-                'message' => 'Error: ruta vacía',
+                'message' => 'La ruta no puede estar vacía. Proporciona una ruta absoluta como /mnt/storage',
+            ];
+        }
+
+        // Reject dangerous system paths BEFORE trimming
+        $dangerousPaths = ['/', '/bin', '/boot', '/dev', '/etc', '/lib', '/root', '/sbin', '/sys', '/usr', '/var'];
+        if (in_array($rootPath, $dangerousPaths) || in_array(rtrim($rootPath, '/'), $dangerousPaths)) {
+            return [
+                'success' => false,
+                'message' => "La ruta '{$rootPath}' no es permitida por razones de seguridad. Usa directorios específicos como /mnt o subdirectorios del proyecto.",
             ];
         }
 
         $rootPath = rtrim($rootPath, '/');
 
-        // Create directory if it doesn't exist
+        // Validate absolute path
+        if (! str_starts_with($rootPath, '/')) {
+            return [
+                'success' => false,
+                'message' => 'La ruta debe ser absoluta (debe comenzar con /). Ejemplo: /mnt/storage o /var/www/storage',
+            ];
+        }
+
+        // Reject paths directly under root (single level like /documents, /uploads, etc)
+        // Paths must be at least 2 levels deep or under specific allowed prefixes
+        $pathParts = array_filter(explode('/', $rootPath));
+        $allowedPrefixes = ['mnt', 'data', 'opt', 'home', 'srv', 'media', 'storage'];
+        $firstPart = $pathParts[0] ?? null;
+
+        if (count($pathParts) === 1) {
+            return [
+                'success' => false,
+                'message' => "No se permiten directorios directamente bajo raíz como /{$firstPart}. Usa rutas como /mnt/storage, /data/uploads, /opt/storage, etc.",
+            ];
+        }
+
+        // Validate that path doesn't contain suspicious patterns
+        if (preg_match('/\$\{.*\}/', $rootPath) || preg_match('/`.*`/', $rootPath)) {
+            return [
+                'success' => false,
+                'message' => 'La ruta contiene caracteres no permitidos',
+            ];
+        }
+
         if (! is_dir($rootPath)) {
             $parentDir = dirname($rootPath);
 
-            // Create parent directories if needed
+            // Try to create parent directory if it doesn't exist
             if (! is_dir($parentDir)) {
                 try {
                     if (! mkdir($parentDir, 0755, true)) {
                         return [
                             'success' => false,
-                            'message' => "No se pudo crear el directorio padre: {$parentDir}",
+                            'message' => "No se pudo crear el directorio padre: {$parentDir}. Verifica los permisos del servidor o crea el directorio manualmente.",
                         ];
                     }
-                    \Log::info('Storage parent directory created', ['path' => $parentDir]);
+                    \Log::info('Storage parent directory created', [
+                        'path' => $parentDir,
+                        'permissions' => '0755',
+                    ]);
                 } catch (\Exception $e) {
                     return [
                         'success' => false,
-                        'message' => "Error al crear directorio padre: {$e->getMessage()}",
+                        'message' => "Error al crear el directorio padre {$parentDir}: {$e->getMessage()}. Verifica los permisos o crea el directorio manualmente.",
                     ];
                 }
             }
 
-            // Check parent directory is writable
+            // Check if parent directory is writable
             if (! is_writable($parentDir)) {
                 return [
                     'success' => false,
-                    'message' => "Sin permisos de escritura en: {$parentDir}",
+                    'message' => "No tienes permisos de escritura en: {$parentDir}. Contacta al administrador del servidor para cambiar los permisos.",
                 ];
             }
 
-            // Create the storage directory
             try {
                 if (! mkdir($rootPath, 0755, true)) {
                     return [
                         'success' => false,
-                        'message' => "No se pudo crear el directorio: {$rootPath}",
+                        'message' => "No se pudo crear el directorio: {$rootPath}. Verifica los permisos del servidor.",
                     ];
                 }
 
-                // Create .gitignore and .gitkeep files
-                file_put_contents($rootPath.'/.gitignore', "*\n!.gitignore\n!.gitkeep\n");
-                file_put_contents($rootPath.'/.gitkeep', '');
+                $gitignorePath = $rootPath.'/.gitignore';
+                file_put_contents($gitignorePath, "*\n!.gitignore\n!.gitkeep\n");
 
-                \Log::info('Storage directory created', ['path' => $rootPath]);
+                $gitkeepPath = $rootPath.'/.gitkeep';
+                file_put_contents($gitkeepPath, '');
+
+                \Log::info('Storage directory created', [
+                    'path' => $rootPath,
+                    'permissions' => '0755',
+                ]);
             } catch (\Exception $e) {
                 return [
                     'success' => false,
-                    'message' => "Error al crear directorio: {$e->getMessage()}",
+                    'message' => "Error al crear el directorio: {$e->getMessage()}. Verifica los permisos del sistema de archivos.",
                 ];
             }
         }
 
-        // Verify directory is readable and writable
         if (! is_readable($rootPath)) {
             return [
                 'success' => false,
-                'message' => "El directorio no es legible: {$rootPath}",
+                'message' => "El directorio no es legible: {$rootPath}. Verifica los permisos.",
             ];
         }
 
         if (! is_writable($rootPath)) {
             return [
                 'success' => false,
-                'message' => "Sin permisos de escritura en: {$rootPath}",
+                'message' => "El directorio no es escribible: {$rootPath}. Contacta al administrador del servidor para cambiar los permisos.",
             ];
         }
 
         return [
             'success' => true,
-            'message' => 'Directorio listo',
+            'message' => 'Directorio configurado correctamente',
             'path' => $rootPath,
         ];
     }
