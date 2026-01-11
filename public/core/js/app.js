@@ -80,6 +80,7 @@ $(function(){
         document.querySelectorAll(".sidebartoggler").forEach((element) => {
             element.addEventListener("click", function (e) {
                 e.preventDefault();
+                e.stopPropagation(); // Prevenir que el evento suba al document listener
                 document.querySelectorAll(".sidebartoggler").forEach((el) => {
                     el.checked = true;
                 });
