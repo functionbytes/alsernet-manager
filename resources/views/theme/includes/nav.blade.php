@@ -74,8 +74,8 @@
             <!-- Mini Navigation (Iconos pequeños a la izquierda) -->
             <div class="mini-nav">
                 <div class="brand-logo d-flex align-items-center justify-content-center">
-                    <a class="nav-link sidebartoggler" id="headerCollapse" href="javascript:void(0)">
-                        <i class="fa fa-ellipsis"></i>
+                    <a class="nav-link nav-icon-hover-bg rounded-circle sidebartoggler" id="headerCollapse" href="javascript:void(0)">
+                        <i class="fas fa-bars"></i>
                     </a>
                 </div>
                 <ul class="mini-nav-ul simplebar-scrollable-y" data-simplebar="init">
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Sidebars (Menús desplegables) -->
-            <div class="sidebarmenu">
+            <div class="sidebarmenu close">
                 @forelse($allSidebars as $sidebarId => $sidebar)
                     @php
                         $sidebarIsActive = $activeSidebarId === $sidebarId;
@@ -369,25 +369,12 @@
         }
 
         /**
-         * Sidebar collapse toggle (hamburger)
-         */
-        function initializeSidebarToggle() {
-            const sidebarToggler = document.getElementById('headerCollapse');
-            if (sidebarToggler) {
-                sidebarToggler.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.body.classList.toggle('mini-sidebar');
-                });
-            }
-        }
-
-        /**
          * Iniciar cuando el DOM esté listo
          */
         document.addEventListener('DOMContentLoaded', function() {
             initializeSidebar();
             handleSubmenuClicks();
-            initializeSidebarToggle();
+            // Nota: El toggle del sidebar lo maneja app.js en handleSidebar()
         });
 
     })();

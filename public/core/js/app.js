@@ -81,9 +81,6 @@ $(function(){
             element.addEventListener("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation(); // Prevenir que el evento suba al document listener
-                document.querySelectorAll(".sidebartoggler").forEach((el) => {
-                    el.checked = true;
-                });
                 mainWrapper.classList.toggle("show-sidebar");
                 document.querySelectorAll(".sidebarmenu").forEach((el) => {
                     el.classList.toggle("close");
