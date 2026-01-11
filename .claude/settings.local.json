@@ -432,7 +432,12 @@
       "Bash(__NEW_LINE_0f58c64ab2995c4b__ mkdir -p /Users/functionbytes/Function/Coding/manager/modules/Health/resources/views/vendor/health/mail)",
       "Bash(__NEW_LINE_ebd9a3b58f924e18__ php artisan vendor:publish --tag=health-views --force)",
       "Bash(__NEW_LINE_55a15c74871d5825__ echo \"=== Vendor Views Verification ===\" echo \"\" echo \"Health:\" ls resources/views/vendor/health/)",
-      "Bash(__NEW_LINE_46f2769624749609__ php artisan config:clear)"
+      "Bash(__NEW_LINE_46f2769624749609__ php artisan config:clear)",
+      "Bash(do echo -n \"$module: \")",
+      "Bash(if [ -f \"Modules/$module/composer.json\" ])",
+      "Bash(then echo \"✓ has composer.json\")",
+      "Bash(else echo \"✗ NO composer.json\")",
+      "Bash(__NEW_LINE_7e255fb2bfe7cb81__ echo \"Campaign:\")"
     ],
     "deny": [],
     "ask": []

@@ -71,7 +71,6 @@
         },
         "files": [
             "app/Helpers/Helper.php",
-            "app/Helpers/SiteHelper.php",
             "modules/System/app/Helpers/SettingsHelper.php",
             "modules/System/app/Helpers/EnvironmentHelper.php",
             "modules/Core/app/Helpers/DateHelper.php",
