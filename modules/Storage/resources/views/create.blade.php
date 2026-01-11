@@ -118,7 +118,7 @@
                                         <strong>¿Dónde se guardarán los archivos?</strong>
                                         <ul class="mb-0 mt-2">
                                             <li><strong>Público:</strong> <code>public/storage/{{ old('name') || 'nombre' }}</code></li>
-                                            <li><strong>Privado:</strong> <code>storage/app/{{ old('name') || 'nombre' }}</code></li>
+                                            <li><strong>Privado:</strong> <code>storage/{{ old('name') || 'nombre' }}</code></li>
                                         </ul>
                                     </div>
                                 </div>

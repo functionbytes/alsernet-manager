@@ -373,7 +373,7 @@ class StorageController extends Controller
                 $root = public_path('storage/'.$diskName);
                 $url = '/storage/'.$diskName;
             } elseif ($storageType === 'private') {
-                $root = storage_path('app/'.$diskName);
+                $root = storage_path($diskName);
                 $url = null;
             } else {
                 return [
