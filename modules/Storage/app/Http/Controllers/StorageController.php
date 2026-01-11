@@ -116,7 +116,7 @@ class StorageController extends Controller
             'name' => 'required|string|max:50',
             'driver' => 'required|string|in:local,ftp,sftp,s3',
             'storage_type' => 'required_if:driver,local|nullable|string|in:public,private',
-            'root' => 'required_if:driver,local,false|nullable|string',
+            'root' => 'nullable|string',
             'url' => 'nullable|string',
             'host' => 'required_if:driver,ftp,sftp|nullable|string',
             'username' => 'required_if:driver,ftp,sftp|nullable|string',
