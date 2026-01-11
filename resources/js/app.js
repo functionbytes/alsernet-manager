@@ -1,5 +1,5 @@
 import './bootstrap';
-import './notifications';
+import '../../modules/Notification/resources/js/notifications';
 
 // Toggle Sidebar - Manejo de sidebar en móvil
 function handleSidebar() {
