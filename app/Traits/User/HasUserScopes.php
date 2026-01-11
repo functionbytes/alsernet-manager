@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * Define query scopes reutilizables para el modelo User,
  * facilitando la búsqueda y filtrado de usuarios.
- *
- * @package App\Traits\User
  */
 trait HasUserScopes
 {

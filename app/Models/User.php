@@ -36,12 +36,13 @@ class User extends Authenticatable
 
     // Custom User traits organized by responsibility
     use HasBasicRelations;
-
     use HasCampaignManagement;
+
     // Document permissions (from Modules)
     use HasDocumentPermissions;
     use HasFileSystemPaths;
     use HasHelpdeskRelations;
+
     // Notifiable and HasNotificationSystem - resolve method conflicts
     use HasNotificationSystem, Notifiable {
         HasNotificationSystem::routeNotificationFor insteadof Notifiable;
@@ -52,7 +53,6 @@ class User extends Authenticatable
     use HasSubscriptionManagement;
     use HasUserAttributes;
     use HasUserScopes;
-
     use HasWarehouseManagement;
 
     /*
