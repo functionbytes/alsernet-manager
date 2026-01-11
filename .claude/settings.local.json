@@ -426,7 +426,10 @@
       "Bash(__NEW_LINE_f0a07d40ff264c9a__ grep -n \"registerCommandSchedules\" /Users/functionbytes/Function/Coding/manager/modules/Helpdesk/app/Providers/HelpdeskServiceProvider.php)",
       "Bash(git grep:*)",
       "Bash(LC_ALL=C find:*)",
-      "Bash(git revert:*)"
+      "Bash(git revert:*)",
+      "Bash(__NEW_LINE_b46adbf730fe4f08__ echo \"=== Vendor Views Summary ===\" echo \"\" echo \"📁 health:\" find /Users/functionbytes/Function/Coding/manager/resources/views/vendor/health -name \"*.blade.php\")",
+      "Bash(__NEW_LINE_5ce46f6a22ee3c12__ echo \"=== health module ===\")",
+      "Bash(__NEW_LINE_0f58c64ab2995c4b__ mkdir -p /Users/functionbytes/Function/Coding/manager/modules/Health/resources/views/vendor/health/mail)"
     ],
     "deny": [],
     "ask": []
