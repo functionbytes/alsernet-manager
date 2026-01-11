@@ -116,6 +116,11 @@ class EventServiceProvider extends LaravelEventServiceProvider
 
         $this->publishes([$sourcePath => $viewPath], ['views', 'pulse-module-views']);
 
+        // Publish vendor views
+        $this->publishes([
+            __DIR__.'/../../resources/views/vendor/pulse' => resource_path('views/vendor/pulse'),
+        ], 'pulse-views');
+
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), 'pulse');
 
         Blade::componentNamespace(config('modules.namespace').'\\Pulse\\View\\Components', 'pulse');

@@ -39,6 +39,11 @@ class HealthServiceProvider extends ServiceProvider
             __DIR__.'/../../config/health.php' => config_path('health.php'),
         ], 'health-config');
 
+        // Publish vendor views
+        $this->publishes([
+            __DIR__.'/../../resources/views/vendor/health' => resource_path('views/vendor/health'),
+        ], 'health-views');
+
         // Register Spatie Health Checks
         $this->registerHealthChecks();
 

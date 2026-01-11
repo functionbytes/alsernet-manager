@@ -32,6 +32,11 @@ class MediaServiceProvider extends ServiceProvider
             __DIR__.'/../../config/media.php' => config_path('media.php'),
         ], 'media-config');
 
+        // Publish vendor views
+        $this->publishes([
+            __DIR__.'/../../resources/views/vendor/media-library' => resource_path('views/vendor/media-library'),
+        ], 'media-views');
+
         // Load migrations
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
