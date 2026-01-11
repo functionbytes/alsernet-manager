@@ -10,7 +10,7 @@ use Modules\Webhook\Http\Controllers\WebhookController;
 |
 | Rutas para la gestión operacional de webhooks (día a día)
 | Prefix: /webhooks (aplicado por ServiceProvider)
-| Name: manager.webhooks.* (aplicado por ServiceProvider)
+| Name: webhooks.* (aplicado por ServiceProvider)
 | Middleware: web, auth, role:super-admin
 |
 */

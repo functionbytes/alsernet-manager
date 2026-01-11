@@ -162,11 +162,11 @@ class SupplierServiceProvider extends ServiceProvider
         NavService::registerSidebar('suppliers', [
             'title' => 'Proveedores',
             'items' => [
-                ['label' => 'Gestión de proveedores', 'route' => 'settings.suppliers.index', 'icon' => 'fa-list'],
-                ['label' => 'Prompts', 'route' => 'settings.suppliers.prompts.index', 'icon' => 'fa-comments'],
-                ['label' => 'Templates', 'route' => 'settings.suppliers.templates.index', 'icon' => 'fa-file-code'],
-                ['label' => 'Automatización', 'route' => 'settings.suppliers.automation.index', 'icon' => 'fa-robot'],
-                ['label' => 'Contenido generado', 'route' => 'settings.suppliers.content.index', 'icon' => 'fa-file-alt'],
+                ['label' => 'Gestión de proveedores', 'route' => 'settings.suppliers.index'],
+                ['label' => 'Prompts', 'route' => 'settings.suppliers.prompts.index'],
+                ['label' => 'Templates', 'route' => 'settings.suppliers.templates.index'],
+                ['label' => 'Automatización', 'route' => 'settings.suppliers.automation.index'],
+                ['label' => 'Contenido generado', 'route' => 'settings.suppliers.content.index'],
             ],
         ]);
     }

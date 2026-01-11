@@ -8,7 +8,7 @@
             <h1 class="h3 fw-bold mb-0">{{ $integration->name }}</h1>
             <p class="text-muted small mb-0">UID: {{ $integration->uid }}</p>
         </div>
-        <a href="{{ route('manager.webhooks.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ route('webhooks.index') }}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Volver
         </a>
     </div>

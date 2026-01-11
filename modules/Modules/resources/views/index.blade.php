@@ -188,7 +188,7 @@
                                                     <li>
                                                         <form action="{{ route('settings.modules.uninstall', $module['alias']) }}" method="POST">
                                                             @csrf
-                                                            <button type="submit" class="dropdown-item text-danger"
+                                                            <button type="submit" class="dropdown-item text-success"
                                                                     onclick="return confirm('¿Desinstalar el módulo {{ $module['name'] }}? Esta acción es irreversible.')">
                                                                 Desinstalar
                                                             </button>

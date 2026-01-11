@@ -16,14 +16,17 @@ class SubscriptionsController extends Controller
      */
     public function index(Request $request)
     {
+        $search = $request->input('search');
+        $isActive = $request->input('is_active');
+
         $subscriptions = WebhookSubscription::query()
             ->with(['integration'])
-            ->when($request->input('integration_id'), fn ($q, $id) => $q->where('integration_id', $id))
-            ->when($request->input('is_active') !== null, fn ($q) => $q->where('is_active', $request->boolean('is_active')))
+            ->when($search, fn ($q, $s) => $q->where('event_type', 'like', "%{$s}%")->orWhere('webhook_url', 'like', "%{$s}%"))
+            ->when($isActive !== null && $isActive !== '', fn ($q) => $q->where('is_active', $request->boolean('is_active')))
             ->latest()
             ->paginate(20);
 
-        return view('webhook::settings.subscriptions.index', compact('subscriptions'));
+        return view('webhook::subscriptions.index', compact('subscriptions', 'search', 'isActive'));
     }
 
     /**
@@ -38,7 +41,7 @@ class SubscriptionsController extends Controller
             $preselectedIntegration = WebhookIntegration::find($request->input('integration_id'));
         }
 
-        return view('webhook::settings.subscriptions.create', compact('integrations', 'preselectedIntegration'));
+        return view('webhook::subscriptions.create', compact('integrations', 'preselectedIntegration'));
     }
 
     /**
@@ -62,7 +65,7 @@ class SubscriptionsController extends Controller
             ->with(['integration'])
             ->firstOrFail();
 
-        return view('webhook::settings.subscriptions.show', compact('subscription'));
+        return view('webhook::subscriptions.show', compact('subscription'));
     }
 
     /**
@@ -73,7 +76,7 @@ class SubscriptionsController extends Controller
         $subscription = WebhookSubscription::where('uid', $uid)->firstOrFail();
         $integrations = WebhookIntegration::active()->get();
 
-        return view('webhook::settings.subscriptions.edit', compact('subscription', 'integrations'));
+        return view('webhook::subscriptions.edit', compact('subscription', 'integrations'));
     }
 
     /**

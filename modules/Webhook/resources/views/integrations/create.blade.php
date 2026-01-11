@@ -8,7 +8,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form id="integration-form" method="POST" action="{{ route('manager.settings.webhooks.integrations.store') }}">
+            <form id="integration-form" method="POST" action="{{ route('webhooks.backups.integrations.store') }}">
                 @csrf
 
                 <div class="row">
@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('manager.settings.webhooks.integrations.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('webhooks.backups.integrations.index') }}" class="btn btn-secondary">
                         <i class="fas fa-times me-1"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">

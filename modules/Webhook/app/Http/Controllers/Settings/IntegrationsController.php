@@ -15,14 +15,19 @@ class IntegrationsController extends Controller
      */
     public function index(Request $request)
     {
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $plan = $request->input('plan');
+
         $integrations = WebhookIntegration::query()
             ->withCount('subscriptions')
-            ->when($request->input('status'), fn ($q, $status) => $q->where('status', $status))
-            ->when($request->input('plan'), fn ($q, $plan) => $q->where('plan', $plan))
+            ->when($search, fn ($q, $s) => $q->where('name', 'like', "%{$s}%")->orWhere('uid', 'like', "%{$s}%"))
+            ->when($status, fn ($q, $s) => $q->where('status', $s))
+            ->when($plan, fn ($q, $p) => $q->where('plan', $p))
             ->latest()
             ->paginate(20);
 
-        return view('webhook::settings.integrations.index', compact('integrations'));
+        return view('webhook::integrations.index', compact('integrations', 'search', 'status', 'plan'));
     }
 
     /**
@@ -30,7 +35,7 @@ class IntegrationsController extends Controller
      */
     public function create()
     {
-        return view('webhook::settings.integrations.create');
+        return view('webhook::integrations.create');
     }
 
     /**
@@ -54,7 +59,7 @@ class IntegrationsController extends Controller
             ->with(['subscriptions'])
             ->firstOrFail();
 
-        return view('webhook::settings.integrations.show', compact('integration'));
+        return view('webhook::integrations.show', compact('integration'));
     }
 
     /**
@@ -64,7 +69,7 @@ class IntegrationsController extends Controller
     {
         $integration = WebhookIntegration::where('uid', $uid)->firstOrFail();
 
-        return view('webhook::settings.integrations.edit', compact('integration'));
+        return view('webhook::integrations.edit', compact('integration'));
     }
 
     /**
