@@ -244,10 +244,13 @@
                     const orderId = orderIds[index];
 
                     $.ajax({
-                        url: `/administrative/documents/sync/by-order?order_id=${orderId}`,
-                        method: 'GET',
+                        url: `/api/documents/sync/by-order`,
+                        method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            order_id: orderId
                         },
                         dataType: 'json',
                         success: function(data) {
