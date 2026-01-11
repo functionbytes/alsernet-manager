@@ -356,6 +356,23 @@ class StorageController extends Controller
      */
     private function validateAndPrepareLocalDisk(string $rootPath): array
     {
+        // Validate that path is not empty
+        if (empty(trim($rootPath))) {
+            return [
+                'success' => false,
+                'message' => 'La ruta no puede estar vacía. Proporciona una ruta absoluta como /mnt/storage',
+            ];
+        }
+
+        // Reject dangerous system paths BEFORE trimming
+        $dangerousPaths = ['/', '/bin', '/boot', '/dev', '/etc', '/lib', '/root', '/sbin', '/sys', '/usr', '/var'];
+        if (in_array($rootPath, $dangerousPaths) || in_array(rtrim($rootPath, '/'), $dangerousPaths)) {
+            return [
+                'success' => false,
+                'message' => "La ruta '{$rootPath}' no es permitida por razones de seguridad. Usa directorios específicos como /mnt o subdirectorios del proyecto.",
+            ];
+        }
+
         $rootPath = rtrim($rootPath, '/');
 
         // Validate absolute path
@@ -363,15 +380,6 @@ class StorageController extends Controller
             return [
                 'success' => false,
                 'message' => 'La ruta debe ser absoluta (debe comenzar con /). Ejemplo: /mnt/storage o /var/www/storage',
-            ];
-        }
-
-        // Reject dangerous system paths
-        $dangerousPaths = ['/', '/bin', '/boot', '/dev', '/etc', '/lib', '/root', '/sbin', '/sys', '/usr', '/var'];
-        if (in_array($rootPath, $dangerousPaths)) {
-            return [
-                'success' => false,
-                'message' => "La ruta '{$rootPath}' no es permitida por razones de seguridad. Usa directorios específicos como /mnt o subdirectorios del proyecto.",
             ];
         }
 
