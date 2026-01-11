@@ -2,9 +2,8 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    Modules\Media\Providers\MediaServiceProvider::class, // Load first to register Spatie MediaLibrary
+    Modules\Media\Providers\MediaServiceProvider::class,
     Modules\Theme\Providers\ThemeServiceProvider::class,
-    // App\Providers\TelescopeServiceProvider::class,
     Modules\Activity\Providers\ActivityServiceProvider::class,
     Modules\Auth\Providers\AuthServiceProvider::class,
     Modules\Backup\Providers\BackupServiceProvider::class,
@@ -23,8 +22,8 @@ return [
     Modules\Role\Providers\RoleServiceProvider::class,
     Modules\Storage\Providers\StorageServiceProvider::class,
     Modules\System\Providers\SystemServiceProvider::class,
-    // Modules\Telescope\Providers\TelescopeServiceProvider::class,
     Modules\User\Providers\UserServiceProvider::class,
     Modules\Warehouse\Providers\WarehouseServiceProvider::class,
     Modules\Webhook\Providers\WebhookServiceProvider::class,
+    // Modules\Telescope\Providers\TelescopeServiceProvider::class,
 ];
