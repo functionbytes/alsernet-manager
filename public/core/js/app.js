@@ -66,19 +66,13 @@ $(function(){
         const mainWrapper = document.getElementById("main-wrapper");
         const isMobileView = () => window.innerWidth < 1300;
 
-        // Inicializar: Sidebar siempre cerrado al cargar
-        document.querySelectorAll(".sidebarmenu").forEach((el) => {
-            el.classList.add("close");
-        });
+        // Inicializar: Sidebar siempre cerrado al cargar (remover show-sidebar)
         mainWrapper.classList.remove("show-sidebar");
 
         function closeSidebarOnMobile() {
             // Solo cerrar en vista móvil (< 1300px)
             if (isMobileView()) {
                 mainWrapper.classList.remove("show-sidebar");
-                document.querySelectorAll(".sidebarmenu").forEach((el) => {
-                    el.classList.add("close");
-                });
             }
         }
 
@@ -88,9 +82,6 @@ $(function(){
                 e.preventDefault();
                 e.stopPropagation(); // Prevenir que el evento suba al document listener
                 mainWrapper.classList.toggle("show-sidebar");
-                document.querySelectorAll(".sidebarmenu").forEach((el) => {
-                    el.classList.toggle("close");
-                });
                 const dataTheme = document.body.getAttribute("data-sidebartype");
                 if (dataTheme === "full") {
                     document.body.setAttribute("data-sidebartype", "mini-sidebar");
@@ -125,9 +116,6 @@ $(function(){
             resizeTimer = setTimeout(function () {
                 if (!isMobileView() && mainWrapper.classList.contains("show-sidebar")) {
                     mainWrapper.classList.remove("show-sidebar");
-                    document.querySelectorAll(".sidebarmenu").forEach((el) => {
-                        el.classList.remove("close");
-                    });
                 }
             }, 250);
         });
