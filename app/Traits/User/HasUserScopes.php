@@ -69,35 +69,45 @@ trait HasUserScopes
     }
 
     /**
-     * Scope para filtrar usuarios
+     * Scope para filtrar usuarios por parámetros
      */
-    public static function scopeFilter(Builder $query, $request): void
+    public function scopeFilter(Builder $query, array $filters): Builder
     {
-        // filters
-        $filters = $request->all();
-        if (! empty($filters)) {
-            // Implementar filtros específicos aquí
+        foreach ($filters as $key => $value) {
+            if (empty($value)) {
+                continue;
+            }
+
+            match ($key) {
+                'status' => $query->where('status', $value),
+                'email' => $query->where('email', 'like', "%{$value}%"),
+                'firstname' => $query->where('firstname', 'like', "%{$value}%"),
+                'lastname' => $query->where('lastname', 'like', "%{$value}%"),
+                default => null,
+            };
         }
+
+        return $query;
     }
 
     /**
-     * Scope para buscar usuarios
+     * Scope para buscar usuarios por palabras clave
      */
-    public static function scopeSearch(Builder $query, string $keyword): void
+    public function scopeSearch(Builder $query, string $keyword): Builder
     {
-        $query = $query->select('customers.*')
-            ->leftJoin('users', 'users.customer_id', '=', 'customers.id');
-
-        // Keyword
         if (! empty(trim($keyword))) {
-            foreach (explode(' ', trim($keyword)) as $keyword) {
-                $query = $query->where(function ($q) use ($keyword) {
-                    $q->orwhere('users.first_name', 'like', '%'.$keyword.'%')
-                        ->orWhere('users.last_name', 'like', '%'.$keyword.'%')
-                        ->orWhere('users.email', 'like', '%'.$keyword.'%');
-                });
-            }
+            return $query->where(function ($q) use ($keyword) {
+                foreach (explode(' ', trim($keyword)) as $term) {
+                    $q->where(function ($subQ) use ($term) {
+                        $subQ->orWhere('firstname', 'like', '%'.$term.'%')
+                            ->orWhere('lastname', 'like', '%'.$term.'%')
+                            ->orWhere('email', 'like', '%'.$term.'%');
+                    });
+                }
+            });
         }
+
+        return $query;
     }
 
     /**

@@ -88,9 +88,9 @@ trait HasUserAttributes
         $lastNameFirst = get_localization_config('show_last_name_first', $this->getLanguageCode());
 
         if ($lastNameFirst) {
-            return htmlspecialchars(trim($this->user->last_name.' '.$this->user->first_name));
+            return htmlspecialchars(trim($this->lastname.' '.$this->firstname));
         } else {
-            return htmlspecialchars(trim($this->user->first_name.' '.$this->user->last_name));
+            return htmlspecialchars(trim($this->firstname.' '.$this->lastname));
         }
     }
 
@@ -99,7 +99,7 @@ trait HasUserAttributes
      */
     public function displayNameEmailOption(): string
     {
-        return $this->displayName().'|||'.$this->user->email;
+        return $this->displayName().'|||'.$this->email;
     }
 
     /**
