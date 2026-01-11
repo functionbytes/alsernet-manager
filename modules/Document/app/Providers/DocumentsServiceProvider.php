@@ -12,6 +12,7 @@ use Modules\Document\Console\Commands\InitializeDocumentWorkflows;
 use Modules\Document\Console\Commands\MigrateProductBlockades;
 use Modules\Document\Console\Commands\MigrateRequestDocumentMedia;
 use Modules\Document\Console\Commands\MigrateRequestDocumentProducts;
+use Modules\Document\Console\Commands\MigrateRequestDocumentProductOrder;
 use Modules\Document\Console\Commands\MigrateRequestDocuments;
 use Modules\Document\Console\Commands\SendDocumentUploadReminders;
 use Modules\Document\Console\Commands\SyncDocumentFields;
@@ -158,6 +159,7 @@ class DocumentsServiceProvider extends ServiceProvider
             MigrateRequestDocumentProducts::class,
             MigrateRequestDocumentMedia::class,
             MigrateProductBlockades::class,
+            MigrateRequestDocumentProductOrder::class,
         ]);
     }
 

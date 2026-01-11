@@ -68,11 +68,11 @@ return [
 
         'prestashop' => [
             'driver' => 'mysql',
-            'host' => '192.168.1.120',
-            'port' => 3306,
-            'database' => 'alvarez_ana',
-            'username' => 'alvarez_ana',
-            'password' => 'Jun.007862',
+            'host' => env('DB_HOST_PRESTASHOP', '213.134.40.101'),
+            'port' => env('DB_PORT_PRESTASHOP', '3306'),
+            'database' => env('DB_DATABASE_PRESTASHOP', 'alvarez_db'),
+            'username' => env('DB_USERNAME_PRESTASHOP', 'alvarez_dbu'),
+            'password' => env('DB_PASSWORD_PRESTASHOP', 'X908#AU90#104'),
         ],
 
         'mariadb' => [

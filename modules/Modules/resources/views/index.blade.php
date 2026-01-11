@@ -167,13 +167,13 @@
                                                     <li><hr class="dropdown-divider"></li>
                                                     @if($module['enabled'])
                                                         <li>
-                                                            <form action="{{ route('settings.modules.disable', $module['alias']) }}" method="POST">
-                                                                @csrf
-                                                                <button type="submit" class="dropdown-item text-warning"
-                                                                        onclick="return confirm('¿Deshabilitar el módulo {{ $module['name'] }}?')">
-                                                                    Deshabilitar
-                                                                </button>
-                                                            </form>
+                                                            <button type="button"
+                                                                    class="dropdown-item text-warning disable-module-btn"
+                                                                    data-module-name="{{ $module['name'] }}"
+                                                                    data-module-alias="{{ $module['alias'] }}"
+                                                                    data-action="{{ route('settings.modules.disable', $module['alias']) }}">
+                                                                Deshabilitar
+                                                            </button>
                                                         </li>
                                                     @else
                                                         <li>
@@ -186,13 +186,13 @@
                                                         </li>
                                                     @endif
                                                     <li>
-                                                        <form action="{{ route('settings.modules.uninstall', $module['alias']) }}" method="POST">
-                                                            @csrf
-                                                            <button type="submit" class="dropdown-item text-success"
-                                                                    onclick="return confirm('¿Desinstalar el módulo {{ $module['name'] }}? Esta acción es irreversible.')">
-                                                                Desinstalar
-                                                            </button>
-                                                        </form>
+                                                        <button type="button"
+                                                                class="dropdown-item text-danger uninstall-module-btn"
+                                                                data-module-name="{{ $module['name'] }}"
+                                                                data-module-alias="{{ $module['alias'] }}"
+                                                                data-action="{{ route('settings.modules.uninstall', $module['alias']) }}">
+                                                            Desinstalar
+                                                        </button>
                                                     </li>
                                                 @endif
                                             </ul>
@@ -235,6 +235,73 @@
         </div>
     </div>
 
+    <!-- Modal para deshabilitar módulo -->
+    <div class="modal fade" id="disableModuleModal" tabindex="-1" aria-labelledby="disableModuleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="disableModuleModalLabel">
+                        <i class="fas fa-power-off text-warning me-2"></i>Deshabilitar módulo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">
+                        ¿Estás seguro de que deseas deshabilitar el módulo <strong id="disable-module-name"></strong>?
+                    </p>
+                    <p class="text-muted small mb-0 mt-2">
+                        El módulo dejará de estar disponible hasta que lo vuelvas a habilitar.
+                    </p>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <form id="disable-module-form" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-power-off me-1"></i>Sí, deshabilitar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para desinstalar módulo -->
+    <div class="modal fade" id="uninstallModuleModal" tabindex="-1" aria-labelledby="uninstallModuleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom bg-danger-subtle">
+                    <h5 class="modal-title text-danger" id="uninstallModuleModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Desinstalar módulo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">
+                        ¿Estás seguro de que deseas desinstalar el módulo <strong id="uninstall-module-name"></strong>?
+                    </p>
+                    <div class="alert alert-danger mb-0" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Esta acción es irreversible.</strong> Se eliminarán todos los datos y configuraciones asociadas al módulo.
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <form id="uninstall-module-form" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Sí, desinstalar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -247,6 +314,32 @@
             @if (session('error'))
             toastr.error('{{ session('error') }}', 'Error');
             @endif
+
+            // Modal para deshabilitar módulo
+            const disableModal = new bootstrap.Modal(document.getElementById('disableModuleModal'));
+
+            $('.disable-module-btn').on('click', function() {
+                const moduleName = $(this).data('module-name');
+                const moduleAction = $(this).data('action');
+
+                $('#disable-module-name').text(moduleName);
+                $('#disable-module-form').attr('action', moduleAction);
+
+                disableModal.show();
+            });
+
+            // Modal para desinstalar módulo
+            const uninstallModal = new bootstrap.Modal(document.getElementById('uninstallModuleModal'));
+
+            $('.uninstall-module-btn').on('click', function() {
+                const moduleName = $(this).data('module-name');
+                const moduleAction = $(this).data('action');
+
+                $('#uninstall-module-name').text(moduleName);
+                $('#uninstall-module-form').attr('action', moduleAction);
+
+                uninstallModal.show();
+            });
         });
     </script>
 @endpush

@@ -4,9 +4,13 @@ namespace Modules\Prestashop\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Prestashop\Entities\Orders\Order;
+use Modules\Prestashop\Entities\Address;
+use Modules\Prestashop\Entities\Carrier;
+use Modules\Prestashop\Entities\Cart;
+use Modules\Prestashop\Entities\Currency;
+use Modules\Prestashop\Entities\Customer;
+use Modules\Prestashop\Entities\Language;
 use Modules\Prestashop\Entities\Orders\OrderState;
 use Modules\Prestashop\Entities\Shop\Shop;
 use Modules\Prestashop\Entities\Shop\ShopGroup;
@@ -110,219 +114,51 @@ class Order extends Model
     // BelongsTo Relationships
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Customer',
-            'id_customer',
-            'id_customer'
-        );
+        return $this->belongsTo(Customer::class, 'id_customer', 'id_customer');
     }
 
     public function addressDelivery(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Address',
-            'id_address_delivery',
-            'id_address'
-        );
+        return $this->belongsTo(Address::class, 'id_address_delivery', 'id_address');
     }
 
     public function addressInvoice(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Address',
-            'id_address_invoice',
-            'id_address'
-        );
+        return $this->belongsTo(Address::class, 'id_address_invoice', 'id_address');
     }
 
     public function cart(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Cart',
-            'id_cart',
-            'id_cart'
-        );
+        return $this->belongsTo(Cart::class, 'id_cart', 'id_cart');
     }
 
     public function currency(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Currency',
-            'id_currency',
-            'id_currency'
-        );
+        return $this->belongsTo(Currency::class, 'id_currency', 'id_currency');
     }
 
     public function language(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Language',
-            'id_lang',
-            'id_lang'
-        );
+        return $this->belongsTo(Language::class, 'id_lang', 'id_lang');
     }
 
     public function carrier(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Carrier',
-            'id_carrier',
-            'id_carrier'
-        );
+        return $this->belongsTo(Carrier::class, 'id_carrier', 'id_carrier');
     }
 
     public function shop(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\Shop',
-            'id_shop',
-            'id_shop'
-        );
+        return $this->belongsTo(Shop::class, 'id_shop', 'id_shop');
     }
 
     public function shopGroup(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\ShopGroup',
-            'id_shop_group',
-            'id_shop_group'
-        );
+        return $this->belongsTo(ShopGroup::class, 'id_shop_group', 'id_shop_group');
     }
 
     public function currentOrderState(): BelongsTo
     {
-        return $this->belongsTo(
-            'App\Models\Prestashop\OrderState',
-            'current_state',
-            'id_order_state'
-        );
-    }
-
-    // HasMany Relationships
-    public function orderDetails(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderDetail',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderHistory(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderHistory',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderPayments(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderPayment',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderInvoices(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderInvoice',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderCarriers(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderCarrier',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderCartRules(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderCartRule',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderMessages(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderMessage',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function orderSlips(): HasMany
-    {
-        return $this->hasMany(
-            'App\Models\Prestashop\OrderSlip',
-            'id_order',
-            'id_order'
-        );
-    }
-
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class, 'id_order');
-    }
-
-    public function deliveryAddress(): BelongsTo
-    {
-        return $this->belongsTo(Address::class, 'id_address_delivery');
-    }
-
-    public function invoiceAddress(): BelongsTo
-    {
-        return $this->belongsTo(Address::class, 'id_address_invoice');
-    }
-
-    public function shopGroup(): BelongsTo
-    {
-        return $this->belongsTo(ShopGroup::class, 'id_shop_group');
-    }
-
-    public function shop(): BelongsTo
-    {
-        return $this->belongsTo(Shop::class, 'id_shop');
-    }
-
-    public function cart(): BelongsTo
-    {
-        return $this->belongsTo(Cart::class, 'id_cart');
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class, 'id_currency');
-    }
-
-    public function lang(): BelongsTo
-    {
-        return $this->belongsTo(Language::class, 'id_lang');
-    }
-
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class, 'id_customer');
-    }
-
-    public function carrier(): BelongsTo
-    {
-        return $this->belongsTo(Carrier::class, 'id_carrier');
-    }
-
-    public function currentState(): BelongsTo
-    {
-        return $this->belongsTo(OrderState::class, 'current_state');
+        return $this->belongsTo(OrderState::class, 'current_state', 'id_order_state');
     }
 }

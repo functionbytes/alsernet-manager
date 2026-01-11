@@ -76,6 +76,31 @@ class Document extends Model implements HasMedia
         'updated_at',
     ];
 
+    // =========================================================================
+    // MUTATORS - Automatic field transformations
+    // =========================================================================
+
+    protected function customerFirstname(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            set: fn ($value) => $value !== null ? strtoupper($value) : null
+        );
+    }
+
+    protected function customerLastname(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            set: fn ($value) => $value !== null ? strtoupper($value) : null
+        );
+    }
+
+    protected function customerCompany(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            set: fn ($value) => $value !== null ? strtoupper($value) : null
+        );
+    }
+
     public function scopeDescending($query)
     {
         return $query->orderBy('created_at', 'desc');

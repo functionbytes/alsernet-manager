@@ -2,7 +2,7 @@
 
 namespace Modules\Document\Entities;
 
-use App\Models\Lang;
+use Modules\Core\Models\Lang;
 use Modules\Document\Traits\HasUid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

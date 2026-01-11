@@ -1621,6 +1621,7 @@ class DocumentsController extends Controller
     public function prestashopOrderPaid(Request $request)
     {
         try {
+
             $orderId = $request->input('order_id') ?? $request->input('id_order');
 
             if (! $orderId) {

@@ -23,6 +23,17 @@ class DocumentProduct extends Model
         'price' => 'decimal:2',
     ];
 
+    // =========================================================================
+    // MUTATORS - Automatic field transformations
+    // =========================================================================
+
+    protected function productName(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            set: fn ($value) => $value !== null ? strtoupper($value) : null
+        );
+    }
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'document_id');

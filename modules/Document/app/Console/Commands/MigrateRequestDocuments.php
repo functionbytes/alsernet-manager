@@ -77,56 +77,40 @@ class MigrateRequestDocuments extends Command
             $migrated = 0;
             $skipped = 0;
             $errors = [];
+            $statusStats = [
+                'awaiting_documents' => 0,
+                'received' => 0,
+                'approved' => 0,
+            ];
 
             foreach ($sourceRecords as $source) {
                 try {
-                    // First, check if this document has products in blockades
-                    $documentTypeId = null;
+                    // Map document type using legacy type field
+                    // Note: Legacy database (webadmin) does not have request_document_products table
+                    // Product associations will need to be handled separately if needed
+                    $typeSlug = strtolower($source->type ?? '');
 
-                    // Get products associated with this document from legacy database
-                    $documentProducts = $sourceDb->table('request_document_products')
-                        ->where('document_id', $source->id)
-                        ->pluck('product_id')
-                        ->toArray();
-
-                    if (! empty($documentProducts)) {
-                        // Check if any of these products are in document_product_blockades
-                        $blockade = DocumentProductBlockade::whereIn('product_id', $documentProducts)
-                            ->whereNotNull('document_type_id')
-                            ->first();
-
-                        if ($blockade) {
-                            // Use the document_type_id from the blockade
-                            $documentTypeId = $blockade->document_type_id;
-                            $this->line("  ℹ Document {$source->id}: Using type from blockade (product_id: {$blockade->product_id})");
-                        }
+                    // Handle legacy type mappings
+                    $typeMappings = [
+                        'gun' => 'corta', // Default mapping for legacy 'gun' type
+                    ];
+                    if (isset($typeMappings[$typeSlug])) {
+                        $typeSlug = $typeMappings[$typeSlug];
                     }
 
-                    // If no blockade found, use legacy type mapping
-                    if (! $documentTypeId) {
-                        $typeSlug = strtolower($source->type ?? '');
+                    if (! isset($typeMap[$typeSlug])) {
+                        $errors[] = "Record {$source->id}: Unknown type '{$source->type}'";
+                        $skipped++;
+                        $bar->advance();
 
-                        // Handle legacy type mappings
-                        $typeMappings = [
-                            'gun' => 'corta', // Default mapping for legacy 'gun' type
-                        ];
-                        if (isset($typeMappings[$typeSlug])) {
-                            $typeSlug = $typeMappings[$typeSlug];
-                        }
-
-                        if (! isset($typeMap[$typeSlug])) {
-                            $errors[] = "Record {$source->id}: Unknown type '{$source->type}'";
-                            $skipped++;
-                            $bar->advance();
-
-                            continue;
-                        }
-
-                        $documentTypeId = $typeMap[$typeSlug];
+                        continue;
                     }
+
+                    $documentTypeId = $typeMap[$typeSlug];
 
                     // Map source to source_id with fallback mappings
-                    $sourceKey = strtolower($source->source ?? '');
+                    // Note: Legacy database doesn't have source field, so we default to 'prestashop'
+                    $sourceKey = strtolower($source->source ?? 'prestashop');
 
                     // Handle legacy source mappings
                     $sourceMappings = [
@@ -136,35 +120,61 @@ class MigrateRequestDocuments extends Command
                         $sourceKey = $sourceMappings[$sourceKey];
                     }
 
+                    // Ensure source exists, default to prestashop if not
                     if (! isset($sourceMap[$sourceKey])) {
-                        $errors[] = "Record {$source->id}: Unknown source '{$source->source}'";
+                        $sourceKey = 'prestashop'; // Default fallback
+                    }
+
+                    if (! isset($sourceMap[$sourceKey])) {
+                        $errors[] = "Record {$source->id}: Unknown source (defaulted to prestashop)";
                         $skipped++;
                         $bar->advance();
 
                         continue;
                     }
 
-                    // Prepare data for insertion
+                    // Determine status based on upload_at and proccess (legacy field)
+                    // Legacy database uses 'upload_at' instead of 'confirmed_at'
+                    // Logic: upload_at + proccess=1 → approved
+                    //        upload_at + proccess=0 → received
+                    //        no upload_at → awaiting_documents
+                    $statusId = $defaultStatusId; // awaiting_documents (2)
+                    $validationStatus = 'pending'; // Default validation status
+
+                    if (isset($source->upload_at) && $source->upload_at) {
+                        if ($source->proccess === 1 || $source->proccess === '1') {
+                            // Documento subido y procesado → aprobado
+                            $statusId = $statusMap['approved'] ?? 5;
+                            $validationStatus = 'approved';
+                        } else {
+                            // Documento subido pero no procesado → recibido
+                            $statusId = $statusMap['received'] ?? 3;
+                            $validationStatus = 'pending';
+                        }
+                    }
+
+                    // Prepare data for insertion (using null coalescing for potentially missing fields)
                     $documentData = [
+                        'id' => $source->id,
                         'uid' => $source->uid,
                         'type_id' => $documentTypeId,
                         'source_id' => $sourceMap[$sourceKey],
                         'sync_id' => 2, // 'none' - no synchronization
                         'load_id' => 2, // 'system' - loaded by migration system
-                        'status_id' => $defaultStatusId,
-                        'validation_status' => 'pending',
-                        'customer_id' => $source->customer_id,
-                        'customer_firstname' => $source->customer_firstname,
-                        'customer_lastname' => $source->customer_lastname,
-                        'customer_email' => $source->customer_email,
-                        'customer_dni' => $source->customer_dni,
-                        'customer_company' => $source->customer_company,
-                        'order_id' => $source->order_id,
-                        'order_reference' => $source->order_reference,
-                        'order_date' => $source->order_date,
-                        'cart_id' => $source->cart_id,
-                        'confirmed_at' => $source->confirmed_at,
-                        'reminder_at' => $source->reminder_at,
+                        'status_id' => $statusId,
+                        'validation_status' => $validationStatus,
+                        'customer_id' => $source->customer_id ?? null,
+                        'customer_firstname' => $source->customer_firstname ?? null,
+                        'customer_lastname' => $source->customer_lastname ?? null,
+                        'customer_email' => $source->customer_email ?? null,
+                        'customer_dni' => $source->customer_dni ?? null,
+                        'customer_company' => $source->customer_company ?? null,
+                        'order_id' => $source->order_id ?? null,
+                        'order_reference' => $source->order_reference ?? null,
+                        'order_date' => $source->order_date ?? null,
+                        'cart_id' => $source->cart_id ?? null,
+                        'confirmed_at' => $source->upload_at ?? null, // Legacy uses 'upload_at'
+                        'reminder_at' => $source->reminder_at ?? null,
                         'current_stage' => 1,
                         'total_stages' => 1,
                         'created_at' => $source->created_at,
@@ -178,6 +188,12 @@ class MigrateRequestDocuments extends Command
                     );
 
                     $migrated++;
+
+                    // Track status statistics
+                    $statusKey = array_search($statusId, $statusMap);
+                    if ($statusKey && isset($statusStats[$statusKey])) {
+                        $statusStats[$statusKey]++;
+                    }
                 } catch (\Exception $e) {
                     $errors[] = "Record {$source->id}: {$e->getMessage()}";
                     $skipped++;
@@ -196,6 +212,13 @@ class MigrateRequestDocuments extends Command
             $this->warn("  ⊘ Skipped: {$skipped}");
             $this->info("  Total: {$total}");
 
+            // Show status distribution
+            $this->line('');
+            $this->comment('📊 Status distribution:');
+            $this->info("  • Awaiting documents: {$statusStats['awaiting_documents']}");
+            $this->info("  • Received: {$statusStats['received']}");
+            $this->info("  • Approved: {$statusStats['approved']}");
+
             if (! empty($errors)) {
                 $this->line('');
                 $this->warn('⚠️  Errors encountered:');
@@ -208,7 +231,8 @@ class MigrateRequestDocuments extends Command
             $this->comment('💡 Next steps:');
             $this->comment('  • Review migrated documents in /settings/documents/');
             $this->comment('  • Update validation stages and status as needed');
-            $this->comment('  • Run: php artisan app:migrate-request-document-products');
+            $this->comment('  • Run: php artisan app:migrate-request-document-products --force');
+            $this->comment('  • Run: php artisan app:migrate-request-document-media --force');
 
         } catch (\Exception $e) {
             $this->error('❌ Migration failed: '.$e->getMessage());
