@@ -66,12 +66,18 @@ $(function(){
         const mainWrapper = document.getElementById("main-wrapper");
         const isMobileView = () => window.innerWidth < 1300;
 
+        // Inicializar: Sidebar siempre cerrado al cargar
+        document.querySelectorAll(".sidebarmenu").forEach((el) => {
+            el.classList.add("close");
+        });
+        mainWrapper.classList.remove("show-sidebar");
+
         function closeSidebarOnMobile() {
             // Solo cerrar en vista móvil (< 1300px)
-            if (isMobileView() && mainWrapper.classList.contains("show-sidebar")) {
+            if (isMobileView()) {
                 mainWrapper.classList.remove("show-sidebar");
                 document.querySelectorAll(".sidebarmenu").forEach((el) => {
-                    el.classList.remove("close");
+                    el.classList.add("close");
                 });
             }
         }
