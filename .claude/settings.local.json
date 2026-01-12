@@ -445,7 +445,8 @@
       "Bash(/Users/functionbytes/Function/Coding/manager/scripts/setup-case-sensitivity.sh:*)",
       "Bash(php-fpm:*)",
       "Bash(nginx -v:*)",
-      "Bash(apache2:*)"
+      "Bash(apache2:*)",
+      "mcp__laravel-boost__list-artisan-commands"
     ],
     "deny": [],
     "ask": []
