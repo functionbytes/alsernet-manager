@@ -442,7 +442,10 @@
       "Bash(shuf)",
       "Bash(do echo \"File: $file\" grep \"$signature\" \"$file\")",
       "Bash(git config:*)",
-      "Bash(/Users/functionbytes/Function/Coding/manager/scripts/setup-case-sensitivity.sh:*)"
+      "Bash(/Users/functionbytes/Function/Coding/manager/scripts/setup-case-sensitivity.sh:*)",
+      "Bash(php-fpm:*)",
+      "Bash(nginx -v:*)",
+      "Bash(apache2:*)"
     ],
     "deny": [],
     "ask": []

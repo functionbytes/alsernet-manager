@@ -32,13 +32,13 @@ class ErpServiceProvider extends ServiceProvider
 
         $this->commands([
             \Modules\Erp\Console\Commands\ErpCheckCommand::class,
-            \Modules\Erp\Console\Commands\V2\ClearProductImports::class,
-            \Modules\Erp\Console\Commands\V2\ExtractOracleDDL::class,
-            \Modules\Erp\Console\Commands\V2\ImportProductsFromPrestashop::class,
-            \Modules\Erp\Console\Commands\V2\ShowImportStatistics::class,
-            \Modules\Erp\Console\Commands\V2\SyncProducts::class,
-            \Modules\Erp\Console\Commands\V2\SyncSpecificPrices::class,
-            \Modules\Erp\Console\Commands\V2\TestOracleConnection::class,
+            \Modules\Erp\Console\Commands\ClearProductImports::class,
+            \Modules\Erp\Console\Commands\ExtractOracleDDL::class,
+            \Modules\Erp\Console\Commands\ImportProductsFromPrestashop::class,
+            \Modules\Erp\Console\Commands\ShowImportStatistics::class,
+            \Modules\Erp\Console\Commands\SyncProducts::class,
+            \Modules\Erp\Console\Commands\SyncSpecificPrices::class,
+            \Modules\Erp\Console\Commands\TestOracleConnection::class,
         ]);
     }
 

@@ -18,9 +18,7 @@
         "clsx": "^2.0.0",
         "date-fns": "^2.0.0",
         "framer-motion": "^12.23.25",
-        "laravel-echo": "^1.19.0",
         "lodash-es": "^4.0.0",
-        "pusher-js": "^8.4.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-hook-form": "^7.0.0",
@@ -29,6 +27,7 @@
         "zustand": "^5.0.0"
     },
     "devDependencies": {
+        "@laravel/echo-react": "^2.2.7",
         "@tailwindcss/vite": "^4.0.0",
         "@tanstack/react-query-devtools": "^5.0.0",
         "@types/node": "^20.0.0",
@@ -36,7 +35,9 @@
         "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^4.0.0",
         "concurrently": "^9.0.1",
+        "laravel-echo": "^2.2.7",
         "laravel-vite-plugin": "^2.0.0",
+        "pusher-js": "^8.4.0",
         "tailwindcss": "^4.0.0",
         "tsx": "^4.0.0",
         "typescript": "^5.0.0",

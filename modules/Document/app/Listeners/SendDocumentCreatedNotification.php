@@ -57,8 +57,12 @@ class SendDocumentCreatedNotification
 
         // Send notification to all users in the validator group
         foreach ($users as $user) {
-            $notification = new class extends Notification
+            $notification = new class extends Notification implements \Illuminate\Contracts\Broadcasting\ShouldBroadcast, \Illuminate\Contracts\Queue\ShouldQueue
             {
+                use \Illuminate\Bus\Queueable;
+
+                public ?int $recipientUserId = null;
+
                 public function __construct(
                     public $document,
                     public $groupKey
@@ -66,7 +70,8 @@ class SendDocumentCreatedNotification
 
                 public function via($notifiable)
                 {
-                    return ['database'];
+                    $this->recipientUserId = $notifiable->id;
+                    return ['database', 'broadcast'];
                 }
 
                 public function toDatabase($notifiable)
@@ -81,7 +86,38 @@ class SendDocumentCreatedNotification
                         'action_url' => url("/documents/show/{$this->document->uid}"),
                         'action_text' => 'Validar documento',
                         'priority' => 'high',
+                        'document_id' => $this->document->id,
+                        'document_uid' => $this->document->uid,
+                        'validator_group' => $this->groupKey,
                     ];
+                }
+
+                public function toBroadcast($notifiable)
+                {
+                    return new \Illuminate\Notifications\Messages\BroadcastMessage([
+                        'title' => '📄 Nuevo documento para validar',
+                        'message' => "Documento #{$this->document->order_id} requiere validación de {$this->groupKey}",
+                        'icon' => 'fas fa-file-check',
+                        'color' => 'warning',
+                        'action_url' => url("/documents/show/{$this->document->uid}"),
+                        'action_text' => 'Validar documento',
+                        'priority' => 'high',
+                        'document_id' => $this->document->id,
+                        'document_uid' => $this->document->uid,
+                        'validator_group' => $this->groupKey,
+                    ]);
+                }
+
+                public function broadcastOn(): array
+                {
+                    return [
+                        new \Illuminate\Broadcasting\Channel('documents.created'),
+                    ];
+                }
+
+                public function broadcastType(): string
+                {
+                    return 'document.created.notification';
                 }
             };
 
