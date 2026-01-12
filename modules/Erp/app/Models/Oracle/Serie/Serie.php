@@ -1,0 +1,105 @@
+<?php
+
+namespace Modules\Erp\Models\Oracle\Serie;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * Modelo para la tabla SERIE_CENTRAL
+ *
+ * ÍNDICES DISPONIBLES:
+ * ✅ IDX_SERIE_CENTRAL_IDSERIEGENER (NONUNIQUE)
+ *    - Tipo: NORMAL
+ *    - Columnas: IDSERIEGENERICA_GRUPOCONTA
+ *
+ * PK_SERIE_CENTRAL (UNIQUE)
+ *    - Tipo: NORMAL
+ *    - Columnas: IDSERIE
+ *
+ */
+class Serie extends Model
+{
+    use SoftDeletes;
+
+    protected $connection = 'oracle';
+    protected $table = 'serie_central';
+    protected $primaryKey = 'idserie';
+    public $timestamps = true;
+    const CREATED_AT = 'fcreacion';
+    const UPDATED_AT = 'fmodificacion';
+    const DELETED_AT = 'fbaja';
+
+    protected $fillable = [
+        'idempresa', 'descripcioncorta', 'tipo', 'n_factura', 'estado',
+        'idusuariomod', 'nseriecontaplus', 'anno', 'idtipodiario', 'fdesde',
+        'fhasta', 'idalmacen', 'idseriegenerica_grupoconta', 'rectificativa', 'tfactura',
+        'pordefecto', 'simplificada',
+    ];
+
+    protected $casts = [
+        'fdesde' => 'datetime',
+        'fhasta' => 'datetime',
+        'estado' => 'boolean',
+    ];
+
+    // ========================================
+    // Relaciones
+    // ========================================
+
+    /**
+     * Relación con Seriegenerica
+     */
+    public function seriegenerica_grupoconta()
+    {
+        return $this->belongsTo(Seriegenerica::class, 'idseriegenerica_grupoconta', 'idseriegenerica');
+    }
+
+
+    /**
+     * Relación: SeriegenericaGrupoconta
+     * ✅ Usa IDX_SERIE_CENTRAL_IDSERIEGENER (indexado)
+     */
+    public function seriegenericaGrupoconta()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Serie\Seriegenerica::class, 'IDSERIEGENERICA_GRUPOCONTA', 'IDSERIEGENERICA');
+    }
+
+
+    /**
+     * Relación: Serie
+     * ✅ Usa PK_SERIE_CENTRAL (indexado)
+     */
+    public function serie()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Serie\Serie::class, 'IDSERIE', 'IDSERIE');
+    }
+
+    /**
+     * Relación: Empresa
+     * ⚠️  SIN ÍNDICE en IDEMPRESA
+     */
+    public function empresa()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Otros\Empresa::class, 'IDEMPRESA', 'IDEMPRESA');
+    }
+
+    /**
+     * Relación: Tipodiario
+     * ⚠️  SIN ÍNDICE en IDTIPODIARIO
+     */
+    public function tipodiario()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Configuracion\Tipodiario::class, 'IDTIPODIARIO', 'IDTIPODIARIO');
+    }
+
+    /**
+     * Relación: Almacen
+     * ⚠️  SIN ÍNDICE en IDALMACEN
+     */
+    public function almacen()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Configuracion\Almacen::class, 'IDALMACEN', 'IDALMACEN');
+    }
+
+}

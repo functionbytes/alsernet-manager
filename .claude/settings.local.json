@@ -437,7 +437,12 @@
       "Bash(if [ -f \"Modules/$module/composer.json\" ])",
       "Bash(then echo \"✓ has composer.json\")",
       "Bash(else echo \"✗ NO composer.json\")",
-      "Bash(__NEW_LINE_7e255fb2bfe7cb81__ echo \"Campaign:\")"
+      "Bash(__NEW_LINE_7e255fb2bfe7cb81__ echo \"Campaign:\")",
+      "Bash(du:*)",
+      "Bash(shuf)",
+      "Bash(do echo \"File: $file\" grep \"$signature\" \"$file\")",
+      "Bash(git config:*)",
+      "Bash(/Users/functionbytes/Function/Coding/manager/scripts/setup-case-sensitivity.sh:*)"
     ],
     "deny": [],
     "ask": []

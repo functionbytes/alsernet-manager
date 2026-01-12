@@ -1,0 +1,78 @@
+<?php
+
+namespace Modules\Erp\Models\Oracle\Otros;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * Modelo para la tabla DIARIO_CENT
+ *
+ * ÍNDICES DISPONIBLES:
+ * ✅ IDX_DIARIO_CENT_IDEJCONTABLE (NONUNIQUE)
+ *    - Tipo: NORMAL
+ *    - Columnas: IDEJERCICIO_CONTABLE
+ *
+ * ✅ IDX_DIARIO_CENT_IDTIPODIARIO (NONUNIQUE)
+ *    - Tipo: NORMAL
+ *    - Columnas: IDTIPODIARIO
+ *
+ * PK_DIARIO_CENT (UNIQUE)
+ *    - Tipo: NORMAL
+ *    - Columnas: IDDIARIO
+ *
+ */
+class Diario extends Model
+{
+    use SoftDeletes;
+
+    protected $connection = 'oracle';
+    protected $table = 'diario_cent';
+    protected $primaryKey = 'iddiario';
+    public $timestamps = true;
+    const CREATED_AT = 'fcreacion';
+    const UPDATED_AT = 'fmodificacion';
+    const DELETED_AT = 'fbaja';
+
+    protected $fillable = [
+        'idejercicio_contable', 'idusuariocre', 'idusuariomod', 'idusuariobaj', 'estado',
+        'supuesto', 'descripcion', 'idtipodiario', 'nasiento',
+    ];
+
+    protected $casts = [
+        'estado' => 'boolean',
+    ];
+
+
+    // ========================================
+    // Relaciones
+    // ========================================
+
+    /**
+     * Relación: Diario
+     * ✅ Usa PK_DIARIO_CENT (indexado)
+     */
+    public function diario()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Otros\Diario::class, 'IDDIARIO', 'IDDIARIO');
+    }
+
+    /**
+     * Relación: EjercicioContable
+     * ✅ Usa IDX_DIARIO_CENT_IDEJCONTABLE (indexado)
+     */
+    public function ejercicioContable()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Otros\EjercicioContable::class, 'IDEJERCICIO_CONTABLE', 'IDEJERCICIO_CONTABLE');
+    }
+
+    /**
+     * Relación: Tipodiario
+     * ✅ Usa IDX_DIARIO_CENT_IDTIPODIARIO (indexado)
+     */
+    public function tipodiario()
+    {
+        return $this->belongsTo(\App\Models\Oracle\Configuracion\Tipodiario::class, 'IDTIPODIARIO', 'IDTIPODIARIO');
+    }
+
+}

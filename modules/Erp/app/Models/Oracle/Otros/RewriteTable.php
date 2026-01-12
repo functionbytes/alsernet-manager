@@ -1,0 +1,22 @@
+<?php
+
+namespace Modules\Erp\Models\Oracle\Otros;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Modelo para la tabla REWRITE_TABLE
+ */
+class RewriteTable extends Model
+{
+    protected $connection = 'oracle';
+    protected $table = 'rewrite_table';
+    protected $primaryKey = 'statement_id';
+    public $incrementing = false;
+    public $timestamps = false;
+
+    protected $fillable = [
+        'mv_owner', 'mv_name', 'sequence', 'query', 'message',
+        'pass', 'flags', 'reserved1', 'reserved2',
+    ];
+}

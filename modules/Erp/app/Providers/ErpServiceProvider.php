@@ -3,50 +3,43 @@
 namespace Modules\Erp\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Erp\Services\Integrations\ErpService;
-use Modules\Theme\Services\NavService;
 
 class ErpServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
-        // Register ERP Service as singleton
-        $this->app->singleton(ErpService::class, function ($app) {
-            return new ErpService;
+        $this->app->singleton(\Modules\Erp\Services\Integrations\ErpService::class, function ($app) {
+            return new \Modules\Erp\Services\Integrations\ErpService;
         });
 
-        // Register Facade alias
-        $this->app->alias('erp', ErpService::class);
+        $this->app->singleton(\Modules\Erp\Services\Integrations\GestionPriceService::class, function ($app) {
+            return new \Modules\Erp\Services\Integrations\GestionPriceService;
+        });
+
+        $this->app->alias('erp', \Modules\Erp\Services\Integrations\ErpService::class);
+        $this->mergeConfigFrom(__DIR__.'/../../config/erp.php', 'erp');
     }
 
-    public function boot()
+    public function boot(): void
     {
-        // Publish configuration
         $this->publishes([
             __DIR__.'/../../config/erp.php' => config_path('erp.php'),
         ], 'erp-config');
 
-        // Load routes
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations/V2');
 
-        // Register menus
-        $this->registerMenus();
-    }
-
-    /**
-     * Registrar menús del módulo Erp
-     */
-    protected function registerMenus(): void
-    {
-
-        // Sidebar con los items del módulo
-        NavService::registerSidebar('settings', [
-            'title' => 'Integración ERP',
-            'items' => [
-                ['label' => 'Dashboard', 'route' => 'settings.erp.index'],
-                ['label' => 'Configuración', 'route' => 'settings.erp.edit'],
-            ],
+        $this->commands([
+            \Modules\Erp\Console\Commands\ErpCheckCommand::class,
+            \Modules\Erp\Console\Commands\V2\ClearProductImports::class,
+            \Modules\Erp\Console\Commands\V2\ExtractOracleDDL::class,
+            \Modules\Erp\Console\Commands\V2\ImportProductsFromPrestashop::class,
+            \Modules\Erp\Console\Commands\V2\ShowImportStatistics::class,
+            \Modules\Erp\Console\Commands\V2\SyncProducts::class,
+            \Modules\Erp\Console\Commands\V2\SyncSpecificPrices::class,
+            \Modules\Erp\Console\Commands\V2\TestOracleConnection::class,
         ]);
     }
+
 }

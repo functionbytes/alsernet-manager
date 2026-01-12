@@ -16,8 +16,10 @@
         "laravel/ui": "^4.6",
         "nesbot/carbon": "^3.8",
         "nwidart/laravel-modules": "^12.0",
+        "ramsey/uuid": "^4.7",
         "symfony/finder": "^7.2",
-        "symfony/mime": "^7.2"
+        "symfony/mime": "^7.2",
+        "yajra/laravel-oci8": "^12.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
