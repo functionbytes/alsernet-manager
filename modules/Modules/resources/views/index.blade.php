@@ -129,10 +129,10 @@
                                             <a href="{{ route('settings.modules.show', $module['alias']) }}" class="text-decoration-none">
                                                 <strong>{{ $module['name'] }}</strong>
                                             </a>
-                                            @if(in_array($module['name'], ['Role', 'Modules']))
-                                                <br><small class="badge bg-primary-subtle text-primary">Módulo protegido</small>
-                                            @endif
                                             <small class="d-block text-muted">{{ $module['alias'] }}</small>
+                                            @if(in_array($module['name'], ['Role', 'Modules']))
+                                                <small class="badge badge-sm bg-primary-subtle text-primary mt-0">Módulo protegido</small>
+                                            @endif
                                         </div>
                                     </td>
                                     <td>
@@ -187,7 +187,7 @@
                                                     @endif
                                                     <li>
                                                         <button type="button"
-                                                                class="dropdown-item text-danger uninstall-module-btn"
+                                                                class="dropdown-item  uninstall-module-btn"
                                                                 data-module-name="{{ $module['name'] }}"
                                                                 data-module-alias="{{ $module['alias'] }}"
                                                                 data-action="{{ route('settings.modules.uninstall', $module['alias']) }}">
@@ -241,7 +241,7 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title" id="disableModuleModalLabel">
-                        <i class="fas fa-power-off text-warning me-2"></i>Deshabilitar módulo
+                        Deshabilitar módulo
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -254,15 +254,16 @@
                     </p>
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <form id="disable-module-form" method="POST" style="display: inline;">
+
+                    <form id="disable-module-form" method="POST" class="w-100">
                         @csrf
-                        <button type="submit" class="btn btn-warning">
-                            <i class="fas fa-power-off me-1"></i>Sí, deshabilitar
+                        <button type="submit" class="btn btn-primary w-100 mb-1">
+                            Sí, deshabilitar
                         </button>
                     </form>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
                 </div>
             </div>
         </div>

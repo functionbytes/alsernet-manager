@@ -31,7 +31,11 @@ return new class extends Migration
             $table->index('mime_type');
             $table->index('type');
             $table->index('disk');
-            $table->fullText('name');
+
+            // SQLite doesn't support fulltext indexes
+            if (config('database.default') !== 'sqlite') {
+                $table->fullText('name');
+            }
 
             $table->foreign('folder_id')->references('id')->on('media_folders')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');

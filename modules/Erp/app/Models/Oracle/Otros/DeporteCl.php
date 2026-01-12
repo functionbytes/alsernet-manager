@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Otros;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -48,6 +49,14 @@ class DeporteCl extends Model
     public function deporteCl()
     {
         return $this->belongsTo(\App\Models\Oracle\Otros\DeporteCl::class, 'IDDEPORTE_CL', 'IDDEPORTE_CL');
+    }
+
+    /**
+     * Relación inversa: SupplierSports (sincronización Supplier)
+     */
+    public function supplierSports(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierSport::class, 'erp_sport_id', 'iddeporte_cl');
     }
 
 }

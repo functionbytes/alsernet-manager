@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('document_mails', function (Blueprint $table) {
-            // Drop the existing foreign key constraint
-            $table->dropForeign('document_mails_template_id_foreign');
-        });
+        // SQLite doesn't support dropping foreign keys by name
+        if (config('database.default') !== 'sqlite') {
+            Schema::table('document_mails', function (Blueprint $table) {
+                // Drop the existing foreign key constraint
+                $table->dropForeign('document_mails_template_id_foreign');
+            });
 
-        Schema::table('document_mails', function (Blueprint $table) {
-            // Recreate the foreign key with proper NULL handling
-            $table->foreign('template_id')
-                ->references('id')
-                ->on('mail_templates')
-                ->nullOnDelete();
-        });
+            Schema::table('document_mails', function (Blueprint $table) {
+                // Recreate the foreign key with proper NULL handling
+                $table->foreign('template_id')
+                    ->references('id')
+                    ->on('mail_templates')
+                    ->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -30,15 +33,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('document_mails', function (Blueprint $table) {
-            $table->dropForeign('document_mails_template_id_foreign');
-        });
+        // SQLite doesn't support dropping foreign keys by name
+        if (config('database.default') !== 'sqlite') {
+            Schema::table('document_mails', function (Blueprint $table) {
+                $table->dropForeign('document_mails_template_id_foreign');
+            });
 
-        Schema::table('document_mails', function (Blueprint $table) {
-            $table->foreign('template_id')
-                ->references('id')
-                ->on('mail_templates')
-                ->nullOnDelete();
-        });
+            Schema::table('document_mails', function (Blueprint $table) {
+                $table->foreign('template_id')
+                    ->references('id')
+                    ->on('mail_templates')
+                    ->nullOnDelete();
+            });
+        }
     }
 };

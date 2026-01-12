@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('document_product_blockades', function (Blueprint $table) {
-            // Drop the foreign key constraint if it exists
-            if (Schema::hasColumn('document_product_blockades', 'source_id')) {
-                $table->dropForeign(['source_id']);
-            }
-        });
+        // SQLite doesn't support dropping foreign keys
+        if (config('database.default') !== 'sqlite') {
+            Schema::table('document_product_blockades', function (Blueprint $table) {
+                // Drop the foreign key constraint if it exists
+                if (Schema::hasColumn('document_product_blockades', 'source_id')) {
+                    $table->dropForeign(['source_id']);
+                }
+            });
+        }
     }
 
     /**

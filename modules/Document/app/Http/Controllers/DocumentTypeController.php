@@ -3,9 +3,9 @@
 namespace Modules\Document\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\Document\Entities\DocumentLang;
 use Modules\Document\Entities\DocumentRequirement;
 use Modules\Document\Entities\DocumentRequirementLang;
 use Modules\Document\Entities\DocumentType;
@@ -31,7 +31,7 @@ class DocumentTypeController extends Controller
             ->orderBy('slug')
             ->paginate(20);
 
-        $langs = Lang::all();
+        $langs = DocumentLang::all();
 
         return view('documents::settings.types.index', [
             'documentTypes' => $documentTypes,
@@ -44,7 +44,7 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-        $langs = Lang::all();
+        $langs = DocumentLang::all();
         $validatorGroups = DocumentValidatorGroup::active()->orderBy('sort_order')->get();
         $validationConditions = DocumentValidationCondition::active()->ordered()->get();
 
@@ -133,7 +133,7 @@ class DocumentTypeController extends Controller
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementLang::create([
+                                DocumentRequirementDocumentLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],
@@ -176,7 +176,7 @@ class DocumentTypeController extends Controller
             ->with(['requirements.langs', 'validationStages'])
             ->firstOrFail();
 
-        $langs = Lang::all();
+        $langs = DocumentLang::all();
         $validatorGroups = DocumentValidatorGroup::active()->orderBy('sort_order')->get();
         $validationConditions = DocumentValidationCondition::active()->ordered()->get();
 
@@ -303,7 +303,7 @@ class DocumentTypeController extends Controller
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementLang::create([
+                                DocumentRequirementDocumentLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],

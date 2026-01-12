@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Configuracion;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -56,6 +57,14 @@ class FamiliaCl extends Model
     public function categoriaCl()
     {
         return $this->belongsTo(\App\Models\Oracle\Otros\CategoriaCl::class, 'IDCATEGORIA_CL', 'IDCATEGORIA_CL');
+    }
+
+    /**
+     * Relación inversa: SupplierFamilies (sincronización Supplier)
+     */
+    public function supplierFamilies(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierFamily::class, 'erp_family_id', 'idfamilia_cl');
     }
 
 }

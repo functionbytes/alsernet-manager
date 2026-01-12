@@ -8,6 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Skip if table already exists (avoid conflicts with Core module)
+        if (Schema::hasTable('push_notification_tokens')) {
+            return;
+        }
+
         Schema::create('push_notification_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

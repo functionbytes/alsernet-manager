@@ -45,16 +45,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('warehouse_inventory_slots', function (Blueprint $table) {
-            // Drop new constraints and columns
-            $table->dropUnique('inventory_slot_unique');
-            $table->dropForeign(['section_id']);
-            $table->dropForeign(['last_section_id']);
-            $table->dropColumn(['section_id', 'last_section_id']);
+        // SQLite doesn't support dropping foreign keys
+        if (config('database.default') !== 'sqlite') {
+            Schema::table('warehouse_inventory_slots', function (Blueprint $table) {
+                // Drop new constraints and columns
+                $table->dropUnique('inventory_slot_unique');
+                $table->dropForeign(['section_id']);
+                $table->dropForeign(['last_section_id']);
+                $table->dropColumn(['section_id', 'last_section_id']);
 
-            // Restore old column
-            $table->integer('section')->default(1)->after('level');
-            $table->unique(['location_id', 'face', 'level', 'section']);
-        });
+                // Restore old column
+                $table->integer('section')->default(1)->after('level');
+                $table->unique(['location_id', 'face', 'level', 'section']);
+            });
+        }
     }
 };

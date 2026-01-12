@@ -1,0 +1,173 @@
+<?php
+
+namespace Modules\Supplier\Listeners;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Modules\Supplier\Events\SupplierProductPriceChanged;
+use Modules\Supplier\Services\ErpSyncService;
+use Modules\Supplier\Entities\SupplierSyncFailure;
+use Illuminate\Support\Str;
+
+/**
+ * Listener que sincroniza precios de Supplier → Oracle en tiempo real
+ *
+ * Características:
+ * - Se encola en cola 'erp-sync' para procesamiento asíncrono
+ * - 3 intentos de reintento con backoff exponencial
+ * - Prevención de duplicados mediante cache
+ * - Detección y manejo de conflictos
+ * - Dead Letter Queue para fallos permanentes
+ *
+ * Flujo:
+ * 1. Recibe evento SupplierProductPriceChanged
+ * 2. Valida que debería sincronizarse (tiene erp_price_id)
+ * 3. Previene duplicados con cache flag
+ * 4. Llama ErpSyncService::syncPriceToOracle()
+ * 5. Si falla permanentemente: guarda en SupplierSyncFailure
+ */
+class SyncPriceToErpListener implements ShouldQueue
+{
+    use InteractsWithQueue;
+
+    /**
+     * Número de reintentos antes de considerar fallido permanentemente
+     */
+    public $tries = 3;
+
+    /**
+     * Timeout en segundos para cada intento
+     */
+    public $timeout = 30;
+
+    /**
+     * Backoff en segundos: [primer intento, segundo, tercero]
+     */
+    public $backoff = [5, 15, 30];
+
+    /**
+     * Cola dedicada para sincronización bidireccional
+     */
+    public $queue = 'erp-sync';
+
+    public function __construct(
+        protected ErpSyncService $erpSyncService
+    ) {
+    }
+
+    /**
+     * Procesar el evento de cambio de precio
+     *
+     * @param SupplierProductPriceChanged $event
+     * @return void
+     * @throws \Exception
+     */
+    public function handle(SupplierProductPriceChanged $event): void
+    {
+        // Validar que se puede sincronizar
+        if (!$event->shouldSyncToErp()) {
+            Log::info('Price sync skipped - no erp_price_id', [
+                'supplier_price_id' => $event->price->id,
+                'changed_fields' => $event->changedFields,
+            ]);
+            return;
+        }
+
+        // Prevención de duplicados: si ya está en proceso, ignorar
+        $cacheKey = $this->getDuplicateKey($event);
+        if (Cache::has($cacheKey)) {
+            Log::debug('Price sync skipped - already processing', [
+                'supplier_price_id' => $event->price->id,
+                'cache_key' => $cacheKey,
+            ]);
+            return;
+        }
+
+        try {
+            // Sincronizar al Oracle
+            $this->erpSyncService->syncPriceToOracle(
+                $event->price,
+                $event->changedFields
+            );
+
+            // Marcar como procesado para evitar duplicados
+            Cache::put($cacheKey, true, now()->addMinutes(5));
+
+            Log::info('Price synced to ERP successfully', [
+                'supplier_price_id' => $event->price->id,
+                'erp_price_id' => $event->price->erp_price_id,
+                'changed_fields' => $event->changedFields,
+                'user_id' => $event->userId,
+                'ip_address' => $event->ipAddress,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to sync price to ERP - will retry', [
+                'supplier_price_id' => $event->price->id,
+                'erp_price_id' => $event->price->erp_price_id,
+                'error' => $e->getMessage(),
+                'attempt' => $this->attempts(),
+            ]);
+
+            // Re-lanzar para que Laravel reintente
+            throw $e;
+        }
+    }
+
+    /**
+     * Se llama cuando el job falla permanentemente (después de $tries intentos)
+     *
+     * Guarda el registro en Dead Letter Queue para diagnóstico y retry manual
+     *
+     * @param SupplierProductPriceChanged $event
+     * @param \Throwable $exception
+     * @return void
+     */
+    public function failed(SupplierProductPriceChanged $event, \Throwable $exception): void
+    {
+        // Guardar en Dead Letter Queue
+        SupplierSyncFailure::create([
+            'uid' => Str::ulid(),
+            'sync_type' => 'price',
+            'supplier_id' => $event->price->id,
+            'erp_id' => $event->price->erp_price_id,
+            'changed_data' => array_combine($event->changedFields, array_fill(0, count($event->changedFields), null)),
+            'error_message' => $exception->getMessage() . ' (Stack: ' . get_class($exception) . ')',
+            'retry_count' => $this->attempts(),
+        ]);
+
+        Log::critical('Price sync to ERP FAILED PERMANENTLY', [
+            'supplier_price_id' => $event->price->id,
+            'erp_price_id' => $event->price->erp_price_id,
+            'error' => $exception->getMessage(),
+            'exception_class' => get_class($exception),
+            'user_id' => $event->userId,
+            'changed_fields' => $event->changedFields,
+            'note' => 'Registrado en supplier_sync_failures para retry manual',
+        ]);
+    }
+
+    /**
+     * Generar clave de cache para prevenir duplicados
+     *
+     * Incluye: precio + campos modificados = si exactamente lo mismo, es duplicado
+     *
+     * @param SupplierProductPriceChanged $event
+     * @return string
+     */
+    protected function getDuplicateKey(SupplierProductPriceChanged $event): string
+    {
+        $hashData = json_encode([
+            'price_id' => $event->price->id,
+            'changed_fields' => $event->changedFields,
+            'current_values' => array_intersect_key(
+                $event->price->toArray(),
+                array_flip($event->changedFields)
+            ),
+        ]);
+
+        return 'erp_sync_price_' . md5($hashData);
+    }
+}

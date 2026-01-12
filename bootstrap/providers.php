@@ -1,29 +1,79 @@
 <?php
 
-return [
-    App\Providers\AppServiceProvider::class,
-    Modules\Media\Providers\MediaServiceProvider::class,
-    Modules\Theme\Providers\ThemeServiceProvider::class,
-    Modules\Activity\Providers\ActivityServiceProvider::class,
-    Modules\Auth\Providers\AuthServiceProvider::class,
-    Modules\Backup\Providers\BackupServiceProvider::class,
-    Modules\Core\Providers\CoreServiceProvider::class,
-    Modules\Database\Providers\DatabaseServiceProvider::class,
-    Modules\Document\Providers\DocumentsServiceProvider::class,
-    Modules\Event\Providers\EventServiceProvider::class,
-    Modules\Health\Providers\HealthServiceProvider::class,
-    Modules\Horizon\Providers\HorizonServiceProvider::class,
-    Modules\Mailer\Providers\MailerServiceProvider::class,
-    Modules\MailsSettings\Providers\MailsSettingsServiceProvider::class,
-    Modules\Modules\Providers\EventServiceProvider::class,
-    Modules\Notification\Providers\NotificationServiceProvider::class,
-    Modules\Prestashop\Providers\PrestashopServiceProvider::class,
-    Modules\Pulse\Providers\EventServiceProvider::class,
-    Modules\Role\Providers\RoleServiceProvider::class,
-    Modules\Storage\Providers\StorageServiceProvider::class,
-    Modules\System\Providers\SystemServiceProvider::class,
-    Modules\User\Providers\UserServiceProvider::class,
-    Modules\Warehouse\Providers\WarehouseServiceProvider::class,
-    Modules\Webhook\Providers\WebhookServiceProvider::class,
-    // Modules\Telescope\Providers\TelescopeServiceProvider::class,
+/**
+ * Module providers configuration
+ *
+ * This configuration dynamically loads service providers based on module activation status.
+ * Modules listed in modules_statuses.json with 'false' will be excluded.
+ *
+ * Critical modules (always loaded): Core, Auth, Role, Modules, Theme
+ */
+
+// Define all available module providers
+$allProviders = [
+    // Core framework modules (always loaded)
+    'App\Providers\AppServiceProvider' => true,
+
+    // Module providers - mapped by module name for dynamic loading
+    'Modules\Activity\Providers\ActivityServiceProvider' => 'Activity',
+    'Modules\Analytics\Providers\AnalyticsServiceProvider' => 'Analytics',
+    'Modules\Auth\Providers\AuthServiceProvider' => 'Auth',
+    'Modules\Backup\Providers\BackupServiceProvider' => 'Backup',
+    'Modules\Campaign\Providers\CampaignServiceProvider' => 'Campaign',
+    'Modules\Compliance\Providers\ComplianceServiceProvider' => 'Compliance',
+    'Modules\Core\Providers\CoreServiceProvider' => true, // Always load
+    'Modules\Database\Providers\DatabaseServiceProvider' => 'Database',
+    'Modules\Document\Providers\DocumentsServiceProvider' => 'Document',
+    'Modules\Erp\Providers\ErpServiceProvider' => 'Erp',
+    'Modules\Event\Providers\EventServiceProvider' => 'Event',
+    'Modules\Health\Providers\HealthServiceProvider' => 'Health',
+    'Modules\Helpdesk\Providers\HelpdeskServiceProvider' => 'Helpdesk',
+    'Modules\Horizon\Providers\HorizonServiceProvider' => 'Horizon',
+    'Modules\Mailer\Providers\MailerServiceProvider' => 'Mailer',
+    'Modules\MailsSettings\Providers\MailsSettingsServiceProvider' => 'MailsSettings',
+    'Modules\Media\Providers\MediaServiceProvider' => 'Media',
+    'Modules\Modules\Providers\EventServiceProvider' => true, // Always load
+    'Modules\Notification\Providers\NotificationServiceProvider' => 'Notification',
+    'Modules\Prestashop\Providers\PrestashopServiceProvider' => 'Prestashop',
+    'Modules\Pulse\Providers\EventServiceProvider' => 'Pulse',
+    'Modules\Queue\Providers\QueueServiceProvider' => 'Queue',
+    'Modules\Return\Providers\ReturnsServiceProvider' => 'Return',
+    'Modules\Reverb\Providers\ReverServiceProvider' => 'Reverb',
+    'Modules\Role\Providers\RoleServiceProvider' => true, // Always load
+    'Modules\Seo\Providers\SeoServiceProvider' => 'Seo',
+    'Modules\Storage\Providers\StorageServiceProvider' => 'Storage',
+    'Modules\Subscriber\Providers\SubscriberServiceProvider' => 'Subscriber',
+    'Modules\Supplier\Providers\SupplierServiceProvider' => 'Supplier',
+    'Modules\System\Providers\SystemServiceProvider' => 'System',
+    'Modules\Telescope\Providers\TelescopeServiceProvider' => 'Telescope',
+    'Modules\Theme\Providers\ThemeServiceProvider' => true, // Always load
+    'Modules\User\Providers\UserServiceProvider' => 'User',
+    'Modules\Warehouse\Providers\WarehouseServiceProvider' => 'Warehouse',
+    'Modules\Webhook\Providers\WebhookServiceProvider' => 'Webhook',
 ];
+
+// Load module statuses
+$modulesStatusFile = base_path('modules_statuses.json');
+$modulesStatus = [];
+
+if (file_exists($modulesStatusFile)) {
+    $modulesStatus = json_decode(file_get_contents($modulesStatusFile), true) ?? [];
+}
+
+// Filter providers based on module activation status
+$providers = [];
+
+foreach ($allProviders as $providerClass => $moduleName) {
+    // Always load core app provider and critical modules
+    if ($moduleName === true) {
+        $providers[] = $providerClass;
+        continue;
+    }
+
+    // For module providers, check if the module is enabled
+    if (isset($modulesStatus[$moduleName]) && $modulesStatus[$moduleName] === true) {
+        $providers[] = $providerClass;
+    }
+}
+
+return $providers;

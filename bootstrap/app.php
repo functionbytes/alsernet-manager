@@ -48,6 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Modules\Core\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Modules\Core\Http\Middleware\EnsureModuleIsActive::class,
         ]);
 
         $middleware->group('api', [

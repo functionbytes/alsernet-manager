@@ -70,6 +70,21 @@ return new class extends Migration
      */
     private function hasIndex(string $table, string $indexName): bool
     {
+        // SQLite doesn't support SHOW INDEX, use schema-agnostic method
+        if (config('database.default') === 'sqlite') {
+            try {
+                $indexes = \Illuminate\Support\Facades\DB::select(
+                    "SELECT name FROM sqlite_master WHERE type='index' AND name=?",
+                    [$indexName]
+                );
+
+                return ! empty($indexes);
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        // MySQL/PostgreSQL
         $indexes = \Illuminate\Support\Facades\DB::select("SHOW INDEX FROM {$table} WHERE Key_name = '{$indexName}'");
 
         return ! empty($indexes);

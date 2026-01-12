@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Configuracion;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Erp\Models\Oracle\Promocion\Lpromocionsubfamiliaincluida;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -69,6 +70,14 @@ class SubfamiliaCl extends Model
     public function familiaCl()
     {
         return $this->belongsTo(\App\Models\Oracle\Configuracion\FamiliaCl::class, 'IDFAMILIA_CL', 'IDFAMILIA_CL');
+    }
+
+    /**
+     * Relación inversa: SupplierSubfamilies (sincronización Supplier)
+     */
+    public function supplierSubfamilies(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierSubfamily::class, 'erp_subfamily_id', 'idsubfamilia_cl');
     }
 
 }

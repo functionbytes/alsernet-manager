@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Proveedor;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -62,6 +63,14 @@ class ArtiprovTarifapro extends Model
     public function artiprov()
     {
         return $this->belongsTo(\App\Models\Oracle\Proveedor\Artiprov::class, 'IDARTIPROV', 'IDARTIPROV');
+    }
+
+    /**
+     * Relación inversa: SupplierProductPrices (sincronización Supplier)
+     */
+    public function supplierProductPrices(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierProductPrice::class, 'erp_price_id', 'idartiprov_tarifapro');
     }
 
 }

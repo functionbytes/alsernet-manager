@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Otros;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -61,6 +62,14 @@ class GrupoCl extends Model
     public function subfamiliaCl()
     {
         return $this->belongsTo(\App\Models\Oracle\Configuracion\SubfamiliaCl::class, 'IDSUBFAMILIA_CL', 'IDSUBFAMILIA_CL');
+    }
+
+    /**
+     * Relación inversa: SupplierGroups (sincronización Supplier)
+     */
+    public function supplierGroups(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierGroup::class, 'erp_group_id', 'idgrupo_cl');
     }
 
 }

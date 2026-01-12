@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "kub-at/php-simple-html-dom-parser": "^1.9"
+        "kub-at/php-simple-html-dom-parser": "^1.9",
+        "yajra/laravel-oci8": "^12.0"
     },
     "extra": {
         "laravel": {

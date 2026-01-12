@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Articulo;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -274,6 +275,14 @@ class Articulo extends Model
     public function periodoCuota()
     {
         return $this->belongsTo(\Modules\Erp\Models\Oracle\Otros\PeriodoCuota::class, 'IDPERIODO_CUOTA', 'IDPERIODO_CUOTA');
+    }
+
+    /**
+     * Relación inversa: SupplierProducts (sincronización Supplier)
+     */
+    public function supplierProducts(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierProduct::class, 'erp_product_id', 'idarticulo');
     }
 
 }

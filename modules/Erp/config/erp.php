@@ -29,32 +29,66 @@ return [
     'payment_apple_tpv' => 2,
 
     // =========================================
-    // V2 - INTEGRACIÓN CONFIG (Nueva)
+    // INTEGRACIÓN CONFIG
     // =========================================
-    'v2' => [
-        'oracle' => [
-            'enabled' => env('ERP_V2_ORACLE_ENABLED', false),
-            'connection' => 'oracle',
-        ],
+    'oracle' => [
+        'enabled' => env('ORACLE_ENABLED', false),
+        'connection' => 'oracle',
+    ],
 
-        'prestashop' => [
-            'enabled' => env('ERP_V2_PRESTASHOP_ENABLED', false),
-            'connection' => 'prestashop',
-        ],
+    'prestashop' => [
+        'enabled' => env('PRESTASHOP_ENABLED', false),
+        'connection' => 'prestashop',
+    ],
 
-        'price_validation' => [
-            'queue' => 'default',
-            'timeout' => 300,
-            'retries' => 3,
-        ],
+    'price_validation' => [
+        'queue' => 'default',
+        'timeout' => 300,
+        'retries' => 3,
+    ],
 
-        'country_mapping' => [
-            6 => 1,   // España
-            15 => 2,  // Portugal
-            8 => 3,   // Francia
-            1 => 4,   // Alemania
-            10 => 5,  // Italia
-            2 => 6,   // Austria
+    'country_mapping' => [
+        6 => 1,   // España
+        15 => 2,  // Portugal
+        8 => 3,   // Francia
+        1 => 4,   // Alemania
+        10 => 5,  // Italia
+        2 => 6,   // Austria
+    ],
+
+    // =========================================
+    // SUPPLIER SYNC CONFIG (ERP ↔ Supplier)
+    // =========================================
+    'supplier_sync' => [
+        // Real-time monitoring of Oracle changes
+        'oracle_monitor_interval' => env('ORACLE_MONITOR_INTERVAL', 30), // seconds between monitor cycles
+        'oracle_monitor_chunk_size' => env('ORACLE_MONITOR_CHUNK_SIZE', 100), // records per transaction
+
+        // Bidirectional sync queue
+        'sync_queue' => env('ERP_SYNC_QUEUE', 'erp-sync'),
+        'sync_timeout' => 30, // seconds
+        'sync_retries' => 3,
+        'sync_backoff' => [5, 15, 30], // exponential backoff in seconds
+
+        // Dead Letter Queue (failed syncs)
+        'dlq_max_retries' => 5,
+        'dlq_retry_delay' => 30, // minutes before auto-retry
+
+        // =====================================================
+        // MEJORA #6: Selective Entity Monitoring
+        // =====================================================
+        // Enable/disable monitoring per entity type
+        // Set to false to skip syncing specific entities
+        'monitored_entities' => [
+            'sports' => env('SYNC_MONITOR_SPORTS', true),
+            'categories' => env('SYNC_MONITOR_CATEGORIES', true),
+            'families' => env('SYNC_MONITOR_FAMILIES', true),
+            'subfamilies' => env('SYNC_MONITOR_SUBFAMILIES', true),
+            'groups' => env('SYNC_MONITOR_GROUPS', true),
+            'providers' => env('SYNC_MONITOR_PROVIDERS', true),
+            'products' => env('SYNC_MONITOR_PRODUCTS', true),
+            'provider_products' => env('SYNC_MONITOR_PROVIDER_PRODUCTS', true),
+            'prices' => env('SYNC_MONITOR_PRICES', true),
         ],
     ],
 ];

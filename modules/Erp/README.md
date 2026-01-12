@@ -130,7 +130,8 @@ modules/Erp/
 │       └── GestionPriceService.php              # Price management
 │
 ├── config/
-│   └── erp.php                                  # Configuration
+│   ├── erp.php                                  # ERP module settings
+│   └── database.php                             # Oracle connection config
 │
 ├── database/
 │   ├── migrations/V2/                           # V2 database schema
@@ -148,7 +149,9 @@ modules/Erp/
 │   ├── api.php                                  # API routes (v1 & v2)
 │   └── web.php                                  # Web routes (settings)
 │
-└── README.md                                    # This documentation
+├── .env.example                                 # Environment variables template
+├── README.md                                    # This documentation
+└── composer.json                                # Module dependencies
 ```
 
 ---
@@ -157,22 +160,27 @@ modules/Erp/
 
 ### Required Environment Variables
 
+The ERP Module is fully encapsulated with its own database configuration managed through the **ErpServiceProvider**. All Oracle database variables are automatically registered when the module is loaded.
+
 ```bash
 # ERP Service Connection
 ERP_URL=https://your-erp-system.com
 
-# Oracle Database Connection
-ERP_V2_ORACLE_ENABLED=true
-DB_ORACLE_DRIVER=oracle
-DB_ORACLE_HOST=oracle-server.example.com
-DB_ORACLE_PORT=1521
-DB_ORACLE_DATABASE=ORCL
-DB_ORACLE_USERNAME=erp_user
-DB_ORACLE_PASSWORD=secure_password
-DB_ORACLE_CHARSET=AL32UTF8
+# Oracle Database Connection (GESTCENT System)
+ORACLE_HOST=223.1.1.8
+ORACLE_PORT=1521
+ORACLE_DATABASE=GESTCENT
+ORACLE_SERVICE_NAME=GESTCENT
+ORACLE_USERNAME=your_oracle_user
+ORACLE_PASSWORD=your_oracle_password
+ORACLE_CHARSET=AL32UTF8
+ORACLE_SCHEMA=DEVELOPER
+ORACLE_SERVER_VERSION=11g
+ORACLE_LOAD_BALANCE=yes
+ORACLE_ENABLED=false
 
-# PrestaShop Database Connection
-ERP_V2_PRESTASHOP_ENABLED=true
+# PrestaShop Integration
+PRESTASHOP_ENABLED=false
 DB_PRESTASHOP_DRIVER=mysql
 DB_PRESTASHOP_HOST=prestashop-db.example.com
 DB_PRESTASHOP_PORT=3306
@@ -181,7 +189,11 @@ DB_PRESTASHOP_USERNAME=ps_user
 DB_PRESTASHOP_PASSWORD=secure_password
 ```
 
-### Configuration File (config/erp.php)
+> **Note:** Copy variables from `modules/Erp/.env.example` to your main `.env` file.
+
+### Configuration Files
+
+#### config/erp.php - ERP Module Settings
 
 ```php
 return [
@@ -194,31 +206,65 @@ return [
     'payment_paypal' => 10,
     // ... more payment types
 
-    'v2' => [
+    'oracle' => [
+        'enabled' => env('ORACLE_ENABLED', false),
+        'connection' => 'oracle',
+    ],
+
+    'prestashop' => [
+        'enabled' => env('PRESTASHOP_ENABLED', false),
+        'connection' => 'prestashop',
+    ],
+
+    'price_validation' => [
+        'queue' => 'default',
+        'timeout' => 300,
+        'retries' => 3,
+    ],
+
+    'country_mapping' => [
+        6 => 1,   // Spain
+        15 => 2,  // Portugal
+        8 => 3,   // France
+        1 => 4,   // Germany
+        10 => 5,  // Italy
+        2 => 6,   // Austria
+    ],
+];
+```
+
+#### config/database.php - Oracle Connection Configuration
+
+The ERP module encapsulates its Oracle database connection in a dedicated configuration file:
+
+```php
+return [
+    'connections' => [
         'oracle' => [
-            'enabled' => env('ERP_V2_ORACLE_ENABLED', false),
-            'connection' => 'oracle',
-        ],
-        'prestashop' => [
-            'enabled' => env('ERP_V2_PRESTASHOP_ENABLED', false),
-            'connection' => 'prestashop',
-        ],
-        'price_validation' => [
-            'queue' => 'default',
-            'timeout' => 300,
-            'retries' => 3,
-        ],
-        'country_mapping' => [
-            6 => 1,   // Spain
-            15 => 2,  // Portugal
-            8 => 3,   // France
-            1 => 4,   // Germany
-            10 => 5,  // Italy
-            2 => 6,   // Austria
+            'driver' => 'oracle',
+            'host' => env('ORACLE_HOST', '223.1.1.8'),
+            'port' => env('ORACLE_PORT', '1521'),
+            'database' => env('ORACLE_DATABASE', 'GESTCENT'),
+            'service_name' => env('ORACLE_SERVICE_NAME', 'GESTCENT'),
+            'username' => env('ORACLE_USERNAME', ''),
+            'password' => env('ORACLE_PASSWORD', ''),
+            'charset' => env('ORACLE_CHARSET', 'AL32UTF8'),
+            'prefix' => '',
+            'prefix_schema' => env('ORACLE_SCHEMA', 'DEVELOPER'),
+            'server_version' => env('ORACLE_SERVER_VERSION', '11g'),
+            'load_balance' => env('ORACLE_LOAD_BALANCE', 'yes'),
+            'pooled' => true,
+            'options' => [
+                PDO::ATTR_PERSISTENT => true,
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+            ],
         ],
     ],
 ];
 ```
+
+**Automatic Registration:** This configuration is automatically merged into Laravel's `config('database')` by the **ErpServiceProvider** during module initialization, making the `oracle` connection available application-wide.
 
 ---
 

@@ -27,6 +27,8 @@ class SupplierServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerMenus();
+        $this->registerObservers();
+        $this->registerEventListeners();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
@@ -61,6 +63,12 @@ class SupplierServiceProvider extends ServiceProvider
         $this->app->singleton(
             \Modules\Supplier\Services\SourceConfigurationService::class,
             fn ($app) => new \Modules\Supplier\Services\SourceConfigurationService
+        );
+
+        // Registrar servicio de sincronización inversa (Supplier → ERP)
+        $this->app->singleton(
+            \Modules\Supplier\Services\ErpSyncService::class,
+            fn ($app) => new \Modules\Supplier\Services\ErpSyncService
         );
     }
 
@@ -169,6 +177,52 @@ class SupplierServiceProvider extends ServiceProvider
                 ['label' => 'Contenido generado', 'route' => 'settings.suppliers.content.index'],
             ],
         ]);
+    }
+
+    /**
+     * Registrar Observers para detectar cambios en modelos
+     *
+     * Los observers disparan eventos cuando los modelos son modificados,
+     * lo que inicia la sincronización bidireccional hacia Oracle.
+     */
+    protected function registerObservers(): void
+    {
+        \Modules\Supplier\Entities\SupplierProductPrice::observe(
+            \Modules\Supplier\Observers\SupplierProductPriceObserver::class
+        );
+
+        \Modules\Supplier\Entities\SupplierErpProvider::observe(
+            \Modules\Supplier\Observers\SupplierErpProviderObserver::class
+        );
+
+        \Modules\Supplier\Entities\SupplierProduct::observe(
+            \Modules\Supplier\Observers\SupplierProductObserver::class
+        );
+    }
+
+    /**
+     * Registrar Event Listeners para sincronización bidireccional
+     *
+     * Los listeners reciben eventos y encolan jobs para sincronizar
+     * cambios hacia Oracle en tiempo real.
+     */
+    protected function registerEventListeners(): void
+    {
+        // Registrar listeners para eventos de cambios en Supplier
+        $this->app['events']->listen(
+            \Modules\Supplier\Events\SupplierProductPriceChanged::class,
+            \Modules\Supplier\Listeners\SyncPriceToErpListener::class
+        );
+
+        $this->app['events']->listen(
+            \Modules\Supplier\Events\SupplierErpProviderUpdated::class,
+            \Modules\Supplier\Listeners\SyncProviderToErpListener::class
+        );
+
+        $this->app['events']->listen(
+            \Modules\Supplier\Events\SupplierProductUpdated::class,
+            \Modules\Supplier\Listeners\SyncProductToErpListener::class
+        );
     }
 
     /**

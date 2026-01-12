@@ -3,6 +3,7 @@
 namespace Modules\Erp\Models\Oracle\Proveedor;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Erp\Models\Oracle\Configuracion\Pais;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -111,6 +112,14 @@ class Proveedor extends Model
     public function moneda()
     {
         return $this->belongsTo(\App\Models\Oracle\Configuracion\Moneda::class, 'IDMONEDA', 'IDMONEDA');
+    }
+
+    /**
+     * Relación inversa: SupplierErpProviders (sincronización Supplier)
+     */
+    public function supplierErpProviders(): HasMany
+    {
+        return $this->hasMany(\Modules\Supplier\Entities\SupplierErpProvider::class, 'erp_provider_id', 'idproveedor');
     }
 
 }
