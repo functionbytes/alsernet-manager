@@ -3,9 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Media\Http\Controllers\MediaManagerController;
 
-Route::middleware(['web', 'auth'])->prefix('media')->name('media.')->group(function () {
+// Public media page - accessible without authentication
+Route::middleware(['web'])->prefix('media')->name('media.')->group(function () {
     Route::get('/', [MediaManagerController::class, 'index'])->name('index');
     Route::get('/list', [MediaManagerController::class, 'getList'])->name('list');
+});
+
+// Protected media operations - require authentication
+Route::middleware(['web', 'auth'])->prefix('media')->name('media.')->group(function () {
     Route::post('/upload', [MediaManagerController::class, 'uploadFile'])->name('upload');
     Route::post('/upload-url', [MediaManagerController::class, 'uploadFromUrl'])->name('upload-url');
     Route::post('/folder/create', [MediaManagerController::class, 'createFolder'])->name('folder.create');

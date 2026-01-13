@@ -446,7 +446,16 @@
       "Bash(php-fpm:*)",
       "Bash(nginx -v:*)",
       "Bash(apache2:*)",
-      "mcp__laravel-boost__list-artisan-commands"
+      "mcp__laravel-boost__list-artisan-commands",
+      "Bash(readlink:*)",
+      "Bash(chown:*)",
+      "Bash(sudo chown:*)",
+      "Bash(sudo chmod:*)",
+      "Bash(nc:*)",
+      "Bash(while ps aux)",
+      "Bash(! grep -q \"MIGRATION COMPLETE\" /tmp/claude/-home2-webadmin-web/tasks/b26198b.output)",
+      "Bash(do sleep 120)",
+      "WebFetch(domain:webadmin.a-alvarez.com)"
     ],
     "deny": [],
     "ask": []

@@ -68,11 +68,29 @@ return [
 
         'prestashop' => [
             'driver' => 'mysql',
+            'url' => env('DB_URL_PRESTASHOP'),
             'host' => env('DB_HOST_PRESTASHOP', '213.134.40.101'),
             'port' => env('DB_PORT_PRESTASHOP', '3306'),
             'database' => env('DB_DATABASE_PRESTASHOP', 'alvarez_db'),
             'username' => env('DB_USERNAME_PRESTASHOP', 'alvarez_dbu'),
             'password' => env('DB_PASSWORD_PRESTASHOP', 'X908#AU90#104'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'webadmin_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_WEBADMIN', 'localhost'),
+            'port' => env('DB_PORT_WEBADMIN', '3306'),
+            'database' => env('DB_DATABASE_WEBADMIN', 'webadmin'),
+            'username' => env('DB_USERNAME_WEBADMIN', 'webadmin'),
+            'password' => env('DB_PASSWORD_WEBADMIN', 'Mar.90272618'),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
         ],
 
         'mariadb' => [
