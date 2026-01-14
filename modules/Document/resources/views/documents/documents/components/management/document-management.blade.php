@@ -230,6 +230,9 @@
             $.ajax({
                 url: '/documents/manage/' + documentUid + '/update-configuration',
                 type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 data: {
                     ...configFormData,
                     send_email_notification: sendEmail

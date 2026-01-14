@@ -132,6 +132,9 @@
             $.ajax({
                 url: "{{ route('api.documents.send-custom-email', $document->uid) }}",
                 method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 data: {
                     subject: subject,
                     message: message,

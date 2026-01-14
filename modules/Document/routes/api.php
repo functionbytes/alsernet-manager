@@ -22,8 +22,8 @@ Route::middleware('throttle:60,1')->group(function () {
 
 // Authenticated routes - requires user authentication
 // ✅ El middleware 'api' ya está aplicado por RouteServiceProvider
-// Solo agregamos 'auth' para requerir autenticación
-Route::middleware('auth')->group(function () {
+// ✅ Agregar 'web' para soporte de sesión + 'auth:web' para autenticación con sesión
+Route::middleware(['web', 'auth:web'])->group(function () {
     // Document processing and syncing
     Route::get('/order/data/{order_id}', [DocumentsController::class, 'getOrderData'])->name('order.data');
     Route::post('/fill-order-data', [DocumentsController::class, 'fillDocumentWithOrderData'])->name('fill-order-data');

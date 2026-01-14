@@ -47,6 +47,6 @@ class MailerTemplateLang extends Model
      */
     public function lang(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Lang', 'lang_id', 'id');
+        return $this->belongsTo(MailerLang::class, 'lang_id', 'id');
     }
 }

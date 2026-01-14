@@ -6,13 +6,7 @@
 
         {{-- Breadcrumb Card --}}
         @include('core::components.card', [
-            'title' => 'Vista Previa de Plantilla',
-            'breadcrumbs' => [
-                ['label' => 'Dashboard', 'url' => url('/home')],
-                ['label' => 'Configuración', 'url' => route('manager.backups')],
-                ['label' => 'Plantillas', 'url' => route('mailers.templates.index')],
-                ['label' => $template->name, 'active' => true]
-            ]
+            'title' => 'Vista Previa de Plantilla'
         ])
 
 
@@ -165,7 +159,6 @@
                             @if ($template->description)
                                 <div class="col-12">
                                     <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-note-sticky text-primary fs-5 mt-1"></i>
                                         <div class="w-100">
                                             <h6 class="text-muted fw-semibold small mb-1">DESCRIPCIÓN</h6>
                                             <p class="mb-0 small">{{ $template->description }}</p>

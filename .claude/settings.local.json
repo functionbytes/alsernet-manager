@@ -455,7 +455,22 @@
       "Bash(while ps aux)",
       "Bash(! grep -q \"MIGRATION COMPLETE\" /tmp/claude/-home2-webadmin-web/tasks/b26198b.output)",
       "Bash(do sleep 120)",
-      "WebFetch(domain:webadmin.a-alvarez.com)"
+      "WebFetch(domain:webadmin.a-alvarez.com)",
+      "Bash(__NEW_LINE_5a612449df40390f__ for file in /home2/webadmin/web/modules/Document/resources/views/documents/documents/components/email/modals/*.blade.php)",
+      "Bash(if grep -q \"X-CSRF-TOKEN\" \"$file\")",
+      "Bash(__NEW_LINE_caa21c59d030b567__ find /home2/webadmin/web/modules/Document/resources/views/ -name \"*.blade.php\" -exec grep -l \"\\\\.ajax\\(\" {})",
+      "Bash(sudo systemctl stop:*)",
+      "Bash(sudo systemctl list-units:*)",
+      "Bash(sudo cp:*)",
+      "Bash(sudo systemctl daemon-reload:*)",
+      "Bash(sudo systemctl status:*)",
+      "Bash(__NEW_LINE_6fda6d8541e4eb60__ php artisan queue:pause default)",
+      "Bash(__NEW_LINE_6fda6d8541e4eb60__ echo \"✅ Queues pausados - Los correos NO se enviarán\")",
+      "mcp__laravel-boost__list-available-env-vars",
+      "Bash(sudo php artisan cache:clear:*)",
+      "Bash(sudo php artisan route:clear:*)",
+      "Bash(sudo mkdir:*)",
+      "Bash(sudo rm:*)"
     ],
     "deny": [],
     "ask": []

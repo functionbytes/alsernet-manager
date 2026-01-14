@@ -45,14 +45,38 @@ trait SendsDocumentEmails
          //   $this->authorize($authPolicy, $document);
         //}
 
-        // 5. Call sender callback and handle response
+        // 5. Check for rate limiting BEFORE calling sender
+        $emailType = $this->getEmailTypeFromRequest($request);
+        $rateLimit = $this->checkRateLimit($document, $emailType);
+
+        if ($rateLimit['limited']) {
+            return response()->json([
+                'success' => false,
+                'error_type' => 'rate_limit',
+                'message' => 'Límite de envío alcanzado',
+                'retry_after' => $rateLimit['retry_after'],
+                'seconds_remaining' => $rateLimit['seconds_remaining'],
+            ], 429);
+        }
+
+        // 6. Check for missing customer email
+        if (empty($document->customer_email)) {
+            return response()->json([
+                'success' => false,
+                'error_type' => 'missing_email',
+                'message' => 'El documento no tiene email del cliente registrado.',
+            ], 422);
+        }
+
+        // 7. Call sender callback and handle response
         $sent = $sender($document, $adminId, $request);
 
-        // 6. Return standardized response
+        // 8. Return standardized response
         if (! $sent) {
             return response()->json([
                 'success' => false,
-                'message' => 'No se pudo enviar el email. Verifica que el documento tenga email del cliente o intenta de nuevo en unos segundos.',
+                'error_type' => 'send_failed',
+                'message' => 'No se pudo enviar el email. Intenta de nuevo en unos segundos.',
             ], 429);
         }
 
@@ -61,6 +85,40 @@ trait SendsDocumentEmails
             'message' => 'Email enviado correctamente',
             'recipient' => $document->customer_email,
         ]);
+    }
+
+    /**
+     * Check if email sending is rate limited
+     */
+    private function checkRateLimit($document, ?string $emailType = 'request'): array
+    {
+        $rateLimitKey = "email_sent:{$document->id}:{$emailType}";
+
+        if (\Illuminate\Support\Facades\Cache::has($rateLimitKey)) {
+            $retryTime = \Illuminate\Support\Facades\Cache::get($rateLimitKey);
+            $secondsRemaining = now()->diffInSeconds($retryTime, false);
+
+            // Redondear hacia arriba para asegurar que el usuario espere tiempo suficiente
+            $secondsRemainingRounded = (int) ceil(max(0, $secondsRemaining));
+
+            return [
+                'limited' => true,
+                'retry_after' => $retryTime->toIso8601String(),
+                'seconds_remaining' => $secondsRemainingRounded,
+            ];
+        }
+
+        return ['limited' => false];
+    }
+
+    /**
+     * Get email type from request or default
+     */
+    private function getEmailTypeFromRequest(Request $request): string
+    {
+        // Try to infer from request context
+        // Default to 'request' if not determinable
+        return 'request';
     }
 
     /**

@@ -483,6 +483,9 @@
                 $.ajax({
                     url: "{{ route('api.documents.confirm-upload') }}",
                     type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
                     data: {
                         uid: documentUid
                     },
@@ -626,6 +629,9 @@
                 $.ajax({
                     url: "{{ route('api.documents.upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),
                     type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
                     data: formData,
                     contentType: false,
                     processData: false,

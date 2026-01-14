@@ -6,13 +6,7 @@
 
     {{-- Breadcrumb Card --}}
     @include('core::components.card', [
-        'title' => 'Editor de Componente de Email',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.backups')],
-            ['label' => 'Componentes', 'url' => route('mailers.components.index')],
-            ['label' => $component->subject, 'active' => true]
-        ]
+        'title' => 'Editor de Componente de Email'
     ])
 
     {{-- Alerts --}}

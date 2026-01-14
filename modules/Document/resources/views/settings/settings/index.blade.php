@@ -395,6 +395,9 @@ $(document).ready(function() {
         $.ajax({
             url: form.attr('action'),
             type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
             data: form.serialize(),
             headers: {
                 'X-HTTP-Method-Override': 'PUT'
@@ -440,6 +443,9 @@ $(document).ready(function() {
         $.ajax({
             url: '{{ route("settings.documents.settings.reset-defaults") }}',
             type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
             data: {
                 _token: '{{ csrf_token() }}'
             },
