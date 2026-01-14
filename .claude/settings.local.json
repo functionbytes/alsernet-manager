@@ -470,7 +470,16 @@
       "Bash(sudo php artisan cache:clear:*)",
       "Bash(sudo php artisan route:clear:*)",
       "Bash(sudo mkdir:*)",
-      "Bash(sudo rm:*)"
+      "Bash(sudo rm:*)",
+      "Bash(sudo systemctl restart:*)",
+      "Bash(sudo kill:*)",
+      "Bash(sudo systemctl disable:*)",
+      "Bash(sudo supervisorctl status:*)",
+      "Bash(sudo supervisorctl stop:*)",
+      "Bash(sudo supervisorctl restart:*)",
+      "Bash(sudo supervisorctl reread:*)",
+      "Bash(sudo supervisorctl update:*)",
+      "Bash(sudo supervisorctl start:*)"
     ],
     "deny": [],
     "ask": []

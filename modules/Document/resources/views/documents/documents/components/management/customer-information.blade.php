@@ -40,6 +40,14 @@
                     <input type="text" class="form-control" value="{{$document->customer_cellphone}}" disabled>
                 </div>
             @endif
+
+            @if($document->lang)
+                    <div class="col-sm-12 col-md-6">
+                        <label class="form-label fw-semibold">Idioma</label>
+                        <input type="text" class="form-control" value="{{$document->lang->title}}" disabled>
+                    </div>
+            @endif
+
         </div>
     </div>
 </div>

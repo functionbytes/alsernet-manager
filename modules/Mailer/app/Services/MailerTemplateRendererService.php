@@ -103,18 +103,24 @@ class MailerTemplateRendererService
         // Procesar {{ header }}
         if (str_contains($content, '{{ header }}')) {
             $headerContent = self::getCachedLayoutContent('email_template_header', $langId);
-            if ($headerContent !== null) {
+            if ($headerContent !== null && $headerContent !== '') {
                 $headerContent = self::replaceVariables($headerContent, $variables);
                 $content = str_replace('{{ header }}', $headerContent, $content);
+            } else {
+                // If header is empty, just remove the tag
+                $content = str_replace('{{ header }}', '', $content);
             }
         }
 
         // Procesar {{ footer }}
         if (str_contains($content, '{{ footer }}')) {
             $footerContent = self::getCachedLayoutContent('email_template_footer', $langId);
-            if ($footerContent !== null) {
+            if ($footerContent !== null && $footerContent !== '') {
                 $footerContent = self::replaceVariables($footerContent, $variables);
                 $content = str_replace('{{ footer }}', $footerContent, $content);
+            } else {
+                // If footer is empty, just remove the tag
+                $content = str_replace('{{ footer }}', '', $content);
             }
         }
 
@@ -137,19 +143,24 @@ class MailerTemplateRendererService
         }
 
         // 2. Revisar caché de Laravel - se limpia automáticamente al guardar/editar
-        $content = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($alias, $langId) {
+        $content = \Illuminate\Support\Facades\Cache::get($cacheKey);
+
+        // 3. Si no está en cache, buscar en la base de datos directamente (fallback)
+        if ($content === null) {
             $layout = MailerLayout::where('alias', $alias)->first();
 
-            if (! $layout) {
-                return null;
+            if ($layout) {
+                $translation = $layout->translate($langId);
+                $content = $translation?->content ?? $layout->content ?? null;
+
+                // Guardar en cache para siguiente vez
+                if ($content !== null) {
+                    \Illuminate\Support\Facades\Cache::put($cacheKey, $content, 3600);
+                }
             }
+        }
 
-            $translation = $layout->translate($langId);
-
-            return $translation?->content ?? $layout->content ?? null;
-        });
-
-        // 3. Guardar en caché estático
+        // 4. Guardar en caché estático
         $staticCache[$cacheKey] = $content;
 
         return $content;
