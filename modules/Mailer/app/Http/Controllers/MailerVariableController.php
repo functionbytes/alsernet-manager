@@ -8,6 +8,7 @@ use Modules\Mailer\Models\MailerVariable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lang;
+use Illuminate\Validation\Rule;
 
 class MailerVariableController extends Controller
 {
@@ -45,6 +46,7 @@ class MailerVariableController extends Controller
         $langs = MailerLang::all();
         $categories = [
             'system' => 'Sistema',
+            'site' => 'Sitio',
             'customer' => 'Cliente',
             'order' => 'Pedido',
             'document' => 'Documento',
@@ -71,10 +73,10 @@ class MailerVariableController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'key' => 'required|string|unique:mail_variables,key|regex:/^[A-Z_]+$/',
+            'key' => 'required|string|unique:mailer_variables,key|regex:/^[A-Z_]+$/',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|string|in:system,customer,order,document,general',
+            'category' => 'required|string|in:system,site,customer,order,document,general',
             'module' => 'required|string|in:core,documents,orders',
             'is_system' => 'boolean',
             'is_enabled' => 'boolean',
@@ -111,6 +113,7 @@ class MailerVariableController extends Controller
         $langs = MailerLang::all();
         $categories = [
             'system' => 'Sistema',
+            'site' => 'Sitio',
             'customer' => 'Cliente',
             'order' => 'Pedido',
             'document' => 'Documento',
@@ -139,11 +142,11 @@ class MailerVariableController extends Controller
      */
     public function update(Request $request, MailerVariable $variable)
     {
-        $validated = $request->validate([
-            'key' => 'required|string|unique:mail_variables,key,'.$variable->id.'|regex:/^[A-Z_]+$/',
+        // For system variables, key and category are not validated (they're fixed)
+        // For custom variables, they must follow strict validation rules
+        $rules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|string|in:system,customer,order,document,general',
             'module' => 'required|string|in:core,documents,orders',
             'is_system' => 'boolean',
             'is_enabled' => 'boolean',
@@ -152,7 +155,24 @@ class MailerVariableController extends Controller
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
             'translations.*.value' => 'nullable|string',
-        ]);
+        ];
+
+        // Only validate key and category for custom variables
+        if (!$variable->is_system) {
+            $rules['key'] = [
+                'required',
+                'string',
+                'regex:/^[A-Z_]+$/',
+                Rule::unique('mailer_variables', 'key')->ignore($variable->id),
+            ];
+            $rules['category'] = 'required|string|in:system,site,customer,order,document,general';
+        } else {
+            // For system variables, just accept the values as-is (they're fixed)
+            $rules['key'] = 'required|string';
+            $rules['category'] = 'required|string';
+        }
+
+        $validated = $request->validate($rules);
 
         $translations = $validated['translations'];
         unset($validated['translations']);

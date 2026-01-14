@@ -5,15 +5,7 @@
 @section('content')
 
     {{-- Breadcrumb Card --}}
-    @include('core::components.card', [
-        'title' => 'Editor de Plantilla de Email',
-        'breadcrumbs' => [
-            ['label' => 'Dashboard', 'url' => url('/home')],
-            ['label' => 'Configuración', 'url' => route('manager.backups')],
-            ['label' => 'Plantillas', 'url' => route('mailers.templates.index')],
-            ['label' => $template->name, 'active' => true]
-        ]
-    ])
+    @include('core::components.card', ['title' => 'Editor de Plantilla de Email'])
 
     {{-- Alerts --}}
     @if (session('success'))

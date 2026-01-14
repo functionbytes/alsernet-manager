@@ -655,6 +655,9 @@ $(document).ready(function() {
         $.ajax({
             url: '{{ route("settings.documents.settings.update") }}',
             type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
             data: {
                 _token: '{{ csrf_token() }}'
             },

@@ -46,3 +46,26 @@ if (! function_exists('xml_to_array')) {
         ];
     }
 }
+
+if (! function_exists('formatBytes')) {
+    /**
+     * Format bytes into human-readable format (B, KB, MB, GB, etc.)
+     *
+     * @param  int  $bytes  The number of bytes
+     * @param  int  $decimals  The number of decimal places (default: 2)
+     * @return string The formatted byte size
+     */
+    function formatBytes($bytes, $decimals = 2)
+    {
+        if ($bytes === 0 || $bytes === '0') {
+            return '0 Bytes';
+        }
+
+        $k = 1024;
+        $dm = $decimals < 0 ? 0 : $decimals;
+        $sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        $i = (int) floor(log($bytes, $k));
+
+        return round($bytes / pow($k, $i), $dm).' '.$sizes[$i];
+    }
+}

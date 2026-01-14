@@ -6,13 +6,7 @@
 
         {{-- Breadcrumb Card --}}
         @include('core::components.card', [
-            'title' => 'Vista Previa de Componente',
-            'breadcrumbs' => [
-                ['label' => 'Dashboard', 'url' => url('/home')],
-                ['label' => 'Configuración', 'url' => route('manager.backups')],
-                ['label' => 'Componentes', 'url' => route('mailers.components.index')],
-                ['label' => $component->subject, 'active' => true]
-            ]
+            'title' => 'Vista Previa de Componente'
         ])
 
 

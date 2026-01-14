@@ -115,6 +115,9 @@
                 $.ajax({
                     url: "{{ route('api.documents.send-rejection', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                     method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                     data: {
                         reason: reason,
                         rejected_docs: rejectedDocs  // Array vacío si no se seleccionó ninguno

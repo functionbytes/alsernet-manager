@@ -35,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         // ✅ Cargar TODAS las rutas desde routes/api.php
         // El archivo api.php define los middlewares de cada grupo (throttle, auth, etc.)
+        // Las rutas públicas usan 'api', las autenticadas usan 'web' en el archivo api.php
         Route::prefix('api/documents')
             ->middleware('api')
             ->name('api.documents.')

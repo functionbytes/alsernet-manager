@@ -38,6 +38,9 @@
             $.ajax({
                 url: "{{ route('api.documents.send-upload-confirmation', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
                 method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 success: function(response) {
                     if (response.success) {
                         toastr.success('Email de confirmación enviado a: ' + response.recipient, 'Éxito', {

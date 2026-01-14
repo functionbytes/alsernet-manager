@@ -10,12 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Document\Console\Commands\CreateSampleDocumentsFromPrestashop;
 use Modules\Document\Console\Commands\InitializeDocumentWorkflows;
 use Modules\Document\Console\Commands\MigrateProductBlockades;
-use Modules\Document\Console\Commands\MigrateRequestDocumentMedia;
-use Modules\Document\Console\Commands\MigrateRequestDocumentProducts;
-use Modules\Document\Console\Commands\MigrateRequestDocumentProductOrder;
 use Modules\Document\Console\Commands\MigrateRequestDocuments;
 use Modules\Document\Console\Commands\SendDocumentUploadReminders;
-use Modules\Document\Console\Commands\SyncDocumentFields;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
@@ -154,12 +150,8 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->commands([
             SendDocumentUploadReminders::class,
             InitializeDocumentWorkflows::class,
-            SyncDocumentFields::class,
             MigrateRequestDocuments::class,
-            MigrateRequestDocumentProducts::class,
-            MigrateRequestDocumentMedia::class,
             MigrateProductBlockades::class,
-            MigrateRequestDocumentProductOrder::class,
         ]);
     }
 

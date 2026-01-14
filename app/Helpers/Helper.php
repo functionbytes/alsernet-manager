@@ -230,3 +230,19 @@ if (! function_exists('getSiteTitle')) {
         return \Modules\Core\Helpers\SiteHelper::getSiteTitle();
     }
 }
+
+if (! function_exists('formatBytes')) {
+    function formatBytes($bytes, $decimals = 2)
+    {
+        if ($bytes === 0 || $bytes === '0') {
+            return '0 Bytes';
+        }
+
+        $k = 1024;
+        $dm = $decimals < 0 ? 0 : $decimals;
+        $sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        $i = (int) floor(log($bytes, $k));
+
+        return round($bytes / pow($k, $i), $dm).' '.$sizes[$i];
+    }
+}
