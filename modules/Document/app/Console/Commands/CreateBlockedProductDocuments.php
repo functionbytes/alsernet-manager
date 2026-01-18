@@ -337,10 +337,7 @@ class CreateBlockedProductDocuments extends Command
      */
     private function fetchPrestashopOrdersAfterOrderId(int $lastOrderId): array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT id_order, id_customer, id_lang, reference, date_add
                   FROM aalv_orders
@@ -348,7 +345,7 @@ class CreateBlockedProductDocuments extends Command
                   ORDER BY id_order ASC";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"".addslashes($query).'" 2>/dev/null');
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if (! $output) {
                 return [];
@@ -387,17 +384,14 @@ class CreateBlockedProductDocuments extends Command
      */
     private function fetchPrestashopOrderProducts(int $orderId): array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT product_id, product_name, product_reference, product_quantity, product_price
                   FROM aalv_order_detail
                   WHERE id_order = {$orderId}";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"".addslashes($query).'" 2>/dev/null');
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if (! $output) {
                 return [];
@@ -436,10 +430,7 @@ class CreateBlockedProductDocuments extends Command
      */
     private function fetchPrestashopCustomer(int $customerId): ?array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT c.firstname, c.lastname, c.email, ca.vat_number, ca.company
                   FROM aalv_customer as c
@@ -448,7 +439,7 @@ class CreateBlockedProductDocuments extends Command
                   LIMIT 1";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"".addslashes($query).'" 2>/dev/null');
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if ($output) {
                 $parts = explode("\t", trim($output));
