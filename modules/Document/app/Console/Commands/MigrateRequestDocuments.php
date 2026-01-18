@@ -6,12 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentProduct;
-use Modules\Document\Entities\DocumentProductBlockade;
 use Modules\Document\Entities\DocumentSource;
 use Modules\Document\Entities\DocumentStatus;
 use Modules\Document\Entities\DocumentType;
 use Modules\Document\Services\DocumentTypeService;
-use Modules\Prestashop\Entities\Order as PrestashopOrder;
 
 class MigrateRequestDocuments extends Command
 {
@@ -99,6 +97,7 @@ class MigrateRequestDocuments extends Command
 
         if (! $document) {
             $this->error("❌ Document not found: {$uid}");
+
             return 1;
         }
 
@@ -116,15 +115,18 @@ class MigrateRequestDocuments extends Command
             if ($this->syncDocument($document, true)) {
                 $this->line('');
                 $this->info('✅ Synchronization complete!');
-                $this->info("  • required_documents: ".json_encode($document->required_documents));
-                $this->info("  • uploaded_documents: ".count($document->uploaded_documents ?? []).' files');
+                $this->info('  • required_documents: '.json_encode($document->required_documents));
+                $this->info('  • uploaded_documents: '.count($document->uploaded_documents ?? []).' files');
+
                 return 0;
             } else {
                 $this->error('❌ Synchronization failed');
+
                 return 1;
             }
         } catch (\Exception $e) {
             $this->error('❌ Error: '.$e->getMessage());
+
             return 1;
         }
     }
@@ -143,6 +145,7 @@ class MigrateRequestDocuments extends Command
 
         if ($documents->isEmpty()) {
             $this->error("❌ No documents found of type: {$type}");
+
             return 1;
         }
 
@@ -199,7 +202,7 @@ class MigrateRequestDocuments extends Command
 
         // Apply limit if specified
         if ($this->option('limit')) {
-            $limit = (int)$this->option('limit');
+            $limit = (int) $this->option('limit');
             $query->limit($limit);
             $this->info("Limiting to {$limit} documents");
         }
@@ -211,6 +214,7 @@ class MigrateRequestDocuments extends Command
 
         if ($total === 0) {
             $this->warn('No records found to migrate');
+
             return ['migrated' => 0, 'skipped' => 0, 'total' => 0];
         }
 
@@ -253,6 +257,7 @@ class MigrateRequestDocuments extends Command
                     $errors[] = "Record {$source->id}: Unknown type '{$source->type}'";
                     $skipped++;
                     $bar->advance();
+
                     continue;
                 }
 
@@ -274,11 +279,11 @@ class MigrateRequestDocuments extends Command
                         $validationStatus = 'received';
                         $validationUpload = 0;
                     }
-                }else {
-                        // Uploaded but not approved yet
-                        $statusId = $statusMap['pending'] ?? 3;
-                        $validationStatus = 'pending';
-                        $validationUpload = 0;
+                } else {
+                    // Uploaded but not approved yet
+                    $statusId = $statusMap['pending'] ?? 3;
+                    $validationStatus = 'pending';
+                    $validationUpload = 0;
                 }
 
                 // Fetch customer data if customer_id exists (using MySQL CLI to bypass IP restrictions)
@@ -303,10 +308,11 @@ class MigrateRequestDocuments extends Command
                         $orderData = $this->fetchPrestashopOrder($source->order_id);
 
                         // If order doesn't exist in Prestashop, skip this document
-                        if (!$orderData) {
+                        if (! $orderData) {
                             $errors[] = "Record {$source->id}: Order {$source->order_id} not found in Prestashop";
                             $skipped++;
                             $bar->advance();
+
                             continue;
                         }
 
@@ -421,7 +427,6 @@ class MigrateRequestDocuments extends Command
         ];
     }
 
-
     /**
      * Migrate document media files metadata
      */
@@ -444,6 +449,7 @@ class MigrateRequestDocuments extends Command
 
             if ($total === 0) {
                 $this->warn('No records found to migrate');
+
                 return ['migrated' => 0, 'skipped' => 0, 'total' => 0];
             }
 
@@ -465,6 +471,7 @@ class MigrateRequestDocuments extends Command
                         $errors[] = "Record {$source->id}: Legacy document {$source->model_id} not found";
                         $skipped++;
                         $bar->advance();
+
                         continue;
                     }
 
@@ -475,6 +482,7 @@ class MigrateRequestDocuments extends Command
                         $errors[] = "Record {$source->id}: Migrated document with UID {$legacyDocument->uid} not found";
                         $skipped++;
                         $bar->advance();
+
                         continue;
                     }
 
@@ -554,6 +562,7 @@ class MigrateRequestDocuments extends Command
             return ['migrated' => $migrated, 'skipped' => $skipped, 'total' => $total];
         } catch (\Exception $e) {
             $this->error('❌ Media migration failed: '.$e->getMessage());
+
             return ['migrated' => 0, 'skipped' => 0, 'total' => 0];
         }
     }
@@ -576,6 +585,7 @@ class MigrateRequestDocuments extends Command
 
             if ($total === 0) {
                 $this->warn('No documents with orders found');
+
                 return ['migrated' => 0, 'skipped' => 0, 'total' => 0];
             }
 
@@ -594,6 +604,7 @@ class MigrateRequestDocuments extends Command
                     if (empty($prestashopProducts)) {
                         $skipped++;
                         $bar->advance();
+
                         continue;
                     }
 
@@ -642,6 +653,7 @@ class MigrateRequestDocuments extends Command
             return ['migrated' => $migrated, 'skipped' => $skipped, 'total' => $total];
         } catch (\Exception $e) {
             $this->error('❌ Product migration failed: '.$e->getMessage());
+
             return ['migrated' => 0, 'skipped' => 0, 'total' => 0];
         }
     }
@@ -707,6 +719,7 @@ class MigrateRequestDocuments extends Command
 
         if ($total === 0) {
             $this->warn('No documents found to sync');
+
             return ['synced' => 0, 'skipped' => 0];
         }
 
@@ -744,6 +757,7 @@ class MigrateRequestDocuments extends Command
 
             if ($total === 0) {
                 $this->warn('No documents found to update');
+
                 return ['updated' => 0, 'skipped' => 0, 'total' => 0];
             }
 
@@ -760,6 +774,7 @@ class MigrateRequestDocuments extends Command
                     if (! $document->customer_id) {
                         $skipped++;
                         $bar->advance();
+
                         continue;
                     }
 
@@ -802,6 +817,7 @@ class MigrateRequestDocuments extends Command
 
         } catch (\Exception $e) {
             $this->error('❌ Email update failed: '.$e->getMessage());
+
             return ['updated' => 0, 'skipped' => 0, 'total' => 0];
         }
     }
@@ -964,10 +980,7 @@ class MigrateRequestDocuments extends Command
      */
     private function fetchPrestashopCustomer($customerId): ?array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT c.firstname, c.lastname, c.email, ca.vat_number, ca.company
                   FROM aalv_customer as c
@@ -976,18 +989,18 @@ class MigrateRequestDocuments extends Command
                   LIMIT 1";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"" . addslashes($query) . "\" 2>/dev/null");
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if ($output) {
                 $parts = explode("\t", trim($output));
                 // Should have at least firstname and lastname (parts 0,1)
                 if (count($parts) >= 2) {
                     return [
-                        'firstname' => !empty($parts[0]) ? $parts[0] : null,
-                        'lastname' => !empty($parts[1]) ? $parts[1] : null,
-                        'email' => !empty($parts[2]) ? $parts[2] : null,
-                        'vat_number' => (isset($parts[3]) && !empty($parts[3])) ? $parts[3] : null,
-                        'company' => (isset($parts[4]) && !empty($parts[4])) ? $parts[4] : null,
+                        'firstname' => ! empty($parts[0]) ? $parts[0] : null,
+                        'lastname' => ! empty($parts[1]) ? $parts[1] : null,
+                        'email' => ! empty($parts[2]) ? $parts[2] : null,
+                        'vat_number' => (isset($parts[3]) && ! empty($parts[3])) ? $parts[3] : null,
+                        'company' => (isset($parts[4]) && ! empty($parts[4])) ? $parts[4] : null,
                     ];
                 }
             }
@@ -1003,24 +1016,21 @@ class MigrateRequestDocuments extends Command
      */
     private function fetchPrestashopOrder($orderId): ?array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT id_lang, reference, date_add FROM aalv_orders WHERE id_order = {$orderId} LIMIT 1";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"" . addslashes($query) . "\" 2>/dev/null");
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if ($output) {
                 $parts = explode("\t", trim($output));
                 // Should return: id_lang, reference, date_add
                 if (count($parts) >= 1) {
                     return [
-                        'id_lang' => (is_numeric($parts[0])) ? (int)$parts[0] : null,
-                        'reference' => !empty($parts[1]) ? $parts[1] : null,
-                        'date_add' => !empty($parts[2]) ? $parts[2] : null,
+                        'id_lang' => (is_numeric($parts[0])) ? (int) $parts[0] : null,
+                        'reference' => ! empty($parts[1]) ? $parts[1] : null,
+                        'date_add' => ! empty($parts[2]) ? $parts[2] : null,
                     ];
                 }
             }
@@ -1036,17 +1046,14 @@ class MigrateRequestDocuments extends Command
      */
     private function fetchPrestashopOrderProducts($orderId): array
     {
-        $host = '213.134.40.101';
-        $user = 'alvarez_dbu';
-        $password = 'X908#AU90#104';
-        $database = 'alvarez_db';
+        $config = config('prestashop');
 
         $query = "SELECT od.product_id, od.product_name, od.product_reference, od.product_quantity, od.product_price
                   FROM aalv_order_detail as od
                   WHERE od.id_order = {$orderId}";
 
         try {
-            $output = shell_exec("mysql -h {$host} -u {$user} -p'{$password}' {$database} -sN -e \"" . addslashes($query) . "\" 2>/dev/null");
+            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
 
             if (! $output) {
                 return [];
@@ -1063,11 +1070,11 @@ class MigrateRequestDocuments extends Command
                 $parts = explode("\t", $line);
                 if (count($parts) >= 5) {
                     $products[] = [
-                        'id_product' => (int)$parts[0],
+                        'id_product' => (int) $parts[0],
                         'product_name' => $parts[1] ?? null,
                         'product_reference' => $parts[2] ?? null,
-                        'product_quantity' => (int)$parts[3],
-                        'product_price' => (float)$parts[4],
+                        'product_quantity' => (int) $parts[3],
+                        'product_price' => (float) $parts[4],
                     ];
                 }
             }
