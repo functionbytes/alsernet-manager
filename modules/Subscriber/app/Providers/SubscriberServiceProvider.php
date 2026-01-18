@@ -132,7 +132,7 @@ class SubscriberServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Subscribers
         NavService::registerMiniItem('subscribers', [
-            'icon' => 'fa-envelope',
+            'icon' => 'fa-duotone fa-envelope',
             'tooltip' => 'Suscriptores',
             'sidebar_id' => 'subscribers',
             'order' => 50,
@@ -142,9 +142,9 @@ class SubscriberServiceProvider extends ServiceProvider
         NavService::registerSidebar('subscribers', [
             'title' => 'Suscriptores',
             'items' => [
-                ['label' => 'Suscriptores', 'route' => 'subscribers.index', 'icon' => 'fa-user'],
-                ['label' => 'Listas de correo', 'route' => 'subscribers.lists.index', 'icon' => 'fa-list'],
-                ['label' => 'Condiciones', 'route' => 'subscribers.conditions.index', 'icon' => 'fa-filter'],
+                ['label' => 'Suscriptores', 'route' => 'subscribers.index', 'icon' => 'fa-duotone fa-user'],
+                ['label' => 'Listas de correo', 'route' => 'subscribers.lists.index', 'icon' => 'fa-duotone fa-list'],
+                ['label' => 'Condiciones', 'route' => 'subscribers.conditions.index', 'icon' => 'fa-duotone fa-filter'],
             ],
         ]);
     }

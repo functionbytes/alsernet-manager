@@ -49,7 +49,7 @@
     data-limit="4">
 
     <a class="nav-link position-relative" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-bell fs-6"></i>
+        <i class="fa-duotone fa-bell fs-6"></i>
         <div id="notification-badge"></div>
     </a>
 
@@ -94,5 +94,5 @@
 </li>
 
 @push('scripts')
-    <script src="{{ asset('Modules/Notification/js/notifications.js') }}?v={{ md5_file(base_path('modules/Notification/public/js/notifications.js')) }}"></script>
+    <script src="{{ asset('modules/Notification/js/notifications.js') }}?v={{ md5_file(base_path('modules/Notification/public/js/notifications.js')) }}"></script>
 @endpush

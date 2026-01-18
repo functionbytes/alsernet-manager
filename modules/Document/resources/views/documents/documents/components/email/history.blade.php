@@ -28,13 +28,13 @@
                 @foreach($recentMails as $mail)
                     @php
                         $typeConfig = [
-                            'request' => ['icon' => 'fa-paper-plane', 'bg' => 'primary-subtle', 'text' => 'primary'],
-                            'reminder' => ['icon' => 'fa-bell', 'bg' => 'warning-subtle', 'text' => 'warning'],
-                            'upload' => ['icon' => 'fa-cloud-upload-alt', 'bg' => 'info-subtle', 'text' => 'info'],
-                            'approval' => ['icon' => 'fa-check', 'bg' => 'success-subtle', 'text' => 'success'],
-                            'rejection' => ['icon' => 'fa-times', 'bg' => 'danger-subtle', 'text' => 'danger'],
-                            'missing' => ['icon' => 'fa-exclamation', 'bg' => 'warning-subtle', 'text' => 'warning'],
-                            'custom' => ['icon' => 'fa-envelope', 'bg' => 'secondary-subtle', 'text' => 'secondary'],
+                            'request' => ['icon' => 'fa-duotone fa-paper-plane', 'bg' => 'primary-subtle', 'text' => 'primary'],
+                            'reminder' => ['icon' => 'fa-duotone fa-bell', 'bg' => 'warning-subtle', 'text' => 'warning'],
+                            'upload' => ['icon' => 'fa-duotone fa-cloud-upload-alt', 'bg' => 'info-subtle', 'text' => 'info'],
+                            'approval' => ['icon' => 'fa-duotone fa-check', 'bg' => 'success-subtle', 'text' => 'success'],
+                            'rejection' => ['icon' => 'fa-duotone fa-times', 'bg' => 'danger-subtle', 'text' => 'danger'],
+                            'missing' => ['icon' => 'fa-duotone fa-exclamation', 'bg' => 'warning-subtle', 'text' => 'warning'],
+                            'custom' => ['icon' => 'fa-duotone fa-envelope', 'bg' => 'secondary-subtle', 'text' => 'secondary'],
                         ];
                         $config = $typeConfig[$mail->email_type] ?? $typeConfig['custom'];
                     @endphp

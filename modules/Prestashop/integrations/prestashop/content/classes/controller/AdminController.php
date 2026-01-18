@@ -615,7 +615,7 @@ class AdminControllerCore extends Controller
 
         $tabs = Tab::recursiveTab($tab_id, $tabs);
 
-        $dummy = ['name' => '', 'href' => '', 'icon' => ''];
+        $dummy = ['name' => '', 'href' => '', 'icon' => 'fa-duotone '];
         $breadcrumbs2 = [
             'container' => $dummy,
             'tab' => $dummy,
@@ -2407,11 +2407,11 @@ class AdminControllerCore extends Controller
             $this->bulk_actions = array_merge([
                 'enableSelection' => [
                     'text' => $this->trans('Enable selection'),
-                    'icon' => 'icon-power-off text-success',
+                    'icon' => 'fa-duotone icon-power-off text-success',
                 ],
                 'disableSelection' => [
                     'text' => $this->trans('Disable selection'),
-                    'icon' => 'icon-power-off text-danger',
+                    'icon' => 'fa-duotone icon-power-off text-danger',
                 ],
                 'divider' => [
                     'text' => 'divider',
@@ -3077,11 +3077,11 @@ class AdminControllerCore extends Controller
             $submit_bulk_actions = array_merge([
                 'enableSelection' => [
                     'text' => $this->trans('Enable selection'),
-                    'icon' => 'icon-power-off text-success',
+                    'icon' => 'fa-duotone icon-power-off text-success',
                 ],
                 'disableSelection' => [
                     'text' => $this->trans('Disable selection'),
-                    'icon' => 'icon-power-off text-danger',
+                    'icon' => 'fa-duotone icon-power-off text-danger',
                 ],
             ], $this->bulk_actions);
             foreach ($submit_bulk_actions as $bulk_action => $params) {
@@ -4396,7 +4396,7 @@ class AdminControllerCore extends Controller
             'title' => '',
             'text' => $this->translationsTab['Configure'],
             'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
-            'icon' => 'wrench',
+            'icon' => 'fa-duotone wrench',
         ];
 
         $desactive_module = [
@@ -4405,7 +4405,7 @@ class AdminControllerCore extends Controller
             'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
             'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
             'cond' => $module->id,
-            'icon' => 'off',
+            'icon' => 'fa-duotone off',
         ];
         $link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
 
@@ -4422,7 +4422,7 @@ class AdminControllerCore extends Controller
             'title' => '',
             'text' => $this->translationsTab['Reset'],
             'cond' => $module->id && $module->active,
-            'icon' => 'undo',
+            'icon' => 'fa-duotone undo',
             'class' => ($is_reset_ready ? 'reset_ready' : ''),
         ];
 
@@ -4432,7 +4432,7 @@ class AdminControllerCore extends Controller
             'title' => '',
             'text' => $this->translationsTab['Delete'],
             'cond' => true,
-            'icon' => 'trash',
+            'icon' => 'fa-duotone trash',
             'class' => 'text-danger',
         ];
 
@@ -4442,7 +4442,7 @@ class AdminControllerCore extends Controller
             'title' => htmlspecialchars($module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
             'text' => $module->enable_device & Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
             'cond' => $module->id,
-            'icon' => 'mobile',
+            'icon' => 'fa-duotone mobile',
         ];
 
         $display_tablet = [
@@ -4451,7 +4451,7 @@ class AdminControllerCore extends Controller
             'title' => htmlspecialchars($module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
             'text' => $module->enable_device & Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
             'cond' => $module->id,
-            'icon' => 'tablet',
+            'icon' => 'fa-duotone tablet',
         ];
 
         $display_computer = [
@@ -4460,7 +4460,7 @@ class AdminControllerCore extends Controller
             'title' => htmlspecialchars($module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
             'text' => $module->enable_device & Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
             'cond' => $module->id,
-            'icon' => 'desktop',
+            'icon' => 'fa-duotone desktop',
         ];
 
         $install = [
@@ -4470,7 +4470,7 @@ class AdminControllerCore extends Controller
             'title' => $this->translationsTab['Install'],
             'text' => $this->translationsTab['Install'],
             'cond' => $module->id,
-            'icon' => 'plus-sign-alt',
+            'icon' => 'fa-duotone plus-sign-alt',
         ];
 
         $uninstall = [
@@ -4479,7 +4479,7 @@ class AdminControllerCore extends Controller
             'title' => $this->translationsTab['Uninstall'],
             'text' => $this->translationsTab['Uninstall'],
             'cond' => $module->id,
-            'icon' => 'minus-sign-alt',
+            'icon' => 'fa-duotone minus-sign-alt',
         ];
 
         $remove_from_favorite = [
@@ -4489,7 +4489,7 @@ class AdminControllerCore extends Controller
             'title' => $this->translationsTab['Remove from Favorites'],
             'text' => $this->translationsTab['Remove from Favorites'],
             'cond' => $module->id,
-            'icon' => 'star',
+            'icon' => 'fa-duotone star',
             'data-value' => '0',
             'data-module' => $module->name,
         ];
@@ -4501,7 +4501,7 @@ class AdminControllerCore extends Controller
             'title' => $this->translationsTab['Mark as Favorite'],
             'text' => $this->translationsTab['Mark as Favorite'],
             'cond' => $module->id,
-            'icon' => 'star',
+            'icon' => 'fa-duotone star',
             'data-value' => '1',
             'data-module' => $module->name,
         ];
@@ -4511,7 +4511,7 @@ class AdminControllerCore extends Controller
             'onclick' => '',
             'title' => 'Update it!',
             'text' => 'Update it!',
-            'icon' => 'refresh',
+            'icon' => 'fa-duotone refresh',
             'cond' => $module->id,
         ];
 

@@ -114,7 +114,7 @@ class MediaManagerController extends Controller
             $breadcrumbs = [[
                 'id' => 0,
                 'name' => 'Todos los archivos',
-                'icon' => 'fas fa-folder-open',
+                'icon' => 'fa-duotone fas fa-folder-open',
             ]];
         }
 
@@ -164,7 +164,7 @@ class MediaManagerController extends Controller
                 'id' => $folder->id,
                 'uid' => $folder->uid,
                 'name' => $folder->name,
-                'icon' => 'fas fa-folder',
+                'icon' => 'fa-duotone fas fa-folder',
                 'color' => $folder->color,
                 'created_at' => $folder->created_at->format('Y-m-d H:i'),
                 'children_count' => $folder->children()->count(),
@@ -415,7 +415,7 @@ class MediaManagerController extends Controller
             array_unshift($breadcrumbs, [
                 'id' => $current->id,
                 'name' => $current->name,
-                'icon' => 'fas fa-folder',
+                'icon' => 'fa-duotone fas fa-folder',
             ]);
             $current = $current->parent_id ? $current->parent : null;
         }

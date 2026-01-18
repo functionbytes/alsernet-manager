@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -51,11 +52,6 @@ class OrderMessageController extends FrameworkBundleAdminController
      * Show list of Order messages
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param OrderMessageFilters $filters
-     * @param Request $request
-     *
-     * @return Response
      */
     public function indexAction(OrderMessageFilters $filters, Request $request): Response
     {
@@ -70,7 +66,7 @@ class OrderMessageController extends FrameworkBundleAdminController
                 'add' => [
                     'href' => $this->generateUrl('admin_order_messages_create'),
                     'desc' => $this->trans('Add new order message', 'Admin.Orderscustomers.Feature'),
-                    'icon' => 'add_circle_outline',
+                    'icon' => 'fa-duotone add_circle_outline',
                 ],
             ],
             'orderMessageGrid' => $this->presentGrid($grid),
@@ -84,10 +80,6 @@ class OrderMessageController extends FrameworkBundleAdminController
      *     "is_granted(['create'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -129,11 +121,6 @@ class OrderMessageController extends FrameworkBundleAdminController
      *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
-     *
-     * @param int $orderMessageId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editAction(int $orderMessageId, Request $request): Response
     {
@@ -160,7 +147,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        if (!isset($form) || !isset($orderMessageName)) {
+        if (! isset($form) || ! isset($orderMessageName)) {
             return $this->redirectToRoute('admin_order_messages_index');
         }
 
@@ -179,10 +166,6 @@ class OrderMessageController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
-     *
-     * @param int $orderMessageId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $orderMessageId): RedirectResponse
     {
@@ -204,10 +187,6 @@ class OrderMessageController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_order_messages_index"
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
@@ -231,12 +210,8 @@ class OrderMessageController extends FrameworkBundleAdminController
 
     /**
      * Get user friendly errors for exception
-     *
-     * @param Exception|null $e
-     *
-     * @return array
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         $language = $e instanceof OrderMessageNameAlreadyUsedException ? (new Language($e->getLangId()))->name : '';
 

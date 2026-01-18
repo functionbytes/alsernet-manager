@@ -2,7 +2,7 @@
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -11,14 +11,21 @@ class Alsernetfinance extends PaymentModule
     protected $_html;
 
     const FINANCED_MIN_AMOUNT = 'FINANCED_MIN_AMOUNT';
+
     const FINANCED_PAYMENT_TEXT = 'FINANCED_PAYMENT_TEXT';
+
     const FINANCED_ADDITIONAL_INFO = 'FINANCED_ADDITIONAL_INFO';
 
     public $min_amount;
+
     public $min_amount_default = 200;
+
     public $payment_text;
+
     public $payment_text_default = 'Personalised financing -- Requires telephone contact';
+
     public $additional_info;
+
     public $additional_info_default = 'We will call you to arrange the financing that best suits your needs';
 
     public function __construct()
@@ -38,17 +45,14 @@ class Alsernetfinance extends PaymentModule
         $this->payment_text = $this->trans(Configuration::get(self::FINANCED_PAYMENT_TEXT));
         $this->additional_info = $this->trans(Configuration::get(self::FINANCED_ADDITIONAL_INFO));
 
-
         parent::__construct();
     }
-
 
     protected function translateUserInput($input)
     {
 
         return $this->trans($input);
     }
-
 
     public function install()
     {
@@ -57,14 +61,12 @@ class Alsernetfinance extends PaymentModule
         Configuration::updateValue(self::FINANCED_PAYMENT_TEXT, $this->payment_text_default) &&
         Configuration::updateValue(self::FINANCED_ADDITIONAL_INFO, $this->additional_info_default);
 
-
         if (
-            !parent::install() ||
-            !$this->registerHook('paymentOptions')
+            ! parent::install() ||
+            ! $this->registerHook('paymentOptions')
         ) {
             return false;
         }
-
 
         return true;
     }
@@ -75,9 +77,9 @@ class Alsernetfinance extends PaymentModule
             Configuration::deleteByName(self::FINANCED_MIN_AMOUNT) &&
             Configuration::deleteByName(self::FINANCED_PAYMENT_TEXT) &&
             Configuration::deleteByName(self::FINANCED_ADDITIONAL_INFO);
+
         return true;
     }
-
 
     public function hookDisplayHeader($params)
     {
@@ -88,20 +90,18 @@ class Alsernetfinance extends PaymentModule
     {
         if (Tools::isSubmit('btnSubmit')) {
             if (Tools::getValue(self::FINANCED_MIN_AMOUNT)) {
-                if (!is_numeric(Tools::getValue(self::FINANCED_MIN_AMOUNT))) {
+                if (! is_numeric(Tools::getValue(self::FINANCED_MIN_AMOUNT))) {
                     $this->_postErrors[] = $this->trans('La cantidad mínima permitida para el pago financiado debe ser un valor numérico', [], 'modules.Alsernetfinance.Admin');
                 }
             }
         }
     }
 
-
-
     public function getContent()
     {
         if (Tools::isSubmit('btnSubmit')) {
             $this->_postValidation();
-            if (!count($this->_postErrors)) {
+            if (! count($this->_postErrors)) {
                 $this->_postProcess();
             } else {
                 foreach ($this->_postErrors as $err) {
@@ -138,7 +138,7 @@ class Alsernetfinance extends PaymentModule
                         [],
                         'modules.Alsernetfinance.Admin'
                     ),
-                    'icon' => 'icon-cogs',
+                    'icon' => 'fa-duotone icon-cogs',
                 ],
                 'input' => [
                     [
@@ -151,14 +151,14 @@ class Alsernetfinance extends PaymentModule
                         'label' => $this->trans('Nombre del tipo de pago', [], 'modules.Alsernetfinance.Admin'),
                         'name' => self::FINANCED_PAYMENT_TEXT,
                         'desc' => $this->trans('Nombre del tipo de pago', [], 'modules.Alsernetfinance.Admin'),
-                        'required' => true
+                        'required' => true,
                     ],
                     [
                         'type' => 'text',
                         'label' => $this->trans('Información adicional', [], 'modules.Alsernetfinance.Admin'),
                         'name' => self::FINANCED_ADDITIONAL_INFO,
                         'desc' => $this->trans('Información adicional', [], 'modules.Alsernetfinance.Admin'),
-                        'required' => true
+                        'required' => true,
                     ],
 
                 ],
@@ -166,11 +166,10 @@ class Alsernetfinance extends PaymentModule
                     'title' => $this->trans('Save', [], 'Admin.Actions'),
                 ],
 
-
             ],
         ];
 
-        $helper = new HelperForm();
+        $helper = new HelperForm;
         $helper->show_toolbar = false;
         $helper->table = $this->table;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -179,8 +178,8 @@ class Alsernetfinance extends PaymentModule
         $helper->id = (int) Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'btnSubmit';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure='
-            . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='
+            .$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = [
             'fields_value' => $this->getConfigFieldsValues(),
@@ -197,6 +196,7 @@ class Alsernetfinance extends PaymentModule
         $configFieldsValues[self::FINANCED_MIN_AMOUNT] = Tools::getValue(self::FINANCED_MIN_AMOUNT, $this->min_amount);
         $configFieldsValues[self::FINANCED_PAYMENT_TEXT] = Tools::getValue(self::FINANCED_PAYMENT_TEXT, $this->trans(Configuration::get(self::FINANCED_PAYMENT_TEXT)));
         $configFieldsValues['FINANCED_ADDITIONAL_INFO'] = Tools::getValue(self::FINANCED_ADDITIONAL_INFO, $this->trans(Configuration::get(self::FINANCED_ADDITIONAL_INFO)));
+
         return $configFieldsValues;
     }
 
@@ -209,10 +209,9 @@ class Alsernetfinance extends PaymentModule
         ];
     }
 
-
     public function hookPaymentOptions($params)
     {
-        if (!$this->active) {
+        if (! $this->active) {
             return;
         }
 
@@ -221,7 +220,7 @@ class Alsernetfinance extends PaymentModule
         $country = new Country($delivery_address->id_country);
 
         if (in_array($country->id, [6, 242, 243, 244])) {
-            $total_cart = (float)$cart->getOrderTotal(true, Cart::BOTH);
+            $total_cart = (float) $cart->getOrderTotal(true, Cart::BOTH);
             $min_amount_in_cart = $this->min_amount_default;
 
             if (is_numeric($this->min_amount)) {
@@ -237,13 +236,13 @@ class Alsernetfinance extends PaymentModule
 
         $paymentOptions = [];
 
-        $payment_text = !empty($this->payment_text) ? $this->payment_text : $this->payment_text_default;
-        $additional_info = !empty($this->additional_info) ? $this->additional_info : $this->additional_info_default;
+        $payment_text = ! empty($this->payment_text) ? $this->payment_text : $this->payment_text_default;
+        $additional_info = ! empty($this->additional_info) ? $this->additional_info : $this->additional_info_default;
 
-        $standardPayment = new PaymentOption();
+        $standardPayment = new PaymentOption;
         $standardPayment->setModuleName($this->name)
             ->setCallToActionText($payment_text)
-            ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+            ->setAction($this->context->link->getModuleLink($this->name, 'validation', [], true))
             ->setAdditionalInformation($additional_info);
 
         $paymentOptions[] = $standardPayment;
@@ -251,22 +250,21 @@ class Alsernetfinance extends PaymentModule
         return $paymentOptions;
     }
 
-
-
     public function hookDisplayPaymentReturn($params)
     {
-        if (!$this->active) {
+        if (! $this->active) {
             return;
         }
 
         $this->smarty->assign(
             $this->getTemplateVars()
         );
+
         return
-            $this->l('Your order on is complete.') . "<br><br>" .
-            $this->l('You have chosen the customized financing payment method') . "<br><br><span>" .
-            $this->l('We will call you to arrange the financed payment') . "<br><br>" .
-            $this->l('Your order will be sent soon.') . "</span><br><br>" .
+            $this->l('Your order on is complete.').'<br><br>'.
+            $this->l('You have chosen the customized financing payment method').'<br><br><span>'.
+            $this->l('We will call you to arrange the financed payment').'<br><br>'.
+            $this->l('Your order will be sent soon.').'</span><br><br>'.
             $this->l('For any questions or for further information, please contact our customer support');
     }
 }

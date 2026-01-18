@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -67,9 +68,6 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     * @param RequestSqlFilters $filters
-     *
      * @return Response
      */
     public function indexAction(Request $request, RequestSqlFilters $filters)
@@ -89,7 +87,7 @@ class SqlManagerController extends FrameworkBundleAdminController
                 'add' => [
                     'href' => $this->generateUrl('admin_sql_requests_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
-                    'icon' => 'add_circle_outline',
+                    'icon' => 'fa-duotone add_circle_outline',
                 ],
             ],
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
@@ -105,9 +103,8 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @return RedirectResponse
      */
@@ -133,12 +130,11 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Process Request SQL backups save.
      *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
+     *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *      redirectRoute="admin_sql_requests_index"
      * )
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -149,7 +145,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $settingForm->handleRequest($request);
 
         if ($settingForm->isSubmitted()) {
-            if (!$errors = $handler->save($settingForm->getData())) {
+            if (! $errors = $handler->save($settingForm->getData())) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } else {
                 $this->flashErrors($errors);
@@ -168,8 +164,6 @@ class SqlManagerController extends FrameworkBundleAdminController
      *      redirectRoute="admin_sql_requests_index"
      * )
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -182,7 +176,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         try {
             $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->getIdentifiableObjectId() !== null) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');
@@ -210,15 +204,14 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Show Request SQL edit page.
      *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
+     *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
      *
-     * @param int $sqlRequestId
-     * @param Request $request
-     *
+     * @param  int  $sqlRequestId
      * @return Response
      */
     public function editAction($sqlRequestId, Request $request)
@@ -263,10 +256,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
-     * @param int $sqlRequestId ID of selected Request SQL
-     *
+     * @param  int  $sqlRequestId  ID of selected Request SQL
      * @return RedirectResponse
      */
     public function deleteAction($sqlRequestId)
@@ -294,9 +287,8 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @return RedirectResponse
      */
@@ -328,9 +320,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     redirectRoute="admin_sql_requests_index"
      * )
      *
-     * @param Request $request
-     * @param int $sqlRequestId
-     *
+     * @param  int  $sqlRequestId
      * @return Response
      */
     public function viewAction(Request $request, $sqlRequestId)
@@ -362,10 +352,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     "is_granted(['read'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_sql_requests_index"
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
-     * @param int $sqlRequestId Request SQL id
-     *
+     * @param  int  $sqlRequestId  Request SQL id
      * @return RedirectResponse|BinaryFileResponse
      */
     public function exportAction($sqlRequestId)
@@ -383,7 +373,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             );
 
             /** @var SqlRequestSettings $sqlRequestSettings */
-            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings());
+            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings);
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleExportException($e));
 
@@ -406,8 +396,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     redirectRoute="admin_sql_requests_index"
      * )
      *
-     * @param string $mySqlTableName Database table name
-     *
+     * @param  string  $mySqlTableName  Database table name
      * @return JsonResponse
      */
     public function ajaxTableColumnsAction($mySqlTableName)
@@ -431,8 +420,6 @@ class SqlManagerController extends FrameworkBundleAdminController
 
     /**
      * Get Request SQL backups form handler.
-     *
-     * @return FormHandlerInterface
      */
     protected function getSettingsFormHandler(): FormHandlerInterface
     {
@@ -461,7 +448,6 @@ class SqlManagerController extends FrameworkBundleAdminController
      * which is used as default form data
      * when creating SqlRequest.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -480,7 +466,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get human readable error for exception.
      *
-     * @param SqlRequestException $e
      *
      * @return string Error message
      */
@@ -500,7 +485,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
         ];
 
-        if (CannotDeleteSqlRequestException::class === $type
+        if ($type === CannotDeleteSqlRequestException::class
             && isset($deleteExceptionMessages[$code])
         ) {
             return $deleteExceptionMessages[$code];
@@ -516,7 +501,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get error message when exception occurs on View action.
      *
-     * @param SqlRequestException $e
      *
      * @return string
      */
@@ -536,8 +520,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception $e
-     *
      * @return string Error message
      */
     protected function handleExportException(Exception $e)
@@ -556,8 +538,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param FileWritingException $e
-     *
      * @return string Error message
      */
     protected function handleApplicationExportException(FileWritingException $e)
@@ -576,8 +556,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param SqlRequestException $e
-     *
      * @return string
      */
     protected function handleDomainExportException(SqlRequestException $e)
@@ -601,7 +579,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function getDatabaseTables()
     {
         /** @var DatabaseTablesList $databaseTablesList */
-        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList());
+        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList);
 
         return $databaseTablesList->getTables();
     }

@@ -52,7 +52,7 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
             'delete' => [
                 'text' => $this->l('Eliminar selección'),
                 'confirm' => $this->l('¿Seguro que quieres eliminar los elementos seleccionados?'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
     }
@@ -923,29 +923,29 @@ class AdminAlsernetComplementariosController extends ModuleAdminController
         $this->toolbar_btn['new'] = [
             'href' => self::$currentIndex.'&addalsernet_complementarios&token='.$this->token,
             'desc' => $this->l('Agregar nuevo'),
-            'icon' => 'process-icon-new',
+            'icon' => 'fa-duotone process-icon-new',
         ];
 
         // Tus 3 botones de atajo
         $this->page_header_toolbar_btn['add_product'] = [
             'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=product',
             'desc' => $this->l('Por Producto'),
-            'icon' => 'process-icon-new',
+            'icon' => 'fa-duotone process-icon-new',
         ];
         $this->page_header_toolbar_btn['add_category'] = [
             'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=category',
             'desc' => $this->l('Por Categoría'),
-            'icon' => 'process-icon-category',
+            'icon' => 'fa-duotone process-icon-category',
         ];
         $this->page_header_toolbar_btn['add_brand'] = [
             'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=brand',
             'desc' => $this->l('Por Marca'),
-            'icon' => 'process-icon-manufacturer',
+            'icon' => 'fa-duotone process-icon-manufacturer',
         ];
         $this->page_header_toolbar_btn['add_label'] = [
             'href' => $this->context->link->getAdminLink('AdminAlsernetComplementarios').'&addType=label',
             'desc' => $this->l('Por Etiqueta'),
-            'icon' => 'process-icon-tags', // o el que prefieras
+            'icon' => 'fa-duotone process-icon-tags', // o el que prefieras
         ];
     }
 

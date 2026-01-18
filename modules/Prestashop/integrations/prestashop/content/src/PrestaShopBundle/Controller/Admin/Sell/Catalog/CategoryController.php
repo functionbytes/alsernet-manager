@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -80,9 +81,6 @@ class CategoryController extends FrameworkBundleAdminController
      *     message="You do not have permission to list this."
      * )
      *
-     * @param Request $request
-     * @param CategoryFilters $filters
-     *
      * @return Response
      */
     public function indexAction(Request $request, CategoryFilters $filters)
@@ -128,8 +126,6 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function searchGridAction(Request $request)
@@ -154,8 +150,6 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index"
      * )
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -171,7 +165,7 @@ class CategoryController extends FrameworkBundleAdminController
         try {
             $handlerResult = $categoryFormHandler->handle($categoryForm);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->getIdentifiableObjectId() !== null) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
@@ -205,8 +199,6 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index"
      * )
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createRootAction(Request $request)
@@ -220,7 +212,7 @@ class CategoryController extends FrameworkBundleAdminController
         try {
             $handlerResult = $rootCategoryFormHandler->handle($rootCategoryForm);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->getIdentifiableObjectId() !== null) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
@@ -254,9 +246,7 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index"
      * )
      *
-     * @param int $categoryId
-     * @param Request $request
-     *
+     * @param  int  $categoryId
      * @return Response
      */
     public function editAction($categoryId, Request $request)
@@ -331,9 +321,7 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index"
      * )
      *
-     * @param int $categoryId
-     * @param Request $request
-     *
+     * @param  int  $categoryId
      * @return Response
      */
     public function editRootAction($categoryId, Request $request)
@@ -342,10 +330,10 @@ class CategoryController extends FrameworkBundleAdminController
             /** @var EditableCategory $editableCategory */
             $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing((int) $categoryId));
 
-            if (!$editableCategory->isRootCategory()) {
+            if (! $editableCategory->isRootCategory()) {
                 return $this->redirectToRoute('admin_categories_edit', ['categoryId' => $categoryId]);
             }
-        } catch (CannotEditRootCategoryException | CategoryNotFoundException $e) {
+        } catch (CannotEditRootCategoryException|CategoryNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_categories_index');
@@ -404,14 +392,12 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
-     * @param Request $request
-     * @param int $categoryId
-     *
+     * @param  int  $categoryId
      * @return RedirectResponse
      */
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
-        if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
+        if (! $this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,
@@ -445,15 +431,13 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
-     * @param Request $request
-     * @param int $categoryId
-     * @param int $menuThumbnailId
-     *
+     * @param  int  $categoryId
+     * @param  int  $menuThumbnailId
      * @return RedirectResponse
      */
     public function deleteMenuThumbnailAction(Request $request, $categoryId, $menuThumbnailId)
     {
-        if (!$this->isCsrfTokenValid('delete-menu-thumbnail', $request->request->get('_csrf_token'))) {
+        if (! $this->isCsrfTokenValid('delete-menu-thumbnail', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,
@@ -488,8 +472,7 @@ class CategoryController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param int $categoryId
-     *
+     * @param  int  $categoryId
      * @return JsonResponse
      */
     public function toggleStatusAction($categoryId)
@@ -505,7 +488,7 @@ class CategoryController extends FrameworkBundleAdminController
             $isEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled((int) $categoryId));
 
             $this->getCommandBus()->handle(
-                new SetCategoryIsEnabledCommand((int) $categoryId, !$isEnabled)
+                new SetCategoryIsEnabledCommand((int) $categoryId, ! $isEnabled)
             );
 
             $response = [
@@ -530,9 +513,8 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @return RedirectResponse
      */
@@ -564,9 +546,8 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @return RedirectResponse
      */
@@ -598,9 +579,8 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @return RedirectResponse
      */
@@ -645,9 +625,8 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to delete this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @return RedirectResponse
      */
@@ -686,9 +665,8 @@ class CategoryController extends FrameworkBundleAdminController
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to view this."
      * )
-     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param CategoryFilters $filters
+     * @DemoRestricted(redirectRoute="admin_categories_index")
      *
      * @return Response
      */
@@ -718,10 +696,10 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
-        return (new CsvResponse())
+        return (new CsvResponse)
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
+            ->setFileName('category_'.date('Y-m-d_His').'.csv');
     }
 
     /**
@@ -731,8 +709,6 @@ class CategoryController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      * )
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -761,10 +737,6 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function getCategoriesTreeAction(Request $request): JsonResponse
     {
@@ -775,10 +747,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param CategoryForTree[] $categoriesTree
-     * @param int $langId
-     *
-     * @return array
+     * @param  CategoryForTree[]  $categoriesTree
      */
     private function formatCategoriesTreeForPresentation(array $categoriesTree, int $langId): array
     {
@@ -801,12 +770,6 @@ class CategoryController extends FrameworkBundleAdminController
         return $formattedCategories;
     }
 
-    /**
-     * @param Request $request
-     * @param int $categoryId
-     *
-     * @return array
-     */
     private function getCategoryToolbarButtons(Request $request, int $categoryId): array
     {
         $toolbarButtons = [];
@@ -815,7 +778,7 @@ class CategoryController extends FrameworkBundleAdminController
             $toolbarButtons['add_root'] = [
                 'href' => $this->generateUrl('admin_categories_create_root'),
                 'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
-                'icon' => 'add_circle_outline',
+                'icon' => 'fa-duotone add_circle_outline',
             ];
         }
 
@@ -828,11 +791,11 @@ class CategoryController extends FrameworkBundleAdminController
 
         // Display the button "Add new category" if the current category is not a root category
         $category = new Category($categoryId);
-        if (!$category->isRootCategory()) {
+        if (! $category->isRootCategory()) {
             $toolbarButtons['add'] = [
                 'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
                 'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
-                'icon' => 'add_circle_outline',
+                'icon' => 'fa-duotone add_circle_outline',
             ];
         }
 
@@ -886,15 +849,13 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     private function getBulkCategoriesFromRequest(Request $request)
     {
         $categoryIds = $request->request->get('category_id_category');
 
-        if (!is_array($categoryIds)) {
+        if (! is_array($categoryIds)) {
             return [];
         }
 
@@ -906,12 +867,10 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return bool
      */
     private function requestHasSearchParameters(Request $request)
     {
-        return !empty($request->query->get(CategoryGridDefinitionFactory::GRID_ID)['filters']);
+        return ! empty($request->query->get(CategoryGridDefinitionFactory::GRID_ID)['filters']);
     }
 }

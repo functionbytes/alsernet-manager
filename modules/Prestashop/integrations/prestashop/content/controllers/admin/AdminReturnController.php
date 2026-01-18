@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -39,9 +40,9 @@ class AdminReturnControllerCore extends AdminController
         parent::__construct();
 
         $this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
-        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
-        $this->_join .= 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = ' . (int) $this->context->language->id . ')';
-        $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
+        $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int) $this->context->language->id.')';
+        $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
 
         $this->fields_list = [
             'id_order_return' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
@@ -84,7 +85,7 @@ class AdminReturnControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Return Merchandise Authorization (RMA)', [], 'Admin.Orderscustomers.Feature'),
-                'icon' => 'icon-clipboard',
+                'icon' => 'fa-duotone icon-clipboard',
             ],
             'input' => [
                 [
@@ -163,7 +164,7 @@ class AdminReturnControllerCore extends AdminController
         $products = OrderReturn::getOrdersReturnProducts($this->object->id, $order);
 
         // Prepare customer explanation for display
-        $this->object->question = '<span class="normal-text">' . nl2br($this->object->question) . '</span>';
+        $this->object->question = '<span class="normal-text">'.nl2br($this->object->question).'</span>';
 
         $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
         $orderUrl = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
@@ -198,7 +199,7 @@ class AdminReturnControllerCore extends AdminController
     public function initToolbar()
     {
         // If display list, we don't want the "add" button
-        if (!$this->display || $this->display == 'list') {
+        if (! $this->display || $this->display == 'list') {
             return;
         } elseif ($this->display != 'options') {
             $this->toolbar_btn['save-and-stay'] = [
@@ -220,12 +221,12 @@ class AdminReturnControllerCore extends AdminController
                 if (($id_order_detail = (int) (Tools::getValue('id_order_detail'))) && Validate::isUnsignedId($id_order_detail)) {
                     if (($id_order_return = (int) (Tools::getValue('id_order_return'))) && Validate::isUnsignedId($id_order_return)) {
                         $orderReturn = new OrderReturn($id_order_return);
-                        if (!Validate::isLoadedObject($orderReturn)) {
-                            die(Tools::displayError());
+                        if (! Validate::isLoadedObject($orderReturn)) {
+                            exit(Tools::displayError());
                         }
                         if ((int) ($orderReturn->countProduct()) > 1) {
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
-                                Tools::redirectAdmin(self::$currentIndex . '&conf=4token=' . $this->token);
+                                Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', [], 'Admin.Orderscustomers.Notification');
                             }
@@ -268,7 +269,7 @@ class AdminReturnControllerCore extends AdminController
                             ),
                             $vars,
                             $customer->email,
-                            $customer->firstname . ' ' . $customer->lastname,
+                            $customer->firstname.' '.$customer->lastname,
                             null,
                             null,
                             null,
@@ -279,9 +280,9 @@ class AdminReturnControllerCore extends AdminController
                         );
 
                         if (Tools::isSubmit('submitAddorder_returnAndStay')) {
-                            Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token . '&updateorder_return&id_order_return=' . (int) $id_order_return);
+                            Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.'&updateorder_return&id_order_return='.(int) $id_order_return);
                         } else {
-                            Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+                            Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
                         }
                     }
                 } else {

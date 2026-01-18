@@ -1168,13 +1168,13 @@ class Campaign extends BaseCampaign implements CampaignInterface, HasTemplateInt
                 'key' => 'regular',
                 'title' => 'Regular',
                 'description' => 'Campaña con contenido de correo electrónico HTML, además de imágenes y enlaces. Este es el tipo más común.',
-                'icon' => 'attach_email',
+                'icon' => 'fa-duotone attach_email',
             ],
             [
                 'key' => 'plain-text',
                 'title' => 'Texto plano',
                 'description' => 'Envíe un correo electrónico de texto simple sin seguimiento de enlaces, imágenes o HTML.',
-                'icon' => 'wysiwyg',
+                'icon' => 'fa-duotone wysiwyg',
             ],
         ];
     }

@@ -6,10 +6,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Events\SupplierErpProviderUpdated;
-use Modules\Supplier\Services\ErpSyncService;
-use Modules\Supplier\Entities\SupplierSyncFailure;
 use Illuminate\Support\Str;
+use Modules\Supplier\Events\SupplierErpProviderUpdated;
+use Modules\Supplier\Models\SupplierSyncFailure;
+use Modules\Supplier\Services\ErpSyncService;
 
 /**
  * Listener que sincroniza proveedores de Supplier → Oracle en tiempo real
@@ -21,30 +21,31 @@ class SyncProviderToErpListener implements ShouldQueue
     use InteractsWithQueue;
 
     public $tries = 3;
+
     public $timeout = 30;
+
     public $backoff = [5, 15, 30];
+
     public $queue = 'erp-sync';
 
     public function __construct(
         protected ErpSyncService $erpSyncService
-    ) {
-    }
+    ) {}
 
     /**
      * Procesar el evento de cambio de proveedor
      *
-     * @param SupplierErpProviderUpdated $event
-     * @return void
      * @throws \Exception
      */
     public function handle(SupplierErpProviderUpdated $event): void
     {
         // Validar que se puede sincronizar
-        if (!$event->shouldSyncToErp()) {
+        if (! $event->shouldSyncToErp()) {
             Log::info('Provider sync skipped - no erp_provider_id', [
                 'supplier_provider_id' => $event->provider->id,
                 'changed_fields' => $event->changedFields,
             ]);
+
             return;
         }
 
@@ -54,6 +55,7 @@ class SyncProviderToErpListener implements ShouldQueue
             Log::debug('Provider sync skipped - already processing', [
                 'supplier_provider_id' => $event->provider->id,
             ]);
+
             return;
         }
 
@@ -88,10 +90,6 @@ class SyncProviderToErpListener implements ShouldQueue
 
     /**
      * Se llama cuando el job falla permanentemente
-     *
-     * @param SupplierErpProviderUpdated $event
-     * @param \Throwable $exception
-     * @return void
      */
     public function failed(SupplierErpProviderUpdated $event, \Throwable $exception): void
     {
@@ -117,9 +115,6 @@ class SyncProviderToErpListener implements ShouldQueue
 
     /**
      * Generar clave de cache para prevenir duplicados
-     *
-     * @param SupplierErpProviderUpdated $event
-     * @return string
      */
     protected function getDuplicateKey(SupplierErpProviderUpdated $event): string
     {
@@ -128,6 +123,6 @@ class SyncProviderToErpListener implements ShouldQueue
             'changed_fields' => $event->changedFields,
         ]);
 
-        return 'erp_sync_provider_' . md5($hashData);
+        return 'erp_sync_provider_'.md5($hashData);
     }
 }

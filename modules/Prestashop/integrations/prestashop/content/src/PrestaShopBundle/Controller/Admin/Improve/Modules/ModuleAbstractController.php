@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -37,8 +38,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     /**
      * Common method of alerts & updates routes for getting template variables.
      *
-     * @param string $type Type of alert to display (to_configure / to_update ...)
-     *
+     * @param  string  $type  Type of alert to display (to_configure / to_update ...)
      * @return array
      */
     protected function getNotificationPageData($type)
@@ -75,7 +75,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         // toolbarButtons
         $toolbarButtons = [];
 
-        if (!in_array(
+        if (! in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             [
                 PageVoter::LEVEL_READ,
@@ -85,7 +85,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             $toolbarButtons['add_module'] = [
                 'href' => '#',
                 'desc' => $this->trans('Upload a module', 'Admin.modules.Feature'),
-                'icon' => 'cloud_upload',
+                'icon' => 'fa-duotone cloud_upload',
                 'help' => $this->trans('Upload a module', 'Admin.modules.Feature'),
             ];
         }
@@ -108,7 +108,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
                 'addons_logout' => [
                     'href' => '#',
                     'desc' => $addonsEmail['username_addons'],
-                    'icon' => 'exit_to_app',
+                    'icon' => 'fa-duotone exit_to_app',
                     'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.modules.Notification'),
                 ],
             ];
@@ -118,7 +118,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             'addons_connect' => [
                 'href' => '#',
                 'desc' => $this->trans('Connect to Addons marketplace', 'Admin.modules.Feature'),
-                'icon' => 'vpn_key',
+                'icon' => 'fa-duotone vpn_key',
                 'help' => $this->trans('Connect to Addons marketplace', 'Admin.modules.Feature'),
             ],
         ];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -132,9 +133,6 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     * @param OrderFilters $filters
-     *
      * @return Response
      */
     public function indexAction(Request $request, OrderFilters $filters)
@@ -157,9 +155,6 @@ class OrderController extends FrameworkBundleAdminController
         );
     }
 
-    /**
-     * @return array
-     */
     private function getOrderToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -169,11 +164,11 @@ class OrderController extends FrameworkBundleAdminController
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
             'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
-            'icon' => 'add_circle_outline',
-            'disabled' => !$isSingleShopContext,
+            'icon' => 'fa-duotone add_circle_outline',
+            'disabled' => ! $isSingleShopContext,
         ];
 
-        if (!$isSingleShopContext) {
+        if (! $isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
                 'You can use this feature in a single shop context only. Switch context to enable it.',
                 'Admin.Orderscustomers.Feature'
@@ -188,8 +183,6 @@ class OrderController extends FrameworkBundleAdminController
      * Places an order from BO
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -227,8 +220,6 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -236,7 +227,7 @@ class OrderController extends FrameworkBundleAdminController
         /** @var ShopContext $shopContextChecker */
         $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
 
-        if (!$shopContextChecker->isSingleShopContext()) {
+        if (! $shopContextChecker->isSingleShopContext()) {
             $this->addFlash('error', $this->trans(
                 'You have to select a shop before creating new orders.',
                 'Admin.Orderscustomers.Notification'
@@ -270,8 +261,6 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function searchAction(Request $request)
@@ -292,7 +281,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
-     * @param int $orderId
+     * @param  int  $orderId
      */
     public function generateInvoicePdfAction($orderId)
     {
@@ -300,7 +289,7 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        exit();
     }
 
     /**
@@ -308,7 +297,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
-     * @param int $orderId
+     * @param  int  $orderId
      */
     public function generateDeliverySlipPdfAction($orderId)
     {
@@ -316,12 +305,10 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die();
+        exit();
     }
 
     /**
-     * @param Request $request
-     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @return RedirectResponse
@@ -350,8 +337,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param OrderFilters $filters
      *
      * @return CsvResponse
      */
@@ -399,19 +384,14 @@ class OrderController extends FrameworkBundleAdminController
             $data[] = $item;
         }
 
-        return (new CsvResponse())
+        return (new CsvResponse)
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('order_' . date('Y-m-d_His') . '.csv');
+            ->setFileName('order_'.date('Y-m-d_His').'.csv');
     }
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function viewAction(int $orderId, Request $request): Response
     {
@@ -461,7 +441,7 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderAddressForm = null;
         $privateNoteForm = null;
 
-        if (null !== $orderForViewing->getCustomer() && $orderForViewing->getCustomer()->getId() !== 0) {
+        if ($orderForViewing->getCustomer() !== null && $orderForViewing->getCustomer()->getId() !== 0) {
             $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
                 'customer_id' => $orderForViewing->getCustomer()->getId(),
             ]);
@@ -495,7 +475,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
+        $backOfficeOrderButtons = new ActionsBarButtonsCollection;
 
         try {
             $this->dispatchHook(
@@ -523,7 +503,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
-        if (!in_array($paginationNum, $paginationNumOptions)) {
+        if (! in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
         }
         sort($paginationNumOptions);
@@ -583,9 +563,6 @@ class OrderController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $orderId
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function partialRefundAction(int $orderId, Request $request)
@@ -615,9 +592,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
-     *
-     * @param int $orderId
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -649,9 +623,6 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
-     * @param int $orderId
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function returnProductAction(int $orderId, Request $request)
@@ -679,13 +650,10 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param OrderForViewing $orderForViewing
-     */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
         $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
-        if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
+        if (! $isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
 
@@ -693,7 +661,7 @@ class OrderController extends FrameworkBundleAdminController
             if ($product->getAvailableQuantity() <= 0) {
                 $this->addFlash(
                     'warning',
-                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification').' '.$product->getName()
                 );
             }
         }
@@ -701,11 +669,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function addProductAction(int $orderId, Request $request): Response
     {
@@ -790,10 +753,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     *
-     * @return Response
      */
     public function getProductPricesAction(int $orderId): Response
     {
@@ -826,8 +785,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
      */
     public function getInvoicesAction(int $orderId)
     {
@@ -846,8 +803,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
      */
     public function getDocumentsAction(int $orderId)
     {
@@ -864,8 +819,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
      */
     public function getShippingAction(int $orderId)
     {
@@ -887,11 +840,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
@@ -939,11 +887,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param int $orderCartRuleId
-     *
-     * @return RedirectResponse
      */
     public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
     {
@@ -965,12 +908,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param int $orderInvoiceId
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
@@ -988,12 +925,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param int $orderDetailId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
     {
@@ -1024,7 +955,7 @@ class OrderController extends FrameworkBundleAdminController
         });
 
         // The whole product row has been removed so we return an empty response
-        if (null === $product) {
+        if ($product === null) {
             return new Response('');
         }
 
@@ -1052,11 +983,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
@@ -1097,12 +1023,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int $orderId
-     * @param Request $request
-     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @return RedirectResponse
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
@@ -1114,7 +1035,7 @@ class OrderController extends FrameworkBundleAdminController
         );
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        if (! $form->isSubmitted() || ! $form->isValid()) {
             // Check if the form is submit from the action bar
             $form = $formFactory->createNamed(
                 'update_order_status_action_bar',
@@ -1135,12 +1056,8 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Updates order status directly from list page.
      *
-     * @param int $orderId
-     * @param Request $request
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @return RedirectResponse
      */
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
@@ -1156,11 +1073,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function addPaymentAction(int $orderId, Request $request): RedirectResponse
     {
@@ -1204,10 +1116,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param int $orderId
-     *
-     * @return JsonResponse
      */
     public function previewAction(int $orderId): JsonResponse
     {
@@ -1235,8 +1143,6 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
-     * @param int $orderId
-     *
      * @return JsonResponse
      */
     public function duplicateOrderCartAction(int $orderId)
@@ -1258,15 +1164,11 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
+     *
      * @DemoRestricted(
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"}
      * )
-     *
-     * @param Request $request
-     * @param int $orderId
-     *
-     * @return Response
      */
     public function sendMessageAction(Request $request, int $orderId): Response
     {
@@ -1281,7 +1183,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->getCommandBus()->handle(new AddOrderCustomerMessageCommand(
                     $orderId,
                     $data['message'],
-                    !$data['is_displayed_to_customer']
+                    ! $data['is_displayed_to_customer']
                 ));
 
                 $this->addFlash(
@@ -1311,8 +1213,8 @@ class OrderController extends FrameworkBundleAdminController
 
         $routesCollection = $this->get('router')->getRouteCollection();
 
-        if (null !== $routesCollection &&
-            !$orderMessageForm->isValid() &&
+        if ($routesCollection !== null &&
+            ! $orderMessageForm->isValid() &&
             $viewRoute = $routesCollection->get('admin_orders_view')
         ) {
             $attributes = $viewRoute->getDefaults();
@@ -1336,20 +1238,16 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function changeCustomerAddressAction(Request $request): RedirectResponse
     {
         $orderId = $request->query->get('orderId');
-        if (!$orderId) {
+        if (! $orderId) {
             return $this->redirectToRoute('admin_orders_index');
         }
 
         $customerId = $request->query->get('customerId');
-        if (!$customerId) {
+        if (! $customerId) {
             return $this->redirectToRoute('admin_orders_index');
         }
 
@@ -1358,7 +1256,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $changeOrderAddressForm->handleRequest($request);
 
-        if (!$changeOrderAddressForm->isSubmitted() || !$changeOrderAddressForm->isValid()) {
+        if (! $changeOrderAddressForm->isSubmitted() || ! $changeOrderAddressForm->isValid()) {
             return $this->redirectToRoute('admin_orders_view', [
                 'orderId' => $orderId,
             ]);
@@ -1392,18 +1290,13 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
     {
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
         $changeOrderCurrencyForm->handleRequest($request);
 
-        if (!$changeOrderCurrencyForm->isSubmitted() || !$changeOrderCurrencyForm->isValid()) {
+        if (! $changeOrderCurrencyForm->isSubmitted() || ! $changeOrderCurrencyForm->isValid()) {
             return $this->redirectToRoute('admin_orders_view', [
                 'orderId' => $orderId,
             ]);
@@ -1433,12 +1326,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param int $orderStatusId
-     * @param int $orderHistoryId
-     *
-     * @return RedirectResponse
      */
     public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
     {
@@ -1462,11 +1349,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param int $orderDetailId
-     *
-     * @return JsonResponse
      */
     public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
     {
@@ -1486,10 +1368,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     *
-     * @return Response
      */
     public function getDiscountsAction(int $orderId): Response
     {
@@ -1504,10 +1382,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     *
-     * @return JsonResponse
      */
     public function getPricesAction(int $orderId): JsonResponse
     {
@@ -1528,10 +1402,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     *
-     * @return Response
      */
     public function getPaymentsAction(int $orderId): Response
     {
@@ -1553,10 +1423,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     *
-     * @return Response
      */
     public function getProductsListAction(int $orderId): Response
     {
@@ -1571,7 +1437,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
         $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
-        if (!in_array($paginationNum, $paginationNumOptions)) {
+        if (! in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
         }
         sort($paginationNumOptions);
@@ -1580,7 +1446,7 @@ class OrderController extends FrameworkBundleAdminController
         $isColumnRefundedDisplayed = false;
 
         foreach (array_slice($orderForViewing->getProducts()->getProducts(), $paginationNum) as $product) {
-            if (!empty($product->getLocation())) {
+            if (! empty($product->getLocation())) {
                 $isColumnLocationDisplayed = true;
             }
             if ($product->getQuantityRefunded() > 0) {
@@ -1606,10 +1472,6 @@ class OrderController extends FrameworkBundleAdminController
      * )
      *
      * Generates invoice for given order
-     *
-     * @param int $orderId
-     *
-     * @return RedirectResponse
      */
     public function generateInvoiceAction(int $orderId): RedirectResponse
     {
@@ -1630,10 +1492,6 @@ class OrderController extends FrameworkBundleAdminController
      * Sends email with process order link to customer
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function sendProcessOrderEmailAction(Request $request): JsonResponse
     {
@@ -1658,9 +1516,6 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $orderId
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -1690,10 +1545,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function configureProductPaginationAction(Request $request): JsonResponse
     {
@@ -1719,19 +1570,16 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param int $orderId
-     * @param string $value
-     *
      * @return BinaryFileResponse|RedirectResponse
      */
     public function displayCustomizationImageAction(int $orderId, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
-        $filePath = $uploadDir . $value;
-        $filesystem = new Filesystem();
+        $filePath = $uploadDir.$value;
+        $filesystem = new Filesystem;
 
         try {
-            if (!$filesystem->exists($filePath)) {
+            if (! $filesystem->exists($filePath)) {
                 $this->addFlash('error', $this->trans('The product customization picture could not be found.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_orders_view', [
@@ -1760,9 +1608,7 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectRoute="admin_orders_index"
      * )
      *
-     * @param mixed $orderId
-     * @param Request $request
-     *
+     * @param  mixed  $orderId
      * @return Response
      */
     public function setInternalNoteAction($orderId, Request $request)
@@ -1805,10 +1651,6 @@ class OrderController extends FrameworkBundleAdminController
      *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to perform this search."
      * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function searchProductsAction(Request $request): JsonResponse
     {
@@ -1846,9 +1688,6 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * Initializes order status update
-     *
-     * @param int $orderId
-     * @param int $orderStatusId
      */
     private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
     {
@@ -1868,8 +1707,6 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception $e
-     *
      * @return array
      */
     private function getErrorMessages(Exception $e)
@@ -2033,9 +1870,6 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param ChangeOrderStatusException $e
-     */
     private function handleChangeOrderStatusException(ChangeOrderStatusException $e)
     {
         $orderIds = array_merge(

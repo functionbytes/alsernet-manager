@@ -34,7 +34,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'technical_support',
                 'description' => 'Problemas técnicos, bugs del sistema y cuestiones de software',
                 'color' => '#0d6efd', // primary blue
-                'icon' => 'fa-tools',
+                'icon' => 'fa-duotone fa-tools',
                 'is_active' => true,
                 'position' => 1,
             ],
@@ -44,7 +44,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'billing_inquiry',
                 'description' => 'Preguntas sobre pagos, facturas y suscripciones',
                 'color' => '#0dcaf0', // info cyan
-                'icon' => 'fa-receipt',
+                'icon' => 'fa-duotone fa-receipt',
                 'is_active' => true,
                 'position' => 2,
             ],
@@ -54,7 +54,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'feature_request',
                 'description' => 'Solicitudes de nuevas funcionalidades y mejoras',
                 'color' => '#198754', // success green
-                'icon' => 'fa-lightbulb',
+                'icon' => 'fa-duotone fa-lightbulb',
                 'is_active' => true,
                 'position' => 3,
             ],
@@ -64,7 +64,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'account_management',
                 'description' => 'Perfil de usuario, contraseña, problemas de acceso',
                 'color' => '#ffc107', // warning yellow
-                'icon' => 'fa-user-circle',
+                'icon' => 'fa-duotone fa-user-circle',
                 'is_active' => true,
                 'position' => 4,
             ],
@@ -74,7 +74,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'product_information',
                 'description' => 'Detalles y características de productos y servicios',
                 'color' => '#0d6efd', // primary blue
-                'icon' => 'fa-box',
+                'icon' => 'fa-duotone fa-box',
                 'is_active' => true,
                 'position' => 5,
             ],
@@ -84,7 +84,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'order_status',
                 'description' => 'Seguimiento y consultas de entrega de pedidos',
                 'color' => '#0dcaf0', // info cyan
-                'icon' => 'fa-shipping-fast',
+                'icon' => 'fa-duotone fa-shipping-fast',
                 'is_active' => true,
                 'position' => 6,
             ],
@@ -94,7 +94,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'complaint',
                 'description' => 'Quejas sobre el servicio y problemas experienciados',
                 'color' => '#dc3545', // danger red
-                'icon' => 'fa-exclamation-triangle',
+                'icon' => 'fa-duotone fa-exclamation-triangle',
                 'is_active' => true,
                 'position' => 7,
             ],
@@ -104,7 +104,7 @@ class HelpdeskTicketCategorySeeder extends Seeder
                 'key' => 'other',
                 'description' => 'Otras consultas que no encajan en las categorías anteriores',
                 'color' => '#6c757d', // secondary gray
-                'icon' => 'fa-question-circle',
+                'icon' => 'fa-duotone fa-question-circle',
                 'is_active' => true,
                 'position' => 8,
             ],

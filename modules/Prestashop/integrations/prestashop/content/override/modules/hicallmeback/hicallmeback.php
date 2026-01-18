@@ -49,38 +49,38 @@ class HICallMeBackOverride extends HICallMeBack
         $tabs = [
             'requests' => [
                 'title' => $this->l('Requests'),
-                'icon' => 'icon-phone',
+                'icon' => 'fa-duotone icon-phone',
             ],
             'design_settings' => [
                 'title' => $this->l('Design Settings'),
-                'icon' => 'icon-paint-brush',
+                'icon' => 'fa-duotone icon-paint-brush',
             ],
             'general_settings' => [
                 'title' => $this->l('General backups'),
-                'icon' => 'icon-cog',
+                'icon' => 'fa-duotone icon-cog',
             ],
             'agents' => [
                 'title' => $this->l('Agentes'),
-                'icon' => 'icon-user',
+                'icon' => 'fa-duotone icon-user',
             ],
             'export' => [
                 'title' => $this->l('Export'),
-                'icon' => 'icon-download',
+                'icon' => 'fa-duotone icon-download',
             ],
             'gdpr' => [
                 'title' => $this->l('GDPR'),
-                'icon' => 'icon-user',
+                'icon' => 'fa-duotone icon-user',
             ],
             'version' => [
                 'title' => $this->l('Version'),
-                'icon' => 'icon-info',
+                'icon' => 'fa-duotone icon-info',
             ],
         ];
         $more_module = $this->hiPrestaClass->getModuleContent('A_CMB');
         if ($more_module) {
             $tabs['more_module'] = [
                 'title' => $this->l('More modules'),
-                'icon' => 'icon-plus-square',
+                'icon' => 'fa-duotone icon-plus-square',
             ];
         }
         $this->context->smarty->assign(

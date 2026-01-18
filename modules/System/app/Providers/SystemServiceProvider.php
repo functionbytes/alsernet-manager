@@ -46,7 +46,7 @@ class SystemServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Settings (configuraciones)
         NavService::registerMiniItem('settings', [
-            'icon' => 'fa-sliders',
+            'icon' => 'fa-duotone fa-sliders',
             'tooltip' => 'Configuraciones',
             'sidebar_id' => 'settings',
             'order' => 100,

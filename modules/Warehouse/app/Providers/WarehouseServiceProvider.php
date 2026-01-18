@@ -250,7 +250,7 @@ class WarehouseServiceProvider extends ServiceProvider
     {
         // Mini-nav item for Warehouse
         NavService::registerMiniItem('warehouse', [
-            'icon' => 'fa-warehouse',
+            'icon' => 'fa-duotone fa-warehouse',
             'tooltip' => 'Almacén',
             'sidebar_id' => 'warehouse',
             'order' => 40,

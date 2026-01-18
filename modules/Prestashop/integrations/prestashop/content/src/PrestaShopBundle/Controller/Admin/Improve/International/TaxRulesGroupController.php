@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -55,11 +56,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * Show tax rules group page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param TaxRulesGroupFilters $filters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, TaxRulesGroupFilters $filters): Response
     {
@@ -79,10 +75,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -96,11 +88,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @param Request $request
-     * @param int $taxRulesGroupId
-     *
-     * @return Response
      */
     public function editAction(Request $request, int $taxRulesGroupId): Response
     {
@@ -114,10 +101,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @param int $taxRulesGroupId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $taxRulesGroupId): RedirectResponse
     {
@@ -141,10 +124,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @param int $taxRulesGroupId
-     *
-     * @return RedirectResponse
      */
     public function toggleStatusAction(int $taxRulesGroupId): RedirectResponse
     {
@@ -155,7 +134,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             );
 
             $this->getCommandBus()->handle(
-                new SetTaxRulesGroupStatusCommand((int) $taxRulesGroupId, !$editableTaxRulesGroup->isActive())
+                new SetTaxRulesGroupStatusCommand((int) $taxRulesGroupId, ! $editableTaxRulesGroup->isActive())
             );
 
             $this->addFlash(
@@ -172,14 +151,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Enables tax rules groups status on bulk action.
      *
-     * @param Request $request
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @return RedirectResponse
      */
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
@@ -201,14 +177,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Disables tax rules groups status on bulk action.
      *
-     * @param Request $request
      *
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @return RedirectResponse
      */
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
@@ -230,14 +203,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Delete tax rules groups on bulk action.
      *
-     * @param Request $request
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_tax_rules_groups_index",
      * )
-     *
-     * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
@@ -256,16 +226,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_tax_rules_groups_index');
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkTaxRulesGroupFromRequest(Request $request): array
     {
         $taxRulesGroupIds = $request->request->get('tax_rules_group_bulk');
 
-        if (!is_array($taxRulesGroupIds)) {
+        if (! is_array($taxRulesGroupIds)) {
             return [];
         }
 
@@ -276,9 +241,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         return $taxRulesGroupIds;
     }
 
-    /**
-     * @return array
-     */
     private function getTaxRulesGroupToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -286,7 +248,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_tax_rules_groups_create'),
             'desc' => $this->trans('Add new tax rules group', 'Admin.International.Feature'),
-            'icon' => 'add_circle_outline',
+            'icon' => 'fa-duotone add_circle_outline',
         ];
 
         return $toolbarButtons;
@@ -294,12 +256,8 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
     /**
      * Gets error messages for exceptions
-     *
-     * @param Exception $e
-     *
-     * @return array
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         return [
             CannotDeleteTaxRulesGroupException::class => $this->trans(

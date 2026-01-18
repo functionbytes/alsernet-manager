@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -66,7 +67,7 @@ class CustomizationFieldType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Label', 'Admin.Global'),
                 'constraints' => [
-                    new DefaultLanguage(),
+                    new DefaultLanguage,
                 ],
                 'options' => [
                     'constraints' => [
@@ -84,7 +85,7 @@ class CustomizationFieldType extends TranslatorAwareType
                 'default_empty_data' => false,
             ])
             ->add('remove', IconButtonType::class, [
-                'icon' => 'delete',
+                'icon' => 'fa-duotone delete',
                 'attr' => [
                     'class' => 'text-secondary remove-customization-btn tooltip-link',
                     'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
@@ -94,7 +95,6 @@ class CustomizationFieldType extends TranslatorAwareType
                     'data-toggle' => 'pstooltip',
                     'data-original-title' => $this->trans('Delete', 'Admin.Global'),
                 ],
-            ])
-        ;
+            ]);
     }
 }

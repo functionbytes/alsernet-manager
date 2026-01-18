@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -44,7 +45,7 @@ class AdminSearchConfControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        if (!Tools::getValue('realedit')) {
+        if (! Tools::getValue('realedit')) {
             $this->deleted = false;
         }
 
@@ -52,7 +53,7 @@ class AdminSearchConfControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -81,33 +82,33 @@ class AdminSearchConfControllerCore extends AdminController
             $params
         );
 
-        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
+        [$total, $indexed] = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p').' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
         $this->fields_options = [
             'indexation' => [
                 'title' => $this->trans('Indexing', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-cogs',
+                'icon' => 'fa-duotone icon-cogs',
                 'info' => '<p>
-						' . $this->trans('The "indexed" inventaries have been analyzed by PrestaShop and will appear in the results of a front office search.', [], 'Admin.Shopparameters.Feature') . '<br />
-						' . $this->trans('Indexed inventaries', [], 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
+						'.$this->trans('The "indexed" inventaries have been analyzed by PrestaShop and will appear in the results of a front office search.', [], 'Admin.Shopparameters.Feature').'<br />
+						'.$this->trans('Indexed inventaries', [], 'Admin.Shopparameters.Feature').' <strong>'.(int) $indexed.' / '.(int) $total.'</strong>.
 					</p>
 					<p>
-						' . $this->trans('Building the product index may take a few minutes.', [], 'Admin.Shopparameters.Feature') . '
-						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".', ['%add_missing_products_label%' => $this->trans('Add missing inventaries to the index', [], 'Admin.Shopparameters.Feature')], 'Admin.Shopparameters.Feature') . '
+						'.$this->trans('Building the product index may take a few minutes.', [], 'Admin.Shopparameters.Feature').'
+						'.$this->trans('If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".', ['%add_missing_products_label%' => $this->trans('Add missing inventaries to the index', [], 'Admin.Shopparameters.Feature')], 'Admin.Shopparameters.Feature').'
 					</p>
-					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+					<a href="'.Context::getContext()->link->getAdminLink('AdminSearch', false).'&action=searchCron&ajax=1&token='.$this->getTokenForCron().'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int) Context::getContext()->shop->id : '').'" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Add missing inventaries to the index', [], 'Admin.Shopparameters.Feature') . '
+						'.$this->trans('Add missing inventaries to the index', [], 'Admin.Shopparameters.Feature').'
 					</a><br />
-					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&full=1&amp;token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+					<a href="'.Context::getContext()->link->getAdminLink('AdminSearch', false).'&action=searchCron&ajax=1&full=1&amp;token='.$this->getTokenForCron().'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int) Context::getContext()->shop->id : '').'" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Re-build the entire index', [], 'Admin.Shopparameters.Feature') . '
+						'.$this->trans('Re-build the entire index', [], 'Admin.Shopparameters.Feature').'
 					</a><br /><br />
 					<p>
-						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', [], 'Admin.Shopparameters.Feature') . '<br />
-						<a href="' . Tools::safeOutput($cron_url) . '">
+						'.$this->trans('You can set a cron job that will rebuild your index using the following URL:', [], 'Admin.Shopparameters.Feature').'<br />
+						<a href="'.Tools::safeOutput($cron_url).'">
 							<i class="icon-external-link-sign"></i>
-							' . Tools::safeOutput($cron_url) . '
+							'.Tools::safeOutput($cron_url).'
 						</a>
 					</p><br />',
                 'fields' => [
@@ -123,13 +124,13 @@ class AdminSearchConfControllerCore extends AdminController
             ],
             'search' => [
                 'title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-search',
-                'info' => '<div class="alert alert-info">' .
+                'icon' => 'fa-duotone icon-search',
+                'info' => '<div class="alert alert-info">'.
                     $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
                         [],
-                        'Admin.Shopparameters.Notification') .
-                    '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
-                    . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
+                        'Admin.Shopparameters.Notification').
+                    '</div>'.'<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
+                    .'<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
                     'PS_SEARCH_START' => [
                         'title' => $this->trans('Search within word', [], 'Admin.Shopparameters.Feature'),
@@ -137,10 +138,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ).'<br/>'.
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 [],
@@ -165,10 +166,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ).'<br/>'.
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 [],
@@ -193,10 +194,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ).'<br/>'.
                             $this->trans(
                                 'Disabling this option will require exact spelling for the search to match results.',
                                 [],
@@ -276,27 +277,27 @@ class AdminSearchConfControllerCore extends AdminController
             ],
             'relevance' => [
                 'title' => $this->trans('Weight', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-cogs',
+                'icon' => 'fa-duotone icon-cogs',
                 'info' => $this->trans(
-                        'The "weight" represents its importance and relevance for the ranking of the inventaries when completing a new search.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br />
-						' . $this->trans(
-                        'A word with a weight of eight will have four times more value than a word with a weight of two.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
-						' . $this->trans(
-                        'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br /><br />
-						' . $this->trans(
-                        'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'The "weight" represents its importance and relevance for the ranking of the inventaries when completing a new search.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ).'<br />
+						'.$this->trans(
+                    'A word with a weight of eight will have four times more value than a word with a weight of two.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ).'<br /><br />
+						'.$this->trans(
+                    'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ).'<br /><br />
+						'.$this->trans(
+                    'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ),
                 'fields' => [
                     'PS_SEARCH_WEIGHT_PNAME' => [
                         'title' => $this->trans('Product name weight', [], 'Admin.Shopparameters.Feature'),
@@ -366,16 +367,16 @@ class AdminSearchConfControllerCore extends AdminController
     {
         if (empty($this->display) || $this->display == 'list') {
             $this->page_header_toolbar_btn['new_alias'] = [
-                'href' => self::$currentIndex . '&addalias&token=' . $this->token,
+                'href' => self::$currentIndex.'&addalias&token='.$this->token,
                 'desc' => $this->trans('Add new alias', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
         $this->identifier_name = 'alias';
         parent::initPageHeaderToolbar();
         if ($this->can_import) {
             $this->toolbar_btn['import'] = [
-                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=alias',
+                'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
                 'desc' => $this->trans('Import', [], 'Admin.Actions'),
             ];
         }
@@ -416,7 +417,7 @@ class AdminSearchConfControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Aliases', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-search',
+                'icon' => 'fa-duotone icon-search',
             ],
             'input' => [
                 [
@@ -455,16 +456,16 @@ class AdminSearchConfControllerCore extends AdminController
         if (empty($search) || empty($string)) {
             $this->errors[] = $this->trans('Aliases and results are both required.', [], 'Admin.Shopparameters.Notification');
         }
-        if (!Validate::isValidSearch($search)) {
-            $this->errors[] = Tools::safeOutput($search) . ' ' . $this->trans('Is not a valid result', [], 'Admin.Shopparameters.Notification');
+        if (! Validate::isValidSearch($search)) {
+            $this->errors[] = Tools::safeOutput($search).' '.$this->trans('Is not a valid result', [], 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
-            if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = Tools::safeOutput($alias) . ' ' . $this->trans('Is not a valid alias', [], 'Admin.Shopparameters.Notification');
+            if (! Validate::isValidSearch($alias)) {
+                $this->errors[] = Tools::safeOutput($alias).' '.$this->trans('Is not a valid alias', [], 'Admin.Shopparameters.Notification');
             }
         }
 
-        if (!count($this->errors)) {
+        if (! count($this->errors)) {
             foreach ($aliases as $alias) {
                 $obj = new Alias(null, trim($alias), trim($search));
                 $obj->save();

@@ -6,11 +6,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierAiCost;
-use Modules\Supplier\Entities\SupplierAutomationExecution;
-use Modules\Supplier\Entities\SupplierAutomationSetting;
-use Modules\Supplier\Entities\SupplierContentLog;
-use Modules\Supplier\Entities\SupplierExtractionResult;
+use Modules\Supplier\Models\SupplierAiCost;
+use Modules\Supplier\Models\SupplierAutomationExecution;
+use Modules\Supplier\Models\SupplierAutomationSetting;
+use Modules\Supplier\Models\SupplierContentLog;
+use Modules\Supplier\Models\SupplierExtractionResult;
 
 /**
  * Cleanup Expired Data Job

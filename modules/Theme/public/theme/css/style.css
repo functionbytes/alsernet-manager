@@ -17480,7 +17480,7 @@
     --bs-purple: #6f42c1;
     --bs-cyan: #000;
     --bs-primary-rgb: 99,91,255;
-    --bs-secondary-rgb: 22,205,199;
+    --bs-secondary-rgb: 144,187,19;
     --bs-success-rgb: #90bb13;
     --bs-info-rgb: 70,202,235;
     --bs-warning-rgb: 248,194,10;
@@ -17495,7 +17495,7 @@
     --bs-purple-rgb: 111,66,193;
     --bs-cyan-rgb: 83,155,255;
     --bs-primary-text-emphasis: shade-color(#90bb13, 60%);
-    --bs-secondary-text-emphasis: shade-color(#16CDC7, 60%);
+    --bs-secondary-text-emphasis: shade-color(#000, 60%);
     --bs-success-text-emphasis: shade-color(#36c76c, 60%);
     --bs-info-text-emphasis: shade-color(#90bb13, 60%);
     --bs-warning-text-emphasis: shade-color(#F8C20A, 60%);
@@ -21068,19 +21068,19 @@ textarea.form-control-lg {
 
 .btn-secondary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #16CDC7;
-    --bs-btn-border-color: #16CDC7;
+    --bs-btn-bg: #000;
+    --bs-btn-border-color: #000;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #13aea9;
-    --bs-btn-hover-border-color: #12a49f;
+    --bs-btn-hover-bg: #1a1a1a;
+    --bs-btn-hover-border-color: #000;
     --bs-btn-focus-shadow-rgb: 57,213,207;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #12a49f;
-    --bs-btn-active-border-color: #119a95;
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #1a1a1a;
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #16CDC7;
-    --bs-btn-disabled-border-color: #16CDC7
+    --bs-btn-disabled-bg: #000;
+    --bs-btn-disabled-border-color: #000
 }
 
 .btn-success {
@@ -21327,7 +21327,7 @@ textarea.form-control-lg {
     --bs-btn-hover-color: #fff;
     --bs-btn-hover-bg: #000000;
     --bs-btn-hover-border-color: #000000;
-    --bs-btn-focus-shadow-rgb: 22,205,199;
+    --bs-btn-focus-shadow-rgb: 144,187,19;
     --bs-btn-active-color: #fff;
     --bs-btn-active-bg: #000000;
     --bs-btn-active-border-color: #000000;
@@ -23320,7 +23320,7 @@ textarea.form-control-lg {
 
 .alert-light {
     --bs-alert-color: var(--bs-light-text-emphasis);
-    --bs-alert-bg: #90bb13;
+     --bs-alert-bg: #f5f6f8;
     --bs-alert-border-color: var(--bs-light-border-subtle);
     --bs-alert-link-color: var(--bs-light-text-emphasis)
 }

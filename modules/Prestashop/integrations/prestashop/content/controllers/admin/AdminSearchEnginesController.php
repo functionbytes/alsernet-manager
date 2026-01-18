@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -41,7 +42,7 @@ class AdminSearchEnginesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        if (!Tools::getValue('realedit')) {
+        if (! Tools::getValue('realedit')) {
             $this->deleted = false;
         }
 
@@ -49,7 +50,7 @@ class AdminSearchEnginesControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -89,9 +90,9 @@ class AdminSearchEnginesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_search_engine'] = [
-                'href' => self::$currentIndex . '&addsearch_engine&token=' . $this->token,
+                'href' => self::$currentIndex.'&addsearch_engine&token='.$this->token,
                 'desc' => $this->trans('Add new search engine', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 

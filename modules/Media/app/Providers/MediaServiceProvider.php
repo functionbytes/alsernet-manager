@@ -70,7 +70,7 @@ class MediaServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Media
         NavService::registerMiniItem('media', [
-            'icon' => 'fa-images',
+            'icon' => 'fa-duotone fa-images',
             'tooltip' => 'Gestor de Medios',
             'sidebar_id' => 'media',
             'order' => 30,

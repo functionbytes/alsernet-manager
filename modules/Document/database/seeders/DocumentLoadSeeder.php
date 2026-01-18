@@ -7,7 +7,6 @@ use Modules\Document\Entities\DocumentLoad;
 
 class DocumentLoadSeeder extends Seeder
 {
-
     public function run(): void
     {
         $loads = [
@@ -15,7 +14,7 @@ class DocumentLoadSeeder extends Seeder
                 'key' => 'manual',
                 'label' => 'Manual',
                 'description' => 'Carga manual de documentos por el administrador',
-                'icon' => 'pencil',
+                'icon' => 'fa-duotone pencil',
                 'color' => '#6c757d',
                 'is_active' => true,
                 'order' => 1,
@@ -24,7 +23,7 @@ class DocumentLoadSeeder extends Seeder
                 'key' => 'system',
                 'label' => 'Sistema',
                 'description' => 'Carga automática disparada por eventos o condiciones',
-                'icon' => 'zap',
+                'icon' => 'fa-duotone zap',
                 'color' => '#ffc107',
                 'is_active' => true,
                 'order' => 2,

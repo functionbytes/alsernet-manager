@@ -69,7 +69,7 @@ foreach ($groups as $group) {
     'name' => 'Documentación Regulatoria',
     'key' => 'regulatory_documentation',
     'description' => 'Licencias, permisos, certificaciones y autorizaciones',
-    'icon' => 'fa-certificate',
+    'icon' => 'fa-duotone fa-certificate',
     'color' => '#0d6efd',
     'is_required' => true,  // ← Not a DocumentValidatorGroup field
     'position' => 1,        // ← Not a DocumentValidatorGroup field

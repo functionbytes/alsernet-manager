@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Models\Supplier;
 use Modules\Supplier\Services\SourceConfigurationService;
 
 class SupplierSourcesController extends Controller
@@ -138,7 +138,7 @@ class SupplierSourcesController extends Controller
      */
     private function getActionsHtml($source): string
     {
-        $editUrl = route('manager.backups.suppliers.sources.edit', [$source->supplier->uid, $source->uid]);
+        $editUrl = route('settings.suppliers.sources.edit', [$source->supplier->uid, $source->uid]);
 
         return '
             <div class="dropdown dropstart">

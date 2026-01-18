@@ -4,14 +4,13 @@ namespace Modules\Supplier\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Modules\Erp\Models\Oracle\Proveedor\Proveedor;
 use Modules\Erp\Models\Oracle\Articulo\Articulo;
-use Modules\Erp\Models\Oracle\Proveedor\Artiprov;
 use Modules\Erp\Models\Oracle\Proveedor\ArtiprovTarifapro;
-use Modules\Supplier\Entities\SupplierProductPrice;
-use Modules\Supplier\Entities\SupplierErpProvider;
-use Modules\Supplier\Entities\SupplierProduct;
+use Modules\Erp\Models\Oracle\Proveedor\Proveedor;
+use Modules\Supplier\Models\SupplierErpProvider;
+use Modules\Supplier\Models\SupplierProduct;
+use Modules\Supplier\Models\SupplierProductPrice;
+use Modules\Supplier\Models\SupplierSyncConflict;
 
 /**
  * Servicio centralizado para sincronización inversa (Supplier → ERP)
@@ -22,14 +21,10 @@ use Modules\Supplier\Entities\SupplierProduct;
  * - Sincronización de productos (SupplierProduct ↔ Articulo)
  * - Detección y resolución de conflictos (ERP siempre gana)
  * - Prevención de loops infinitos mediante cache flags
- *
- * @package Modules\Supplier\Services
  */
 class ErpSyncService
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Sincronizar precio de Supplier → Oracle
@@ -41,9 +36,9 @@ class ErpSyncService
      * 4. Si no hay conflicto: actualizar Oracle con cambios de Supplier
      * 5. Actualizar last_synced_at en Supplier
      *
-     * @param SupplierProductPrice $price Precio a sincronizar
-     * @param array $changedFields Campos que cambiaron (ej: ['cost', 'discount1'])
-     * @return void
+     * @param  SupplierProductPrice  $price  Precio a sincronizar
+     * @param  array  $changedFields  Campos que cambiaron (ej: ['cost', 'discount1'])
+     *
      * @throws Exception Si el precio no existe en Oracle
      */
     public function syncPriceToOracle(SupplierProductPrice $price, array $changedFields): void
@@ -51,7 +46,7 @@ class ErpSyncService
         $oraclePrice = ArtiprovTarifapro::on('oracle')
             ->find($price->erp_price_id);
 
-        if (!$oraclePrice) {
+        if (! $oraclePrice) {
             throw new Exception("Oracle price not found: {$price->erp_price_id}");
         }
 
@@ -65,8 +60,12 @@ class ErpSyncService
                 'changed_fields' => $changedFields,
             ]);
 
+            // Register conflict for auditing
+            $this->registerConflict('price', $price, $oraclePrice, $changedFields);
+
             // Re-sincronizar DESDE ERP (ERP gana)
             $this->syncPriceFromOracle($oraclePrice, $price);
+
             return;
         }
 
@@ -109,14 +108,12 @@ class ErpSyncService
     /**
      * Detectar conflicto: ¿ERP fue modificado después del último sync de Supplier?
      *
-     * @param ArtiprovTarifapro $oraclePrice
-     * @param SupplierProductPrice $supplierPrice
      * @return bool True si hay conflicto
      */
     protected function hasConflict(ArtiprovTarifapro $oraclePrice, SupplierProductPrice $supplierPrice): bool
     {
         // Si ERP no tiene last_synced_at, es primera vez → sin conflicto
-        if (!$supplierPrice->last_synced_at) {
+        if (! $supplierPrice->last_synced_at) {
             return false;
         }
 
@@ -128,10 +125,6 @@ class ErpSyncService
      * Re-sincronizar DESDE ERP cuando hay conflicto (ERP gana)
      *
      * Copia valores de Oracle a Supplier
-     *
-     * @param ArtiprovTarifapro $oraclePrice
-     * @param SupplierProductPrice $supplierPrice
-     * @return void
      */
     protected function syncPriceFromOracle(ArtiprovTarifapro $oraclePrice, SupplierProductPrice $supplierPrice): void
     {
@@ -154,9 +147,6 @@ class ErpSyncService
     /**
      * Sincronizar proveedor de Supplier → Oracle
      *
-     * @param SupplierErpProvider $provider
-     * @param array $changedFields
-     * @return void
      * @throws Exception
      */
     public function syncProviderToOracle(SupplierErpProvider $provider, array $changedFields): void
@@ -164,7 +154,7 @@ class ErpSyncService
         $oracleProvider = Proveedor::on('oracle')
             ->find($provider->erp_provider_id);
 
-        if (!$oracleProvider) {
+        if (! $oracleProvider) {
             throw new Exception("Oracle provider not found: {$provider->erp_provider_id}");
         }
 
@@ -176,7 +166,11 @@ class ErpSyncService
                 'changed_fields' => $changedFields,
             ]);
 
+            // Register conflict for auditing
+            $this->registerConflict('provider', $provider, $oracleProvider, $changedFields);
+
             $this->syncProviderFromOracle($oracleProvider, $provider);
+
             return;
         }
 
@@ -223,14 +217,10 @@ class ErpSyncService
 
     /**
      * Detectar conflicto en proveedor
-     *
-     * @param Proveedor $oracleProvider
-     * @param SupplierErpProvider $supplierProvider
-     * @return bool
      */
     protected function hasProviderConflict(Proveedor $oracleProvider, SupplierErpProvider $supplierProvider): bool
     {
-        if (!$supplierProvider->last_synced_at) {
+        if (! $supplierProvider->last_synced_at) {
             return false;
         }
 
@@ -239,10 +229,6 @@ class ErpSyncService
 
     /**
      * Re-sincronizar proveedor desde Oracle
-     *
-     * @param Proveedor $oracleProvider
-     * @param SupplierErpProvider $supplierProvider
-     * @return void
      */
     protected function syncProviderFromOracle(Proveedor $oracleProvider, SupplierErpProvider $supplierProvider): void
     {
@@ -267,9 +253,6 @@ class ErpSyncService
     /**
      * Sincronizar producto de Supplier → Oracle
      *
-     * @param SupplierProduct $product
-     * @param array $changedFields
-     * @return void
      * @throws Exception
      */
     public function syncProductToOracle(SupplierProduct $product, array $changedFields): void
@@ -277,7 +260,7 @@ class ErpSyncService
         $oracleProduct = Articulo::on('oracle')
             ->find($product->erp_product_id);
 
-        if (!$oracleProduct) {
+        if (! $oracleProduct) {
             throw new Exception("Oracle product not found: {$product->erp_product_id}");
         }
 
@@ -289,7 +272,11 @@ class ErpSyncService
                 'changed_fields' => $changedFields,
             ]);
 
+            // Register conflict for auditing
+            $this->registerConflict('product', $product, $oracleProduct, $changedFields);
+
             $this->syncProductFromOracle($oracleProduct, $product);
+
             return;
         }
 
@@ -324,14 +311,10 @@ class ErpSyncService
 
     /**
      * Detectar conflicto en producto
-     *
-     * @param Articulo $oracleProduct
-     * @param SupplierProduct $supplierProduct
-     * @return bool
      */
     protected function hasProductConflict(Articulo $oracleProduct, SupplierProduct $supplierProduct): bool
     {
-        if (!$supplierProduct->last_synced_at) {
+        if (! $supplierProduct->last_synced_at) {
             return false;
         }
 
@@ -340,10 +323,6 @@ class ErpSyncService
 
     /**
      * Re-sincronizar producto desde Oracle
-     *
-     * @param Articulo $oracleProduct
-     * @param SupplierProduct $supplierProduct
-     * @return void
      */
     protected function syncProductFromOracle(Articulo $oracleProduct, SupplierProduct $supplierProduct): void
     {
@@ -360,5 +339,137 @@ class ErpSyncService
             'supplier_product_id' => $supplierProduct->id,
             'erp_product_id' => $oracleProduct->idarticulo,
         ]);
+    }
+
+    /**
+     * Register conflict for auditing purposes
+     *
+     * @param  string  $entityType  'price', 'product', or 'provider'
+     * @param  mixed  $localEntity  Supplier model instance
+     * @param  mixed  $erpEntity  Oracle model instance
+     * @param  array  $changedFields  Fields that were modified
+     */
+    protected function registerConflict(string $entityType, $localEntity, $erpEntity, array $changedFields): void
+    {
+        try {
+            // Extract local data based on entity type
+            $localData = $this->extractEntityData($entityType, $localEntity);
+
+            // Extract ERP data based on entity type
+            $erpData = $this->extractErpEntityData($entityType, $erpEntity);
+
+            // Create conflict record
+            SupplierSyncConflict::create([
+                'entity_type' => $entityType,
+                'entity_id' => $localEntity->id,
+                'erp_id' => $this->getErpId($entityType, $erpEntity),
+                'resolution_strategy' => SupplierSyncConflict::STRATEGY_ERP_WINS,
+                'local_data' => $localData,
+                'erp_data' => $erpData,
+                'resolved_data' => $erpData, // ERP wins, so resolved data = ERP data
+                'changed_fields' => $changedFields,
+                'conflict_detected_at' => now(),
+                'resolved_at' => now(), // Auto-resolved by strategy
+                'resolved_by_user_id' => null, // System resolved
+                'resolved_by_ip' => request()?->ip(),
+            ]);
+
+            Log::info('Conflict registered for auditing', [
+                'entity_type' => $entityType,
+                'entity_id' => $localEntity->id,
+                'changed_fields' => $changedFields,
+            ]);
+        } catch (\Exception $e) {
+            // Don't fail sync if conflict registration fails
+            Log::error('Failed to register conflict', [
+                'entity_type' => $entityType,
+                'entity_id' => $localEntity->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Extract relevant data from local entity
+     */
+    protected function extractEntityData(string $entityType, $entity): array
+    {
+        return match ($entityType) {
+            'price' => [
+                'cost' => $entity->cost,
+                'discount1' => $entity->discount1,
+                'discount2' => $entity->discount2,
+                'effective_date' => $entity->effective_date?->toDateTimeString(),
+                'is_active' => $entity->is_active,
+                'updated_at' => $entity->updated_at?->toDateTimeString(),
+                'last_synced_at' => $entity->last_synced_at?->toDateTimeString(),
+            ],
+            'product' => [
+                'name' => $entity->name,
+                'barcode' => $entity->barcode,
+                'recommended_price' => $entity->recommended_price,
+                'is_active' => $entity->is_active,
+                'updated_at' => $entity->updated_at?->toDateTimeString(),
+                'last_synced_at' => $entity->last_synced_at?->toDateTimeString(),
+            ],
+            'provider' => [
+                'name' => $entity->name,
+                'email' => $entity->email,
+                'phone' => $entity->phone,
+                'website' => $entity->website,
+                'shipping_cost' => $entity->shipping_cost,
+                'discount_percent' => $entity->discount_percent,
+                'updated_at' => $entity->updated_at?->toDateTimeString(),
+                'last_synced_at' => $entity->last_synced_at?->toDateTimeString(),
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * Extract relevant data from ERP entity
+     */
+    protected function extractErpEntityData(string $entityType, $entity): array
+    {
+        return match ($entityType) {
+            'price' => [
+                'pcosto' => $entity->pcosto,
+                'dto1' => $entity->dto1,
+                'dto2' => $entity->dto2,
+                'fecha' => $entity->fecha,
+                'estado' => $entity->estado,
+                'fmodificacion' => $entity->fmodificacion?->toDateTimeString(),
+            ],
+            'product' => [
+                'descripcion' => $entity->descripcion,
+                'codbar' => $entity->codbar,
+                'preciorecomendadoprov' => $entity->preciorecomendadoprov,
+                'estado' => $entity->estado,
+                'fmodificacion' => $entity->fmodificacion?->toDateTimeString(),
+            ],
+            'provider' => [
+                'nombre' => $entity->nombre,
+                'email' => $entity->email,
+                'telefono1' => $entity->telefono1,
+                'web' => $entity->web,
+                'portes' => $entity->portes,
+                'dto' => $entity->dto,
+                'fmodificacion' => $entity->fmodificacion?->toDateTimeString(),
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * Get ERP ID based on entity type
+     */
+    protected function getErpId(string $entityType, $entity): ?int
+    {
+        return match ($entityType) {
+            'price' => $entity->idartiprov_tarifapro ?? null,
+            'product' => $entity->idarticulo ?? null,
+            'provider' => $entity->idproveedor ?? null,
+            default => null,
+        };
     }
 }

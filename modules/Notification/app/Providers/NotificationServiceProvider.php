@@ -34,10 +34,10 @@ class NotificationServiceProvider extends ServiceProvider
             __DIR__.'/../../config/notification.php' => config_path('notification.php'),
         ], 'notification-config');
 
-        // Publish assets (CSS and JavaScript)
+        // Publish assets (CSS and JavaScript) - use compiled versions from public/
         $this->publishes([
-            __DIR__.'/../../resources/css' => public_path('modules/Notification/css'),
-            __DIR__.'/../../resources/js' => public_path('modules/Notification/js'),
+            __DIR__.'/../../public/css' => public_path('modules/Notification/css'),
+            __DIR__.'/../../public/js' => public_path('modules/Notification/js'),
         ], 'notification-assets');
 
         // Load migrations
@@ -140,7 +140,7 @@ class NotificationServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Notifications
         NavService::registerMiniItem('notifications', [
-            'icon' => 'fa-bell',
+            'icon' => 'fa-duotone fa-bell',
             'tooltip' => 'Notificaciones',
             'sidebar_id' => 'notifications',
             'order' => 70,

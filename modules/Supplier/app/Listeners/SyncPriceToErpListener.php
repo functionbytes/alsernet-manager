@@ -6,10 +6,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Events\SupplierProductPriceChanged;
-use Modules\Supplier\Services\ErpSyncService;
-use Modules\Supplier\Entities\SupplierSyncFailure;
 use Illuminate\Support\Str;
+use Modules\Supplier\Events\SupplierProductPriceChanged;
+use Modules\Supplier\Models\SupplierSyncFailure;
+use Modules\Supplier\Services\ErpSyncService;
 
 /**
  * Listener que sincroniza precios de Supplier → Oracle en tiempo real
@@ -54,24 +54,22 @@ class SyncPriceToErpListener implements ShouldQueue
 
     public function __construct(
         protected ErpSyncService $erpSyncService
-    ) {
-    }
+    ) {}
 
     /**
      * Procesar el evento de cambio de precio
      *
-     * @param SupplierProductPriceChanged $event
-     * @return void
      * @throws \Exception
      */
     public function handle(SupplierProductPriceChanged $event): void
     {
         // Validar que se puede sincronizar
-        if (!$event->shouldSyncToErp()) {
+        if (! $event->shouldSyncToErp()) {
             Log::info('Price sync skipped - no erp_price_id', [
                 'supplier_price_id' => $event->price->id,
                 'changed_fields' => $event->changedFields,
             ]);
+
             return;
         }
 
@@ -82,6 +80,7 @@ class SyncPriceToErpListener implements ShouldQueue
                 'supplier_price_id' => $event->price->id,
                 'cache_key' => $cacheKey,
             ]);
+
             return;
         }
 
@@ -120,10 +119,6 @@ class SyncPriceToErpListener implements ShouldQueue
      * Se llama cuando el job falla permanentemente (después de $tries intentos)
      *
      * Guarda el registro en Dead Letter Queue para diagnóstico y retry manual
-     *
-     * @param SupplierProductPriceChanged $event
-     * @param \Throwable $exception
-     * @return void
      */
     public function failed(SupplierProductPriceChanged $event, \Throwable $exception): void
     {
@@ -134,7 +129,7 @@ class SyncPriceToErpListener implements ShouldQueue
             'supplier_id' => $event->price->id,
             'erp_id' => $event->price->erp_price_id,
             'changed_data' => array_combine($event->changedFields, array_fill(0, count($event->changedFields), null)),
-            'error_message' => $exception->getMessage() . ' (Stack: ' . get_class($exception) . ')',
+            'error_message' => $exception->getMessage().' (Stack: '.get_class($exception).')',
             'retry_count' => $this->attempts(),
         ]);
 
@@ -153,9 +148,6 @@ class SyncPriceToErpListener implements ShouldQueue
      * Generar clave de cache para prevenir duplicados
      *
      * Incluye: precio + campos modificados = si exactamente lo mismo, es duplicado
-     *
-     * @param SupplierProductPriceChanged $event
-     * @return string
      */
     protected function getDuplicateKey(SupplierProductPriceChanged $event): string
     {
@@ -168,6 +160,6 @@ class SyncPriceToErpListener implements ShouldQueue
             ),
         ]);
 
-        return 'erp_sync_price_' . md5($hashData);
+        return 'erp_sync_price_'.md5($hashData);
     }
 }

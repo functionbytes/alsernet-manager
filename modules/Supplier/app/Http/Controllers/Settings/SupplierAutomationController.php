@@ -7,9 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Modules\Supplier\Entities\SupplierAutomationExecution;
-use Modules\Supplier\Entities\SupplierAutomationTrigger;
-use Modules\Supplier\Entities\SupplierAutomationWorkflow;
+use Modules\Supplier\Models\Automation\SupplierAutomationExecution;
+use Modules\Supplier\Models\Automation\SupplierAutomationTrigger;
+use Modules\Supplier\Models\Automation\SupplierAutomationWorkflow;
 use Modules\Supplier\Services\AutomationOrchestrationService;
 
 class SupplierAutomationController extends Controller
@@ -395,7 +395,7 @@ class SupplierAutomationController extends Controller
             $workflow = SupplierAutomationWorkflow::create($validated);
 
             return redirect()
-                ->route('manager.backups.suppliers.automation.index')
+                ->route('settings.suppliers.automation.index')
                 ->with('success', 'Workflow creado exitosamente');
 
         } catch (\Exception $e) {
@@ -446,7 +446,7 @@ class SupplierAutomationController extends Controller
             $workflow->update($validated);
 
             return redirect()
-                ->route('manager.backups.suppliers.automation.index')
+                ->route('settings.suppliers.automation.index')
                 ->with('success', 'Workflow actualizado exitosamente');
 
         } catch (\Exception $e) {
@@ -468,14 +468,14 @@ class SupplierAutomationController extends Controller
             $workflow->delete();
 
             return redirect()
-                ->route('manager.backups.suppliers.automation.index')
+                ->route('settings.suppliers.automation.index')
                 ->with('success', 'Workflow eliminado exitosamente');
 
         } catch (\Exception $e) {
             Log::error('Error deleting workflow: '.$e->getMessage());
 
             return redirect()
-                ->route('manager.backups.suppliers.automation.index')
+                ->route('settings.suppliers.automation.index')
                 ->with('error', 'Error al eliminar el workflow: '.$e->getMessage());
         }
     }

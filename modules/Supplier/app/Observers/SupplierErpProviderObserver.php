@@ -4,8 +4,8 @@ namespace Modules\Supplier\Observers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierErpProvider;
 use Modules\Supplier\Events\SupplierErpProviderUpdated;
+use Modules\Supplier\Models\SupplierErpProvider;
 
 /**
  * Observer que dispara eventos cuando un proveedor ERP es modificado
@@ -29,9 +29,6 @@ class SupplierErpProviderObserver
 
     /**
      * Se llama cuando un proveedor es actualizado
-     *
-     * @param SupplierErpProvider $provider
-     * @return void
      */
     public function updated(SupplierErpProvider $provider): void
     {
@@ -41,6 +38,7 @@ class SupplierErpProviderObserver
             Log::debug('Provider update skipped - sync in progress from ERP', [
                 'provider_id' => $provider->id,
             ]);
+
             return;
         }
 
@@ -56,6 +54,7 @@ class SupplierErpProviderObserver
                 'provider_id' => $provider->id,
                 'changed_fields' => $dirtyFields,
             ]);
+
             return;
         }
 
@@ -76,9 +75,6 @@ class SupplierErpProviderObserver
 
     /**
      * Se llama cuando un proveedor es creado
-     *
-     * @param SupplierErpProvider $provider
-     * @return void
      */
     public function created(SupplierErpProvider $provider): void
     {
@@ -87,9 +83,6 @@ class SupplierErpProviderObserver
 
     /**
      * Se llama cuando un proveedor es eliminado (soft delete)
-     *
-     * @param SupplierErpProvider $provider
-     * @return void
      */
     public function deleted(SupplierErpProvider $provider): void
     {
@@ -101,9 +94,6 @@ class SupplierErpProviderObserver
 
     /**
      * Se llama cuando un proveedor es restaurado de soft delete
-     *
-     * @param SupplierErpProvider $provider
-     * @return void
      */
     public function restored(SupplierErpProvider $provider): void
     {

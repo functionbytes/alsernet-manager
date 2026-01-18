@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -124,8 +125,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $attachmentId
-     *
+     * @param  int  $attachmentId
      * @return Response
      */
     public function editAction($attachmentId, Request $request)
@@ -163,7 +163,7 @@ class AttachmentController extends FrameworkBundleAdminController
             }
         }
 
-        if (!isset($attachmentInformation) || !isset($attachmentForm)) {
+        if (! isset($attachmentInformation) || ! isset($attachmentForm)) {
             return $this->redirectToRoute('admin_attachments_index');
         }
 
@@ -209,6 +209,7 @@ class AttachmentController extends FrameworkBundleAdminController
      * Deletes attachment
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
+     *
      * @DemoRestricted(redirectRoute="admin_attachments_index")
      */
     public function deleteAction(int $attachmentId): RedirectResponse
@@ -252,10 +253,7 @@ class AttachmentController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attachments_index');
     }
 
-    /**
-     * @param Exception $e
-     */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         return [
             DeleteAttachmentException::class => $this->trans(
@@ -270,7 +268,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 AttachmentConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
-                    ),
+                ),
                 AttachmentConstraintException::INVALID_FILE_SIZE => $this->trans(
                     'Upload error. Please check your server configurations for the maximum upload size allowed.',
                     'Admin.Catalog.Notification'
@@ -286,7 +284,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 AttachmentConstraintException::INVALID_FIELDS => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
-                    ),
+                ),
                 AttachmentConstraintException::INVALID_DESCRIPTION => $this->trans(
                     'Invalid description for %s language',
                     'Admin.Catalog.Notification'
@@ -306,7 +304,7 @@ class AttachmentController extends FrameworkBundleAdminController
             CannotAddAttachmentException::class => $this->trans(
                 'This attachment was unable to be loaded into the database.',
                 'Admin.Catalog.Notification'
-                ),
+            ),
             CannotUpdateAttachmentException::class => $this->trans(
                 'This attachment was unable to be loaded into the database.',
                 'Admin.Catalog.Notification'
@@ -323,16 +321,11 @@ class AttachmentController extends FrameworkBundleAdminController
         ];
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkAttachmentsFromRequest(Request $request): array
     {
         $attachmentIds = $request->request->get('attachment_files_bulk');
 
-        if (!is_array($attachmentIds)) {
+        if (! is_array($attachmentIds)) {
             return [];
         }
 
@@ -343,9 +336,6 @@ class AttachmentController extends FrameworkBundleAdminController
         return $attachmentIds;
     }
 
-    /**
-     * @return array
-     */
     private function getAttachmentToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -353,7 +343,7 @@ class AttachmentController extends FrameworkBundleAdminController
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_attachments_create'),
             'desc' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
-            'icon' => 'add_circle_outline',
+            'icon' => 'fa-duotone add_circle_outline',
         ];
 
         return $toolbarButtons;

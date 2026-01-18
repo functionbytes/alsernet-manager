@@ -6,16 +6,16 @@ use App\Exceptions\Supplier\ExtractionException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierAutomationExecution;
-use Modules\Supplier\Entities\SupplierAutomationWorkflow;
-use Modules\Supplier\Entities\SupplierExtractionBatch;
-use Modules\Supplier\Entities\SupplierExtractionMapping;
-use Modules\Supplier\Entities\SupplierExtractionResult;
-use Modules\Supplier\Entities\SupplierSource;
 use Modules\Supplier\Events\ExtractionBatchCompleted;
 use Modules\Supplier\Events\ExtractionBatchStarted;
 use Modules\Supplier\Events\ExtractionResultProcessed;
 use Modules\Supplier\Events\OrchestratorWorkflowTriggered;
+use Modules\Supplier\Models\SupplierAutomationExecution;
+use Modules\Supplier\Models\SupplierAutomationWorkflow;
+use Modules\Supplier\Models\SupplierExtractionBatch;
+use Modules\Supplier\Models\SupplierExtractionMapping;
+use Modules\Supplier\Models\SupplierExtractionResult;
+use Modules\Supplier\Models\SupplierSource;
 
 /**
  * Extraction Service for Supplier Automation System

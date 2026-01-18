@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -59,11 +60,6 @@ class ZoneController extends FrameworkBundleAdminController
      * Show all zones.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param ZoneFilters $zoneFilters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, ZoneFilters $zoneFilters): Response
     {
@@ -82,10 +78,6 @@ class ZoneController extends FrameworkBundleAdminController
      * Provides filters functionality.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function searchAction(Request $request): RedirectResponse
     {
@@ -107,10 +99,6 @@ class ZoneController extends FrameworkBundleAdminController
      *     redirectRoute="admin_zones_index",
      *     message="You need permission to create new zone."
      * )
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -123,7 +111,7 @@ class ZoneController extends FrameworkBundleAdminController
         try {
             $handleResult = $zoneFormHandler->handle($zoneForm);
 
-            if (null !== $handleResult->getIdentifiableObjectId()) {
+            if ($handleResult->getIdentifiableObjectId() !== null) {
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_zones_index');
@@ -147,11 +135,6 @@ class ZoneController extends FrameworkBundleAdminController
      *     redirectRoute="admin_zones_index",
      *     message="You need permission to edit this."
      * )
-     *
-     * @param int $zoneId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editAction(int $zoneId, Request $request): Response
     {
@@ -180,7 +163,7 @@ class ZoneController extends FrameworkBundleAdminController
             }
         }
 
-        if (!isset($editableZone) || !isset($zoneForm)) {
+        if (! isset($editableZone) || ! isset($zoneForm)) {
             return $this->redirectToRoute('admin_zones_index');
         }
 
@@ -202,10 +185,6 @@ class ZoneController extends FrameworkBundleAdminController
      * )
      *
      * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
-     * @param int $zoneId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $zoneId): RedirectResponse
     {
@@ -233,10 +212,6 @@ class ZoneController extends FrameworkBundleAdminController
      * @DemoRestricted(
      *     redirectRoute="admin_zones_index"
      * )
-     *
-     * @param int $zoneId
-     *
-     * @return RedirectResponse
      */
     public function toggleStatusAction(int $zoneId): RedirectResponse
     {
@@ -257,11 +232,8 @@ class ZoneController extends FrameworkBundleAdminController
      * Deletes zones in bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
+     *
      * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
@@ -288,12 +260,8 @@ class ZoneController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_zones_index",
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
-     * @param string $status
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkToggleStatus(string $status, Request $request): RedirectResponse
     {
@@ -315,10 +283,6 @@ class ZoneController extends FrameworkBundleAdminController
 
     /**
      * Return zone error messages mapping.
-     *
-     * @param Exception $e
-     *
-     * @return array
      */
     private function getErrorMessages(Exception $e): array
     {
@@ -360,32 +324,25 @@ class ZoneController extends FrameworkBundleAdminController
 
     /**
      * Collects zone IDs from request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     private function getBulkZonesFromRequest(Request $request): array
     {
         $zoneIds = $request->request->get('zone_bulk');
 
-        if (!is_array($zoneIds)) {
+        if (! is_array($zoneIds)) {
             return [];
         }
 
         return array_map('intval', $zoneIds);
     }
 
-    /**
-     * @return array
-     */
     private function getZoneToolbarButtons(): array
     {
         return [
             'add' => [
                 'href' => $this->generateUrl('admin_zones_create'),
                 'desc' => $this->trans('Add new zone', 'Admin.International.Feature'),
-                'icon' => 'add_circle_outline',
+                'icon' => 'fa-duotone add_circle_outline',
             ],
         ];
     }

@@ -81,12 +81,19 @@ $(function(){
             element.addEventListener("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation(); // Prevenir que el evento suba al document listener
-                mainWrapper.classList.toggle("show-sidebar");
-                const dataTheme = document.body.getAttribute("data-sidebartype");
-                if (dataTheme === "full") {
+
+                // Obtener estado actual
+                const currentSidebarType = document.body.getAttribute("data-sidebartype");
+
+                // Cambiar entre full y mini-sidebar
+                if (currentSidebarType === "full") {
+                    // Cambiar a mini-sidebar
                     document.body.setAttribute("data-sidebartype", "mini-sidebar");
+                    mainWrapper.classList.add("show-sidebar");
                 } else {
+                    // Cambiar a full
                     document.body.setAttribute("data-sidebartype", "full");
+                    mainWrapper.classList.remove("show-sidebar");
                 }
             });
         });

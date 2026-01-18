@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -40,7 +41,7 @@ class AdminGendersControllerCore extends AdminController
 
         parent::__construct();
 
-        if (!Tools::getValue('realedit')) {
+        if (! Tools::getValue('realedit')) {
             $this->deleted = false;
         }
 
@@ -48,7 +49,7 @@ class AdminGendersControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -97,9 +98,9 @@ class AdminGendersControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_gender'] = [
-                'href' => self::$currentIndex . '&addgender&token=' . $this->token,
+                'href' => self::$currentIndex.'&addgender&token='.$this->token,
                 'desc' => $this->trans('Add new social title', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -111,7 +112,7 @@ class AdminGendersControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Social titles', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-male',
+                'icon' => 'fa-duotone icon-male',
             ],
             'input' => [
                 [
@@ -120,7 +121,7 @@ class AdminGendersControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Shopparameters.Help') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Shopparameters.Help').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
                     'required' => true,
                 ],
                 [
@@ -175,7 +176,7 @@ class AdminGendersControllerCore extends AdminController
         ];
 
         /** @var Gender $obj */
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
@@ -196,7 +197,7 @@ class AdminGendersControllerCore extends AdminController
     protected function postImage($id)
     {
         if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
-            if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
+            if (! Validate::isInt(Tools::getValue('img_width')) || ! Validate::isInt(Tools::getValue('img_height'))) {
                 $this->errors[] = $this->trans('Width and height must be numeric values.', [], 'Admin.Shopparameters.Notification');
             } else {
                 if ((int) Tools::getValue('img_width') > 0 && (int) Tools::getValue('img_height') > 0) {
@@ -207,11 +208,11 @@ class AdminGendersControllerCore extends AdminController
                     $height = null;
                 }
 
-                return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/', false, $width, $height);
+                return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/', false, $width, $height);
             }
         }
 
-        return !count($this->errors) ? true : false;
+        return ! count($this->errors) ? true : false;
     }
 
     protected function afterImageUpload()
@@ -219,8 +220,8 @@ class AdminGendersControllerCore extends AdminController
         parent::afterImageUpload();
 
         if (($id_gender = (int) Tools::getValue('id_gender')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_ . $id_gender . '.jpg')) {
-            $current_file = _PS_TMP_IMG_DIR_ . 'gender_mini_' . $id_gender . '_' . $this->context->shop->id . '.jpg';
+             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_.$id_gender.'.jpg')) {
+            $current_file = _PS_TMP_IMG_DIR_.'gender_mini_'.$id_gender.'_'.$this->context->shop->id.'.jpg';
 
             if (file_exists($current_file)) {
                 unlink($current_file);

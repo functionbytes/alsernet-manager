@@ -24,6 +24,7 @@ class DocumentRejected extends Notification implements ShouldBroadcast, ShouldQu
     public function via(object $notifiable): array
     {
         $this->recipientUserId = $notifiable->id;
+
         return ['database', 'broadcast'];
     }
 
@@ -40,7 +41,7 @@ class DocumentRejected extends Notification implements ShouldBroadcast, ShouldQu
             'rejected_by' => $this->rejectedBy,
             'title' => '❌ Documento Rechazado',
             'message' => "El documento #{$orderRef} ha sido rechazado. Motivo: {$this->reason}",
-            'icon' => 'fas fa-times-circle',
+            'icon' => 'fa-duotone fas fa-times-circle',
             'color' => 'danger',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -61,7 +62,7 @@ class DocumentRejected extends Notification implements ShouldBroadcast, ShouldQu
             'rejected_by' => $this->rejectedBy,
             'title' => '❌ Documento Rechazado',
             'message' => "El documento #{$orderRef} ha sido rechazado. Motivo: {$this->reason}",
-            'icon' => 'fas fa-times-circle',
+            'icon' => 'fa-duotone fas fa-times-circle',
             'color' => 'danger',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -76,7 +77,7 @@ class DocumentRejected extends Notification implements ShouldBroadcast, ShouldQu
 
     public function broadcastOn(): array
     {
-        if (!$this->recipientUserId) {
+        if (! $this->recipientUserId) {
             return [];
         }
 

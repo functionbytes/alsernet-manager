@@ -7,7 +7,6 @@ use Modules\Document\Entities\DocumentSync;
 
 class DocumentSyncSeeder extends Seeder
 {
-
     public function run(): void
     {
         $syncs = [
@@ -15,7 +14,7 @@ class DocumentSyncSeeder extends Seeder
                 'key' => 'none',
                 'label' => 'Sin Sincronización',
                 'description' => 'No se sincroniza con sistemas externos',
-                'icon' => 'slash',
+                'icon' => 'fa-duotone slash',
                 'color' => '#6c757d',
                 'is_active' => true,
                 'order' => 1,
@@ -24,7 +23,7 @@ class DocumentSyncSeeder extends Seeder
                 'key' => 'prestashop',
                 'label' => 'Prestashop',
                 'description' => 'Sincronización automática con prestaShop',
-                'icon' => 'globe',
+                'icon' => 'fa-duotone globe',
                 'color' => '#24b9a6',
                 'is_active' => true,
                 'order' => 2,
@@ -33,7 +32,7 @@ class DocumentSyncSeeder extends Seeder
                 'key' => 'erp',
                 'label' => 'Gestion',
                 'description' => 'Sincronización con sistema gestion',
-                'icon' => 'database',
+                'icon' => 'fa-duotone database',
                 'color' => '#0d6efd',
                 'is_active' => true,
                 'order' => 3,

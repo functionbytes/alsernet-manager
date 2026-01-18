@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -53,8 +54,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
     private $dateFormat;
 
     /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $dateFormat The format in which date column values should be shown
+     * @param  string  $dateFormat  The format in which date column values should be shown
      */
     public function __construct(HookDispatcherInterface $hookDispatcher, $dateFormat)
     {
@@ -83,25 +83,25 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        return (new ColumnCollection)
             ->add((new DataColumn('id_order_slip'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_order_slip',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_order_slip',
+                ])
             )
             ->add((new DataColumn('id_order'))
-            ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
-            ->setOptions([
-                'field' => 'id_order',
-            ])
+                ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'field' => 'id_order',
+                ])
             )
             ->add((new DateTimeColumn('date_add'))
-            ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
-            ->setOptions([
-                'field' => 'date_add',
-                'format' => $this->dateFormat,
-            ])
+                ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'field' => 'date_add',
+                    'format' => $this->dateFormat,
+                ])
             )
             ->add(
                 (new LinkColumn('pdf'))
@@ -112,7 +112,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                         'route' => 'admin_credit_slips_generate_pdf',
                         'route_param_name' => 'creditSlipId',
                         'route_param_field' => 'id_order_slip',
-                        'icon' => 'insert_drive_file',
+                        'icon' => 'fa-duotone insert_drive_file',
                         'button_template' => 'outline',
                         'color_template' => 'secondary',
                     ])
@@ -125,42 +125,41 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getFilters()
     {
-        return (new FilterCollection())
+        return (new FilterCollection)
             ->add((new Filter('id_credit_slip', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_order_slip')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_order_slip')
             )
             ->add((new Filter('id_order', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_order')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('date_issued', DateRangeType::class))
-            ->setTypeOptions([
-                'required' => false,
-            ])
-            ->setAssociatedColumn('date_add')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_credit_slips_index',
-            ])
-            ->setAssociatedColumn('actions')
-            )
-        ;
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_credit_slips_index',
+                ])
+                ->setAssociatedColumn('actions')
+            );
     }
 
     /**
@@ -168,7 +167,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getGridActions()
     {
-        return (new GridActionCollection())
+        return (new GridActionCollection)
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
                     ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))

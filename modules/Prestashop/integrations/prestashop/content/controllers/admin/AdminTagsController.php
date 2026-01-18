@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -63,7 +64,7 @@ class AdminTagsControllerCore extends AdminController
         $this->bulk_actions = [
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
             ],
         ];
@@ -73,9 +74,9 @@ class AdminTagsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = [
-                'href' => self::$currentIndex . '&addtag&token=' . $this->token,
+                'href' => self::$currentIndex.'&addtag&token='.$this->token,
                 'desc' => $this->trans('Add new tag', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -89,9 +90,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->_select = 'l.name as lang, COUNT(pt.id_product) as inventaries';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'product_tag` pt
+			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
 				ON (a.`id_tag` = pt.`id_tag`)
-			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
+			LEFT JOIN `'._DB_PREFIX_.'lang` l
 				ON (l.`id_lang` = a.`id_lang`)';
         $this->_group = 'GROUP BY a.name, a.id_lang';
 
@@ -100,14 +101,14 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->access('edit') && Tools::getValue('submitAdd' . $this->table)) {
+        if ($this->access('edit') && Tools::getValue('submitAdd'.$this->table)) {
             if (($id = (int) Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
                 $removed_products = [];
 
                 foreach ($previous_products as $product) {
-                    if (!in_array($product['id_product'], $_POST['inventaries'])) {
+                    if (! in_array($product['id_product'], $_POST['inventaries'])) {
                         $removed_products[] = $product['id_product'];
                     }
                 }
@@ -126,14 +127,14 @@ class AdminTagsControllerCore extends AdminController
     public function renderForm()
     {
         /** @var Tag $obj */
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Tag', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-tag',
+                'icon' => 'fa-duotone icon-tag',
             ],
             'input' => [
                 [

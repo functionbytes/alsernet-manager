@@ -334,15 +334,44 @@ class CreateBlockedProductDocuments extends Command
 
     /**
      * Fetch Prestashop orders after a given order_id
+     * FILTRADO: Solo obtiene órdenes PAGADAS (cualquier estado pagado en historial)
+     * Valida que tengan document_number y document_type
+     * Alineado con OrderHistory.php línea 294: if ($new_os->id == 2 || $new_os->paid == 1)
+     * METODOLOGÍA: Busca SI EXISTE cualquier estado pagado (no importa si es el último)
      */
     private function fetchPrestashopOrdersAfterOrderId(int $lastOrderId): array
     {
-        $config = config('prestashop');
+        $config = [
+            'host' => env('DB_HOST_PRESTASHOP', '192.168.1.120'),
+            'port' => env('DB_PORT_PRESTASHOP', 3306),
+            'database' => env('DB_DATABASE_PRESTASHOP', 'alvarez_ana'),
+            'username' => env('DB_USERNAME_PRESTASHOP', 'alvarez_ana'),
+            'password' => env('DB_PASSWORD_PRESTASHOP', ''),
+        ];
 
-        $query = "SELECT id_order, id_customer, id_lang, reference, date_add
-                  FROM aalv_orders
-                  WHERE id_order > {$lastOrderId}
-                  ORDER BY id_order ASC";
+        // Query: Obtener órdenes PAGADAS únicamente con datos de documento válidos
+        // Usa EXISTS para validar que la orden TUVO estado de pagada en algún momento
+        // No importa si ahora está en otro estado (Cancelada, Entregada, etc.)
+        // Valida que document_number y document_type no sean NULL ni vacíos
+        $query = "SELECT DISTINCT
+                    o.id_order,
+                    o.id_customer,
+                    o.id_lang,
+                    o.reference,
+                    o.date_add
+                  FROM aalv_orders o
+                  WHERE o.id_order > {$lastOrderId}
+                    AND o.document_number IS NOT NULL
+                    AND o.document_number <> ''
+                    AND o.document_type IS NOT NULL
+                    AND o.document_type <> ''
+                    AND EXISTS (
+                        SELECT 1
+                        FROM aalv_order_history oh
+                        WHERE oh.id_order = o.id_order
+                          AND oh.id_order_state = 2
+                    )
+                  ORDER BY o.id_order ASC";
 
         try {
             $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
@@ -360,6 +389,7 @@ class CreateBlockedProductDocuments extends Command
                 }
 
                 $parts = explode("\t", $line);
+                // Campos esperados: id_order, id_customer, id_lang, reference, date_add
                 if (count($parts) >= 5) {
                     $orders[] = [
                         'id_order' => (int) $parts[0],

@@ -23,6 +23,7 @@ class DocumentApproved extends Notification implements ShouldBroadcast, ShouldQu
     public function via(object $notifiable): array
     {
         $this->recipientUserId = $notifiable->id;
+
         return ['database', 'broadcast'];
     }
 
@@ -38,7 +39,7 @@ class DocumentApproved extends Notification implements ShouldBroadcast, ShouldQu
             'approved_by' => $this->approvedBy,
             'title' => '✅ Documento Aprobado',
             'message' => "El documento #{$orderRef} ha sido aprobado exitosamente",
-            'icon' => 'fas fa-check-circle',
+            'icon' => 'fa-duotone fas fa-check-circle',
             'color' => 'success',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -58,7 +59,7 @@ class DocumentApproved extends Notification implements ShouldBroadcast, ShouldQu
             'approved_by' => $this->approvedBy,
             'title' => '✅ Documento Aprobado',
             'message' => "El documento #{$orderRef} ha sido aprobado",
-            'icon' => 'fas fa-check-circle',
+            'icon' => 'fa-duotone fas fa-check-circle',
             'color' => 'success',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -73,7 +74,7 @@ class DocumentApproved extends Notification implements ShouldBroadcast, ShouldQu
 
     public function broadcastOn(): array
     {
-        if (!$this->recipientUserId) {
+        if (! $this->recipientUserId) {
             return [];
         }
 

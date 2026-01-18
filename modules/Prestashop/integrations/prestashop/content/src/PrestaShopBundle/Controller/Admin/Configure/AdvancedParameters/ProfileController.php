@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -56,8 +57,6 @@ class ProfileController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param ProfileFilters $filters
-     *
      * @return Response
      */
     public function indexAction(ProfileFilters $filters)
@@ -71,7 +70,7 @@ class ProfileController extends FrameworkBundleAdminController
                     'add' => [
                         'href' => $this->generateUrl('admin_profiles_create'),
                         'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
-                        'icon' => 'add_circle_outline',
+                        'icon' => 'fa-duotone add_circle_outline',
                     ],
                 ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
@@ -91,8 +90,6 @@ class ProfileController extends FrameworkBundleAdminController
      * Used for applying filtering actions.
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -118,9 +115,8 @@ class ProfileController extends FrameworkBundleAdminController
      * Show profile's create page
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @return Response
      */
@@ -133,7 +129,7 @@ class ProfileController extends FrameworkBundleAdminController
             $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
             $handlerResult = $formHandler->handle($form);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->getIdentifiableObjectId() !== null) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
@@ -162,11 +158,10 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
-     * @param int $profileId
-     * @param Request $request
-     *
+     * @param  int  $profileId
      * @return Response
      */
     public function editAction($profileId, Request $request)
@@ -227,10 +222,10 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
-     * @param int $profileId
-     *
+     * @param  int  $profileId
      * @return RedirectResponse
      */
     public function deleteAction($profileId)
@@ -255,9 +250,8 @@ class ProfileController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
      *
      * @return RedirectResponse
      */

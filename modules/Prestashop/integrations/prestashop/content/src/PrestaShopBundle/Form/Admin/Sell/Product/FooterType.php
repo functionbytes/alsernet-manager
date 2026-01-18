@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -50,12 +51,6 @@ class FooterType extends TranslatorAwareType
      */
     private $router;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param ProductProvider $productUrlProvider
-     * @param RouterInterface $router
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -72,7 +67,7 @@ class FooterType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $productId = !empty($options['product_id']) ? (int) $options['product_id'] : null;
+        $productId = ! empty($options['product_id']) ? (int) $options['product_id'] : null;
         $deleteUrl = $productId ? $this->router->generate('admin_product_unit_action', [
             'action' => 'delete',
             'id' => $productId,
@@ -88,7 +83,7 @@ class FooterType extends TranslatorAwareType
             ->add('catalog', IconButtonType::class, [
                 'label' => $this->trans('Go to catalog', 'Admin.Catalog.Feature'),
                 'type' => 'link',
-                'icon' => 'arrow_back_ios',
+                'icon' => 'fa-duotone arrow_back_ios',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
                     'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
@@ -96,7 +91,7 @@ class FooterType extends TranslatorAwareType
             ])
             ->add('preview', IconButtonType::class, [
                 'label' => $this->trans('Preview', 'Admin.Actions'),
-                'icon' => 'remove_red_eye',
+                'icon' => 'fa-duotone remove_red_eye',
                 'attr' => [
                     'class' => 'btn-outline-secondary preview-url-button',
                     'data-seo-url' => $seoUrl,
@@ -112,7 +107,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('delete', IconButtonType::class, [
-                'icon' => 'delete',
+                'icon' => 'fa-duotone delete',
                 'label' => $this->trans('Delete', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'tooltip-link delete-product-button btn-outline-secondary',
@@ -146,7 +141,7 @@ class FooterType extends TranslatorAwareType
             ->add('duplicate_product', IconButtonType::class, [
                 'label' => $this->trans('Duplicate', 'Admin.Actions'),
                 'type' => 'link',
-                'icon' => 'content_copy',
+                'icon' => 'fa-duotone content_copy',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
                     'href' => $duplicateUrl,
@@ -156,14 +151,13 @@ class FooterType extends TranslatorAwareType
             ->add('new_product', IconButtonType::class, [
                 'label' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
                 'type' => 'link',
-                'icon' => 'add_circle_outline',
+                'icon' => 'fa-duotone add_circle_outline',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
                     'href' => $this->router->generate('admin_products_v2_create'),
                     'disabled' => empty($productId),
                 ],
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -181,7 +175,6 @@ class FooterType extends TranslatorAwareType
                     'class' => 'product-footer-right',
                 ],
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
-        ;
+            ->setAllowedTypes('product_id', ['null', 'int']);
     }
 }

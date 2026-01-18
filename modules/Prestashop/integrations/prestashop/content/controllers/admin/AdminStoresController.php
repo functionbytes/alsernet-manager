@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -39,7 +40,7 @@ class AdminStoresControllerCore extends AdminController
 
         parent::__construct();
 
-        if (!Tools::getValue('realedit')) {
+        if (! Tools::getValue('realedit')) {
             $this->deleted = false;
         }
 
@@ -65,7 +66,7 @@ class AdminStoresControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -98,9 +99,9 @@ class AdminStoresControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_store'] = [
-                'href' => self::$currentIndex . '&addstore&token=' . $this->token,
+                'href' => self::$currentIndex.'&addstore&token='.$this->token,
                 'desc' => $this->trans('Add new store', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -118,28 +119,28 @@ class AdminStoresControllerCore extends AdminController
 
         $this->_select = 'cl.`name` country, st.`name` state, sl.*';
         $this->_join = '
-            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
+            LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
                 ON (cl.`id_country` = a.`id_country`
-                AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
-            LEFT JOIN `' . _DB_PREFIX_ . 'state` st
+                AND cl.`id_lang` = '.(int) $this->context->language->id.')
+            LEFT JOIN `'._DB_PREFIX_.'state` st
                 ON (st.`id_state` = a.`id_state`)
-            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
+            LEFT JOIN `'._DB_PREFIX_.'store_lang` sl
                 ON (sl.`id_store` = a.`id_store`
-                AND sl.`id_lang` = ' . (int) $this->context->language->id . ') ';
+                AND sl.`id_lang` = '.(int) $this->context->language->id.') ';
 
         return parent::renderList();
     }
 
     public function renderForm()
     {
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
-        $image = _PS_STORE_IMG_DIR_ . $obj->id . '.jpg';
+        $image = _PS_STORE_IMG_DIR_.$obj->id.'.jpg';
         $image_url = ImageManager::thumbnail(
             $image,
-            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
+            $this->table.'_'.(int) $obj->id.'.'.$this->imageType,
             350,
             $this->imageType,
             true,
@@ -147,7 +148,7 @@ class AdminStoresControllerCore extends AdminController
         );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
-        $tmp_addr = new Address();
+        $tmp_addr = new Address;
         $res = $tmp_addr->getFieldsRequiredDatabase();
         $required_fields = [];
         foreach ($res as $row) {
@@ -157,7 +158,7 @@ class AdminStoresControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Stores', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-home',
+                'icon' => 'fa-duotone icon-home',
             ],
             'input' => [
                 [
@@ -307,7 +308,7 @@ class AdminStoresControllerCore extends AdminController
         $hours = [];
 
         $hours_temp = ($this->getFieldValue($obj, 'hours'));
-        if (is_array($hours_temp) && !empty($hours_temp)) {
+        if (is_array($hours_temp) && ! empty($hours_temp)) {
             $langs = Language::getLanguages(false);
             $hours_temp = array_map('json_decode', $hours_temp);
             $hours = array_map(
@@ -329,14 +330,14 @@ class AdminStoresControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (isset($_POST['submitAdd' . $this->table])) {
+        if (isset($_POST['submitAdd'.$this->table])) {
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
                 if (is_string($vp)) {
                     $_POST[$kp] = trim($vp);
                 }
-                if ('hours' === $kp) {
+                if ($kp === 'hours') {
                     foreach ($vp as $day => $value) {
                         $_POST['hours'][$day] = is_array($value) ? array_map('trim', $_POST['hours'][$day]) : trim($value);
                     }
@@ -352,12 +353,12 @@ class AdminStoresControllerCore extends AdminController
             $id_country = (int) Tools::getValue('id_country');
             $country = new Country((int) $id_country);
 
-            if ($id_country && $country && !(int) $country->contains_states && $id_state) {
+            if ($id_country && $country && ! (int) $country->contains_states && $id_state) {
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', [], 'Admin.Advparameters.Notification');
             }
 
             /* If the selected country contains states, then a state have to be selected */
-            if ((int) $country->contains_states && !$id_state) {
+            if ((int) $country->contains_states && ! $id_state) {
                 $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', [], 'Admin.Shopparameters.Notification');
             }
 
@@ -370,18 +371,18 @@ class AdminStoresControllerCore extends AdminController
 
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
-            if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/Postal code is incorrect.', [], 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+            if ($country->zip_code_format && ! $country->checkZipCode($postcode)) {
+                $this->errors[] = $this->trans('Your Zip/Postal code is incorrect.', [], 'Admin.Notifications.Error').'<br />'.$this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
                 $this->errors[] = $this->trans('A Zip/Postal code is required.', [], 'Admin.Notifications.Error');
-            } elseif ($postcode && !Validate::isPostCode($postcode)) {
+            } elseif ($postcode && ! Validate::isPostCode($postcode)) {
                 $this->errors[] = $this->trans('The Zip/Postal code is invalid.', [], 'Admin.Notifications.Error');
             }
             /* Store hours */
             foreach ($langs as $lang) {
                 $hours = [];
-                for ($i = 1; $i < 8; ++$i) {
-                    if (1 < count($langs)) {
+                for ($i = 1; $i < 8; $i++) {
+                    if (count($langs) > 1) {
                         $hours[] = explode(' | ', $_POST['hours'][$i][$lang['id_lang']]);
                         unset($_POST['hours'][$i][$lang['id_lang']]);
                     } else {
@@ -391,10 +392,10 @@ class AdminStoresControllerCore extends AdminController
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
+            $_POST['hours'] = (count($langs) > 1) ? $encodedHours : json_encode($hours);
         }
 
-        if (!count($this->errors)) {
+        if (! count($this->errors)) {
             parent::postProcess();
         } else {
             $this->display = 'add';
@@ -406,20 +407,20 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_.$id_store.'.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(
-                    _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                    _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
+                    _PS_STORE_IMG_DIR_.$id_store.'.jpg',
+                    _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
                     ImageManager::resize(
-                        _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
-                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
+                        _PS_STORE_IMG_DIR_.$id_store.'.jpg',
+                        _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'2x.jpg',
                         (int) $image_type['width'] * 2,
                         (int) $image_type['height'] * 2
                     );
@@ -547,7 +548,7 @@ class AdminStoresControllerCore extends AdminController
         $fields = $formFields;
         $this->fields_options['contact'] = [
             'title' => $this->trans('Contact details', [], 'Admin.Shopparameters.Feature'),
-            'icon' => 'icon-user',
+            'icon' => 'fa-duotone icon-user',
             'fields' => $fields,
             'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
         ];
@@ -556,9 +557,9 @@ class AdminStoresControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0') {
-            $sql = 'SELECT `active` FROM `' . _DB_PREFIX_ . 'state`
-					WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
-						AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
+            $sql = 'SELECT `active` FROM `'._DB_PREFIX_.'state`
+					WHERE `id_country` = '.(int) Tools::getValue('PS_SHOP_COUNTRY_ID').'
+						AND `id_state` = '.(int) Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
                 $this->errors[] = $this->trans('The specified state is not located in this country.', [], 'Admin.Shopparameters.Notification');
@@ -568,7 +569,7 @@ class AdminStoresControllerCore extends AdminController
 
     public function updateOptionPsShopCountryId($value)
     {
-        if (!$this->errors && $value) {
+        if (! $this->errors && $value) {
             $country = new Country($value, $this->context->language->id);
             if ($country->id) {
                 Configuration::updateValue('PS_SHOP_COUNTRY_ID', $value);
@@ -579,7 +580,7 @@ class AdminStoresControllerCore extends AdminController
 
     public function updateOptionPsShopStateId($value)
     {
-        if (!$this->errors && $value) {
+        if (! $this->errors && $value) {
             $state = new State($value);
             if ($state->id) {
                 Configuration::updateValue('PS_SHOP_STATE_ID', $value);
@@ -591,8 +592,7 @@ class AdminStoresControllerCore extends AdminController
     /**
      * Adapt the format of hours.
      *
-     * @param array $value
-     *
+     * @param  array  $value
      * @return array
      */
     protected function adaptHoursFormat($value)

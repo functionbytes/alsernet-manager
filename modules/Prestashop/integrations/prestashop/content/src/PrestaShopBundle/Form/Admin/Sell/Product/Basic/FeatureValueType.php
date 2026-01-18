@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -107,7 +108,7 @@ class FeatureValueType extends TranslatorAwareType
                 ],
             ])
             ->add('delete', IconButtonType::class, [
-                'icon' => 'delete',
+                'icon' => 'fa-duotone delete',
                 'attr' => [
                     'class' => 'tooltip-link delete-feature-value pl-0 pr-0',
                     'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
@@ -117,8 +118,7 @@ class FeatureValueType extends TranslatorAwareType
                     'data-toggle' => 'pstooltip',
                     'data-original-title' => $this->trans('Delete', 'Admin.Global'),
                 ],
-            ])
-        ;
+            ]);
 
         // This listeners register to PRE_SET_DATA and PRE_SUBMIT events to dynamically set the proper choices of the
         // feature_value_id field

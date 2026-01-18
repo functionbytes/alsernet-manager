@@ -3,13 +3,13 @@
 return [
     'navigation' => [
         'manager_settings' => [
-            'icon' => 'fas fa-headset',
+            'icon' => 'fa-duotone fas fa-headset',
             'title' => 'Helpdesk',
             'route' => 'manager.backups.helpdesk.index',
             'permission' => 'manage_helpdesk_settings',
         ],
         'agent_menu' => [
-            'icon' => 'fas fa-ticket-alt',
+            'icon' => 'fa-duotone fas fa-ticket-alt',
             'title' => 'Helpdesk',
             'route' => 'helpdesk.dashboard',
             'permission' => 'access_helpdesk',

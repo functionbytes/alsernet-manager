@@ -11,12 +11,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Entities\SupplierAiContent;
-use Modules\Supplier\Entities\SupplierAiCost;
-use Modules\Supplier\Entities\SupplierAutomationRateLimit;
-use Modules\Supplier\Entities\SupplierExtractionResult;
-use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\SupplierAiContent;
+use Modules\Supplier\Models\SupplierAiCost;
+use Modules\Supplier\Models\SupplierAutomationRateLimit;
+use Modules\Supplier\Models\SupplierExtractionResult;
+use Modules\Supplier\Models\SupplierPrompt;
 use Modules\Supplier\Services\ContentGenerationService;
 
 /**

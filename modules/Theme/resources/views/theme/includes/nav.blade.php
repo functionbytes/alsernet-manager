@@ -1,24 +1,20 @@
-<!-- Sidebar Start - Menu Dinámico con NavService -->
 
 @php
+
     use Modules\Theme\Services\NavService;
 
-    // Obtener items y sidebars filtrados por permisos del usuario
     $miniItems = NavService::getMiniItemsForUser();
     $allSidebars = NavService::getSidebarsForUser();
 
-    // Detectar qué sidebar debe estar activo basado en la ruta actual
     $activeSidebarId = null;
     $currentRoute = request()->route()?->getName() ?? '';
     $user = auth()->user();
 
     foreach ($allSidebars as $sidebarId => $sidebar) {
-        // Soportar ambas estructuras: sections (nueva) e items (legacy)
         if (isset($sidebar['sections'])) {
             // Nueva estructura con múltiples secciones
             foreach ($sidebar['sections'] as $section) {
                 foreach ($section['items'] ?? [] as $item) {
-                    // Validar que el usuario tenga permisos para este item
                     $canAccessItem = true;
                     if (!empty($item['permission']) && $user) {
                         $permissions = array_map('trim', explode('|', $item['permission']));
@@ -61,24 +57,22 @@
         }
     }
 
-    // Si no se encontró, usar el primer sidebar
     if (!$activeSidebarId && count($allSidebars) > 0) {
         $activeSidebarId = array_key_first($allSidebars);
     }
+
 @endphp
 
 <aside class="side-mini-panel with-vertical">
-    <!-- Vertical Layout Sidebar -->
     <div class="iconbar">
         <div>
-            <!-- Mini Navigation (Iconos pequeños a la izquierda) -->
             <div class="mini-nav">
                 <div class="brand-logo d-flex align-items-center justify-content-center">
-                    <a class="nav-link nav-icon-hover-bg rounded-circle sidebartoggler" id="headerCollapse" href="javascript:void(0)">
-                        <i class="fas fa-bars"></i>
+                    <a class="nav-link sidebartoggler" id="headerCollapse" href="javascript:void(0)">
+                        <i class="fa-duotone fa-bars fs-6"></i>
                     </a>
                 </div>
-                <ul class="mini-nav-ul simplebar-scrollable-y" data-simplebar="init">
+                <ul class="mini-nav-ul" data-simplebar="">
                     @forelse($miniItems as $miniItem)
                         @php
                             $isActive = $activeSidebarId === $miniItem['sidebar_id'];
@@ -102,15 +96,14 @@
                 </ul>
             </div>
 
-            <!-- Sidebars (Menús desplegables) -->
-            <div class="sidebarmenu close">
+            <div class="sidebarmenu">
                 @forelse($allSidebars as $sidebarId => $sidebar)
                     @php
                         $sidebarIsActive = $activeSidebarId === $sidebarId;
                     @endphp
-                    <nav class="sidebar-nav scroll-sidebar {{ $sidebarIsActive ? '' : 'd-none' }}"
+                    <nav class="sidebar-nav scroll-sidebar {{ $sidebarIsActive ? 'd-block' : 'd-none' }}"
                          id="menu-right-{{ $sidebarId }}"
-                         data-simplebar="init">
+                         data-simplebar="">
                         <ul class="sidebar-menu" id="sidebarnav-{{ $sidebarId }}">
                             @php
                                 $sections = isset($sidebar['sections']) ? $sidebar['sections'] : [['title' => $sidebar['title'] ?? 'Menu', 'items' => $sidebar['items'] ?? []]];
@@ -175,20 +168,14 @@
                         </ul>
                     </nav>
                 @empty
-                    <!-- Sin sidebars registrados -->
                 @endforelse
             </div>
         </div>
     </div>
 </aside>
 
-<!-- Sidebar End -->
-
 @push('scripts')
 <script>
-    /**
-     * Sistema de Navegación - Detección automática de rutas y submenús
-     */
     (function() {
         'use strict';
 
@@ -204,8 +191,9 @@
                 return;
             }
 
-            // Ocultar todos los sidebars y quitar clase selected
-            document.querySelectorAll('.sidebar-nav').forEach(sidebar => {
+            // Ocultar todos los sidebars (solo los del sidebarmenu, no el offcanvas mobile)
+            document.querySelectorAll('.sidebarmenu .sidebar-nav').forEach(sidebar => {
+                sidebar.classList.remove('d-block');
                 sidebar.classList.add('d-none');
             });
             document.querySelectorAll('.mini-nav-item').forEach(item => {
@@ -215,6 +203,7 @@
             // Mostrar el sidebar seleccionado con delay para permitir transiciones CSS
             setTimeout(() => {
                 targetSidebar.classList.remove('d-none');
+                targetSidebar.classList.add('d-block');
                 targetMiniNav.classList.add('selected');
 
                 // Dispatch event para reinicializar tooltips

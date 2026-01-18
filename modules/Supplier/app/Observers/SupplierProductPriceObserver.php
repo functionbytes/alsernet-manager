@@ -4,8 +4,8 @@ namespace Modules\Supplier\Observers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierProductPrice;
 use Modules\Supplier\Events\SupplierProductPriceChanged;
+use Modules\Supplier\Models\SupplierProductPrice;
 
 /**
  * Observer que dispara eventos cuando un precio de producto es modificado
@@ -35,9 +35,6 @@ class SupplierProductPriceObserver
 
     /**
      * Se llama cuando un precio es actualizado
-     *
-     * @param SupplierProductPrice $price
-     * @return void
      */
     public function updated(SupplierProductPrice $price): void
     {
@@ -47,6 +44,7 @@ class SupplierProductPriceObserver
             Log::debug('Price update skipped - sync in progress from ERP', [
                 'price_id' => $price->id,
             ]);
+
             return;
         }
 
@@ -62,6 +60,7 @@ class SupplierProductPriceObserver
                 'price_id' => $price->id,
                 'changed_fields' => $dirtyFields,
             ]);
+
             return;
         }
 
@@ -86,9 +85,6 @@ class SupplierProductPriceObserver
 
     /**
      * Se llama cuando un precio es creado (generalmente desde ERP sync, no aquí)
-     *
-     * @param SupplierProductPrice $price
-     * @return void
      */
     public function created(SupplierProductPrice $price): void
     {
@@ -98,9 +94,6 @@ class SupplierProductPriceObserver
 
     /**
      * Se llama cuando un precio es eliminado (soft delete)
-     *
-     * @param SupplierProductPrice $price
-     * @return void
      */
     public function deleted(SupplierProductPrice $price): void
     {
@@ -113,9 +106,6 @@ class SupplierProductPriceObserver
 
     /**
      * Se llama cuando un precio es restaurado de soft delete
-     *
-     * @param SupplierProductPrice $price
-     * @return void
      */
     public function restored(SupplierProductPrice $price): void
     {

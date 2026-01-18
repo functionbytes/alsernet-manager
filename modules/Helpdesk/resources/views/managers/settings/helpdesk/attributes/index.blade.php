@@ -103,16 +103,16 @@
                                 <td>
                                     @php
                                         $formatLabels = [
-                                            'text' => ['label' => 'Texto', 'icon' => 'ti-text', 'color' => 'primary'],
-                                            'textarea' => ['label' => 'Área de Texto', 'icon' => 'ti-forms', 'color' => 'info'],
-                                            'number' => ['label' => 'Número', 'icon' => 'ti-123', 'color' => 'success'],
-                                            'switch' => ['label' => 'Interruptor', 'icon' => 'ti-toggle-left', 'color' => 'warning'],
-                                            'rating' => ['label' => 'Calificación', 'icon' => 'ti-star', 'color' => 'danger'],
-                                            'select' => ['label' => 'Selección', 'icon' => 'ti-list', 'color' => 'secondary'],
-                                            'checkboxGroup' => ['label' => 'Checkboxes', 'icon' => 'ti-checkbox', 'color' => 'dark'],
-                                            'date' => ['label' => 'Fecha', 'icon' => 'ti-calendar', 'color' => 'purple']
+                                            'text' => ['label' => 'Texto', 'icon' => 'fa-duotone ti-text', 'color' => 'primary'],
+                                            'textarea' => ['label' => 'Área de Texto', 'icon' => 'fa-duotone ti-forms', 'color' => 'info'],
+                                            'number' => ['label' => 'Número', 'icon' => 'fa-duotone ti-123', 'color' => 'success'],
+                                            'switch' => ['label' => 'Interruptor', 'icon' => 'fa-duotone ti-toggle-left', 'color' => 'warning'],
+                                            'rating' => ['label' => 'Calificación', 'icon' => 'fa-duotone ti-star', 'color' => 'danger'],
+                                            'select' => ['label' => 'Selección', 'icon' => 'fa-duotone ti-list', 'color' => 'secondary'],
+                                            'checkboxGroup' => ['label' => 'Checkboxes', 'icon' => 'fa-duotone ti-checkbox', 'color' => 'dark'],
+                                            'date' => ['label' => 'Fecha', 'icon' => 'fa-duotone ti-calendar', 'color' => 'purple']
                                         ];
-                                        $format = $formatLabels[$attribute->format] ?? ['label' => $attribute->format, 'icon' => 'ti-help', 'color' => 'muted'];
+                                        $format = $formatLabels[$attribute->format] ?? ['label' => $attribute->format, 'icon' => 'fa-duotone ti-help', 'color' => 'muted'];
                                     @endphp
                                     <span class="badge bg-{{ $format['color'] }}-subtle text-{{ $format['color'] }}">
                                         <i class="ti {{ $format['icon'] }}"></i> {{ $format['label'] }}

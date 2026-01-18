@@ -109,14 +109,14 @@
                                         <td>
                                             @php
                                                 $typeBadges = [
-                                                    'website' => ['bg' => 'light', 'icon' => 'globe', 'text' => 'Web'],
-                                                    'ftp' => ['bg' => 'light', 'icon' => 'server', 'text' => 'FTP'],
-                                                    'sftp' => ['bg' => 'light', 'icon' => 'shield', 'text' => 'SFTP'],
-                                                    'api' => ['bg' => 'light', 'icon' => 'code', 'text' => 'API'],
-                                                    'upload' => ['bg' => 'light', 'icon' => 'upload', 'text' => 'Upload'],
-                                                    'file' => ['bg' => 'light', 'icon' => 'file', 'text' => 'Archivo'],
+                                                    'website' => ['bg' => 'light', 'icon' => 'fa-duotone globe', 'text' => 'Web'],
+                                                    'ftp' => ['bg' => 'light', 'icon' => 'fa-duotone server', 'text' => 'FTP'],
+                                                    'sftp' => ['bg' => 'light', 'icon' => 'fa-duotone shield', 'text' => 'SFTP'],
+                                                    'api' => ['bg' => 'light', 'icon' => 'fa-duotone code', 'text' => 'API'],
+                                                    'upload' => ['bg' => 'light', 'icon' => 'fa-duotone upload', 'text' => 'Upload'],
+                                                    'file' => ['bg' => 'light', 'icon' => 'fa-duotone file', 'text' => 'Archivo'],
                                                 ];
-                                                $badge = $typeBadges[$source->source_type] ?? ['bg' => 'light', 'icon' => 'question', 'text' => $source->source_type];
+                                                $badge = $typeBadges[$source->source_type] ?? ['bg' => 'light', 'icon' => 'fa-duotone question', 'text' => $source->source_type];
                                             @endphp
                                             <span class="badge bg-{{ $badge['bg'] }}-subtle text-{{ $badge['bg'] }}">
                                                 {{ $badge['text'] }}

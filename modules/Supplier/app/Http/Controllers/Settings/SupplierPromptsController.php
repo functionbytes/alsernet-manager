@@ -7,7 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Models\Prompt\SupplierPrompt;
+use Modules\Supplier\Models\Supplier;
 use Modules\Supplier\Services\ContentGenerationService;
 
 class SupplierPromptsController extends Controller
@@ -62,7 +63,7 @@ class SupplierPromptsController extends Controller
         $pageTitle = 'Crear Prompt de IA';
         $breadcrumb = 'Configuración / Proveedores / Prompts / Crear';
 
-        $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
         return view('supplier::settings.prompts.create', compact('pageTitle', 'breadcrumb', 'suppliers'));
     }
@@ -88,7 +89,7 @@ class SupplierPromptsController extends Controller
                 'version' => 1,
             ]);
 
-            return redirect()->route('manager.backups.suppliers.prompts.index')
+            return redirect()->route('settings.suppliers.prompts.index')
                 ->with('success', 'Prompt creado exitosamente');
 
         } catch (\Exception $e) {
@@ -132,7 +133,7 @@ class SupplierPromptsController extends Controller
         $pageTitle = "Editar Prompt: {$prompt->label}";
         $breadcrumb = 'Configuración / Proveedores / Prompts / Editar';
 
-        $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
         return view('supplier::settings.prompts.edit', compact('prompt', 'pageTitle', 'breadcrumb', 'suppliers'));
     }
@@ -163,7 +164,7 @@ class SupplierPromptsController extends Controller
                 'version' => $incrementVersion ? $prompt->version + 1 : $prompt->version,
             ]);
 
-            return redirect()->route('manager.backups.suppliers.prompts.index')
+            return redirect()->route('settings.suppliers.prompts.index')
                 ->with('success', 'Prompt actualizado exitosamente');
 
         } catch (\Exception $e) {

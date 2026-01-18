@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -49,9 +50,6 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     * @param ContactFilters $filters
-     *
      * @return Response
      */
     public function indexAction(Request $request, ContactFilters $filters)
@@ -69,7 +67,7 @@ class ContactsController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
                         'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
-                        'icon' => 'add_circle_outline',
+                        'icon' => 'fa-duotone add_circle_outline',
                         'href' => $this->generateUrl('admin_contacts_create'),
                     ],
                 ],
@@ -82,8 +80,6 @@ class ContactsController extends FrameworkBundleAdminController
      * Grid search action.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -114,8 +110,6 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to add this."
      * )
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -128,7 +122,7 @@ class ContactsController extends FrameworkBundleAdminController
             $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handle($contactForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->getIdentifiableObjectId() !== null) {
                 $this->addFlash(
                     'success',
                     $this->trans('Successful creation.', 'Admin.Notifications.Success')
@@ -159,9 +153,7 @@ class ContactsController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $contactId
-     * @param Request $request
-     *
+     * @param  int  $contactId
      * @return Response
      */
     public function editAction($contactId, Request $request)
@@ -205,8 +197,7 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
-     * @param int $contactId
-     *
+     * @param  int  $contactId
      * @return RedirectResponse
      */
     public function deleteAction($contactId)
@@ -236,8 +227,6 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_contacts_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function deleteBulkAction(Request $request)
@@ -258,8 +247,6 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception $e
-     *
      * @return array
      */
     private function getErrorMessages(Exception $e)

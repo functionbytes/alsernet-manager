@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Modules\Prestashop\Services\SupplierSyncService;
-use Modules\Supplier\Entities\SupplierAiContent;
+use Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\SupplierAiContent;
 use Modules\Supplier\Services\ContentGenerationService;
 
 class SupplierContentController extends Controller
@@ -54,7 +55,7 @@ class SupplierContentController extends Controller
             ->withQueryString();
 
         // Get suppliers for filter dropdown
-        $suppliers = \App\Models\Supplier\Supplier::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
         // Get stats
         $stats = [

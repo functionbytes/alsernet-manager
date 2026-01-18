@@ -5,7 +5,7 @@ namespace Modules\Supplier\Events;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Supplier\Entities\SupplierProductPrice;
+use Modules\Supplier\Models\SupplierProductPrice;
 
 /**
  * Evento disparado cuando un precio de producto cambia en Supplier
@@ -30,8 +30,7 @@ class SupplierProductPriceChanged
         public ?array $previousValues,
         public int $userId,
         public string $ipAddress,
-    ) {
-    }
+    ) {}
 
     /**
      * Validar que debería sincronizarse a ERP
@@ -39,8 +38,6 @@ class SupplierProductPriceChanged
      * Condiciones:
      * - El precio tiene ID de ERP (erp_price_id)
      * - Los campos modificados son sincronizables
-     *
-     * @return bool
      */
     public function shouldSyncToErp(): bool
     {
@@ -58,12 +55,11 @@ class SupplierProductPriceChanged
 
     /**
      * Obtener descripción legible del evento para logging
-     *
-     * @return string
      */
     public function getDescription(): string
     {
         $fields = implode(', ', $this->changedFields);
+
         return "Precio #{$this->price->id} modificado (campos: $fields)";
     }
 }

@@ -4,7 +4,7 @@ namespace Modules\Supplier\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Models\SupplierPrompt;
 
 /**
  * PromptSelectionService

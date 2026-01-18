@@ -5,7 +5,7 @@ namespace Modules\Supplier\Events;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\Supplier\Entities\SupplierErpProvider;
+use Modules\Supplier\Models\SupplierErpProvider;
 
 /**
  * Evento disparado cuando un proveedor ERP cambia en Supplier
@@ -26,13 +26,10 @@ class SupplierErpProviderUpdated
         public array $changedFields,
         public int $userId,
         public string $ipAddress,
-    ) {
-    }
+    ) {}
 
     /**
      * Validar que debería sincronizarse a ERP
-     *
-     * @return bool
      */
     public function shouldSyncToErp(): bool
     {
@@ -50,12 +47,11 @@ class SupplierErpProviderUpdated
 
     /**
      * Obtener descripción legible del evento para logging
-     *
-     * @return string
      */
     public function getDescription(): string
     {
         $fields = implode(', ', $this->changedFields);
+
         return "Proveedor #{$this->provider->id} modificado (campos: $fields)";
     }
 }

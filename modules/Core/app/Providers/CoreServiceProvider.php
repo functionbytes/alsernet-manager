@@ -84,7 +84,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Core/Dashboard
         NavService::registerMiniItem('dashboard', [
-            'icon' => 'fa-home',
+            'icon' => 'fa-duotone fa-home',
             'tooltip' => 'Panel de control',
             'sidebar_id' => 'dashboard',
             'order' => 10,

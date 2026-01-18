@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentLang;
 use Modules\Document\Entities\DocumentRequirement;
-use Modules\Document\Entities\DocumentRequirementLang;
 use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentTypeValidationStage;
 use Modules\Document\Entities\DocumentValidationCondition;
@@ -63,7 +62,7 @@ class DocumentTypeController extends Controller
             'slug' => 'required|string|unique:document_types,slug|max:50|regex:/^[a-z0-9_-]+$/',
             'label' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:50',
+            'icon' => 'fa-duotone nullable|string|max:50',
             'color' => 'nullable|string|max:20',
             'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer|min:0',
@@ -205,7 +204,7 @@ class DocumentTypeController extends Controller
             'slug' => 'required|string|max:50|regex:/^[a-z0-9_-]+$/|unique:document_types,slug,'.$type->id,
             'label' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:50',
+            'icon' => 'fa-duotone nullable|string|max:50',
             'color' => 'nullable|string|max:20',
             'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer|min:0',

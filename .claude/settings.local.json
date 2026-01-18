@@ -479,7 +479,12 @@
       "Bash(sudo supervisorctl restart:*)",
       "Bash(sudo supervisorctl reread:*)",
       "Bash(sudo supervisorctl update:*)",
-      "Bash(sudo supervisorctl start:*)"
+      "Bash(sudo supervisorctl start:*)",
+      "Bash(modules/Document/app/Providers/DocumentsServiceProvider.php )",
+      "Bash(modules/Document/BLOCKED_PRODUCTS_COMMAND.md )",
+      "Bash(modules/Document/COMANDO_RESUMEN.md )",
+      "Bash(modules/Document/CONFIGURACION_AVANZADA.md )",
+      "Bash(modules/Document/ARCHIVOS_CREADOS.md)"
     ],
     "deny": [],
     "ask": []

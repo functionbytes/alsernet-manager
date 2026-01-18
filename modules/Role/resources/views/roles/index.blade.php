@@ -41,7 +41,7 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-primary mb-2">Total</h6>
+                                        <h6 class="card-title  mb-2">Total</h6>
                                         <h4 class="mb-1 fw-bold">{{ $roles->total() }}</h4>
                                         <small class="text-muted">Total roles</small>
                                     </div>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -51,7 +52,7 @@ class AdminTabsControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Actions'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
         $this->fields_list = [
@@ -94,13 +95,13 @@ class AdminTabsControllerCore extends AdminController
             $this->page_header_toolbar_btn['back_to_list'] = [
                 'href' => Context::getContext()->link->getAdminLink('AdminTabs'),
                 'desc' => $this->trans('Back to list', [], 'Admin.Actions'),
-                'icon' => 'process-icon-back',
+                'icon' => 'fa-duotone process-icon-back',
             ];
         } elseif (empty($this->display)) {
             $this->page_header_toolbar_btn['new_menu'] = [
-                'href' => self::$currentIndex . '&addtab&token=' . $this->token,
+                'href' => self::$currentIndex.'&addtab&token='.$this->token,
                 'desc' => $this->trans('Add new menu', [], 'Admin.Actions'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -134,7 +135,7 @@ class AdminTabsControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Menus', [], 'Admin.Global'),
-                'icon' => 'icon-list-ul',
+                'icon' => 'fa-duotone icon-list-ul',
             ],
             'input' => [
                 [
@@ -148,7 +149,7 @@ class AdminTabsControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ],
                 [
                     'type' => 'text',
@@ -188,7 +189,7 @@ class AdminTabsControllerCore extends AdminController
         ];
 
         $display_parent = true;
-        if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name . 'Controller')) {
+        if (Validate::isLoadedObject($this->object) && ! class_exists($this->object->class_name.'Controller')) {
             $display_parent = false;
         }
 
@@ -227,10 +228,10 @@ class AdminTabsControllerCore extends AdminController
 
     public function initProcess()
     {
-        if (Tools::getIsset('details' . $this->table)) {
+        if (Tools::getIsset('details'.$this->table)) {
             $this->list_id = 'details';
 
-            if (isset($_POST['submitReset' . $this->list_id])) {
+            if (isset($_POST['submitReset'.$this->list_id])) {
                 $this->processResetFilters();
             }
         } else {
@@ -254,13 +255,13 @@ class AdminTabsControllerCore extends AdminController
             $this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
             $this->_select = 'b.*';
-            $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = ' .
-                (int) $this->context->language->id . ')';
-            $this->_where = 'AND a.`id_parent` = ' . (int) $id;
+            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.
+                (int) $this->context->language->id.')';
+            $this->_where = 'AND a.`id_parent` = '.(int) $id;
             $this->_orderBy = 'position';
             $this->_use_found_rows = false;
 
-            self::$currentIndex = self::$currentIndex . '&details' . $this->table;
+            self::$currentIndex = self::$currentIndex.'&details'.$this->table;
             $this->processFilter();
 
             return parent::renderList();
@@ -275,44 +276,44 @@ class AdminTabsControllerCore extends AdminController
 
             return;
         }
-        /* PrestaShop demo mode*/
+        /* PrestaShop demo mode */
 
         if (($id_tab = (int) Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab))) {
             if ($tab->move($direction)) {
-                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
+                Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
             }
-        } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd' . $this->table)) {
+        } elseif (Tools::getValue('position') && ! Tools::isSubmit('submitAdd'.$this->table)) {
             if ($this->access('edit') !== '1') {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
-            } elseif (!Validate::isLoadedObject($object = new Tab((int) Tools::getValue($this->identifier)))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
-                    ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
+            } elseif (! Validate::isLoadedObject($object = new Tab((int) Tools::getValue($this->identifier)))) {
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error').
+                    ' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
             }
-            if (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+            if (! $object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
                 $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
             } else {
-                Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . Tools::getAdminTokenLite('AdminTabs'));
+                Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
             }
-        } elseif (Tools::isSubmit('submitAdd' . $this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent')) {
+        } elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent')) {
             $this->errors[] = $this->trans('You can\'t put this menu inside itself. ', [], 'Admin.Advparameters.Notification');
-        } elseif (Tools::isSubmit('submitAdd' . $this->table) && $id_parent = (int) Tools::getValue('id_parent')) {
-            $this->redirect_after = self::$currentIndex . '&id_' . $this->table . '=' . $id_parent . '&details' . $this->table . '&conf=4&token=' . $this->token;
-        } elseif (isset($_GET['details' . $this->table]) && is_array($this->bulk_actions)) {
+        } elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int) Tools::getValue('id_parent')) {
+            $this->redirect_after = self::$currentIndex.'&id_'.$this->table.'='.$id_parent.'&details'.$this->table.'&conf=4&token='.$this->token;
+        } elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions)) {
             $submit_bulk_actions = array_merge([
                 'enableSelection' => [
                     'text' => $this->trans('Enable selection', [], 'Admin.Actions'),
-                    'icon' => 'icon-power-off text-success',
+                    'icon' => 'fa-duotone icon-power-off text-success',
                 ],
                 'disableSelection' => [
                     'text' => $this->trans('Disable selection', [], 'Admin.Actions'),
-                    'icon' => 'icon-power-off text-danger',
+                    'icon' => 'fa-duotone icon-power-off text-danger',
                 ],
             ], $this->bulk_actions);
             foreach ($submit_bulk_actions as $bulk_action => $params) {
-                if (Tools::isSubmit('submitBulk' . $bulk_action . $this->table) || Tools::isSubmit('submitBulk' . $bulk_action)) {
+                if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action)) {
                     if ($this->access('edit')) {
-                        $this->action = 'bulk' . $bulk_action;
-                        $this->boxes = Tools::getValue($this->list_id . 'Box');
+                        $this->action = 'bulk'.$bulk_action;
+                        $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
                     }
@@ -320,8 +321,8 @@ class AdminTabsControllerCore extends AdminController
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
                     if ($this->access('edit')) {
-                        $this->action = 'bulk' . Tools::getValue('select_submitBulk');
-                        $this->boxes = Tools::getValue($this->list_id . 'Box');
+                        $this->action = 'bulk'.Tools::getValue('select_submitBulk');
+                        $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
                     }
@@ -331,12 +332,12 @@ class AdminTabsControllerCore extends AdminController
             }
         } else {
             // Temporary add the position depend of the selection of the parent category
-            if (!Tools::isSubmit('id_tab')) { // @todo Review
+            if (! Tools::isSubmit('id_tab')) { // @todo Review
                 $_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
             }
         }
 
-        if (!count($this->errors)) {
+        if (! count($this->errors)) {
             parent::postProcess();
         }
     }
@@ -344,10 +345,10 @@ class AdminTabsControllerCore extends AdminController
     protected function afterImageUpload()
     {
         /** @var Tab $obj */
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
-        @rename(_PS_IMG_DIR_ . 't/' . $obj->id . '.gif', _PS_IMG_DIR_ . 't/' . $obj->class_name . '.gif');
+        @rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');
     }
 
     public function ajaxProcessUpdatePositions()
@@ -357,7 +358,7 @@ class AdminTabsControllerCore extends AdminController
         $positions = Tools::getValue('tab');
 
         // when changing positions in a tab sub-list, the first array value is empty and needs to be removed
-        if (!$positions[0]) {
+        if (! $positions[0]) {
             unset($positions[0]);
             // reset indexation from 0
             $positions = array_merge($positions);
@@ -369,12 +370,12 @@ class AdminTabsControllerCore extends AdminController
             if (isset($pos[2]) && (int) $pos[2] === $id_tab) {
                 if ($tab = new Tab((int) $pos[2])) {
                     if (isset($position) && $tab->updatePosition($way, $position)) {
-                        echo 'ok position ' . (int) $position . ' for tab ' . (int) $pos[1] . '\r\n';
+                        echo 'ok position '.(int) $position.' for tab '.(int) $pos[1].'\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update tab ' . (int) $id_tab . ' to position ' . (int) $position . ' "}';
+                        echo '{"hasError" : true, "errors" : "Can not update tab '.(int) $id_tab.' to position '.(int) $position.' "}';
                     }
                 } else {
-                    echo '{"hasError" : true, "errors" : "This tab (' . (int) $id_tab . ') can t be loaded"}';
+                    echo '{"hasError" : true, "errors" : "This tab ('.(int) $id_tab.') can t be loaded"}';
                 }
 
                 break;

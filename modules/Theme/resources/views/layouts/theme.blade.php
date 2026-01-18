@@ -1,12 +1,5 @@
-@php
-    use Illuminate\Support\Facades\Session;
-@endphp
-
-    <!DOCTYPE html>
-
-<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="green" data-layout="vertical"
-      data-boxed-layout="boxed" data-card="shadow">
-
+<!DOCTYPE html>
+<html lang="en"  data-layout="vertical"  data-boxed-layout="boxed" data-card="shadow">
 <head>
 
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
@@ -43,32 +36,65 @@
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ url('theme/css/style.css') }}">
-    <link rel="stylesheet" href="{{ url('theme/css/extra.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/css/extra.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ url('theme/css/fontawesome.min.css') }}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
 
     <link rel="stylesheet" href="{{ url('core/tooltipster/css/tooltipster.bundle.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ url('core/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
+    <link rel="stylesheet" href="{{ url('core/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
     <link rel="stylesheet" href="{{ url('core/css/google-font-icon.css') }}">
 
 
     @stack('css')
     @stack('scripts-head')
 
+    <style>
+        /* Fix sidebar visibility in full mode */
+        @media (min-width: 992px) {
+            /* Sidebar width when expanded */
+            body[data-sidebartype=full] .side-mini-panel .sidebarmenu {
+                width: 240px !important;
+                height: 100vh !important;
+                position: fixed !important;
+                left: 80px !important;
+                top: 0 !important;
+                flex-shrink: 0;
+                z-index: 98;
+            }
+
+            body[data-sidebartype=full] .side-mini-panel .sidebarmenu .sidebar-nav {
+                left: 0 !important;
+                position: relative !important;
+            }
+
+            /* Sidebar collapsed */
+            body[data-sidebartype=full] .side-mini-panel .sidebarmenu.close {
+                width: 0 !important;
+                left: 80px !important;
+            }
+
+            body[data-sidebartype=full] .side-mini-panel .sidebarmenu.close .sidebar-nav {
+                left: -240px !important;
+            }
+
+            /* Page wrapper margin to accommodate sidebar (80px iconbar + 240px sidebarmenu) */
+            body[data-sidebartype=full] .page-wrapper {
+                margin-left: 320px !important;
+            }
+        }
+    </style>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 
 </head>
 
-<body class="">
+<body class="" data-sidebartype="mini-sidebar">
 
-<div
-    id="main-wrapper"
->
+<div id="main-wrapper">
 
-    <div
-        class="page-wrapper"
-    >
+    <div class="page-wrapper" >
 
 
         @include ('theme.includes.nav')
@@ -106,7 +132,10 @@
 <script src="{{ url('theme/libs/toastr/toastr.min.js') }}"></script>
 <script src="{{ url('theme/libs/quill/dist/quill.min.js') }}"></script>
 
-<!-- Theme & App Scripts -->
+<!-- Theme Core Scripts (orden importante) -->
+<script src="{{ url('theme/js/theme/app.init.js') }}"></script>
+<script src="{{ url('theme/js/theme/app.min.js') }}"></script>
+<script src="{{ url('theme/js/theme/sidebarmenu.js') }}"></script>
 <script src="{{ url('theme/js/theme/theme.js') }}"></script>
 
 <!-- Form Initializers -->
@@ -118,7 +147,6 @@
 <script src="{{ url('core/js/link.js') }}"></script>
 <script src="{{ url('core/js/box.js') }}"></script>
 <script src="{{ url('core/js/popup.js') }}"></script>
-<script src="{{ url('core/js/sidebar.js') }}"></script>
 <script src="{{ url('core/js/list.js') }}"></script>
 <script src="{{ url('core/js/anotify.js') }}"></script>
 <script src="{{ url('core/js/dialog.js') }}"></script>
@@ -126,6 +154,7 @@
 <script src="{{ url('core/js/search.js') }}"></script>
 <script src="{{ url('core/js/image_popup.js') }}"></script>
 <script src="{{ url('core/js/app.js') }}"></script>
+
 
 <script>
     $(function () {
@@ -194,6 +223,14 @@
         // Scroll to active link on page load
         scrollToActiveSidebarLink();
 
+        // Fix: Remove 'close' class from sidebarmenu when in full mode on page load
+        const sidebarType = document.body.getAttribute('data-sidebartype');
+        if (sidebarType === 'full') {
+            document.querySelectorAll('.sidebarmenu').forEach(menu => {
+                menu.classList.remove('close');
+            });
+        }
+
         // Delete confirmation modal
         function deleteConfirmation() {
             $(".confirm-delete").click(function (e) {
@@ -205,6 +242,17 @@
         }
 
         deleteConfirmation();
+
+        // Fix navbar visibility on mobile
+        const navbarNav = document.getElementById('navbarNav');
+        if (navbarNav) {
+            navbarNav.addEventListener('shown.bs.collapse', function () {
+                this.style.visibility = 'visible';
+            });
+            navbarNav.addEventListener('show.bs.collapse', function () {
+                this.style.visibility = 'visible';
+            });
+        }
     });
 </script>
 

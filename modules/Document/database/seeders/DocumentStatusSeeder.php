@@ -20,7 +20,7 @@ class DocumentStatusSeeder extends Seeder
                 'label' => 'Solicitado',
                 'description' => 'Documentación solicitada. Email de solicitud enviado. Esperando que el cliente envíe documentos.',
                 'color' => '#6c757d',
-                'icon' => 'file-text',
+                'icon' => 'fa-duotone file-text',
                 'is_active' => true,
                 'order' => 1,
                 'translations' => [
@@ -29,14 +29,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Demandé', 'description' => 'Documentation demandée. Email de demande envoyé.'],
                     ['lang_id' => 4, 'label' => 'Solicitado', 'description' => 'Documentação solicitada. Email de solicitação enviado.'],
                     ['lang_id' => 5, 'label' => 'Angefordert', 'description' => 'Dokumentation angefordert. Anforderungs-E-Mail gesendet.'],
-                ]
+                ],
             ],
             [
                 'key' => 'awaiting_documents',
                 'label' => 'Esperando documentos',
                 'description' => 'Cliente no ha enviado documentos. Recordatorios enviados periódicamente.',
                 'color' => '#17a2b8',
-                'icon' => 'hourglass',
+                'icon' => 'fa-duotone hourglass',
                 'is_active' => true,
                 'order' => 2,
                 'translations' => [
@@ -45,14 +45,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'En attente de documents', 'description' => 'Le client n\'a pas envoyé de documents.'],
                     ['lang_id' => 4, 'label' => 'Aguardando documentos', 'description' => 'O cliente não enviou documentos.'],
                     ['lang_id' => 5, 'label' => 'Auf Dokumente warten', 'description' => 'Der Kunde hat keine Dokumente eingereicht.'],
-                ]
+                ],
             ],
             [
                 'key' => 'received',
                 'label' => 'Documentos recibidos',
                 'description' => 'Documentos recibidos del cliente. Email de confirmación enviado. En espera de revisión del administrador.',
                 'color' => '#0dcaf0',
-                'icon' => 'inbox',
+                'icon' => 'fa-duotone inbox',
                 'is_active' => true,
                 'order' => 3,
                 'translations' => [
@@ -61,14 +61,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Documents reçus', 'description' => 'Documents reçus du client.'],
                     ['lang_id' => 4, 'label' => 'Documentos recebidos', 'description' => 'Documentos recebidos do cliente.'],
                     ['lang_id' => 5, 'label' => 'Dokumente erhalten', 'description' => 'Dokumente vom Kunden erhalten.'],
-                ]
+                ],
             ],
             [
                 'key' => 'incomplete',
                 'label' => 'Incompleto',
                 'description' => 'Faltan documentos requeridos después de la revisión del administrador.',
                 'color' => '#ffc107',
-                'icon' => 'alert-circle',
+                'icon' => 'fa-duotone alert-circle',
                 'is_active' => true,
                 'order' => 4,
                 'translations' => [
@@ -77,14 +77,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Incomplet', 'description' => 'Les documents requis sont manquants.'],
                     ['lang_id' => 4, 'label' => 'Incompleto', 'description' => 'Faltam documentos necessários.'],
                     ['lang_id' => 5, 'label' => 'Unvollständig', 'description' => 'Erforderliche Dokumente fehlen.'],
-                ]
+                ],
             ],
             [
                 'key' => 'approved',
                 'label' => 'Aprobado',
                 'description' => 'Documentos verificados y aprobados. Email de aprobación enviado. Solicitud completada.',
                 'color' => '#28a745',
-                'icon' => 'check-circle',
+                'icon' => 'fa-duotone check-circle',
                 'is_active' => true,
                 'order' => 5,
                 'translations' => [
@@ -93,14 +93,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Approuvé', 'description' => 'Documents vérifiés et approuvés.'],
                     ['lang_id' => 4, 'label' => 'Aprovado', 'description' => 'Documentos verificados e aprovados.'],
                     ['lang_id' => 5, 'label' => 'Genehmigt', 'description' => 'Dokumente überprüft und genehmigt.'],
-                ]
+                ],
             ],
             [
                 'key' => 'rejected',
                 'label' => 'Rechazado',
                 'description' => 'Documentos rechazados con motivo. Email de rechazo enviado. Cliente debe reenviar documentación.',
                 'color' => '#dc3545',
-                'icon' => 'x-circle',
+                'icon' => 'fa-duotone x-circle',
                 'is_active' => true,
                 'order' => 6,
                 'translations' => [
@@ -109,14 +109,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Rejeté', 'description' => 'Documents rejetés avec motif.'],
                     ['lang_id' => 4, 'label' => 'Rejeitado', 'description' => 'Documentos rejeitados com motivo.'],
                     ['lang_id' => 5, 'label' => 'Abgelehnt', 'description' => 'Dokumente mit Begründung abgelehnt.'],
-                ]
+                ],
             ],
             [
                 'key' => 'cancelled',
                 'label' => 'Cancelado',
                 'description' => 'Solicitud de documento cancelada por el administrador.',
                 'color' => '#6c757d',
-                'icon' => 'ban',
+                'icon' => 'fa-duotone ban',
                 'is_active' => true,
                 'order' => 7,
                 'translations' => [
@@ -125,14 +125,14 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Annulé', 'description' => 'Demande annulée par l\'administrateur.'],
                     ['lang_id' => 4, 'label' => 'Cancelado', 'description' => 'Solicitação cancelada pelo administrador.'],
                     ['lang_id' => 5, 'label' => 'Storniert', 'description' => 'Anforderung vom Administrator storniert.'],
-                ]
+                ],
             ],
             [
                 'key' => 'completed',
                 'label' => 'Completado',
                 'description' => 'Status obsoleto. Use "Approved" en su lugar.',
                 'color' => '#20c997',
-                'icon' => 'badge-check',
+                'icon' => 'fa-duotone badge-check',
                 'is_active' => false,
                 'order' => 8,
                 'translations' => [
@@ -141,7 +141,7 @@ class DocumentStatusSeeder extends Seeder
                     ['lang_id' => 3, 'label' => 'Complété', 'description' => 'État obsolète.'],
                     ['lang_id' => 4, 'label' => 'Completo', 'description' => 'Status obsoleto.'],
                     ['lang_id' => 5, 'label' => 'Fertig', 'description' => 'Veralteter Status.'],
-                ]
+                ],
             ],
         ];
 
@@ -158,7 +158,7 @@ class DocumentStatusSeeder extends Seeder
                 );
 
                 // Add translations
-                if (!empty($translations)) {
+                if (! empty($translations)) {
                     foreach ($translations as $translation) {
                         DB::table('document_status_langs')->updateOrInsert(
                             [

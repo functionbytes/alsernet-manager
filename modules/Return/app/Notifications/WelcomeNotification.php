@@ -87,7 +87,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
         return [
             'title' => '¡Bienvenido a A-alvarez!',
             'body' => 'Te damos la bienvenida a nuestra plataforma.',
-            'icon' => 'welcome',
+            'icon' => 'fa-duotone welcome',
             'data' => [
                 'type' => 'welcome',
                 'action_url' => url('/dashboard'),

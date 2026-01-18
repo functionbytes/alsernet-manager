@@ -30,7 +30,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Nuevo',
                 'key' => 'new',
                 'color' => '#0d6efd', // primary blue
-                'icon' => 'fa-plus-circle',
+                'icon' => 'fa-duotone fa-plus-circle',
                 'is_open' => true,
                 'is_closed' => false,
                 'position' => 1,
@@ -40,7 +40,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Abierto',
                 'key' => 'open',
                 'color' => '#0dcaf0', // info cyan
-                'icon' => 'fa-folder-open',
+                'icon' => 'fa-duotone fa-folder-open',
                 'is_open' => true,
                 'is_closed' => false,
                 'position' => 2,
@@ -50,7 +50,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Esperando Cliente',
                 'key' => 'waiting_customer',
                 'color' => '#ffc107', // warning yellow
-                'icon' => 'fa-clock',
+                'icon' => 'fa-duotone fa-clock',
                 'is_open' => true,
                 'is_closed' => false,
                 'position' => 3,
@@ -60,7 +60,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'En Espera',
                 'key' => 'on_hold',
                 'color' => '#6c757d', // secondary gray
-                'icon' => 'fa-pause-circle',
+                'icon' => 'fa-duotone fa-pause-circle',
                 'is_open' => false,
                 'is_closed' => false,
                 'position' => 4,
@@ -70,7 +70,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Escalado',
                 'key' => 'escalated',
                 'color' => '#fd7e14', // orange
-                'icon' => 'fa-arrow-up',
+                'icon' => 'fa-duotone fa-arrow-up',
                 'is_open' => true,
                 'is_closed' => false,
                 'position' => 5,
@@ -80,7 +80,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Resuelto',
                 'key' => 'resolved',
                 'color' => '#198754', // success green
-                'icon' => 'fa-check-circle',
+                'icon' => 'fa-duotone fa-check-circle',
                 'is_open' => false,
                 'is_closed' => false,
                 'position' => 6,
@@ -90,7 +90,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Reabierto',
                 'key' => 'reopened',
                 'color' => '#dc3545', // danger red
-                'icon' => 'fa-exclamation-circle',
+                'icon' => 'fa-duotone fa-exclamation-circle',
                 'is_open' => true,
                 'is_closed' => false,
                 'position' => 7,
@@ -100,7 +100,7 @@ class HelpdeskTicketStatusSeeder extends Seeder
                 'name' => 'Cerrado',
                 'key' => 'closed',
                 'color' => '#495057', // dark gray
-                'icon' => 'fa-lock',
+                'icon' => 'fa-duotone fa-lock',
                 'is_open' => false,
                 'is_closed' => true,
                 'position' => 8,

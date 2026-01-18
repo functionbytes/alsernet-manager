@@ -50,7 +50,7 @@ class AdminProductFilmController extends ModuleAdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Product Video', [], 'modules.AlsernetProductVideo.Admin'),
-                'icon' => 'icon-film', // Cambiar icono si es necesario
+                'icon' => 'fa-duotone icon-film', // Cambiar icono si es necesario
             ],
             'input' => [
                 // Campos existentes
@@ -151,7 +151,7 @@ class AdminProductFilmController extends ModuleAdminController
                 'type' => 'button',
                 'title' => 'Duplicar la información',
                 'name' => 'duplicate_languages',
-                'icon' => 'process-icon-copy', // Icono de duplicar
+                'icon' => 'fa-duotone process-icon-copy', // Icono de duplicar
                 'class' => 'btn btn-default', // Clase para estilo
                 'id' => 'duplicate_languages_btn', // Añadir un ID para el botón
             ],

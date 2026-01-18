@@ -23,22 +23,22 @@ class AiAgentSettingsController extends Controller
             'openai' => [
                 'label' => 'OpenAI (GPT-4)',
                 'models' => ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
-                'icon' => '🟢',
+                'icon' => 'fa-duotone 🟢',
             ],
             'anthropic' => [
                 'label' => 'Anthropic (Claude)',
                 'models' => ['claude-3-opus-20250219', 'claude-3-sonnet-20250229', 'claude-3-haiku-20250307'],
-                'icon' => '🔵',
+                'icon' => 'fa-duotone 🔵',
             ],
             'gemini' => [
                 'label' => 'Google Gemini',
                 'models' => ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'],
-                'icon' => '🟡',
+                'icon' => 'fa-duotone 🟡',
             ],
             'local' => [
                 'label' => 'Local Model (Ollama)',
                 'models' => ['llama2', 'mistral', 'neural-chat', 'openchat'],
-                'icon' => '⚪',
+                'icon' => 'fa-duotone ⚪',
             ],
         ];
 
@@ -322,7 +322,7 @@ class AiAgentSettingsController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'color' => 'required|string|max:7',
-            'icon' => 'nullable|string|max:100',
+            'icon' => 'fa-duotone nullable|string|max:100',
             'system_prompt_addition' => 'nullable|string',
             'priority' => 'nullable|integer|min:0|max:100',
             'is_active' => 'nullable|boolean',
@@ -346,7 +346,7 @@ class AiAgentSettingsController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'color' => 'required|string|max:7',
-            'icon' => 'nullable|string|max:100',
+            'icon' => 'fa-duotone nullable|string|max:100',
             'system_prompt_addition' => 'nullable|string',
             'priority' => 'nullable|integer|min:0|max:100',
             'is_active' => 'nullable|boolean',

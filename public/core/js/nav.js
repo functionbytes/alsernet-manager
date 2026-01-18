@@ -63,8 +63,12 @@ const AdminSettings = {
           const width =
             window.innerWidth > 0 ? window.innerWidth : screen.width;
           if (width < 1300) {
+
+              console.log('AdminSettingsInit 1300');
             document.body.setAttribute("data-sidebartype", "mini-sidebar");
           } else {
+
+              console.log('AdminSettingsInit 1600');
             document.body.setAttribute("data-sidebartype", "full");
           }
         };
@@ -383,21 +387,29 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleSidebar() {
     document.querySelectorAll(".sidebartoggler").forEach((element) => {
       element.addEventListener("click", function () {
-        document.querySelectorAll(".sidebartoggler").forEach((el) => {
-          el.checked = true;
-        });
-        document
-          .getElementById("main-wrapper")
-          .classList.toggle("show-sidebar");
+        const mainWrapper = document.getElementById("main-wrapper");
+        const currentSidebarType = document.body.getAttribute("data-sidebartype");
+
+        // Cambiar entre full y mini-sidebar
+        if (currentSidebarType === "full") {
+          // Cambiar a mini-sidebar
+          document.body.setAttribute("data-sidebartype", "mini-sidebar");
+          mainWrapper.classList.add("show-sidebar");
+        } else {
+          // Cambiar a full
+          document.body.setAttribute("data-sidebartype", "full");
+          mainWrapper.classList.remove("show-sidebar");
+        }
+
+        // Toggle clase close en sidebarmenu
         document.querySelectorAll(".sidebarmenu").forEach((el) => {
           el.classList.toggle("close");
         });
-        const dataTheme = document.body.getAttribute("data-sidebartype");
-        if (dataTheme === "full") {
-          document.body.setAttribute("data-sidebartype", "mini-sidebar");
-        } else {
-          document.body.setAttribute("data-sidebartype", "full");
-        }
+
+        // Marcar todos los togglers como checked
+        document.querySelectorAll(".sidebartoggler").forEach((el) => {
+          el.checked = true;
+        });
       });
     });
   }

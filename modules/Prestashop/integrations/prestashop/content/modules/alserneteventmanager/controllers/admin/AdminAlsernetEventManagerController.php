@@ -17,40 +17,40 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
     public function renderList()
     {
         // Definir los campos de la lista
-        $this->fields_list = array(
-            'id_event' => array(
+        $this->fields_list = [
+            'id_event' => [
                 'title' => $this->l('Event ID'),
                 'align' => 'center',
-                'type' => 'text'
-            ),
-            'title' => array(
+                'type' => 'text',
+            ],
+            'title' => [
                 'title' => $this->l('Event Title'),
                 'align' => 'left',
-                'type' => 'text'
-            ),
-            'start_date' => array(
+                'type' => 'text',
+            ],
+            'start_date' => [
                 'title' => $this->l('Start Date'),
                 'align' => 'center',
-                'type' => 'datetime'
-            ),
-            'end_date' => array(
+                'type' => 'datetime',
+            ],
+            'end_date' => [
                 'title' => $this->l('End Date'),
                 'align' => 'center',
-                'type' => 'datetime'
-            ),
-            'available' => array(
+                'type' => 'datetime',
+            ],
+            'available' => [
                 'title' => $this->l('Available'),
                 'align' => 'center',
-                'type' => 'bool'
-            )
-        );
+                'type' => 'bool',
+            ],
+        ];
 
         // Agregar las acciones de fila
         $this->addRowAction('edit');  // Acción de editar
         $this->addRowAction('delete'); // Acción de eliminar
 
         // URL para agregar un nuevo evento
-        $this->context->smarty->assign('add_event_url', $this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->module->name . '&controller=addEvent');
+        $this->context->smarty->assign('add_event_url', $this->context->link->getAdminLink('AdminModules').'&configure='.$this->module->name.'&controller=addEvent');
 
         // Generar la vista de la lista
         return parent::renderList();
@@ -75,12 +75,11 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
             ];
         }
 
-
         $form = [
             'form' => [
                 'legend' => [
                     'title' => $this->l('Create/Edit Event'),
-                    'icon' => 'icon-cogs'
+                    'icon' => 'fa-duotone icon-cogs',
                 ],
                 'input' => [
                     [
@@ -88,49 +87,49 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
                         'label' => $this->l('Título del Evento'),
                         'name' => 'EVENT_TITLE',
                         'required' => true,
-                        'value' => isset($default_values['EVENT_TITLE']) ? $default_values['EVENT_TITLE'] : ''
+                        'value' => isset($default_values['EVENT_TITLE']) ? $default_values['EVENT_TITLE'] : '',
                     ],
                     [
                         'type' => 'datetime',
                         'label' => $this->l('Fecha de Inicio'),
                         'name' => 'EVENT_START_DATE',
                         'required' => true,
-                        'value' => isset($default_values['EVENT_START_DATE']) ? $default_values['EVENT_START_DATE'] : ''
+                        'value' => isset($default_values['EVENT_START_DATE']) ? $default_values['EVENT_START_DATE'] : '',
                     ],
                     [
                         'type' => 'datetime',
                         'label' => $this->l('Fecha de Fin'),
                         'name' => 'EVENT_END_DATE',
                         'required' => true,
-                        'value' => isset($default_values['EVENT_END_DATE']) ? $default_values['EVENT_END_DATE'] : ''
+                        'value' => isset($default_values['EVENT_END_DATE']) ? $default_values['EVENT_END_DATE'] : '',
                     ],
                     [
                         'type' => 'text',
                         'label' => $this->l('Etiqueta de Filtro'),
                         'name' => 'EVENT_FILTER_TAG',
                         'required' => false,
-                        'value' => isset($default_values['EVENT_FILTER_TAG']) ? $default_values['EVENT_FILTER_TAG'] : ''
+                        'value' => isset($default_values['EVENT_FILTER_TAG']) ? $default_values['EVENT_FILTER_TAG'] : '',
                     ],
                     [
                         'type' => 'text',
                         'label' => $this->l('Etiqueta de Gestión'),
                         'name' => 'EVENT_MANAGEMENT_TAG',
                         'required' => false,
-                        'value' => isset($default_values['EVENT_MANAGEMENT_TAG']) ? $default_values['EVENT_MANAGEMENT_TAG'] : ''
+                        'value' => isset($default_values['EVENT_MANAGEMENT_TAG']) ? $default_values['EVENT_MANAGEMENT_TAG'] : '',
                     ],
                     [
                         'type' => 'color',
                         'label' => $this->l('Color del Botón'),
                         'name' => 'EVENT_COLOR_BUTTON',
                         'required' => false,
-                        'value' => isset($default_values['EVENT_COLOR_BUTTON']) ? $default_values['EVENT_COLOR_BUTTON'] : '#ffffff'
+                        'value' => isset($default_values['EVENT_COLOR_BUTTON']) ? $default_values['EVENT_COLOR_BUTTON'] : '#ffffff',
                     ],
                     [
                         'type' => 'color',
                         'label' => $this->l('Color del Evento'),
                         'name' => 'EVENT_COLOR',
                         'required' => false,
-                        'value' => isset($default_values['EVENT_COLOR']) ? $default_values['EVENT_COLOR'] : '#000000'
+                        'value' => isset($default_values['EVENT_COLOR']) ? $default_values['EVENT_COLOR'] : '#000000',
                     ],
                     [
                         'type' => 'switch',
@@ -141,15 +140,15 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
                             [
                                 'id' => 'active_on',
                                 'value' => 1,
-                                'label' => $this->l('Sí')
+                                'label' => $this->l('Sí'),
                             ],
                             [
                                 'id' => 'active_off',
                                 'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'label' => $this->l('No'),
+                            ],
                         ],
-                        'value' => isset($default_values['EVENT_AVAILABLE']) ? $default_values['EVENT_AVAILABLE'] : 1
+                        'value' => isset($default_values['EVENT_AVAILABLE']) ? $default_values['EVENT_AVAILABLE'] : 1,
                     ],
                     [
                         'type' => 'select',
@@ -161,8 +160,8 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
                             'query' => $this->getLanguages(),  // Obtener los idiomas activos
                             'id' => 'id_lang',
                             'name' => 'name',
-                            'value' => isset($default_values['EVENT_LANGS']) ? $default_values['EVENT_LANGS'] : []
-                        ]
+                            'value' => isset($default_values['EVENT_LANGS']) ? $default_values['EVENT_LANGS'] : [],
+                        ],
                     ],
                     [
                         'type' => 'select',
@@ -174,17 +173,17 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
                             'query' => $this->getCategories(),  // Obtener todas las categorías disponibles
                             'id' => 'id_category',
                             'name' => 'name',
-                            'value' => isset($default_values['EVENT_CATEGORIES']) ? $default_values['EVENT_CATEGORIES'] : []
-                        ]
-                    ]
+                            'value' => isset($default_values['EVENT_CATEGORIES']) ? $default_values['EVENT_CATEGORIES'] : [],
+                        ],
+                    ],
                 ],
                 'submit' => [
-                    'title' => $this->l('Save Event')
-                ]
-            ]
+                    'title' => $this->l('Save Event'),
+                ],
+            ],
         ];
 
-        $helper = new HelperForm();
+        $helper = new HelperForm;
         $helper->module = $this;
         $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
         $helper->fields_value = $event; // Directamente asignamos el evento
@@ -192,7 +191,6 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
 
         return $helper->generateForm([$form]);
     }
-
 
     public function getLanguages()
     {
@@ -202,12 +200,13 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
         foreach ($languages as $language) {
             $language_options[] = [
                 'id_lang' => $language['id_lang'],
-                'name' => $language['name']
+                'name' => $language['name'],
             ];
         }
 
         return $language_options;
     }
+
     public function getCategoriess()
     {
         $categories = Category::getCategories($this->context->language->id, true, false);
@@ -216,13 +215,10 @@ class AdminAlsernetEventManagerController extends ModuleAdminController
         foreach ($categories as $category) {
             $category_options[] = [
                 'id' => $category['id_category'],
-                'name' => $category['name']
+                'name' => $category['name'],
             ];
         }
 
         return $category_options;
     }
-
-
-
 }

@@ -44,22 +44,22 @@ class DocumentConfigurationController extends Controller
         'general' => [
             'label' => 'General',
             'description' => 'Configuracion general del modulo de documentos',
-            'icon' => 'fas fa-cog',
+            'icon' => 'fa-duotone fas fa-cog',
         ],
         'email' => [
             'label' => 'Notificaciones Email',
             'description' => 'Configuracion de envio de emails y recordatorios',
-            'icon' => 'fas fa-envelope',
+            'icon' => 'fa-duotone fas fa-envelope',
         ],
         'sla' => [
             'label' => 'Politicas SLA',
             'description' => 'Configuracion de politicas de nivel de servicio',
-            'icon' => 'fas fa-clock',
+            'icon' => 'fa-duotone fas fa-clock',
         ],
         'upload' => [
             'label' => 'Carga de Archivos',
             'description' => 'Configuracion de tipos de archivo y limites',
-            'icon' => 'fas fa-upload',
+            'icon' => 'fa-duotone fas fa-upload',
         ],
     ];
 
@@ -931,7 +931,7 @@ class DocumentConfigurationController extends Controller
                 'metadata' => self::SETTING_GROUPS[$group] ?? [
                     'label' => ucfirst($group),
                     'description' => '',
-                    'icon' => 'fas fa-cog',
+                    'icon' => 'fa-duotone fas fa-cog',
                 ],
                 'settings' => $settings,
             ];

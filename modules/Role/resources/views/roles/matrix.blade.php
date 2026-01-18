@@ -16,7 +16,7 @@
                         <p class="small mb-0 text-muted">Vista completa de todos los permisos asignados a cada rol del sistema</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('settings.roles.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('settings.roles.index') }}" class="btn btn-light">
                             Atrás
                         </a>
                     </div>
@@ -38,7 +38,7 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div>
-                                        <h6 class="card-title text-primary mb-2">Total permisos</h6>
+                                        <h6 class="card-title  mb-2">Total permisos</h6>
                                         <h4 class="mb-1 fw-bold">{{ $totalPermissions }}</h4>
                                         <small class="text-muted">Permisos en sistema</small>
                                     </div>
@@ -114,7 +114,7 @@
                             <div class="card-header bg-light border-bottom">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-0 fw-bold">{{ $role->name }}</h6>
+                                        <h6 class="mb-0 fw-bold">{{ Str::title($role->name) }}</h6>
                                     </div>
                                     <div>
                                         <span class="badge bg-primary permission-count-{{ $role->id }}">
@@ -129,7 +129,7 @@
                                         <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                                             <div class="card border h-100">
                                                 <div class="card-header bg-light bg-opacity-10 border-bottom">
-                                                    <h6 class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                                                    <h6 class="mb-0 fw-bold  text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.5px;">
                                                         {{ Str::title(str_replace('_', ' ', $module)) }}
                                                     </h6>
                                                 </div>
@@ -137,7 +137,7 @@
                                                     @foreach ($categories as $category => $perms)
                                                         <div class="permission-category mb-3">
                                                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                                                <span class="badge bg-secondary bg-opacity-10 text-dark" style="font-size: 0.7rem;">
+                                                                <span class="badge bg-light bg-opacity-10 text-dark" style="font-size: 0.7rem;">
                                                                     {{ Str::title(str_replace('_', ' ', $category)) }}
                                                                 </span>
                                                                 <small class="text-muted" style="font-size: 0.65rem;">{{ count($perms) }}</small>

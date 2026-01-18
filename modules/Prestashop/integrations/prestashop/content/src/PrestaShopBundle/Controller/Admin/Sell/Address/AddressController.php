@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -72,11 +73,6 @@ class AddressController extends FrameworkBundleAdminController
      * Show addresses listing page
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param AddressFilters $filters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, AddressFilters $filters): Response
     {
@@ -100,10 +96,6 @@ class AddressController extends FrameworkBundleAdminController
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      *
      * @throws Exception
      */
@@ -130,10 +122,6 @@ class AddressController extends FrameworkBundleAdminController
      * Deletes address
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_addresses_index")
-     *
-     * @param int $addressId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
@@ -160,10 +148,6 @@ class AddressController extends FrameworkBundleAdminController
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to delete this."
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function deleteBulkAction(Request $request): RedirectResponse
     {
@@ -182,9 +166,6 @@ class AddressController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_addresses_index');
     }
 
-    /**
-     * @return array
-     */
     private function getAddressToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -192,32 +173,24 @@ class AddressController extends FrameworkBundleAdminController
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_addresses_create'),
             'desc' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
-            'icon' => 'add_circle_outline',
+            'icon' => 'fa-duotone add_circle_outline',
         ];
 
         return $toolbarButtons;
     }
 
-    /**
-     * @return FormInterface
-     */
     private function getRequiredFieldsForm(): FormInterface
     {
-        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForAddress());
+        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForAddress);
 
         return $this->createForm(RequiredFieldsAddressType::class, ['required_fields' => $requiredFields]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkAddressesFromRequest(Request $request): array
     {
         $addressIds = $request->request->get('address_addresses_bulk');
 
-        if (!is_array($addressIds)) {
+        if (! is_array($addressIds)) {
             return [];
         }
 
@@ -236,10 +209,6 @@ class AddressController extends FrameworkBundleAdminController
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to create this."
      * )
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -269,7 +238,7 @@ class AddressController extends FrameworkBundleAdminController
             $formData['id_customer'] = (int) $request->query->get('id_customer');
         }
 
-        if (!empty($formData['id_customer'])) {
+        if (! empty($formData['id_customer'])) {
             /** @var CustomerDataProvider $customerDataProvider */
             $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
             /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
@@ -279,7 +248,7 @@ class AddressController extends FrameworkBundleAdminController
             $formData['first_name'] = $customer->firstname;
             $formData['last_name'] = $customer->lastname;
             $formData['company'] = $customer->company;
-            $customerInfo = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
+            $customerInfo = $customer->firstname.' '.$customer->lastname.' ('.$customer->email.')';
         }
 
         $addressForm = $addressFormBuilder->getForm($formData);
@@ -325,11 +294,6 @@ class AddressController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
-     *
-     * @param int $addressId
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editAction(int $addressId, Request $request): Response
     {
@@ -378,9 +342,9 @@ class AddressController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $customerInfo = $editableAddress->getLastName() . ' ' .
-            $editableAddress->getFirstName() . ' (' .
-            $editableAddress->getCustomerEmail() . ')';
+        $customerInfo = $editableAddress->getLastName().' '.
+            $editableAddress->getFirstName().' ('.
+            $editableAddress->getCustomerEmail().')';
 
         return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
             'enableSidebar' => true,
@@ -400,12 +364,6 @@ class AddressController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
-     *
-     * @param int $orderId
-     * @param string $addressType
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
     {
@@ -478,9 +436,9 @@ class AddressController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $customerInfo = $editableAddress->getLastName() . ' ' .
-            $editableAddress->getFirstName() . ' (' .
-            $editableAddress->getCustomerEmail() . ')';
+        $customerInfo = $editableAddress->getLastName().' '.
+            $editableAddress->getFirstName().' ('.
+            $editableAddress->getCustomerEmail().')';
 
         return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
             'enableSidebar' => true,
@@ -501,12 +459,6 @@ class AddressController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
-     *
-     * @param int $cartId
-     * @param string $addressType
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editCartAddressAction(int $cartId, string $addressType, Request $request): Response
     {
@@ -579,9 +531,9 @@ class AddressController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $customerInfo = $editableAddress->getLastName() . ' ' .
-            $editableAddress->getFirstName() . ' (' .
-            $editableAddress->getCustomerEmail() . ')';
+        $customerInfo = $editableAddress->getLastName().' '.
+            $editableAddress->getFirstName().' ('.
+            $editableAddress->getCustomerEmail().')';
 
         return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
             'enableSidebar' => true,
@@ -595,11 +547,6 @@ class AddressController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param Exception $e
-     *
-     * @return array
-     */
     private function getErrorMessages(Exception $e): array
     {
         return [

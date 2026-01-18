@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -66,9 +67,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
      */
     private $translator;
 
-    /**
-     * @param Context $context
-     */
     public function __construct(Context $context)
     {
         $this->context = $context;
@@ -96,8 +94,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     }
 
     /**
-     * @param array $messages
-     *
      * @return CustomerThreadMessage[]
      */
     private function getCustomerThreadMessages(array $messages)
@@ -114,10 +110,10 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             $attachmentFile = null;
 
-            if (!empty($message['file_name'])
-                && file_exists(_PS_UPLOAD_DIR_ . $message['file_name'])
+            if (! empty($message['file_name'])
+                && file_exists(_PS_UPLOAD_DIR_.$message['file_name'])
             ) {
-                $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
+                $attachmentFile = _THEME_PROD_PIC_DIR_.$message['file_name'];
             }
 
             $productId = null;
@@ -153,8 +149,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     }
 
     /**
-     * @param CustomerThreadId $customerThreadId
-     *
      * @return CustomerThread
      */
     private function getCustomerThread(CustomerThreadId $customerThreadId)
@@ -171,8 +165,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     /**
      * Get customer thread messages in timeline
      *
-     * @param array $messages
-     * @param CustomerThread $customerThread
      *
      * @return CustomerThreadTimeline
      */
@@ -185,11 +177,11 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             $content = '';
 
-            if (!$message['private']) {
+            if (! $message['private']) {
                 $content .= sprintf(
                     '%s <span class="badge badge-primary rounded">%s</span><br/>',
                     $this->translator->trans('Message to:', [], 'Admin.Catalog.Feature'),
-                    !$message['id_employee'] ? $message['subject'] : $message['customer_name']
+                    ! $message['id_employee'] ? $message['subject'] : $message['customer_name']
                 );
             }
 
@@ -206,7 +198,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             $timeline[$message['date_add']][] = [
                 'arrow' => 'left',
                 'background_color' => '',
-                'icon' => 'email',
+                'icon' => 'fa-duotone email',
                 'content' => $content,
                 'date' => $message['date_add'],
                 'related_order_id' => null,
@@ -240,7 +232,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                     'arrow' => 'right',
                     'alt' => true,
                     'background_color' => $history['color'],
-                    'icon' => 'credit_card',
+                    'icon' => 'fa-duotone credit_card',
                     'content' => $content,
                     'date' => $history['date_add'],
                     'see_more_link' => $link_order,
@@ -270,8 +262,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     }
 
     /**
-     * @param CustomerThread $thread
-     *
      * @return array
      */
     private function getAvailableActions(CustomerThread $thread)
@@ -326,13 +316,11 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     }
 
     /**
-     * @param CustomerThread $thread
-     *
      * @return CustomerInformation
      */
     private function getCustomerInformation(CustomerThread $thread)
     {
-        if (!$thread->id_customer) {
+        if (! $thread->id_customer) {
             return CustomerInformation::withEmailOnly($thread->email);
         }
 
@@ -369,8 +357,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     }
 
     /**
-     * @param CustomerThread $thread
-     *
      * @return string|null
      */
     private function getContactName(CustomerThread $thread)

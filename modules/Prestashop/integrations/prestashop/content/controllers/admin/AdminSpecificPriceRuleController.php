@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -56,17 +57,17 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = 's.name shop_name, cul.name as currency_name, cl.name country_name, gl.name group_name';
-        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = a.id_shop)
-		LEFT JOIN ' . _DB_PREFIX_ . 'currency_lang cul ON (cul.id_currency = a.id_currency AND cul.id_lang=' . (int) $this->context->language->id . ')
-		LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang=' . (int) $this->context->language->id . ')
-		LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang=' . (int) $this->context->language->id . ')';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
+		LEFT JOIN '._DB_PREFIX_.'currency_lang cul ON (cul.id_currency = a.id_currency AND cul.id_lang='.(int) $this->context->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int) $this->context->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang='.(int) $this->context->language->id.')';
         $this->_use_found_rows = false;
 
         $this->bulk_actions = [
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -139,9 +140,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_specific_price_rule'] = [
-                'href' => self::$currentIndex . '&addspecific_price_rule&token=' . $this->token,
+                'href' => self::$currentIndex.'&addspecific_price_rule&token='.$this->token,
                 'desc' => $this->trans('Add new catalog price rule', [], 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -153,7 +154,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
-            if (null !== $this->_list[$k]['id_currency']) {
+            if ($this->_list[$k]['id_currency'] !== null) {
                 $currency = new Currency(
                     (int) $this->_list[$k]['id_currency'],
                     (int) $this->context->language->id,
@@ -172,14 +173,14 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
     public function renderForm()
     {
-        if (!$this->object->id) {
+        if (! $this->object->id) {
             $this->object->price = -1;
         }
 
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Catalog price rules', [], 'Admin.Catalog.Feature'),
-                'icon' => 'icon-dollar',
+                'icon' => 'fa-duotone icon-dollar',
             ],
             'input' => [
                 [
@@ -324,7 +325,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $attribute_groups = [];
         $attributes = Attribute::getAttributes((int) $this->context->language->id);
         foreach ($attributes as $attribute) {
-            if (!isset($attribute_groups[$attribute['id_attribute_group']])) {
+            if (! isset($attribute_groups[$attribute['id_attribute_group']])) {
                 $attribute_groups[$attribute['id_attribute_group']] = [
                     'id_attribute_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['attribute_group'],

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -46,8 +47,6 @@ class PerformanceController extends FrameworkBundleAdminController
      * Displays the Performance main page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
-     * @return Response
      */
     public function indexAction(): Response
     {
@@ -55,7 +54,7 @@ class PerformanceController extends FrameworkBundleAdminController
             'clear_cache' => [
                 'href' => $this->generateUrl('admin_clear_cache'),
                 'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
-                'icon' => 'delete',
+                'icon' => 'fa-duotone delete',
             ],
         ];
 
@@ -91,9 +90,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Smarty configuration form.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -110,9 +108,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Debug Mode configuration form.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -129,9 +126,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Optional Features configuration form.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -148,9 +144,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Combine Compress Cache configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -167,9 +162,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Media Servers configuration form.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -186,9 +180,8 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance Caching configuration form.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
      *
-     * @param Request $request
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse
      */
@@ -204,16 +197,13 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance configuration form.
      *
-     * @param Request $request
-     * @param FormHandlerInterface $formHandler
-     * @param string $hookName
      *
      * @return RedirectResponse
      */
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
         $this->dispatchHook(
-            'actionAdminAdvancedParametersPerformanceControllerPostProcess' . $hookName . 'Before',
+            'actionAdminAdvancedParametersPerformanceControllerPostProcess'.$hookName.'Before',
             ['controller' => $this]
         );
 
@@ -226,7 +216,7 @@ class PerformanceController extends FrameworkBundleAdminController
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
-            if (0 === count($saveErrors)) {
+            if (count($saveErrors) === 0) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } else {
                 $this->flashErrors($saveErrors);
@@ -252,57 +242,36 @@ class PerformanceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_performance');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getSmartyFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.smarty.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getDebugModeFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.debug_mode.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getOptionalFeaturesFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.optional_features.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getCombineCompressCacheFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.ccc.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getMediaServersFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.media_servers.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getCachingFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.performance.caching.form_handler');
     }
 
-    /**
-     * @return FormBuilderInterface
-     */
     protected function getMemcacheFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.admin.advanced_parameters.performance.memcache.form_builder');

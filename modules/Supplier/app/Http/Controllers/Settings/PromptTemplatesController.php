@@ -7,14 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Modules\Catalog\Models\Category;
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Models\Prompt\SupplierPrompt;
+use Modules\Supplier\Models\Supplier;
 
 class PromptTemplatesController extends Controller
 {
-    /**
-     * Display prompt templates library
-     */
     public function index(Request $request): View
     {
         $pageTitle = 'Biblioteca de Plantillas de Prompts';
@@ -128,7 +125,7 @@ class PromptTemplatesController extends Controller
             ]);
 
             return redirect()
-                ->route('manager.backups.suppliers.templates.index')
+                ->route('settings.suppliers.templates.index')
                 ->with('success', 'Plantilla creada exitosamente');
 
         } catch (\Exception $e) {
@@ -194,7 +191,7 @@ class PromptTemplatesController extends Controller
             ]);
 
             return redirect()
-                ->route('manager.backups.suppliers.templates.index')
+                ->route('settings.suppliers.templates.index')
                 ->with('success', 'Plantilla actualizada exitosamente');
 
         } catch (\Exception $e) {

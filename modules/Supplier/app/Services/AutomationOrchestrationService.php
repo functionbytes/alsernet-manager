@@ -9,17 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierAutomationAlert;
-use Modules\Supplier\Entities\SupplierAutomationChain;
-use Modules\Supplier\Entities\SupplierAutomationChainExecution;
-use Modules\Supplier\Entities\SupplierAutomationDeadLetterQueue;
-use Modules\Supplier\Entities\SupplierAutomationExecution;
-use Modules\Supplier\Entities\SupplierAutomationHealthCheck;
-use Modules\Supplier\Entities\SupplierAutomationRateLimit;
-use Modules\Supplier\Entities\SupplierAutomationRetryQueue;
-use Modules\Supplier\Entities\SupplierAutomationTrigger;
-use Modules\Supplier\Entities\SupplierAutomationWorkflow;
-use Modules\Supplier\Entities\SupplierSource;
+use Modules\Supplier\Models\SupplierAutomationAlert;
+use Modules\Supplier\Models\SupplierAutomationChain;
+use Modules\Supplier\Models\SupplierAutomationChainExecution;
+use Modules\Supplier\Models\SupplierAutomationDeadLetterQueue;
+use Modules\Supplier\Models\SupplierAutomationExecution;
+use Modules\Supplier\Models\SupplierAutomationHealthCheck;
+use Modules\Supplier\Models\SupplierAutomationRateLimit;
+use Modules\Supplier\Models\SupplierAutomationRetryQueue;
+use Modules\Supplier\Models\SupplierAutomationTrigger;
+use Modules\Supplier\Models\SupplierAutomationWorkflow;
+use Modules\Supplier\Models\SupplierSource;
 
 class AutomationOrchestrationService
 {

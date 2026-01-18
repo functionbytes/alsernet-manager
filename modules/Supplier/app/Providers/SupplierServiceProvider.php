@@ -2,8 +2,28 @@
 
 namespace Modules\Supplier\Providers;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Supplier\Commands\CleanupSyncCacheCommand;
+use Modules\Supplier\Events\SupplierErpProviderUpdated;
+use Modules\Supplier\Events\SupplierProductPriceChanged;
+use Modules\Supplier\Events\SupplierProductUpdated;
+use Modules\Supplier\Listeners\SyncPriceToErpListener;
+use Modules\Supplier\Listeners\SyncProductToErpListener;
+use Modules\Supplier\Listeners\SyncProviderToErpListener;
+use Modules\Supplier\Models\SupplierErpProvider;
+use Modules\Supplier\Models\SupplierProduct;
+use Modules\Supplier\Models\SupplierProductPrice;
+use Modules\Supplier\Observers\SupplierErpProviderObserver;
+use Modules\Supplier\Observers\SupplierProductObserver;
+use Modules\Supplier\Observers\SupplierProductPriceObserver;
+use Modules\Supplier\Services\AutomationOrchestrationService;
+use Modules\Supplier\Services\ContentGenerationService;
+use Modules\Supplier\Services\ErpSyncService;
+use Modules\Supplier\Services\ExtractionService;
+use Modules\Supplier\Services\PromptSelectionService;
+use Modules\Supplier\Services\SourceConfigurationService;
 use Modules\Theme\Services\NavService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
@@ -24,8 +44,10 @@ class SupplierServiceProvider extends ServiceProvider
     {
         $this->registerCommands();
         $this->registerCommandSchedules();
+        $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerViewComposers();
         $this->registerMenus();
         $this->registerObservers();
         $this->registerEventListeners();
@@ -39,36 +61,42 @@ class SupplierServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
 
+        // Merge module config
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/supplier.php',
+            'supplier'
+        );
+
         // Register services as singletons
         $this->app->singleton(
-            \Modules\Supplier\Services\PromptSelectionService::class,
-            fn ($app) => new \Modules\Supplier\Services\PromptSelectionService
+            PromptSelectionService::class,
+            fn ($app) => new PromptSelectionService
         );
 
         $this->app->singleton(
-            \Modules\Supplier\Services\ExtractionService::class,
-            fn ($app) => new \Modules\Supplier\Services\ExtractionService
+            ExtractionService::class,
+            fn ($app) => new ExtractionService
         );
 
         $this->app->singleton(
-            \Modules\Supplier\Services\AutomationOrchestrationService::class,
-            fn ($app) => new \Modules\Supplier\Services\AutomationOrchestrationService
+            AutomationOrchestrationService::class,
+            fn ($app) => new AutomationOrchestrationService
         );
 
         $this->app->singleton(
-            \Modules\Supplier\Services\ContentGenerationService::class,
-            fn ($app) => new \Modules\Supplier\Services\ContentGenerationService
+            ContentGenerationService::class,
+            fn ($app) => new ContentGenerationService
         );
 
         $this->app->singleton(
-            \Modules\Supplier\Services\SourceConfigurationService::class,
-            fn ($app) => new \Modules\Supplier\Services\SourceConfigurationService
+            SourceConfigurationService::class,
+            fn ($app) => new SourceConfigurationService
         );
 
         // Registrar servicio de sincronización inversa (Supplier → ERP)
         $this->app->singleton(
-            \Modules\Supplier\Services\ErpSyncService::class,
-            fn ($app) => new \Modules\Supplier\Services\ErpSyncService
+            ErpSyncService::class,
+            fn ($app) => new ErpSyncService
         );
     }
 
@@ -77,7 +105,9 @@ class SupplierServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // Register artisan commands here
+        $this->commands([
+            CleanupSyncCacheCommand::class,
+        ]);
     }
 
     /**
@@ -85,10 +115,31 @@ class SupplierServiceProvider extends ServiceProvider
      */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            // Cleanup stale sync cache flags every hour
+            $schedule->command('supplier:cleanup-sync-cache')
+                ->hourly()
+                ->withoutOverlapping()
+                ->runInBackground();
+        });
+    }
+
+    /**
+     * Register translations.
+     */
+    public function registerTranslations(): void
+    {
+        $langPath = resource_path('lang/modules/'.$this->nameLower);
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, $this->nameLower);
+            $this->loadJsonTranslationsFrom($langPath);
+        } else {
+            $this->loadTranslationsFrom(module_path($this->name, 'lang'), $this->nameLower);
+            $this->loadJsonTranslationsFrom(module_path($this->name, 'lang'));
+        }
     }
 
     /**
@@ -154,27 +205,45 @@ class SupplierServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register view composers for theme integration.
+     */
+    protected function registerViewComposers(): void
+    {
+        // Compositors específicos del módulo Supplier pueden ser agregados aquí si es necesario
+    }
+
+    /**
      * Register navigation menus
      */
     protected function registerMenus(): void
     {
         // Mini-nav item para Proveedores
         NavService::registerMiniItem('suppliers', [
-            'icon' => 'fa-truck',
+            'icon' => 'fa-duotone fa-truck',
             'tooltip' => 'Proveedores',
             'sidebar_id' => 'suppliers',
             'order' => 50,
         ]);
 
-        // Sidebar con los items del módulo
+        // Sidebar operational - Gestión de suppliers
         NavService::registerSidebar('suppliers', [
             'title' => 'Proveedores',
             'items' => [
-                ['label' => 'Gestión de proveedores', 'route' => 'settings.suppliers.index'],
+                ['label' => 'Gestión de proveedores', 'route' => 'suppliers.index'],
+            ],
+        ]);
+
+        // Sidebar settings - Configuración del módulo Supplier
+        NavService::registerSidebar('settings', [
+            'title' => 'Proveedores',
+            'items' => [
+                ['label' => 'Crear proveedor', 'route' => 'settings.suppliers.create'],
                 ['label' => 'Prompts', 'route' => 'settings.suppliers.prompts.index'],
                 ['label' => 'Templates', 'route' => 'settings.suppliers.templates.index'],
                 ['label' => 'Automatización', 'route' => 'settings.suppliers.automation.index'],
                 ['label' => 'Contenido generado', 'route' => 'settings.suppliers.content.index'],
+                ['label' => 'Sincronización', 'route' => 'settings.suppliers.sync.index'],
+                ['label' => 'Fallos de sincronización', 'route' => 'settings.suppliers.sync-failures.index'],
             ],
         ]);
     }
@@ -187,16 +256,16 @@ class SupplierServiceProvider extends ServiceProvider
      */
     protected function registerObservers(): void
     {
-        \Modules\Supplier\Entities\SupplierProductPrice::observe(
-            \Modules\Supplier\Observers\SupplierProductPriceObserver::class
+        SupplierProductPrice::observe(
+            SupplierProductPriceObserver::class
         );
 
-        \Modules\Supplier\Entities\SupplierErpProvider::observe(
-            \Modules\Supplier\Observers\SupplierErpProviderObserver::class
+        SupplierErpProvider::observe(
+            SupplierErpProviderObserver::class
         );
 
-        \Modules\Supplier\Entities\SupplierProduct::observe(
-            \Modules\Supplier\Observers\SupplierProductObserver::class
+        SupplierProduct::observe(
+            SupplierProductObserver::class
         );
     }
 
@@ -210,18 +279,18 @@ class SupplierServiceProvider extends ServiceProvider
     {
         // Registrar listeners para eventos de cambios en Supplier
         $this->app['events']->listen(
-            \Modules\Supplier\Events\SupplierProductPriceChanged::class,
-            \Modules\Supplier\Listeners\SyncPriceToErpListener::class
+            SupplierProductPriceChanged::class,
+            SyncPriceToErpListener::class
         );
 
         $this->app['events']->listen(
-            \Modules\Supplier\Events\SupplierErpProviderUpdated::class,
-            \Modules\Supplier\Listeners\SyncProviderToErpListener::class
+            SupplierErpProviderUpdated::class,
+            SyncProviderToErpListener::class
         );
 
         $this->app['events']->listen(
-            \Modules\Supplier\Events\SupplierProductUpdated::class,
-            \Modules\Supplier\Listeners\SyncProductToErpListener::class
+            SupplierProductUpdated::class,
+            SyncProductToErpListener::class
         );
     }
 

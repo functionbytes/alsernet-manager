@@ -22,7 +22,7 @@ class DocumentTypeSeeder extends Seeder
             [
                 'slug' => 'corta',
                 'label' => 'Licencia de armas cortas',
-                'icon' => 'fas fa-gun',
+                'icon' => 'fa-duotone fas fa-gun',
                 'color' => '#dc3545',
                 'sort_order' => 1,
                 'sla_multiplier' => 2.0,
@@ -73,7 +73,7 @@ class DocumentTypeSeeder extends Seeder
             [
                 'slug' => 'rifle',
                 'label' => 'Licencia de rifles',
-                'icon' => 'fas fa-gun',
+                'icon' => 'fa-duotone fas fa-gun',
                 'color' => '#ff6b6b',
                 'sort_order' => 2,
                 'sla_multiplier' => 2.0,
@@ -124,7 +124,7 @@ class DocumentTypeSeeder extends Seeder
             [
                 'slug' => 'escopeta',
                 'label' => 'Licencia de escopetas',
-                'icon' => 'fas fa-gun',
+                'icon' => 'fa-duotone fas fa-gun',
                 'color' => '#fd7e14',
                 'sort_order' => 3,
                 'sla_multiplier' => 2.0,
@@ -175,7 +175,7 @@ class DocumentTypeSeeder extends Seeder
             [
                 'slug' => 'balines',
                 'label' => 'Licencia de balines',
-                'icon' => 'fas fa-circle',
+                'icon' => 'fa-duotone fas fa-circle',
                 'color' => '#ffc107',
                 'sort_order' => 4,
                 'sla_multiplier' => 0.5,
@@ -213,7 +213,7 @@ class DocumentTypeSeeder extends Seeder
             [
                 'slug' => 'dni',
                 'label' => 'Solo identificación',
-                'icon' => 'fas fa-id-card',
+                'icon' => 'fa-duotone fas fa-id-card',
                 'color' => '#0dcaf0',
                 'sort_order' => 5,
                 'sla_multiplier' => 0.5,

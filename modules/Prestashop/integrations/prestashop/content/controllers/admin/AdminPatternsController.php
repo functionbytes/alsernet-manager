@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -64,7 +65,7 @@ class AdminPatternsControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => 'patterns of helper form.tpl',
-                'icon' => 'icon-edit',
+                'icon' => 'fa-duotone icon-edit',
             ],
             'tabs' => [
                 'small' => 'Small Inputs',
@@ -407,7 +408,7 @@ class AdminPatternsControllerCore extends AdminController
                     'label' => 'input free',
                     'name' => 'type_free',
                 ],
-                //...
+                // ...
             ],
             'submit' => [
                 'title' => 'Save',
@@ -484,7 +485,7 @@ class AdminPatternsControllerCore extends AdminController
             ],
         ];
 
-        $helper = new HelperList();
+        $helper = new HelperList;
         $helper->shopLinkType = '';
         $helper->simple_header = true;
         $helper->actions = ['edit', 'delete'];
@@ -495,7 +496,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list use a simple Header with no toolbar';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -588,7 +589,7 @@ class AdminPatternsControllerCore extends AdminController
             ],
         ];
 
-        $helper = new HelperList();
+        $helper = new HelperList;
         $helper->shopLinkType = '';
         $helper->simple_header = false;
         $helper->actions = [];
@@ -599,7 +600,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list shows a lot of small columns';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -610,7 +611,7 @@ class AdminPatternsControllerCore extends AdminController
 
         $fields_list = [];
 
-        $helper = new HelperList();
+        $helper = new HelperList;
         $helper->shopLinkType = '';
         $helper->simple_header = true;
         $helper->actions = null;
@@ -621,7 +622,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'Moderate Comments';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -632,7 +633,7 @@ class AdminPatternsControllerCore extends AdminController
             'delete' => [
                 'text' => 'Delete selected',
                 'confirm' => 'Delete selected items?',
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
         $this->fields_list = [
@@ -662,7 +663,7 @@ class AdminPatternsControllerCore extends AdminController
         $this->fields_options = [
             'general' => [
                 'title' => 'General',
-                'icon' => 'icon-cogs',
+                'icon' => 'fa-duotone icon-cogs',
                 'fields' => [],
                 'submit' => ['title' => 'Save'],
             ],

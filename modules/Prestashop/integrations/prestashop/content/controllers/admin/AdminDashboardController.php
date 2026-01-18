@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -45,11 +46,11 @@ class AdminDashboardControllerCore extends AdminController
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS([
-            _PS_JS_DIR_ . 'vendor/d3.v3.min.js',
-            __PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/nv.d3.min.js',
-            _PS_JS_DIR_ . '/admin/dashboard.js',
+            _PS_JS_DIR_.'vendor/d3.v3.min.js',
+            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
+            _PS_JS_DIR_.'/admin/dashboard.js',
         ]);
-        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/nv.d3.css');
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css');
     }
 
     public function initPageHeaderToolbar()
@@ -57,7 +58,7 @@ class AdminDashboardControllerCore extends AdminController
         $this->page_header_toolbar_title = $this->trans('Dashboard', [], 'Admin.Dashboard.Feature');
         $this->page_header_toolbar_btn['switch_demo'] = [
             'desc' => $this->trans('Demo mode', [], 'Admin.Dashboard.Feature'),
-            'icon' => 'process-icon-toggle-' . (Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
+            'icon' => 'fa-duotone process-icon-toggle-'.(Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
             'help' => $this->trans('This mode displays sample data so you can try your dashboard without real numbers.', [], 'Admin.Dashboard.Help'),
         ];
 
@@ -88,11 +89,11 @@ class AdminDashboardControllerCore extends AdminController
         foreach ($modules as $module) {
             if (isset($module->tab) && $module->tab == 'payments_gateways' && $module->id) {
                 $moduleClass = Module::getInstanceByName($module->name);
-                if (!$moduleClass->isEnabledForShopContext()) {
+                if (! $moduleClass->isEnabledForShopContext()) {
                     continue;
                 }
 
-                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED'] = [
+                $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = [
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a fixed fee for each order placed in %currency% with %module%.',
@@ -108,7 +109,7 @@ class AdminDashboardControllerCore extends AdminController
                     'defaultValue' => '0',
                     'suffix' => $currency->iso_code,
                 ];
-                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR'] = [
+                $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = [
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.',
@@ -126,7 +127,7 @@ class AdminDashboardControllerCore extends AdminController
                 ];
 
                 if (Currency::isMultiCurrencyActivated()) {
-                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED_FOREIGN'] = [
+                    $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED_FOREIGN'] = [
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a fixed fee for each order placed with a foreign currency with %module%.',
@@ -141,13 +142,13 @@ class AdminDashboardControllerCore extends AdminController
                         'defaultValue' => '0',
                         'suffix' => $currency->iso_code,
                     ];
-                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR_FOREIGN'] = [
+                    $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR_FOREIGN'] = [
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
-                             ['%module%' => $module->displayName],
-                             'Admin.Dashboard.Help'
-                            ),
+                            ['%module%' => $module->displayName],
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPercentage',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -159,7 +160,7 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         foreach ($carriers as $carrier) {
-            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP'] = [
+            $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = [
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.',
@@ -174,7 +175,7 @@ class AdminDashboardControllerCore extends AdminController
                 'defaultValue' => '0',
                 'suffix' => '%',
             ];
-            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP_OVERSEAS'] = [
+            $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = [
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
@@ -228,7 +229,7 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
-        if (!empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+        if (! empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');
@@ -269,7 +270,7 @@ class AdminDashboardControllerCore extends AdminController
             $this->context->cookie->write();
         }
 
-        $calendar_helper = new HelperCalendar();
+        $calendar_helper = new HelperCalendar;
 
         $calendar_helper->setDateFrom(Tools::getValue('date_from', $this->context->employee->stats_date_from));
         $calendar_helper->setDateTo(Tools::getValue('date_to', $this->context->employee->stats_date_to));
@@ -277,11 +278,11 @@ class AdminDashboardControllerCore extends AdminController
         $stats_compare_from = $this->context->employee->stats_compare_from;
         $stats_compare_to = $this->context->employee->stats_compare_to;
 
-        if (null === $stats_compare_from || $stats_compare_from == '0000-00-00') {
+        if ($stats_compare_from === null || $stats_compare_from == '0000-00-00') {
             $stats_compare_from = null;
         }
 
-        if (null === $stats_compare_to || $stats_compare_to == '0000-00-00') {
+        if ($stats_compare_to === null || $stats_compare_to == '0000-00-00') {
             $stats_compare_to = null;
         }
 
@@ -304,7 +305,7 @@ class AdminDashboardControllerCore extends AdminController
             'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
-            'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
+            'new_version_url' => Tools::getCurrentUrlProtocolPrefix()._PS_API_DOMAIN_.'/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code.'&autoupgrade='.(int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')).'&hosted_mode='.(int) defined('_PS_HOST_MODE_'),
             'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
             'calendar' => $calendar_helper->generate(),
             'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
@@ -332,19 +333,19 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitDateRange')) {
-            if (!Validate::isDate(Tools::getValue('date_from'))
-                || !Validate::isDate(Tools::getValue('date_to'))) {
+            if (! Validate::isDate(Tools::getValue('date_from'))
+                || ! Validate::isDate(Tools::getValue('date_to'))) {
                 $this->errors[] = $this->trans('The selected date range is not valid.', [], 'Admin.Notifications.Error');
             }
 
             if (Tools::getValue('datepicker_compare')) {
-                if (!Validate::isDate(Tools::getValue('compare_date_from'))
-                    || !Validate::isDate(Tools::getValue('compare_date_to'))) {
+                if (! Validate::isDate(Tools::getValue('compare_date_from'))
+                    || ! Validate::isDate(Tools::getValue('compare_date_to'))) {
                     $this->errors[] = $this->trans('The selected date range is not valid.', [], 'Admin.Notifications.Error');
                 }
             }
 
-            if (!count($this->errors)) {
+            if (! count($this->errors)) {
                 $this->context->employee->stats_date_from = Tools::getValue('date_from');
                 $this->context->employee->stats_date_to = Tools::getValue('date_to');
                 $this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
@@ -374,8 +375,8 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         $shop = Context::getContext()->shop;
-        if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && !defined('_PS_HOST_MODE_')) {
-            $warning = $this->trans('You are currently connected under the following domain name:', [], 'Admin.Dashboard.Notification') . ' <span style="color: #CC0000;">' . $_SERVER['HTTP_HOST'] . '</span><br />';
+        if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && ! defined('_PS_HOST_MODE_')) {
+            $warning = $this->trans('You are currently connected under the following domain name:', [], 'Admin.Dashboard.Notification').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
                 $warning .= $this->trans(
                     'This is different from the shop domain name set in the Multistore backups: "%s".',
@@ -383,20 +384,20 @@ class AdminDashboardControllerCore extends AdminController
                         '%s' => $shop->domain,
                     ],
                     'Admin.Dashboard.Notification'
-                ) . $this->trans(
+                ).$this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url=' . (int) $shop->id . '&updateshop_url&token=' . Tools::getAdminTokenLite('AdminShopUrl') . '">',
+                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int) $shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'
                 );
             } else {
-                $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', [], 'Admin.Dashboard.Notification') . '
-				' . $this->trans(
+                $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', [], 'Admin.Dashboard.Notification').'
+				'.$this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     [
-                        '{link}' => '<a href="index.php?controller=AdminMeta&token=' . Tools::getAdminTokenLite('AdminMeta') . '#meta_fieldset_shop_url">',
+                        '{link}' => '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">',
                         '{/link}' => '</a>',
                     ],
                     'Admin.Dashboard.Notification'
@@ -426,13 +427,13 @@ class AdminDashboardControllerCore extends AdminController
             'extra' => (int) Tools::getValue('extra'),
         ];
 
-        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int) Tools::getValue('dashboard_use_push'))));
+        exit(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int) Tools::getValue('dashboard_use_push'))));
     }
 
     public function ajaxProcessSetSimulationMode()
     {
         Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int) Tools::getValue('PS_DASHBOARD_SIMULATION'));
-        die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
+        exit('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
     }
 
     /**
@@ -475,14 +476,13 @@ class AdminDashboardControllerCore extends AdminController
             $return['widget_html'] = $module_obj->$hook($params);
         }
 
-        die(json_encode($return));
+        exit(json_encode($return));
     }
 
     /**
      * Return the Help center link for the provided locale
      *
-     * @param string $languageCode 2-letter locale code
-     *
+     * @param  string  $languageCode  2-letter locale code
      * @return string
      */
     private function getHelpCenterLink($languageCode)

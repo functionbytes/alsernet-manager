@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -42,7 +43,7 @@ class AdminShopGroupControllerCore extends AdminController
 
         parent::__construct();
 
-        if (!Tools::getValue('realedit')) {
+        if (! Tools::getValue('realedit')) {
             $this->deleted = false;
         }
 
@@ -97,9 +98,9 @@ class AdminShopGroupControllerCore extends AdminController
                 $urls = $current_shop->getUrls();
 
                 foreach ($urls as $key_url => &$url) {
-                    $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
+                    $title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
                     if (strlen($title) > 23) {
-                        $title = substr($title, 0, 23) . '...';
+                        $title = substr($title, 0, 23).'...';
                     }
 
                     $url['name'] = $title;
@@ -114,13 +115,13 @@ class AdminShopGroupControllerCore extends AdminController
                 new TreeToolbarLink(
                     'Collapse All',
                     '#',
-                    '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
+                    '$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
-                    '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
+                    '$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
                 ),
             ])
@@ -149,13 +150,13 @@ class AdminShopGroupControllerCore extends AdminController
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->page_header_toolbar_btn['new'] = [
                 'desc' => $this->trans('Add a new shop group', [], 'Admin.Advparameters.Feature'),
-                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             ];
             $this->page_header_toolbar_btn['new_2'] = [
                 'desc' => $this->trans('Add a new shop', [], 'Admin.Advparameters.Feature'),
-                'href' => $this->context->link->getAdminLink('AdminShop') . '&addshop',
+                'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
                 'imgclass' => 'new_2',
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
     }
@@ -167,7 +168,7 @@ class AdminShopGroupControllerCore extends AdminController
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->toolbar_btn['new'] = [
                 'desc' => $this->trans('Add a new shop group', [], 'Admin.Advparameters.Feature'),
-                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             ];
         }
     }
@@ -177,7 +178,7 @@ class AdminShopGroupControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Shop group', [], 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-shopping-cart',
+                'icon' => 'fa-duotone icon-shopping-cart',
             ],
             'description' => $this->trans('Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.', [], 'Admin.Advparameters.Help'),
             'input' => [
@@ -214,7 +215,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ],
                     ],
-                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', [], 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: you will not be able to disable this option once you have registered customers.', [], 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', [], 'Admin.Advparameters.Help').'<br/>'.$this->trans('Warning: you will not be able to disable this option once you have registered customers.', [], 'Admin.Advparameters.Help'),
                 ],
                 [
                     'type' => 'switch',
@@ -253,7 +254,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ],
                     ],
-                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', [], 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', [], 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', [], 'Admin.Advparameters.Help').'<br/>'.$this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', [], 'Admin.Advparameters.Help'),
                 ],
                 [
                     'type' => 'switch',
@@ -280,7 +281,7 @@ class AdminShopGroupControllerCore extends AdminController
             ],
         ];
 
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
@@ -317,7 +318,7 @@ class AdminShopGroupControllerCore extends AdminController
         // test store authorized to remove
         foreach ($this->_list as $shop_group) {
             $shops = Shop::getShops(true, $shop_group['id_shop_group']);
-            if (!empty($shops)) {
+            if (! empty($shops)) {
                 $shop_group_delete_list[] = $shop_group['id_shop_group'];
             }
         }
@@ -326,7 +327,7 @@ class AdminShopGroupControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('delete' . $this->table) || Tools::isSubmit('status') || Tools::isSubmit('status' . $this->table)) {
+        if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table)) {
             /** @var ShopGroup $object */
             $object = $this->loadObject();
 
@@ -346,13 +347,13 @@ class AdminShopGroupControllerCore extends AdminController
 
     protected function afterAdd($new_shop_group)
     {
-        //Reset available quantitites
+        // Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 
     protected function afterUpdate($new_shop_group)
     {
-        //Reset available quantitites
+        // Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 

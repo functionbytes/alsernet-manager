@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -88,9 +89,6 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to view this."
      * )
      *
-     * @param Request $request
-     * @param CustomerFilters $filters
-     *
      * @return Response
      */
     public function indexAction(Request $request, CustomerFilters $filters)
@@ -126,8 +124,6 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function searchGridAction(Request $request)
@@ -147,13 +143,11 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
     {
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+        if (! $this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->redirectToRoute('admin_customers_index');
         }
 
@@ -200,9 +194,7 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
-     * @param int $customerId
-     * @param Request $request
-     *
+     * @param  int  $customerId
      * @return Response
      */
     public function editAction($customerId, Request $request)
@@ -254,13 +246,10 @@ class CustomerController extends AbstractAdminController
      * View customer information.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
+     *
      * @DemoRestricted(redirectRoute="admin_customers_index")
      *
-     * @param int $customerId
-     * @param Request $request
-     * @param CustomerDiscountFilters $customerDiscountFilters
-     * @param CustomerAddressFilters $customerAddressFilters
-     *
+     * @param  int  $customerId
      * @return Response
      */
     public function viewAction(
@@ -332,9 +321,7 @@ class CustomerController extends AbstractAdminController
      *      redirectRoute="admin_customers_index"
      * )
      *
-     * @param int $customerId
-     * @param Request $request
-     *
+     * @param  int  $customerId
      * @return Response
      */
     public function setPrivateNoteAction($customerId, Request $request)
@@ -372,9 +359,7 @@ class CustomerController extends AbstractAdminController
      *      redirectRoute="admin_customers_index"
      * )
      *
-     * @param int $customerId
-     * @param Request $request
-     *
+     * @param  int  $customerId
      * @return RedirectResponse
      */
     public function transformGuestToCustomerAction($customerId, Request $request)
@@ -409,8 +394,6 @@ class CustomerController extends AbstractAdminController
      *      redirectRoute="admin_customers_index"
      * )
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function setRequiredFieldsAction(Request $request)
@@ -434,15 +417,13 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function searchAction(Request $request)
     {
         $query = $request->query->get('customer_search');
         $phrases = explode(' ', $query);
-        $isRequestFromLegacyPage = !$request->query->has('sf2');
+        $isRequestFromLegacyPage = ! $request->query->has('sf2');
 
         try {
             $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
@@ -457,7 +438,7 @@ class CustomerController extends AbstractAdminController
         // it will return response so legacy can understand it
         if ($isRequestFromLegacyPage) {
             return $this->json([
-                'found' => !empty($customers),
+                'found' => ! empty($customers),
                 'customers' => $customers,
             ]);
         }
@@ -469,8 +450,6 @@ class CustomerController extends AbstractAdminController
      * Provides customer information for address creation in json format
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -507,8 +486,7 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $customerId
-     *
+     * @param  int  $customerId
      * @return RedirectResponse
      */
     public function toggleStatusAction($customerId)
@@ -518,7 +496,7 @@ class CustomerController extends AbstractAdminController
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
             $editCustomerCommand = new EditCustomerCommand((int) $customerId);
-            $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
+            $editCustomerCommand->setIsEnabled(! $editableCustomer->isEnabled());
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
@@ -542,8 +520,7 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $customerId
-     *
+     * @param  int  $customerId
      * @return RedirectResponse
      */
     public function toggleNewsletterSubscriptionAction($customerId)
@@ -555,7 +532,7 @@ class CustomerController extends AbstractAdminController
             $editCustomerCommand = new EditCustomerCommand((int) $customerId);
 
             // toggle newsletter subscription
-            $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
+            $editCustomerCommand->setNewsletterSubscribed(! $editableCustomer->isNewsletterSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
@@ -579,8 +556,7 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $customerId
-     *
+     * @param  int  $customerId
      * @return RedirectResponse
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
@@ -590,7 +566,7 @@ class CustomerController extends AbstractAdminController
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
             $editCustomerCommand = new EditCustomerCommand((int) $customerId);
-            $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
+            $editCustomerCommand->setIsPartnerOffersSubscribed(! $editableCustomer->isPartnerOffersSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
@@ -613,8 +589,6 @@ class CustomerController extends AbstractAdminController
      *     redirectRoute="admin_customers_index",
      *     message="You do not have permission to delete this."
      * )
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -659,8 +633,6 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to delete this."
      * )
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function deleteAction(Request $request)
@@ -699,8 +671,6 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function enableBulkAction(Request $request)
@@ -731,8 +701,6 @@ class CustomerController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function disableBulkAction(Request $request)
@@ -758,8 +726,6 @@ class CustomerController extends AbstractAdminController
      * Export filtered customers
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param CustomerFilters $filters
      *
      * @return CsvResponse
      */
@@ -789,30 +755,28 @@ class CustomerController extends AbstractAdminController
         foreach ($grid->getData()->getRecords()->all() as $record) {
             $data[] = [
                 'id_customer' => $record['id_customer'],
-                'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
+                'social_title' => $record['social_title'] === '--' ? '' : $record['social_title'],
                 'firstname' => $record['firstname'],
                 'lastname' => $record['lastname'],
                 'email' => $record['email'],
-                'company' => '--' === $record['company'] ? '' : $record['company'],
-                'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
+                'company' => $record['company'] === '--' ? '' : $record['company'],
+                'total_spent' => $record['total_spent'] === '--' ? '' : $record['total_spent'],
                 'enabled' => $record['active'],
                 'newsletter' => $record['newsletter'],
                 'partner_offers' => $record['optin'],
                 'registration' => $record['date_add'],
-                'connect' => '--' === $record['connect'] ? '' : $record['connect'],
+                'connect' => $record['connect'] === '--' ? '' : $record['connect'],
             ];
         }
 
-        return (new CsvResponse())
+        return (new CsvResponse)
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
+            ->setFileName('customer_'.date('Y-m-d_His').'.csv');
     }
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param int $customerId
      *
      * @return JsonResponse
      */
@@ -834,8 +798,6 @@ class CustomerController extends AbstractAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param int $customerId
      *
      * @return JsonResponse
      */
@@ -860,7 +822,7 @@ class CustomerController extends AbstractAdminController
      */
     private function getRequiredFieldsForm()
     {
-        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
+        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer);
 
         return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
     }
@@ -868,16 +830,14 @@ class CustomerController extends AbstractAdminController
     /**
      * If customer form is submitted and groups are not selected
      * we add empty groups to request
-     *
-     * @param Request $request
      */
     private function addGroupSelectionToRequest(Request $request)
     {
-        if (!$request->isMethod(Request::METHOD_POST)) {
+        if (! $request->isMethod(Request::METHOD_POST)) {
             return;
         }
 
-        if (!$request->request->has('customer')
+        if (! $request->request->has('customer')
             || isset($request->request->get('customer')['group_ids'])
         ) {
             return;
@@ -892,7 +852,6 @@ class CustomerController extends AbstractAdminController
     /**
      * Get errors that can be used to translate exceptions into user friendly messages
      *
-     * @param Exception $e
      *
      * @return array
      */
@@ -976,7 +935,7 @@ class CustomerController extends AbstractAdminController
      *
      * @todo Remove this code when legacy edit will be migrated.
      *
-     * @param int $messageId The message id from legacy context
+     * @param  int  $messageId  The message id from legacy context
      */
     private function manageLegacyFlashes($messageId)
     {
@@ -992,9 +951,6 @@ class CustomerController extends AbstractAdminController
         }
     }
 
-    /**
-     * @return array
-     */
     private function getCustomerToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -1004,11 +960,11 @@ class CustomerController extends AbstractAdminController
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_customers_create'),
             'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
-            'icon' => 'add_circle_outline',
-            'disabled' => !$isSingleShopContext,
+            'icon' => 'fa-duotone add_circle_outline',
+            'disabled' => ! $isSingleShopContext,
         ];
 
-        if (!$isSingleShopContext) {
+        if (! $isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
                 'You can use this feature in a single shop context only. Switch context to enable it.',
                 'Admin.Orderscustomers.Feature'

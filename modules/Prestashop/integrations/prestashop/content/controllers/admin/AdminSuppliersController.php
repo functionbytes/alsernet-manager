@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -49,13 +50,13 @@ class AdminSuppliersControllerCore extends AdminController
         $this->bulk_actions = [
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
             ],
         ];
 
         $this->_select = 'COUNT(DISTINCT ps.`id_product`) AS inventaries';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
+        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
         $this->_group = 'GROUP BY a.`id_supplier`';
 
         $this->fieldImageSettings = ['name' => 'logo', 'dir' => 'su'];
@@ -80,9 +81,9 @@ class AdminSuppliersControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_supplier'] = [
-                'href' => self::$currentIndex . '&addsupplier&token=' . $this->token,
+                'href' => self::$currentIndex.'&addsupplier&token='.$this->token,
                 'desc' => $this->trans('Add new supplier', [], 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -92,14 +93,14 @@ class AdminSuppliersControllerCore extends AdminController
     public function renderForm()
     {
         // loads current warehouse
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
-        $image = _PS_SUPP_IMG_DIR_ . $obj->id . '.jpg';
+        $image = _PS_SUPP_IMG_DIR_.$obj->id.'.jpg';
         $image_url = ImageManager::thumbnail(
             $image,
-            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
+            $this->table.'_'.(int) $obj->id.'.'.$this->imageType,
             350,
             $this->imageType,
             true,
@@ -107,7 +108,7 @@ class AdminSuppliersControllerCore extends AdminController
         );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
-        $tmp_addr = new Address();
+        $tmp_addr = new Address;
         $res = $tmp_addr->getFieldsRequiredDatabase();
         $required_fields = [];
         foreach ($res as $row) {
@@ -117,7 +118,7 @@ class AdminSuppliersControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Suppliers', [], 'Admin.Global'),
-                'icon' => 'icon-truck',
+                'icon' => 'fa-duotone icon-truck',
             ],
             'input' => [
                 [
@@ -130,7 +131,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ],
                 (
                     in_array('company', $required_fields) ?
@@ -152,10 +153,10 @@ class AdminSuppliersControllerCore extends AdminController
                     'name' => 'description',
                     'lang' => true,
                     'hint' => [
-                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                         $this->trans('Will appear in the list of suppliers.', [], 'Admin.Catalog.Help'),
                     ],
-                    'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
+                    'autoload_rte' => 'rte', // Enable TinyMCE editor for short description
                 ],
                 [
                     'type' => 'text',
@@ -254,7 +255,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'name' => 'meta_title',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ],
                 [
                     'type' => 'text',
@@ -262,7 +263,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'name' => 'meta_description',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ],
                 [
                     'type' => 'tags',
@@ -272,7 +273,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'col' => 6,
                     'hint' => [
                         $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', [], 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                     ],
                 ],
                 [
@@ -354,7 +355,7 @@ class AdminSuppliersControllerCore extends AdminController
 
         if (empty($this->display) && $this->can_import) {
             $this->toolbar_btn['import'] = [
-                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=suppliers',
+                'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
                 'desc' => $this->trans('Import', [], 'Admin.Actions'),
             ];
         }
@@ -366,7 +367,7 @@ class AdminSuppliersControllerCore extends AdminController
         $products = $this->object->getProductsLite($this->context->language->id);
         $total_product = count($products);
 
-        for ($i = 0; $i < $total_product; ++$i) {
+        for ($i = 0; $i < $total_product; $i++) {
             $products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
             $products[$i]->loadStockData();
             // Build attributes combinations
@@ -395,7 +396,7 @@ class AdminSuppliersControllerCore extends AdminController
                 foreach ($comb_array as $key => $product_attribute) {
                     $list = '';
                     foreach ($product_attribute['attributes'] as $attribute) {
-                        $list .= $attribute[0] . ' - ' . $attribute[1] . ', ';
+                        $list .= $attribute[0].' - '.$attribute[1].', ';
                     }
                     $comb_array[$key]['attributes'] = rtrim($list, ', ');
                 }
@@ -430,22 +431,22 @@ class AdminSuppliersControllerCore extends AdminController
 
         /* Generate image with differents size */
         if (($id_supplier = (int) Tools::getValue('id_supplier')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_ . $id_supplier . '.jpg')) {
+             isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg')) {
             $images_types = ImageType::getImagesTypes('suppliers');
             foreach ($images_types as $image_type) {
-                $file = _PS_SUPP_IMG_DIR_ . $id_supplier . '.jpg';
-                if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_ . $id_supplier . '-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
+                $file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
+                if (! ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
                     $return = false;
                 }
 
                 if ($generate_hight_dpi_images) {
-                    if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_ . $id_supplier . '-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                    if (! ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
                         $return = false;
                     }
                 }
             }
 
-            $current_logo_file = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id_supplier . '_' . $this->context->shop->id . '.jpg';
+            $current_logo_file = _PS_TMP_IMG_DIR_.'supplier_mini_'.$id_supplier.'_'.$this->context->shop->id.'.jpg';
 
             if (file_exists($current_logo_file)) {
                 unlink($current_logo_file);
@@ -463,14 +464,14 @@ class AdminSuppliersControllerCore extends AdminController
     public function postProcess()
     {
         // checks access
-        if (Tools::isSubmit('submitAdd' . $this->table) && !($this->access('add'))) {
+        if (Tools::isSubmit('submitAdd'.$this->table) && ! ($this->access('add'))) {
             $this->errors[] = $this->trans('You do not have permission to add suppliers.', [], 'Admin.Catalog.Notification');
 
             return parent::postProcess();
         }
 
-        if (Tools::isSubmit('submitAdd' . $this->table)) {
-            if (Tools::isSubmit('id_supplier') && !($obj = $this->loadObject(true))) {
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
+            if (Tools::isSubmit('id_supplier') && ! ($obj = $this->loadObject(true))) {
                 return;
             }
 
@@ -479,7 +480,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $address = new Address((int) Tools::getValue('id_address'));
             } // updates address
             else {
-                $address = new Address();
+                $address = new Address;
             } // creates address
 
             $address->alias = Tools::getValue('name', null);
@@ -527,14 +528,14 @@ class AdminSuppliersControllerCore extends AdminController
             }
 
             return parent::postProcess();
-        } elseif (Tools::isSubmit('delete' . $this->table)) {
-            if (!($obj = $this->loadObject(true))) {
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
+            if (! ($obj = $this->loadObject(true))) {
                 return;
             } elseif (SupplyOrder::supplierHasPendingOrders($obj->id)) {
                 $this->errors[] = $this->trans('It is not possible to delete a supplier if there are pending supplier orders.', [], 'Admin.Catalog.Notification');
             } else {
-                //delete all product_supplier linked to this supplier
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_supplier` WHERE `id_supplier`=' . (int) $obj->id);
+                // delete all product_supplier linked to this supplier
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int) $obj->id);
 
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
@@ -553,8 +554,7 @@ class AdminSuppliersControllerCore extends AdminController
     /**
      * @see AdminController::afterAdd()
      *
-     * @param Supplier $object
-     *
+     * @param  Supplier  $object
      * @return bool
      */
     protected function afterAdd($object)
@@ -572,8 +572,7 @@ class AdminSuppliersControllerCore extends AdminController
     /**
      * @see AdminController::afterUpdate()
      *
-     * @param Supplier $object
-     *
+     * @param  Supplier  $object
      * @return bool
      */
     protected function afterUpdate($object)

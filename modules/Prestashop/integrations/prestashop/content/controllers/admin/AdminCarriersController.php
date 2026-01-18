@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -33,7 +34,7 @@ class AdminCarriersControllerCore extends AdminController
 
     public function __construct()
     {
-        if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier')) {
+        if ($id_carrier = Tools::getValue('id_carrier') && ! Tools::isSubmit('deletecarrier') && ! Tools::isSubmit('statuscarrier') && ! Tools::isSubmit('isFreecarrier')) {
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard', true, [], ['id_carrier' => (int) $id_carrier]));
         }
 
@@ -54,7 +55,7 @@ class AdminCarriersControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Notifications.Info'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
 
@@ -126,7 +127,7 @@ class AdminCarriersControllerCore extends AdminController
             $this->page_header_toolbar_btn['new_carrier'] = [
                 'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
                 'desc' => $this->trans('Add new carrier', [], 'Admin.Shipping.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -136,14 +137,14 @@ class AdminCarriersControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'INNER JOIN `' . _DB_PREFIX_ . 'carrier_lang` b ON a.id_carrier = b.id_carrier' . Shop::addSqlRestrictionOnLang('b') . ' AND b.id_lang = ' . (int) $this->context->language->id . ' LEFT JOIN `' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop=' . (int) $this->context->shop->id . ')';
+        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.(int) $this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int) $this->context->shop->id.')';
         $this->_use_found_rows = false;
 
         // Removes the Recommended modules button
         unset($this->page_header_toolbar_btn['modules-list']);
 
         // test if need to show header alert.
-        $sql = 'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2';
+        $sql = 'SELECT COUNT(1) FROM `'._DB_PREFIX_.'carrier` WHERE deleted = 0 AND id_reference > 2';
         $showHeaderAlert = (Db::getInstance()->executeS($sql, false)->fetchColumn(0) == 0);
 
         // Assign them in two steps! Because renderModulesList needs it before to be called.
@@ -163,7 +164,7 @@ class AdminCarriersControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Carriers', [], 'Admin.Shipping.Feature'),
-                'icon' => 'icon-truck',
+                'icon' => 'fa-duotone icon-truck',
             ],
             'input' => [
                 [
@@ -181,7 +182,7 @@ class AdminCarriersControllerCore extends AdminController
                     'type' => 'file',
                     'label' => $this->trans('Logo', [], 'Admin.Global'),
                     'name' => 'logo',
-                    'hint' => $this->trans('Upload a logo from your computer.', [], 'Admin.Shipping.Help') . ' (.gif, .jpg, .jpeg ' . $this->trans('or', [], 'Admin.Shipping.Help') . ' .png)',
+                    'hint' => $this->trans('Upload a logo from your computer.', [], 'Admin.Shipping.Help').' (.gif, .jpg, .jpeg '.$this->trans('or', [], 'Admin.Shipping.Help').' .png)',
                 ],
                 [
                     'type' => 'text',
@@ -403,7 +404,7 @@ class AdminCarriersControllerCore extends AdminController
             'title' => $this->trans('Save', [], 'Admin.Actions'),
         ];
 
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
@@ -418,18 +419,18 @@ class AdminCarriersControllerCore extends AdminController
             $this->ajaxProcessGetModuleQuickView();
         }
 
-        if (Tools::getValue('submitAdd' . $this->table)) {
+        if (Tools::getValue('submitAdd'.$this->table)) {
             /* Checking fields validity */
             $this->validateRules();
-            if (!count($this->errors)) {
-                $id = (int) Tools::getValue('id_' . $this->table);
+            if (! count($this->errors)) {
+                $id = (int) Tools::getValue('id_'.$this->table);
 
                 /* Object update */
-                if (isset($id) && !empty($id)) {
+                if (isset($id) && ! empty($id)) {
                     try {
                         if ($this->access('edit')) {
                             $current_carrier = new Carrier($id);
-                            if (!Validate::isLoadedObject($current_carrier)) {
+                            if (! Validate::isLoadedObject($current_carrier)) {
                                 throw new PrestaShopException('Cannot load Carrier object');
                             }
 
@@ -457,9 +458,9 @@ class AdminCarriersControllerCore extends AdminController
                                 $this->postImage($new_carrier->id);
                                 $this->changeZones($new_carrier->id);
                                 $new_carrier->setTaxRulesGroup((int) Tools::getValue('id_tax_rules_group'));
-                                Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $current_carrier->id . '&conf=4&token=' . $this->token);
+                                Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
                             } else {
-                                $this->errors[] = $this->trans('An error occurred while updating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
+                                $this->errors[] = $this->trans('An error occurred while updating an object.', [], 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
                             }
                         } else {
                             $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
@@ -471,19 +472,19 @@ class AdminCarriersControllerCore extends AdminController
                     // Object creation
                     if ($this->access('add')) {
                         // Create new Carrier
-                        $carrier = new Carrier();
+                        $carrier = new Carrier;
                         $this->copyFromPost($carrier, $this->table);
                         $carrier->position = Carrier::getHigherPosition() + 1;
                         if ($carrier->add()) {
-                            if (($_POST['id_' . $this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect) {
+                            if (($_POST['id_'.$this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect) {
                                 $carrier->setTaxRulesGroup((int) Tools::getValue('id_tax_rules_group'), true);
                                 $this->changeZones($carrier->id);
                                 $this->changeGroups($carrier->id);
                                 $this->updateAssoShop($carrier->id);
-                                Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $carrier->id . '&conf=3&token=' . $this->token);
+                                Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$carrier->id.'&conf=3&token='.$this->token);
                             }
                         } else {
-                            $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
+                            $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
                         }
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error');
@@ -491,8 +492,8 @@ class AdminCarriersControllerCore extends AdminController
                 }
             }
             parent::postProcess();
-        } elseif (isset($_GET['isFree' . $this->table])) {
-            if (!$this->access('edit')) {
+        } elseif (isset($_GET['isFree'.$this->table])) {
+            if (! $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
 
                 return;
@@ -501,13 +502,13 @@ class AdminCarriersControllerCore extends AdminController
             $this->processIsFree();
         } else {
             // if deletion : removes the carrier from the warehouse/carrier association
-            if (Tools::isSubmit('delete' . $this->table)) {
-                $id = (int) Tools::getValue('id_' . $this->table);
+            if (Tools::isSubmit('delete'.$this->table)) {
+                $id = (int) Tools::getValue('id_'.$this->table);
                 // Delete from the reference_id and not from the carrier id
                 $carrier = new Carrier((int) $id);
                 Warehouse::removeCarrier($carrier->id_reference);
-            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::getValue($this->table . 'Box', [])) > 0) {
-                $ids = Tools::getValue($this->table . 'Box');
+            } elseif (Tools::isSubmit($this->table.'Box') && count(Tools::getValue($this->table.'Box', [])) > 0) {
+                $ids = Tools::getValue($this->table.'Box');
                 array_walk($ids, 'intval');
                 foreach ($ids as $id) {
                     // Delete from the reference_id and not from the carrier id
@@ -523,20 +524,20 @@ class AdminCarriersControllerCore extends AdminController
     public function processIsFree()
     {
         $carrier = new Carrier($this->id_object);
-        if (!Validate::isLoadedObject($carrier)) {
+        if (! Validate::isLoadedObject($carrier)) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
         $carrier->is_free = $carrier->is_free ? 0 : 1;
-        if (!$carrier->update()) {
+        if (! $carrier->update()) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
-        Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . $this->token);
+        Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token);
     }
 
     /**
      * Overload the property $fields_value.
      *
-     * @param object $obj
+     * @param  object  $obj
      */
     public function getFieldsValues($obj)
     {
@@ -562,7 +563,7 @@ class AdminCarriersControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $this->fields_value['zone_'.$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
         }
 
         // Added values of object Group
@@ -577,15 +578,14 @@ class AdminCarriersControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
+            $this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && ! $obj->id));
         }
 
         $this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
     }
 
     /**
-     * @param Carrier $object
-     *
+     * @param  Carrier  $object
      * @return int
      */
     protected function beforeDelete($object)
@@ -596,14 +596,14 @@ class AdminCarriersControllerCore extends AdminController
     protected function changeGroups($id_carrier, $delete = true)
     {
         if ($delete) {
-            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'carrier_group WHERE id_carrier = ' . (int) $id_carrier);
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int) $id_carrier);
         }
-        $groups = Db::getInstance()->executeS('SELECT id_group FROM `' . _DB_PREFIX_ . 'group`');
+        $groups = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
         foreach ($groups as $group) {
             if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
                 Db::getInstance()->execute('
-					INSERT INTO ' . _DB_PREFIX_ . 'carrier_group (id_group, id_carrier)
-					VALUES(' . (int) $group['id_group'] . ',' . (int) $id_carrier . ')
+					INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier)
+					VALUES('.(int) $group['id_group'].','.(int) $id_carrier.')
 				');
             }
         }
@@ -613,16 +613,16 @@ class AdminCarriersControllerCore extends AdminController
     {
         /** @var Carrier $carrier */
         $carrier = new $this->className($id);
-        if (!Validate::isLoadedObject($carrier)) {
-            die($this->trans('The object cannot be loaded.', [], 'Admin.Notifications.Error'));
+        if (! Validate::isLoadedObject($carrier)) {
+            exit($this->trans('The object cannot be loaded.', [], 'Admin.Notifications.Error'));
         }
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
             if (count($carrier->getZone($zone['id_zone']))) {
-                if (!isset($_POST['zone_' . $zone['id_zone']]) || !$_POST['zone_' . $zone['id_zone']]) {
+                if (! isset($_POST['zone_'.$zone['id_zone']]) || ! $_POST['zone_'.$zone['id_zone']]) {
                     $carrier->deleteZone($zone['id_zone']);
                 }
-            } elseif (isset($_POST['zone_' . $zone['id_zone']]) && $_POST['zone_' . $zone['id_zone']]) {
+            } elseif (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']]) {
                 $carrier->addZone($zone['id_zone']);
             }
         }
@@ -631,12 +631,12 @@ class AdminCarriersControllerCore extends AdminController
     /**
      * Modifying initial getList method to display position feature (drag and drop).
      *
-     * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
-     * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
+     * @param  int  $id_lang
+     * @param  string|null  $order_by
+     * @param  string|null  $order_way
+     * @param  int  $start
+     * @param  int|null  $limit
+     * @param  int|bool  $id_lang_shop
      *
      * @throws PrestaShopException
      */
@@ -663,12 +663,12 @@ class AdminCarriersControllerCore extends AdminController
             if (isset($pos[2]) && (int) $pos[2] === $id_carrier) {
                 if ($carrier = new Carrier((int) $pos[2])) {
                     if (isset($position) && $carrier->updatePosition($way, $position)) {
-                        echo 'ok position ' . (int) $position . ' for carrier ' . (int) $pos[1] . '\r\n';
+                        echo 'ok position '.(int) $position.' for carrier '.(int) $pos[1].'\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update carrier ' . (int) $id_carrier . ' to position ' . (int) $position . ' "}';
+                        echo '{"hasError" : true, "errors" : "Can not update carrier '.(int) $id_carrier.' to position '.(int) $position.' "}';
                     }
                 } else {
-                    echo '{"hasError" : true, "errors" : "This carrier (' . (int) $id_carrier . ') can t be loaded"}';
+                    echo '{"hasError" : true, "errors" : "This carrier ('.(int) $id_carrier.') can t be loaded"}';
                 }
 
                 break;
@@ -680,7 +680,7 @@ class AdminCarriersControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
-            if (!array_key_exists('Edit', self::$cache_lang)) {
+            if (! array_key_exists('Edit', self::$cache_lang)) {
                 self::$cache_lang['Edit'] = $this->trans('Edit', [], 'Admin.Actions');
             }
 
@@ -701,20 +701,20 @@ class AdminCarriersControllerCore extends AdminController
         if ($this->access('delete')) {
             $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 
-            if (!array_key_exists('Delete', self::$cache_lang)) {
+            if (! array_key_exists('Delete', self::$cache_lang)) {
                 self::$cache_lang['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
             }
 
-            if (!array_key_exists('DeleteItem', self::$cache_lang)) {
+            if (! array_key_exists('DeleteItem', self::$cache_lang)) {
                 self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', [], 'Admin.Notifications.Info');
             }
 
-            if (!array_key_exists('Name', self::$cache_lang)) {
+            if (! array_key_exists('Name', self::$cache_lang)) {
                 self::$cache_lang['Name'] = $this->trans('Name:', [], 'Admin.Shipping.Feature');
             }
 
-            if (null !== $name) {
-                $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
+            if ($name !== null) {
+                $name = '\n\n'.self::$cache_lang['Name'].' '.$name;
             }
 
             $data = [
@@ -724,7 +724,7 @@ class AdminCarriersControllerCore extends AdminController
             ];
 
             if ($this->specificConfirmDelete !== false) {
-                $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
+                $data['confirm'] = $this->specificConfirmDelete !== null ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
             }
 
             $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

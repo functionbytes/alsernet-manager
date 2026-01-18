@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('core::components.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-cog'])
+    @include('core::components.card', ['title' => 'Configurar acciones de email: ' . $stageName, 'icon' => 'fa-duotone fa-cog'])
 
     <div class="widget-content">
         @include('core::components.alerts')

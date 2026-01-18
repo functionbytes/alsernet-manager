@@ -201,7 +201,7 @@ class ReturnTrackingController extends Controller
             'type' => 'created',
             'title' => 'Solicitud creada',
             'description' => 'Se ha creado la solicitud de devolución',
-            'icon' => 'file-plus',
+            'icon' => 'fa-duotone file-plus',
             'color' => 'blue',
         ]);
 
@@ -227,7 +227,7 @@ class ReturnTrackingController extends Controller
                     'type' => 'communication',
                     'title' => 'Email enviado',
                     'description' => $communication->subject,
-                    'icon' => 'mail',
+                    'icon' => 'fa-duotone mail',
                     'color' => 'gray',
                 ]);
             });
@@ -246,7 +246,7 @@ class ReturnTrackingController extends Controller
                 'type' => 'label',
                 'name' => 'Etiqueta de Envío',
                 'description' => 'Etiqueta prepagada para enviar su devolución',
-                'icon' => 'tag',
+                'icon' => 'fa-duotone tag',
                 'available' => true,
             ];
         }
@@ -257,7 +257,7 @@ class ReturnTrackingController extends Controller
                 'type' => 'receipt',
                 'name' => 'Recibo de Devolución',
                 'description' => 'Comprobante de su devolución',
-                'icon' => 'file-text',
+                'icon' => 'fa-duotone file-text',
                 'available' => true,
             ];
         }
@@ -267,7 +267,7 @@ class ReturnTrackingController extends Controller
             'type' => 'form',
             'name' => 'Formulario de Devolución',
             'description' => 'Resumen de su solicitud de devolución',
-            'icon' => 'clipboard',
+            'icon' => 'fa-duotone clipboard',
             'available' => true,
         ];
 

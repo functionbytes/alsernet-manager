@@ -186,19 +186,19 @@
                             'approved' => [
                                 'badge_class' => 'bg-primary text-white',
                                 'icon_bg' => 'bg-success',
-                                'icon' => 'fa-check-circle',
+                                'icon' => 'fa-duotone fa-check-circle',
                                 'label' => 'Aprobado',
                             ],
                             'rejected' => [
                                 'badge_class' => 'bg-danger text-white',
                                 'icon_bg' => 'bg-danger',
-                                'icon' => 'fa-times-circle',
+                                'icon' => 'fa-duotone fa-times-circle',
                                 'label' => 'Rechazado',
                             ],
                             default => [
                                 'badge_class' => 'bg-light text-black',
                                 'icon_bg' => 'bg-warning',
-                                'icon' => 'fa-undo',
+                                'icon' => 'fa-duotone fa-undo',
                                 'label' => 'Devuelto',
                             ]
                         };

@@ -125,7 +125,7 @@ class CustomAdminForms
             'form' => [
                 'legend' => [
                     'title' => $this->l('Agente'),
-                    'icon' => 'icon-user',
+                    'icon' => 'fa-duotone icon-user',
                 ],
                 'input' => [
                     [

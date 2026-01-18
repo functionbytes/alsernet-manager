@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -85,7 +86,7 @@ class AdminRequestSqlControllerCore extends AdminController
             'delete' => [
                 'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
+                'icon' => 'fa-duotone icon-trash',
             ],
         ];
     }
@@ -105,7 +106,7 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql')) {
             $this->toolbar_btn['edit'] = [
-                'href' => self::$currentIndex . '&amp;updaterequest_sql&amp;token=' . $this->token . '&amp;id_request_sql=' . (int) $id_request,
+                'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int) $id_request,
                 'desc' => $this->trans('Edit this SQL query', [], 'Admin.Advparameters.Feature'),
             ];
         }
@@ -125,12 +126,12 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', [], 'Admin.Advparameters.Notification'));
         $this->displayInformation('
-		<strong>' . $this->trans('How do I create a new SQL query?', [], 'Admin.Advparameters.Help') . '</strong><br />
+		<strong>'.$this->trans('How do I create a new SQL query?', [], 'Admin.Advparameters.Help').'</strong><br />
 		<ul>
-			<li>' . $this->trans('Click "%add_new_label%".', ['%add_new_label%' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature')], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('Fill in the fields and click "%save_label%".', ['%save_label%' => $this->trans('Save', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('You can then view the query results by clicking on the "%view_label%" action in the dropdown menu', ['%view_label%' => $this->trans('View', [], 'Admin.Global')], 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
-			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the "%export_label%" button', ['%export_label%' => $this->trans('Export', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
+			<li>'.$this->trans('Click "%add_new_label%".', ['%add_new_label%' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature')], 'Admin.Advparameters.Help').'</li>
+			<li>'.$this->trans('Fill in the fields and click "%save_label%".', ['%save_label%' => $this->trans('Save', [], 'Admin.Actions')], 'Admin.Advparameters.Help').'</li>
+			<li>'.$this->trans('You can then view the query results by clicking on the "%view_label%" action in the dropdown menu', ['%view_label%' => $this->trans('View', [], 'Admin.Global')], 'Admin.Advparameters.Help').' <i class="icon-pencil"></i></li>
+			<li>'.$this->trans('You can also export the query results as a CSV file by clicking on the "%export_label%" button', ['%export_label%' => $this->trans('Export', [], 'Admin.Actions')], 'Admin.Advparameters.Help').' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');
@@ -146,7 +147,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('SQL query', [], 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-cog',
+                'icon' => 'fa-duotone icon-cog',
             ],
             'input' => [
                 [
@@ -170,7 +171,7 @@ class AdminRequestSqlControllerCore extends AdminController
             ],
         ];
 
-        $request = new RequestSql();
+        $request = new RequestSql;
         $this->tpl_form_vars = ['tables' => $request->getTables()];
 
         return parent::renderForm();
@@ -197,10 +198,10 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            die($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
+            exit($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
         if ($table = Tools::getValue('table')) {
-            $request_sql = new RequestSql();
+            $request_sql = new RequestSql;
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {
                 unset(
@@ -210,14 +211,14 @@ class AdminRequestSqlControllerCore extends AdminController
                     $attributes[$key]['Extra']
                 );
             }
-            die(json_encode($attributes));
+            exit(json_encode($attributes));
         }
     }
 
     public function renderView()
     {
         /** @var RequestSql $obj */
-        if (!($obj = $this->loadObject(true))) {
+        if (! ($obj = $this->loadObject(true))) {
             return;
         }
 
@@ -233,7 +234,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
             $this->toolbar_title = $obj->name;
 
-            $request_sql = new RequestSql();
+            $request_sql = new RequestSql;
             $view['attributes'] = $request_sql->attributes;
         } else {
             $view['error'] = true;
@@ -248,12 +249,12 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function _childValidation()
     {
-        if (Tools::getValue('submitAdd' . $this->table) && $sql = Tools::getValue('sql')) {
-            $request_sql = new RequestSql();
+        if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql')) {
+            $request_sql = new RequestSql;
             $parser = $request_sql->parsingSql($sql);
             $validate = $request_sql->validateParser($parser, false, $sql);
 
-            if (!$validate || count($request_sql->error_sql)) {
+            if (! $validate || count($request_sql->error_sql)) {
                 $this->displayError($request_sql->error_sql);
             }
         }
@@ -262,9 +263,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display export action link.
      *
-     * @param $token
-     * @param int $id
-     *
+     * @param  int  $id
      * @return string
      *
      * @throws Exception
@@ -275,7 +274,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $tpl = $this->createTemplate('list_action_export.tpl');
 
         $tpl->assign([
-            'href' => self::$currentIndex . '&token=' . $this->token . '&' . $this->identifier . '=' . $id . '&export' . $this->table . '=1',
+            'href' => self::$currentIndex.'&token='.$this->token.'&'.$this->identifier.'='.$id.'&export'.$this->table.'=1',
             'action' => $this->trans('Export', [], 'Admin.Actions'),
         ]);
 
@@ -285,7 +284,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function initProcess()
     {
         parent::initProcess();
-        if (Tools::getValue('export' . $this->table)) {
+        if (Tools::getValue('export'.$this->table)) {
             $this->display = 'export';
             $this->action = 'export';
         }
@@ -294,7 +293,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function initContent()
     {
         if ($this->display == 'edit' || $this->display == 'add') {
-            if (!$this->loadObject(true)) {
+            if (! $this->loadObject(true)) {
                 return;
             }
 
@@ -307,7 +306,7 @@ class AdminRequestSqlControllerCore extends AdminController
             $this->content .= $this->renderView();
         } elseif ($this->display == 'export') {
             $this->processExport();
-        } elseif (!$this->ajax) {
+        } elseif (! $this->ajax) {
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
         }
@@ -321,9 +320,9 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_request'] = [
-                'href' => self::$currentIndex . '&addrequest_sql&token=' . $this->token,
+                'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
                 'desc' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature'),
-                'icon' => 'process-icon-new',
+                'icon' => 'fa-duotone process-icon-new',
             ];
         }
 
@@ -336,28 +335,28 @@ class AdminRequestSqlControllerCore extends AdminController
     public function processExport($textDelimiter = '"')
     {
         $id = Tools::getValue($this->identifier);
-        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ . '/export/' : _PS_ADMIN_DIR_ . '/export/';
-        if (!Validate::isFileName($id)) {
-            die(Tools::displayError());
+        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_.'/export/' : _PS_ADMIN_DIR_.'/export/';
+        if (! Validate::isFileName($id)) {
+            exit(Tools::displayError());
         }
-        $file = 'request_sql_' . $id . '.csv';
-        if ($csv = fopen($export_dir . $file, 'wb')) {
+        $file = 'request_sql_'.$id.'.csv';
+        if ($csv = fopen($export_dir.$file, 'wb')) {
             $sql = RequestSql::getRequestSqlById($id);
 
             if ($sql) {
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
                 foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
-                    fwrite($csv, $key . ';');
+                    fwrite($csv, $key.';');
                 }
                 foreach ($results as $result) {
                     fwrite($csv, "\n");
                     foreach ($tab_key as $name) {
-                        fwrite($csv, $textDelimiter . strip_tags($result[$name]) . $textDelimiter . ';');
+                        fwrite($csv, $textDelimiter.strip_tags($result[$name]).$textDelimiter.';');
                     }
                 }
-                if (file_exists($export_dir . $file)) {
-                    $filesize = filesize($export_dir . $file);
+                if (file_exists($export_dir.$file)) {
+                    $filesize = filesize($export_dir.$file);
                     $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
                     if ($filesize < $upload_max_filesize) {
                         if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
@@ -366,12 +365,12 @@ class AdminRequestSqlControllerCore extends AdminController
                             $charset = self::$encoding_file[0]['name'];
                         }
 
-                        header('Content-Type: text/csv; charset=' . $charset);
+                        header('Content-Type: text/csv; charset='.$charset);
                         header('Cache-Control: no-store, no-cache');
-                        header('Content-Disposition: attachment; filename="' . $file . '"');
-                        header('Content-Length: ' . $filesize);
-                        readfile($export_dir . $file);
-                        die();
+                        header('Content-Disposition: attachment; filename="'.$file.'"');
+                        header('Content-Length: '.$filesize);
+                        readfile($export_dir.$file);
+                        exit();
                     } else {
                         $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', [], 'Admin.Advparameters.Notification');
                     }
@@ -383,7 +382,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display all errors.
      *
-     * @param $e : array of errors
+     * @param  $e  : array of errors
      */
     public function displayError($e)
     {
@@ -400,13 +399,13 @@ class AdminRequestSqlControllerCore extends AdminController
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
-                                'The "%attribute%" attribute does not exist in the "%table%" table.',
-                                [
-                                    '%attribute%' => $e[$key]['attribut'][0],
-                                    '%table%' => $e[$key]['attribut'][1],
-                                ],
-                                'Admin.Advparameters.Notification'
-                            );
+                            'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            [
+                                '%attribute%' => $e[$key]['attribut'][0],
+                                '%table%' => $e[$key]['attribut'][1],
+                            ],
+                            'Admin.Advparameters.Notification'
+                        );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', ['checkedForm'], 'Admin.Advparameters.Notification');
                     }

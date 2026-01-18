@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -60,11 +61,6 @@ class CarriersController extends FrameworkBundleAdminController
      * Show carriers listing page
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param CarrierFilters $filters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, CarrierFilters $filters): Response
     {
@@ -92,10 +88,6 @@ class CarriersController extends FrameworkBundleAdminController
      * Process Grid search.
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function searchAction(Request $request): RedirectResponse
     {
@@ -112,10 +104,6 @@ class CarriersController extends FrameworkBundleAdminController
 
     /**
      * Redirect to carrier wizard for carrier editing.
-     *
-     * @param int $carrierId
-     *
-     * @return RedirectResponse
      */
     public function editAction(int $carrierId): RedirectResponse
     {
@@ -129,11 +117,8 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param int $carrierId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $carrierId): RedirectResponse
     {
@@ -157,10 +142,6 @@ class CarriersController extends FrameworkBundleAdminController
      * )
      *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param int $carrierId
-     *
-     * @return RedirectResponse
      */
     public function toggleStatusAction(int $carrierId): RedirectResponse
     {
@@ -188,10 +169,6 @@ class CarriersController extends FrameworkBundleAdminController
      * )
      *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param int $carrierId
-     *
-     * @return RedirectResponse
      */
     public function toggleIsFreeAction(int $carrierId): RedirectResponse
     {
@@ -219,10 +196,6 @@ class CarriersController extends FrameworkBundleAdminController
      * )
      *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function updatePositionAction(Request $request): RedirectResponse
     {
@@ -253,11 +226,8 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
@@ -283,11 +253,8 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
@@ -313,11 +280,8 @@ class CarriersController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_carriers_index",
      * )
+     *
      * @DemoRestricted(redirectRoute="admin_carriers_index")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
@@ -375,7 +339,7 @@ class CarriersController extends FrameworkBundleAdminController
         $toolbarButtons['add'] = [
             'href' => $this->getAdminLink('AdminCarrierWizard', []),
             'desc' => $this->trans('Add new carrier', 'Admin.Shipping.Feature'),
-            'icon' => 'add_circle_outline',
+            'icon' => 'fa-duotone add_circle_outline',
         ];
 
         return $toolbarButtons;
@@ -383,16 +347,12 @@ class CarriersController extends FrameworkBundleAdminController
 
     /**
      * Get carrier IDs from request for bulk actions.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     private function getCarrierIdsFromRequest(Request $request): array
     {
         $carrierIds = $request->request->get('carrier_bulk');
 
-        if (!is_array($carrierIds)) {
+        if (! is_array($carrierIds)) {
             return [];
         }
 

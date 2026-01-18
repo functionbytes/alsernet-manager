@@ -4,8 +4,8 @@ namespace Modules\Supplier\Observers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierProduct;
 use Modules\Supplier\Events\SupplierProductUpdated;
+use Modules\Supplier\Models\SupplierProduct;
 
 /**
  * Observer que dispara eventos cuando un producto es modificado
@@ -26,9 +26,6 @@ class SupplierProductObserver
 
     /**
      * Se llama cuando un producto es actualizado
-     *
-     * @param SupplierProduct $product
-     * @return void
      */
     public function updated(SupplierProduct $product): void
     {
@@ -38,6 +35,7 @@ class SupplierProductObserver
             Log::debug('Product update skipped - sync in progress from ERP', [
                 'product_id' => $product->id,
             ]);
+
             return;
         }
 
@@ -53,6 +51,7 @@ class SupplierProductObserver
                 'product_id' => $product->id,
                 'changed_fields' => $dirtyFields,
             ]);
+
             return;
         }
 
@@ -73,9 +72,6 @@ class SupplierProductObserver
 
     /**
      * Se llama cuando un producto es creado
-     *
-     * @param SupplierProduct $product
-     * @return void
      */
     public function created(SupplierProduct $product): void
     {
@@ -84,9 +80,6 @@ class SupplierProductObserver
 
     /**
      * Se llama cuando un producto es eliminado (soft delete)
-     *
-     * @param SupplierProduct $product
-     * @return void
      */
     public function deleted(SupplierProduct $product): void
     {
@@ -98,9 +91,6 @@ class SupplierProductObserver
 
     /**
      * Se llama cuando un producto es restaurado de soft delete
-     *
-     * @param SupplierProduct $product
-     * @return void
      */
     public function restored(SupplierProduct $product): void
     {

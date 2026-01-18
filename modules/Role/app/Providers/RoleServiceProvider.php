@@ -78,7 +78,7 @@ class RoleServiceProvider extends ServiceProvider
     {
         // Mini-nav item for Roles & Permissions
         NavService::registerMiniItem('roles', [
-            'icon' => 'fa-shield',
+            'icon' => 'fa-duotone fa-shield',
             'tooltip' => 'Roles y Permisos',
             'sidebar_id' => 'roles',
             'order' => 40,

@@ -54,7 +54,7 @@ class HelpCenterController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|string',
-            'icon' => 'nullable|string|max:100',
+            'icon' => 'fa-duotone nullable|string|max:100',
             'visible_to_role' => 'nullable|string|max:255',
             'managed_by_role' => 'nullable|string|max:255',
         ]);
@@ -93,7 +93,7 @@ class HelpCenterController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|string',
-            'icon' => 'nullable|string|max:100',
+            'icon' => 'fa-duotone nullable|string|max:100',
             'visible_to_role' => 'nullable|string|max:255',
             'managed_by_role' => 'nullable|string|max:255',
         ]);

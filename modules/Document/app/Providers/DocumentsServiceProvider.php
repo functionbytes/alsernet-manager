@@ -7,11 +7,14 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\Document\Console\Commands\AnalyzePaidOrdersVsDocuments;
 use Modules\Document\Console\Commands\CreateBlockedProductDocuments;
+use Modules\Document\Console\Commands\DeepAnalyzePrestashopOrderStates;
 use Modules\Document\Console\Commands\InitializeDocumentWorkflows;
 use Modules\Document\Console\Commands\MigrateProductBlockades;
 use Modules\Document\Console\Commands\MigrateRequestDocuments;
 use Modules\Document\Console\Commands\SendDocumentUploadReminders;
+use Modules\Document\Console\Commands\ValidateAndCleanupDocuments;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
@@ -153,6 +156,9 @@ class DocumentsServiceProvider extends ServiceProvider
             MigrateRequestDocuments::class,
             MigrateProductBlockades::class,
             CreateBlockedProductDocuments::class,
+            ValidateAndCleanupDocuments::class,
+            AnalyzePaidOrdersVsDocuments::class,
+            DeepAnalyzePrestashopOrderStates::class,
         ]);
     }
 

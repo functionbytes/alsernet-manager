@@ -1,9 +1,0 @@
-{
-   "name": "Theme",
-   "alias": "theme",
-   "description": "Theme module for managing navigation and menu items across the application",
-   "keywords": ["theme", "navigation", "menu"],
-   "priority": 1,
-   "providers": ["Modules\\Theme\\Providers\\ThemeServiceProvider"],
-   "files": []
-}

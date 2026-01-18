@@ -14,14 +14,14 @@
         <div class="card">
             <!-- Header Section -->
             <div class="card-header p-4 border-bottom border-light">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <h5 class="mb-1 fw-bold">Panel de automatización</h5>
                         <p class="small mb-0 text-muted">Gestiona workflows, ejecuciones y disparadores automáticos</p>
                     </div>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-secondary" id="refreshStatsBtn">
-                            <i class="fas fa-sync me-1"></i> Actualizar
+                            Actualizar
                         </button>
                         <button type="button" class="btn btn-primary" id="createWorkflowBtn">
                             Nuevo workflow
@@ -36,60 +36,36 @@
                     <div class="col-md-3">
                         <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-primary mb-2">
-                                            Workflows activos
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold" id="activeWorkflows">{{ $stats['active_workflows'] ?? 0 }}</h4>
-                                        <small class="text-muted">En funcionamiento</small>
-                                    </div>
-                                </div>
+                                <h6 class="card-title text-muted mb-2">Workflows activos</h6>
+                                <h4 class="mb-1 fw-bold" id="activeWorkflows">{{ $stats['active_workflows'] ?? 0 }}</h4>
+                                <small class="text-muted">En funcionamiento</small>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-warning mb-2">
-                                            Pendientes
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold" id="pendingExecutions">{{ $stats['pending_executions'] ?? 0 }}</h4>
-                                        <small class="text-muted">Ejecuciones en cola</small>
-                                    </div>
-                                </div>
+                                <h6 class="card-title text-muted mb-2">Pendientes</h6>
+                                <h4 class="mb-1 fw-bold" id="pendingExecutions">{{ $stats['pending_executions'] ?? 0 }}</h4>
+                                <small class="text-muted">Ejecuciones en cola</small>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-success mb-2">
-                                            Fallidas
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold" id="failedExecutions">{{ $stats['failed_executions_today'] ?? 0 }}</h4>
-                                        <small class="text-muted">Hoy</small>
-                                    </div>
-                                </div>
+                                <h6 class="card-title text-muted mb-2">Fallidas</h6>
+                                <h4 class="mb-1 fw-bold" id="failedExecutions">{{ $stats['failed_executions_today'] ?? 0 }}</h4>
+                                <small class="text-muted">Hoy</small>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card bg-light-secondary stat-card h-100">
                             <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <h6 class="card-title text-success mb-2">
-                                            Ejecuciones
-                                        </h6>
-                                        <h4 class="mb-1 fw-bold">{{ $stats['total_executions_today'] ?? 0 }}</h4>
-                                        <small class="text-muted">Hoy</small>
-                                    </div>
-                                </div>
+                                <h6 class="card-title text-muted mb-2">Ejecuciones totales</h6>
+                                <h4 class="mb-1 fw-bold">{{ $stats['total_executions_today'] ?? 0 }}</h4>
+                                <small class="text-muted">Hoy</small>
                             </div>
                         </div>
                     </div>
@@ -102,36 +78,30 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-primary btn-lg" id="runAllBtn">
-                                <i class="fas fa-play me-2"></i>
-                                <span class="d-block small">Ejecutar todos los workflows</span>
+                            <button type="button" class="btn btn-primary" id="runAllBtn">
+                                Ejecutar todos los workflows
                             </button>
                             <small class="text-muted text-center">
-                                <i class="fas fa-info-circle me-1"></i>
                                 Ejecuta todos los workflows activos
                             </small>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('settings.suppliers.automation.logs') }}" class="btn btn-info btn-lg">
-                                <i class="fas fa-file-lines me-2"></i>
-                                <span class="d-block small">Ver logs del sistema</span>
+                            <a href="{{ route('settings.suppliers.automation.logs') }}" class="btn btn-secondary">
+                                Ver logs del sistema
                             </a>
                             <small class="text-muted text-center">
-                                <i class="fas fa-info-circle me-1"></i>
                                 Consulta registros de actividad
                             </small>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-danger btn-lg" id="clearFailedBtn">
-                                <i class="fas fa-trash me-2"></i>
-                                <span class="d-block small">Limpiar ejecuciones fallidas</span>
+                            <button type="button" class="btn btn-outline-secondary" id="clearFailedBtn">
+                                Limpiar ejecuciones fallidas
                             </button>
                             <small class="text-muted text-center">
-                                <i class="fas fa-info-circle me-1"></i>
                                 Elimina <span id="failedCount">{{ $stats['failed_executions_today'] ?? 0 }}</span> ejecuciones fallidas
                             </small>
                         </div>
@@ -249,6 +219,67 @@
             </div>
         </div>
     </div>
+
+    <!-- Modals -->
+    <!-- Run All Workflows Modal -->
+    <div class="modal fade" id="runAllModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Ejecutar todos los workflows?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Esto iniciará todos los workflows activos.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmRunAllBtn">Sí, ejecutar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear Failed Executions Modal -->
+    <div class="modal fade" id="clearFailedModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Limpiar ejecuciones fallidas?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Esto eliminará todas las ejecuciones fallidas del registro.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmClearFailedBtn">Sí, limpiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Execution Details Modal -->
+    <div class="modal fade" id="executionDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="executionDetailsTitle">Detalles de Ejecución</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="executionDetailsBody">
+                    <div class="text-center py-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -260,12 +291,17 @@
 $(document).ready(function() {
     let workflowsTable, executionsTable, triggersTable, alertsTable;
 
+    // Initialize modals
+    const runAllModal = new bootstrap.Modal(document.getElementById('runAllModal'));
+    const clearFailedModal = new bootstrap.Modal(document.getElementById('clearFailedModal'));
+    const executionDetailsModal = new bootstrap.Modal(document.getElementById('executionDetailsModal'));
+
     // Initialize DataTables
     function initTables() {
         workflowsTable = $('#workflowsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("backups.suppliers.automation.workflows.data") }}',
+            ajax: '{{ route("settings.suppliers.automation.workflows.data") }}',
             columns: [
                 { data: 'name', name: 'name' },
                 { data: 'supplier', name: 'supplier' },
@@ -282,7 +318,7 @@ $(document).ready(function() {
         executionsTable = $('#executionsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("backups.suppliers.automation.executions.data") }}',
+            ajax: '{{ route("settings.suppliers.automation.executions.data") }}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'workflow', name: 'workflow' },
@@ -301,7 +337,7 @@ $(document).ready(function() {
         triggersTable = $('#triggersTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("backups.suppliers.automation.triggers.data") }}',
+            ajax: '{{ route("settings.suppliers.automation.triggers.data") }}',
             columns: [
                 { data: 'workflow', name: 'workflow' },
                 { data: 'type', name: 'type' },
@@ -318,7 +354,7 @@ $(document).ready(function() {
         alertsTable = $('#alertsTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("backups.suppliers.automation.alerts.data") }}',
+            ajax: '{{ route("settings.suppliers.automation.alerts.data") }}',
             columns: [
                 { data: 'created_at', name: 'created_at' },
                 { data: 'type', name: 'type' },
@@ -339,7 +375,7 @@ $(document).ready(function() {
     // Refresh stats
     function refreshStats() {
         $.ajax({
-            url: '{{ route("backups.suppliers.automation.stats") }}',
+            url: '{{ route("settings.suppliers.automation.stats") }}',
             method: 'GET',
             success: function(response) {
                 if (response.success) {
@@ -363,77 +399,66 @@ $(document).ready(function() {
 
     // Create workflow
     $('#createWorkflowBtn').on('click', function() {
-        window.location.href = '{{ route("backups.suppliers.automation.workflows.create") }}';
+        window.location.href = '{{ route("settings.suppliers.automation.workflows.create") }}';
     });
 
-    // Run all workflows
+    // Run all workflows - Show modal
     $('#runAllBtn').on('click', function() {
-        const btn = $(this);
+        runAllModal.show();
+    });
+
+    // Run all workflows - Confirm
+    $('#confirmRunAllBtn').on('click', function() {
+        const btn = $('#runAllBtn');
         const originalHtml = btn.html();
 
-        Swal.fire({
-            title: '¿Ejecutar todos los workflows?',
-            text: 'Esto iniciará todos los workflows activos.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, ejecutar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                btn.prop('disabled', true);
-                btn.html('<i class="fas fa-spinner fa-spin me-1"></i> Ejecutando...');
+        btn.prop('disabled', true);
+        btn.html('Ejecutando...');
+        runAllModal.hide();
 
-                $.ajax({
-                    url: '{{ route("backups.suppliers.automation.workflows.run-all") }}',
-                    method: 'POST',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message, 'Automatización');
-                            refreshStats();
-                            executionsTable.ajax.reload();
-                        }
-                    },
-                    error: function() {
-                        toastr.error('Error al ejecutar workflows', 'Error');
-                    },
-                    complete: function() {
-                        btn.prop('disabled', false);
-                        btn.html(originalHtml);
-                    }
-                });
+        $.ajax({
+            url: '{{ route("settings.suppliers.automation.workflows.run-all") }}',
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message, 'Automatización');
+                    refreshStats();
+                    executionsTable.ajax.reload();
+                }
+            },
+            error: function() {
+                toastr.error('Error al ejecutar workflows', 'Error');
+            },
+            complete: function() {
+                btn.prop('disabled', false);
+                btn.html(originalHtml);
             }
         });
     });
 
-    // Clear failed executions
+    // Clear failed executions - Show modal
     $('#clearFailedBtn').on('click', function() {
-        Swal.fire({
-            title: '¿Limpiar ejecuciones fallidas?',
-            text: 'Esto eliminará todas las ejecuciones fallidas del registro.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, limpiar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '{{ route("backups.suppliers.automation.executions.clear-failed") }}',
-                    method: 'POST',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message, 'Automatización');
-                            refreshStats();
-                            executionsTable.ajax.reload();
-                        }
-                    },
-                    error: function() {
-                        toastr.error('Error al limpiar ejecuciones', 'Error');
-                    }
-                });
+        clearFailedModal.show();
+    });
+
+    // Clear failed executions - Confirm
+    $('#confirmClearFailedBtn').on('click', function() {
+        clearFailedModal.hide();
+
+        $.ajax({
+            url: '{{ route("settings.suppliers.automation.executions.clear-failed") }}',
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message, 'Automatización');
+                    refreshStats();
+                    executionsTable.ajax.reload();
+                }
+            },
+            error: function() {
+                toastr.error('Error al limpiar ejecuciones', 'Error');
             }
         });
     });
@@ -443,7 +468,7 @@ $(document).ready(function() {
         const id = $(this).data('id');
 
         $.ajax({
-            url: '{{ route("backups.suppliers.automation.workflows.run", ":id") }}'.replace(':id', id),
+            url: '{{ route("settings.suppliers.automation.workflows.run", ":id") }}'.replace(':id', id),
             method: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
@@ -463,34 +488,73 @@ $(document).ready(function() {
     $(document).on('click', '.view-execution', function() {
         const id = $(this).data('id');
 
+        // Show loading state
+        $('#executionDetailsBody').html(`
+            <div class="text-center py-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        `);
+
+        executionDetailsModal.show();
+
         $.ajax({
-            url: '{{ route("backups.suppliers.automation.executions.show", ":id") }}'.replace(':id', id),
+            url: '{{ route("settings.suppliers.automation.executions.show", ":id") }}'.replace(':id', id),
             method: 'GET',
             success: function(response) {
                 if (response.success) {
                     const execution = response.data;
-                    Swal.fire({
-                        title: 'Detalles de Ejecución #' + execution.id,
-                        html: `
-                            <div class="text-start">
-                                <p><strong>Workflow:</strong> ${execution.workflow_name}</p>
-                                <p><strong>Estado:</strong> ${execution.status}</p>
-                                <p><strong>Inicio:</strong> ${execution.started_at}</p>
-                                <p><strong>Fin:</strong> ${execution.finished_at || 'N/A'}</p>
-                                <p><strong>Duración:</strong> ${execution.duration || 'N/A'}</p>
-                                <hr>
-                                <p><strong>Resultado:</strong></p>
-                                <pre class="bg-light p-2 rounded">${execution.result || 'Sin resultado'}</pre>
-                                ${execution.error ? `<p><strong>Error:</strong></p><pre class="bg-danger text-white p-2 rounded">${execution.error}</pre>` : ''}
+                    $('#executionDetailsTitle').text('Detalles de Ejecución #' + execution.id);
+
+                    let html = `
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold mb-2">Workflow</h6>
+                                <p class="text-muted">${execution.workflow_name}</p>
                             </div>
-                        `,
-                        width: '80%',
-                        showCloseButton: true
-                    });
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold mb-2">Estado</h6>
+                                <p class="text-muted">${execution.status}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold mb-2">Inicio</h6>
+                                <p class="text-muted">${execution.started_at}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold mb-2">Fin</h6>
+                                <p class="text-muted">${execution.finished_at || 'N/A'}</p>
+                            </div>
+                            <div class="col-12">
+                                <h6 class="fw-semibold mb-2">Duración</h6>
+                                <p class="text-muted">${execution.duration || 'N/A'}</p>
+                            </div>
+                            <div class="col-12">
+                                <h6 class="fw-semibold mb-2">Resultado</h6>
+                                <pre class="bg-light p-3 rounded">${execution.result || 'Sin resultado'}</pre>
+                            </div>
+                    `;
+
+                    if (execution.error) {
+                        html += `
+                            <div class="col-12">
+                                <h6 class="fw-semibold mb-2">Error</h6>
+                                <pre class="bg-light p-3 rounded text-danger">${execution.error}</pre>
+                            </div>
+                        `;
+                    }
+
+                    html += '</div>';
+
+                    $('#executionDetailsBody').html(html);
                 }
             },
             error: function() {
-                toastr.error('Error al cargar detalles', 'Error');
+                $('#executionDetailsBody').html(`
+                    <div class="alert alert-danger">
+                        Error al cargar los detalles de la ejecución
+                    </div>
+                `);
             }
         });
     });
@@ -499,6 +563,4 @@ $(document).ready(function() {
     setInterval(refreshStats, 30000);
 });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush

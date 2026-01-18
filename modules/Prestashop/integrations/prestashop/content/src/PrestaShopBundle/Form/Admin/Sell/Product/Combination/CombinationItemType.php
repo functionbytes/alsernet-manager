@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -95,7 +96,7 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('edit', IconButtonType::class, [
-                'icon' => 'mode_edit',
+                'icon' => 'fa-duotone mode_edit',
                 'attr' => [
                     'class' => 'edit-combination-item tooltip-link',
                     'data-toggle' => 'pstooltip',
@@ -103,7 +104,7 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('delete', IconButtonType::class, [
-                'icon' => 'delete',
+                'icon' => 'fa-duotone delete',
                 'attr' => [
                     'class' => 'remove-combination-item tooltip-link',
                     'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
@@ -113,7 +114,6 @@ class CombinationItemType extends TranslatorAwareType
                     'data-toggle' => 'pstooltip',
                     'data-original-title' => $this->trans('Delete', 'Admin.Global'),
                 ],
-            ])
-        ;
+            ]);
     }
 }

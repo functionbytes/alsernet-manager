@@ -91,13 +91,6 @@
     display: block;
     user-select: none;
     -webkit-user-select: none;
-    height
-    Specifies the height of the content area, padding area or border area (depending on 'box-sizing') of certain boxes.
-
-Disponible en la mayoría de los navegadores principales (Baseline desde enero de 2018)
-Más información
-
-No mostrar: 20px;
     height: 44px;
 }
 .card-body .select2-container,
@@ -799,69 +792,6 @@ kbd {
     margin-bottom: 0;
 }
 
-/* ========================================
-   SIDE-MINI-PANEL FIX
-   ======================================== */
-
-/* Fix para asegurar que el sidebar sea visible */
-.side-mini-panel {
-    display: flex;
-    align-items: stretch;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: auto;
-    height: 100vh;
-    background: transparent;
-}
-
-.side-mini-panel .iconbar {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-}
-
-.side-mini-panel .iconbar > div {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.side-mini-panel .mini-nav {
-    width: 80px;
-    flex-shrink: 0;
-    overflow-y: auto;
-}
-
-.side-mini-panel .sidebarmenu {
-    position: relative;
-    height: 100%;
-    flex-shrink: 0;
-}
-
-
-/* Sidebar Navigation Transitions */
-.side-mini-panel .sidebarmenu .sidebar-nav {
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    opacity: 1;
-    visibility: visible;
-}
-
-.side-mini-panel .sidebarmenu .sidebar-nav.d-none {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0;
-}
-
-/* Ensure nav-small-cap properly hides with parent */
-.sidebar-nav.d-none .nav-small-cap,
-.sidebar-nav.d-none .sidebar-item {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
 
 /* ========================================
    SELECT2 IN MODALS FIX
@@ -892,4 +822,27 @@ kbd {
 /* Select2 results inside modal */
 .modal .select2-results {
     z-index: 1057 !important;
+}
+
+/* Fix sidebar visibility in full mode */
+@media (min-width: 992px) {
+    /* Give sidebarmenu a width when NOT in mini-sidebar mode */
+    [data-layout=vertical][data-sidebartype=full] .side-mini-panel .sidebarmenu {
+        width: 240px !important;
+        flex-shrink: 0;
+    }
+
+    /* Show sidebar-nav when in full mode */
+    [data-layout=vertical][data-sidebartype=full] .side-mini-panel .sidebarmenu .sidebar-nav {
+        left: 80px !important;
+    }
+
+    /* When sidebarmenu has 'close' class, collapse it */
+    [data-layout=vertical][data-sidebartype=full] .side-mini-panel .sidebarmenu.close {
+        width: 0 !important;
+    }
+
+    [data-layout=vertical][data-sidebartype=full] .side-mini-panel .sidebarmenu.close .sidebar-nav {
+        left: -240px !important;
+    }
 }

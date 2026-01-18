@@ -6,9 +6,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Supplier\Entities\SupplierAutomationDeadLetterQueue;
-use Modules\Supplier\Entities\SupplierAutomationExecution;
-use Modules\Supplier\Entities\SupplierAutomationRetryQueue;
+use Modules\Supplier\Models\SupplierAutomationDeadLetterQueue;
+use Modules\Supplier\Models\SupplierAutomationExecution;
+use Modules\Supplier\Models\SupplierAutomationRetryQueue;
 
 /**
  * Retry Failed Execution Job

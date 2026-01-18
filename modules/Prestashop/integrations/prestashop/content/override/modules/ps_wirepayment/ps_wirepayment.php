@@ -88,7 +88,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
             'form' => [
                 'legend' => [
                     'title' => $this->trans('Account details', [], 'modules.Wirepayment.Admin'),
-                    'icon' => 'icon-envelope',
+                    'icon' => 'fa-duotone icon-envelope',
                 ],
                 'input' => [
                     [
@@ -120,7 +120,7 @@ class Ps_WirepaymentOverride extends Ps_Wirepayment
             'form' => [
                 'legend' => [
                     'title' => $this->trans('Customization', [], 'modules.Wirepayment.Admin'),
-                    'icon' => 'icon-cogs',
+                    'icon' => 'fa-duotone icon-cogs',
                 ],
                 'input' => [
                     [

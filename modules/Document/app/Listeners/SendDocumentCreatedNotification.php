@@ -71,6 +71,7 @@ class SendDocumentCreatedNotification
                 public function via($notifiable)
                 {
                     $this->recipientUserId = $notifiable->id;
+
                     return ['database', 'broadcast'];
                 }
 
@@ -81,7 +82,7 @@ class SendDocumentCreatedNotification
                         'message' => "Se ha creado un nuevo documento para la orden #{$this->document->order_id}. ".
                                      "Cliente: {$this->document->customer_firstname} {$this->document->customer_lastname}. ".
                                      "Requiere validación de {$this->groupKey}.",
-                        'icon' => 'fas fa-file-check',
+                        'icon' => 'fa-duotone fas fa-file-check',
                         'color' => 'warning',
                         'action_url' => url("/documents/show/{$this->document->uid}"),
                         'action_text' => 'Validar documento',
@@ -97,7 +98,7 @@ class SendDocumentCreatedNotification
                     return new \Illuminate\Notifications\Messages\BroadcastMessage([
                         'title' => '📄 Nuevo documento para validar',
                         'message' => "Documento #{$this->document->order_id} requiere validación de {$this->groupKey}",
-                        'icon' => 'fas fa-file-check',
+                        'icon' => 'fa-duotone fas fa-file-check',
                         'color' => 'warning',
                         'action_url' => url("/documents/show/{$this->document->uid}"),
                         'action_text' => 'Validar documento',

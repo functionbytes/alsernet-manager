@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Modules\Catalog\Models\Category;
-use Modules\Supplier\Entities\Supplier;
+use Modules\Supplier\Models\Supplier;
 
 class SupplierCategoriesController extends Controller
 {

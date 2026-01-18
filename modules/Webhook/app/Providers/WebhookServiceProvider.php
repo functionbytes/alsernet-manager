@@ -109,7 +109,7 @@ class WebhookServiceProvider extends ServiceProvider
     {
         // Mini-nav item for Webhooks
         NavService::registerMiniItem('webhooks', [
-            'icon' => 'fa-webhook',
+            'icon' => 'fa-duotone fa-webhook',
             'tooltip' => 'Webhooks',
             'sidebar_id' => 'webhooks',
             'order' => 40,

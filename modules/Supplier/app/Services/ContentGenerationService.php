@@ -6,12 +6,12 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Modules\Supplier\Entities\Supplier;
-use Modules\Supplier\Entities\SupplierAiContent;
-use Modules\Supplier\Entities\SupplierAiCost;
-use Modules\Supplier\Entities\SupplierContentValidation;
-use Modules\Supplier\Entities\SupplierExtractionResult;
-use Modules\Supplier\Entities\SupplierPrompt;
+use Modules\Supplier\Models\Supplier;
+use Modules\Supplier\Models\SupplierAiContent;
+use Modules\Supplier\Models\SupplierAiCost;
+use Modules\Supplier\Models\SupplierContentValidation;
+use Modules\Supplier\Models\SupplierExtractionResult;
+use Modules\Supplier\Models\SupplierPrompt;
 
 /**
  * Content Generation Service for Supplier Automation System

@@ -62,7 +62,7 @@ class EventServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Events
         NavService::registerMiniItem('events', [
-            'icon' => 'fa-calendar',
+            'icon' => 'fa-duotone fa-calendar',
             'tooltip' => 'Eventos',
             'sidebar_id' => 'events',
             'order' => 40,

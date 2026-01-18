@@ -24,6 +24,7 @@ class DocumentStatusChanged extends Notification implements ShouldBroadcast, Sho
     public function via(object $notifiable): array
     {
         $this->recipientUserId = $notifiable->id;
+
         return ['database', 'broadcast'];
     }
 
@@ -40,7 +41,7 @@ class DocumentStatusChanged extends Notification implements ShouldBroadcast, Sho
             'new_status' => $this->newStatus,
             'title' => '🔄 Estado del Documento Actualizado',
             'message' => "El documento #{$orderRef} cambió de estado: {$this->oldStatus} → {$this->newStatus}",
-            'icon' => 'fas fa-sync-alt',
+            'icon' => 'fa-duotone fas fa-sync-alt',
             'color' => 'info',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -61,7 +62,7 @@ class DocumentStatusChanged extends Notification implements ShouldBroadcast, Sho
             'new_status' => $this->newStatus,
             'title' => '🔄 Estado Actualizado',
             'message' => "Documento #{$orderRef}: {$this->oldStatus} → {$this->newStatus}",
-            'icon' => 'fas fa-sync-alt',
+            'icon' => 'fa-duotone fas fa-sync-alt',
             'color' => 'info',
             'action_url' => route('documents.show', $this->document->uid),
             'action_text' => 'Ver documento',
@@ -76,7 +77,7 @@ class DocumentStatusChanged extends Notification implements ShouldBroadcast, Sho
 
     public function broadcastOn(): array
     {
-        if (!$this->recipientUserId) {
+        if (! $this->recipientUserId) {
             return [];
         }
 

@@ -19,7 +19,8 @@ Se implementó el sistema completo de **notificaciones en tiempo real** para el 
 **Las notificaciones ahora funcionan en tiempo real** cuando:
 1. ✅ Se crea un documento → Notificación instantánea a validadores
 2. ✅ Se aprueba un documento → Notificación instantánea al cliente
-3. ✅ Se rechaza un documento → Notificación instantánea al cliente
+3. ✅ Se rechaza un documento → Notificación insupstantánea al cliente
+3. ✅ Se rechaza un documento → Notificación insupstantánea al cliente
 4. ✅ Cambia el estado del documento → Notificación instantánea
 
 ### Requisitos para funcionamiento

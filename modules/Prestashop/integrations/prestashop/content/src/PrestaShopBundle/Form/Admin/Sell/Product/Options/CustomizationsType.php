@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -46,12 +47,11 @@ class CustomizationsType extends TranslatorAwareType
             ])
             ->add('add_customization_field', IconButtonType::class, [
                 'label' => $this->trans('Add a customization field', 'Admin.Catalog.Feature'),
-                'icon' => 'add_circle',
+                'icon' => 'fa-duotone add_circle',
                 'attr' => [
                     'class' => 'btn-outline-secondary add-customization-btn',
                 ],
-            ])
-        ;
+            ]);
     }
 
     /**
