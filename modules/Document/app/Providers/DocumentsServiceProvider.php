@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Modules\Document\Console\Commands\CreateSampleDocumentsFromPrestashop;
+use Modules\Document\Console\Commands\CreateBlockedProductDocuments;
 use Modules\Document\Console\Commands\InitializeDocumentWorkflows;
 use Modules\Document\Console\Commands\MigrateProductBlockades;
 use Modules\Document\Console\Commands\MigrateRequestDocuments;
@@ -152,6 +152,7 @@ class DocumentsServiceProvider extends ServiceProvider
             InitializeDocumentWorkflows::class,
             MigrateRequestDocuments::class,
             MigrateProductBlockades::class,
+            CreateBlockedProductDocuments::class,
         ]);
     }
 
@@ -253,7 +254,7 @@ class DocumentsServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Documentos (operaciones)
         NavService::registerMiniItem('documents', [
-            'icon' => 'fa-file-pdf',
+            'icon' => 'fa-duotone fa-file-pdf',
             'tooltip' => 'Documentos',
             'sidebar_id' => 'documents',
             'order' => 20,
