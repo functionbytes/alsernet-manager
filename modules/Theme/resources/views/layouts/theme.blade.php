@@ -83,6 +83,23 @@
                 margin-left: 320px !important;
             }
         }
+
+        /* Sidebar navigation transitions and positioning */
+        .side-mini-panel .sidebarmenu .sidebar-nav {
+            left: 80px !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease, left 0.4s ease-in-out;
+        }
+
+        .side-mini-panel .sidebarmenu .sidebar-nav.d-none {
+            left: -300px !important;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .side-mini-panel .sidebarmenu .sidebar-nav.d-block {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
