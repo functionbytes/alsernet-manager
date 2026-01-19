@@ -89,11 +89,11 @@ $(function(){
                 if (currentSidebarType === "full") {
                     // Cambiar a mini-sidebar
                     document.body.setAttribute("data-sidebartype", "mini-sidebar");
-                    mainWrapper.classList.add("show-sidebar");
+                    mainWrapper.classList.remove("show-sidebar");
                 } else {
                     // Cambiar a full
                     document.body.setAttribute("data-sidebartype", "full");
-                    mainWrapper.classList.remove("show-sidebar");
+                    mainWrapper.classList.add("show-sidebar");
                 }
             });
         });
