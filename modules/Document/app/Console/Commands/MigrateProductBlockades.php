@@ -65,56 +65,29 @@ class MigrateProductBlockades extends Command
 
     /**
      * Load document type mapping from database
-     * Maps blockade type keywords to document_type_id
-     * Uses label slug matching for dynamic mapping
+     * Maps blockade labels to document_type_id
+     * Uses associated_labels field on DocumentType for dynamic configuration
      */
     private function loadDocumentTypeMapping(): void
     {
         $documentTypes = DocumentType::all();
 
         foreach ($documentTypes as $docType) {
-            // Convert label to lowercase slug for matching
-            $slug = strtolower($docType->label);
-            // Remove special characters and normalize spaces
-            $slug = preg_replace('/[^a-z0-9]/', '', $slug);
-
-            // Map by the processed slug
-            $this->blockadeTypeMapping[$slug] = $docType->id;
-
-            // Also add the original lowercase label for fuzzy matching
-            $lowerLabel = strtolower($docType->label);
-            if ($lowerLabel !== $slug) {
-                $this->blockadeTypeMapping[$lowerLabel] = $docType->id;
+            // Load associated labels from the DocumentType model
+            if (! empty($docType->associated_labels) && is_array($docType->associated_labels)) {
+                foreach ($docType->associated_labels as $label) {
+                    $normalizedLabel = strtolower(trim($label));
+                    $this->blockadeTypeMapping[$normalizedLabel] = $docType->id;
+                }
             }
         }
 
-        // Map common blockade type aliases to document types
-        $aliases = [
-            'corta' => $this->findDocumentTypeByKeyword('corta'),
-            'rifle' => $this->findDocumentTypeByKeyword('rifle'),
-            'escopeta' => $this->findDocumentTypeByKeyword('escopeta'),
-            'balines' => $this->findDocumentTypeByKeyword('balines'),
-            'dni' => $this->findDocumentTypeByKeyword('identificacion'),
-        ];
-
-        foreach ($aliases as $alias => $docTypeId) {
-            if ($docTypeId) {
-                $this->blockadeTypeMapping[$alias] = $docTypeId;
-            }
+        // Log the mapping for debugging
+        if (empty($this->blockadeTypeMapping)) {
+            $this->warn('No associated labels found in any document type. Configure them in the admin panel.');
+        } else {
+            $this->info('Loaded document type mapping: '.json_encode($this->blockadeTypeMapping));
         }
-
-        $this->info('Loaded document type mapping: '.json_encode($this->blockadeTypeMapping));
-    }
-
-    /**
-     * Find document type ID by keyword matching in label
-     */
-    private function findDocumentTypeByKeyword(string $keyword): ?int
-    {
-        $keyword = strtolower($keyword);
-        $docType = DocumentType::whereRaw('LOWER(label) LIKE ?', ["%{$keyword}%"])->first();
-
-        return $docType?->id;
     }
 
     /**

@@ -105,7 +105,7 @@
                     </div>
                     <div class="col-md-3">
                         <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#labelsModal">
-                            <i class="fas fa-plus me-2"></i>Agregar etiqueta
+                            Agregar etiqueta
                         </button>
                     </div>
                 </div>
@@ -121,8 +121,8 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                             <tr>
-                                <th width="30%">Etiqueta</th>
-                                <th width="50%">Tipo de documento asociado</th>
+                                <th width="40%">Etiqueta</th>
+                                <th width="40%">Tipo de documento asociado</th>
                                 <th width="15%" class="text-center">Productos</th>
                                 <th width="5%" class="text-center">Acciones</th>
                             </tr>
@@ -130,35 +130,39 @@
                             <tbody>
                             @foreach($labels as $label)
                                 @php
-                                    // Find matching document type
+                                    // Find matching document type by searching associated_labels
                                     $docType = $documentTypes->first(function($dt) use ($label) {
-                                        return strtolower($dt->slug) === strtolower($label);
+                                        $associatedLabels = $dt->associated_labels ?? [];
+                                        return in_array(strtoupper($label), array_map('strtoupper', $associatedLabels));
                                     });
                                 @endphp
                                 <tr>
                                     <td>
-                                        <code class="text-primary">{{ strtoupper($label) }}</code>
+                                        <code>{{ strtoupper($label) }}</code>
                                     </td>
                                     <td>
                                         @if($docType)
                                             <div>
                                                 <strong>{{ $docType->label }}</strong>
                                                 <br>
-                                                <small class="text-muted">{{ $docType->description ? Str::limit($docType->description, 60) : '-' }}</small>
+                                                <small class="text-muted">{{ $docType->description ? Str::limit($docType->description, 50) : '-' }}</small>
                                             </div>
                                         @else
                                             <span class="text-muted">Sin tipo de documento asociado</span>
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        @if($docType && $docType->blockades_count > 0)
-                                            <span class="badge bg-light text-dark">{{ number_format($docType->blockades_count) }}</span>
+                                        @php
+                                            $labelCount = isset($blockadesByType[strtolower($label)]) ? $blockadesByType[strtolower($label)]->count : 0;
+                                        @endphp
+                                        @if($labelCount > 0)
+                                            <span class="badge bg-light text-dark">{{ number_format($labelCount) }}</span>
                                         @else
-                                            <span class="badge bg-light text-muted">0</span>
+                                            <span class="badge bg-light text-dark">0</span>
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-secondary text-white delete-label-btn" data-label="{{ $label }}">
+                                        <button type="button" class="btn btn-sm btn-secondary text-white delete-label-btn" data-label="{{ $label }}" title="Eliminar etiqueta">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -255,7 +259,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary mb-1 w-100" id="addLabelBtn">
-                        <i class="fas fa-plus me-2"></i>Agregar etiqueta
+                        Agregar etiqueta
                     </button>
                     <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
@@ -272,7 +276,7 @@
                 </div>
                 <div class="modal-body text-center py-4">
                     <div class="mb-3">
-                        <div class="round-48 rounded-circle bg-success-subtle text-success mx-auto mb-3 d-flex align-items-center justify-content-center">
+                        <div class="round-48 rounded-circle bg-black text-white mx-auto mb-3 d-flex align-items-center justify-content-center">
                             <i class="fas fa-check fs-4"></i>
                         </div>
                     </div>
@@ -280,7 +284,7 @@
                     <p class="text-muted mb-0" id="successMessage"></p>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-success w-100" id="reloadPageBtn">Recargar página</button>
+                    <button type="button" class="btn btn-primary w-100" id="reloadPageBtn">Recargar página</button>
                 </div>
             </div>
         </div>

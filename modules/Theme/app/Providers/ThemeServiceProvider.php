@@ -29,6 +29,9 @@ class ThemeServiceProvider extends ServiceProvider
         // to the 334+ files that use it
         View::addLocation(__DIR__.'/../../resources/views');
 
+        // Register helper functions
+        $this->registerHelpers();
+
         // Publish theme assets (CSS, JS, images, libs)
         $this->publishes([
             __DIR__.'/../../public/theme' => public_path('theme'),
@@ -37,6 +40,17 @@ class ThemeServiceProvider extends ServiceProvider
         // Load routes if they exist
         if (file_exists(__DIR__.'/../../routes/web.php')) {
             $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        }
+    }
+
+    /**
+     * Register helper functions
+     */
+    private function registerHelpers(): void
+    {
+        $helperFile = __DIR__.'/../Helpers/functions.php';
+        if (file_exists($helperFile)) {
+            require_once $helperFile;
         }
     }
 }

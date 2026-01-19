@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\DocumentLang;
 use Modules\Document\Entities\DocumentRequirement;
+use Modules\Document\Entities\DocumentRequirementLang;
 use Modules\Document\Entities\DocumentType;
 use Modules\Document\Entities\DocumentTypeValidationStage;
 use Modules\Document\Entities\DocumentValidationCondition;
@@ -132,7 +133,7 @@ class DocumentTypeController extends Controller
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementDocumentLang::create([
+                                DocumentRequirementLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],
@@ -204,11 +205,12 @@ class DocumentTypeController extends Controller
             'slug' => 'required|string|max:50|regex:/^[a-z0-9_-]+$/|unique:document_types,slug,'.$type->id,
             'label' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'icon' => 'fa-duotone nullable|string|max:50',
+            'icon' => 'nullable|string|max:50',
             'color' => 'nullable|string|max:20',
             'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer|min:0',
             'sla_multiplier' => 'nullable|numeric|min:0|max:100',
+            'associated_labels' => 'nullable|string',
             'validation_stages' => 'nullable|array',
             'validation_stages.*.key' => 'required|string|exists:document_validator_groups,key',
             'validation_stages.*.order' => 'required|integer|min:1',
@@ -232,6 +234,14 @@ class DocumentTypeController extends Controller
         try {
             DB::beginTransaction();
 
+            // Process associated labels
+            $associatedLabels = null;
+            if (! empty($validated['associated_labels'])) {
+                $labels = array_map('strtoupper', array_map('trim', explode(',', $validated['associated_labels'])));
+                $labels = array_filter($labels);
+                $associatedLabels = ! empty($labels) ? array_values($labels) : null;
+            }
+
             // Update document type
             $type->update([
                 'slug' => $validated['slug'],
@@ -242,6 +252,7 @@ class DocumentTypeController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
                 'sort_order' => $validated['sort_order'] ?? 0,
                 'sla_multiplier' => $validated['sla_multiplier'] ?? 1.0,
+                'associated_labels' => $associatedLabels,
             ]);
 
             // Update validation stages in relational table
@@ -302,7 +313,7 @@ class DocumentTypeController extends Controller
                         foreach ($requirementData['translations'] as $translationData) {
                             // Only create translation if name is provided
                             if (! empty($translationData['name'])) {
-                                DocumentRequirementDocumentLang::create([
+                                DocumentRequirementLang::create([
                                     'document_requirement_id' => $requirement->id,
                                     'lang_id' => $translationData['lang_id'],
                                     'name' => $translationData['name'],

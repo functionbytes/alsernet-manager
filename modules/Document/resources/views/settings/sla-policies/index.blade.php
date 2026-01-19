@@ -149,14 +149,14 @@
                                     </td>
                                     <td>
                                         @if($policy->business_hours_only)
-                                            <span class="badge bg-primary-subtle text-primary">Horario Comercial</span>
+                                            <span class="badge bg-info-subtle text-info">Horario Comercial</span>
                                         @else
-                                            <span class="badge bg-secondary-subtle text-secondary">24/7</span>
+                                            <span class="badge bg-info-subtle text-info">24/7</span>
                                         @endif
                                     </td>
                                     <td>
                                         @if($policy->enable_escalation)
-                                            <span class="badge bg-danger-subtle text-danger">Activado</span>
+                                            <span class="badge bg-info-subtle text-info">Activado</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif

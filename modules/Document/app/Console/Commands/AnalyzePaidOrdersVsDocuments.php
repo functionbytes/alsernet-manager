@@ -3,312 +3,322 @@
 namespace Modules\Document\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Document\Entities\Document;
 
 class AnalyzePaidOrdersVsDocuments extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:analyze-paid-orders-vs-documents {--show-details : Show detailed list of documents to delete}';
+    protected $signature = 'app:analyze-paid-orders-vs-documents {--show-details : Show detailed list of documents}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Compare paid orders in Prestashop with existing documents - full analysis';
+    protected $description = 'Compare paid orders (estado 27) with documents and blockades validation';
 
-    /**
-     * Execute the console command.
-     */
+    private const PAID_STATE = 27;
+
+    private const ANALYSIS_DATE = '2025-05-27';
+
     public function handle(): int
     {
         try {
-            $this->info('🔍 Starting analysis of paid orders vs documents...');
+            $this->info('🔍 Analyzing paid orders vs documents...');
             $this->line('');
 
-            // Get all statistics
+            // Get statistics
             $stats = $this->analyzeOrders();
 
             // Display results
             $this->displayResults($stats);
 
             if ($this->option('show-details')) {
-                $this->displayDetailedDocumentsToDelete();
+                $this->displayDetailedAnalysis($stats);
             }
 
             return 0;
         } catch (\Exception $e) {
             $this->error('❌ Analysis failed: '.$e->getMessage());
-            $this->error($e->getTraceAsString());
 
             return 1;
         }
     }
 
-    /**
-     * Analyze orders and documents
-     */
     private function analyzeOrders(): array
     {
-        try {
-            $config = [
-                'host' => env('DB_HOST_PRESTASHOP', '192.168.1.120'),
-                'port' => env('DB_PORT_PRESTASHOP', 3306),
-                'database' => env('DB_DATABASE_PRESTASHOP', 'alvarez_ana'),
-                'username' => env('DB_USERNAME_PRESTASHOP', 'alvarez_ana'),
-                'password' => env('DB_PASSWORD_PRESTASHOP', ''),
+        // Get all paid orders (estado 27)
+        $paidOrderIds = DB::connection('prestashop')
+            ->table('aalv_order_history')
+            ->where('id_order_state', self::PAID_STATE)
+            ->distinct('id_order')
+            ->pluck('id_order')
+            ->toArray();
+
+        $paidOrdersSet = array_flip($paidOrderIds);
+
+        // Get paid orders from analysis date
+        $paidOrdersFromDate = DB::connection('prestashop')
+            ->table('aalv_orders as o')
+            ->join('aalv_order_history as oh', 'o.id_order', '=', 'oh.id_order')
+            ->where('oh.id_order_state', self::PAID_STATE)
+            ->where('o.date_add', '>=', self::ANALYSIS_DATE)
+            ->distinct('o.id_order')
+            ->pluck('o.id_order')
+            ->toArray();
+
+        // Get all documents
+        $allDocuments = Document::whereRaw('order_id > 0')
+            ->select('id', 'order_id', 'uid', 'type_id', 'status_id', 'created_at')
+            ->get();
+
+        // Get blockades
+        $blockades = DB::connection('mysql')
+            ->table('document_product_blockades')
+            ->select('product_id', 'product_attribute_id', 'document_type_id')
+            ->get();
+
+        // Build blockade map
+        $blockadeMap = [];
+        foreach ($blockades as $b) {
+            $attr = $b->product_attribute_id;
+            $type = $b->document_type_id;
+
+            if ($attr == 0 || $attr === null) {
+                $key = "prod:{$b->product_id}|{$type}";
+                $blockadeMap[$key] = true;
+            } else {
+                $key = "attr:{$attr}|{$type}";
+                $blockadeMap[$key] = true;
+            }
+        }
+
+        // Get order products
+        $orderProducts = DB::connection('prestashop')
+            ->table('aalv_order_detail')
+            ->select('id_order', 'product_id', 'product_attribute_id')
+            ->get();
+
+        $orderProductMap = [];
+        foreach ($orderProducts as $item) {
+            if (!isset($orderProductMap[$item->id_order])) {
+                $orderProductMap[$item->id_order] = [];
+            }
+            $orderProductMap[$item->id_order][] = [
+                'product_id' => $item->product_id,
+                'attribute_id' => $item->product_attribute_id,
             ];
+        }
 
-            // Query 1: Get all paid orders from Prestashop
-            $paidOrders = $this->getPaidOrdersFromPrestashop($config);
-            $totalPaidOrders = count($paidOrders);
+        // Analyze documents
+        $validDocs = 0;
+        $docsWithoutEstado27 = 0;
+        $docsWithoutBlockedProducts = 0;
+        $docsOrphaned = 0;
+        $docsValid = [];
+        $docsInvalid = [];
 
-            // Query 2: Get all documents with order_id
-            $documents = Document::whereNotNull('order_id')
-                ->where('order_id', '>', 0)
-                ->get();
-            $totalDocuments = $documents->count();
-
-            // Query 3: Count paid orders with documents
-            $paidOrdersWithDocuments = 0;
-            $paidOrdersWithoutDocuments = 0;
-
-            foreach ($paidOrders as $orderId) {
-                $hasDocument = $documents->where('order_id', $orderId)->count() > 0;
-                if ($hasDocument) {
-                    $paidOrdersWithDocuments++;
-                } else {
-                    $paidOrdersWithoutDocuments++;
-                }
+        foreach ($allDocuments as $doc) {
+            // Check estado 27
+            if (!isset($paidOrdersSet[$doc->order_id])) {
+                $docsWithoutEstado27++;
+                $docsInvalid[] = [
+                    'id' => $doc->id,
+                    'order_id' => $doc->order_id,
+                    'reason' => 'Without estado 27',
+                    'status' => $doc->status_id,
+                    'created_at' => $doc->created_at,
+                ];
+                continue;
             }
 
-            // Query 4: Count documents without paid order
-            $documentsWithoutPaidOrder = 0;
-            $exceptionStatus5 = 0;
-            $documentsToDelete = 0;
+            // Check if order has products
+            if (!isset($orderProductMap[$doc->order_id])) {
+                $docsOrphaned++;
+                $docsInvalid[] = [
+                    'id' => $doc->id,
+                    'order_id' => $doc->order_id,
+                    'reason' => 'Order not found',
+                    'status' => $doc->status_id,
+                    'created_at' => $doc->created_at,
+                ];
+                continue;
+            }
 
-            foreach ($documents as $document) {
-                $isPaid = in_array($document->order_id, $paidOrders);
+            // Check if product is blocked
+            $hasBlocked = false;
+            foreach ($orderProductMap[$doc->order_id] as $product) {
+                $attrId = $product['attribute_id'];
+                $prodId = $product['product_id'];
+                $typeId = $doc->type_id;
 
-                if (! $isPaid) {
-                    $documentsWithoutPaidOrder++;
-
-                    if ($document->status_id === 5) {
-                        $exceptionStatus5++;
-                    } else {
-                        $documentsToDelete++;
+                if ($attrId == 0) {
+                    $key = "prod:{$prodId}|{$typeId}";
+                    if (isset($blockadeMap[$key])) {
+                        $hasBlocked = true;
+                        break;
+                    }
+                } else {
+                    $key = "attr:{$attrId}|{$typeId}";
+                    if (isset($blockadeMap[$key])) {
+                        $hasBlocked = true;
+                        break;
                     }
                 }
             }
 
-            return [
-                'total_paid_orders' => $totalPaidOrders,
-                'total_documents' => $totalDocuments,
-                'paid_orders_with_documents' => $paidOrdersWithDocuments,
-                'paid_orders_without_documents' => $paidOrdersWithoutDocuments,
-                'documents_without_paid_order' => $documentsWithoutPaidOrder,
-                'exception_status_5' => $exceptionStatus5,
-                'documents_to_delete' => $documentsToDelete,
-                'paid_order_ids' => $paidOrders,
-            ];
-        } catch (\Exception $e) {
-            $this->error('Error analyzing orders: '.$e->getMessage());
-            throw $e;
+            if ($hasBlocked) {
+                $validDocs++;
+                $docsValid[] = [
+                    'id' => $doc->id,
+                    'order_id' => $doc->order_id,
+                    'status' => $doc->status_id,
+                    'created_at' => $doc->created_at,
+                ];
+            } else {
+                $docsWithoutBlockedProducts++;
+                $docsInvalid[] = [
+                    'id' => $doc->id,
+                    'order_id' => $doc->order_id,
+                    'reason' => 'Without blocked products',
+                    'status' => $doc->status_id,
+                    'created_at' => $doc->created_at,
+                ];
+            }
         }
+
+        return [
+            'total_paid_orders_all' => count($paidOrderIds),
+            'total_paid_orders_from_date' => count($paidOrdersFromDate),
+            'total_documents' => $allDocuments->count(),
+            'valid_documents' => $validDocs,
+            'invalid_documents' => $allDocuments->count() - $validDocs,
+            'docs_without_estado27' => $docsWithoutEstado27,
+            'docs_without_blocked_products' => $docsWithoutBlockedProducts,
+            'docs_orphaned' => $docsOrphaned,
+            'valid_docs' => $docsValid,
+            'invalid_docs' => $docsInvalid,
+            'total_blockades' => $blockades->count(),
+            'valid_blockades' => $blockades->whereNotNull('product_id')->count(),
+        ];
     }
 
-    /**
-     * Get all paid orders from Prestashop
-     * METODOLOGÍA: Busca CUALQUIER estado pagado en historial (no solo el último)
-     * Alineado con: OrderHistory.php línea 294: if ($new_os->id == 2 || $new_os->paid == 1)
-     */
-    private function getPaidOrdersFromPrestashop(array $config): array
-    {
-        try {
-            // Query simple: Busca órdenes con estado de pago (ID=2)
-            $query = 'SELECT DISTINCT o.id_order
-                      FROM aalv_orders o
-                      WHERE EXISTS (
-                          SELECT 1
-                          FROM aalv_order_history oh
-                          WHERE oh.id_order = o.id_order
-                            AND oh.id_order_state = 2
-                      )
-                      ORDER BY o.id_order ASC';
-
-            $output = shell_exec("mysql -h {$config['host']} -u {$config['username']} -p'{$config['password']}' {$config['database']} -sN -e \"".addslashes($query).'" 2>/dev/null');
-
-            if (! $output) {
-                return [];
-            }
-
-            $paidOrders = [];
-            $lines = explode("\n", trim($output));
-
-            foreach ($lines as $line) {
-                if (! empty($line)) {
-                    $paidOrders[] = (int) trim($line);
-                }
-            }
-
-            return $paidOrders;
-        } catch (\Exception $e) {
-            \Log::error('Failed to fetch paid orders: '.$e->getMessage());
-
-            return [];
-        }
-    }
-
-    /**
-     * Display results in formatted table
-     */
     private function displayResults(array $stats): void
     {
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->info('📊 ANALYSIS RESULTS: PAID ORDERS vs DOCUMENTS');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->info('📊 PAID ORDERS vs DOCUMENTS ANALYSIS');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         $this->line('');
 
-        // Paid Orders Summary
-        $this->info('🛒 Prestashop Paid Orders:');
-        $this->line("  Total Paid Orders: {$stats['total_paid_orders']}");
+        // Paid Orders
+        $this->info('💰 PAID ORDERS (Estado '.self::PAID_STATE.')');
+        $this->table(
+            ['Metric', 'Count'],
+            [
+                ['ALL TIME', $stats['total_paid_orders_all']],
+                ['From '.self::ANALYSIS_DATE, $stats['total_paid_orders_from_date']],
+            ]
+        );
         $this->line('');
 
-        // Documents Summary
-        $this->info('📄 Our Documents:');
-        $this->line("  Total Documents: {$stats['total_documents']}");
-        $this->line('');
-
-        // Concordance Analysis
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->info('✅ MATCHES: Paid Orders WITH Documents');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->info("  Paid Orders with Documents: {$stats['paid_orders_with_documents']}");
-
-        $percentage = $stats['total_paid_orders'] > 0
-            ? round(($stats['paid_orders_with_documents'] / $stats['total_paid_orders']) * 100, 2)
+        // Documents
+        $this->info('📄 DOCUMENTS STATUS');
+        $validPercentage = $stats['total_documents'] > 0
+            ? round(($stats['valid_documents'] / $stats['total_documents']) * 100, 1)
             : 0;
 
-        $this->line("  Coverage: {$percentage}% of paid orders have documents");
+        $this->table(
+            ['Status', 'Count', 'Percentage'],
+            [
+                ['✅ VALID', $stats['valid_documents'], $validPercentage.'%'],
+                ['❌ INVALID', $stats['invalid_documents'], (100 - $validPercentage).'%'],
+                ['TOTAL', $stats['total_documents'], '100%'],
+            ]
+        );
         $this->line('');
 
-        // Missing Documents
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->warn('⚠️  MISSING: Paid Orders WITHOUT Documents');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->warn("  Paid Orders without Documents: {$stats['paid_orders_without_documents']}");
-        $this->line('  → These orders should have documents but don\'t');
+        // Invalid Documents Breakdown
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->warn('⚠️  INVALID DOCUMENTS BREAKDOWN');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->table(
+            ['Reason', 'Count'],
+            [
+                ['Without estado 27', $stats['docs_without_estado27']],
+                ['Without blocked products', $stats['docs_without_blocked_products']],
+                ['Order not found', $stats['docs_orphaned']],
+            ]
+        );
         $this->line('');
 
-        // Orphan Documents
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->error('❌ ORPHAN: Documents WITHOUT Paid Orders');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->error("  Documents without Paid Order: {$stats['documents_without_paid_order']}");
+        // Blockades Status
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->info('🚫 BLOCKADES TABLE');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $blockadeUsability = $stats['total_blockades'] > 0
+            ? round(($stats['valid_blockades'] / $stats['total_blockades']) * 100, 1)
+            : 0;
+
+        $this->table(
+            ['Metric', 'Count', 'Status'],
+            [
+                ['Total blockade records', $stats['total_blockades'], ''],
+                ['Valid (product_id NOT NULL)', $stats['valid_blockades'], '✅'],
+                ['Invalid (product_id NULL)', $stats['total_blockades'] - $stats['valid_blockades'], '❌'],
+                ['Usability', $blockadeUsability.'%', ''],
+            ]
+        );
         $this->line('');
 
-        // Breakdown of orphan documents
-        $this->info('  Breakdown:');
-        $this->line("    • Exception (status_id = 5): {$stats['exception_status_5']} (KEEP)");
-        $this->error("    • Candidates for Deletion: {$stats['documents_to_delete']} (DELETE)");
-        $this->line('');
+        // Recommendations
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->info('💡 RECOMMENDATIONS');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-        // Summary
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->info('📋 SUMMARY & RECOMMENDATIONS');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        $this->line('');
-
-        $this->info('Document Status:');
-        $this->line("  ✅ Well-matched: {$stats['paid_orders_with_documents']} / {$stats['total_paid_orders']}");
-        $this->line("  ⚠️  Need attention: {$stats['paid_orders_without_documents']} paid orders without docs");
-        $this->error("  ❌ To be cleaned: {$stats['documents_to_delete']} documents");
-        $this->line('');
-
-        $this->info('Actions:');
-        if ($stats['paid_orders_without_documents'] > 0) {
-            $this->line("  1. Create {$stats['paid_orders_without_documents']} missing documents");
-            $this->line('     → Run: php artisan app:create-blocked-product-documents --force');
+        if ($stats['docs_without_blocked_products'] > 0) {
+            $this->line("❌ {$stats['docs_without_blocked_products']} documents need blocked products added");
+            $this->line('   → Add missing products to document_product_blockades');
         }
 
-        if ($stats['documents_to_delete'] > 0) {
-            $this->line("  2. Delete {$stats['documents_to_delete']} orphan documents");
-            $this->line('     → Run: php artisan app:validate-and-cleanup-documents --force --dry-run');
-            $this->line('     → Then: php artisan app:validate-and-cleanup-documents --force');
+        if ($stats['docs_without_estado27'] > 0) {
+            $this->line("❌ {$stats['docs_without_estado27']} documents from orders never paid");
+            $this->line('   → Review/delete these documents');
         }
 
-        if ($stats['paid_orders_without_documents'] === 0 && $stats['documents_to_delete'] === 0) {
-            $this->info('  ✅ All good! Everything is in sync.');
+        if ($stats['valid_documents'] == $stats['total_documents']) {
+            $this->info('✅ All documents are VALID!');
         }
 
         $this->line('');
-        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     }
 
-    /**
-     * Display detailed list of documents to delete
-     */
-    private function displayDetailedDocumentsToDelete(): void
+    private function displayDetailedAnalysis(array $stats): void
     {
-        try {
-            $config = [
-                'host' => env('DB_HOST_PRESTASHOP', '192.168.1.120'),
-                'port' => env('DB_PORT_PRESTASHOP', 3306),
-                'database' => env('DB_DATABASE_PRESTASHOP', 'alvarez_ana'),
-                'username' => env('DB_USERNAME_PRESTASHOP', 'alvarez_ana'),
-                'password' => env('DB_PASSWORD_PRESTASHOP', ''),
-            ];
-            $paidOrders = $this->getPaidOrdersFromPrestashop($config);
+        $this->line('');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->info('📋 DETAILED: Valid Documents (first 50)');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-            $documents = Document::whereNotNull('order_id')
-                ->where('order_id', '>', 0)
-                ->where('status_id', '<>', 5)
-                ->get();
+        $validTableData = array_map(function ($doc) {
+            return [$doc['id'], $doc['order_id'], $doc['status'], $doc['created_at']->format('Y-m-d H:i:s')];
+        }, array_slice($stats['valid_docs'], 0, 50));
 
-            $candidatesForDeletion = [];
+        $this->table(['Doc ID', 'Order ID', 'Status', 'Created At'], $validTableData);
 
-            foreach ($documents as $doc) {
-                if (! in_array($doc->order_id, $paidOrders)) {
-                    $candidatesForDeletion[] = $doc;
-                }
-            }
-
-            if (empty($candidatesForDeletion)) {
-                $this->info('No documents to delete.');
-
-                return;
-            }
-
-            $this->line('');
-            $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            $this->error('📄 DETAILED LIST: Documents to Delete');
-            $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            $this->line('');
-
-            $this->table(
-                ['ID', 'UID', 'Order ID', 'Status', 'Created At'],
-                array_map(function ($doc) {
-                    return [
-                        $doc->id,
-                        substr($doc->uid, 0, 12).'...',
-                        $doc->order_id,
-                        $doc->status_id,
-                        $doc->created_at->format('Y-m-d H:i:s'),
-                    ];
-                }, array_slice($candidatesForDeletion, 0, 50))
-            );
-
-            if (count($candidatesForDeletion) > 50) {
-                $this->line('  ... and '.(count($candidatesForDeletion) - 50).' more');
-            }
-
-            $this->line('');
-        } catch (\Exception $e) {
-            $this->error('Error displaying details: '.$e->getMessage());
+        if (count($stats['valid_docs']) > 50) {
+            $this->line('... and '.(count($stats['valid_docs']) - 50).' more');
         }
+
+        $this->line('');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->error('📋 DETAILED: Invalid Documents (first 50)');
+        $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+        $invalidTableData = array_map(function ($doc) {
+            return [$doc['id'], $doc['order_id'], $doc['reason'], $doc['status'], $doc['created_at']->format('Y-m-d H:i:s')];
+        }, array_slice($stats['invalid_docs'], 0, 50));
+
+        $this->table(['Doc ID', 'Order ID', 'Reason', 'Status', 'Created At'], $invalidTableData);
+
+        if (count($stats['invalid_docs']) > 50) {
+            $this->line('... and '.(count($stats['invalid_docs']) - 50).' more');
+        }
+
+        $this->line('');
     }
 }

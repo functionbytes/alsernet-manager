@@ -175,6 +175,40 @@
                             </div>
                         </div>
 
+                        <!-- Associated PrestaShop Labels Section -->
+                        <div class="row mt-5 border-top pt-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold mb-0">
+                                    Etiquetas de PrestaShop
+                                </h5>
+                                <p class="text-muted mb-4">Configura las etiquetas de PrestaShop que corresponden a este tipo de documento. Los productos con estas etiquetas requerirán este documento.</p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="control-label col-form-label">Etiquetas asociadas</label>
+                                    <input type="text" class="form-control @error('associated_labels') is-invalid @enderror"
+                                           name="associated_labels"
+                                           value="{{ old('associated_labels', implode(', ', $documentType->associated_labels ?? [])) }}"
+                                           placeholder="Ej: DNI, CORTA, BALINES45, BALINES55">
+                                    <small class="form-text text-muted">Ingresa las etiquetas separadas por comas. Se convertirán a mayúsculas automáticamente. Después de guardar, ejecuta la sincronización desde el panel de bloqueos.</small>
+                                    @error('associated_labels')
+                                        <span class="field-validation-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            @if(!empty($documentType->associated_labels))
+                                <div class="col-12">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach($documentType->associated_labels as $label)
+                                            <span class="badge bg-primary">{{ $label }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
                         </div>
 
                             </div>

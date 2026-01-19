@@ -22,18 +22,20 @@ class DocumentProductBlockadeController extends Controller
         $lastSync = Setting::get('product_blockades_last_sync');
         $syncCount = Setting::get('product_blockades_sync_count', 0);
         $totalBlockades = DocumentProductBlockade::count();
-        $currentLabels = Setting::get('product_blockade_labels', 'DNI,ESCOPETA,RIFLE,CORTA');
 
         // Get all active document types for label association
         $documentTypes = DocumentType::where('is_active', true)
             ->orderBy('label')
             ->get();
 
-        // Get statistics by document type
-        $blockadesByType = DocumentProductBlockade::selectRaw('document_type_id, COUNT(*) as count')
-            ->groupBy('document_type_id')
+        // Get current labels from settings (the ones user has configured)
+        $currentLabels = Setting::get('product_blockade_labels', '');
+
+        // Get statistics by blockade type (label)
+        $blockadesByType = DocumentProductBlockade::selectRaw('blockade_type, COUNT(*) as count')
+            ->groupBy('blockade_type')
             ->get()
-            ->keyBy('document_type_id');
+            ->keyBy('blockade_type');
 
         // Get unique products count
         $uniqueProducts = DocumentProductBlockade::selectRaw('COUNT(DISTINCT COALESCE(product_id, product_attribute_id)) as count')
@@ -45,11 +47,6 @@ class DocumentProductBlockadeController extends Controller
             ->limit(10)
             ->get();
 
-        // Add count to each document type
-        foreach ($documentTypes as $type) {
-            $type->blockades_count = $blockadesByType->get($type->id)->count ?? 0;
-        }
-
         return view('documents::settings.blockades.index', [
             'lastSync' => $lastSync ? \Carbon\Carbon::parse($lastSync)->diffForHumans() : 'Nunca',
             'syncCount' => (int) $syncCount,
@@ -57,6 +54,7 @@ class DocumentProductBlockadeController extends Controller
             'uniqueProducts' => $uniqueProducts,
             'currentLabels' => $currentLabels,
             'documentTypes' => $documentTypes,
+            'blockadesByType' => $blockadesByType,
             'recentBlockades' => $recentBlockades,
         ]);
     }

@@ -286,7 +286,6 @@ class DocumentsServiceProvider extends ServiceProvider
                 ['label' => 'Políticas SLA', 'route' => 'settings.documents.sla-policies.index'],
                 ['label' => 'Grupos de validadores', 'route' => 'settings.documents.groups.index'],
                 ['label' => 'Bloqueos de productos', 'route' => 'settings.documents.blockades.index'],
-                ['label' => 'Acciones de email por etapa', 'route' => 'settings.documents.stage-email-actions.index'],
             ],
         ]);
     }

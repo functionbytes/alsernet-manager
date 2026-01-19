@@ -14,6 +14,7 @@ class DocumentProductBlockade extends Model
         'product_id',
         'product_attribute_id',
         'document_type_id',
+        'blockade_type',
     ];
 
     protected function casts(): array
@@ -23,6 +24,7 @@ class DocumentProductBlockade extends Model
             'product_id' => 'integer',
             'product_attribute_id' => 'integer',
             'document_type_id' => 'integer',
+            'blockade_type' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
@@ -93,5 +95,4 @@ class DocumentProductBlockade extends Model
 
         return $blockade?->documentType?->slug;
     }
-
 }

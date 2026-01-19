@@ -23,6 +23,7 @@ class DocumentType extends Model
         'sort_order',
         'sla_multiplier',
         'validation_stages',
+        'associated_labels',
     ];
 
     protected function casts(): array
@@ -32,6 +33,7 @@ class DocumentType extends Model
             'sort_order' => 'integer',
             'sla_multiplier' => 'decimal:2',
             'validation_stages' => 'array',
+            'associated_labels' => 'array',
         ];
     }
 
