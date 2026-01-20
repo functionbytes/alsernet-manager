@@ -100,7 +100,7 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
 
             // Step 2: Get all existing documents
             $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            $this->info('📍 STEP 2: Validating existing documents');
+            $this->info('📍 STEP 2: Validating existing documents & syncing missing data');
             $this->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
             $this->line('');
 
@@ -109,6 +109,12 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                 ->get();
 
             $this->info("✓ Total documents: ".count($allDocuments));
+
+            // Sync missing customer data and lang_id in existing documents
+            $this->line('');
+            $this->comment('🔄 Syncing missing customer data and lang_id...');
+            $this->syncMissingDocumentData();
+            $this->line('');
 
             // Validate each document using the same logic as the script
             $validDocuments = [];
@@ -254,7 +260,9 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
 
                 foreach ($toCreate as $orderId) {
                     try {
+
                         $orderData = $this->fetchPrestashopOrderData($orderId);
+
                         if (! $orderData) {
                             $errors[] = "Order {$orderId}: Could not fetch order data from Prestashop";
                             $failed++;
@@ -393,7 +401,7 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
 
             return [
                 'id_customer' => $order->id_customer,
-                'id_lang' => $order->id_lang,
+                'id_lang' => $order->id_lang ?? 1,
                 'reference' => $order->reference,
                 'date_add' => $order->date_add,
                 'firstname' => $customer?->firstname,
@@ -402,6 +410,62 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
             ];
         } catch (\Exception $e) {
             return null;
+        }
+    }
+
+    private function syncMissingDocumentData(): void
+    {
+        try {
+            // Find documents with missing customer data or lang_id
+            $docsToSync = Document::whereNotNull('order_id')
+                ->where(function ($q) {
+                    $q->whereNull('customer_firstname')
+                      ->orWhereNull('customer_lastname')
+                      ->orWhereNull('customer_email')
+                      ->orWhereNull('order_reference')
+                      ->orWhereNull('lang_id');
+                })
+                ->select('id', 'order_id')
+                ->get();
+
+            if ($docsToSync->isEmpty()) {
+                $this->info('  ✓ All documents have complete data');
+                return;
+            }
+
+            $synced = 0;
+            $failed = 0;
+
+            foreach ($docsToSync as $doc) {
+                try {
+                    $orderData = $this->fetchPrestashopOrderData($doc->order_id);
+                    if (! $orderData) {
+                        $failed++;
+                        continue;
+                    }
+
+                    $doc->update([
+                        'lang_id' => $orderData['id_lang'],
+                        'customer_firstname' => $orderData['firstname'],
+                        'customer_lastname' => $orderData['lastname'],
+                        'customer_email' => $orderData['email'],
+                        'order_reference' => $orderData['reference'],
+                    ]);
+
+                    $synced++;
+                } catch (\Exception $e) {
+                    $failed++;
+                }
+            }
+
+            if ($synced > 0) {
+                $this->info("  ✓ Synced: {$synced} documents");
+            }
+            if ($failed > 0) {
+                $this->warn("  ⚠️  Failed: {$failed} documents");
+            }
+        } catch (\Exception $e) {
+            $this->warn("  ⚠️  Sync error: ".$e->getMessage());
         }
     }
 }

@@ -115,7 +115,7 @@ class MailerServiceProvider extends ServiceProvider
     {
         // Mini-nav item for Mailers
         NavService::registerMiniItem('mailers', [
-            'icon' => 'fa-duotone fa-envelope',
+            'icon' => 'fa-duotone fa-thin fa-envelopes-bulk',
             'tooltip' => 'Emails',
             'sidebar_id' => 'mailers',
             'order' => 25,

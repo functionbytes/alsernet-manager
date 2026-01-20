@@ -107,7 +107,7 @@ class Renderer
      */
     public static function css()
     {
-        return '<style>'.file_get_contents(static::DIST.'styles.css').'</style>';
+        return '<style>'.file_get_contents(static::DIST.'style.css').'</style>';
     }
 
     /**

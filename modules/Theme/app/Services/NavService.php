@@ -366,4 +366,114 @@ class NavService
 
         return $user->hasPermissionTo($permissionName);
     }
+
+    /**
+     * Obtener datos completos de navegación para renderizar en el template
+     *
+     * Esto retorna:
+     * - miniItems: items del mini-nav filtrados por permisos
+     * - sidebars: sidebars filtrados por permisos
+     * - activeSidebarId: el ID del sidebar que debería estar activo basándose en la ruta actual
+     *
+     * Este método centraliza toda la lógica que solía estar en el template Blade,
+     * mejorando la claridad y permitiendo reutilización en otros contextos.
+     *
+     * @return array{miniItems: Collection, sidebars: array, activeSidebarId: string|null}
+     */
+    public static function getNavDataForUser(): array
+    {
+        $user = auth()->user();
+        $miniItems = self::getMiniItemsForUser();
+        $sidebars = self::getSidebarsForUser();
+
+        // Determinar el sidebar activo basándose en la ruta actual
+        $activeSidebarId = self::findActiveSidebarForUser($sidebars, $user);
+
+        // Si no hay sidebar activo y hay sidebars disponibles, usar el primero
+        if (! $activeSidebarId && count($sidebars) > 0) {
+            $activeSidebarId = array_key_first($sidebars);
+        }
+
+        return [
+            'miniItems' => $miniItems,
+            'sidebars' => $sidebars,
+            'activeSidebarId' => $activeSidebarId,
+        ];
+    }
+
+    /**
+     * Encontrar el sidebar activo basándose en la ruta actual
+     *
+     * Busca a través de todos los sidebars y sus items para determinar
+     * cuál debería estar activo basándose en la ruta que se está viendo.
+     *
+     * @param array $sidebars Sidebars filtrados por permisos
+     * @param \Illuminate\Foundation\Auth\User|null $user Usuario autenticado
+     * @return string|null ID del sidebar activo, o null si no se encuentra
+     */
+    private static function findActiveSidebarForUser(array $sidebars, ?\Illuminate\Foundation\Auth\User $user = null): ?string
+    {
+        if (! $user) {
+            return null;
+        }
+
+        foreach ($sidebars as $sidebarId => $sidebar) {
+            // Soportar nueva estructura de secciones
+            if (isset($sidebar['sections'])) {
+                foreach ($sidebar['sections'] as $section) {
+                    foreach ($section['items'] ?? [] as $item) {
+                        // Validar que el usuario tenga permisos para este item
+                        if (self::userCanAccessItem($item, $user)) {
+                            // Verificar si la ruta actual coincide
+                            if (request()->routeIs($item['route'] . '*')) {
+                                return $sidebarId;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Estructura legacy con items directos
+                foreach ($sidebar['items'] ?? [] as $item) {
+                    // Validar que el usuario tenga permisos para este item
+                    if (self::userCanAccessItem($item, $user)) {
+                        // Verificar si la ruta actual coincide
+                        if (request()->routeIs($item['route'] . '*')) {
+                            return $sidebarId;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Verificar si un usuario puede acceder a un item específico del menú
+     *
+     * Maneja tanto permisos simples como múltiples (separadas por |)
+     *
+     * @param array $item Item del menú con opcional campo 'permission'
+     * @param \Illuminate\Foundation\Auth\User $user Usuario autenticado
+     * @return bool True si el usuario puede acceder, false en caso contrario
+     */
+    private static function userCanAccessItem(array $item, \Illuminate\Foundation\Auth\User $user): bool
+    {
+        // Si no hay requerimiento de permiso, permitir acceso
+        if (empty($item['permission'])) {
+            return true;
+        }
+
+        // Parsear permisos separados por | (OR logic)
+        $permissions = array_map('trim', explode('|', $item['permission']));
+
+        // Verificar si el usuario tiene al menos uno de los permisos
+        foreach ($permissions as $permission) {
+            if ($user->can($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

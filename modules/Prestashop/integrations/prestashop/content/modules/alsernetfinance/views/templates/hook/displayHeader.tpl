@@ -9,7 +9,7 @@
 </div>
 
 {addJs file='modules/alsernetfinance/js/modal-script.js'}
-{addCss file='modules/alsernetfinance/css/modal-styles.css'}
+{addCss file='modules/alsernetfinance/css/modal-style.css'}
 
 
 

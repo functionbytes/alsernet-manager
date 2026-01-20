@@ -6,27 +6,27 @@
 	@include('layouts.core._favicon')
 
 	@include('layouts.core._head')
-	
+
 	<!-- Bootstrap -->
 	<link href="{{ AppUrl::asset('assets2/lib/bootstrap-4.4.0/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ AppUrl::asset('assets2/lib/select2-4.0.12/css/select2.min.css') }}" rel="stylesheet" />
-	
+
 	<link rel="stylesheet" href="{{ AppUrl::asset('assets/css/icons/linearicons/style.css') }}">
 	<link rel="stylesheet" href="{{ AppUrl::asset('assets/timepicker/jquery.timepicker.css') }}">
 	<link rel="stylesheet" href="{{ AppUrl::asset('assets/datepicker/dist/datepicker.min.css') }}">
-	<link href="{{ AppUrl::asset('assets/css/icons/icomoon/styles.css') }}" rel="stylesheet" type="text/css">
-	
+	<link href="{{ AppUrl::asset('assets/css/icons/icomoon/style.css') }}" rel="stylesheet" type="text/css">
+
 	<link href="{{ AppUrl::asset('css/loading.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ AppUrl::asset('css/popup.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ AppUrl::asset('css/autofill.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ AppUrl::asset('assets2/css/dialog.css') }}" rel="stylesheet" type="text/css">
-	
+
 	<!-- Google icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    
-	
-	
+
+
+
 	<!-- Core JS files -->
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/loaders/pace.min.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/core/libraries/jquery.min.js') }}"></script>
@@ -44,7 +44,7 @@
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/ui/moment/moment.min.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/pickers/daterangepicker.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/notifications/bootbox.min.js') }}"></script>
-	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/notifications/sweet_alert.min.js') }}"></script>		
+	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/notifications/sweet_alert.min.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/forms/styling/switch.min.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/pickers/pickadate/picker.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('assets/js/plugins/pickers/pickadate/picker.date.js') }}"></script>
@@ -52,17 +52,17 @@
     <link rel="stylesheet" href="{{ AppUrl::asset('js/scrollbar/jquery.mCustomScrollbar.css') }}">
     <script type="text/javascript" src="{{ AppUrl::asset('js/scrollbar/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <script type="text/javascript" src="{{ AppUrl::asset('js/jquery.cookie.js') }}"></script>
-	<script type="text/javascript" src="{{ AppUrl::asset('rangeslider/bootstrap-slider.js') }}"></script>	
-	<script type="text/javascript" src="{{ AppUrl::asset('bootstrap3-editable/js/bootstrap-editable.min.js') }}"></script>		
+	<script type="text/javascript" src="{{ AppUrl::asset('rangeslider/bootstrap-slider.js') }}"></script>
+	<script type="text/javascript" src="{{ AppUrl::asset('bootstrap3-editable/js/bootstrap-editable.min.js') }}"></script>
 
 	<!-- Tooltip -->
 	<link rel="stylesheet" href="{{ AppUrl::asset('assets/tooltipster/css/tooltipster.bundle.min.css') }}">
 	<link rel="stylesheet" href="{{ AppUrl::asset('assets/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
-	<script type="text/javascript" src="{{ AppUrl::asset('assets/tooltipster/js/tooltipster.bundle.min.js') }}"></script>		
+	<script type="text/javascript" src="{{ AppUrl::asset('assets/tooltipster/js/tooltipster.bundle.min.js') }}"></script>
 
-	<script type="text/javascript" src="{{ AppUrl::asset('assets/timepicker/jquery.timepicker.js') }}"></script>		
-	<script type="text/javascript" src="{{ AppUrl::asset('assets/datepicker/dist/datepicker.min.js') }}"></script>		
-	
+	<script type="text/javascript" src="{{ AppUrl::asset('assets/timepicker/jquery.timepicker.js') }}"></script>
+	<script type="text/javascript" src="{{ AppUrl::asset('assets/datepicker/dist/datepicker.min.js') }}"></script>
+
 	<!-- Select2 -->
 	<script src="{{ AppUrl::asset('assets2/lib/select2-4.0.12/js/select2.min.js') }}"></script>
 	<!-- PNotify -->
@@ -73,27 +73,27 @@
 	<script>
 		PNotify.defaults.styling = 'bootstrap4';
 	</script>
-		
+
 	<!-- Diagram -->
 	<script src="{{ AppUrl::asset('assets2/lib/automation.js') }}"></script>
-		
+
 	<!-- App -->
 	<link href="{{ AppUrl::asset('assets2/css/app.css') }}?v={{ app_version() }}" rel="stylesheet" type="text/css">
-	
+
 	<!-- Dropzone -->
 	<script type="text/javascript" src="{{ AppUrl::asset('core/dropzone/dropzone.js') }}"></script>
 	@include('helpers._dropzone_lang')
 	<link href="{{ AppUrl::asset('core/dropzone/dropzone.css') }}" rel="stylesheet" type="text/css">
-	
+
 	<!-- Ajax box -->
 	<script type="text/javascript" src="{{ AppUrl::asset('assets2/js/box.js') }}"></script>
-		
+
 	<!-- Scrollbar -->
 	<script type="text/javascript" src="{{ AppUrl::asset('assets2/lib/scrollbar/jquery.scrollbar.min.js') }}"></script>
 	<link href="{{ AppUrl::asset('assets2/lib/scrollbar/jquery.scrollbar.css') }}" rel="stylesheet" type="text/css">
 
 	@yield('page_script')
-	
+
 	<script type="text/javascript" src="{{ AppUrl::asset('js/autofill.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('js/select-custom.js') }}"></script>
 	<script type="text/javascript" src="{{ AppUrl::asset('js/modal.js') }}"></script>
@@ -115,7 +115,7 @@
 	<!-- display flash message -->
 	@include('common.flash')
 
-	
+
 	<!-- Custom langue -->
 	<script>
 		var LANG_CODE = 'en-US';
@@ -132,7 +132,7 @@
 			if(typeof(settings.globalError) != 'undefined' || settings.globalError == false) {
 				return;
 			}
-			
+
 			// abort ajax
 			if (request.statusText =='abort') {
 				return;
@@ -151,6 +151,6 @@
 
 	<!-- main inner content -->
 	@yield('content')
-    
+
 </body>
 </html>

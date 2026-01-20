@@ -48,7 +48,7 @@ class ThemeServiceProvider extends ServiceProvider
      */
     private function registerHelpers(): void
     {
-        $helperFile = __DIR__.'/../Helpers/functions.php';
+        $helperFile = __DIR__.'/../Helpers/helpers.php';
         if (file_exists($helperFile)) {
             require_once $helperFile;
         }

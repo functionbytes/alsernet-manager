@@ -71,7 +71,7 @@ class UserServiceProvider extends ServiceProvider
     {
         // Mini-nav item for Users
         NavService::registerMiniItem('users', [
-            'icon' => 'fa-duotone fa-users',
+            'icon' => 'fa-duotone fa-thin fa-users-medical',
             'tooltip' => 'Usuarios',
             'sidebar_id' => 'users',
             'order' => 30,

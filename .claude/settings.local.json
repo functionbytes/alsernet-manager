@@ -492,7 +492,8 @@
       "Bash(tr:*)",
       "Bash(mcp__laravel-boost__last-error)",
       "Bash(killall php:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(composer run dev:*)"
     ],
     "deny": [],
     "ask": []

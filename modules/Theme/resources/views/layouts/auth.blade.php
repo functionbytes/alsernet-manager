@@ -13,9 +13,8 @@
 
     @yield('head')
 
-    <link href="/pages/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/pages/css/blue-theme.css" rel="stylesheet">
-    <link href="/pages/css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ themeAsset('libs/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ themeAsset('css/auth.css') }}">
 
     @stack('css')
 
@@ -23,18 +22,17 @@
 
 <body>
 
+    <div id="page" class="page font--jakarta">
 
-<div id="page" class="page font--jakarta">
+        @yield('content')
 
-    @yield('content')
+    </div>
 
-</div>
+    <script src="{{ themeAsset('libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ themeAsset('libs/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ themeAsset('libs/jquery-validation/dist/jquery.validate.min.js') }}"></script>
 
-
-<script src="{{ url('theme/libs/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ url('theme/libs/jquery-validation/dist/jquery.validate.min.js') }}"></script>
-
-@stack('scripts')
+    @stack('scripts')
 
 </body>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"  data-layout="vertical"  data-boxed-layout="boxed" data-card="shadow">
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="green" data-layout="vertical" data-boxed-layout="boxed" data-card="shadow">
+
 <head>
 
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
@@ -23,7 +24,7 @@
     <meta name="user-id" content="{{ auth()->id() ?? '' }}">
 
     <!-- Library CSS -->
-    <link rel="stylesheet" href="{{ themeAsset('libs/taginput/bootstrap-tagsinput.css') }}">
+    <link rel="stylesheet" href="{{ themeAsset('images/taginput/bootstrap-tagsinput.css') }}">
     <link rel="stylesheet" href="{{ themeAsset('libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ themeAsset('libs/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ themeAsset('libs/quill/dist/quill.snow.css') }}">
@@ -45,82 +46,24 @@
     <link rel="stylesheet" href="{{ url('core/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css') }}">
     <link rel="stylesheet" href="{{ url('core/css/google-font-icon.css') }}">
 
-
     @stack('css')
     @stack('scripts-head')
-
-    <style>
-        /* Fix sidebar visibility in full mode */
-        @media (min-width: 992px) {
-            /* Sidebar width when expanded */
-            body[data-sidebartype=full] .side-mini-panel .sidebarmenu {
-                width: 240px !important;
-                height: 100vh !important;
-                position: fixed !important;
-                left: 80px !important;
-                top: 0 !important;
-                flex-shrink: 0;
-                z-index: 98;
-            }
-
-            body[data-sidebartype=full] .side-mini-panel .sidebarmenu .sidebar-nav {
-                left: 0 !important;
-                position: relative !important;
-            }
-
-            /* Sidebar collapsed */
-            body[data-sidebartype=full] .side-mini-panel .sidebarmenu.close {
-                width: 0 !important;
-                left: 80px !important;
-            }
-
-            body[data-sidebartype=full] .side-mini-panel .sidebarmenu.close .sidebar-nav {
-                left: -240px !important;
-            }
-
-            /* Page wrapper margin to accommodate sidebar (80px iconbar + 240px sidebarmenu) */
-            body[data-sidebartype=full] .page-wrapper {
-                margin-left: 320px !important;
-            }
-        }
-
-        /* Sidebar navigation transitions and positioning */
-        .side-mini-panel .sidebarmenu .sidebar-nav {
-            left: 80px !important;
-            transition: opacity 0.3s ease, visibility 0.3s ease, left 0.4s ease-in-out;
-        }
-
-        .side-mini-panel .sidebarmenu .sidebar-nav.d-none {
-            left: -300px !important;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .side-mini-panel .sidebarmenu .sidebar-nav.d-block {
-            opacity: 1;
-            visibility: visible;
-        }
-    </style>
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
 </head>
 
-<body class="" data-sidebartype="mini-sidebar">
+<body class="" data-sidebartype="full" >
 
 <div id="main-wrapper">
 
-    <div class="page-wrapper" >
+    @include ('theme.includes.nav')
 
+    <div class="page-wrapper">
 
-        @include ('theme.includes.nav')
-
-        <!-- Main wrapper -->
+        @include ('theme.includes.header')
 
         <div class="body-wrapper">
-
-            @include ('theme.includes.header')
 
             <div class="container-fluid">
                 @yield('content')
@@ -136,9 +79,8 @@
 
 <!-- Core Libraries -->
 <script src="{{ themeAsset('libs/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ themeAsset('libs/simplebar/dist/simplebar.min.js') }}"></script>
 <script src="{{ themeAsset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ url('core/tooltipster/js/tooltipster.bundle.min.js') }}"></script>
+<script src="{{ themeAsset('libs/simplebar/dist/simplebar.min.js') }}"></script>
 
 <!-- Form/Input Libraries -->
 <script src="{{ themeAsset('libs/taginput/bootstrap-tagsinput.js') }}"></script>
@@ -151,15 +93,16 @@
 
 <!-- Theme & App Scripts (orden importante) -->
 <script src="{{ themeAsset('js/theme/app.init.js') }}"></script>
+<script src="{{ themeAsset('js/theme/theme.js') }}"></script>
 <script src="{{ themeAsset('js/theme/app.min.js') }}"></script>
 <script src="{{ themeAsset('js/theme/sidebarmenu.js') }}"></script>
-<script src="{{ themeAsset('js/theme/theme.js') }}"></script>
 
 <!-- Form Initializers -->
 <script src="{{ themeAsset('js/forms/select2.init.js') }}"></script>
 <script src="{{ themeAsset('js/forms/quill-init.js') }}"></script>
 
 <!-- Core App Scripts -->
+<script src="{{ url('core/tooltipster/js/tooltipster.bundle.min.js') }}"></script>
 <script src="{{ url('core/js/functions.js') }}"></script>
 <script src="{{ url('core/js/link.js') }}"></script>
 <script src="{{ url('core/js/box.js') }}"></script>

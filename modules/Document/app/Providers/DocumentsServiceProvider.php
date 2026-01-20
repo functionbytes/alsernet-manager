@@ -15,6 +15,7 @@ use Modules\Document\Console\Commands\MigrateProductBlockades;
 use Modules\Document\Console\Commands\MigrateRequestDocuments;
 use Modules\Document\Console\Commands\SendDocumentUploadReminders;
 use Modules\Document\Console\Commands\ValidateAndCleanupDocuments;
+use Modules\Document\Console\Commands\ValidateAndCreateDocumentsFromPaidOrders;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
@@ -157,6 +158,7 @@ class DocumentsServiceProvider extends ServiceProvider
             MigrateProductBlockades::class,
             CreateBlockedProductDocuments::class,
             ValidateAndCleanupDocuments::class,
+            ValidateAndCreateDocumentsFromPaidOrders::class,
             AnalyzePaidOrdersVsDocuments::class,
             DeepAnalyzePrestashopOrderStates::class,
         ]);
@@ -260,7 +262,7 @@ class DocumentsServiceProvider extends ServiceProvider
     {
         // Mini-nav item para Documentos (operaciones)
         NavService::registerMiniItem('documents', [
-            'icon' => 'fa-duotone fa-file-pdf',
+            'icon' => 'fa-duotone fa-thin fa-album-collection-circle-plus',
             'tooltip' => 'Documentos',
             'sidebar_id' => 'documents',
             'order' => 20,
