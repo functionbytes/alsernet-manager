@@ -15,7 +15,7 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
     protected $description = 'Validate and create documents for paid orders with blocked products, delete documents for orders without estado 27 or blocked products';
 
     private const PAID_STATE = 27;
-    private const ANALYSIS_DATE = '2026-01-01';
+    private const ANALYSIS_DATE = '2025-11-15';
 
     public function handle(): int
     {
@@ -270,10 +270,9 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                             continue;
                         }
 
-                        $defaultStatusId = DocumentStatus::where('key', 'awaiting_documents')->first()?->id ?? 2;
+                        $defaultStatusId = DocumentStatus::where('key', 'pending')->first()?->id ?? 2;
 
                         $document = Document::create([
-                            'uid' => 'doc-'.$orderId.'-'.time().'-'.rand(1000, 9999),
                             'type_id' => $defaultTypeId,
                             'source_id' => 3,
                             'sync_id' => 2,
@@ -416,14 +415,15 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
     private function syncMissingDocumentData(): void
     {
         try {
-            // Find documents with missing customer data or lang_id
+            // Find documents with missing customer data, lang_id, or order_date
             $docsToSync = Document::whereNotNull('order_id')
                 ->where(function ($q) {
                     $q->whereNull('customer_firstname')
                       ->orWhereNull('customer_lastname')
                       ->orWhereNull('customer_email')
                       ->orWhereNull('order_reference')
-                      ->orWhereNull('lang_id');
+                      ->orWhereNull('lang_id')
+                      ->orWhereNull('order_date');
                 })
                 ->select('id', 'order_id')
                 ->get();
@@ -450,6 +450,7 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                         'customer_lastname' => $orderData['lastname'],
                         'customer_email' => $orderData['email'],
                         'order_reference' => $orderData['reference'],
+                        'order_date' => $orderData['date_add'],
                     ]);
 
                     $synced++;
