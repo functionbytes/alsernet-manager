@@ -263,10 +263,12 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $variables = self::prepareDocumentVariables($document);
-
             // Get lang_id from document (defaults to 1 if not set)
             $langId = $document->lang_id ?? 1;
+
+            // Obtener los documentos requeridos con traducciones
+            $uploadedDocs = $document->getRequiredDocumentsWithLabels();
+            $variables = self::prepareDocumentVariables($document, $uploadedDocs);
 
             // Get translation for the template using document's language
             $translation = $template->translate($langId);
