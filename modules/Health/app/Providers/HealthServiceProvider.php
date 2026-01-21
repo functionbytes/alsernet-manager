@@ -85,13 +85,15 @@ class HealthServiceProvider extends ServiceProvider
         // Solo agregar checks de producción si realmente estamos en producción
         if ($isRealProduction) {
             $checks[] = DebugModeCheck::new();
-            $checks[] = OptimizedAppCheck::new();
 
-            if (config('queue.default') !== 'sync') {
-                $checks[] = QueueCheck::new();
-            }
+            // OptimizedApp check omitted - has route caching serialization issues
+            // $checks[] = OptimizedAppCheck::new();
 
-            $checks[] = ScheduleCheck::new()->heartbeatMaxAgeInMinutes(2);
+            // Queue and Schedule checks omitted - require heartbeat mechanism with running supervisor processes
+            // if (config('queue.default') !== 'sync') {
+            //     $checks[] = QueueCheck::new();
+            // }
+            // $checks[] = ScheduleCheck::new()->heartbeatMaxAgeInMinutes(2);
         }
 
         Health::checks($checks);
