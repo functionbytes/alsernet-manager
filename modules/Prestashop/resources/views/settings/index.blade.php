@@ -6,205 +6,222 @@
 
   <div class="widget-content searchable-container list">
 
-      @if(session('success'))
-          <div class="alert alert-light alert-dismissible fade show" role="alert">
-              {{ session('success') }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <!-- Main Card -->
+    <div class="card">
+      <!-- Header Section -->
+      <div class="card-header p-4 border-bottom border-light">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="mb-1 fw-bold">Configuración PrestaShop</h5>
+            <p class="small mb-0 text-muted">Gestiona la sincronización y conexión con PrestaShop</p>
           </div>
-      @endif
-
-      <!-- Acciones y Controles -->
-    <div class="card card-body mb-3">
-
-      <div class="row g-2">
-        <!-- Configuración -->
-        <div class="col-md-3">
-          <a href="{{ route('settings.prestashop.edit') }}" class="btn btn-primary w-100">
-            Configurar
-          </a>
-        </div>
-
-        <!-- Actualizar -->
-        <div class="col-md-3">
-          <button type="button" class="btn btn-secondary w-100" id="refreshBtn">
-            Actualizar
-          </button>
-        </div>
-
-        <!-- Test Sincronización -->
-        <div class="col-md-2">
-          <button type="button" class="btn btn-outline-primary w-100" id="testSyncBtn">
-            Sincronizar
-          </button>
-        </div>
-
-        <!-- Resetear Stats -->
-        <div class="col-md-2">
-          <button type="button" class="btn btn-outline-primary w-100" id="resetStatsBtn">
-            Restablecer
-          </button>
+          <div class="d-flex gap-2">
+            <a href="{{ route('settings.prestashop.edit') }}" class="btn btn-primary">
+              <i class="fas fa-cog me-1"></i> Configurar
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Estado del Servicio -->
-    <div class="card card-body mb-3">
-      <h5 class="mb-3">Estado del Servicio</h5>
+      <!-- Success/Error Messages -->
+      @if(session('success'))
+        <div class="card-body border-bottom">
+          <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-check-circle fs-4 me-2"></i>
+              <div>{{ session('success') }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        </div>
+      @endif
 
-      <div class="row">
-        <div class="col-lg-3 col-md-6 mb-3">
-          <div class="card  bg-light-secondary ">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="fa-duotone fa-power-off fs-7 text-primary"></i>
+      <!-- Stats Section -->
+      <div class="card-body border-bottom">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+            <div class="card bg-light-secondary">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-power-off fs-4 text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-1 text-muted small">Estado</p>
+                    <h5 class="mb-0" id="serviceStatus">
+                      @if($settings['prestashop_enabled'] === 'yes')
+                        <span class="badge bg-success">Habilitado</span>
+                      @else
+                        <span class="badge bg-danger">Deshabilitado</span>
+                      @endif
+                    </h5>
+                  </div>
                 </div>
-                <div>
-                  <p class="mb-1 text-muted">Estado</p>
-                  <h5 class="mb-0" id="serviceStatus">
-                    @if($settings['prestashop_enabled'] === 'yes')
-                      <span class="badge bg-success">Habilitado</span>
-                    @else
-                      <span class="badge bg-danger">Deshabilitado</span>
-                    @endif
-                  </h5>
+                <div class="mt-3">
+                  <button type="button" class="btn btn-sm btn-outline-dark w-100" id="toggleServiceBtn">
+                    {{ $settings['prestashop_enabled'] === 'yes' ? 'Deshabilitar' : 'Habilitar' }}
+                  </button>
                 </div>
               </div>
-              <div class="mt-3">
-                <button type="button" class="btn btn-sm btn-outline-dark w-100" id="toggleServiceBtn">
-                  {{ $settings['prestashop_enabled'] === 'yes' ? 'Deshabilitar' : 'Habilitar' }}
-                </button>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+            <div class="card bg-light-secondary">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-database fs-4 text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-1 text-muted small">Conexión DB</p>
+                    <h5 class="mb-0" id="connectionStatus">
+                      @if($stats['last_sync_status'] === 'online')
+                        <span class="badge bg-success">Online</span>
+                      @elseif($stats['last_sync_status'] === 'offline')
+                        <span class="badge bg-danger">Offline</span>
+                      @else
+                        <span class="badge bg-warning">Sin verificar</span>
+                      @endif
+                    </h5>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <button type="button" class="btn btn-sm btn-outline-dark w-100" id="checkConnectionBtn">
+                    <span class="btn-text">Verificar</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+            <div class="card bg-light-secondary">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-sync fs-4 text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-1 text-muted small">Sincronizaciones</p>
+                    <h5 class="mb-0" id="totalSyncs">
+                      {{ number_format((int)$stats['total_syncs']) }}
+                    </h5>
+                    <p class="text-xs mb-0">
+                      <span class="text-muted" id="failedSyncs">{{ (int)$stats['failed_syncs'] }}</span> errores
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6">
+            <div class="card bg-light-secondary">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-check-circle fs-4 text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-1 text-muted small">Tasa de éxito</p>
+                    <h5 class="mb-0" id="successRate">
+                      {{ number_format((float)$stats['success_rate'], 2) }}%
+                    </h5>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-lg-3 col-md-6 mb-3">
-          <div class="card  bg-light-secondary ">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="fa-duotone fa-database fs-7 text-primary"></i>
+      <!-- Actions Section -->
+      <div class="card-body border-bottom bg-light">
+        <h6 class="fw-bold mb-3">Acciones del sistema</h6>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <button type="button" class="btn btn-outline-primary w-100" id="refreshBtn">
+              <i class="fas fa-sync me-1"></i> Actualizar estadísticas
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-outline-primary w-100" id="testSyncBtn">
+              <i class="fas fa-play-circle me-1"></i> Sincronizar ahora
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-outline-danger w-100" id="resetStatsBtn">
+              <i class="fas fa-rotate-left me-1"></i> Restablecer estadísticas
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuration Section -->
+      <div class="card-body">
+        <h6 class="fw-bold mb-3">Información de configuración</h6>
+        <div class="row">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="card bg-light h-100">
+              <div class="card-body">
+                <h6 class="mb-3">Configuración base de datos</h6>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Host:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_db_host'] }}</p>
                 </div>
-                <div>
-                  <p class="mb-1 text-muted">Conexión DB</p>
-                  <h5 class="mb-0" id="connectionStatus">
-                    @if($stats['last_sync_status'] === 'online')
-                      <span class="badge bg-success">Online</span>
-                    @elseif($stats['last_sync_status'] === 'offline')
-                      <span class="badge bg-danger">Offline</span>
-                    @else
-                      <span class="badge bg-danger">Sin verificar</span>
-                    @endif
-                  </h5>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Puerto:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_db_port'] }}</p>
                 </div>
-              </div>
-              <div class="mt-3">
-                <button type="button" class="btn btn-sm btn-outline-dark w-100" id="checkConnectionBtn">
-                  <span class="btn-text">Verificar</span>
-                  <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                </button>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Base de datos:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_db_database'] }}</p>
+                </div>
+                <div class="mb-0">
+                  <label class="form-label fw-semibold text-primary small mb-1">URL PrestaShop:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_url'] }}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-lg-3 col-md-6 mb-3">
-          <div class="card  bg-light-secondary ">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="fa-duotone fa-sync fs-7 text-primary"></i>
+          <div class="col-md-6">
+            <div class="card bg-light h-100">
+              <div class="card-body">
+                <h6 class="mb-3">Parámetros de sincronización</h6>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Timeout:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_timeout'] }} segundos</p>
                 </div>
-                <div>
-                  <p class="mb-1 text-muted">Sincronizaciones</p>
-                  <h5 class="mb-0" id="totalSyncs">
-                    {{ number_format((int)$stats['total_syncs']) }}
-                  </h5>
-                  <p class="text-xs mb-0">
-                    <span class="text-muted" id="failedSyncs">{{ (int)$stats['failed_syncs'] }}</span> errores
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Timeout conexión:</label>
+                  <p class="text-muted mb-0">{{ $settings['prestashop_connect_timeout'] }} segundos</p>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-primary small mb-1">Sincronización habilitada:</label>
+                  <p class="text-muted mb-0">
+                    {{ $settings['prestashop_sync_enabled'] === 'yes' ? 'Sí' : 'No' }}
+                  </p>
+                </div>
+                <div class="mb-0">
+                  <label class="form-label fw-semibold text-primary small mb-1">Última sincronización:</label>
+                  <p class="text-muted mb-0">
+                    @if($stats['last_sync_check'])
+                      {{ \Carbon\Carbon::parse($stats['last_sync_check'])->diffForHumans() }}
+                    @else
+                      Nunca
+                    @endif
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 mb-3">
-          <div class="card  bg-light-secondary ">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="fa-duotone fa-check-circle fs-7 text-primary"></i>
-                </div>
-                <div>
-                  <p class="mb-1 text-muted">Tasa de Éxito</p>
-                  <h5 class="mb-0" id="successRate">
-                    {{ number_format((float)$stats['success_rate'], 2) }}%
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+
     </div>
-
-    <!-- Información de Configuración -->
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <div class="card card-body h-100">
-          <h5 class="mb-3">Configuración base de datos</h5>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Host:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_db_host'] }}</p>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Puerto:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_db_port'] }}</p>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Base de Datos:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_db_database'] }}</p>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold text-primary">URL PrestaShop:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_url'] }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <div class="card card-body h-100">
-          <h5 class="mb-3">Parámetros de sincronización</h5>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Timeout:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_timeout'] }} segundos</p>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Timeout Conexión:</label>
-            <p class="text-muted mb-0">{{ $settings['prestashop_connect_timeout'] }} segundos</p>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold text-primary">Sincronización habilitada:</label>
-            <p class="text-muted mb-0">
-              {{ $settings['prestashop_sync_enabled'] === 'yes' ? 'Sí' : 'No' }}
-            </p>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold text-primary">Última sincronización:</label>
-            <p class="text-muted mb-0">
-              @if($stats['last_sync_check'])
-                {{ \Carbon\Carbon::parse($stats['last_sync_check'])->diffForHumans() }}
-              @else
-                Nunca
-              @endif
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
 
   </div>
 

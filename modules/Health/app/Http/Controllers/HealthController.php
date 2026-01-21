@@ -109,9 +109,17 @@ class HealthController extends Controller
                 });
             });
 
-        return response()->json([
-            'period_days' => $days,
-            'history' => $history,
+        // If request wants JSON (AJAX call), return JSON
+        if ($request->wantsJson() || $request->ajax() || $request->header('Accept') === 'application/json') {
+            return response()->json([
+                'period_days' => $days,
+                'history' => $history,
+            ]);
+        }
+
+        // Otherwise return the view
+        return view('health::settings.history', [
+            'pageTitle' => 'Historial de verificaciones',
         ]);
     }
 
@@ -313,5 +321,266 @@ class HealthController extends Controller
         }
 
         return 0;
+    }
+
+    /**
+     * Execute scheduler manually
+     */
+    public function runSchedule(Request $request)
+    {
+        try {
+            // Run schedule command
+            \Illuminate\Support\Facades\Artisan::call('schedule:run');
+            $output = \Illuminate\Support\Facades\Artisan::output();
+
+            // Set schedule check heartbeat to mark it as running
+            \Illuminate\Support\Facades\Artisan::call('health:schedule-check-heartbeat');
+
+            // Also dispatch queue check jobs if queue is configured
+            if (config('queue.default') !== 'sync') {
+                \Illuminate\Support\Facades\Artisan::call('health:queue-check-heartbeat');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Scheduler ejecutado exitosamente',
+                'output' => $output,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al ejecutar el scheduler: '.$e->getMessage(),
+                'timestamp' => now()->toIso8601String(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get queue worker status
+     */
+    public function queueStatus()
+    {
+        try {
+            $queueConnection = config('queue.default');
+
+            // Check if workers are running
+            $workersRunning = false;
+            $workerCount = 0;
+
+            if (function_exists('exec')) {
+                exec('ps aux | grep -i "queue:work\|horizon" | grep -v grep', $output);
+                $workerCount = count($output);
+                $workersRunning = $workerCount > 0;
+            }
+
+            // Get queue size
+            $queueSize = 0;
+            if ($queueConnection === 'database') {
+                $queueSize = \Illuminate\Support\Facades\DB::table(config('queue.connections.database.table', 'jobs'))->count();
+            } elseif ($queueConnection === 'redis') {
+                try {
+                    $redis = \Illuminate\Support\Facades\Redis::connection(config('queue.connections.redis.connection', 'default'));
+                    $queueSize = $redis->llen('queues:'.config('queue.connections.redis.queue', 'default'));
+                } catch (\Exception $e) {
+                    $queueSize = 'N/A';
+                }
+            }
+
+            // Get failed jobs count
+            $failedJobsCount = \Illuminate\Support\Facades\DB::table(config('queue.failed.table', 'failed_jobs'))->count();
+
+            return response()->json([
+                'status' => 'success',
+                'connection' => $queueConnection,
+                'workers_running' => $workersRunning,
+                'worker_count' => $workerCount,
+                'pending_jobs' => $queueSize,
+                'failed_jobs' => $failedJobsCount,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to get queue status: '.$e->getMessage(),
+                'timestamp' => now()->toIso8601String(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Process pending queue jobs
+     */
+    public function processQueue(Request $request)
+    {
+        try {
+            $queueConnection = config('queue.default');
+
+            if ($queueConnection === 'sync') {
+                return response()->json([
+                    'status' => 'info',
+                    'message' => 'Queue is set to sync mode. Jobs are processed immediately.',
+                    'timestamp' => now()->toIso8601String(),
+                ]);
+            }
+
+            // Process a limited number of jobs
+            \Illuminate\Support\Facades\Artisan::call('queue:work', [
+                '--once' => true,
+                '--tries' => 3,
+            ]);
+
+            $output = \Illuminate\Support\Facades\Artisan::output();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Queue jobs processed',
+                'output' => $output,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process queue: '.$e->getMessage(),
+                'timestamp' => now()->toIso8601String(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get scheduled tasks list
+     */
+    public function scheduleList()
+    {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('schedule:list');
+            $output = \Illuminate\Support\Facades\Artisan::output();
+
+            // Parse schedule list output
+            $lines = explode("\n", trim($output));
+            $tasks = [];
+
+            foreach ($lines as $line) {
+                if (preg_match('/^(.+?)\s+Next Due:\s+(.+)$/', trim($line), $matches)) {
+                    $tasks[] = [
+                        'command' => trim($matches[1]),
+                        'next_due' => trim($matches[2]),
+                    ];
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'tasks' => $tasks,
+                'raw_output' => $output,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to get schedule list: '.$e->getMessage(),
+                'timestamp' => now()->toIso8601String(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate Supervisor configuration
+     */
+    public function generateSupervisorConfig(Request $request)
+    {
+        try {
+            $workers = $request->input('workers', 3);
+            $tries = $request->input('tries', 3);
+            $timeout = $request->input('timeout', 300);
+
+            // Run the artisan command
+            \Illuminate\Support\Facades\Artisan::call('health:supervisor-config', [
+                '--workers' => $workers,
+                '--tries' => $tries,
+                '--timeout' => $timeout,
+                '--force' => true,
+            ]);
+
+            $output = \Illuminate\Support\Facades\Artisan::output();
+
+            // Get the generated file path (dentro del módulo Health)
+            $appName = str_replace(' ', '-', strtolower(config('app.name', 'laravel')));
+            $configPath = base_path('modules/Health/storage/supervisor');
+            $configFile = "{$configPath}/{$appName}-worker.conf";
+
+            // Read the generated config
+            $configContent = file_exists($configFile) ? file_get_contents($configFile) : null;
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Configuración de Supervisor generada exitosamente',
+                'config_file' => $configFile,
+                'config_content' => $configContent,
+                'app_name' => $appName,
+                'instructions' => $this->getSupervisorInstructions($appName, $configFile),
+                'output' => $output,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al generar configuración: '.$e->getMessage(),
+                'timestamp' => now()->toIso8601String(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Download Supervisor configuration file
+     */
+    public function downloadSupervisorConfig()
+    {
+        try {
+            $appName = str_replace(' ', '-', strtolower(config('app.name', 'laravel')));
+            $configFile = base_path("modules/Health/storage/supervisor/{$appName}-worker.conf");
+
+            if (! file_exists($configFile)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Archivo de configuración no encontrado. Genera primero la configuración.',
+                ], 404);
+            }
+
+            return response()->download($configFile, "{$appName}-worker.conf", [
+                'Content-Type' => 'text/plain',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al descargar configuración: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get Supervisor installation instructions
+     */
+    private function getSupervisorInstructions(string $appName, string $configFile): array
+    {
+        return [
+            'install' => [
+                'ubuntu' => 'sudo apt-get install supervisor',
+                'macos' => 'brew install supervisor && brew services start supervisor',
+            ],
+            'setup' => [
+                "sudo cp {$configFile} /etc/supervisor/conf.d/{$appName}-worker.conf",
+                'sudo supervisorctl reread',
+                'sudo supervisorctl update',
+                "sudo supervisorctl start {$appName}-worker:*",
+            ],
+            'verify' => 'sudo supervisorctl status',
+            'useful_commands' => [
+                'status' => 'sudo supervisorctl status',
+                'restart' => "sudo supervisorctl restart {$appName}-worker:*",
+                'stop' => "sudo supervisorctl stop {$appName}-worker:*",
+                'logs' => "sudo supervisorctl tail -f {$appName}-worker:* stdout",
+            ],
+        ];
     }
 }

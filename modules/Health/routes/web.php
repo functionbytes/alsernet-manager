@@ -22,6 +22,16 @@ Route::middleware(['web', 'auth', 'role:super-admin'])
         Route::get('/', [HealthController::class, 'index'])->name('index');
         Route::get('/check', [HealthController::class, 'check'])->name('check');
         Route::get('/history', [HealthController::class, 'history'])->name('history');
+
+        // System management actions
+        Route::post('/schedule/run', [HealthController::class, 'runSchedule'])->name('schedule.run');
+        Route::get('/schedule/list', [HealthController::class, 'scheduleList'])->name('schedule.list');
+        Route::get('/queue/status', [HealthController::class, 'queueStatus'])->name('queue.status');
+        Route::post('/queue/process', [HealthController::class, 'processQueue'])->name('queue.process');
+
+        // Supervisor configuration
+        Route::post('/supervisor/generate', [HealthController::class, 'generateSupervisorConfig'])->name('supervisor.generate');
+        Route::get('/supervisor/download', [HealthController::class, 'downloadSupervisorConfig'])->name('supervisor.download');
     });
 
 // Health Check API Routes (no authentication, no rate limiting - for external monitoring)

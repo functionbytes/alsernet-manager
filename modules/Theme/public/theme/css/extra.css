@@ -1652,7 +1652,7 @@ kbd {
 .rounded-profile {
     width: 35px;
     height: 35px;
-    background-color: #cfcfcf;
+    background-color: #cfcfcf !important;
     font-size: 14px;
 }
 
@@ -1739,3 +1739,11 @@ body .select2-container--classic .select2-selection--single .select2-selection__
     z-index: 1;
     transition: all 0.2s ease;
 }
+
+body .select2-container--classic .select2-selection--single, body .select2-container--classic .select2-selection--single .select2-selection__arrow, body .select2-container--classic .select2-selection--single .select2-selection__rendered, body .select2-container--default .select2-selection--multiple, body .select2-container--default .select2-selection--single, body .select2-container--default .select2-selection--single .select2-selection__arrow, body .select2-container--default .select2-selection--single .select2-selection__rendered {
+    border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+    height: 40px;
+    line-height: 24px;
+}
+

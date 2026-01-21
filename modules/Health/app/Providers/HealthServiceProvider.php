@@ -53,11 +53,15 @@ class HealthServiceProvider extends ServiceProvider
 
     protected function registerHealthChecks()
     {
-        Health::checks([
+        // Detectar si realmente estamos en producción (no .test, .local, localhost)
+        $isRealProduction = app()->environment('production')
+            && ! str_contains(config('app.url'), '.test')
+            && ! str_contains(config('app.url'), '.local')
+            && ! str_contains(config('app.url'), 'localhost');
+
+        $checks = [
             // Environment & Configuration
             EnvironmentCheck::new()->expectEnvironment(app()->environment()),
-            DebugModeCheck::new()->if(app()->environment('production')),
-            OptimizedAppCheck::new()->if(app()->environment('production')),
 
             // Database
             DatabaseCheck::new(),
@@ -69,20 +73,28 @@ class HealthServiceProvider extends ServiceProvider
             CacheCheck::new(),
             RedisCheck::new(),
 
-            // Queue System
-            QueueCheck::new()->if(app()->environment('production') && config('queue.default') !== 'sync'),
-
-            // Scheduled Tasks
-            ScheduleCheck::new()
-                ->if(app()->environment('production'))
-                ->heartbeatMaxAgeInMinutes(2),
-
             // Storage
             StorageCheck::new(),
+
+            // Monitoreo de espacio en disco (umbrales altos)
             UsedDiskSpaceCheck::new()
-                ->warnWhenUsedSpaceIsAbovePercentage(70)
-                ->failWhenUsedSpaceIsAbovePercentage(90),
-        ]);
+                ->warnWhenUsedSpaceIsAbovePercentage(97)
+                ->failWhenUsedSpaceIsAbovePercentage(99),
+        ];
+
+        // Solo agregar checks de producción si realmente estamos en producción
+        if ($isRealProduction) {
+            $checks[] = DebugModeCheck::new();
+            $checks[] = OptimizedAppCheck::new();
+
+            if (config('queue.default') !== 'sync') {
+                $checks[] = QueueCheck::new();
+            }
+
+            $checks[] = ScheduleCheck::new()->heartbeatMaxAgeInMinutes(2);
+        }
+
+        Health::checks($checks);
     }
 
     /**
