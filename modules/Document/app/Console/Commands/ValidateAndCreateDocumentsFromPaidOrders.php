@@ -285,6 +285,9 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                             'customer_firstname' => $orderData['firstname'] ?? null,
                             'customer_lastname' => $orderData['lastname'] ?? null,
                             'customer_email' => $orderData['email'] ?? null,
+                            'customer_company' => $orderData['company'] ?? null,
+                            'customer_dni' => $orderData['dni'] ?? null,
+                            'customer_cellphone' => $orderData['cellphone'] ?? null,
                             'order_id' => $orderId,
                             'order_reference' => $orderData['reference'] ?? null,
                             'order_date' => $orderData['date_add'] ?? null,
@@ -390,12 +393,37 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
             }
 
             $customer = null;
+            $company = null;
+            $dni = null;
+            $cellphone = null;
+
             if ($order->id_customer) {
                 $customer = DB::connection('prestashop')
                     ->table('aalv_customer')
                     ->where('id_customer', $order->id_customer)
                     ->select('firstname', 'lastname', 'email')
                     ->first();
+
+                // Fetch additional data from addresses
+                $addressData = $this->fetchCustomerAddressData($order->id_customer);
+                if ($addressData) {
+                    $company = $addressData['company'];
+                    $dni = $addressData['dni'];
+                    $cellphone = $addressData['cellphone'];
+                }
+
+                // If customer email is anonymous, fetch real data
+                if ($customer && str_starts_with($customer->email, 'anon_')) {
+                    $realData = $this->fetchRealCustomerData($order->id_customer);
+                    if ($realData) {
+                        $customer->firstname = $realData['firstname'];
+                        $customer->lastname = $realData['lastname'];
+                        $customer->email = $realData['email'];
+                        $company = $realData['company'] ?? $company;
+                        $dni = $realData['dni'] ?? $dni;
+                        $cellphone = $realData['cellphone'] ?? $cellphone;
+                    }
+                }
             }
 
             return [
@@ -406,6 +434,9 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                 'firstname' => $customer?->firstname,
                 'lastname' => $customer?->lastname,
                 'email' => $customer?->email,
+                'company' => $company,
+                'dni' => $dni,
+                'cellphone' => $cellphone,
             ];
         } catch (\Exception $e) {
             return null;
@@ -415,17 +446,21 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
     private function syncMissingDocumentData(): void
     {
         try {
-            // Find documents with missing customer data, lang_id, or order_date
+            // Find documents with missing customer data, lang_id, order_date, OR anonymous emails
             $docsToSync = Document::whereNotNull('order_id')
                 ->where(function ($q) {
                     $q->whereNull('customer_firstname')
                       ->orWhereNull('customer_lastname')
                       ->orWhereNull('customer_email')
+                      ->orWhereNull('customer_company')
+                      ->orWhereNull('customer_dni')
+                      ->orWhereNull('customer_cellphone')
                       ->orWhereNull('order_reference')
                       ->orWhereNull('lang_id')
-                      ->orWhereNull('order_date');
+                      ->orWhereNull('order_date')
+                      ->orWhere('customer_email', 'like', 'anon_%');
                 })
-                ->select('id', 'order_id')
+                ->select('id', 'order_id', 'customer_email', 'customer_id')
                 ->get();
 
             if ($docsToSync->isEmpty()) {
@@ -434,6 +469,7 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
             }
 
             $synced = 0;
+            $anonUpdated = 0;
             $failed = 0;
 
             foreach ($docsToSync as $doc) {
@@ -444,11 +480,33 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
                         continue;
                     }
 
+                    // Check if current email is anonymous (starts with anon_)
+                    $isAnonymous = $doc->customer_email && str_starts_with($doc->customer_email, 'anon_');
+
+                    // If anonymous, force re-fetch real customer data from PrestaShop
+                    if ($isAnonymous && $orderData['id_customer']) {
+                        $realCustomerData = $this->fetchRealCustomerData($orderData['id_customer']);
+
+                        if ($realCustomerData) {
+                            $orderData['firstname'] = $realCustomerData['firstname'];
+                            $orderData['lastname'] = $realCustomerData['lastname'];
+                            $orderData['email'] = $realCustomerData['email'];
+                            $orderData['company'] = $realCustomerData['company'] ?? $orderData['company'];
+                            $orderData['dni'] = $realCustomerData['dni'] ?? $orderData['dni'];
+                            $orderData['cellphone'] = $realCustomerData['cellphone'] ?? $orderData['cellphone'];
+                            $anonUpdated++;
+                        }
+                    }
+
                     $doc->update([
                         'lang_id' => $orderData['id_lang'],
+                        'customer_id' => $orderData['id_customer'],
                         'customer_firstname' => $orderData['firstname'],
                         'customer_lastname' => $orderData['lastname'],
                         'customer_email' => $orderData['email'],
+                        'customer_company' => $orderData['company'],
+                        'customer_dni' => $orderData['dni'],
+                        'customer_cellphone' => $orderData['cellphone'],
                         'order_reference' => $orderData['reference'],
                         'order_date' => $orderData['date_add'],
                     ]);
@@ -462,11 +520,153 @@ class ValidateAndCreateDocumentsFromPaidOrders extends Command
             if ($synced > 0) {
                 $this->info("  ✓ Synced: {$synced} documents");
             }
+            if ($anonUpdated > 0) {
+                $this->info("  ✓ Anonymous customers updated: {$anonUpdated}");
+            }
             if ($failed > 0) {
                 $this->warn("  ⚠️  Failed: {$failed} documents");
             }
         } catch (\Exception $e) {
             $this->warn("  ⚠️  Sync error: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Fetch customer address data (company, dni, cellphone)
+     */
+    private function fetchCustomerAddressData(int $customerId): ?array
+    {
+        try {
+            $address = DB::connection('prestashop')
+                ->table('aalv_address')
+                ->where('id_customer', $customerId)
+                ->where('deleted', 0)
+                ->orderByDesc('id_address')
+                ->select('company', 'vat_number', 'phone', 'phone_mobile')
+                ->first();
+
+            if (!$address) {
+                return null;
+            }
+
+            // Prioritize mobile over landline phone
+            $cellphone = $address->phone_mobile ?: $address->phone;
+
+            return [
+                'company' => $address->company,
+                'dni' => $address->vat_number,
+                'cellphone' => $cellphone,
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Fetch real customer data from PrestaShop (bypassing any anonymous data)
+     * Also updates the customer table if real data is found for anonymous customer
+     */
+    private function fetchRealCustomerData(int $customerId): ?array
+    {
+        try {
+            $customer = DB::connection('prestashop')
+                ->table('aalv_customer')
+                ->where('id_customer', $customerId)
+                ->select('firstname', 'lastname', 'email')
+                ->first();
+
+            if (!$customer) {
+                return null;
+            }
+
+            $isAnonymous = str_starts_with($customer->email, 'anon_');
+
+            // If this is anonymous data, try to find real data from order addresses
+            if ($isAnonymous) {
+                $realData = $this->fetchRealCustomerDataFromAddresses($customerId);
+
+                if ($realData) {
+                    // Update PrestaShop customer table with real data (name and email only)
+                    DB::connection('prestashop')
+                        ->table('aalv_customer')
+                        ->where('id_customer', $customerId)
+                        ->update([
+                            'firstname' => $realData['firstname'],
+                            'lastname' => $realData['lastname'],
+                            'email' => $realData['email'],
+                        ]);
+
+                    return $realData;
+                }
+
+                return null;
+            }
+
+            // Get additional data from addresses
+            $addressData = $this->fetchCustomerAddressData($customerId);
+
+            return [
+                'firstname' => $customer->firstname,
+                'lastname' => $customer->lastname,
+                'email' => $customer->email,
+                'company' => $addressData['company'] ?? null,
+                'dni' => $addressData['dni'] ?? null,
+                'cellphone' => $addressData['cellphone'] ?? null,
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Fetch real customer data from order addresses (invoice or delivery)
+     */
+    private function fetchRealCustomerDataFromAddresses(int $customerId): ?array
+    {
+        try {
+            // Try to get data from invoice address first
+            $address = DB::connection('prestashop')
+                ->table('aalv_address')
+                ->where('id_customer', $customerId)
+                ->where('deleted', 0)
+                ->where(function ($q) {
+                    $q->whereNotNull('firstname')
+                      ->where('firstname', '!=', '')
+                      ->whereNotNull('lastname')
+                      ->where('lastname', '!=', '');
+                })
+                ->orderByDesc('id_address')
+                ->select('firstname', 'lastname', 'company', 'vat_number', 'phone', 'phone_mobile')
+                ->first();
+
+            if (!$address) {
+                return null;
+            }
+
+            // Try to find a valid email from customer table history or use a generated one
+            $email = DB::connection('prestashop')
+                ->table('aalv_customer')
+                ->where('id_customer', $customerId)
+                ->value('email');
+
+            // If still anonymous, we can't do much more
+            if (str_starts_with($email, 'anon_')) {
+                return null;
+            }
+
+            // Prioritize mobile over landline phone
+            $cellphone = $address->phone_mobile ?: $address->phone;
+
+            return [
+                'firstname' => $address->firstname,
+                'lastname' => $address->lastname,
+                'email' => $email,
+                'company' => $address->company,
+                'dni' => $address->vat_number,
+                'cellphone' => $cellphone,
+            ];
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }
