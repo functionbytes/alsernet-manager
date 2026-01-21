@@ -57,7 +57,7 @@ class HealthServiceProvider extends ServiceProvider
             // Environment & Configuration
             EnvironmentCheck::new()->expectEnvironment(app()->environment()),
             DebugModeCheck::new()->if(app()->environment('production')),
-            OptimizedAppCheck::new(),
+            OptimizedAppCheck::new()->if(app()->environment('production')),
 
             // Database
             DatabaseCheck::new(),
@@ -70,10 +70,11 @@ class HealthServiceProvider extends ServiceProvider
             RedisCheck::new(),
 
             // Queue System
-            QueueCheck::new()->if(config('queue.default') !== 'sync'),
+            QueueCheck::new()->if(app()->environment('production') && config('queue.default') !== 'sync'),
 
             // Scheduled Tasks
             ScheduleCheck::new()
+                ->if(app()->environment('production'))
                 ->heartbeatMaxAgeInMinutes(2),
 
             // Storage
