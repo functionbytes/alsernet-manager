@@ -79,7 +79,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ $attachment['url'] }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                        <a href="{{ parse_url($attachment['url'], PHP_URL_PATH) }}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
                                             <i class="fa fa-download"></i>
                                         </a>
                                         @if(auth()->user()->canDocument('delete-attachments'))
@@ -191,6 +191,17 @@
 
 @push('scripts')
     <script>
+        // Función para extraer la ruta de una URL (similar a parse_url PHP_URL_PATH)
+        function getPathFromUrl(url) {
+            try {
+                const urlObj = new URL(url);
+                return urlObj.pathname;
+            } catch (e) {
+                // Si ya es una ruta relativa, devolverla como está
+                return url;
+            }
+        }
+
         $(document).ready(function() {
             const documentUid = '{{ $document->uid }}';
 
@@ -317,7 +328,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex gap-2">
-                                                    <a href="${attachment.url}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
+                                                    <a href="${getPathFromUrl(attachment.url)}" class="btn btn-sm btn-primary" target="_blank" title="Descargar">
                                                         <i class="fa fa-download"></i>
                                                     </a>
                                                     <button type="button" class="btn btn-sm btn-danger delete-attachment-btn" data-media-id="${attachment.id}" title="Eliminar">

@@ -943,7 +943,7 @@ class Document extends Model implements HasMedia
                 'file_name' => $media->file_name,
                 'size' => $media->size,
                 'mime_type' => $media->mime_type,
-                'url' => $media->getUrl(),
+                'url' => parse_url($media->getUrl(), PHP_URL_PATH),
                 'uploaded_at' => $media->created_at->format('Y-m-d H:i:s'),
                 'uploaded_by' => $media->getCustomProperty('uploaded_by'),
                 'notes' => $media->getCustomProperty('notes'),
