@@ -126,12 +126,12 @@ class DocumentType extends Model
             ->first();
     }
 
-    public function getRequiredDocuments(): array
+    public function getRequiredDocuments(?int $langId = null): array
     {
         $docs = [];
 
         foreach ($this->requirements as $requirement) {
-            $docs[$requirement->key] = $requirement->getName();
+            $docs[$requirement->key] = $requirement->getName($langId);
         }
 
         return $docs;

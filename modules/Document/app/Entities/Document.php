@@ -779,7 +779,8 @@ class Document extends Model implements HasMedia
         $documentType = $this->documentType;
 
         if ($documentType) {
-            return $documentType->getRequiredDocuments();
+            // Pass the document's language ID to get translated labels
+            return $documentType->getRequiredDocuments($this->lang_id);
         }
 
         return $this->getDefaultDocuments();

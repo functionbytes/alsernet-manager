@@ -30,13 +30,12 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            // Obtener los documentos requeridos para este tipo de documento
-            $documentTypeSlug = $document->documentType?->slug ?? 'general';
-            $requiredDocs = DocumentTypeService::getRequiredDocuments($documentTypeSlug);
-            $variables = self::prepareDocumentVariables($document, $requiredDocs);
-
             // Get lang_id from document (defaults to 1 if not set)
             $langId = $document->lang_id ?? 1;
+
+            // Obtener los documentos requeridos para este tipo de documento con traducción
+            $requiredDocs = $document->getRequiredDocumentsWithLabels();
+            $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
             // Get translation for the template using document's language
             $translation = $template->translate($langId);
@@ -79,8 +78,11 @@ class DocumentEmailTemplateService
                 return false;
             }
 
-            $documentTypeSlug = $document->documentType?->slug ?? 'general';
-            $requiredDocs = DocumentTypeService::getRequiredDocuments($documentTypeSlug);
+            // Get lang_id from document (defaults to 1 if not set)
+            $langId = $document->lang_id ?? 1;
+
+            // Obtener los documentos requeridos para este tipo de documento con traducción
+            $requiredDocs = $document->getRequiredDocumentsWithLabels();
 
             $variables = self::prepareDocumentVariables($document, $requiredDocs);
 
@@ -96,8 +98,6 @@ class DocumentEmailTemplateService
                 $daysSinceRequest,
                 $daysSinceRequest === 1 ? '' : 's'
             );
-
-            $langId = $document->lang_id ?? 1;
 
             $translation = $template->translate($langId);
             if (! $translation || ! $translation->subject) {
