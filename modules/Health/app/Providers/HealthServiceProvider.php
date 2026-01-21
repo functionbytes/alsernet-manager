@@ -9,7 +9,6 @@ use Modules\Health\Checks\StorageCheck;
 use Modules\Theme\Services\NavService;
 use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Checks\Checks\DatabaseConnectionCountCheck;
-use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\OptimizedAppCheck;
 use Spatie\Health\Checks\Checks\QueueCheck;
@@ -81,20 +80,6 @@ class HealthServiceProvider extends ServiceProvider
                 ->warnWhenUsedSpaceIsAbovePercentage(97)
                 ->failWhenUsedSpaceIsAbovePercentage(99),
         ];
-
-        // Solo agregar checks de producción si realmente estamos en producción
-        if ($isRealProduction) {
-            $checks[] = DebugModeCheck::new();
-
-            // OptimizedApp check omitted - has route caching serialization issues
-            // $checks[] = OptimizedAppCheck::new();
-
-            // Queue and Schedule checks omitted - require heartbeat mechanism with running supervisor processes
-            // if (config('queue.default') !== 'sync') {
-            //     $checks[] = QueueCheck::new();
-            // }
-            // $checks[] = ScheduleCheck::new()->heartbeatMaxAgeInMinutes(2);
-        }
 
         Health::checks($checks);
     }
