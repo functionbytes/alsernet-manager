@@ -552,8 +552,8 @@ class DocumentsController extends Controller
             // Solo documentos adicionales (additional_attachments)
             $mediaItems = $document->getMedia('additional_attachments');
         } else {
-            // Todos los documentos del documento (comportamiento Por defecto)
-            $mediaItems = $document->media;
+            // Solo documentos requeridos de la colección 'documents'
+            $mediaItems = $document->getMedia('documents');
         }
 
         $pdfDocs = $mediaItems->filter(fn ($media) => $media->mime_type === 'application/pdf');
