@@ -553,14 +553,22 @@ class DocumentEmailTemplateService
 
         $html = '<ul style="margin: 10px 0; padding-left: 20px;">';
 
-        foreach ($missingDocs as $docCode) {
-            // Traducir el nombre del documento según el idioma
-            $translationKey = "documents.requirements.{$docCode}.name";
-            $docName = __($translationKey, [], $locale);
+        foreach ($missingDocs as $docCode => $docLabel) {
+            // Si $docLabel es una cadena (ya traducida desde DocumentType), usarla directamente
+            // Si es un array (estructura antigua), usar el valor 'name'
+            if (is_string($docLabel)) {
+                $docName = $docLabel;
+            } elseif (is_array($docLabel) && isset($docLabel['name'])) {
+                $docName = $docLabel['name'];
+            } else {
+                // Fallback: intentar traducir desde translations
+                $translationKey = "documents.requirements.{$docCode}.name";
+                $docName = __($translationKey, [], $locale);
 
-            // Si no existe traducción, usar el código como fallback con formato legible
-            if ($docName === $translationKey) {
-                $docName = ucwords(str_replace('_', ' ', $docCode));
+                // Si no existe traducción, usar el código como fallback con formato legible
+                if ($docName === $translationKey) {
+                    $docName = ucwords(str_replace('_', ' ', $docCode));
+                }
             }
 
             $html .= '<li style="margin: 5px 0; color: #333; font-size: 15px;">'.$docName.'</li>';
