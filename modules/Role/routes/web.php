@@ -20,12 +20,9 @@ Route::prefix('roles')->name('roles.')->group(function () {
     Route::get('/users/{role}', [RoleController::class, 'showUsers'])->name('show.users');
 });
 
-// Permissions management routes
+// Permissions management routes (view only - API routes in routes/api.php)
 Route::prefix('permissions')->name('permissions.')->group(function () {
     Route::get('/', [PermissionController::class, 'index'])->name('index');
     Route::get('/create', [PermissionController::class, 'create'])->name('create');
-    Route::post('/store', [PermissionController::class, 'store'])->name('store');
     Route::get('/edit/{id}', [PermissionController::class, 'edit'])->name('edit');
-    Route::put('/update/{id}', [PermissionController::class, 'update'])->name('update');
-    Route::delete('/destroy/{id}', [PermissionController::class, 'destroy'])->name('destroy');
 });

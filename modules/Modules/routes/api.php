@@ -7,7 +7,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::apiResource('modules', ModulesController::class)->names('modules');
 
     // Additional modules management operations
-    Route::put('/modules/{moduleAlias}', [ModulesController::class, 'update'])->name('modules.update');
     Route::post('/modules/install', [ModulesController::class, 'install'])->name('modules.install');
     Route::post('/modules/{moduleAlias}/enable', [ModulesController::class, 'enable'])->name('modules.enable');
     Route::post('/modules/{moduleAlias}/disable', [ModulesController::class, 'disable'])->name('modules.disable');
