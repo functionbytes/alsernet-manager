@@ -493,7 +493,9 @@
       "Bash(mcp__laravel-boost__last-error)",
       "Bash(killall php:*)",
       "Bash(git restore:*)",
-      "Bash(composer run dev:*)"
+      "Bash(composer run dev:*)",
+      "Bash(ss:*)",
+      "Bash(CACHE_DRIVER=file DB_LOG_QUERIES=false php artisan migrate:*)"
     ],
     "deny": [],
     "ask": []

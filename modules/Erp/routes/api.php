@@ -1,24 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Erp\Http\Controllers\ErpController as V1ErpController;
-use Modules\Erp\Http\Controllers\Eloquent\ClienteController as EloquentClienteController;
-use Modules\Erp\Http\Controllers\Eloquent\ArticuloController as EloquentArticuloController;
-use Modules\Erp\Http\Controllers\Eloquent\AlbaranController as EloquentAlbaranController;
-use Modules\Erp\Http\Controllers\Eloquent\BonoController as EloquentBonoController;
-use Modules\Erp\Http\Controllers\Eloquent\StockController as EloquentStockController;
-use Modules\Erp\Http\Controllers\Eloquent\ValeController as EloquentValeController;
-use Modules\Erp\Http\Controllers\Eloquent\PedidoClienteController as EloquentPedidoClienteController;
-use Modules\Erp\Http\Controllers\Eloquent\ClienteCatalogoController as EloquentClienteCatalogoController;
+use Modules\Erp\Http\Controllers\Api\ErpController as V1ErpController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\ClienteController as EloquentClienteController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\ArticuloController as EloquentArticuloController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\AlbaranController as EloquentAlbaranController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\BonoController as EloquentBonoController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\StockController as EloquentStockController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\ValeController as EloquentValeController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\PedidoClienteController as EloquentPedidoClienteController;
+use Modules\Erp\Http\Controllers\Api\Eloquent\ClienteCatalogoController as EloquentClienteCatalogoController;
 
-use Modules\Erp\Http\Controllers\Direct\ClienteController as DirectClienteController;
-use Modules\Erp\Http\Controllers\Direct\ArticuloController as DirectArticuloController;
-use Modules\Erp\Http\Controllers\Direct\AlbaranController as DirectAlbaranController;
-use Modules\Erp\Http\Controllers\Direct\BonoController as DirectBonoController;
-use Modules\Erp\Http\Controllers\Direct\StockController as DirectStockController;
-use Modules\Erp\Http\Controllers\Direct\ValeController as DirectValeController;
-use Modules\Erp\Http\Controllers\Direct\PedidoClienteController as DirectPedidoClienteController;
-use Modules\Erp\Http\Controllers\Direct\ClienteCatalogoController as DirectClienteCatalogoController;
+use Modules\Erp\Http\Controllers\Api\Direct\ClienteController as DirectClienteController;
+use Modules\Erp\Http\Controllers\Api\Direct\ArticuloController as DirectArticuloController;
+use Modules\Erp\Http\Controllers\Api\Direct\AlbaranController as DirectAlbaranController;
+use Modules\Erp\Http\Controllers\Api\Direct\BonoController as DirectBonoController;
+use Modules\Erp\Http\Controllers\Api\Direct\StockController as DirectStockController;
+use Modules\Erp\Http\Controllers\Api\Direct\ValeController as DirectValeController;
+use Modules\Erp\Http\Controllers\Api\Direct\PedidoClienteController as DirectPedidoClienteController;
+use Modules\Erp\Http\Controllers\Api\Direct\ClienteCatalogoController as DirectClienteCatalogoController;
 
 Route::middleware(['api'])->group(function () {
 

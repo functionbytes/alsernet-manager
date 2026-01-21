@@ -6,21 +6,21 @@
 
     <!-- Mensajes de estado -->
     @if ($message = session('success'))
-        <div class="alert bg-light-secondary text-black alert-dismissible fade show" role="alert">
+        <div class="alert alert-success  text-black alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i> {{ $message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     @if ($message = session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-success  text-black alert-dismissible fade show" role="alert">
             <i class="fa fa-circle-exclamation me-2"></i> {{ $message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-success  text-black alert-dismissible fade show" role="alert">
             <i class="fa fa-circle-exclamation me-2"></i> Por favor, corrige los siguientes errores:
             <ul class="mb-0 mt-2">
                 @foreach ($errors->all() as $error)

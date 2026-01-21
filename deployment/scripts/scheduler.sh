@@ -2,7 +2,7 @@
 # Laravel Scheduler Runner Script
 # This script runs the Laravel scheduler every minute
 
-PROJECT_PATH="/home2/webadminpruebas/web"
+PROJECT_PATH="/home/webadmin/web"
 LARAVEL_ARTISAN="$PROJECT_PATH/artisan"
 LOG_FILE="/var/log/laravel/scheduler.log"
 
