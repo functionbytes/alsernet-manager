@@ -252,7 +252,7 @@ class DocumentEmailTemplateService
     public static function sendUploadConfirmation(Document $document, ?int $adminId = null): bool
     {
         try {
-            $template = self::resolveTemplate('documents.mail_template_upload_confirmation_id', 'document_upload_confirmation', ['document_confirmation']);
+            $template = self::resolveTemplate('documents.mail_template_upload_confirmation_id', 'document_completed', ['document_confirmation']);
 
             if (! $template) {
                 return false;

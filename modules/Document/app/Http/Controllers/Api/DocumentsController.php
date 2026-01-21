@@ -17,11 +17,13 @@ use Modules\Document\Events\DocumentCreated;
 use Modules\Document\Jobs\MailTemplateJob;
 use Modules\Document\Services\DocumentEmailService;
 use Modules\Document\Services\DocumentTypeService;
+use Modules\Document\Traits\SendsDocumentEmails;
 use Modules\Prestashop\Entities\Orders\Order as PrestashopOrder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DocumentsController extends Controller
 {
+    use SendsDocumentEmails;
     /**
      * Sincroniza un documento con los datos de su orden e importa productos
      * Método helper reutilizable para sincronización de datos y productos
@@ -672,7 +674,25 @@ class DocumentsController extends Controller
                 // Si se actualizó, procesar upload: enviar confirmación
                 if ($updated === 1) {
                     $document->refresh();
-                    app(DocumentEmailService::class)->processDocumentUpload($document);
+
+                    // Capture adminId before releasing session
+                    $adminId = auth()->id();
+
+                    // Process upload with email service
+                    $emailService = app(DocumentEmailService::class);
+                    $sent = $emailService->sendUploadConfirmation($document, $adminId);
+
+                    if ($sent) {
+                        // Update document status to received
+                        $receivedStatus = DocumentStatus::where('key', 'received')->first();
+                        if ($receivedStatus) {
+                            $document->update(['status_id' => $receivedStatus->id]);
+                            Log::info('Document status set to Received', [
+                                'document_uid' => $document->uid,
+                                'status_id' => $receivedStatus->id,
+                            ]);
+                        }
+                    }
                 }
             }
 
