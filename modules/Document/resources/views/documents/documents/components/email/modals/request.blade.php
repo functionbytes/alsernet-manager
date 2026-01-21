@@ -74,7 +74,7 @@
                             if (typeof window.reloadActionHistory === 'function') {
                                 window.reloadActionHistory();
                             }
-                        } else if (data.error_type === 'rate_limit') {
+                        } else if (data.error_type === 'rate_limit' || data.error_type === 'send_failed') {
                             showRateLimitModal(data);
                         } else {
                             toastr.error(data.message || 'No se pudo enviar', 'Error', {
@@ -84,9 +84,9 @@
                             });
                         }
                     }
-                    // Manejar 429 (rate limit)
+                    // Manejar 429 (rate limit o send failed)
                     else if (status === 429) {
-                        if (data.error_type === 'rate_limit') {
+                        if (data.error_type === 'rate_limit' || data.error_type === 'send_failed') {
                             showRateLimitModal(data);
                         } else {
                             toastr.error(data.message || 'Error al procesar la solicitud', 'Error', {
@@ -127,59 +127,95 @@
                 });
             });
 
-            // Función para mostrar modal de rate limit
+            // Función para mostrar modal de rate limit o error de envío
             function showRateLimitModal(response) {
-                const retryTime = new Date(response.retry_after);
-                const secondsRemaining = Math.ceil(response.seconds_remaining);
-
                 // Cerrar modal actual
                 $('#requestUploadModal').modal('hide');
 
-                // Crear modal de rate limit
-                const modalHtml = `
-                    <div class="modal fade" id="rateLimitModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content border-0 shadow-sm">
-                                <div class="modal-header bg-light border-bottom">
-                                    <h5 class="modal-title fw-bold">
-                                        Límite de envío
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body text-center py-4">
-                                    <p class="text-muted mb-3">Solo puedes enviar un email del mismo tipo cada 60 segundos</p>
-                                    <div class="mb-3">
-                                        <div class="h2 text-warning fw-bold">${secondsRemaining}s</div>
-                                        <small class="text-muted">Reintentar en</small>
+                // Determinar si es rate limit o error de envío
+                const isRateLimit = response.error_type === 'rate_limit';
+
+                let modalContent = '';
+                let timerContent = '';
+
+                if (isRateLimit) {
+                    const retryTime = new Date(response.retry_after);
+                    const secondsRemaining = Math.ceil(response.seconds_remaining);
+
+                    timerContent = `
+                        <div class="mb-3">
+                            <div class="h2 text-warning fw-bold">${secondsRemaining}s</div>
+                            <small class="text-muted">Reintentar en</small>
+                        </div>
+                        <small class="text-muted d-block">A las ${retryTime.toLocaleTimeString('es-ES')}</small>
+                    `;
+
+                    modalContent = `
+                        <div class="modal fade" id="rateLimitModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-sm">
+                                    <div class="modal-header bg-light border-bottom">
+                                        <h5 class="modal-title fw-bold">
+                                            Límite de envío
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <small class="text-muted d-block">A las ${retryTime.toLocaleTimeString('es-ES')}</small>
-                                </div>
-                                <div class="modal-footer border-top bg-light">
-                                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Entendido</button>
+                                    <div class="modal-body text-center py-4">
+                                        <p class="text-muted mb-3">Solo puedes enviar un email del mismo tipo cada 60 segundos</p>
+                                        ${timerContent}
+                                    </div>
+                                    <div class="modal-footer border-top bg-light">
+                                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Entendido</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // Error de envío
+                    modalContent = `
+                        <div class="modal fade" id="rateLimitModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-sm">
+                                    <div class="modal-header bg-light border-bottom">
+                                        <h5 class="modal-title fw-bold">
+                                            <i class="fas fa-exclamation-circle text-danger me-2"></i>Error al enviar
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body text-center py-4">
+                                        <p class="text-muted">${response.message || 'No se pudo enviar el email. Intenta de nuevo en unos segundos.'}</p>
+                                    </div>
+                                    <div class="modal-footer border-top bg-light">
+                                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Entendido</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
 
                 // Remover modal anterior si existe
                 $('#rateLimitModal').remove();
-                $('body').append(modalHtml);
+                $('body').append(modalContent);
 
                 const rateLimitModal = new bootstrap.Modal(document.getElementById('rateLimitModal'));
                 rateLimitModal.show();
 
-                // Timer que actualiza cada segundo
-                let remaining = secondsRemaining;
-                const timerInterval = setInterval(function() {
-                    remaining--;
-                    if (remaining <= 0) {
-                        clearInterval(timerInterval);
-                        rateLimitModal.hide();
-                    } else {
-                        $('#rateLimitModal .h2').html(remaining + 's');
-                    }
-                }, 1000);
+                // Timer que actualiza cada segundo (solo si es rate limit)
+                if (isRateLimit) {
+                    const secondsRemaining = Math.ceil(response.seconds_remaining);
+                    let remaining = secondsRemaining;
+                    const timerInterval = setInterval(function() {
+                        remaining--;
+                        if (remaining <= 0) {
+                            clearInterval(timerInterval);
+                            rateLimitModal.hide();
+                        } else {
+                            $('#rateLimitModal .h2').html(remaining + 's');
+                        }
+                    }, 1000);
+                }
             }
         });
     </script>
