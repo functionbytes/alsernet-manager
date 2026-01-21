@@ -41,9 +41,9 @@ trait SendsDocumentEmails
         $document = Document::where('uid', $uid)->firstOrFail();
 
         // 4. Authorize if policy specified
-        //if ($authPolicy) {
-         //   $this->authorize($authPolicy, $document);
-        //}
+        // if ($authPolicy) {
+        //   $this->authorize($authPolicy, $document);
+        // }
 
         // 5. Check for rate limiting BEFORE calling sender
         $emailType = $this->getEmailTypeFromRequest($request);
@@ -112,11 +112,31 @@ trait SendsDocumentEmails
     }
 
     /**
-     * Get email type from request or default
+     * Get email type from request path and context
      */
     private function getEmailTypeFromRequest(Request $request): string
     {
-        // Try to infer from request context
+        $path = $request->path();
+
+        // Map URL patterns to email types
+        $patterns = [
+            'send-notification' => 'request',
+            'send-reminder' => 'reminder',
+            'send-missing' => 'missing',
+            'send-approval' => 'approval',
+            'send-rejection' => 'rejection',
+            'send-custom-email' => 'custom',
+            'send-upload-confirmation' => 'upload',
+            'request-initial' => 'request',
+            'request-missing' => 'missing',
+        ];
+
+        foreach ($patterns as $pattern => $type) {
+            if (str_contains($path, $pattern)) {
+                return $type;
+            }
+        }
+
         // Default to 'request' if not determinable
         return 'request';
     }

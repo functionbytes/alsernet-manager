@@ -532,18 +532,13 @@ class DocumentEmailTemplateService
             $variables['REQUEST_REASON'] = $notes ?? '';
             $variables['NOTES'] = $notes ?? '';
 
-            // Crear sección de notas HTML solo si existen notas
-            if (! empty($notes)) {
-                $variables['NOTES_SECTION'] = sprintf(
-                    '<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ff0049;">
-                        <p style="margin: 0; font-weight: bold; color: #374151;">Nota adicional:</p>
-                        <p style="margin-top: 10px; font-style: italic; color: #555;">"%s"</p>
-                    </div>',
-                    htmlspecialchars($notes, ENT_QUOTES, 'UTF-8')
-                );
-            } else {
-                $variables['NOTES_SECTION'] = '';
-            }
+            // Pasar NOTES_CONTENT (escapado para HTML) para uso en plantillas Twig
+            $variables['NOTES_CONTENT'] = ! empty($notes) ? htmlspecialchars($notes, ENT_QUOTES, 'UTF-8') : '';
+        } else {
+            // Si no hay documentos faltantes, inicializar variables de notas como vacías
+            $variables['REQUEST_REASON'] = '';
+            $variables['NOTES'] = '';
+            $variables['NOTES_CONTENT'] = '';
         }
 
         return $variables;

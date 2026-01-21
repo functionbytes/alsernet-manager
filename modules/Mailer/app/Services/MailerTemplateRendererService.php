@@ -178,9 +178,23 @@ class MailerTemplateRendererService
 
     /**
      * Reemplazar variables {TAG} con valores
+     * Detecta automáticamente si usa sintaxis Twig ({% o {{) y renderiza apropiadamente
      */
     public static function replaceVariables(string $content, array $variables = []): string
     {
+        // Detectar si la plantilla usa sintaxis Twig
+        $usesTwig = self::usesTwigSyntax($content);
+
+        Log::info('MailerTemplateRenderer: Detecting Twig syntax', [
+            'uses_twig' => $usesTwig,
+            'content_preview' => substr($content, 0, 200),
+        ]);
+
+        if ($usesTwig) {
+            return self::renderWithTwig($content, $variables);
+        }
+
+        // Método clásico: reemplazo simple con str_replace
         foreach ($variables as $key => $value) {
             // Manejar tanto claves con y sin llaves
             $placeholder = str_starts_with($key, '{') ? $key : '{'.$key.'}';
@@ -192,6 +206,80 @@ class MailerTemplateRendererService
         }
 
         return $content;
+    }
+
+    /**
+     * Detectar si el contenido usa sintaxis Twig
+     */
+    private static function usesTwigSyntax(string $content): bool
+    {
+        // Buscar tags Twig: {% ... %} o {{ ... }} (estilo Twig)
+        return preg_match('/\{%\s*.+?\s*%\}/', $content) > 0;
+    }
+
+    /**
+     * Renderizar contenido usando motor Twig
+     */
+    private static function renderWithTwig(string $content, array $variables = []): string
+    {
+        Log::info('MailerTemplateRenderer: Starting Twig rendering');
+
+        try {
+            // Convertir sintaxis clásica {VAR} a sintaxis Twig {{ VAR }} para compatibilidad
+            // Solo convertir variables que NO estén ya en sintaxis Twig
+            $content = preg_replace_callback(
+                '/\{([A-Z_][A-Z0-9_]*)\}/',
+                function ($matches) {
+                    // Si ya está dentro de un bloque Twig, no convertir
+                    return '{{ '.$matches[1].' }}';
+                },
+                $content
+            );
+
+            // Crear instancia de Twig con loader desde string
+            $loader = new \Twig\Loader\ArrayLoader([
+                'template' => $content,
+            ]);
+
+            $twig = new \Twig\Environment($loader, [
+                'autoescape' => false, // No escapar HTML (ya viene escapado si es necesario)
+                'strict_variables' => false, // No fallar si variable no existe
+            ]);
+
+            // Normalizar nombres de variables (sin llaves)
+            $normalizedVars = [];
+            foreach ($variables as $key => $value) {
+                $cleanKey = str_replace(['{', '}'], '', $key);
+                $normalizedVars[$cleanKey] = $value;
+            }
+
+            Log::info('MailerTemplateRenderer: Twig variables', [
+                'variables_count' => count($normalizedVars),
+                'variables' => array_keys($normalizedVars),
+            ]);
+
+            // Renderizar con Twig
+            $rendered = $twig->render('template', $normalizedVars);
+
+            Log::info('MailerTemplateRenderer: Twig rendered successfully');
+
+            return $rendered;
+        } catch (\Exception $e) {
+            Log::error('MailerTemplateRenderer: Error rendering Twig template', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Fallback a método clásico si Twig falla
+            foreach ($variables as $key => $value) {
+                $placeholder = str_starts_with($key, '{') ? $key : '{'.$key.'}';
+                if (! is_array($value) && ! is_object($value)) {
+                    $content = str_replace($placeholder, (string) $value, $content);
+                }
+            }
+
+            return $content;
+        }
     }
 
     /**

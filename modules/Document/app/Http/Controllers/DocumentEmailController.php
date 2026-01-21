@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Modules\Core\Models\Setting;
 use Modules\Document\Entities\Document;
 use Modules\Document\Entities\DocumentMail;
-use Modules\Document\Jobs\MailTemplateJob;
+use Modules\Document\Services\DocumentEmailService;
 use Modules\Document\Services\DocumentMailService;
+use Modules\Document\Traits\SendsDocumentEmails;
 use Modules\Document\Traits\ValidatesDocumentPermissions;
 
 /**
@@ -17,168 +18,72 @@ use Modules\Document\Traits\ValidatesDocumentPermissions;
  * Extracted from DocumentsController for better separation of concerns
  *
  * ⚠️ All methods require proper authorization checks via ValidatesDocumentPermissions trait
+ * ⚠️ Uses SendsDocumentEmails trait for rate limiting and standardized email sending
  */
 class DocumentEmailController extends Controller
 {
-    use ValidatesDocumentPermissions;
+    use SendsDocumentEmails, ValidatesDocumentPermissions;
+
+    protected DocumentEmailService $emailService;
+
+    public function __construct(DocumentEmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
 
     /**
      * Send notification email to customer (initial request)
      */
-    public function sendNotificationEmail($uid): JsonResponse
+    public function sendNotificationEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send initial request emails
-            try {
-                $this->authorizeEmailOperation($document, 'send-initial-request');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar solicitudes iniciales de documentos',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            // Verificar si está habilitado en configuración global
-            if (Setting::get('documents.enable_initial_request', 'yes') !== 'yes') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'La solicitud inicial de documentos está deshabilitada en la configuración.',
-                ], 403);
-            }
-
-            // Validar que el documento tiene email
-            $recipient = $document->customer_email;
-            if (! $recipient) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se pudo enviar: documento sin email de cliente',
-                    'document_email' => $document->customer_email,
-                ], 400);
-            }
-
-            // Despachar job para enviar email en background
-            MailTemplateJob::dispatch($document, 'request');
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email de notificación en cola para envío',
-                'recipient' => $recipient,
-            ]);
-        } catch (\Exception $e) {
+        // Check configuration setting
+        if (Setting::get('documents.enable_initial_request', 'yes') !== 'yes') {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al procesar solicitud: '.$e->getMessage(),
-            ], 500);
+                'message' => 'La solicitud inicial de documentos está deshabilitada en la configuración.',
+            ], 403);
         }
+
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendInitialRequest($doc, $adminId)
+        );
     }
 
     /**
      * Send reminder email to customer
      */
-    public function sendReminderEmail($uid): JsonResponse
+    public function sendReminderEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send reminder emails
-            try {
-                $this->authorizeEmailOperation($document, 'send-reminders');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar recordatorios',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            // Verificar si está habilitado en configuración global
-            if (Setting::get('documents.enable_reminder', 'yes') !== 'yes') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Los recordatorios automáticos están deshabilitados en la configuración.',
-                ], 403);
-            }
-
-            // Verificar que el cliente tiene email
-            $recipient = $document->customer_email;
-            if (! $recipient) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se pudo enviar: documento sin email de cliente',
-                ], 400);
-            }
-
-            // Despachar job para enviar email en background
-            MailTemplateJob::dispatch($document, 'reminder');
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Email de recordatorio en cola para envío',
-                'recipient' => $recipient,
-            ]);
-        } catch (\Exception $e) {
+        // Check configuration setting
+        if (Setting::get('documents.enable_reminder', 'yes') !== 'yes') {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al enviar email: '.$e->getMessage(),
-            ], 500);
+                'message' => 'Los recordatorios automáticos están deshabilitados en la configuración.',
+            ], 403);
         }
+
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendReminder($doc, $adminId)
+        );
     }
 
     /**
      * Resend reminder email
      */
-    public function resendReminderEmail($uid): JsonResponse
+    public function resendReminderEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // Verificar que el cliente tiene email
-            $recipient = $document->customer_email;
-            if (! $recipient) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se pudo enviar: documento sin email de cliente',
-                ], 400);
-            }
-
-            // Despachar job para enviar email en background
-            MailTemplateJob::dispatch($document, 'reminder');
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Recordatorio reenviado exitosamente',
-                'recipient' => $recipient,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al reenviar recordatorio: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendReminder($doc, $adminId)
+        );
     }
 
     /**
@@ -186,57 +91,23 @@ class DocumentEmailController extends Controller
      */
     public function sendMissingDocumentsEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
+        // Validate request
+        $validated = $this->validateEmailRequest($request, [
+            'missing_docs' => 'required|array|min:1',
+            'notes' => 'nullable|string',
+        ]);
 
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send missing documents notification
-            try {
-                $this->authorizeEmailOperation($document, 'send-missing-docs');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar notificaciones de documentos faltantes',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            $missingDocs = $request->input('missing_docs', []);
-
-            if (empty($missingDocs)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Debes especificar al menos un documento faltante.',
-                ], 400);
-            }
-
-            $mailService = new DocumentMailService;
-            $result = $mailService->sendMissingDocumentsMail($document, $missingDocs);
-
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Email de documentos específicos enviado exitosamente',
-                    'missing_docs' => $missingDocs,
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar email de documentos específicos',
-                ], 500);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendMissingDocumentsRequest(
+                $doc,
+                $validated['missing_docs'],
+                $validated['notes'] ?? null,
+                $adminId
+            )
+        );
     }
 
     /**
@@ -244,57 +115,23 @@ class DocumentEmailController extends Controller
      */
     public function sendCustomEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
+        // Validate request
+        $validated = $this->validateEmailRequest($request, [
+            'subject' => 'required|string|max:200',
+            'message' => 'required|string|min:10',
+        ]);
 
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send custom emails
-            try {
-                $this->authorizeEmailOperation($document, 'send-custom-email');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar correos personalizados',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            $subject = $request->input('subject');
-            $message = $request->input('message');
-
-            if (! $subject || ! $message) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Debes proporcionar asunto y mensaje.',
-                ], 400);
-            }
-
-            $mailService = new DocumentMailService;
-            $result = $mailService->sendCustomMail($document, $subject, $message);
-
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Email personalizado enviado exitosamente',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar email personalizado',
-                ], 500);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendCustomEmail(
+                $doc,
+                $validated['subject'],
+                $validated['message'],
+                $adminId
+            )
+        );
     }
 
     /**
@@ -302,49 +139,12 @@ class DocumentEmailController extends Controller
      */
     public function sendUploadConfirmationEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send upload confirmation emails
-            try {
-                $this->authorizeEmailOperation($document, 'send-upload-confirmation');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar confirmaciones de subida',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            $message = $request->input('message', '');
-
-            $mailService = new DocumentMailService;
-            $result = $mailService->sendUploadConfirmationMail($document, $message);
-
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Email de confirmación de subida enviado exitosamente',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar email de confirmación',
-                ], 500);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendUploadConfirmation($doc, $adminId)
+        );
     }
 
     /**
@@ -352,47 +152,12 @@ class DocumentEmailController extends Controller
      */
     public function sendApprovalEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
-
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            // ✅ AUTHORIZATION CHECK: Verify user can send approval emails
-            try {
-                $this->authorizeEmailOperation($document, 'send-approval');
-            } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No tienes permiso para enviar notificaciones de aprobación',
-                    'error' => $e->getMessage(),
-                ], 403);
-            }
-
-            $mailService = new DocumentMailService;
-            $result = $mailService->sendApprovalMail($document);
-
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Email de aprobación enviado exitosamente',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar email de aprobación',
-                ], 500);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendApprovalEmail($doc, $adminId)
+        );
     }
 
     /**
@@ -400,39 +165,23 @@ class DocumentEmailController extends Controller
      */
     public function sendRejectionEmail(Request $request, $uid): JsonResponse
     {
-        try {
-            $document = Document::findByUid($uid);
+        // Validate request
+        $validated = $this->validateEmailRequest($request, [
+            'reason' => 'required|string|min:10',
+            'rejected_docs' => 'nullable|array',
+        ]);
 
-            if (! $document) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Documento no encontrado.',
-                ], 404);
-            }
-
-            $reason = $request->input('reason', 'No especificado');
-            $rejectedDocs = $request->input('rejected_docs', []);
-
-            $mailService = new DocumentMailService;
-            $result = $mailService->sendRejectionMail($document, $reason, $rejectedDocs);
-
-            if ($result) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Email de rechazo enviado exitosamente',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar email de rechazo',
-                ], 500);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: '.$e->getMessage(),
-            ], 500);
-        }
+        // Use standardized email sending flow with rate limiting
+        return $this->sendEmail(
+            $request,
+            $uid,
+            fn ($doc, $adminId) => $this->emailService->sendRejectionEmail(
+                $doc,
+                $validated['reason'],
+                $validated['rejected_docs'] ?? [],
+                $adminId
+            )
+        );
     }
 
     /**
