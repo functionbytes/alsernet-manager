@@ -47,6 +47,10 @@ auth.json
 *.swp
 *.swo
 
+# Claude Code & Development Tools
+.claude/
+.tinker/
+
 # WordPress
 **/wp-content/uploads/
 
