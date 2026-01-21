@@ -228,6 +228,9 @@
                     formData.append('notes', notes);
                 }
 
+                // Agregar token CSRF al FormData para compatibilidad con multipart/form-data
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
                 $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...');
 
                 $.ajax({

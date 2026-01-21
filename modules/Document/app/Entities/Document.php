@@ -469,8 +469,13 @@ class Document extends Model implements HasMedia
         foreach ($conditions as $key => $expectedValue) {
             $actualValue = $this->getConditionValue($key);
 
+            // Normalize both values to boolean for comparison
+            // This handles JSON storing 1/0 while PHP returns true/false
+            $actualBool = (bool) $actualValue;
+            $expectedBool = (bool) $expectedValue;
+
             // If expected value doesn't match actual value, condition fails
-            if ($actualValue !== $expectedValue) {
+            if ($actualBool !== $expectedBool) {
                 return false;
             }
         }
@@ -1108,25 +1113,42 @@ class Document extends Model implements HasMedia
                 $document->required_documents = $document->getRequiredDocuments();
             }
 
-            // If requires_financing or type_id changed, reinitialize workflow to recalculate stages
+            // If requires_financing or type_id changed, recalculate workflow stages
             if ($document->isDirty('requires_financing') || $document->isDirty('type_id')) {
                 try {
                     // Get new stages based on updated attributes
                     $stages = $document->getValidationWorkflowStages();
+                    $newTotalStages = count($stages);
 
-                    // Only update workflow attributes if stages count changed
-                    if (! empty($stages) && count($stages) !== $document->total_stages) {
-                        // Update workflow attributes WITHOUT calling save() to avoid recursion
-                        $document->total_stages = count($stages);
-                        $document->current_stage = 1;
-                        $document->validation_status = Document::VALIDATION_STATUS_PENDING;
-                        $document->current_validator_group = $stages[0];
-                        $document->assigned_user_id = null;
-                        $document->validation_started_at = null;
-                        $document->validation_completed_at = null;
+                    // Only update if stages count actually changed
+                    if (! empty($stages) && $newTotalStages !== $document->total_stages) {
+                        $oldTotalStages = $document->total_stages;
+
+                        // Update total_stages
+                        $document->total_stages = $newTotalStages;
+
+                        if ($newTotalStages > $oldTotalStages) {
+                            // ADDING stages: Keep current progress, just update total
+                            // Don't reset current_stage, validation_status, or history
+                            // New stages will be handled naturally when approving current stage
+                        } elseif ($newTotalStages < $oldTotalStages) {
+                            // REMOVING stages: Only adjust if current_stage exceeds new total
+                            if ($document->current_stage > $newTotalStages) {
+                                // Current stage no longer exists, move to last valid stage
+                                $document->current_stage = $newTotalStages;
+                                $document->current_validator_group = $stages[$newTotalStages - 1] ?? null;
+
+                                // If we were completed and stages were removed, stay completed
+                                // Otherwise, set to in_validation since we're now at an incomplete stage
+                                if ($document->validation_status !== Document::VALIDATION_STATUS_APPROVED) {
+                                    $document->validation_status = Document::VALIDATION_STATUS_IN_VALIDATION;
+                                }
+                            }
+                            // If current_stage <= newTotalStages, keep everything as is
+                        }
                     }
                 } catch (\Exception $e) {
-                    Log::error('Error reinitializing workflow for document '.$document->uid.': '.$e->getMessage());
+                    Log::error('Error recalculating workflow stages for document '.$document->uid.': '.$e->getMessage());
                 }
             }
         });

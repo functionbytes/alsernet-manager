@@ -4,9 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Modules\Document\Http\Controllers\Api\DocumentsController;
 use Modules\Document\Http\Controllers\Api\DocumentValidationController;
 
-// ✅ Public routes with rate limiting
-// El middleware 'api' ya está aplicado por RouteServiceProvider
-Route::middleware('throttle:60,1')->group(function () {
+// ✅ Public routes with rate limiting (stateless API)
+Route::middleware(['api', 'throttle:60,1'])->group(function () {
     // RESTful endpoint: POST /api/documents → creates a new document
     Route::post('/', [DocumentsController::class, 'store'])->name('store');
     // Deprecated: POST /api/documents/create (kept for backwards compatibility)
@@ -20,9 +19,9 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::post('/webhooks/prestashop/order-paid', [DocumentsController::class, 'prestashopOrderPaid'])->name('webhooks.prestashop.order-paid');
 });
 
-// Authenticated routes - requires user authentication
-// ✅ El middleware 'api' ya está aplicado por RouteServiceProvider
-// ✅ Agregar 'web' para soporte de sesión + 'auth:web' para autenticación con sesión
+// Authenticated routes - requires user authentication with session
+// ✅ Usar 'web' para soporte de sesión + 'auth:web' para autenticación con sesión
+// IMPORTANTE: NO usar middleware 'api' junto con 'web' - son incompatibles
 Route::middleware(['web', 'auth:web'])->group(function () {
     // Document processing and syncing
     Route::get('/order/data/{order_id}', [DocumentsController::class, 'getOrderData'])->name('order.data');
@@ -67,7 +66,7 @@ Route::middleware(['web', 'auth:web'])->group(function () {
     Route::get('/{uid}/action-history', [DocumentValidationController::class, 'getActionHistory'])->name('action-history');
     Route::get('/{uid}/email-history', [DocumentValidationController::class, 'getEmailHistory'])->name('email-history');
     Route::get('/{uid}/emails', [DocumentValidationController::class, 'emailHistory'])->name('emails');
-    Route::get('/emails/{mailUid}/preview', [DocumentValidationController::class, 'emailPreview'])->name('emails.preview');
+    Route::get('/{uid}/emails/{mailUid}/preview', [DocumentValidationController::class, 'emailPreview'])->name('emails.preview.api');
     Route::get('/{uid}/status-timeline', [DocumentValidationController::class, 'getStatusTimeline'])->name('status-timeline');
     Route::get('/{uid}/attachments', [DocumentValidationController::class, 'getAdditionalAttachments'])->name('attachments');
 

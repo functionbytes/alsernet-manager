@@ -124,7 +124,7 @@ $(document).ready(function() {
                 contentType: false,
                 processData: false,
                 headers: {
-                    'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     toastr.success(response.message || 'Permiso actualizado correctamente');

@@ -293,7 +293,7 @@
                         </a>
                     @endif
                     @if($document->mails()->count() > 0 && auth()->user()->canDocument('route-mails-documents'))
-                        <a href="{{ route('api.documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
+                        <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-outline-info w-100 mb-2">
                            Ver emails enviados
                            <span class="badge bg-black ms-1">{{ $document->mails()->count() }}</span>
                         </a>

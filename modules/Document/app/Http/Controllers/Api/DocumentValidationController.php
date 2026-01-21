@@ -373,7 +373,7 @@ class DocumentValidationController extends Controller
             $note = $document->notes()->create([
                 'content' => $validated['content'],
                 'is_internal' => $validated['is_internal'] ?? true,
-                'user_id' => auth()->id(),
+                'created_by' => auth()->id(),
             ]);
 
             return response()->json([

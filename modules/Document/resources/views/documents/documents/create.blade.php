@@ -196,6 +196,9 @@
                         formData.append('description', description);
                         formData.append('categorie', categorie);
 
+                        // Agregar token CSRF al FormData para compatibilidad con multipart/form-data
+                        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
                         var $submitButton = $('button[type="submit"]');
                         $submitButton.prop('disabled', true);
 

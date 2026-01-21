@@ -170,8 +170,10 @@ trait HasValidationWorkflow
                 // Reset email flag if moving to intermediate stage that doesn't allow emails
                 $sendEmailThisStage = false;
 
-                // Notify all users in the next validator group
-                $this->notifyValidatorGroup($previousStage, $this->current_stage, $nextGroup);
+                // Notify all users in the next validator group (only if group is defined)
+                if ($nextGroup !== null) {
+                    $this->notifyValidatorGroup($previousStage, $this->current_stage, $nextGroup);
+                }
             }
 
             $this->save();

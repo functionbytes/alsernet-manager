@@ -38,7 +38,7 @@
                         ];
                         $config = $typeConfig[$mail->email_type] ?? $typeConfig['custom'];
                     @endphp
-                    <a href="{{ route('api.documents.emails.preview', $mail->uid) }}"
+                    <a href="{{ route('documents.emails.preview', [$document->uid, $mail->uid]) }}"
                        class="email-item d-block text-decoration-none"
                        target="_blank">
                         <div class="d-flex gap-3 align-items-start">
@@ -53,7 +53,7 @@
                                             Enviado
                                         </span>
                                     @elseif($mail->status === 'failed')
-                                        <span class="badge bg-danger-subtle text-danger">
+                                        <span class="badge bg-danger-subtle text-white">
                                             Fallido
                                         </span>
                                     @else
@@ -84,9 +84,8 @@
                 @endforeach
             </div>
             <div class="border-top mt-3 pt-3" >
-                <a href="{{ route('api.documents.emails', $document->uid) }}"
-                   class="btn btn-primary w-100 ">
-                    <i class="fas fa-history me-1"></i> Ver historial completo
+                <a href="{{ route('documents.emails', $document->uid) }}" class="btn btn-primary w-100 ">
+                    Ver historial completo
                 </a>
             </div>
 

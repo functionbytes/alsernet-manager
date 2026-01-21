@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title" id="confirmConfigurationModalLabel">
-                    <i class="fas fa-info-circle text-primary me-2"></i>Confirmar cambios
+                   Confirmar cambios
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -23,8 +23,8 @@
                         </label>
                     </div>
                 </div>
-                <p class="text-muted mb-0">
-                    <i class="fas fa-check-circle text-success me-2"></i>¿Estás seguro de que deseas guardar estos cambios?
+                <p class="mb-0">
+                    ¿Estás seguro de que deseas guardar estos cambios?
                 </p>
             </div>
             <div class="modal-footer border-top">

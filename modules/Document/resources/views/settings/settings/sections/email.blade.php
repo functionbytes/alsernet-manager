@@ -192,6 +192,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Enviar los datos por AJAX
             const formData = new FormData(this);
 
+            // Agregar token CSRF al FormData para compatibilidad con multipart/form-data
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
             fetch('{{ route('settings.documents.configurations.update') }}', {
                 method: 'POST',
                 headers: {

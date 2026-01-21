@@ -18476,7 +18476,7 @@ progress {
     --bs-primary-rgb: #90bb13;
     --bs-light-primary: #90bb13;
     --bs-primary-bg-subtle: rgba(10, 126, 164, 0.1);
-    --bs-secondary: #ccda4e;
+    --bs-secondary: #CCDA60;
     --bs-secondary-rgb: 204,218,78;
     --bs-light-secondary: rgba(204, 218, 78, 0.1);
     --bs-secondary-bg-subtle: rgba(204, 218, 78, 0.1)
@@ -40059,7 +40059,7 @@ label {
 }
 
 body .text-muted {
-    color: #526b7a!important
+    color: #000000 !important;
 }
 
 .form-select {
@@ -49005,19 +49005,19 @@ button.toast-close-button {
 }
 
 .toast-success {
-    background-color: #36c76c!important
+    background-color: #90bb13 !important;
 }
 
 .toast-error {
-    background-color: #ff6692!important
+    background-color: #ff0049!important
 }
 
 .toast-info {
-    background-color: #46caeb!important
+    background-color: #90bb13 !important
 }
 
 .toast-warning {
-    background-color: #f8c20a!important
+    background-color: #ff0049 !important
 }
 
 .toast-progress {

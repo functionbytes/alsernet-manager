@@ -185,7 +185,7 @@
                     url: `{{ route('api.documents.notes.update', ['uid' => 'UID_PLACEHOLDER', 'noteId' => 'NOTE_PLACEHOLDER']) }}`.replace('UID_PLACEHOLDER', documentUid).replace('NOTE_PLACEHOLDER', noteId),
                     method: 'PUT',
                     headers: {
-                        'X-CSRF-TOKEN': $('[name="_token"]').val()
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
                     data: JSON.stringify({content: content}),
@@ -277,7 +277,7 @@
                     url: `{{ route('api.documents.notes.delete', ['uid' => 'UID_PLACEHOLDER', 'noteId' => 'NOTE_PLACEHOLDER']) }}`.replace('UID_PLACEHOLDER', documentUid).replace('NOTE_PLACEHOLDER', noteId),
                     method: 'DELETE',
                     headers: {
-                        'X-CSRF-TOKEN': $('[name="_token"]').val()
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
                     success: function (data) {
@@ -348,7 +348,7 @@
                     url: `{{ route('api.documents.notes.add', ['uid' => 'PLACEHOLDER']) }}`.replace('PLACEHOLDER', documentUid),
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': $('[name="_token"]').val()
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
                     data: JSON.stringify({content: content}),

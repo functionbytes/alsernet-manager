@@ -76,7 +76,7 @@
                 url: `{{ route('api.documents.notes.add', ['uid' => 'PLACEHOLDER']) }}`.replace('PLACEHOLDER', documentUid),
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': $('[name="_token"]').val()
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 dataType: 'json',
                 data: JSON.stringify({ content: content }),

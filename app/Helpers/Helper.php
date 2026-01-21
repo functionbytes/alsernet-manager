@@ -231,9 +231,5 @@ if (! function_exists('getSiteTitle')) {
     }
 }
 
-if (! function_exists('formatBytes')) {
-    function formatBytes($bytes, $decimals = 2)
-    {
-        return \Modules\Core\Helpers\formatBytes($bytes, $decimals);
-    }
-}
+// formatBytes() is already defined in modules/Core/app/Helpers/DataFormatHelper.php
+// and loaded via composer autoload - no wrapper needed

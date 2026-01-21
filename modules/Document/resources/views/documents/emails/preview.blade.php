@@ -3,7 +3,7 @@
 @section('content')
 
 
-    @include('core::components.card', ['title' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)]])
+    @include('core::components.card', ['title' => 'Documento #' . $document->order_id, 'url' => route('documents.manage', $document->uid)])
 
     {{-- Preview Content --}}
     <div class="row g-3">
@@ -110,7 +110,7 @@
                                                 <i class="fas fa-check me-1"></i>Enviado
                                             </span>
                                         @elseif($mail->status === 'failed')
-                                            <span class="badge bg-danger-subtle text-danger">
+                                            <span class="badge bg-danger-subtle text-white">
                                                 <i class="fas fa-times me-1"></i>Fallido
                                             </span>
                                         @else

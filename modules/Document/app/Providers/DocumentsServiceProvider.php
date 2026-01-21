@@ -137,9 +137,10 @@ class DocumentsServiceProvider extends ServiceProvider
         // Web routes (operational and configuration) - middleware/prefix/name applied within the file
         require module_path($this->name, 'routes/web.php');
 
-        // Public API routes
-        Route::middleware(['api', 'throttle:60,1'])
-            ->prefix('api/documents')
+        // API routes - middleware applied individually in routes/api.php
+        // ✅ NO middleware applied here to avoid conflicts between stateless 'api' and session-based 'web' middleware
+        // ✅ routes/api.php defines separate groups: public routes use 'api', authenticated routes use 'web'
+        Route::prefix('api/documents')
             ->name('api.documents.')
             ->group(function () {
                 require module_path($this->name, 'routes/api.php');
@@ -154,13 +155,9 @@ class DocumentsServiceProvider extends ServiceProvider
         $this->commands([
             SendDocumentUploadReminders::class,
             InitializeDocumentWorkflows::class,
-            MigrateRequestDocuments::class,
             MigrateProductBlockades::class,
             CreateBlockedProductDocuments::class,
-            ValidateAndCleanupDocuments::class,
             ValidateAndCreateDocumentsFromPaidOrders::class,
-            AnalyzePaidOrdersVsDocuments::class,
-            DeepAnalyzePrestashopOrderStates::class,
         ]);
     }
 

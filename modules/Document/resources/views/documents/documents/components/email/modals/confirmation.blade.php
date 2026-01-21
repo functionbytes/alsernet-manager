@@ -16,7 +16,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-primary w-100 mb-1" id="btnConfirmUpload">
-                    <i class="fas fa-paper-plane me-1"></i> Enviar confirmación
+                    Enviar confirmación
                 </button>
                 <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
                     Cancelar
@@ -29,11 +29,10 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // ===== Handler: Enviar confirmación de recepción =====
         $('#btnConfirmUpload').on('click', function() {
             const $btn = $(this);
 
-            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Enviando...');
+            $btn.prop('disabled', true).html('Enviando...');
 
             $.ajax({
                 url: "{{ route('api.documents.send-upload-confirmation', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', window.documentUid),
@@ -65,7 +64,7 @@
                     });
                 },
                 complete: function() {
-                    $btn.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i> Enviar confirmación');
+                    $btn.prop('disabled', false).html('Enviar confirmación');
                 }
             });
         });

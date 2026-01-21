@@ -10,7 +10,7 @@ use Modules\Notification\Http\Controllers\Api\NotificationController;
 |
 | Prefix: /api/notifications (applied by NotificationServiceProvider)
 | Name: api.notifications.* (applied by NotificationServiceProvider)
-| Middleware: web, auth (applied by NotificationServiceProvider)
+| Middleware: web, auth:web (applied by NotificationServiceProvider)
 |
 */
 

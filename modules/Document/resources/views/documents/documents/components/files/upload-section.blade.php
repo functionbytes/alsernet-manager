@@ -31,7 +31,7 @@
                                     {{ $docLabel }}
                                 </label>
                                 @if(!isset($uploadedDocs[$docKey]))
-                                    <span class="badge bg-danger-subtle text-danger">
+                                    <span class="badge bg-danger-subtle text-white">
                                     Pendiente
                                 </span>
                                 @endif
@@ -625,6 +625,9 @@
                 $submitBtn.html('Cargando...');
                 $progressBar.show();
                 $uploadStatus.text('Cargando documentos...');
+
+                // Agregar token CSRF al FormData para compatibilidad con multipart/form-data
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
                 $.ajax({
                     url: "{{ route('api.documents.upload', ['uid' => 'PLACEHOLDER']) }}".replace('PLACEHOLDER', documentUid),

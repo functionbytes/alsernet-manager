@@ -3,7 +3,7 @@
 
 
 
-        <nav class="navbar navbar-expand-lg p-0">
+        <nav class="navbar   p-0">
             <ul class="navbar-nav">
                 <li class="nav-item d-flex d-xl-none">
                     <a class="nav-link nav-icon-hover-bg rounded-circle  sidebartoggler " id="headerCollapse" href="javascript:void(0)">

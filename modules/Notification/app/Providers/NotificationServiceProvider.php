@@ -69,7 +69,7 @@ class NotificationServiceProvider extends ServiceProvider
         $modulePath = dirname(__DIR__, 2);
 
         // Notification operational routes
-        Route::middleware(['web', 'auth'])
+        Route::middleware(['web', 'auth:web'])
             ->prefix('notifications')
             ->name('notifications.')
             ->group(function () use ($modulePath) {
@@ -77,7 +77,7 @@ class NotificationServiceProvider extends ServiceProvider
             });
 
         // Notification backups routes
-        Route::middleware(['web', 'auth', 'role:super-admin'])
+        Route::middleware(['web', 'auth:web', 'role:super-admin'])
             ->prefix('settings/notifications')
             ->name('settings.notifications.')
             ->group(function () use ($modulePath) {
@@ -85,7 +85,7 @@ class NotificationServiceProvider extends ServiceProvider
             });
 
         // API routes
-        Route::middleware(['web', 'auth'])
+        Route::middleware(['web', 'auth:web'])
             ->prefix('api/notifications')
             ->name('api.notifications.')
             ->group(function () use ($modulePath) {

@@ -84,7 +84,7 @@
                                                Enviado
                                             </span>
                                         @elseif($mail->status === 'failed')
-                                            <span class="badge bg-danger-subtle text-danger">
+                                            <span class="badge bg-danger-subtle text-white">
                                                 Fallido
                                             </span>
                                         @else
@@ -125,7 +125,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('api.documents.emails.preview', $mail->uid) }}" target="_blank">
+                                                    <a class="dropdown-item" href="{{ route('documents.emails.preview', $mail->uid) }}" target="_blank">
                                                         Vista previa
                                                     </a>
                                                 </li>
