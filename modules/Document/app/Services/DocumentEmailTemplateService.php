@@ -406,6 +406,59 @@ class DocumentEmailTemplateService
     }
 
     /**
+     * Construir URL de carga de documentos con prefijo de idioma
+     * - Español (es): sin prefijo -> /solicitud-documentos
+     * - Otros idiomas: con prefijo -> /pt/solicitud-documentos, /fr/solicitud-documentos
+     */
+    private static function buildUploadUrl(Document $document): ?string
+    {
+        $uploadPortalTemplate = Setting::get('documents.upload_portal_url');
+
+        if (! $uploadPortalTemplate) {
+            return null;
+        }
+
+        // Obtener el código de idioma (iso_code)
+        $locale = $document->lang->iso_code ?? 'es';
+
+        // Parsear la URL template para separar dominio y ruta
+        $urlParts = parse_url(rtrim($uploadPortalTemplate));
+
+        if (! $urlParts || ! isset($urlParts['scheme']) || ! isset($urlParts['host'])) {
+            // Si no se puede parsear, usar el método antiguo como fallback
+            return str_replace('{uid}', $document->uid, rtrim($uploadPortalTemplate));
+        }
+
+        // Construir URL base con esquema y host
+        $baseUrl = $urlParts['scheme'].'://'.$urlParts['host'];
+
+        // Agregar puerto si existe
+        if (isset($urlParts['port'])) {
+            $baseUrl .= ':'.$urlParts['port'];
+        }
+
+        // Obtener la ruta (path)
+        $path = $urlParts['path'] ?? '/solicitud-documentos';
+
+        // Si el idioma NO es español, agregar prefijo de idioma
+        if ($locale !== 'es') {
+            // Insertar el código de idioma después del dominio
+            $path = '/'.$locale.$path;
+        }
+
+        // Construir la URL completa
+        $fullUrl = $baseUrl.$path;
+
+        // Agregar query string si existe en el template
+        if (isset($urlParts['query'])) {
+            $fullUrl .= '?'.$urlParts['query'];
+        }
+
+        // Reemplazar el placeholder {uid} con el UID real del documento
+        return str_replace('{uid}', $document->uid, $fullUrl);
+    }
+
+    /**
      * Preparar variables para el documento
      */
     private static function prepareDocumentVariables(
@@ -431,11 +484,8 @@ class DocumentEmailTemplateService
             ? $document->created_at->addDays(3)->format('d/m/Y')
             : null;
 
-        // Generar URL de carga
-        $uploadPortalTemplate = Setting::get('documents.upload_portal_url');
-        $uploadUrl = $uploadPortalTemplate
-            ? str_replace('{uid}', $document->uid, rtrim($uploadPortalTemplate))
-            : null;
+        // Generar URL de carga con prefijo de idioma
+        $uploadUrl = self::buildUploadUrl($document);
 
         // Traducir el tipo de documento
         $documentType = $document->documentType?->slug ?? 'general';
