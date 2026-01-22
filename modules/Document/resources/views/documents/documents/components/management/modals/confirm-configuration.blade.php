@@ -12,7 +12,7 @@
                 <div id="emailNotificationSection" style="display: none;">
                     <div class="alert alert-info border-0 rounded-2 bg-light-info mb-3">
                         <h6 class="fw-semibold text-info mb-2">
-                            <i class="fas fa-envelope me-2"></i>Email de notificación
+                            Email de notificación
                         </h6>
                         <p class="small mb-0" id="emailTypeDescription"></p>
                     </div>

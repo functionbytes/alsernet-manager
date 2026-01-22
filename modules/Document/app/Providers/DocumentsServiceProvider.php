@@ -16,6 +16,11 @@ use Modules\Document\Console\Commands\MigrateRequestDocuments;
 use Modules\Document\Console\Commands\SendDocumentUploadReminders;
 use Modules\Document\Console\Commands\ValidateAndCleanupDocuments;
 use Modules\Document\Console\Commands\ValidateAndCreateDocumentsFromPaidOrders;
+use Modules\Document\Console\Commands\ValidateDocumentStages;
+use Modules\Document\Console\Commands\ValidateAllDocumentAspects;
+use Modules\Document\Console\Commands\ValidateDocumentMedia;
+use Modules\Document\Console\Commands\ValidateDocumentsComplete;
+use Modules\Document\Console\Commands\ReinitializeDocumentWorkflows;
 use Modules\Document\Entities\Document;
 use Modules\Document\Http\ViewComposers\NavigationComposer;
 use Modules\Document\Policies\DocumentPolicy;
@@ -158,6 +163,11 @@ class DocumentsServiceProvider extends ServiceProvider
             MigrateProductBlockades::class,
             CreateBlockedProductDocuments::class,
             ValidateAndCreateDocumentsFromPaidOrders::class,
+            ValidateDocumentStages::class,
+            ValidateAllDocumentAspects::class,
+            ValidateDocumentMedia::class,
+            ValidateDocumentsComplete::class,
+            ReinitializeDocumentWorkflows::class,
         ]);
     }
 

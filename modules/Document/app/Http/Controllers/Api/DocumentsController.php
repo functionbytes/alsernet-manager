@@ -460,29 +460,6 @@ class DocumentsController extends Controller
             ], 409);
         }
 
-        //        if (! $document->source_id) {
-        //            $apiSource = DocumentSource::where('key', 'api')->first();
-        //            $document->source_id = $apiSource?->id;
-        //        }
-        //
-        //        if (! $document->load_id) {
-        //            $apiLoad = DocumentLoad::where('key', 'api')->first();
-        //            $document->load_id = $apiLoad?->id;
-        //        }
-        //
-        //        if (! $document->sync_id) {
-        //            $automaticSync = DocumentSync::where('key', 'automatic')->first();
-        //            $document->sync_id = $automaticSync?->id;
-        //        }
-        //
-        //        if (! $document->upload_id) {
-        //            $automaticUpload = DocumentUploadType::where('key', 'automatic')->first();
-        //            $document->upload_id = $automaticUpload?->id;
-        //        }
-        //
-        //        $document->save();
-
-        // Actualizar JSON de documentos requeridos si no existe
         if (empty($document->required_documents)) {
             $document->updateRequiredDocumentsJson();
         }

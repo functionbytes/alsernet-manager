@@ -702,9 +702,9 @@ class DocumentsController extends Controller
             $oldRequiresFinancing = $document->requires_financing;
             $document->requires_financing = $request->boolean('requires_financing');
 
-            // Si cambió requires_financing, reinicializar el workflow para recalcular etapas
+            // Si cambió requires_financing, recalcular etapas sin perder el progreso actual
             if ($oldRequiresFinancing !== $document->requires_financing) {
-                $document->initializeWorkflow();
+                $document->recalculateWorkflowStages();
             }
         }
 
@@ -1520,8 +1520,25 @@ class DocumentsController extends Controller
             if ($validated['send_email_notification'] && $previousStatus !== $document->status_id) {
                 $newStatus = DocumentStatus::find($document->status_id);
                 if ($newStatus) {
-                    // Aquí podrías enviar un email al cliente notificando del cambio de estado
-                    // Por ahora solo registramos la acción
+                    try {
+                        // Obtener el servicio de email
+                        $emailService = app(\Modules\Document\Services\DocumentEmailService::class);
+
+                        // Determinar qué email enviar basado en el nuevo estado
+                        // Buscar si el nuevo estado corresponde a "aprobado", "rechazado", etc.
+                        $statusSlug = strtolower($newStatus->key ?? '');
+
+                        if (strpos($statusSlug, 'approved') !== false || strpos($statusSlug, 'approved') !== false) {
+                            // Enviar email de aprobación
+                            $emailService->sendApprovalEmail($document, auth()->id());
+                        } elseif (strpos($statusSlug, 'rejected') !== false || strpos($statusSlug, 'rejected') !== false) {
+                            // Enviar email de rechazo (sin razón especificada)
+                            $emailService->sendRejectionEmail($document, 'El documento ha sido rechazado.', [], auth()->id());
+                        } 
+                    } catch (\Exception $e) {
+                        // Si hay error en el email, registrar pero no fallar
+                        \Log::error('Error sending status change email for document ' . $uid . ': ' . $e->getMessage());
+                    }
                 }
             }
 

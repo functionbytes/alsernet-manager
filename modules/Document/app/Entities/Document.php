@@ -1085,6 +1085,52 @@ class Document extends Model implements HasMedia
     }
 
     /**
+     * Recalculate workflow stages when document conditions change (e.g., requires_financing)
+     * This preserves the current progress without resetting the workflow to pending
+     */
+    public function recalculateWorkflowStages(): bool
+    {
+        try {
+            $stages = $this->getValidationWorkflowStages();
+            $newTotalStages = count($stages);
+
+            if (empty($stages)) {
+                return false;
+            }
+
+            // If stage count changed
+            if ($newTotalStages !== $this->total_stages) {
+                $oldTotalStages = $this->total_stages;
+                $this->total_stages = $newTotalStages;
+
+                // If adding stages, keep current progress
+                if ($newTotalStages > $oldTotalStages) {
+                    // Just update total_stages, keep current stage and status
+                }
+                // If removing stages, adjust if needed
+                elseif ($newTotalStages < $oldTotalStages) {
+                    if ($this->current_stage > $newTotalStages) {
+                        $this->current_stage = $newTotalStages;
+                        $this->current_validator_group = $stages[$newTotalStages - 1] ?? null;
+
+                        // Only change status if not already approved
+                        if ($this->validation_status !== self::VALIDATION_STATUS_APPROVED) {
+                            $this->validation_status = self::VALIDATION_STATUS_IN_VALIDATION;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            \Log::error('Error recalculating workflow stages for document '.$this->uid.': '.$e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Boot method to initialize required_documents when creating a document
      * Uses getRequiredDocuments() to fetch keys based on document type
      * Laravel automatically calls bootHasUid() from the trait

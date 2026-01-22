@@ -205,7 +205,7 @@
                 // Show email notification section
                 $('#emailNotificationSection').show();
                 $('#emailTypeDescription').html(
-                    `<i class="fas fa-info-circle me-1"></i><strong>${emailConfig.label}:</strong> ${emailConfig.description}`
+                    `<strong>${emailConfig.label}:</strong> ${emailConfig.description}`
                 );
                 $('#sendEmailOnStatusChange').prop('checked', true);
             } else {
